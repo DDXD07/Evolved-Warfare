@@ -13,6 +13,7 @@ WATER = (63, 118, 228)
 _cache = {}
 
 ALIASES = {
+    "smooth_sandstone": "sandstone_top", "smooth_red_sandstone": "red_sandstone_top", "cut_sandstone": "cut_sandstone",
     "brick": "bricks", "stone_brick": "stone_bricks", "deepslate_tile": "deepslate_tiles",
     "mossy_stone_brick": "mossy_stone_bricks", "cobblestone": "cobblestone", "polished_andesite": "polished_andesite",
 }
@@ -61,7 +62,19 @@ def base_name(n):
     return n
 
 
+MISSING = set()
+
+
 def colors(st):
+    top, side = _colors(st)
+    if top is None or side is None:
+        MISSING.add(short(st))
+        c = top or side or (200, 0, 200)
+        return (c, c)
+    return (top, side)
+
+
+def _colors(st):
     n = short(st)
     if n in SPECIAL:
         return SPECIAL[n]
@@ -84,6 +97,10 @@ def colors(st):
     if n.endswith("_trapdoor"):
         c = tex(n)
         return (c, c)
+    if n in ALIASES and n != ALIASES[n]:
+        c = tex(ALIASES[n])
+        if c:
+            return (c, c)
     b = base_name(n)
     if b != n:
         top = tex(b, b + "_planks", b + "s")
@@ -132,7 +149,8 @@ def shape_of(st):
     return (1.0, 1.0)
 
 
-def render(blocks, entities=(), scale=6, ground=None, margin=3, bg=(242, 238, 228), title=None):
+def render(blocks, entities=(), scale=6, ground=None, margin=3, bg=(242, 238, 228), title=None,
+           ground_block=("minecraft:grass_block", {})):
     """blocks: {(x,y,z): state}. ground: y de la capa de hierba a dibujar (None = sin suelo)."""
     blocks = dict(blocks)
     if ground is not None and blocks:
@@ -141,7 +159,7 @@ def render(blocks, entities=(), scale=6, ground=None, margin=3, bg=(242, 238, 22
         for x in range(min(xs) - margin, max(xs) + margin + 1):
             for z in range(min(zs) - margin, max(zs) + margin + 1):
                 if (x, ground, z) not in blocks:
-                    blocks[(x, ground, z)] = ("minecraft:grass_block", {})
+                    blocks[(x, ground, z)] = ground_block
     items = [(p, st, False) for p, st in blocks.items() if short(st) not in ("air", "structure_void")]
     for (eid, (x, y, z)) in entities:
         kind = "npc" if "evolvedwarfare" in eid else "stand"

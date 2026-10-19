@@ -73,7 +73,10 @@ class Element:
         self.raw = raw
         self.empty = raw["element_type"] == "minecraft:empty_pool_element"
         if not self.empty:
-            self.name = raw["location"].split(":", 1)[1]
+            if raw["element_type"] == "minecraft:feature_pool_element":
+                self.name = "feature/" + raw["feature"].split(":", 1)[1]
+            else:
+                self.name = raw["location"].split(":", 1)[1]
             self.template = templates[self.name]
             self.projection = raw["projection"]
 
@@ -96,10 +99,13 @@ class Element:
 
 
 class Pools:
-    def __init__(self, templates):
+    def __init__(self, templates, pools=None):
         self.pools = {}
-        for name, data in E.POOLS.items():
-            self.pools[f"{E.NS}:{name}"] = data
+        if pools is not None:
+            self.pools.update(pools)
+        else:
+            for name, data in E.POOLS.items():
+                self.pools[f"{E.NS}:{name}"] = data
         self.templates = templates
         self.cache = {}
 
@@ -152,7 +158,11 @@ def _templates():
 def generate(structure_name, seed, ground=0):
     st = E.STRUCTURES[structure_name]
     templates = _templates()
-    pools = Pools(templates)
+    return generate_with(Pools(templates), st, seed, ground)
+
+
+def generate_with(pools, st, seed, ground=0):
+    """st: dict con start_pool, size, max_distance_from_center, use_expansion_hack."""
     rnd = random.Random(seed)
     max_size, max_dist, hack = st["size"], st["max_distance_from_center"], st["use_expansion_hack"]
     height_on_ground = ground + 1

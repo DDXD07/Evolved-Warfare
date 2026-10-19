@@ -1,0 +1,16 @@
+{
+	"required": true,
+	"package": "com.evolvedwarfare.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"mixins": [
+		"PoolStructurePieceAccessor",
+		"SinglePoolElementAccessor",
+		"StructurePoolBasedGeneratorMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}

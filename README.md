@@ -8,7 +8,7 @@ Requiere **Fabric API**. Opcional: **Golden Coin Merchants** (los reclutas acept
 
 | Fase | Contenido | Estado |
 |---|---|---|
-| 1 | **NPC base (el recluta)** y dónde vive: ciudades, campamentos y torres generados; contrato, dueño, equipo, órdenes, paga diaria | ✅ Hecha |
+| 1 | **NPC base (el recluta)** y dónde vive: ciudades, campamentos y torres generados; contrato, dueño, equipo, órdenes, paga diaria. Aldeas vanilla con empedrado, farolas y empalizada | ✅ Hecha |
 | 2 | Soldados: cuerpo a cuerpo, arquero y médico; IA de combate, patrullas, niveles, bastón de mando | ⏳ |
 | 3 | Trabajadores y zonas de trabajo: granja, tala, mina, animales, pesca; ayuntamiento | ⏳ |
 | 4 | Logística y comercio: almacén, mensajero con rutas, comerciante (Golden Coin) | ⏳ |
@@ -32,6 +32,13 @@ Cada uno tiene nombre y aspecto al azar (6 aspectos) y pasea cerca de su sitio e
 Para encontrarlas rápido (con trucos activados): `/locate structure evolvedwarfare:city`, `evolvedwarfare:mercenary_camp` o `evolvedwarfare:watchtower`.
 
 Los cofres del cuartel, la herrería, las torres y el campamento tienen botín de aldea (armas, armaduras, herramientas).
+
+### Aldeas vanilla mejoradas
+Las aldeas normales de Minecraft también cambian (solo las que se generen después de instalar el mod):
+- **Calles empedradas**: la tierra de los caminos pasa a ser empedrado (adoquín con algo de andesita, grava y musgo). Las del desierto ya eran de arenisca y se quedan así.
+- **Farolas** en el borde de las calles, cada 8-10 bloques, nunca delante de una puerta ni en un cruce: de noche se ve bien y no aparecen monstruos en las calles.
+- **Empalizada de troncos** alrededor de toda la aldea, a unos 4 bloques de las casas, con faroles encima. La madera depende del tipo de aldea: roble (llanuras), acacia (sabana), abeto (taiga y nieve) y jungla (desierto).
+- **Puertas**: normalmente 4, donde una calle llega cerca de la empalizada. Tienen postes altos con faroles y un camino empedrado que sale de la calle y atraviesa la puerta.
 
 ### Contratar
 **Contrato de reclutamiento** (receta sin forma): papel + saco de tinta + pluma + lingote de oro + pan.
@@ -61,6 +68,7 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
 - `ew_jigsaw_sim.py` — simula cómo el juego monta las ciudades (encaje de piezas, tamaño, nº de NPCs).
 - `ew_preview.py` — dibuja vistas previas isométricas.
 - `ew_textures.py` — genera las texturas (aspectos de los reclutas, contrato, interfaz).
+- `ew_village.py` — prototipo de las aldeas vanilla mejoradas (mismo algoritmo que `VillageExtras.java`) con vista previa.
 
 ```
 python3 tools/ew_structures.py src/main/resources/data/evolvedwarfare
