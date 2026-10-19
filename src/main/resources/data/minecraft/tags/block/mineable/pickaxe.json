@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "evolvedwarfare:blacksmith_post",
+    "evolvedwarfare:cook_post",
+    "evolvedwarfare:charcoal_burner_post",
+    "evolvedwarfare:stonemason_post",
+    "evolvedwarfare:fletcher_post"
+  ]
+}

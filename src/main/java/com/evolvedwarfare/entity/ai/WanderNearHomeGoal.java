@@ -22,7 +22,7 @@ public class WanderNearHomeGoal extends Goal {
 	@Override
 	public boolean canStart() {
 		BlockPos home = npc.getHome();
-		return npc.getEffectiveOrder() == NpcOrder.HOME && home != null
+		return npc.getEffectiveOrder() == NpcOrder.HOME && home != null && !npc.isBusy()
 				&& npc.getRandom().nextInt(120) == 0
 				&& npc.squaredDistanceTo(home.getX() + 0.5, home.getY(), home.getZ() + 0.5) <= (RADIUS + 1) * (RADIUS + 1);
 	}

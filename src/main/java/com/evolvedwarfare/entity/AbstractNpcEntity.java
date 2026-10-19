@@ -202,6 +202,11 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 		return home;
 	}
 
+	/** Ocupado con algo (un trabajador en plena tarea): no vuelve a casa ni se pone a pasear. */
+	public boolean isBusy() {
+		return false;
+	}
+
 	/** Fija la casa donde está ahora y le ordena quedarse allí. */
 	public void setHomeHere() {
 		setHomeAt(getBlockPos());

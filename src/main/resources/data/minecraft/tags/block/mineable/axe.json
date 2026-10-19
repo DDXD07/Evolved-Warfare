@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "evolvedwarfare:farmer_post",
+    "evolvedwarfare:lumberjack_post",
+    "evolvedwarfare:miner_post",
+    "evolvedwarfare:digger_post",
+    "evolvedwarfare:fisherman_post",
+    "evolvedwarfare:shepherd_post",
+    "evolvedwarfare:breeder_post",
+    "evolvedwarfare:beekeeper_post",
+    "evolvedwarfare:gardener_post",
+    "evolvedwarfare:town_hall"
+  ]
+}

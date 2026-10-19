@@ -1,0 +1,10 @@
+{
+  "parent": "evolvedwarfare:block/work_site_template",
+  "textures": {
+    "side": "evolvedwarfare:block/workshop_side",
+    "top": "evolvedwarfare:block/workshop_top",
+    "bottom": "evolvedwarfare:block/workshop_bottom",
+    "front": "evolvedwarfare:block/workshop_front",
+    "icon": "minecraft:item/bread"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "evolvedwarfare:block/town_hall"
+    },
+    "facing=east": {
+      "model": "evolvedwarfare:block/town_hall",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "evolvedwarfare:block/town_hall",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "evolvedwarfare:block/town_hall",
+      "y": 270
+    }
+  }
+}

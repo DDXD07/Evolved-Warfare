@@ -1,6 +1,7 @@
 package com.evolvedwarfare;
 
 import com.evolvedwarfare.entity.NpcSides;
+import com.evolvedwarfare.registry.ModBlocks;
 import com.evolvedwarfare.registry.ModEntities;
 import com.evolvedwarfare.registry.ModItems;
 import com.evolvedwarfare.registry.ModScreens;
@@ -19,6 +20,8 @@ import org.slf4j.LoggerFactory;
  *
  * <p>Fase 2: soldados (guerrero, bárbaro, arquero, ballestero, médico), bandidos hostiles con fuertes,
  * patrullas y asaltos, niveles y bastón de mando.</p>
+ *
+ * <p>Fase 3: trabajadores con 14 oficios, cada uno con su puesto de trabajo, y el ayuntamiento que les paga.</p>
  */
 public class EvolvedWarfare implements ModInitializer {
 	public static final String MOD_ID = "evolvedwarfare";
@@ -30,6 +33,7 @@ public class EvolvedWarfare implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		ModBlocks.init();
 		ModEntities.init();
 		ModItems.init();
 		ModScreens.init();

@@ -28,7 +28,7 @@ public class ReturnHomeGoal extends Goal {
 
 	@Override
 	public boolean canStart() {
-		return awayFromHome();
+		return !npc.isBusy() && awayFromHome();
 	}
 
 	@Override

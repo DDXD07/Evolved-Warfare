@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "evolvedwarfare:block/stonemason_post"
+    },
+    "facing=east": {
+      "model": "evolvedwarfare:block/stonemason_post",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "evolvedwarfare:block/stonemason_post",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "evolvedwarfare:block/stonemason_post",
+      "y": 270
+    }
+  }
+}

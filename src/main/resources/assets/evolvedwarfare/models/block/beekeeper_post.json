@@ -1,0 +1,10 @@
+{
+  "parent": "evolvedwarfare:block/work_site_template",
+  "textures": {
+    "side": "evolvedwarfare:block/work_site_side",
+    "top": "evolvedwarfare:block/work_site_top",
+    "bottom": "evolvedwarfare:block/work_site_bottom",
+    "front": "evolvedwarfare:block/work_site_front",
+    "icon": "minecraft:item/honeycomb"
+  }
+}

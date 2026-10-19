@@ -5,7 +5,9 @@ import com.evolvedwarfare.entity.NpcOrder;
 import com.evolvedwarfare.entity.NpcRole;
 import com.evolvedwarfare.entity.RecruitEntity;
 import com.evolvedwarfare.entity.SoldierEntity;
+import com.evolvedwarfare.entity.WorkerEntity;
 import com.evolvedwarfare.registry.ModScreens;
+import com.evolvedwarfare.work.Profession;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -52,7 +54,10 @@ public class NpcScreenHandler extends ScreenHandler {
 	private static final int P_KILLS = 8;
 	private static final int P_XP = 9;
 	private static final int P_XP_NEXT = 10;
-	private static final int PROPERTY_COUNT = 11;
+	/** 0 = no es trabajador; si no, oficio + 1. */
+	private static final int P_PROFESSION = 11;
+	private static final int P_JOBS = 12;
+	private static final int PROPERTY_COUNT = 13;
 
 	// posiciones (compartidas con la pantalla)
 	public static final int ARMOR_X = 8;
@@ -152,6 +157,12 @@ public class NpcScreenHandler extends ScreenHandler {
 		} else {
 			properties.set(P_ROLE, 0);
 		}
+		if (npc instanceof WorkerEntity worker) {
+			properties.set(P_PROFESSION, worker.getProfession().ordinal() + 1);
+			properties.set(P_JOBS, Math.min(worker.getJobsDone(), 30000));
+		} else {
+			properties.set(P_PROFESSION, 0);
+		}
 	}
 
 	@Override
@@ -169,7 +180,13 @@ public class NpcScreenHandler extends ScreenHandler {
 			case BUTTON_FOLLOW -> npc.setOrder(NpcOrder.FOLLOW);
 			case BUTTON_STAY -> npc.setOrder(NpcOrder.STAY);
 			case BUTTON_HOME -> npc.setOrder(NpcOrder.HOME);
-			case BUTTON_SET_HOME -> npc.setHomeHere();
+			case BUTTON_SET_HOME -> {
+				// la casa de un trabajador es su puesto
+				if (npc instanceof WorkerEntity) {
+					return false;
+				}
+				npc.setHomeHere();
+			}
 			case BUTTON_TRAIN -> {
 				train(player);
 				return true;
@@ -299,5 +316,16 @@ public class NpcScreenHandler extends ScreenHandler {
 
 	public int experienceForNextLevel() {
 		return properties.get(P_XP_NEXT);
+	}
+
+	/** Oficio del trabajador, o null si no lo es. */
+	@Nullable
+	public Profession profession() {
+		int i = properties.get(P_PROFESSION);
+		return i <= 0 ? null : Profession.byOrdinal(i - 1);
+	}
+
+	public int jobsDone() {
+		return properties.get(P_JOBS);
 	}
 }

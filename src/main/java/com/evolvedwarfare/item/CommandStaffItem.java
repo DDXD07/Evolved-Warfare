@@ -4,6 +4,7 @@ import com.evolvedwarfare.entity.AbstractNpcEntity;
 import com.evolvedwarfare.entity.NpcOrder;
 import com.evolvedwarfare.entity.NpcSides;
 import com.evolvedwarfare.entity.SoldierEntity;
+import com.evolvedwarfare.entity.WorkerEntity;
 import java.util.List;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -34,9 +35,10 @@ public class CommandStaffItem extends Item {
 		super(settings);
 	}
 
+	/** Tus NPCs cercanos, menos los trabajadores (esos se quedan en su puesto). */
 	private static List<AbstractNpcEntity> followers(World world, PlayerEntity player) {
 		return world.getEntitiesByClass(AbstractNpcEntity.class, player.getBoundingBox().expand(RANGE),
-				npc -> npc.isAlive() && npc.isOwner(player));
+				npc -> npc.isAlive() && npc.isOwner(player) && !(npc instanceof WorkerEntity));
 	}
 
 	@Override

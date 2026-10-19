@@ -39,6 +39,8 @@ public final class ModItems {
 						entries.add(COMMAND_STAFF);
 						entries.add(MEDIC_KIT);
 						entries.add(BANDIT_SPAWN_EGG);
+						entries.add(ModBlocks.TOWN_HALL);
+						ModBlocks.WORK_SITES.values().forEach(block -> entries.add(block));
 					})
 					.build());
 

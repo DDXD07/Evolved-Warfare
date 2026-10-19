@@ -1,0 +1,10 @@
+{
+  "parent": "evolvedwarfare:block/work_site_template",
+  "textures": {
+    "side": "evolvedwarfare:block/town_hall_side",
+    "top": "evolvedwarfare:block/town_hall_top",
+    "bottom": "evolvedwarfare:block/work_site_bottom",
+    "front": "evolvedwarfare:block/town_hall_front",
+    "icon": "minecraft:item/bell"
+  }
+}

@@ -5,6 +5,7 @@ import com.evolvedwarfare.entity.AbstractNpcEntity;
 import com.evolvedwarfare.entity.NpcOrder;
 import com.evolvedwarfare.entity.NpcRole;
 import com.evolvedwarfare.screen.NpcScreenHandler;
+import com.evolvedwarfare.work.Profession;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
@@ -76,7 +77,8 @@ public class NpcScreen extends HandledScreen<NpcScreenHandler> {
 		followButton.active = order != NpcOrder.FOLLOW;
 		stayButton.active = order != NpcOrder.STAY;
 		homeButton.active = order != NpcOrder.HOME && handler.hasHome();
-		trainButton.visible = handler.role() == null;
+		setHomeButton.active = handler.profession() == null;
+		trainButton.visible = handler.role() == null && handler.profession() == null;
 	}
 
 	@Override
@@ -97,11 +99,20 @@ public class NpcScreen extends HandledScreen<NpcScreenHandler> {
 	@Override
 	protected void drawForeground(DrawContext context, int mouseX, int mouseY) {
 		NpcRole role = handler.role();
-		Text heading = role == null
-				? Text.translatable("gui.evolvedwarfare.title.recruit", title)
-				: Text.translatable("gui.evolvedwarfare.title.soldier", title, Text.translatable(role.translationKey()), handler.level());
+		Profession profession = handler.profession();
+		Text heading;
+		if (profession != null) {
+			heading = Text.translatable("gui.evolvedwarfare.title.worker", title, Text.translatable(profession.translationKey()));
+		} else if (role != null) {
+			heading = Text.translatable("gui.evolvedwarfare.title.soldier", title, Text.translatable(role.translationKey()), handler.level());
+		} else {
+			heading = Text.translatable("gui.evolvedwarfare.title.recruit", title);
+		}
 		context.drawText(textRenderer, heading, 8, 6, TEXT, false);
-		if (role != null) {
+		if (profession != null) {
+			context.drawText(textRenderer, Text.translatable("gui.evolvedwarfare.stats.worker", handler.jobsDone()),
+					NpcScreenHandler.PROVISIONS_X - 1, 83, TEXT, false);
+		} else if (role != null) {
 			Text stats = handler.experienceForNextLevel() > 0
 					? Text.translatable("gui.evolvedwarfare.stats", handler.kills(), handler.experience(), handler.experienceForNextLevel())
 					: Text.translatable("gui.evolvedwarfare.stats.max", handler.kills());
