@@ -106,31 +106,58 @@ Para encontrarlos: `/locate structure evolvedwarfare:bandit_camp` o `evolvedwarf
 ## Fase 3 — Trabajadores
 
 ### Cómo poner a alguien a trabajar
-1. Fabrica el **puesto** del oficio y ponlo donde quieras que trabaje (el dibujo del frente mira hacia ti).
+1. Fabrica el **puesto** del oficio y ponlo donde quieras (el dibujo del frente mira hacia ti). Se abre su **menú de edificio** (ver abajo): elige un diseño y pulsa **Construir**, o **Sin edificio**.
 2. Ten cerca (a menos de 24 bloques) un **recluta** tuyo.
-3. Abre el puesto (clic derecho) y pulsa **Asignar recluta**: tu recluta más cercano pasa a ser trabajador de ese oficio, con su nombre, equipo y paga.
-4. Dale su **herramienta** en la mano (desde su menú) y lo que gaste en la fila de **suministros** del puesto. Lo que produce va a las dos filas de **producción**.
+3. Abre el puesto (clic derecho) y pulsa **Asignar**: tu recluta más cercano pasa a ser trabajador de ese oficio, con su nombre, equipo y paga.
+4. Pon en la fila de **suministros** los materiales del edificio; cuando lo termine, lo que gaste su oficio (semillas, combustible...). Dale su **herramienta** en la mano (desde su menú). Lo que produce va a las dos filas de **producción**.
 
-Trabajan de día dentro de la zona de su puesto y de noche descansan junto a él. Huyen de monstruos y bandidos. Si no cobran, hacen huelga. **Ver zona** marca el borde de la zona con partículas. **Despedir** lo convierte otra vez en recluta (y te sigue). Si rompes el puesto, su trabajador vuelve a ser recluta y lo que había dentro cae al suelo.
+La **zona de trabajo** está delante del puesto (el campo, el bosque, el cercado...) y el edificio detrás y a los lados, así que no se estorban. El minero y el excavador trabajan en un pozo detrás.
 
-Con la herramienta de su oficio trabajan más rápido (más cuanto mejor sea: madera < piedra < hierro < diamante < netherita < oro; Fortuna y Toque de seda funcionan) y gastan su durabilidad; sin ella van a la mitad. Si se les rompe y hay otra en los suministros, la cogen solos. El menú del puesto muestra quién trabaja, cuántas tareas lleva y qué está haciendo (o qué le falta: suministros, combustible, agua, sitio en el almacén...). El botón **[?]** explica el oficio.
+Trabajan de día dentro de la zona de su puesto y de noche descansan junto a él (dentro de su edificio, si lo tiene). Huyen de monstruos y bandidos. Si no cobran, hacen huelga. **Ver zona** marca el borde de la zona con partículas. **Despedir** lo convierte otra vez en recluta (y te sigue). Si rompes el puesto, su trabajador vuelve a ser recluta y lo que había dentro cae al suelo.
+
+Con la herramienta de su oficio trabajan más rápido (más cuanto mejor sea: madera < piedra < hierro < diamante < netherita < oro; Fortuna y Toque de seda funcionan) y gastan su durabilidad; sin ella van a la mitad. Si se les rompe y hay otra en los suministros, la cogen solos. El menú del puesto muestra quién trabaja, cuántas tareas lleva y qué está haciendo (o qué le falta: suministros, combustible, agua, materiales de obra, sitio en el almacén...). El botón **[?]** explica el oficio.
 
 Las **tolvas** meten cosas en los suministros por arriba y los lados, y sacan la producción por abajo, así que puedes encadenar puestos con cofres.
+
+### El edificio de cada puesto
+Al poner un puesto se abre su menú de edificio (luego, con el botón **Edificio** del puesto):
+- **Vista previa en 3D** del diseño: se gira arrastrando con el ratón y se acerca con la rueda. El borde de color en el suelo marca la zona de trabajo.
+- Cada diseño sale de una **semilla**: tamaño, madera, paredes (tablones, zócalo de piedra, troncos, entramado, piedra), tejado, ventanas, puerta y detalles. **Otra semilla** genera otro; **Anterior** vuelve atrás (guarda las últimas 32).
+- **Materiales**: lo que necesita, por tipo. Cada bloque gasta uno de su tipo, de cualquier variante: escaleras, losas, vallas, puertas o barriles gastan un tablón (de cualquier madera); los troncos, un tronco; los ladrillos y escaleras de piedra, piedra (roca, piedra, ladrillos de piedra...); las ventanas, cristal o paneles; las antorchas y faroles, antorchas; la lana y las alfombras, lana; las pacas, heno. La madera y la piedra que se ven las decide la semilla, no lo que pagues.
+- **Construir**: el trabajador lo levanta antes de ponerse con su oficio. Primero limpia el sitio de lo natural (tierra, piedra, hierba, árboles; lo que saca va a la producción), rellena con tierra los huecos bajo el suelo y pone los bloques de abajo arriba. Nunca rompe lo que no es natural (cosas tuyas): esas piezas se quedan sin poner. Si le falta un material, para y el puesto avisa («Falta: Cristal»).
+- **Sin edificio**: trabaja sin él (puedes elegir uno más tarde). **Cancelar** deja la obra a medias.
+
+| Oficio | Edificio |
+|---|---|
+| Granjero | Granja con pacas de heno y compostador |
+| Leñador | Cabaña de troncos con leñera cubierta y tocón |
+| Minero | Granero sobre la entrada de la mina, con portón y farol |
+| Excavador | Cobertizo abierto (el pozo empieza detrás) |
+| Pescador | Caseta con barriles y farol en un poste |
+| Pastor | Establo y **cercado** alrededor de toda su zona (se entra por la casa; cancela al fondo para ti) |
+| Criador | Gallinero con franja de color y **cercado** igual que el pastor |
+| Apicultor | Colmenar con tejadillo y jardineras |
+| Hortelano | Invernadero de cristal con bancales y compostador |
+| Herrero | Forja de piedra con chimenea y hogar encendido |
+| Cocinero | Cocina con chimenea y hogar |
+| Carbonero | Tejadillo, horno de cúpula con hoguera y pila de troncos |
+| Cantero | Taller de piedra con bloques apilados |
+| Flechero | Taller con dianas de paja |
 
 ### Los 14 oficios
 Receta de todos los puestos: 7 tablones alrededor, un cofre abajo y el objeto del oficio en el centro.
 
 | Oficio | Puesto (objeto central) | Zona | Qué hace | Qué necesita |
 |---|---|---|---|---|
-| **Granjero** | Azada | 11×11 | Ara la tierra con agua a 4 bloques (como en vanilla), siembra, cosecha y resiembra | Semillas, patatas, zanahorias o remolacha. Harina de hueso opcional |
-| **Leñador** | Hacha | 15×15 | Tala árboles enteros (solo árboles naturales, nunca casas de troncos), replanta en el tocón, recoge brotes, palos y manzanas y planta brotes en cuadrícula | Brotes. Harina de hueso opcional |
-| **Minero** | Pico | Pozo 5×5 bajo tierra | Cava una entrada de 5 escalones detrás del puesto, levanta un granero pequeño encima y, desde el rellano del fondo, vacía un pozo bajo tierra hasta la roca madre (la superficie queda intacta). No toca cofres ni bloques junto a lava. Las menas que su pico no puede romper las deja | Un pico. Tablones (granero) y antorchas opcionales |
+| **Granjero** | Azada | 11×11 delante | Ara la tierra con agua a 4 bloques (como en vanilla), siembra, cosecha y resiembra | Semillas, patatas, zanahorias o remolacha. Harina de hueso opcional |
+| **Leñador** | Hacha | 15×15 delante | Tala árboles enteros (solo árboles naturales, nunca casas de troncos), replanta en el tocón, recoge brotes, palos y manzanas y planta brotes en cuadrícula | Brotes. Harina de hueso opcional |
+| **Minero** | Pico | Pozo 5×5 bajo tierra | Cava una entrada de 5 escalones detrás del puesto (dentro de su granero) y, desde el rellano del fondo, vacía un pozo bajo tierra hasta la roca madre (la superficie queda intacta). No toca cofres ni bloques junto a lava. Las menas que su pico no puede romper las deja | Un pico. Antorchas opcionales |
 | **Excavador** | Pala | Pozo 7×7 | Abre un pozo detrás del puesto (dejando un pasillo de un bloque) y saca tierra, arena, grava, arcilla, barro... hasta 16 capas | Nada (con pala, mucho más rápido) |
-| **Pescador** | Caña | 13×13 | Pesca en el agua cercana (al menos 4 bloques de agua) | Nada (con caña, más rápido) |
-| **Pastor** | Tijeras | 17×17 | Esquila ovejas, ordeña vacas y cabras, recoge la lana, cría y mantiene el rebaño en 8 adultos por especie | Trigo, cubos, tijeras |
-| **Criador** | Bala de heno | 17×17 | Gallinas, cerdos y conejos: los cría, recoge huevos y plumas y mantiene 8 adultos por especie | Semillas, zanahorias, patatas o dientes de león |
-| **Apicultor** | Panal | 17×17 | Vacía colmenas y nidos llenos sin enfadar a las abejas y planta flores | Frascos de cristal (o tijeras para panales). Flores opcionales |
-| **Hortelano** | Harina de hueso | 13×13 | Melones y calabazas de tallo, caña, cactus, bambú, bayas dulces y luminosas, cacao y verrugas del Nether (replanta estas dos) | Nada |
+| **Pescador** | Caña | 13×13 delante | Pesca en el agua cercana (al menos 4 bloques de agua) | Nada (con caña, más rápido) |
+| **Pastor** | Tijeras | 17×17 delante | Esquila ovejas, ordeña vacas y cabras, recoge la lana, cría y mantiene el rebaño en 8 adultos por especie | Trigo, cubos, tijeras |
+| **Criador** | Bala de heno | 17×17 delante | Gallinas, cerdos y conejos: los cría, recoge huevos y plumas y mantiene 8 adultos por especie | Semillas, zanahorias, patatas o dientes de león |
+| **Apicultor** | Panal | 17×17 delante | Vacía colmenas y nidos llenos sin enfadar a las abejas y planta flores | Frascos de cristal (o tijeras para panales). Flores opcionales |
+| **Hortelano** | Harina de hueso | 13×13 delante | Melones y calabazas de tallo, caña, cactus, bambú, bayas dulces y luminosas, cacao y verrugas del Nether (replanta estas dos) | Nada |
 | **Herrero** | Alto horno | — | Funde menas y metal en bruto (recetas de alto horno) | Menas y combustible |
 | **Cocinero** | Ahumador | — | Cocina carne, pescado y patatas (recetas de ahumador) y hornea pan con 3 de trigo | Comida cruda o trigo, y combustible |
 | **Carbonero** | Horno | — | 5 troncos → 4 de carbón vegetal, sin combustible | Troncos |
@@ -139,7 +166,7 @@ Receta de todos los puestos: 7 tablones alrededor, un cofre abajo y el objeto de
 
 El pastor y el criador nunca sacrifican animales con nombre ni atados.
 
-**La mina bajo tierra** (minero): detrás del puesto deja un pasillo de un bloque y cava una escalera de 5 escalones (3 de alto, se puede bajar andando) que acaba en un rellano a 5 bloques de profundidad. Desde ahí vacía el pozo, que empieza bajo tierra con 3 bloques de techo, así que en la superficie solo se ve la boca de la escalera. Encima de la boca levanta un **granero pequeño** (5×5, postes de tronco, paredes de tablones con ventanas de barrotes, tejado a dos aguas y un portón de 3 de ancho hacia el puesto). Cada bloque gasta un tablón de los suministros y sale de la madera de esos tablones; si no tiene, sigue minando y el menú avisa con «Granero: faltan tablones». Solo construye en huecos libres y repara lo que se rompa. Si le das antorchas, pone una dentro del granero, otra en la escalera y otra en el rellano. **Ver zona** marca en la superficie dónde irá el pozo y por dónde baja la escalera.
+**La mina bajo tierra** (minero): detrás del puesto deja un pasillo de un bloque y cava una escalera de 5 escalones (3 de alto, se puede bajar andando) que acaba en un rellano a 5 bloques de profundidad. Desde ahí vacía el pozo, que empieza bajo tierra con 3 bloques de techo, así que en la superficie solo se ve la boca de la escalera, dentro de su granero. Si le das antorchas, pone una en la escalera y otra en el rellano. **Ver zona** marca en la superficie dónde irá el pozo y por dónde baja la escalera.
 
 ### Ayuntamiento
 Receta: lingote de oro, libro y lingote de oro arriba; tablón, cofre y tablón en medio; 3 tablones abajo. Guarda comida o Golden Coins dentro y cada pocos segundos rellena las provisiones de todos tus NPCs (trabajadores, soldados y reclutas) a menos de 48 bloques, hasta 3 días de paga. Así no tienes que ir dándoles de comer uno a uno.
@@ -150,6 +177,7 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
 - `ew_jigsaw_sim.py` — simula cómo el juego monta las ciudades (encaje de piezas, tamaño, nº de NPCs).
 - `ew_preview.py` — dibuja vistas previas isométricas.
 - `ew_textures.py` — genera las texturas (aspectos de los reclutas, contrato, interfaz).
+- `ew_buildings.py` — compila el generador de edificios (Java puro) y dibuja los diseños de cada oficio con varias semillas.
 - `ew_blocks.py` — texturas, modelos, recetas y botín de los puestos de trabajo y el ayuntamiento.
 - `ew_village.py` — prototipo de las aldeas vanilla mejoradas (mismo algoritmo que `VillageExtras.java`) con vista previa.
 
