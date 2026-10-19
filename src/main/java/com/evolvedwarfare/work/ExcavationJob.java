@@ -14,7 +14,6 @@ import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -43,10 +42,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * <ol>
  *   <li>Primero cava la <b>entrada</b> (escalones y rellano). Lo que sale de ahí lo guarda siempre.</li>
- *   <li>Con <b>tablones</b> en los suministros levanta un granero pequeño encima de la entrada ({@link MineBarn}).
- *       Si no tiene, sigue trabajando y el menú del puesto avisa de que faltan.</li>
- *   <li>Si hay <b>antorchas</b> en los suministros, pone una dentro del granero, otra en la escalera y otra en
- *       el rellano.</li>
+ *   <li>Si hay <b>antorchas</b> en los suministros, pone una en la escalera y otra en el rellano.</li>
  *   <li>Después vacía el <b>pozo</b> capa a capa, trabajando desde el rellano.</li>
  * </ol>
  *
@@ -133,46 +129,17 @@ public class ExcavationJob implements Job {
 			return WorkAction.fromSite(stand, Vec3d.ofCenter(pos), ticks, c -> digEntrance(c, pos)).breaking(pos);
 		}
 
-		// 2. el granero encima de la entrada (con tablones de los suministros)
-		boolean barnNeedsPlanks = false;
-		if (underground) {
-			boolean planks = ctx.site.count(MineBarn.PLANKS, false) > 0;
-			for (MineBarn.Piece piece : MineBarn.pieces(ctx.sitePos, back)) {
-				BlockPos pos = piece.pos();
-				if (!Jobs.isClear(world.getBlockState(pos))) {
-					continue;
-				}
-				if (!planks) {
-					barnNeedsPlanks = true;
-					break;
-				}
-				if (MineBarn.occupied(world, pos)) {
-					continue;
-				}
-				// se pone dentro del granero, al lado, y construye desde ahí (llega hasta el tejado)
-				BlockPos stand = MineBarn.standFor(ctx.sitePos, back, piece);
-				return WorkAction.fromSite(stand, Vec3d.ofCenter(pos), ctx.ticks(10), c -> MineBarn.build(c, piece));
-			}
-		}
-		ctx.site.setNote(barnNeedsPlanks ? WorkSiteBlockEntity.NOTE_BARN_NEEDS_PLANKS : WorkSiteBlockEntity.NOTE_NONE);
-
-		// 3. antorchas, si se las das: dentro del granero, en la escalera y en el rellano
+		// 2. antorchas, si se las das: en la escalera y en el rellano
 		if (underground && ctx.site.count(TORCH, false) > 0) {
-			BlockState floorTorch = Blocks.TORCH.getDefaultState();
-			BlockState wallTorch = Blocks.WALL_TORCH.getDefaultState()
-					.with(Properties.HORIZONTAL_FACING, MineBarn.torchFacing(back));
-			BlockPos[] spots = {MineBarn.torchSpot(ctx.sitePos, back), stepFeet(ctx.sitePos, back, 3), landing(ctx.sitePos, back)};
-			BlockState[] torches = {wallTorch, floorTorch, floorTorch};
-			for (int i = 0; i < spots.length; i++) {
-				BlockPos spot = spots[i];
-				BlockState torch = torches[i];
+			BlockState torch = Blocks.TORCH.getDefaultState();
+			for (BlockPos spot : new BlockPos[] {stepFeet(ctx.sitePos, back, 3), landing(ctx.sitePos, back)}) {
 				if (world.getBlockState(spot).isAir() && torch.canPlaceAt(world, spot)) {
 					return WorkAction.atBlock(spot, ctx.ticks(10), c -> placeTorch(c, spot, torch)).reach(2.5);
 				}
 			}
 		}
 
-		// 4. el pozo, capa a capa: la mina desde el rellano; el pozo abierto, desde el puesto
+		// 3. el pozo, capa a capa: la mina desde el rellano; el pozo abierto, desde el puesto
 		BlockPos stand = underground ? landing(ctx.sitePos, back) : ctx.sitePos;
 		BlockPos center = area.center(ctx.sitePos, ctx.facing);
 		int half = area.radius();

@@ -1,6 +1,8 @@
 package com.evolvedwarfare.client.screen;
 
 import com.evolvedwarfare.block.WorkSiteBlockEntity;
+import com.evolvedwarfare.building.BuildMaterials;
+import com.evolvedwarfare.building.Material;
 import com.evolvedwarfare.screen.WorkSiteScreenHandler;
 import com.evolvedwarfare.work.Profession;
 import com.evolvedwarfare.work.WorkArea;
@@ -46,15 +48,21 @@ public class WorkSiteScreen extends HandledScreen<WorkSiteScreenHandler> {
 	@Override
 	protected void init() {
 		super.init();
+		boolean hasArea = handler.getProfession().area().exists();
 		workerButton = ButtonWidget.builder(Text.empty(), b -> click(handler.hasWorker()
 						? WorkSiteScreenHandler.BUTTON_DISMISS : WorkSiteScreenHandler.BUTTON_ASSIGN))
-				.dimensions(x + 7, y + STATUS_TOP + 25, 80, 14).build();
+				.dimensions(x + 7, y + STATUS_TOP + 25, 58, 14).build();
 		addDrawableChild(workerButton);
 		areaButton = ButtonWidget.builder(Text.translatable("gui.evolvedwarfare.button.area"), b -> click(WorkSiteScreenHandler.BUTTON_AREA))
-				.dimensions(x + 89, y + STATUS_TOP + 25, 80, 14).build();
+				.dimensions(x + 67, y + STATUS_TOP + 25, 50, 14).build();
 		areaButton.setTooltip(Tooltip.of(Text.translatable("gui.evolvedwarfare.button.area.tip")));
-		areaButton.visible = handler.getProfession().area().exists();
+		areaButton.visible = hasArea;
 		addDrawableChild(areaButton);
+		ButtonWidget buildingButton = ButtonWidget.builder(Text.translatable("gui.evolvedwarfare.button.building"),
+						b -> click(WorkSiteScreenHandler.BUTTON_BUILDING))
+				.dimensions(hasArea ? x + 119 : x + 67, y + STATUS_TOP + 25, hasArea ? 50 : 102, 14).build();
+		buildingButton.setTooltip(Tooltip.of(Text.translatable("gui.evolvedwarfare.button.building.tip")));
+		addDrawableChild(buildingButton);
 		updateButtons();
 	}
 
@@ -104,6 +112,7 @@ public class WorkSiteScreen extends HandledScreen<WorkSiteScreenHandler> {
 		if (profession.usesTool()) {
 			lines.add(Text.translatable("gui.evolvedwarfare.site.help.tool").formatted(Formatting.GRAY));
 		}
+		lines.add(Text.translatable("gui.evolvedwarfare.site.help.building").formatted(Formatting.GRAY));
 		lines.add(Text.translatable("gui.evolvedwarfare.site.help.storage").formatted(Formatting.DARK_GRAY));
 		return lines;
 	}
@@ -132,8 +141,9 @@ public class WorkSiteScreen extends HandledScreen<WorkSiteScreenHandler> {
 		context.drawText(textRenderer, HELP, backgroundWidth - 8 - textRenderer.getWidth(HELP), 6, 0x3060A0, false);
 		context.drawText(textRenderer, Text.translatable("gui.evolvedwarfare.site.output"), 8, 37, TEXT, false);
 		Text extra = extraInfo();
-		if (handler.note() == WorkSiteBlockEntity.NOTE_BARN_NEEDS_PLANKS) {
-			Text note = Text.translatable("gui.evolvedwarfare.site.note.barn_planks");
+		Material missing = WorkSiteBlockEntity.missingFromNote(handler.note());
+		if (missing != null) {
+			Text note = Text.translatable("gui.evolvedwarfare.site.note.missing", Text.translatable(BuildMaterials.translationKey(missing)));
 			context.drawText(textRenderer, note, backgroundWidth - 8 - textRenderer.getWidth(note), 37, BAD, false);
 		} else if (extra != null) {
 			context.drawText(textRenderer, extra, backgroundWidth - 8 - textRenderer.getWidth(extra), 37, TEXT, false);

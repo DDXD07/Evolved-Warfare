@@ -3,6 +3,7 @@ package com.evolvedwarfare.client;
 import com.evolvedwarfare.client.render.BanditRenderer;
 import com.evolvedwarfare.client.render.ModModelLayers;
 import com.evolvedwarfare.client.render.RecruitRenderer;
+import com.evolvedwarfare.client.screen.BlueprintScreen;
 import com.evolvedwarfare.client.screen.NpcScreen;
 import com.evolvedwarfare.client.screen.WorkSiteScreen;
 import com.evolvedwarfare.registry.ModBlocks;
@@ -25,6 +26,7 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		EntityRendererRegistry.register(ModEntities.BANDIT, BanditRenderer::new);
 		HandledScreens.register(ModScreens.NPC, NpcScreen::new);
 		HandledScreens.register(ModScreens.WORK_SITE, WorkSiteScreen::new);
+		HandledScreens.register(ModScreens.BLUEPRINT, BlueprintScreen::new);
 		// el dibujo del frente de los puestos tiene transparencias
 		for (Block block : ModBlocks.WORK_SITES.values()) {
 			BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout());

@@ -18,7 +18,13 @@ public enum WorkStatus {
 	UNPAID(Tone.BAD),
 	ABSENT(Tone.BAD),
 	AWAY(Tone.NEUTRAL),
-	DONE(Tone.GOOD);
+	DONE(Tone.GOOD),
+	/** El jugador aún no ha elegido (o descartado) el edificio del puesto. */
+	CHOOSE_BUILDING(Tone.NEUTRAL),
+	/** Construyendo el edificio del puesto. */
+	BUILDING(Tone.GOOD),
+	/** La obra está parada: falta algún material en los suministros. */
+	NO_MATERIALS(Tone.BAD);
 
 	public enum Tone { GOOD, NEUTRAL, BAD }
 

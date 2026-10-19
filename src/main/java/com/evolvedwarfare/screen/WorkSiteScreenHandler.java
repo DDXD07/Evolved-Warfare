@@ -29,6 +29,7 @@ public class WorkSiteScreenHandler extends ScreenHandler {
 	public static final int BUTTON_ASSIGN = 0;
 	public static final int BUTTON_DISMISS = 1;
 	public static final int BUTTON_AREA = 2;
+	public static final int BUTTON_BUILDING = 3;
 
 	public static final int P_STATUS = 0;
 	public static final int P_HAS_WORKER = 1;
@@ -115,6 +116,7 @@ public class WorkSiteScreenHandler extends ScreenHandler {
 			case BUTTON_ASSIGN -> site.assign(serverPlayer);
 			case BUTTON_DISMISS -> site.dismiss(serverPlayer);
 			case BUTTON_AREA -> site.showArea(serverPlayer);
+			case BUTTON_BUILDING -> site.openBlueprint(serverPlayer);
 			default -> {
 				return false;
 			}
@@ -195,7 +197,7 @@ public class WorkSiteScreenHandler extends ScreenHandler {
 		return properties.get(P_JOBS);
 	}
 
-	/** Aviso del oficio (ver {@link WorkSiteBlockEntity#NOTE_BARN_NEEDS_PLANKS}). */
+	/** Aviso (falta un material: ver {@link WorkSiteBlockEntity#missingFromNote}). */
 	public int note() {
 		return properties.get(P_NOTE);
 	}

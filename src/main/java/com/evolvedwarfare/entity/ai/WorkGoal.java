@@ -1,5 +1,6 @@
 package com.evolvedwarfare.entity.ai;
 
+import com.evolvedwarfare.building.BuildState;
 import com.evolvedwarfare.entity.WorkerEntity;
 import com.evolvedwarfare.work.WorkAction;
 import com.evolvedwarfare.work.WorkContext;
@@ -48,14 +49,20 @@ public class WorkGoal extends Goal {
 		if (ctx == null) {
 			return false;
 		}
-		WorkAction planned = worker.getJob().plan(ctx);
+		if (ctx.site.getBuildState() == BuildState.CHOOSING) {
+			// primero hay que elegir el edificio (o "Sin edificio") en el menú del puesto
+			worker.setWorkStatus(WorkStatus.CHOOSE_BUILDING);
+			nextPlan = worker.age + 40;
+			return false;
+		}
+		WorkAction planned = worker.currentJob(ctx).plan(ctx);
 		if (planned == null) {
 			worker.setWorkStatus(ctx.status());
 			// "WORKING" sin tarea = está pasando de capa o mirando más sitios: vuelve a mirar enseguida
 			nextPlan = worker.age + (ctx.status() == WorkStatus.WORKING ? 5 : 60);
 			return false;
 		}
-		worker.setWorkStatus(WorkStatus.WORKING);
+		worker.setWorkStatus(ctx.site.getBuildState() == BuildState.BUILDING ? WorkStatus.BUILDING : WorkStatus.WORKING);
 		action = planned;
 		return true;
 	}

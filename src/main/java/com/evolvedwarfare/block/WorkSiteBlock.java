@@ -16,6 +16,7 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
@@ -91,6 +92,11 @@ public class WorkSiteBlock extends BlockWithEntity {
 		super.onPlaced(world, pos, state, placer, stack);
 		if (!world.isClient && placer instanceof PlayerEntity player && world.getBlockEntity(pos) instanceof WorkSiteBlockEntity site) {
 			site.setOwner(player.getUuid());
+			// diseño al azar para su edificio, y se abre el menú para elegirlo
+			site.initSeed(world.getRandom());
+			if (player instanceof ServerPlayerEntity serverPlayer) {
+				site.openBlueprint(serverPlayer);
+			}
 		}
 	}
 

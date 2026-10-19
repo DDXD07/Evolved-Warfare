@@ -3,7 +3,11 @@ package com.evolvedwarfare.block;
 import com.evolvedwarfare.entity.NpcOrder;
 import com.evolvedwarfare.entity.RecruitEntity;
 import com.evolvedwarfare.entity.WorkerEntity;
+import com.evolvedwarfare.building.BuildPlan;
+import com.evolvedwarfare.building.BuildState;
+import com.evolvedwarfare.building.Material;
 import com.evolvedwarfare.registry.ModBlocks;
+import com.evolvedwarfare.screen.BlueprintScreenHandler;
 import com.evolvedwarfare.screen.WorkSiteScreenHandler;
 import com.evolvedwarfare.work.CookingJob;
 import com.evolvedwarfare.work.ExcavationJob;
@@ -53,7 +57,8 @@ public class WorkSiteBlockEntity extends BlockEntity implements SidedInventory, 
 	public static final int UNSET = Integer.MIN_VALUE;
 	/** Avisos que el oficio deja para el menú (además del estado). */
 	public static final int NOTE_NONE = 0;
-	public static final int NOTE_BARN_NEEDS_PLANKS = 1;
+	/** Historial de semillas que se guarda (para el botón "Anterior"). */
+	private static final int MAX_HISTORY = 32;
 	/** Distancia a la que busca reclutas tuyos al pulsar "Asignar". */
 	public static final int ASSIGN_RANGE = 24;
 	private static final int[] SUPPLY = slots(0, SUPPLY_SLOTS);
@@ -66,6 +71,14 @@ public class WorkSiteBlockEntity extends BlockEntity implements SidedInventory, 
 	private UUID workerUuid;
 	private int mineY = UNSET;
 	private int fuel;
+	/** Edificio del puesto: semilla del diseño, semillas anteriores y en qué punto está la obra. */
+	private int seed;
+	private final java.util.ArrayDeque<Integer> seedHistory = new java.util.ArrayDeque<>();
+	private BuildState buildState = BuildState.CHOOSING;
+	@Nullable
+	private BuildPlan buildPlan;
+	private int buildPlaced;
+	private int buildTotal;
 
 	// solo en memoria: lo que cuenta el trabajador cada segundo
 	private long lastHeartbeat = Long.MIN_VALUE / 2;
@@ -144,6 +157,166 @@ public class WorkSiteBlockEntity extends BlockEntity implements SidedInventory, 
 
 	public void setNote(int note) {
 		this.note = note;
+	}
+
+	/** Aviso de "falta este material" para el menú. */
+	public static int noteMissing(Material material) {
+		return 1 + material.ordinal();
+	}
+
+	/** El material que falta según el aviso, o null. */
+	@Nullable
+	public static Material missingFromNote(int note) {
+		Material[] values = Material.values();
+		return note >= 1 && note <= values.length ? values[note - 1] : null;
+	}
+
+	// ------------------------------------------------------------------ edificio
+
+	public int getSeed() {
+		return seed;
+	}
+
+	public BuildState getBuildState() {
+		return buildState;
+	}
+
+	/** Semilla al azar para un puesto recién puesto. */
+	public void initSeed(net.minecraft.util.math.random.Random random) {
+		seed = random.nextInt(Integer.MAX_VALUE);
+		seedHistory.clear();
+		buildPlan = null;
+		markDirty();
+	}
+
+	/** El plano en el mundo (se calcula al pedirlo y se guarda hasta que cambie la semilla). */
+	public BuildPlan getBuildPlan() {
+		if (buildPlan == null) {
+			buildPlan = BuildPlan.create(getProfession(), seed, pos, getFacing());
+		}
+		return buildPlan;
+	}
+
+	private boolean canChoose() {
+		return buildState == BuildState.CHOOSING || buildState == BuildState.NONE;
+	}
+
+	public void newSeed() {
+		if (!canChoose() || world == null) {
+			return;
+		}
+		seedHistory.push(seed);
+		while (seedHistory.size() > MAX_HISTORY) {
+			seedHistory.removeLast();
+		}
+		seed = world.getRandom().nextInt(Integer.MAX_VALUE);
+		buildPlan = null;
+		markDirty();
+	}
+
+	public void previousSeed() {
+		if (!canChoose() || seedHistory.isEmpty()) {
+			return;
+		}
+		seed = seedHistory.pop();
+		buildPlan = null;
+		markDirty();
+	}
+
+	public int seedHistorySize() {
+		return seedHistory.size();
+	}
+
+	/** Confirma el diseño: el trabajador lo construirá antes de ponerse con su oficio. */
+	public void confirmBuilding() {
+		if (!canChoose()) {
+			return;
+		}
+		buildState = BuildState.BUILDING;
+		buildPlan = null;
+		buildPlaced = 0;
+		markDirty();
+	}
+
+	/** Trabajar sin edificio. */
+	public void skipBuilding() {
+		if (buildState == BuildState.CHOOSING) {
+			buildState = BuildState.NONE;
+			markDirty();
+		}
+	}
+
+	/** Deja la obra a medias (lo construido se queda). */
+	public void cancelBuilding() {
+		if (buildState == BuildState.BUILDING) {
+			buildState = BuildState.NONE;
+			note = NOTE_NONE;
+			markDirty();
+		}
+	}
+
+	public void setBuildProgress(int placed, int total) {
+		buildPlaced = placed;
+		buildTotal = total;
+	}
+
+	public void finishBuilding(WorkerEntity worker) {
+		if (buildState != BuildState.BUILDING) {
+			return;
+		}
+		buildState = BuildState.DONE;
+		buildPlaced = buildTotal;
+		note = NOTE_NONE;
+		markDirty();
+		worker.tellOwner(Text.translatable("message.evolvedwarfare.site.building_done", worker.getName(),
+				Text.translatable("building.evolvedwarfare." + getProfession().id())));
+	}
+
+	/** Datos que ve el menú del edificio. */
+	public final PropertyDelegate blueprintProperties = new PropertyDelegate() {
+		@Override
+		public int get(int index) {
+			return switch (index) {
+				case BlueprintScreenHandler.P_SEED_LO -> seed & 0xFFFF;
+				case BlueprintScreenHandler.P_SEED_HI -> (seed >>> 16) & 0xFFFF;
+				case BlueprintScreenHandler.P_STATE -> buildState.ordinal();
+				case BlueprintScreenHandler.P_HISTORY -> Math.min(seedHistory.size(), 999);
+				case BlueprintScreenHandler.P_PLACED -> Math.min(buildPlaced, 30000);
+				case BlueprintScreenHandler.P_TOTAL -> Math.min(buildTotal, 30000);
+				case BlueprintScreenHandler.P_NOTE -> buildState == BuildState.BUILDING ? note : NOTE_NONE;
+				default -> 0;
+			};
+		}
+
+		@Override
+		public void set(int index, int value) {
+		}
+
+		@Override
+		public int size() {
+			return BlueprintScreenHandler.PROPERTY_COUNT;
+		}
+	};
+
+	/** Abre el menú del edificio (vista previa en 3D y semillas). */
+	public void openBlueprint(ServerPlayerEntity player) {
+		WorkSiteBlockEntity site = this;
+		player.openHandledScreen(new ExtendedScreenHandlerFactory<BlockPos>() {
+			@Override
+			public BlockPos getScreenOpeningData(ServerPlayerEntity serverPlayer) {
+				return site.getPos();
+			}
+
+			@Override
+			public Text getDisplayName() {
+				return Text.translatable("building.evolvedwarfare." + site.getProfession().id());
+			}
+
+			@Override
+			public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+				return new BlueprintScreenHandler(syncId, playerInventory, site);
+			}
+		});
 	}
 
 	public int getSupplySlots() {
@@ -476,6 +649,9 @@ public class WorkSiteBlockEntity extends BlockEntity implements SidedInventory, 
 		}
 		nbt.putInt("MineY", mineY);
 		nbt.putInt("Fuel", fuel);
+		nbt.putInt("Seed", seed);
+		nbt.putIntArray("SeedHistory", seedHistory.stream().mapToInt(Integer::intValue).toArray());
+		nbt.putString("BuildState", buildState.id());
 	}
 
 	@Override
@@ -487,5 +663,12 @@ public class WorkSiteBlockEntity extends BlockEntity implements SidedInventory, 
 		workerUuid = nbt.containsUuid("Worker") ? nbt.getUuid("Worker") : null;
 		mineY = nbt.contains("MineY") ? nbt.getInt("MineY") : UNSET;
 		fuel = nbt.getInt("Fuel");
+		seed = nbt.getInt("Seed");
+		seedHistory.clear();
+		for (int previous : nbt.getIntArray("SeedHistory")) {
+			seedHistory.addLast(previous);
+		}
+		buildState = nbt.contains("BuildState") ? BuildState.byId(nbt.getString("BuildState")) : BuildState.CHOOSING;
+		buildPlan = null;
 	}
 }

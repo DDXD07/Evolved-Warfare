@@ -8,8 +8,8 @@ import net.minecraft.util.math.Direction;
  * Zona de trabajo de un puesto.
  *
  * <ul>
- *   <li><b>Alrededor</b>: un cuadrado de lado {@code 2 * radius + 1} centrado en el puesto, de {@code down} bloques
- *       por debajo a {@code up} por encima.</li>
+ *   <li><b>Delante</b>: un cuadrado de lado {@code 2 * radius + 1} justo delante del puesto (empieza a 2 bloques, para
+ *       que quepa el edificio del oficio detrás), de {@code down} bloques por debajo a {@code up} por encima.</li>
  *   <li><b>Pozo</b>: un cuadrado de lado {@code 2 * radius + 1} <i>detrás</i> del puesto que se vacía capa a capa.
  *       El del excavador se abre desde la superficie, separado del puesto por un pasillo de un bloque; el del minero
  *       es una mina bajo tierra al final de una entrada de 5 escalones (ver {@link ExcavationJob}).</li>
@@ -37,10 +37,10 @@ public record WorkArea(int radius, boolean pit, boolean underground, int down, i
 		return radius > 0;
 	}
 
-	/** Centro de la zona: el propio puesto o, para los pozos, detrás de él (la mina, después de la entrada). */
+	/** Centro de la zona: delante del puesto o, para los pozos, detrás de él (la mina, después de la entrada). */
 	public BlockPos center(BlockPos site, Direction facing) {
 		if (!pit) {
-			return site;
+			return site.offset(facing, radius + 2);
 		}
 		return site.offset(facing.getOpposite(), radius + (underground ? ExcavationJob.PIT_START : 2));
 	}

@@ -3,6 +3,8 @@ package com.evolvedwarfare.entity;
 import com.evolvedwarfare.block.WorkSiteBlockEntity;
 import com.evolvedwarfare.entity.ai.WorkGoal;
 import com.evolvedwarfare.registry.ModEntities;
+import com.evolvedwarfare.building.BuildState;
+import com.evolvedwarfare.work.BuildJob;
 import com.evolvedwarfare.work.Job;
 import com.evolvedwarfare.work.Profession;
 import com.evolvedwarfare.work.WorkAction;
@@ -44,6 +46,8 @@ public class WorkerEntity extends AbstractNpcEntity {
 	private int jobsDone;
 	@Nullable
 	private Job job;
+	@Nullable
+	private Job buildJob;
 	private WorkStatus status = WorkStatus.WAITING;
 	private long lastActive = Long.MIN_VALUE / 2;
 	private final Map<Long, Long> ignoredBlocks = new HashMap<>();
@@ -169,6 +173,22 @@ public class WorkerEntity extends AbstractNpcEntity {
 
 	public void markBusy() {
 		lastActive = getWorld().getTime();
+	}
+
+	/** Avisa a su dueño (si está conectado). */
+	public void tellOwner(Text message) {
+		notifyOwner(message);
+	}
+
+	/** El trabajo de ahora: la obra del edificio del puesto o su oficio. */
+	public Job currentJob(WorkContext ctx) {
+		if (ctx.site.getBuildState() == BuildState.BUILDING) {
+			if (buildJob == null) {
+				buildJob = new BuildJob();
+			}
+			return buildJob;
+		}
+		return getJob();
 	}
 
 	public void onJobDone() {

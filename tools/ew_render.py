@@ -202,19 +202,35 @@ def render(blocks, entities=(), scale=6, ground=None, margin=3, bg=(242, 238, 22
         if not (vis_top or vis_e or vis_s):
             continue
         m = (1 - wid) / 2
-        x0, x1, z0, z1 = x + m, x + 1 - m, z + m, z + 1 - m
-        y0, y1 = y, y + hgt
+        boxes = [(x + m, x + 1 - m, y, y + hgt, z + m, z + 1 - m)]
+        if not is_ent and short(st).endswith("_stairs"):
+            # escalón: media losa abajo y medio bloque arriba en el lado de "facing"
+            f = st[1].get("facing", "north")
+            top_half = st[1].get("half") == "top"
+            lo, hi = (y + 0.5, y + 1) if top_half else (y, y + 0.5)
+            ulo, uhi = (y, y + 0.5) if top_half else (y + 0.5, y + 1)
+            hx0, hx1, hz0, hz1 = x, x + 1, z, z + 1
+            if f == "east":
+                hx0 = x + 0.5
+            elif f == "west":
+                hx1 = x + 0.5
+            elif f == "south":
+                hz0 = z + 0.5
+            else:
+                hz1 = z + 0.5
+            boxes = [(x, x + 1, lo, hi, z, z + 1), (hx0, hx1, ulo, uhi, hz0, hz1)]
 
         def P(a, b, c):
             px, py = proj(a, b, c)
             return (px + ox, py + oy)
 
-        if vis_e:
-            dr.polygon([P(x1, y0, z0), P(x1, y0, z1), P(x1, y1, z1), P(x1, y1, z0)], fill=shade(side, 0.78))
-        if vis_s:
-            dr.polygon([P(x0, y0, z1), P(x1, y0, z1), P(x1, y1, z1), P(x0, y1, z1)], fill=shade(side, 0.62))
-        if vis_top:
-            dr.polygon([P(x0, y1, z0), P(x1, y1, z0), P(x1, y1, z1), P(x0, y1, z1)], fill=shade(top, 1.0))
+        for (x0, x1, y0, y1, z0, z1) in boxes:
+            if vis_e:
+                dr.polygon([P(x1, y0, z0), P(x1, y0, z1), P(x1, y1, z1), P(x1, y1, z0)], fill=shade(side, 0.78))
+            if vis_s:
+                dr.polygon([P(x0, y0, z1), P(x1, y0, z1), P(x1, y1, z1), P(x0, y1, z1)], fill=shade(side, 0.62))
+            if vis_top:
+                dr.polygon([P(x0, y1, z0), P(x1, y1, z0), P(x1, y1, z1), P(x0, y1, z1)], fill=shade(top, 1.0))
     if title:
         try:
             font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 18)
