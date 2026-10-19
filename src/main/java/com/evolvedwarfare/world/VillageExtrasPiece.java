@@ -121,7 +121,7 @@ public class VillageExtrasPiece extends StructurePiece {
 		return x >= box.getMinX() && x <= box.getMaxX() && z >= box.getMinZ() && z <= box.getMaxZ();
 	}
 
-	private static boolean canReplace(BlockState state) {
+	private static boolean isFree(BlockState state) {
 		return state.isAir() || state.isReplaceable();
 	}
 
@@ -141,7 +141,7 @@ public class VillageExtrasPiece extends StructurePiece {
 				}
 				continue;
 			}
-			if (!canReplace(state)) {
+			if (!isFree(state)) {
 				return y;
 			}
 		}
@@ -165,11 +165,11 @@ public class VillageExtrasPiece extends StructurePiece {
 		}
 		BlockState log = style.log();
 		for (int y = ground + 1; y <= top; y++) {
-			if (canReplace(world.getBlockState(pos.set(x, y, z)))) {
+			if (isFree(world.getBlockState(pos.set(x, y, z)))) {
 				set(world, pos, log);
 			}
 		}
-		if (lantern && canReplace(world.getBlockState(pos.set(x, top + 1, z)))) {
+		if (lantern && isFree(world.getBlockState(pos.set(x, top + 1, z)))) {
 			set(world, pos, Blocks.LANTERN.getDefaultState());
 		}
 	}
@@ -200,7 +200,7 @@ public class VillageExtrasPiece extends StructurePiece {
 			return;
 		}
 		for (int y = ground + 1; y <= ground + 3; y++) {
-			if (!canReplace(world.getBlockState(pos.set(x, y, z)))) {
+			if (!isFree(world.getBlockState(pos.set(x, y, z)))) {
 				return;
 			}
 		}
