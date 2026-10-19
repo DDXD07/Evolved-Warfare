@@ -1,0 +1,16 @@
+name: inspect
+on: [push]
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          java-version: '25'
+          distribution: 'microsoft'
+      - run: chmod +x ./gradlew && ./gradlew genSources --no-daemon -q
+      - name: fragmentos 1
+        run: python3 tools/ci/inspect.py 1
+      - name: fragmentos 2
+        run: python3 tools/ci/inspect.py 2
