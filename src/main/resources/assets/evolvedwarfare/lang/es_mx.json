@@ -106,8 +106,8 @@
   "profession.evolvedwarfare.lumberjack.supplies": "Necesita: brotes. Extra: harina de hueso.",
   "profession.evolvedwarfare.miner": "Minero",
   "block.evolvedwarfare.miner_post": "Puesto de minero",
-  "profession.evolvedwarfare.miner.info": "Cava una entrada de 5 escalones y, bajo tierra, un pozo hasta el fondo.",
-  "profession.evolvedwarfare.miner.supplies": "Necesita: un pico (cuanto mejor, más menas saca). Extra: antorchas.",
+  "profession.evolvedwarfare.miner.info": "Cava una entrada con un granero encima y, bajo tierra, un pozo hasta el fondo.",
+  "profession.evolvedwarfare.miner.supplies": "Necesita: un pico. Extra: tablones (para el granero) y antorchas.",
   "profession.evolvedwarfare.digger": "Excavador",
   "block.evolvedwarfare.digger_post": "Puesto de excavador",
   "profession.evolvedwarfare.digger.info": "Saca tierra, arena, grava y arcilla de un pozo.",
@@ -166,5 +166,6 @@
   "status.evolvedwarfare.absent": "El trabajador no está cerca",
   "status.evolvedwarfare.away": "Fuera del puesto (dale «Ir a casa»)",
   "status.evolvedwarfare.done": "Trabajo terminado",
-  "gui.evolvedwarfare.site.area_mine": "Pozo de %s×%s bajo tierra, detrás del puesto"
+  "gui.evolvedwarfare.site.area_mine": "Pozo de %s×%s bajo tierra, detrás del puesto",
+  "gui.evolvedwarfare.site.note.barn_planks": "Granero: faltan tablones"
 }

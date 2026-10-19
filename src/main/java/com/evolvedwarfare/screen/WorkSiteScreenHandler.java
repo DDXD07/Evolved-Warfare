@@ -37,7 +37,8 @@ public class WorkSiteScreenHandler extends ScreenHandler {
 	public static final int P_FUEL = 4;
 	public static final int P_DEPTH = 5;
 	public static final int P_JOBS = 6;
-	public static final int PROPERTY_COUNT = 7;
+	public static final int P_NOTE = 7;
+	public static final int PROPERTY_COUNT = 8;
 	public static final int NO_DEPTH = Short.MAX_VALUE;
 
 	// posiciones (compartidas con la pantalla)
@@ -192,5 +193,10 @@ public class WorkSiteScreenHandler extends ScreenHandler {
 
 	public int jobsDone() {
 		return properties.get(P_JOBS);
+	}
+
+	/** Aviso del oficio (ver {@link WorkSiteBlockEntity#NOTE_BARN_NEEDS_PLANKS}). */
+	public int note() {
+		return properties.get(P_NOTE);
 	}
 }

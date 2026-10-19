@@ -106,8 +106,8 @@
   "profession.evolvedwarfare.lumberjack.supplies": "Needs: saplings. Extra: bone meal.",
   "profession.evolvedwarfare.miner": "Miner",
   "block.evolvedwarfare.miner_post": "Miner's Post",
-  "profession.evolvedwarfare.miner.info": "Digs a 5-step entrance and, underground, a shaft all the way down.",
-  "profession.evolvedwarfare.miner.supplies": "Needs: a pickaxe (the better it is, the more ores). Extra: torches.",
+  "profession.evolvedwarfare.miner.info": "Digs an entrance with a small barn on top and, underground, a shaft all the way down.",
+  "profession.evolvedwarfare.miner.supplies": "Needs: a pickaxe. Extra: planks (for the barn) and torches.",
   "profession.evolvedwarfare.digger": "Digger",
   "block.evolvedwarfare.digger_post": "Digger's Post",
   "profession.evolvedwarfare.digger.info": "Digs dirt, sand, gravel and clay out of a pit.",
@@ -166,5 +166,6 @@
   "status.evolvedwarfare.absent": "The worker isn't nearby",
   "status.evolvedwarfare.away": "Away from the post (use \"Go home\")",
   "status.evolvedwarfare.done": "Job finished",
-  "gui.evolvedwarfare.site.area_mine": "%s×%s underground pit behind the post"
+  "gui.evolvedwarfare.site.area_mine": "%s×%s underground pit behind the post",
+  "gui.evolvedwarfare.site.note.barn_planks": "Barn: needs planks"
 }

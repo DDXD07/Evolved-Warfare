@@ -1,5 +1,6 @@
 package com.evolvedwarfare.client.screen;
 
+import com.evolvedwarfare.block.WorkSiteBlockEntity;
 import com.evolvedwarfare.screen.WorkSiteScreenHandler;
 import com.evolvedwarfare.work.Profession;
 import com.evolvedwarfare.work.WorkArea;
@@ -131,7 +132,10 @@ public class WorkSiteScreen extends HandledScreen<WorkSiteScreenHandler> {
 		context.drawText(textRenderer, HELP, backgroundWidth - 8 - textRenderer.getWidth(HELP), 6, 0x3060A0, false);
 		context.drawText(textRenderer, Text.translatable("gui.evolvedwarfare.site.output"), 8, 37, TEXT, false);
 		Text extra = extraInfo();
-		if (extra != null) {
+		if (handler.note() == WorkSiteBlockEntity.NOTE_BARN_NEEDS_PLANKS) {
+			Text note = Text.translatable("gui.evolvedwarfare.site.note.barn_planks");
+			context.drawText(textRenderer, note, backgroundWidth - 8 - textRenderer.getWidth(note), 37, BAD, false);
+		} else if (extra != null) {
 			context.drawText(textRenderer, extra, backgroundWidth - 8 - textRenderer.getWidth(extra), 37, TEXT, false);
 		}
 

@@ -51,6 +51,9 @@ public class WorkSiteBlockEntity extends BlockEntity implements SidedInventory, 
 	public static final int SUPPLY_SLOTS = 9;
 	public static final int SIZE = 27;
 	public static final int UNSET = Integer.MIN_VALUE;
+	/** Avisos que el oficio deja para el menú (además del estado). */
+	public static final int NOTE_NONE = 0;
+	public static final int NOTE_BARN_NEEDS_PLANKS = 1;
 	/** Distancia a la que busca reclutas tuyos al pulsar "Asignar". */
 	public static final int ASSIGN_RANGE = 24;
 	private static final int[] SUPPLY = slots(0, SUPPLY_SLOTS);
@@ -69,6 +72,7 @@ public class WorkSiteBlockEntity extends BlockEntity implements SidedInventory, 
 	private int workerEntityId = -1;
 	private WorkStatus status = WorkStatus.WAITING;
 	private int jobsDone;
+	private int note = NOTE_NONE;
 
 	/** Datos que ve el menú (se mandan al cliente como números de 16 bits). */
 	public final PropertyDelegate properties = new PropertyDelegate() {
@@ -82,6 +86,7 @@ public class WorkSiteBlockEntity extends BlockEntity implements SidedInventory, 
 				case WorkSiteScreenHandler.P_FUEL -> Math.min(fuel / CookingJob.FUEL_PER_ITEM, 9999);
 				case WorkSiteScreenHandler.P_DEPTH -> mineY == UNSET ? WorkSiteScreenHandler.NO_DEPTH : mineY;
 				case WorkSiteScreenHandler.P_JOBS -> Math.min(jobsDone, 30000);
+				case WorkSiteScreenHandler.P_NOTE -> workerUuid != null ? note : NOTE_NONE;
 				default -> 0;
 			};
 		}
@@ -135,6 +140,10 @@ public class WorkSiteBlockEntity extends BlockEntity implements SidedInventory, 
 	public void addFuel(int amount) {
 		fuel = Math.max(0, fuel + amount);
 		markDirty();
+	}
+
+	public void setNote(int note) {
+		this.note = note;
 	}
 
 	public int getSupplySlots() {
