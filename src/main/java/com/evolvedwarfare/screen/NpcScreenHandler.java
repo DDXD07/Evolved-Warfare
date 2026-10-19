@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ArrayPropertyDelegate;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.slot.ArmorSlot;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
@@ -82,7 +81,7 @@ public class NpcScreenHandler extends ScreenHandler {
 		LivingEntity wearer = npc != null ? npc : playerInventory.player;
 
 		for (int i = 0; i < 4; i++) {
-			addSlot(new ArmorSlot(equipment, wearer, NpcEquipmentInventory.SLOTS[i], i, ARMOR_X, ARMOR_Y + i * 18, EMPTY_ARMOR_ICONS[i]));
+			addSlot(new NpcArmorSlot(equipment, wearer, NpcEquipmentInventory.SLOTS[i], i, ARMOR_X, ARMOR_Y + i * 18, EMPTY_ARMOR_ICONS[i]));
 		}
 		addSlot(new Slot(equipment, 4, HANDS_X, MAINHAND_Y));
 		addSlot(new Slot(equipment, 5, HANDS_X, OFFHAND_Y));
