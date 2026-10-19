@@ -135,8 +135,7 @@ public class WorkSiteBlock extends BlockWithEntity {
 		tooltip.add(Text.translatable("profession.evolvedwarfare." + profession.id() + ".info").withColor(GRAY));
 		WorkArea area = profession.area();
 		if (area.exists()) {
-			tooltip.add(Text.translatable(area.pit() ? "gui.evolvedwarfare.site.area_pit" : "gui.evolvedwarfare.site.area",
-					area.size(), area.size()).withColor(GRAY));
+			tooltip.add(Text.translatable(area.descriptionKey(), area.size(), area.size()).withColor(GRAY));
 		}
 		tooltip.add(Text.translatable("profession.evolvedwarfare." + profession.id() + ".supplies").withColor(GRAY));
 	}

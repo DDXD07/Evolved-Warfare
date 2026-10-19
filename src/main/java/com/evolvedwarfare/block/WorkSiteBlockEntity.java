@@ -263,8 +263,8 @@ public class WorkSiteBlockEntity extends BlockEntity implements SidedInventory, 
 			particle(serverWorld, player, box.getMinX(), y, z);
 			particle(serverWorld, player, box.getMaxX() + 1, y, z);
 		}
-		if (area.pit()) {
-			// la entrada: una marca por tramo, en la superficie
+		if (area.underground()) {
+			// la entrada de la mina: una marca por tramo, en la superficie
 			Direction back = getFacing().getOpposite();
 			for (int step = 1; step <= ExcavationJob.STEPS + 1; step++) {
 				BlockPos feet = ExcavationJob.stepFeet(pos, back, step);

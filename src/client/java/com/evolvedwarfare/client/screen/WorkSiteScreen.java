@@ -97,8 +97,7 @@ public class WorkSiteScreen extends HandledScreen<WorkSiteScreenHandler> {
 		lines.add(Text.translatable(base + ".info").formatted(Formatting.GRAY));
 		WorkArea area = profession.area();
 		if (area.exists()) {
-			lines.add(Text.translatable(area.pit() ? "gui.evolvedwarfare.site.area_pit" : "gui.evolvedwarfare.site.area",
-					area.size(), area.size()).formatted(Formatting.GRAY));
+			lines.add(Text.translatable(area.descriptionKey(), area.size(), area.size()).formatted(Formatting.GRAY));
 		}
 		lines.add(Text.translatable(base + ".supplies").formatted(Formatting.GRAY));
 		if (profession.usesTool()) {

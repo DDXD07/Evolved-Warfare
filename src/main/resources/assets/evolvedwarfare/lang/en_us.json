@@ -74,7 +74,7 @@
   "block.evolvedwarfare.town_hall.tooltip.0": "Pays your NPCs within %s blocks on its own.",
   "block.evolvedwarfare.town_hall.tooltip.1": "Store food or coins: tops them up to %s days.",
   "gui.evolvedwarfare.site.area": "Area: %s×%s around the post",
-  "gui.evolvedwarfare.site.area_pit": "%s×%s underground pit behind the post",
+  "gui.evolvedwarfare.site.area_pit": "%s×%s pit behind the post",
   "gui.evolvedwarfare.site.help.tool": "Their tool goes in their hand; spares go in the supplies.",
   "gui.evolvedwarfare.site.help.storage": "Top: supplies. Bottom: output (hoppers pull from below).",
   "gui.evolvedwarfare.site.output": "Output",
@@ -110,8 +110,8 @@
   "profession.evolvedwarfare.miner.supplies": "Needs: a pickaxe (the better it is, the more ores). Extra: torches.",
   "profession.evolvedwarfare.digger": "Digger",
   "block.evolvedwarfare.digger_post": "Digger's Post",
-  "profession.evolvedwarfare.digger.info": "Digs a 5-step entrance and, underground, digs out dirt, sand, gravel and clay.",
-  "profession.evolvedwarfare.digger.supplies": "Needs: nothing (much faster with a shovel). Extra: torches.",
+  "profession.evolvedwarfare.digger.info": "Digs dirt, sand, gravel and clay out of a pit.",
+  "profession.evolvedwarfare.digger.supplies": "Needs: nothing. Much faster with a shovel.",
   "profession.evolvedwarfare.fisherman": "Fisherman",
   "block.evolvedwarfare.fisherman_post": "Fisherman's Post",
   "profession.evolvedwarfare.fisherman.info": "Fishes in nearby water (4+ water blocks).",
@@ -165,5 +165,6 @@
   "status.evolvedwarfare.unpaid": "On strike: unpaid",
   "status.evolvedwarfare.absent": "The worker isn't nearby",
   "status.evolvedwarfare.away": "Away from the post (use \"Go home\")",
-  "status.evolvedwarfare.done": "Job finished"
+  "status.evolvedwarfare.done": "Job finished",
+  "gui.evolvedwarfare.site.area_mine": "%s×%s underground pit behind the post"
 }

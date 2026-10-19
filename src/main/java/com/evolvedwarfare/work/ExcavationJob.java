@@ -21,7 +21,12 @@ import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Minero y excavador: trabajan bajo tierra, sin abrir un agujero en la superficie.
+ * Minero y excavador: vacían un pozo detrás del puesto, capa a capa, guardando lo que sale.
+ *
+ * <p><b>Excavador</b>: pozo de 7x7 abierto desde la superficie, separado del puesto por un pasillo de un bloque, de
+ * hasta {@code maxDepth} capas. Solo saca lo que se cava con pala.</p>
+ *
+ * <p><b>Minero</b>: trabaja bajo tierra, sin abrir un agujero en la superficie.</p>
  *
  * <pre>
  *  vista de lado (el puesto mira a la izquierda; "detrás" es la derecha)
@@ -44,8 +49,7 @@ import org.jetbrains.annotations.Nullable;
  * <p>En el pozo: no tocan cofres ni otros bloques con contenido, ni obsidiana, ni roca madre, ni bloques pegados a
  * lava. En la primera capa no quitan la arena o grava que sostiene el techo. Sin la herramienta de su oficio no
  * pueden con los bloques que la necesitan (piedra, nieve) y se paran ahí; con una demasiado floja para una mena
- * (diamante con pico de piedra) la dejan en su sitio. El excavador solo saca lo que se cava con pala y baja como
- * mucho {@code maxDepth} capas.</p>
+ * (diamante con pico de piedra) la dejan en su sitio.</p>
  */
 public class ExcavationJob implements Job {
 	/** Escalones de la entrada (cada uno baja un bloque). */
@@ -108,9 +112,11 @@ public class ExcavationJob implements Job {
 		}
 		ServerWorld world = ctx.world;
 		Direction back = ctx.facing.getOpposite();
+		WorkArea area = ctx.profession.area();
+		boolean underground = area.underground();
 
-		// 1. la entrada
-		List<BlockPos> entrance = entranceBlocks(ctx.sitePos, back);
+		// 1. la entrada (solo la mina bajo tierra)
+		List<BlockPos> entrance = underground ? entranceBlocks(ctx.sitePos, back) : List.of();
 		for (int i = 0; i < entrance.size(); i++) {
 			BlockPos pos = entrance.get(i);
 			BlockState state = world.getBlockState(pos);
@@ -124,7 +130,7 @@ public class ExcavationJob implements Job {
 		}
 
 		// 2. antorchas, si se las das
-		if (ctx.site.count(TORCH, false) > 0) {
+		if (underground && ctx.site.count(TORCH, false) > 0) {
 			for (BlockPos spot : new BlockPos[] {stepFeet(ctx.sitePos, back, 3), landing(ctx.sitePos, back)}) {
 				if (world.getBlockState(spot).isAir() && Blocks.TORCH.getDefaultState().canPlaceAt(world, spot)) {
 					return WorkAction.atBlock(spot, ctx.ticks(10), c -> placeTorch(c, spot)).reach(2.0);
@@ -132,12 +138,11 @@ public class ExcavationJob implements Job {
 			}
 		}
 
-		// 3. el pozo, capa a capa, desde el rellano
-		BlockPos landing = landing(ctx.sitePos, back);
-		WorkArea area = ctx.profession.area();
+		// 3. el pozo, capa a capa: la mina desde el rellano; el pozo abierto, desde el puesto
+		BlockPos stand = underground ? landing(ctx.sitePos, back) : ctx.sitePos;
 		BlockPos center = area.center(ctx.sitePos, ctx.facing);
 		int half = area.radius();
-		int top = pitTop(ctx.sitePos);
+		int top = underground ? pitTop(ctx.sitePos) : ctx.sitePos.getY() - 1;
 		int limit = world.getBottomY();
 		if (maxDepth > 0) {
 			limit = Math.max(limit, top - maxDepth + 1);
@@ -165,7 +170,7 @@ public class ExcavationJob implements Job {
 						continue;
 					}
 					// en la primera capa no quita lo que sostiene arena o grava: el techo se queda en su sitio
-					if (y == top && world.getBlockState(pos.up()).getBlock() instanceof FallingBlock) {
+					if (underground && y == top && world.getBlockState(pos.up()).getBlock() instanceof FallingBlock) {
 						continue;
 					}
 					if (state.isToolRequired() && !ctx.tool().isSuitableFor(state)) {
@@ -175,7 +180,7 @@ public class ExcavationJob implements Job {
 						continue;
 					}
 					int ticks = ctx.ticks(digTicks(world, pos, state));
-					return WorkAction.fromSite(landing, Vec3d.ofCenter(pos), ticks, c -> digPit(c, pos)).breaking(pos);
+					return WorkAction.fromSite(stand, Vec3d.ofCenter(pos), ticks, c -> digPit(c, pos)).breaking(pos);
 				}
 			}
 			if (blocked) {

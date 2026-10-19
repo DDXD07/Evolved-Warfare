@@ -24,8 +24,8 @@ public enum Profession {
 	/** Tala los árboles enteros, recoge brotes y manzanas y replanta en cuadrícula. */
 	LUMBERJACK("lumberjack", AxeItem.class, WorkArea.around(7, 3, 3), LumberjackJob::new),
 	/** Cava una entrada de 5 escalones detrás del puesto y, bajo tierra, un pozo de 5x5 hasta el fondo del mundo. */
-	MINER("miner", PickaxeItem.class, WorkArea.pit(2), () -> new ExcavationJob(false, 0)),
-	/** Cava la misma entrada y, bajo tierra, saca tierra, arena, grava y arcilla de un pozo de 7x7 (16 capas). */
+	MINER("miner", PickaxeItem.class, WorkArea.mine(2), () -> new ExcavationJob(false, 0)),
+	/** Saca tierra, arena, grava y arcilla de un pozo de 7x7 abierto detrás del puesto (hasta 16 de profundidad). */
 	DIGGER("digger", ShovelItem.class, WorkArea.pit(3), () -> new ExcavationJob(true, 16)),
 	/** Pesca en el agua cercana. */
 	FISHERMAN("fisherman", FishingRodItem.class, WorkArea.around(6, 3, 1), FishermanJob::new),

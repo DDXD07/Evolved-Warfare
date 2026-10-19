@@ -10,29 +10,47 @@ import net.minecraft.util.math.Direction;
  * <ul>
  *   <li><b>Alrededor</b>: un cuadrado de lado {@code 2 * radius + 1} centrado en el puesto, de {@code down} bloques
  *       por debajo a {@code up} por encima.</li>
- *   <li><b>Pozo</b> (mina, excavación): un cuadrado de lado {@code 2 * radius + 1} <i>detrás</i> del puesto y bajo
- *       tierra, al final de una entrada de 5 escalones (ver {@link ExcavationJob}).</li>
+ *   <li><b>Pozo</b>: un cuadrado de lado {@code 2 * radius + 1} <i>detrás</i> del puesto que se vacía capa a capa.
+ *       El del excavador se abre desde la superficie, separado del puesto por un pasillo de un bloque; el del minero
+ *       es una mina bajo tierra al final de una entrada de 5 escalones (ver {@link ExcavationJob}).</li>
  *   <li><b>Ninguna</b>: los talleres trabajan en el propio puesto.</li>
  * </ul>
  */
-public record WorkArea(int radius, boolean pit, int down, int up) {
-	public static final WorkArea NONE = new WorkArea(0, false, 0, 0);
+public record WorkArea(int radius, boolean pit, boolean underground, int down, int up) {
+	public static final WorkArea NONE = new WorkArea(0, false, false, 0, 0);
 
 	public static WorkArea around(int radius, int down, int up) {
-		return new WorkArea(radius, false, down, up);
+		return new WorkArea(radius, false, false, down, up);
 	}
 
+	/** Pozo abierto desde la superficie, detrás del puesto. */
 	public static WorkArea pit(int radius) {
-		return new WorkArea(radius, true, 1, -1);
+		return new WorkArea(radius, true, false, 1, -1);
+	}
+
+	/** Mina bajo tierra, al final de una entrada de 5 escalones. */
+	public static WorkArea mine(int radius) {
+		return new WorkArea(radius, true, true, 1, -1);
 	}
 
 	public boolean exists() {
 		return radius > 0;
 	}
 
-	/** Centro de la zona: el propio puesto o, para los pozos, detrás de él (después de la entrada). */
+	/** Centro de la zona: el propio puesto o, para los pozos, detrás de él (la mina, después de la entrada). */
 	public BlockPos center(BlockPos site, Direction facing) {
-		return pit ? site.offset(facing.getOpposite(), radius + ExcavationJob.PIT_START) : site;
+		if (!pit) {
+			return site;
+		}
+		return site.offset(facing.getOpposite(), radius + (underground ? ExcavationJob.PIT_START : 2));
+	}
+
+	/** Clave del texto que describe la zona ("Zona: 11×11...", "Pozo de 7×7..."). */
+	public String descriptionKey() {
+		if (!pit) {
+			return "gui.evolvedwarfare.site.area";
+		}
+		return underground ? "gui.evolvedwarfare.site.area_mine" : "gui.evolvedwarfare.site.area_pit";
 	}
 
 	public BlockBox box(BlockPos site, Direction facing) {

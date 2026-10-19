@@ -74,7 +74,7 @@
   "block.evolvedwarfare.town_hall.tooltip.0": "Paga sola a tus NPCs a menos de %s bloques.",
   "block.evolvedwarfare.town_hall.tooltip.1": "Guarda comida o monedas: les rellena hasta %s días.",
   "gui.evolvedwarfare.site.area": "Zona: %s×%s alrededor del puesto",
-  "gui.evolvedwarfare.site.area_pit": "Pozo de %s×%s bajo tierra, detrás del puesto",
+  "gui.evolvedwarfare.site.area_pit": "Pozo de %s×%s detrás del puesto",
   "gui.evolvedwarfare.site.help.tool": "Su herramienta va en su mano; las de repuesto, en los suministros.",
   "gui.evolvedwarfare.site.help.storage": "Arriba: suministros. Abajo: producción (las tolvas sacan por debajo).",
   "gui.evolvedwarfare.site.output": "Producción",
@@ -110,8 +110,8 @@
   "profession.evolvedwarfare.miner.supplies": "Necesita: un pico (cuanto mejor, más menas saca). Extra: antorchas.",
   "profession.evolvedwarfare.digger": "Excavador",
   "block.evolvedwarfare.digger_post": "Puesto de excavador",
-  "profession.evolvedwarfare.digger.info": "Cava una entrada de 5 escalones y, bajo tierra, saca tierra, arena, grava y arcilla.",
-  "profession.evolvedwarfare.digger.supplies": "Necesita: nada (con pala, mucho más rápido). Extra: antorchas.",
+  "profession.evolvedwarfare.digger.info": "Saca tierra, arena, grava y arcilla de un pozo.",
+  "profession.evolvedwarfare.digger.supplies": "Necesita: nada. Con pala, mucho más rápido.",
   "profession.evolvedwarfare.fisherman": "Pescador",
   "block.evolvedwarfare.fisherman_post": "Puesto de pescador",
   "profession.evolvedwarfare.fisherman.info": "Pesca en el agua cercana (4 bloques de agua o más).",
@@ -165,5 +165,6 @@
   "status.evolvedwarfare.unpaid": "En huelga: no le pagas",
   "status.evolvedwarfare.absent": "El trabajador no está cerca",
   "status.evolvedwarfare.away": "Fuera del puesto (dale «Ir a casa»)",
-  "status.evolvedwarfare.done": "Trabajo terminado"
+  "status.evolvedwarfare.done": "Trabajo terminado",
+  "gui.evolvedwarfare.site.area_mine": "Pozo de %s×%s bajo tierra, detrás del puesto"
 }
