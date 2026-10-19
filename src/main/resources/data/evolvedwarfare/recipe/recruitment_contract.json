@@ -1,0 +1,25 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"category": "misc",
+	"ingredients": [
+		{
+			"item": "minecraft:paper"
+		},
+		{
+			"item": "minecraft:ink_sac"
+		},
+		{
+			"item": "minecraft:feather"
+		},
+		{
+			"item": "minecraft:gold_ingot"
+		},
+		{
+			"item": "minecraft:bread"
+		}
+	],
+	"result": {
+		"id": "evolvedwarfare:recruitment_contract",
+		"count": 1
+	}
+}

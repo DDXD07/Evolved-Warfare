@@ -1,0 +1,30 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"category": "misc",
+	"ingredients": [
+		{
+			"item": "minecraft:paper"
+		},
+		{
+			"item": "minecraft:ink_sac"
+		},
+		{
+			"item": "goldencoin:golden_coin"
+		},
+		{
+			"item": "goldencoin:golden_coin"
+		}
+	],
+	"result": {
+		"id": "evolvedwarfare:recruitment_contract",
+		"count": 1
+	},
+	"fabric:load_conditions": [
+		{
+			"condition": "fabric:all_mods_loaded",
+			"values": [
+				"goldencoin"
+			]
+		}
+	]
+}

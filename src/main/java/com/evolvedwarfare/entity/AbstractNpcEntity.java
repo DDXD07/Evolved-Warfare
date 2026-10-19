@@ -1,0 +1,377 @@
+package com.evolvedwarfare.entity;
+
+import com.evolvedwarfare.EvolvedWarfare;
+import com.evolvedwarfare.entity.ai.FollowOwnerNpcGoal;
+import com.evolvedwarfare.entity.ai.ReturnHomeGoal;
+import com.evolvedwarfare.entity.ai.StayGoal;
+import com.evolvedwarfare.entity.ai.WanderNearHomeGoal;
+import com.evolvedwarfare.screen.NpcScreenHandler;
+import java.util.UUID;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.ai.goal.LongDoorInteractGoal;
+import net.minecraft.entity.ai.goal.LookAroundGoal;
+import net.minecraft.entity.ai.goal.LookAtEntityGoal;
+import net.minecraft.entity.ai.goal.SwimGoal;
+import net.minecraft.entity.ai.pathing.MobNavigation;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.mob.PathAwareEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
+
+/**
+ * Base de todos los NPCs de Evolved Warfare.
+ *
+ * <ul>
+ *   <li><b>Dueño</b>: el jugador que lo contrató. Solo él puede darle órdenes y abrir su menú.</li>
+ *   <li><b>Órdenes</b>: seguir, quedarse quieto o volver a casa.</li>
+ *   <li><b>Equipo</b>: armadura y armas en sus manos (se ven puestas y se sueltan al morir).</li>
+ *   <li><b>Paga</b>: cada día de juego consume 1 provisión (comida o Golden Coin). Si pasa
+ *       {@value #MAX_UNPAID_DAYS} días sin cobrar, deserta.</li>
+ * </ul>
+ */
+public abstract class AbstractNpcEntity extends PathAwareEntity {
+	public static final int UPKEEP_INTERVAL = 24000;
+	public static final int MAX_UNPAID_DAYS = 3;
+	public static final int PROVISION_SLOTS = 2;
+	/** Lo que acepta como paga (comida cocinada y, si está instalado, la Golden Coin). */
+	public static final TagKey<Item> UPKEEP = TagKey.of(RegistryKeys.ITEM, EvolvedWarfare.id("upkeep"));
+
+	private static final TrackedData<Integer> VARIANT =
+			DataTracker.registerData(AbstractNpcEntity.class, TrackedDataHandlerRegistry.INTEGER);
+
+	@Nullable
+	private UUID ownerUuid;
+	private NpcOrder order = NpcOrder.FOLLOW;
+	@Nullable
+	private BlockPos home;
+	private int upkeepTimer = UPKEEP_INTERVAL;
+	private int unpaidDays;
+	private final SimpleInventory provisions = new SimpleInventory(PROVISION_SLOTS);
+
+	protected AbstractNpcEntity(EntityType<? extends AbstractNpcEntity> type, World world) {
+		super(type, world);
+		setPersistent();
+		if (getNavigation() instanceof MobNavigation navigation) {
+			navigation.setCanPathThroughDoors(true);
+		}
+	}
+
+	public static DefaultAttributeContainer.Builder createNpcAttributes() {
+		return MobEntity.createMobAttributes()
+				.add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0)
+				.add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3)
+				.add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 1.0);
+	}
+
+	@Override
+	protected void initDataTracker(DataTracker.Builder builder) {
+		super.initDataTracker(builder);
+		builder.add(VARIANT, 0);
+	}
+
+	@Override
+	protected void initGoals() {
+		goalSelector.add(0, new SwimGoal(this));
+		goalSelector.add(1, new LongDoorInteractGoal(this, true));
+		goalSelector.add(2, new FollowOwnerNpcGoal(this, 1.0));
+		goalSelector.add(2, new StayGoal(this));
+		goalSelector.add(3, new ReturnHomeGoal(this, 1.0));
+		goalSelector.add(4, new WanderNearHomeGoal(this, 0.6));
+		goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
+		goalSelector.add(7, new LookAroundGoal(this));
+	}
+
+	// ------------------------------------------------------------------ apariencia
+
+	public int getVariant() {
+		return getDataTracker().get(VARIANT);
+	}
+
+	public void setVariant(int variant) {
+		getDataTracker().set(VARIANT, variant);
+	}
+
+	// ------------------------------------------------------------------ dueño y órdenes
+
+	public void setOwner(PlayerEntity player) {
+		ownerUuid = player.getUuid();
+	}
+
+	public boolean isOwner(PlayerEntity player) {
+		return ownerUuid != null && ownerUuid.equals(player.getUuid());
+	}
+
+	@Nullable
+	public PlayerEntity getOwner() {
+		return ownerUuid == null ? null : getWorld().getPlayerByUuid(ownerUuid);
+	}
+
+	public NpcOrder getOrder() {
+		return order;
+	}
+
+	/** Orden efectiva: "volver a casa" sin casa equivale a quedarse quieto. */
+	public NpcOrder getEffectiveOrder() {
+		return order == NpcOrder.HOME && home == null ? NpcOrder.STAY : order;
+	}
+
+	public void setOrder(NpcOrder order) {
+		this.order = order;
+		getNavigation().stop();
+	}
+
+	@Nullable
+	public BlockPos getHome() {
+		return home;
+	}
+
+	/** Fija la casa donde está ahora y le ordena quedarse allí. */
+	public void setHomeHere() {
+		home = getBlockPos();
+		setOrder(NpcOrder.HOME);
+	}
+
+	// ------------------------------------------------------------------ paga
+
+	public SimpleInventory getProvisions() {
+		return provisions;
+	}
+
+	public int getUnpaidDays() {
+		return unpaidDays;
+	}
+
+	/** Días de paga que tiene guardados (1 provisión = 1 día). */
+	public int getProvisionDays() {
+		int days = 0;
+		for (int i = 0; i < provisions.size(); i++) {
+			ItemStack stack = provisions.getStack(i);
+			if (stack.isIn(UPKEEP)) {
+				days += stack.getCount();
+			}
+		}
+		return days;
+	}
+
+	public static boolean isUpkeepItem(ItemStack stack) {
+		return stack.isIn(UPKEEP);
+	}
+
+	private boolean consumeProvision() {
+		for (int i = 0; i < provisions.size(); i++) {
+			ItemStack stack = provisions.getStack(i);
+			if (stack.isIn(UPKEEP)) {
+				stack.decrement(1);
+				provisions.markDirty();
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public void tick() {
+		super.tick();
+		if (!getWorld().isClient && isAlive()) {
+			tickUpkeep();
+			// Bien pagado, se cura poco a poco.
+			if (unpaidDays == 0 && age % 100 == 0 && getHealth() < getMaxHealth()) {
+				heal(1.0F);
+			}
+		}
+	}
+
+	private void tickUpkeep() {
+		if (--upkeepTimer > 0) {
+			return;
+		}
+		upkeepTimer = UPKEEP_INTERVAL;
+		if (consumeProvision()) {
+			unpaidDays = 0;
+			if (getProvisionDays() == 0) {
+				notifyOwner(Text.translatable("message.evolvedwarfare.last_provision", getName()));
+			}
+			return;
+		}
+		unpaidDays++;
+		if (unpaidDays >= MAX_UNPAID_DAYS) {
+			notifyOwner(Text.translatable("message.evolvedwarfare.deserted", getName()));
+			desert();
+		} else {
+			notifyOwner(Text.translatable("message.evolvedwarfare.unpaid", getName(), MAX_UNPAID_DAYS - unpaidDays));
+		}
+	}
+
+	/** Se marcha: deja en el suelo todo lo que llevaba. */
+	private void desert() {
+		for (EquipmentSlot slot : EquipmentSlot.values()) {
+			ItemStack stack = getEquippedStack(slot);
+			if (!stack.isEmpty()) {
+				dropStack(stack.copy());
+				equipStack(slot, ItemStack.EMPTY);
+			}
+		}
+		dropProvisions();
+		discard();
+	}
+
+	private void dropProvisions() {
+		for (int i = 0; i < provisions.size(); i++) {
+			ItemStack stack = provisions.removeStack(i);
+			if (!stack.isEmpty()) {
+				dropStack(stack);
+			}
+		}
+	}
+
+	protected void notifyOwner(Text message) {
+		PlayerEntity owner = getOwner();
+		if (owner != null) {
+			owner.sendMessage(message, false);
+		}
+	}
+
+	// ------------------------------------------------------------------ interacción
+
+	@Override
+	protected ActionResult interactMob(PlayerEntity player, Hand hand) {
+		World world = getWorld();
+		if (!isOwner(player)) {
+			if (!world.isClient) {
+				player.sendMessage(Text.translatable("message.evolvedwarfare.not_yours", getName()), true);
+			}
+			return ActionResult.success(world.isClient);
+		}
+		ItemStack held = player.getStackInHand(hand);
+		if (!player.isSneaking() && isUpkeepItem(held)) {
+			// Clic con comida/monedas: se guarda directamente como provisiones.
+			if (!world.isClient) {
+				ItemStack rest = provisions.addStack(held.copy());
+				int added = held.getCount() - rest.getCount();
+				if (added > 0) {
+					if (!player.isCreative()) {
+						held.decrement(added);
+					}
+					player.sendMessage(Text.translatable("message.evolvedwarfare.fed", getName(), getProvisionDays()), true);
+				} else {
+					player.sendMessage(Text.translatable("message.evolvedwarfare.provisions_full", getName()), true);
+				}
+			}
+			return ActionResult.success(world.isClient);
+		}
+		if (!world.isClient && player instanceof ServerPlayerEntity serverPlayer) {
+			openMenu(serverPlayer);
+		}
+		return ActionResult.success(world.isClient);
+	}
+
+	private void openMenu(ServerPlayerEntity player) {
+		AbstractNpcEntity npc = this;
+		player.openHandledScreen(new ExtendedScreenHandlerFactory<Integer>() {
+			@Override
+			public Integer getScreenOpeningData(ServerPlayerEntity serverPlayer) {
+				return npc.getId();
+			}
+
+			@Override
+			public Text getDisplayName() {
+				return npc.getName();
+			}
+
+			@Override
+			public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+				return new NpcScreenHandler(syncId, playerInventory, npc);
+			}
+		});
+	}
+
+	// ------------------------------------------------------------------ daño, muerte, despawn
+
+	@Override
+	public boolean damage(DamageSource source, float amount) {
+		// Su dueño no puede herirlo por accidente.
+		if (source.getAttacker() instanceof PlayerEntity player && isOwner(player)) {
+			return false;
+		}
+		return super.damage(source, amount);
+	}
+
+	@Override
+	public void onDeath(DamageSource source) {
+		if (!getWorld().isClient) {
+			notifyOwner(Text.translatable("message.evolvedwarfare.died", getName()));
+		}
+		super.onDeath(source);
+	}
+
+	@Override
+	protected void dropInventory() {
+		super.dropInventory();
+		dropProvisions();
+	}
+
+	/** El equipo que le das siempre se recupera entero al morir. */
+	@Override
+	protected float getDropChance(EquipmentSlot slot) {
+		return 2.0F;
+	}
+
+	@Override
+	public boolean canImmediatelyDespawn(double distanceSquared) {
+		return false;
+	}
+
+	// ------------------------------------------------------------------ guardado
+
+	@Override
+	public void writeCustomDataToNbt(NbtCompound nbt) {
+		super.writeCustomDataToNbt(nbt);
+		if (ownerUuid != null) {
+			nbt.putUuid("Owner", ownerUuid);
+		}
+		nbt.putString("Order", order.name());
+		if (home != null) {
+			nbt.putInt("HomeX", home.getX());
+			nbt.putInt("HomeY", home.getY());
+			nbt.putInt("HomeZ", home.getZ());
+		}
+		nbt.putInt("Variant", getVariant());
+		nbt.putInt("UpkeepTimer", upkeepTimer);
+		nbt.putInt("UnpaidDays", unpaidDays);
+		nbt.put("Provisions", provisions.toNbtList(getRegistryManager()));
+	}
+
+	@Override
+	public void readCustomDataFromNbt(NbtCompound nbt) {
+		super.readCustomDataFromNbt(nbt);
+		ownerUuid = nbt.containsUuid("Owner") ? nbt.getUuid("Owner") : null;
+		order = NpcOrder.byName(nbt.getString("Order"));
+		home = nbt.contains("HomeX") ? new BlockPos(nbt.getInt("HomeX"), nbt.getInt("HomeY"), nbt.getInt("HomeZ")) : null;
+		setVariant(nbt.getInt("Variant"));
+		upkeepTimer = nbt.contains("UpkeepTimer") ? nbt.getInt("UpkeepTimer") : UPKEEP_INTERVAL;
+		unpaidDays = nbt.getInt("UnpaidDays");
+		provisions.readNbtList(nbt.getList("Provisions", 10), getRegistryManager());
+	}
+}

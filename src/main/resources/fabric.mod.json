@@ -1,0 +1,27 @@
+{
+	"schemaVersion": 1,
+	"id": "evolvedwarfare",
+	"version": "${version}",
+	"name": "Evolved Warfare",
+	"description": "NPCs, ejércitos, trabajadores y asedio para Minecraft 1.21.1. Inspirado en Ancient Warfare.",
+	"license": "MIT",
+	"icon": "assets/evolvedwarfare/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.evolvedwarfare.EvolvedWarfare"
+		],
+		"client": [
+			"com.evolvedwarfare.client.EvolvedWarfareClient"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.16.0",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"goldencoin": "*"
+	}
+}
