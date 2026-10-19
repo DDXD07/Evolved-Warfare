@@ -38,6 +38,7 @@ import net.minecraft.registry.tag.TagKey;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -78,6 +79,9 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 	private NpcOrder order = NpcOrder.FOLLOW;
 	@Nullable
 	private BlockPos home;
+	/** Sitio donde le mandaron quedarse quieto (vuelve a él después de luchar). */
+	@Nullable
+	private BlockPos stayPos;
 	private int upkeepTimer = UPKEEP_INTERVAL;
 	private int unpaidDays;
 	private final SimpleInventory provisions = new SimpleInventory(PROVISION_SLOTS);
@@ -129,6 +133,7 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 	public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason,
 			@Nullable EntityData entityData) {
 		EntityData data = super.initialize(world, difficulty, spawnReason, entityData);
+		setLeftHanded(false);
 		initAppearance(world.getRandom());
 		if (ownerUuid == null) {
 			home = getBlockPos();
@@ -149,6 +154,11 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 
 	public void setOwner(PlayerEntity player) {
 		ownerUuid = player.getUuid();
+	}
+
+	@Nullable
+	public UUID getOwnerUuid() {
+		return ownerUuid;
 	}
 
 	/** ¿Está libre, esperando a que alguien lo contrate? */
@@ -176,7 +186,15 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 
 	public void setOrder(NpcOrder order) {
 		this.order = order;
+		if (order == NpcOrder.STAY) {
+			stayPos = getBlockPos();
+		}
 		getNavigation().stop();
+	}
+
+	@Nullable
+	public BlockPos getStayPos() {
+		return stayPos;
 	}
 
 	@Nullable
@@ -186,8 +204,28 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 
 	/** Fija la casa donde está ahora y le ordena quedarse allí. */
 	public void setHomeHere() {
-		home = getBlockPos();
+		setHomeAt(getBlockPos());
+	}
+
+	/** Le manda a vivir (o a vigilar) en un sitio concreto. */
+	public void setHomeAt(BlockPos pos) {
+		home = pos.toImmutable();
 		setOrder(NpcOrder.HOME);
+	}
+
+	/** Copia dueño, órdenes, paga y aspecto a otro NPC (al entrenar un recluta como soldado). */
+	public void copyNpcStateTo(AbstractNpcEntity other) {
+		other.ownerUuid = ownerUuid;
+		other.order = order;
+		other.home = home;
+		other.stayPos = stayPos;
+		other.upkeepTimer = upkeepTimer;
+		other.unpaidDays = unpaidDays;
+		for (int i = 0; i < provisions.size(); i++) {
+			other.provisions.setStack(i, provisions.getStack(i).copy());
+			provisions.setStack(i, ItemStack.EMPTY);
+		}
+		other.setVariant(getVariant());
 	}
 
 	// ------------------------------------------------------------------ paga
@@ -408,6 +446,16 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 		return false;
 	}
 
+	@Override
+	protected SoundEvent getHurtSound(DamageSource source) {
+		return SoundEvents.ENTITY_PLAYER_HURT;
+	}
+
+	@Override
+	protected SoundEvent getDeathSound() {
+		return SoundEvents.ENTITY_PLAYER_DEATH;
+	}
+
 	// ------------------------------------------------------------------ guardado
 
 	@Override
@@ -422,6 +470,11 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 			nbt.putInt("HomeY", home.getY());
 			nbt.putInt("HomeZ", home.getZ());
 		}
+		if (stayPos != null) {
+			nbt.putInt("StayX", stayPos.getX());
+			nbt.putInt("StayY", stayPos.getY());
+			nbt.putInt("StayZ", stayPos.getZ());
+		}
 		nbt.putInt("Variant", getVariant());
 		nbt.putInt("UpkeepTimer", upkeepTimer);
 		nbt.putInt("UnpaidDays", unpaidDays);
@@ -434,6 +487,7 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 		ownerUuid = nbt.containsUuid("Owner") ? nbt.getUuid("Owner") : null;
 		order = NpcOrder.byName(nbt.getString("Order"));
 		home = nbt.contains("HomeX") ? new BlockPos(nbt.getInt("HomeX"), nbt.getInt("HomeY"), nbt.getInt("HomeZ")) : null;
+		stayPos = nbt.contains("StayX") ? new BlockPos(nbt.getInt("StayX"), nbt.getInt("StayY"), nbt.getInt("StayZ")) : null;
 		setVariant(nbt.getInt("Variant"));
 		upkeepTimer = nbt.contains("UpkeepTimer") ? nbt.getInt("UpkeepTimer") : UPKEEP_INTERVAL;
 		unpaidDays = nbt.getInt("UnpaidDays");

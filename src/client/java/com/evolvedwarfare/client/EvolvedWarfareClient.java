@@ -1,5 +1,6 @@
 package com.evolvedwarfare.client;
 
+import com.evolvedwarfare.client.render.BanditRenderer;
 import com.evolvedwarfare.client.render.ModModelLayers;
 import com.evolvedwarfare.client.render.RecruitRenderer;
 import com.evolvedwarfare.client.screen.NpcScreen;
@@ -14,6 +15,8 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		ModModelLayers.init();
 		EntityRendererRegistry.register(ModEntities.RECRUIT, RecruitRenderer::new);
+		EntityRendererRegistry.register(ModEntities.SOLDIER, RecruitRenderer::new);
+		EntityRendererRegistry.register(ModEntities.BANDIT, BanditRenderer::new);
 		HandledScreens.register(ModScreens.NPC, NpcScreen::new);
 	}
 }

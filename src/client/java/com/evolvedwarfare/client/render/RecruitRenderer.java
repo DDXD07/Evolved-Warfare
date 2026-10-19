@@ -1,17 +1,17 @@
 package com.evolvedwarfare.client.render;
 
 import com.evolvedwarfare.EvolvedWarfare;
-import com.evolvedwarfare.entity.RecruitEntity;
-import net.minecraft.client.render.entity.BipedEntityRenderer;
+import com.evolvedwarfare.entity.AbstractNpcEntity;
+import com.evolvedwarfare.entity.NpcNames;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.feature.ArmorFeatureRenderer;
-import net.minecraft.client.render.entity.model.ArmorEntityModel;
-import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.util.Identifier;
 
-/** Dibuja al recluta con forma de jugador, su skin, la armadura puesta y lo que lleva en las manos. */
-public class RecruitRenderer extends BipedEntityRenderer<RecruitEntity, PlayerEntityModel<RecruitEntity>> {
-	private static final Identifier[] SKINS = new Identifier[RecruitEntity.VARIANTS];
+/**
+ * Reclutas y soldados del jugador: la misma persona con su skin (6 aspectos); lo que cambia según su
+ * clase es el equipo que lleva.
+ */
+public class RecruitRenderer<T extends AbstractNpcEntity> extends NpcBipedRenderer<T> {
+	private static final Identifier[] SKINS = new Identifier[NpcNames.VARIANTS];
 
 	static {
 		for (int i = 0; i < SKINS.length; i++) {
@@ -20,15 +20,11 @@ public class RecruitRenderer extends BipedEntityRenderer<RecruitEntity, PlayerEn
 	}
 
 	public RecruitRenderer(EntityRendererFactory.Context context) {
-		super(context, new PlayerEntityModel<>(context.getPart(ModModelLayers.NPC), false), 0.5F);
-		addFeature(new ArmorFeatureRenderer<>(this,
-				new ArmorEntityModel<>(context.getPart(ModModelLayers.NPC_INNER_ARMOR)),
-				new ArmorEntityModel<>(context.getPart(ModModelLayers.NPC_OUTER_ARMOR)),
-				context.getModelManager()));
+		super(context);
 	}
 
 	@Override
-	public Identifier getTexture(RecruitEntity entity) {
+	public Identifier getTexture(T entity) {
 		return SKINS[Math.floorMod(entity.getVariant(), SKINS.length)];
 	}
 }

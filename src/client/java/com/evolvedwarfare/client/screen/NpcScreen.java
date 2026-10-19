@@ -3,6 +3,7 @@ package com.evolvedwarfare.client.screen;
 import com.evolvedwarfare.EvolvedWarfare;
 import com.evolvedwarfare.entity.AbstractNpcEntity;
 import com.evolvedwarfare.entity.NpcOrder;
+import com.evolvedwarfare.entity.NpcRole;
 import com.evolvedwarfare.screen.NpcScreenHandler;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -24,6 +25,7 @@ public class NpcScreen extends HandledScreen<NpcScreenHandler> {
 	private ButtonWidget stayButton;
 	private ButtonWidget homeButton;
 	private ButtonWidget setHomeButton;
+	private ButtonWidget trainButton;
 
 	public NpcScreen(NpcScreenHandler handler, PlayerInventory inventory, Text title) {
 		super(handler, inventory, title);
@@ -39,6 +41,13 @@ public class NpcScreen extends HandledScreen<NpcScreenHandler> {
 		stayButton = addOrderButton("stay", NpcScreenHandler.BUTTON_STAY, 89, 94);
 		homeButton = addOrderButton("home", NpcScreenHandler.BUTTON_HOME, 8, 112);
 		setHomeButton = addOrderButton("set_home", NpcScreenHandler.BUTTON_SET_HOME, 89, 112);
+		trainButton = ButtonWidget.builder(Text.translatable("gui.evolvedwarfare.button.train"), b -> {
+			if (client != null && client.interactionManager != null) {
+				client.interactionManager.clickButton(handler.syncId, NpcScreenHandler.BUTTON_TRAIN);
+			}
+		}).dimensions(x + 99, y + 81, 70, 12).build();
+		trainButton.setTooltip(Tooltip.of(Text.translatable("gui.evolvedwarfare.button.train.tip")));
+		addDrawableChild(trainButton);
 		updateButtons();
 	}
 
@@ -67,6 +76,7 @@ public class NpcScreen extends HandledScreen<NpcScreenHandler> {
 		followButton.active = order != NpcOrder.FOLLOW;
 		stayButton.active = order != NpcOrder.STAY;
 		homeButton.active = order != NpcOrder.HOME && handler.hasHome();
+		trainButton.visible = handler.role() == null;
 	}
 
 	@Override
@@ -86,7 +96,17 @@ public class NpcScreen extends HandledScreen<NpcScreenHandler> {
 
 	@Override
 	protected void drawForeground(DrawContext context, int mouseX, int mouseY) {
-		context.drawText(textRenderer, title, 8, 6, TEXT, false);
+		NpcRole role = handler.role();
+		Text heading = role == null
+				? Text.translatable("gui.evolvedwarfare.title.recruit", title)
+				: Text.translatable("gui.evolvedwarfare.title.soldier", title, Text.translatable(role.translationKey()), handler.level());
+		context.drawText(textRenderer, heading, 8, 6, TEXT, false);
+		if (role != null) {
+			Text stats = handler.experienceForNextLevel() > 0
+					? Text.translatable("gui.evolvedwarfare.stats", handler.kills(), handler.experience(), handler.experienceForNextLevel())
+					: Text.translatable("gui.evolvedwarfare.stats.max", handler.kills());
+			context.drawText(textRenderer, stats, NpcScreenHandler.PROVISIONS_X - 1, 83, TEXT, false);
+		}
 		context.drawText(textRenderer, playerInventoryTitle, 8, playerInventoryTitleY, TEXT, false);
 
 		int infoX = NpcScreenHandler.PROVISIONS_X - 1;

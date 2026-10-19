@@ -2,6 +2,9 @@ package com.evolvedwarfare.screen;
 
 import com.evolvedwarfare.entity.AbstractNpcEntity;
 import com.evolvedwarfare.entity.NpcOrder;
+import com.evolvedwarfare.entity.NpcRole;
+import com.evolvedwarfare.entity.RecruitEntity;
+import com.evolvedwarfare.entity.SoldierEntity;
 import com.evolvedwarfare.registry.ModScreens;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -15,6 +18,7 @@ import net.minecraft.screen.ArrayPropertyDelegate;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,6 +32,7 @@ public class NpcScreenHandler extends ScreenHandler {
 	public static final int BUTTON_STAY = 1;
 	public static final int BUTTON_HOME = 2;
 	public static final int BUTTON_SET_HOME = 3;
+	public static final int BUTTON_TRAIN = 4;
 
 	private static final int EQUIPMENT_SLOTS = 6;
 	private static final int FIRST_PROVISION_SLOT = EQUIPMENT_SLOTS;
@@ -40,6 +45,13 @@ public class NpcScreenHandler extends ScreenHandler {
 	private static final int P_DAYS = 3;
 	private static final int P_UNPAID = 4;
 	private static final int P_HAS_HOME = 5;
+	/** 0 = recluta; si no, clase + 1. */
+	private static final int P_ROLE = 6;
+	private static final int P_LEVEL = 7;
+	private static final int P_KILLS = 8;
+	private static final int P_XP = 9;
+	private static final int P_XP_NEXT = 10;
+	private static final int PROPERTY_COUNT = 11;
 
 	// posiciones (compartidas con la pantalla)
 	public static final int ARMOR_X = 8;
@@ -60,7 +72,7 @@ public class NpcScreenHandler extends ScreenHandler {
 
 	@Nullable
 	private final AbstractNpcEntity npc;
-	private final PropertyDelegate properties = new ArrayPropertyDelegate(6);
+	private final PropertyDelegate properties = new ArrayPropertyDelegate(PROPERTY_COUNT);
 
 	/** Cliente: recibe el id de la entidad desde el servidor. */
 	public NpcScreenHandler(int syncId, PlayerInventory playerInventory, Integer entityId) {
@@ -130,6 +142,15 @@ public class NpcScreenHandler extends ScreenHandler {
 		properties.set(P_DAYS, Math.min(npc.getProvisionDays(), 9999));
 		properties.set(P_UNPAID, npc.getUnpaidDays());
 		properties.set(P_HAS_HOME, npc.getHome() != null ? 1 : 0);
+		if (npc instanceof SoldierEntity soldier) {
+			properties.set(P_ROLE, soldier.getRole().ordinal() + 1);
+			properties.set(P_LEVEL, soldier.getCombatLevel());
+			properties.set(P_KILLS, Math.min(soldier.getKills(), 9999));
+			properties.set(P_XP, Math.min(soldier.getExperience(), 9999));
+			properties.set(P_XP_NEXT, soldier.experienceForNextLevel());
+		} else {
+			properties.set(P_ROLE, 0);
+		}
 	}
 
 	@Override
@@ -148,12 +169,34 @@ public class NpcScreenHandler extends ScreenHandler {
 			case BUTTON_STAY -> npc.setOrder(NpcOrder.STAY);
 			case BUTTON_HOME -> npc.setOrder(NpcOrder.HOME);
 			case BUTTON_SET_HOME -> npc.setHomeHere();
+			case BUTTON_TRAIN -> {
+				train(player);
+				return true;
+			}
 			default -> {
 				return false;
 			}
 		}
 		updateProperties();
 		return true;
+	}
+
+	/** Convierte al recluta en soldado según el arma que lleva en la mano principal. */
+	private void train(PlayerEntity player) {
+		if (!(npc instanceof RecruitEntity recruit)) {
+			return;
+		}
+		NpcRole role = NpcRole.fromWeapon(recruit.getMainHandStack());
+		if (role == null) {
+			player.sendMessage(Text.translatable("message.evolvedwarfare.train_needs_weapon", recruit.getName()), false);
+			return;
+		}
+		SoldierEntity soldier = recruit.trainAs(role);
+		if (soldier != null) {
+			player.sendMessage(Text.translatable("message.evolvedwarfare.trained", soldier.getName(),
+					Text.translatable(role.translationKey())), false);
+			player.closeHandledScreen();
+		}
 	}
 
 	@Override
@@ -230,5 +273,28 @@ public class NpcScreenHandler extends ScreenHandler {
 
 	public boolean hasHome() {
 		return properties.get(P_HAS_HOME) != 0;
+	}
+
+	/** Clase del soldado, o null si es un recluta. */
+	@Nullable
+	public NpcRole role() {
+		int i = properties.get(P_ROLE);
+		return i <= 0 ? null : NpcRole.byOrdinal(i - 1);
+	}
+
+	public int level() {
+		return Math.max(1, properties.get(P_LEVEL));
+	}
+
+	public int kills() {
+		return properties.get(P_KILLS);
+	}
+
+	public int experience() {
+		return properties.get(P_XP);
+	}
+
+	public int experienceForNextLevel() {
+		return properties.get(P_XP_NEXT);
 	}
 }
