@@ -6,6 +6,7 @@ import com.evolvedwarfare.entity.WorkerEntity;
 import com.evolvedwarfare.registry.ModBlocks;
 import com.evolvedwarfare.screen.WorkSiteScreenHandler;
 import com.evolvedwarfare.work.CookingJob;
+import com.evolvedwarfare.work.ExcavationJob;
 import com.evolvedwarfare.work.Profession;
 import com.evolvedwarfare.work.WorkArea;
 import com.evolvedwarfare.work.WorkStatus;
@@ -261,6 +262,15 @@ public class WorkSiteBlockEntity extends BlockEntity implements SidedInventory, 
 		for (int z = box.getMinZ() + 1; z <= box.getMaxZ(); z++) {
 			particle(serverWorld, player, box.getMinX(), y, z);
 			particle(serverWorld, player, box.getMaxX() + 1, y, z);
+		}
+		if (area.pit()) {
+			// la entrada: una marca por tramo, en la superficie
+			Direction back = getFacing().getOpposite();
+			for (int step = 1; step <= ExcavationJob.STEPS + 1; step++) {
+				BlockPos feet = ExcavationJob.stepFeet(pos, back, step);
+				serverWorld.spawnParticles(player, ParticleTypes.END_ROD, true, feet.getX() + 0.5, y + 0.3, feet.getZ() + 0.5,
+						2, 0.1, 0.2, 0.1, 0.0);
+			}
 		}
 	}
 

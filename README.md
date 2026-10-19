@@ -124,8 +124,8 @@ Receta de todos los puestos: 7 tablones alrededor, un cofre abajo y el objeto de
 |---|---|---|---|---|
 | **Granjero** | Azada | 11×11 | Ara la tierra con agua a 4 bloques (como en vanilla), siembra, cosecha y resiembra | Semillas, patatas, zanahorias o remolacha. Harina de hueso opcional |
 | **Leñador** | Hacha | 15×15 | Tala árboles enteros (solo árboles naturales, nunca casas de troncos), replanta en el tocón, recoge brotes, palos y manzanas y planta brotes en cuadrícula | Brotes. Harina de hueso opcional |
-| **Minero** | Pico | Pozo 5×5 | Cava detrás del puesto capa a capa hasta la roca madre. No toca cofres ni bloques junto a lava. Las menas que su pico no puede romper las deja | Un pico |
-| **Excavador** | Pala | Pozo 7×7 | Saca tierra, arena, grava, arcilla, barro... hasta 16 capas | Nada (con pala, mucho más rápido) |
+| **Minero** | Pico | Pozo 5×5 bajo tierra | Cava una entrada de 5 escalones detrás del puesto y, desde el rellano del fondo, un pozo bajo tierra hasta la roca madre (la superficie queda intacta). No toca cofres ni bloques junto a lava. Las menas que su pico no puede romper las deja | Un pico. Antorchas opcionales |
+| **Excavador** | Pala | Pozo 7×7 bajo tierra | La misma entrada, y bajo tierra saca tierra, arena, grava, arcilla, barro... hasta 16 capas | Nada (con pala, mucho más rápido). Antorchas opcionales |
 | **Pescador** | Caña | 13×13 | Pesca en el agua cercana (al menos 4 bloques de agua) | Nada (con caña, más rápido) |
 | **Pastor** | Tijeras | 17×17 | Esquila ovejas, ordeña vacas y cabras, recoge la lana, cría y mantiene el rebaño en 8 adultos por especie | Trigo, cubos, tijeras |
 | **Criador** | Bala de heno | 17×17 | Gallinas, cerdos y conejos: los cría, recoge huevos y plumas y mantiene 8 adultos por especie | Semillas, zanahorias, patatas o dientes de león |
@@ -138,6 +138,8 @@ Receta de todos los puestos: 7 tablones alrededor, un cofre abajo y el objeto de
 | **Flechero** | Mesa de flechería | — | Pedernal + palo + pluma → 4 flechas; grava → pedernal | Esos materiales |
 
 El pastor y el criador nunca sacrifican animales con nombre ni atados.
+
+**La mina bajo tierra** (minero y excavador): detrás del puesto dejan un pasillo de un bloque y cavan una escalera de 5 escalones (3 de alto, se puede bajar andando) que acaba en un rellano a 5 bloques de profundidad. Desde ahí vacían el pozo, que empieza bajo tierra con 3 bloques de techo, así que en la superficie solo se ve la boca de la escalera. Si les das antorchas, ponen una en la escalera y otra en el rellano. **Ver zona** marca en la superficie dónde irá el pozo y por dónde baja la escalera.
 
 ### Ayuntamiento
 Receta: lingote de oro, libro y lingote de oro arriba; tablón, cofre y tablón en medio; 3 tablones abajo. Guarda comida o Golden Coins dentro y cada pocos segundos rellena las provisiones de todos tus NPCs (trabajadores, soldados y reclutas) a menos de 48 bloques, hasta 3 días de paga. Así no tienes que ir dándoles de comer uno a uno.
