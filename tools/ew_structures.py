@@ -570,7 +570,8 @@ def npc_recruit():
 
 
 # ======================================================================== CAMPAMENTO
-def camp_center():
+def camp_center(banner="red_banner", loot=LOOT_WEAPONS, npc_pool=None, tents=P_TENTS):
+    """Centro del campamento. Con otros parámetros sirve también para el campamento de bandidos."""
     n = 11
     t = Template(n, 7, n)
     c = n // 2
@@ -587,19 +588,19 @@ def camp_center():
         t.put(7, 1, z, S("stripped_spruce_log", axis="z"))
     for x in (4, 5, 6):
         t.put(x, 1, 7, S("stripped_spruce_log", axis="x"))
-    t.put(8, 1, 2, *chest("west", LOOT_WEAPONS))
+    t.put(8, 1, 2, *chest("west", loot))
     t.put(2, 1, 2, "hay_block")
     t.put(2, 2, 2, "hay_block")
     t.put(3, 1, 2, "hay_block")
     for y in range(1, 5):
         t.put(8, y, 8, "dark_oak_fence")
-    t.put(8, 5, 8, S("red_banner", rotation="0"))
+    t.put(8, 5, 8, S(banner, rotation="0"))
     t.put(2, 1, 8, "dark_oak_fence")
     t.put(2, 2, 8, lantern())
-    t.npc_slot(3, 0, 8)
-    t.npc_slot(7, 0, 2)
+    t.npc_slot(3, 0, 8, *([npc_pool] if npc_pool else []))
+    t.npc_slot(7, 0, 2, *([npc_pool] if npc_pool else []))
     for (x, z, f) in ((c, 0, "north"), (c, n - 1, "south"), (0, c, "west"), (n - 1, c, "east")):
-        t.jigsaw(x, 1, z, f + "_up", TENT, TENT, P_TENTS)
+        t.jigsaw(x, 1, z, f + "_up", TENT, TENT, tents)
     return t
 
 
@@ -615,34 +616,34 @@ def a_frame(t, x0, x1, half, color_fn):
                 t.put(x, 1 + k, z, color_fn(x))
 
 
-def tent_small():
+def tent_small(wool="white_wool", bed_color="white", npc_pool=None):
     t = Template(6, 4, 5)
     for x in range(1, 6):
         for z in range(1, 4):
             t.put(x, 0, z, "coarse_dirt")
-    a_frame(t, 1, 5, 2, lambda x: "white_wool")
+    a_frame(t, 1, 5, 2, lambda x: wool)
     for (y, z) in ((1, 1), (1, 2), (1, 3), (2, 2)):
-        t.put(5, y, z, "white_wool")
-    bed(t, 3, 1, 2, "east", "white")
-    t.npc_slot(2, 0, 2)
+        t.put(5, y, z, wool)
+    bed(t, 3, 1, 2, "east", bed_color)
+    t.npc_slot(2, 0, 2, *([npc_pool] if npc_pool else []))
     tent_jigsaw(t, 2)
     return t
 
 
-def tent_large():
+def tent_large(stripe="red_wool", base="white_wool", bed_color="red", npc_pool=None, loot=None):
     t = Template(8, 5, 7)
     for x in range(1, 8):
         for z in range(1, 6):
             t.put(x, 0, z, "coarse_dirt")
-    a_frame(t, 1, 7, 3, lambda x: "red_wool" if x % 2 else "white_wool")
+    a_frame(t, 1, 7, 3, lambda x: stripe if x % 2 else base)
     for (y, zs) in ((1, range(1, 6)), (2, range(2, 5)), (3, (3,))):
         for z in zs:
-            t.put(7, y, z, "red_wool")
-    bed(t, 5, 1, 1, "east", "red")
-    bed(t, 5, 1, 5, "east", "red")
-    t.put(6, 1, 3, *barrel("west"))
+            t.put(7, y, z, stripe)
+    bed(t, 5, 1, 1, "east", bed_color)
+    bed(t, 5, 1, 5, "east", bed_color)
+    t.put(6, 1, 3, *barrel("west", loot))
     t.put(4, 3, 3, lantern(hanging=True))
-    t.npc_slot(3, 0, 3)
+    t.npc_slot(3, 0, 3, *([npc_pool] if npc_pool else []))
     tent_jigsaw(t, 3)
     return t
 
@@ -715,6 +716,169 @@ def watchtower():
     return t
 
 
+# ======================================================================== BANDIDOS
+P_BANDITS = f"{NS}:npc/bandits"
+P_BANDIT_ARCHERS = f"{NS}:npc/bandit_archers"
+P_BANDIT_CAPTAIN = f"{NS}:npc/bandit_captain"
+P_PRISONERS = f"{NS}:npc/prisoners"
+P_BANDIT_TENTS = f"{NS}:bandit_camp/tents"
+LOOT_BANDIT_CAMP = f"{NS}:chests/bandit_camp"
+LOOT_BANDIT_FORT = f"{NS}:chests/bandit_fort"
+
+
+def npc_bandit(role=None):
+    t = Template(1, 2, 1)
+    t.jigsaw(0, 0, 0, "down_south", f"{NS}:npc", f"{NS}:npc", "minecraft:empty")
+    data = {"id": f"{NS}:bandit", "PersistenceRequired": nbt.Byte(1)}
+    if role:
+        data["Role"] = role
+    t.entity(data, 0, 0, 0, YAW["west"])
+    return t
+
+
+def cage(t, x0, z0, gate_side="north", floor="cobblestone"):
+    """Jaula 5x5 de barrotes con puerta de valla y un prisionero (recluta libre: rescátalo y contrátalo)."""
+    for x in range(x0, x0 + 5):
+        for z in range(z0, z0 + 5):
+            t.put(x, 0, z, floor)
+            ring = x in (x0, x0 + 4) or z in (z0, z0 + 4)
+            for y in (1, 2, 3):
+                t.put(x, y, z, "iron_bars" if ring else "air")
+            t.put(x, 4, z, "spruce_planks")
+    gx, gz = (x0 + 2, z0) if gate_side == "north" else (x0, z0 + 2)
+    t.put(gx, 1, gz, S("spruce_fence_gate", facing="north" if gate_side == "north" else "west", in_wall="false",
+                       open="false", powered="false"))
+    t.put(gx, 2, gz, "air")
+    t.put(x0 + 3, 1, z0 + 3, "hay_block")
+    t.put(x0 + 2, 3, z0 + 2, lantern(hanging=True))
+    t.npc_slot(x0 + 1, 0, z0 + 2, P_PRISONERS)
+
+
+def bandit_cage():
+    """Pieza de campamento: la jaula con un prisionero."""
+    t = Template(7, 5, 7)
+    cage(t, 1, 1, gate_side="west")
+    tent_jigsaw(t, 3)
+    return t
+
+
+def bandit_fort():
+    """Fortín de bandidos: empalizada, 4 torres con arqueros, puerta, patio, sala del capitán y calabozo."""
+    n = 31
+    t = Template(n, 11, n)
+    last = n - 1
+    # suelo del patio
+    for x in range(n):
+        for z in range(n):
+            h = (x * 7 + z * 13) % 11
+            b = "gravel" if h == 0 else ("dirt_path" if h == 1 else "coarse_dirt")
+            if 13 <= z <= 17 and x <= 21:
+                b = "cobblestone" if (x + z) % 4 else "gravel"
+            t.put(x, 0, z, b)
+    # empalizada
+    for i in range(n):
+        for (x, z) in ((i, 0), (i, last), (0, i), (last, i)):
+            top = 5 + ((x + z) & 1)
+            for y in range(1, top + 1):
+                t.put(x, y, z, S("spruce_log", axis="y"))
+            t.put(x, 0, z, S("spruce_log", axis="y"))
+    # puerta (lado oeste)
+    for z in (14, 15, 16):
+        for y in range(1, 5):
+            t.put(0, y, z, "air")
+        t.put(0, 5, z, S("stripped_spruce_log", axis="z"))
+        t.put(0, 6, z, "air")
+    for z in (13, 17):
+        for y in range(1, 8):
+            t.put(0, y, z, S("spruce_log", axis="y"))
+        t.put(0, 8, z, lantern())
+    # torres en las esquinas
+    for (cx, cz, sx, sz) in ((0, 0, 1, 1), (last, 0, -1, 1), (0, last, 1, -1), (last, last, -1, -1)):
+        def P(dx, dz):
+            return cx + sx * dx, cz + sz * dz
+        for dx in range(5):
+            for dz in range(5):
+                x, z = P(dx, dz)
+                if dx in (0, 4) and dz in (0, 4):
+                    for y in range(0, 9):
+                        t.put(x, y, z, S("spruce_log", axis="y"))
+                t.put(x, 6, z, "spruce_planks")
+                if dx in (0, 4) or dz in (0, 4):
+                    t.put(x, 7, z, "spruce_fence")
+        for dz in (1, 2, 3):
+            for y in range(1, 6):
+                x, z = P(4, dz)
+                t.put(x, y, z, "spruce_planks")
+        # escalera de mano por el lado del patio y hueco en la barandilla
+        lx, lz = P(5, 2)
+        facing = "east" if sx > 0 else "west"
+        for y in range(1, 7):
+            t.put(lx, y, lz, S("ladder", facing=facing, waterlogged="false"))
+        bx, bz = P(4, 2)
+        t.put(bx, 7, bz, "air")
+        for (dx, dz) in ((0, 0), (4, 4)):
+            x, z = P(dx, dz)
+            t.put(x, 9, z, lantern())
+        ax, az = P(2, 2)
+        t.npc_slot(ax, 6, az, P_BANDIT_ARCHERS)
+    # sala del capitán (lado este)
+    x0, x1, z0, z1 = 20, 28, 10, 20
+    foundation(t, x0, x1, z0, z1, ring=S("cobblestone"), inner=S("spruce_planks"))
+    clear(t, x0 + 1, 1, z0 + 1, x1 - 1, 9, z1 - 1)
+    walls(t, x0, x1, z0, z1, 1, 4, S("spruce_planks"), corner=S("stripped_spruce_log", axis="y"),
+          top=lambda axis: S("stripped_spruce_log", axis=axis))
+    gable_z(t, z0 - 1, z1 + 1, x0 - 1, x1 + 1, 4, "dark_oak", "dark_oak", gable_zs=(z0, z1),
+            gable_block=S("spruce_planks"))
+    door(t, x0, 1, 15, "east")
+    for z in (12, 18):
+        t.put(x0, 2, z, S("glass_pane"))
+    t.put(x0 - 1, 3, 14, S("black_wall_banner", facing="west"))
+    t.put(x0 - 1, 3, 16, S("black_wall_banner", facing="west"))
+    t.put(x1 - 1, 1, z0 + 1, *chest("west", LOOT_BANDIT_FORT))
+    t.put(x1 - 1, 1, z1 - 1, *chest("west", LOOT_BANDIT_FORT))
+    for z in (14, 15, 16):
+        t.put(25, 1, z, slab("dark_oak", "top"))
+    t.put(26, 1, 15, stairs("dark_oak", "east"))
+    bed(t, 22, 1, z0 + 1, "east", "black")
+    t.put(24, 4, 15, lantern(hanging=True))
+    t.put(x1 - 1, 2, 15, S("black_wall_banner", facing="west"))
+    t.npc_slot(23, 0, 15, P_BANDIT_CAPTAIN)
+    # tiendas del patio (norte)
+    for (tx, wool) in ((7, "black_wool"), (14, "gray_wool")):
+        for x in range(tx, tx + 5):
+            for k in range(3):
+                for z in {4 + k, 8 - k}:
+                    t.put(x, 1 + k, z, wool)
+        for (y, z) in ((1, 5), (1, 6), (1, 7), (2, 6)):
+            t.put(tx + 4, y, z, wool)
+        bed(t, tx + 2, 1, 6, "east", "black")
+        t.npc_slot(tx + 1, 0, 6, P_BANDITS)
+    t.put(19, 1, 5, *chest("west", LOOT_BANDIT_CAMP))
+    # calabozo (sur)
+    cage(t, 8, 22, gate_side="north")
+    # hoguera, muñecos y armero
+    t.put(12, 1, 20, S("campfire", facing="north", lit="true", signal_fire="false", waterlogged="false"))
+    for x in (10, 14):
+        t.put(x, 1, 20, S("stripped_spruce_log", axis="z"))
+    for (x, z) in ((16, 23), (18, 25)):
+        t.put(x, 1, z, "spruce_fence")
+        t.put(x, 2, z, "hay_block")
+        t.put(x, 3, z, S("carved_pumpkin", facing="west"))
+    t.entity(armor_stand(head="leather_helmet", chest_="leather_chestplate", main="iron_sword"), 17, 1, 11, YAW["south"])
+    t.entity(armor_stand(head="chainmail_helmet", chest_="leather_chestplate", main="crossbow"), 18, 1, 11, YAW["south"])
+    for (x, z) in ((6, 12), (6, 18), (17, 19)):
+        t.put(x, 1, z, "spruce_fence")
+        t.put(x, 2, z, "spruce_fence")
+        t.put(x, 3, z, lantern())
+    for (x, y, z) in ((25, 1, 25), (26, 1, 25), (25, 2, 25), (26, 1, 26)):
+        t.put(x, y, z, *barrel())
+    t.put(24, 1, 26, "hay_block")
+    # guarnición del patio
+    for (x, z) in ((8, 15), (12, 12), (15, 18), (18, 9), (19, 21)):
+        t.npc_slot(x, 0, z, P_BANDITS)
+    return t
+
+
 # ======================================================================== JSON
 def element(location, projection="rigid", processors=None, legacy=False):
     return {
@@ -784,6 +948,15 @@ TEMPLATES = {
     "camp/supply": camp_supply,
     "camp/weapon_rack": camp_weapon_rack,
     "watchtower/tower": watchtower,
+    "npc/bandit": npc_bandit,
+    "npc/bandit_archer": lambda: npc_bandit("archer"),
+    "npc/bandit_crossbowman": lambda: npc_bandit("crossbowman"),
+    "npc/bandit_captain": lambda: npc_bandit("captain"),
+    "bandit_camp/center": lambda: camp_center("black_banner", LOOT_BANDIT_CAMP, P_BANDITS, P_BANDIT_TENTS),
+    "bandit_camp/tent_small": lambda: tent_small("black_wool", "black", P_BANDITS),
+    "bandit_camp/tent_large": lambda: tent_large("red_wool", "black_wool", "black", P_BANDITS, LOOT_BANDIT_CAMP),
+    "bandit_camp/cage": bandit_cage,
+    "bandit_fort/fort": bandit_fort,
 }
 
 
@@ -819,6 +992,15 @@ POOLS = {
     "camp/tents": pool([(element(L("camp/tent_small")), 3), (element(L("camp/tent_large")), 2),
                         (element(L("camp/supply")), 2), (element(L("camp/weapon_rack")), 1), (EMPTY, 1)]),
     "watchtower/base": pool([(element(L("watchtower/tower"), processors=WEATHER), 1)]),
+    "npc/bandits": pool([(element(L("npc/bandit"), legacy=True), 5), (EMPTY, 1)]),
+    "npc/bandit_archers": pool([(element(L("npc/bandit_archer"), legacy=True), 3),
+                                (element(L("npc/bandit_crossbowman"), legacy=True), 2), (EMPTY, 1)]),
+    "npc/bandit_captain": pool([(element(L("npc/bandit_captain"), legacy=True), 1)]),
+    "npc/prisoners": pool([(element(L("npc/recruit"), legacy=True), 1)]),
+    "bandit_camp/centers": pool([(element(L("bandit_camp/center")), 1)]),
+    "bandit_camp/tents": pool([(element(L("bandit_camp/tent_small")), 3), (element(L("bandit_camp/tent_large")), 2),
+                               (element(L("bandit_camp/cage")), 2), (element(L("camp/supply")), 1), (EMPTY, 1)]),
+    "bandit_fort/base": pool([(element(L("bandit_fort/fort"), processors=WEATHER), 1)]),
 }
 
 
@@ -842,6 +1024,8 @@ STRUCTURES = {
     "city": jigsaw_structure(L("city/town_centers"), 5, 72, f"#{NS}:has_structure/city", True),
     "mercenary_camp": jigsaw_structure(L("camp/centers"), 2, 32, f"#{NS}:has_structure/mercenary_camp", False),
     "watchtower": jigsaw_structure(L("watchtower/base"), 1, 16, f"#{NS}:has_structure/watchtower", False),
+    "bandit_camp": jigsaw_structure(L("bandit_camp/centers"), 2, 32, f"#{NS}:has_structure/bandit_camp", False),
+    "bandit_fort": jigsaw_structure(L("bandit_fort/base"), 1, 24, f"#{NS}:has_structure/bandit_fort", False),
 }
 
 STRUCTURE_SETS = {
@@ -855,9 +1039,23 @@ STRUCTURE_SETS = {
                       "exclusion_zone": {"other_set": "minecraft:villages", "chunk_count": 4}},
         "structures": [{"structure": L("mercenary_camp"), "weight": 1}, {"structure": L("watchtower"), "weight": 1}],
     },
+    "bandit_lairs": {
+        "placement": {"type": "minecraft:random_spread", "salt": 908712345, "spacing": 30, "separation": 11,
+                      "exclusion_zone": {"other_set": "minecraft:villages", "chunk_count": 6}},
+        "structures": [{"structure": L("bandit_camp"), "weight": 3}, {"structure": L("bandit_fort"), "weight": 1}],
+    },
 }
 
+BANDIT_BIOMES = ["minecraft:plains", "minecraft:sunflower_plains", "minecraft:meadow", "minecraft:forest",
+                 "minecraft:birch_forest", "minecraft:dark_forest", "minecraft:taiga", "minecraft:old_growth_pine_taiga",
+                 "minecraft:old_growth_spruce_taiga", "minecraft:snowy_taiga", "minecraft:snowy_plains",
+                 "minecraft:savanna", "minecraft:savanna_plateau", "minecraft:windswept_hills",
+                 "minecraft:windswept_forest", "minecraft:windswept_savanna", "minecraft:badlands",
+                 "minecraft:wooded_badlands"]
+
 BIOME_TAGS = {
+    "bandit_camp": BANDIT_BIOMES,
+    "bandit_fort": BANDIT_BIOMES,
     "city": ["minecraft:plains", "minecraft:sunflower_plains", "minecraft:meadow", "minecraft:savanna",
              "minecraft:forest", "minecraft:birch_forest", "minecraft:taiga", "minecraft:snowy_plains"],
     "mercenary_camp": ["minecraft:plains", "minecraft:sunflower_plains", "minecraft:meadow", "minecraft:forest",

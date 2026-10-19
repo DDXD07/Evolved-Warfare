@@ -9,10 +9,10 @@ Requiere **Fabric API**. Opcional: **Golden Coin Merchants** (los reclutas acept
 | Fase | Contenido | Estado |
 |---|---|---|
 | 1 | **NPC base (el recluta)** y dónde vive: ciudades, campamentos y torres generados; contrato, dueño, equipo, órdenes, paga diaria. Aldeas vanilla con empedrado, farolas y empalizada | ✅ Hecha |
-| 2 | Soldados: cuerpo a cuerpo, arquero y médico; IA de combate, patrullas, niveles, bastón de mando | ⏳ |
+| 2 | **Soldados y bandidos**: guerrero, bárbaro, arquero, ballestero, médico; bandidos hostiles en fuertes, campamentos, patrullas y asaltos; niveles y bastón de mando | ✅ Hecha |
 | 3 | Trabajadores y zonas de trabajo: granja, tala, mina, animales, pesca; ayuntamiento | ⏳ |
 | 4 | Logística y comercio: almacén, mensajero con rutas, comerciante (Golden Coin) | ⏳ |
-| 5 | Facciones enemigas: bandidos, vikingos, piratas; campamentos, reputación, asaltos | ⏳ |
+| 5 | Más facciones enemigas (vikingos, piratas), reputación y diplomacia | ⏳ |
 | 6 | Estructuras: escáner y constructor de planos; más tipos de ciudad (desierto, nieve) y fortalezas | ⏳ |
 | 7 | Asedio: catapulta, balista, trebuchet, ariete; puente levadizo y rastrillo | ⏳ |
 | 8 | Armas medievales, árbol de investigación, equilibrio y configuración | ⏳ |
@@ -61,6 +61,47 @@ Atajo: clic derecho con comida (o Golden Coins) en la mano → se la guarda como
 - Si un día no cobra, te avisa por el chat. Tras **3 días sin paga deserta**: deja su equipo en el suelo y se va.
 - Bien pagado, se cura poco a poco.
 - Su dueño no puede herirlo por accidente. Si muere, te avisa y su equipo queda en el suelo.
+
+## Fase 2 — Soldados y bandidos
+
+### Clases
+Las mismas cinco clases para tus soldados y para los bandidos (más el capitán, solo bandido):
+
+| Clase | Arma | Cómo lucha |
+|---|---|---|
+| **Guerrero** | Espada (y escudo) | Primera línea. Con escudo para parte de los golpes que le llegan de frente. |
+| **Bárbaro** | Hacha | Golpea muy fuerte, pero más despacio. |
+| **Arquero** | Arco | Dispara desde unos 15 bloques, se mueve de lado y se aparta si te acercas. |
+| **Ballestero** | Ballesta | Carga despacio, apunta y dispara un virote que hace mucho daño. |
+| **Médico** | Botiquín | No ataca: busca al aliado más herido (NPCs y su dueño) y lo cura. |
+| **Capitán** | Espada, escudo y armadura de hierro | Jefe de los fuertes de bandidos: 40 de vida. |
+
+### Tus soldados
+1. Contrata un recluta.
+2. Ponle el arma en la mano principal (desde su menú).
+3. Pulsa **Entrenar**: se convierte en soldado de esa clase y conserva nombre, aspecto, equipo y paga.
+
+Sin fuego amigo: tus soldados no te hieren ni se hieren entre ellos (ni con flechas). Defienden a su dueño, atacan a quien ataque su dueño y a los monstruos y bandidos cercanos, sin alejarse de su zona: unos 20 bloques de ti si te siguen, 12 de su puesto si están quietos, 16 de su casa. Después vuelven a su sitio. Los de cuerpo a cuerpo no van a por creepers.
+
+**Niveles**: suben con las bajas (monstruo 1, bandido 3, capitán 10; los médicos ganan 1 por cada curación). Hay 5 niveles, y cada uno da +2 de vida y +0,5 de daño cuerpo a cuerpo (+10 % de daño de flecha). El menú muestra la clase, el nivel, las bajas y la experiencia.
+
+**Bastón de mando** (lingote de oro + lana roja + 2 palos en diagonal):
+- Clic derecho al aire: todos tus NPCs a menos de 32 bloques te siguen. Con Mayús: se quedan quietos.
+- Clic derecho en un bloque: van allí y lo vigilan.
+- Clic derecho en un enemigo: tus soldados lo atacan.
+
+**Botiquín** (receta sin forma: cuero + lana blanca + tinte rojo + rodaja de sandía reluciente): para entrenar médicos.
+
+### Bandidos
+Atacan a cualquier jugador, a tus reclutas y soldados y a los gólems de hierro. No aparecen en pacífico.
+- **Campamentos de bandidos**: tiendas negras, hoguera y botín, con 1-6 bandidos. A veces tienen una jaula con un **prisionero**: abre la puerta y contrátalo.
+- **Fuertes de bandidos**: empalizada, 4 torres con arqueros o ballesteros, sala del capitán con dos cofres de buen botín, calabozo con un prisionero y unos 10 bandidos.
+- **Patrullas**: de vez en cuando (desde el día 2) aparece un grupo de 3-6 bandidos cerca de un jugador y va a por él.
+- **Asaltos**: cada 3-5 días de juego, si estás dentro de una aldea o de una ciudad del mod, suena un cuerno y llega un grupo de 4-12 bandidos (con capitán en difícil). Atacan también a los aldeanos. Una barra muestra cuántos quedan; si en 10 minutos no los derrotas, se retiran.
+
+Sueltan pepitas de oro, flechas, pan y, a veces, esmeraldas; el capitán suelta esmeraldas, hierro y a veces una manzana dorada.
+
+Para encontrarlos: `/locate structure evolvedwarfare:bandit_camp` o `evolvedwarfare:bandit_fort`. En creativo hay un **huevo de bandido** (clase al azar).
 
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):

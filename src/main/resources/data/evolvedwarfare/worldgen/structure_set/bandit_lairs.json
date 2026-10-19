@@ -1,0 +1,22 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 908712345,
+    "spacing": 30,
+    "separation": 11,
+    "exclusion_zone": {
+      "other_set": "minecraft:villages",
+      "chunk_count": 6
+    }
+  },
+  "structures": [
+    {
+      "structure": "evolvedwarfare:bandit_camp",
+      "weight": 3
+    },
+    {
+      "structure": "evolvedwarfare:bandit_fort",
+      "weight": 1
+    }
+  ]
+}

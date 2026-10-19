@@ -31,6 +31,7 @@ SPECIAL = {
     "chain": ((60, 65, 80), (60, 65, 80)),
 }
 NPC_COLOR = ((70, 110, 200), (60, 95, 180))      # túnica azul: así se ven los reclutas en la vista previa
+BANDIT_COLOR = ((190, 40, 40), (150, 30, 30))    # rojo: bandidos
 STAND_COLOR = ((150, 150, 150), (120, 120, 120))
 
 
@@ -162,7 +163,7 @@ def render(blocks, entities=(), scale=6, ground=None, margin=3, bg=(242, 238, 22
                     blocks[(x, ground, z)] = ground_block
     items = [(p, st, False) for p, st in blocks.items() if short(st) not in ("air", "structure_void")]
     for (eid, (x, y, z)) in entities:
-        kind = "npc" if "evolvedwarfare" in eid else "stand"
+        kind = "bandit" if "bandit" in eid else ("npc" if "evolvedwarfare" in eid else "stand")
         items.append(((x, y, z), kind, True))
         items.append(((x, y + 1, z), kind, True))
     if not items:
@@ -186,7 +187,7 @@ def render(blocks, entities=(), scale=6, ground=None, margin=3, bg=(242, 238, 22
     items.sort(key=lambda it: (it[0][0] + it[0][2]) + 0.82 * it[0][1])
     for (x, y, z), st, is_ent in items:
         if is_ent:
-            top, side = NPC_COLOR if st == "npc" else STAND_COLOR
+            top, side = {"npc": NPC_COLOR, "bandit": BANDIT_COLOR}.get(st, STAND_COLOR)
             hgt, wid = 1.0, 0.5
         else:
             top, side = colors(st)

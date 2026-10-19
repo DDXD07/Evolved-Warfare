@@ -1,4 +1,4 @@
-"""Texturas originales de Evolved Warfare (fase 1): skins de reclutas 64x64, contrato, GUI e icono."""
+"""Texturas originales de Evolved Warfare: skins de reclutas y bandidos 64x64, objetos, GUI e icono."""
 import os
 import random
 import sys
@@ -294,6 +294,125 @@ def back_preview(skin):
     return out
 
 
+
+# ----------------------------------------------------------------- bandidos (fase 2)
+BANDIT_VARIANTS = [
+    dict(skin="#D9A47E", hair="#2A1C12", tunic="#4A3423", pants="#2E2A24", boots="#1E140C", style="short",
+         beard=False, hood="#3A2A1C", mask="#8E1F1F"),
+    dict(skin="#B57A50", hair="#141010", tunic="#5E1B1B", pants="#2E2A24", boots="#1E140C", style="crop",
+         beard=True, hood=None, mask="#1F1F1F"),
+    dict(skin="#E8B896", hair="#6B4A2A", tunic="#3C3F2A", pants="#2B2620", boots="#1A120A", style="short",
+         beard=False, hood="#262626", scar=True),
+    dict(skin="#C99068", hair="#7A2E1A", tunic="#2B2B2B", pants="#3A3026", boots="#1E140C", style="long",
+         beard=False, hood=None, mask="#3C3F2A"),
+]
+CAPTAIN = dict(skin="#D2A07A", hair="#1A1410", tunic="#1E1E22", pants="#3A2A1E", boots="#120C08", style="short",
+               beard=True, hood=None, eyepatch=True, trim="#C9A33A")
+
+
+def make_bandit(p, seed):
+    img = make_skin(p, seed)
+    rnd = random.Random(seed * 7 + 3)
+    if p.get("mask"):
+        m = hexc(p["mask"])
+        # pañuelo en la capa exterior de la cabeza: cara, lados y nudo detrás
+        for x in range(8):
+            for y in (5, 6, 7):
+                img.putpixel((40 + x, 8 + y), jitter(m, rnd, 6) if not (y == 7 and x in (0, 7)) else shade(m, 0.8))
+                img.putpixel((32 + x, 8 + y), jitter(m, rnd, 6))   # lado derecho
+                img.putpixel((48 + x, 8 + y), jitter(m, rnd, 6))   # lado izquierdo
+        for (x, y) in ((3, 5), (4, 5), (3, 6), (4, 7), (5, 7)):
+            img.putpixel((56 + x, 8 + y), shade(m, 0.75))          # nudo
+    if p.get("scar"):
+        scar = hexc("#9C4A42")
+        for (x, y) in ((5, 2), (6, 3), (5, 4), (6, 5)):
+            img.putpixel((8 + x, 8 + y), scar)
+    if p.get("eyepatch"):
+        black, strap = hexc("#121212"), hexc("#2A2420")
+        for x in range(8):
+            img.putpixel((8 + x, 8 + 3), strap)
+        for (x, y) in ((1, 3), (2, 3), (1, 4), (2, 4), (1, 5), (2, 5)):
+            img.putpixel((8 + x, 8 + y), black)
+        for x in range(8):
+            img.putpixel((0 + x, 8 + 3), strap)
+            img.putpixel((16 + x, 8 + 3), strap)
+            img.putpixel((24 + x, 8 + 3), strap)
+    if p.get("trim"):
+        gold = hexc(p["trim"])
+        for y in range(0, 12):
+            if y == 8:
+                continue
+            img.putpixel((20 + 0, 20 + y), gold)
+            img.putpixel((20 + 7, 20 + y), gold)
+        for y in (2, 4, 6):
+            img.putpixel((20 + 3, 20 + y), gold)
+            img.putpixel((20 + 4, 20 + y), shade(gold, 0.8))
+        for x in range(4):  # puños dorados
+            img.putpixel((44 + x, 20 + 5), gold)
+            img.putpixel((36 + x, 52 + 5), gold)
+    return img
+
+
+# ----------------------------------------------------------------- objetos (fase 2)
+def command_staff():
+    im = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    wood, wood_d, wood_l = hexc("#7A5230"), hexc("#4A3018"), hexc("#A0723F")
+    gold, gold_d, gold_l = hexc("#D9B13B"), hexc("#9A7420"), hexc("#F5DE7A")
+    red, red_d = hexc("#B3262B"), hexc("#7A151A")
+    for i in range(2, 12):
+        x, y = i, 15 - i
+        im.putpixel((x, y), wood)
+        im.putpixel((x - 1, y), wood_d)
+        im.putpixel((x, y + 1), wood_d) if y + 1 < 16 else None
+        if i % 3 == 0:
+            im.putpixel((x, y), wood_l)
+    # remate dorado
+    for (x, y) in ((11, 3), (12, 3), (11, 4), (12, 2), (13, 2), (13, 3), (12, 4), (14, 1), (13, 1)):
+        im.putpixel((x, y), gold)
+    for (x, y) in ((12, 2), (14, 1)):
+        im.putpixel((x, y), gold_l)
+    for (x, y) in ((11, 4), (12, 4)):
+        im.putpixel((x, y), gold_d)
+    # banderín rojo
+    for (x, y) in ((9, 3), (8, 3), (7, 3), (8, 4), (7, 4), (6, 4), (7, 5), (9, 4), (8, 5), (9, 5), (10, 4), (10, 5)):
+        im.putpixel((x, y), red)
+    for (x, y) in ((6, 4), (7, 5), (8, 5)):
+        im.putpixel((x, y), red_d)
+    im.putpixel((8, 4), gold)
+    return im
+
+
+def medic_kit():
+    im = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    box_c, box_d, box_l = hexc("#E8E2D0"), hexc("#A39C88"), hexc("#FFFFFF")
+    red = hexc("#C0282D")
+    strap = hexc("#6B4A2A")
+    for y in range(5, 14):
+        for x in range(2, 14):
+            im.putpixel((x, y), box_c)
+    for x in range(2, 14):
+        im.putpixel((x, 5), box_l)
+        im.putpixel((x, 13), box_d)
+    for y in range(5, 14):
+        im.putpixel((2, y), box_l)
+        im.putpixel((13, y), box_d)
+    # asa
+    for x in range(6, 10):
+        im.putpixel((x, 3), strap)
+    im.putpixel((5, 4), strap)
+    im.putpixel((10, 4), strap)
+    # cruz roja
+    for y in range(7, 12):
+        im.putpixel((7, y), red)
+        im.putpixel((8, y), red)
+    for x in range(5, 11):
+        im.putpixel((x, 9), red)
+        im.putpixel((x, 8), red) if x in (5, 10) else None
+    for x in range(5, 11):
+        im.putpixel((x, 8), red)
+    return im
+
+
 if __name__ == "__main__":
     os.makedirs(PREVIEW, exist_ok=True)
     sheet = Image.new("RGBA", (len(VARIANTS) * 36, 34), (60, 60, 70, 255))
@@ -319,4 +438,23 @@ if __name__ == "__main__":
     icon.alpha_composite(up(face, 12), (4, 4))
     icon.alpha_composite(up(c, 4), (64, 64))
     icon.save(os.path.join(RES, "icon.png"))
+
+    # fase 2: bandidos, capitán y objetos
+    os.makedirs(os.path.join(RES, "textures/entity/bandit"), exist_ok=True)
+    sheet = Image.new("RGBA", ((len(BANDIT_VARIANTS) + 1) * 36, 34), (60, 60, 70, 255))
+    for i, p in enumerate(BANDIT_VARIANTS):
+        b = make_bandit(p, 300 + i)
+        b.save(os.path.join(RES, f"textures/entity/bandit/bandit_{i}.png"))
+        sheet.alpha_composite(front_preview(b), (i * 36 + 1, 1))
+        sheet.alpha_composite(back_preview(b), (i * 36 + 18, 1))
+    cap = make_bandit(CAPTAIN, 399)
+    cap.save(os.path.join(RES, "textures/entity/bandit/captain.png"))
+    k = len(BANDIT_VARIANTS)
+    sheet.alpha_composite(front_preview(cap), (k * 36 + 1, 1))
+    sheet.alpha_composite(back_preview(cap), (k * 36 + 18, 1))
+    up(sheet, 6).save(os.path.join(PREVIEW, "bandits_x6.png"))
+    for name, fn in (("command_staff", command_staff), ("medic_kit", medic_kit)):
+        im = fn()
+        im.save(os.path.join(RES, f"textures/item/{name}.png"))
+        up(im, 8).save(os.path.join(PREVIEW, f"{name}_x8.png"))
     print("ok")
