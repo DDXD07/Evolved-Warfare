@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.SaplingBlock;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.BlockItem;
@@ -30,8 +31,8 @@ import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Leñador (zona 15x15): tala árboles enteros (solo árboles de verdad: troncos con hojas naturales, nunca casas de
- * troncos), replanta un brote en el tocón, recoge brotes, palos y manzanas del suelo y planta brotes en cuadrícula
+ * Leñador (zona 15x15): tala árboles enteros (solo árboles de verdad: troncos con hojas naturales y sin nada
+ * construido pegado, así que nunca toca casas de troncos), replanta un brote en el tocón, recoge brotes, palos y manzanas del suelo y planta brotes en cuadrícula
  * (cada 3 bloques) donde haya sitio. Con harina de hueso en los suministros abona los brotes.
  */
 public class LumberjackJob implements Job {
@@ -189,6 +190,9 @@ public class LumberjackJob implements Job {
 						BlockState state = world.getBlockState(n);
 						if (state.isIn(BlockTags.LOGS)) {
 							queue.add(n);
+						} else if (isBuilt(state)) {
+							// pegado a tablones, puertas, cristal... es una construcción, no un árbol
+							return null;
 						} else if (!naturalLeaves && state.isIn(BlockTags.LEAVES)
 								&& state.contains(Properties.PERSISTENT) && !state.get(Properties.PERSISTENT)) {
 							naturalLeaves = true;
@@ -198,6 +202,17 @@ public class LumberjackJob implements Job {
 			}
 		}
 		return naturalLeaves ? logs : null;
+	}
+
+	/** Bloques de construcción que nunca están pegados a un árbol natural. */
+	private static boolean isBuilt(BlockState state) {
+		return state.isIn(BlockTags.PLANKS) || state.isIn(BlockTags.STAIRS) || state.isIn(BlockTags.SLABS)
+				|| state.isIn(BlockTags.DOORS) || state.isIn(BlockTags.TRAPDOORS) || state.isIn(BlockTags.FENCES)
+				|| state.isIn(BlockTags.FENCE_GATES) || state.isIn(BlockTags.WALLS) || state.isIn(BlockTags.WOOL)
+				|| state.isIn(BlockTags.BEDS) || state.isOf(Blocks.GLASS) || state.isOf(Blocks.GLASS_PANE)
+				|| state.isOf(Blocks.COBBLESTONE) || state.isOf(Blocks.STONE_BRICKS) || state.isOf(Blocks.BRICKS)
+				|| state.isOf(Blocks.TORCH) || state.isOf(Blocks.WALL_TORCH) || state.isOf(Blocks.LANTERN)
+				|| state.isOf(Blocks.CHEST) || state.isOf(Blocks.CRAFTING_TABLE);
 	}
 
 	private static boolean fell(WorkContext ctx, BlockPos base) {

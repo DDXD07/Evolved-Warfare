@@ -161,6 +161,12 @@ public class WorkerEntity extends AbstractNpcEntity {
 		return getWorld().getTime() - lastActive < 40;
 	}
 
+	/** Los mineros y excavadores no pasean: junto a su puesto hay un pozo. */
+	@Override
+	public boolean canWander() {
+		return !getProfession().area().pit();
+	}
+
 	public void markBusy() {
 		lastActive = getWorld().getTime();
 	}

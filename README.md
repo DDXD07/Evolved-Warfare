@@ -10,7 +10,7 @@ Requiere **Fabric API**. Opcional: **Golden Coin Merchants** (los reclutas acept
 |---|---|---|
 | 1 | **NPC base (el recluta)** y dónde vive: ciudades, campamentos y torres generados; contrato, dueño, equipo, órdenes, paga diaria. Aldeas vanilla con empedrado, farolas y empalizada | ✅ Hecha |
 | 2 | **Soldados y bandidos**: guerrero, bárbaro, arquero, ballestero, médico; bandidos hostiles en fuertes, campamentos, patrullas y asaltos; niveles y bastón de mando | ✅ Hecha |
-| 3 | Trabajadores y zonas de trabajo: granja, tala, mina, animales, pesca; ayuntamiento | ⏳ |
+| 3 | **Trabajadores**: 14 oficios con su puesto de trabajo (granja, tala, mina, excavación, pesca, ganado, corral, colmenas, huerto, forja, cocina, carbonera, cantería, flechas) y ayuntamiento que paga solo | ✅ Hecha |
 | 4 | Logística y comercio: almacén, mensajero con rutas, comerciante (Golden Coin) | ⏳ |
 | 5 | Más facciones enemigas (vikingos, piratas), reputación y diplomacia | ⏳ |
 | 6 | Estructuras: escáner y constructor de planos; más tipos de ciudad (desierto, nieve) y fortalezas | ⏳ |
@@ -86,7 +86,7 @@ Sin fuego amigo: tus soldados no te hieren ni se hieren entre ellos (ni con flec
 **Niveles**: suben con las bajas (monstruo 1, bandido 3, capitán 10; los médicos ganan 1 por cada curación). Hay 5 niveles, y cada uno da +2 de vida y +0,5 de daño cuerpo a cuerpo (+10 % de daño de flecha). El menú muestra la clase, el nivel, las bajas y la experiencia.
 
 **Bastón de mando** (lingote de oro + lana roja + 2 palos en diagonal):
-- Clic derecho al aire: todos tus NPCs a menos de 32 bloques te siguen. Con Mayús: se quedan quietos.
+- Clic derecho al aire: todos tus NPCs a menos de 32 bloques te siguen (menos los trabajadores, que siguen en su puesto). Con Mayús: se quedan quietos.
 - Clic derecho en un bloque: van allí y lo vigilan.
 - Clic derecho en un enemigo: tus soldados lo atacan.
 
@@ -103,12 +103,52 @@ Sueltan pepitas de oro, flechas, pan y, a veces, esmeraldas; el capitán suelta 
 
 Para encontrarlos: `/locate structure evolvedwarfare:bandit_camp` o `evolvedwarfare:bandit_fort`. En creativo hay un **huevo de bandido** (clase al azar).
 
+## Fase 3 — Trabajadores
+
+### Cómo poner a alguien a trabajar
+1. Fabrica el **puesto** del oficio y ponlo donde quieras que trabaje (el dibujo del frente mira hacia ti).
+2. Ten cerca (a menos de 24 bloques) un **recluta** tuyo.
+3. Abre el puesto (clic derecho) y pulsa **Asignar recluta**: tu recluta más cercano pasa a ser trabajador de ese oficio, con su nombre, equipo y paga.
+4. Dale su **herramienta** en la mano (desde su menú) y lo que gaste en la fila de **suministros** del puesto. Lo que produce va a las dos filas de **producción**.
+
+Trabajan de día dentro de la zona de su puesto y de noche descansan junto a él. Huyen de monstruos y bandidos. Si no cobran, hacen huelga. **Ver zona** marca el borde de la zona con partículas. **Despedir** lo convierte otra vez en recluta (y te sigue). Si rompes el puesto, su trabajador vuelve a ser recluta y lo que había dentro cae al suelo.
+
+Con la herramienta de su oficio trabajan más rápido (más cuanto mejor sea: madera < piedra < hierro < diamante < netherita < oro; Fortuna y Toque de seda funcionan) y gastan su durabilidad; sin ella van a la mitad. Si se les rompe y hay otra en los suministros, la cogen solos. El menú del puesto muestra quién trabaja, cuántas tareas lleva y qué está haciendo (o qué le falta: suministros, combustible, agua, sitio en el almacén...). El botón **[?]** explica el oficio.
+
+Las **tolvas** meten cosas en los suministros por arriba y los lados, y sacan la producción por abajo, así que puedes encadenar puestos con cofres.
+
+### Los 14 oficios
+Receta de todos los puestos: 7 tablones alrededor, un cofre abajo y el objeto del oficio en el centro.
+
+| Oficio | Puesto (objeto central) | Zona | Qué hace | Qué necesita |
+|---|---|---|---|---|
+| **Granjero** | Azada | 11×11 | Ara la tierra con agua a 4 bloques (como en vanilla), siembra, cosecha y resiembra | Semillas, patatas, zanahorias o remolacha. Harina de hueso opcional |
+| **Leñador** | Hacha | 15×15 | Tala árboles enteros (solo árboles naturales, nunca casas de troncos), replanta en el tocón, recoge brotes, palos y manzanas y planta brotes en cuadrícula | Brotes. Harina de hueso opcional |
+| **Minero** | Pico | Pozo 5×5 | Cava detrás del puesto capa a capa hasta la roca madre. No toca cofres ni bloques junto a lava. Las menas que su pico no puede romper las deja | Un pico |
+| **Excavador** | Pala | Pozo 7×7 | Saca tierra, arena, grava, arcilla, barro... hasta 16 capas | Nada (con pala, mucho más rápido) |
+| **Pescador** | Caña | 13×13 | Pesca en el agua cercana (al menos 4 bloques de agua) | Nada (con caña, más rápido) |
+| **Pastor** | Tijeras | 17×17 | Esquila ovejas, ordeña vacas y cabras, recoge la lana, cría y mantiene el rebaño en 8 adultos por especie | Trigo, cubos, tijeras |
+| **Criador** | Bala de heno | 17×17 | Gallinas, cerdos y conejos: los cría, recoge huevos y plumas y mantiene 8 adultos por especie | Semillas, zanahorias, patatas o dientes de león |
+| **Apicultor** | Panal | 17×17 | Vacía colmenas y nidos llenos sin enfadar a las abejas y planta flores | Frascos de cristal (o tijeras para panales). Flores opcionales |
+| **Hortelano** | Harina de hueso | 13×13 | Melones y calabazas de tallo, caña, cactus, bambú, bayas dulces y luminosas, cacao y verrugas del Nether (replanta estas dos) | Nada |
+| **Herrero** | Alto horno | — | Funde menas y metal en bruto (recetas de alto horno) | Menas y combustible |
+| **Cocinero** | Ahumador | — | Cocina carne, pescado y patatas (recetas de ahumador) y hornea pan con 3 de trigo | Comida cruda o trigo, y combustible |
+| **Carbonero** | Horno | — | 5 troncos → 4 de carbón vegetal, sin combustible | Troncos |
+| **Cantero** | Cortapiedras | — | Roca y piedra → ladrillos de piedra; andesita, diorita y granito pulidos; arenisca; ladrillos de pizarra, piedra negra y toba | Esos bloques (con pico, más rápido) |
+| **Flechero** | Mesa de flechería | — | Pedernal + palo + pluma → 4 flechas; grava → pedernal | Esos materiales |
+
+El pastor y el criador nunca sacrifican animales con nombre ni atados.
+
+### Ayuntamiento
+Receta: lingote de oro, libro y lingote de oro arriba; tablón, cofre y tablón en medio; 3 tablones abajo. Guarda comida o Golden Coins dentro y cada pocos segundos rellena las provisiones de todos tus NPCs (trabajadores, soldados y reclutas) a menos de 48 bloques, hasta 3 días de paga. Así no tienes que ir dándoles de comer uno a uno.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque y escribe los `.nbt` y los JSON de generación.
 - `ew_jigsaw_sim.py` — simula cómo el juego monta las ciudades (encaje de piezas, tamaño, nº de NPCs).
 - `ew_preview.py` — dibuja vistas previas isométricas.
 - `ew_textures.py` — genera las texturas (aspectos de los reclutas, contrato, interfaz).
+- `ew_blocks.py` — texturas, modelos, recetas y botín de los puestos de trabajo y el ayuntamiento.
 - `ew_village.py` — prototipo de las aldeas vanilla mejoradas (mismo algoritmo que `VillageExtras.java`) con vista previa.
 
 ```

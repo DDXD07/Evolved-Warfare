@@ -57,11 +57,16 @@ public class ExcavationJob implements Job {
 				return ctx.idle(WorkStatus.DONE);
 			}
 			boolean blocked = false;
+			BlockPos feet = ctx.worker.getBlockPos();
 			for (int dz = -half; dz <= half; dz++) {
 				for (int dx = -half; dx <= half; dx++) {
 					BlockPos pos = new BlockPos(center.getX() + dx, y, center.getZ() + dz);
 					BlockState state = world.getBlockState(pos);
 					if (!canDig(world, pos, state)) {
+						continue;
+					}
+					// nunca el bloque que pisa (para no caerse al pozo)
+					if (pos.getX() == feet.getX() && pos.getZ() == feet.getZ() && pos.getY() < feet.getY()) {
 						continue;
 					}
 					if (state.isToolRequired() && !ctx.tool().isSuitableFor(state)) {

@@ -207,6 +207,11 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 		return false;
 	}
 
+	/** ¿Puede pasear por los alrededores de su casa? */
+	public boolean canWander() {
+		return true;
+	}
+
 	/** Fija la casa donde está ahora y le ordena quedarse allí. */
 	public void setHomeHere() {
 		setHomeAt(getBlockPos());
