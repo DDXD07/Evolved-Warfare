@@ -18,6 +18,7 @@ import net.minecraft.screen.ArrayPropertyDelegate;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
@@ -195,7 +196,9 @@ public class NpcScreenHandler extends ScreenHandler {
 		if (soldier != null) {
 			player.sendMessage(Text.translatable("message.evolvedwarfare.trained", soldier.getName(),
 					Text.translatable(role.translationKey())), false);
-			player.closeHandledScreen();
+			if (player instanceof ServerPlayerEntity serverPlayer) {
+				serverPlayer.closeHandledScreen();
+			}
 		}
 	}
 
