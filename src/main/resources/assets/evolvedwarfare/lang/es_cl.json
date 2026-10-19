@@ -1,8 +1,8 @@
 {
 	"itemGroup.evolvedwarfare": "Evolved Warfare",
 	"item.evolvedwarfare.recruitment_contract": "Contrato de reclutamiento",
-	"item.evolvedwarfare.recruitment_contract.tooltip.0": "Úsalo sobre el suelo para contratar",
-	"item.evolvedwarfare.recruitment_contract.tooltip.1": "a un recluta a tu servicio.",
+	"item.evolvedwarfare.recruitment_contract.tooltip.0": "Clic derecho sobre un recluta libre de una",
+	"item.evolvedwarfare.recruitment_contract.tooltip.1": "ciudad, campamento o torre para contratarlo.",
 	"entity.evolvedwarfare.recruit": "Recluta",
 	"order.evolvedwarfare.follow": "Seguir",
 	"order.evolvedwarfare.stay": "Quieto",
@@ -21,6 +21,7 @@
 	"gui.evolvedwarfare.unpaid": "¡Sin paga! Se va en %s",
 	"gui.evolvedwarfare.provisions": "Provisiones:",
 	"message.evolvedwarfare.recruited": "%s se ha unido a ti. ¡No olvides pagarle con comida!",
+	"message.evolvedwarfare.for_hire": "%s busca trabajo. Contrátalo con un Contrato de reclutamiento.",
 	"message.evolvedwarfare.not_yours": "%s sirve a otro jugador.",
 	"message.evolvedwarfare.fed": "%s guarda las provisiones (paga para %s días).",
 	"message.evolvedwarfare.provisions_full": "%s no puede llevar más provisiones.",

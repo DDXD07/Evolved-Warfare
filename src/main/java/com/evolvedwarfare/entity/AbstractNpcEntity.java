@@ -5,11 +5,14 @@ import com.evolvedwarfare.entity.ai.FollowOwnerNpcGoal;
 import com.evolvedwarfare.entity.ai.ReturnHomeGoal;
 import com.evolvedwarfare.entity.ai.StayGoal;
 import com.evolvedwarfare.entity.ai.WanderNearHomeGoal;
+import com.evolvedwarfare.item.RecruitmentContractItem;
 import com.evolvedwarfare.screen.NpcScreenHandler;
 import java.util.UUID;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.LongDoorInteractGoal;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
@@ -29,14 +32,20 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
+import net.minecraft.world.LocalDifficulty;
+import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,6 +53,9 @@ import org.jetbrains.annotations.Nullable;
  * Base de todos los NPCs de Evolved Warfare.
  *
  * <ul>
+ *   <li><b>Origen</b>: solo aparecen en las ciudades y estructuras que genera el mod. Ahí están
+ *       <i>libres</i>: viven alrededor de su sitio y esperan a que alguien los contrate.</li>
+ *   <li><b>Contratar</b>: clic derecho con un contrato de reclutamiento sobre un NPC libre.</li>
  *   <li><b>Dueño</b>: el jugador que lo contrató. Solo él puede darle órdenes y abrir su menú.</li>
  *   <li><b>Órdenes</b>: seguir, quedarse quieto o volver a casa.</li>
  *   <li><b>Equipo</b>: armadura y armas en sus manos (se ven puestas y se sueltan al morir).</li>
@@ -105,6 +117,26 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 
 	// ------------------------------------------------------------------ apariencia
 
+	/** Aspecto y nombre al azar; cada tipo de NPC decide los suyos. */
+	protected void initAppearance(Random random) {
+	}
+
+	/**
+	 * Se llama al aparecer por primera vez: al generarse dentro de una estructura (o con /summon).
+	 * Un NPC sin dueño se queda viviendo alrededor del sitio donde apareció.
+	 */
+	@Override
+	public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason,
+			@Nullable EntityData entityData) {
+		EntityData data = super.initialize(world, difficulty, spawnReason, entityData);
+		initAppearance(world.getRandom());
+		if (ownerUuid == null) {
+			home = getBlockPos();
+			order = NpcOrder.HOME;
+		}
+		return data;
+	}
+
 	public int getVariant() {
 		return getDataTracker().get(VARIANT);
 	}
@@ -117,6 +149,11 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 
 	public void setOwner(PlayerEntity player) {
 		ownerUuid = player.getUuid();
+	}
+
+	/** ¿Está libre, esperando a que alguien lo contrate? */
+	public boolean isForHire() {
+		return ownerUuid == null;
 	}
 
 	public boolean isOwner(PlayerEntity player) {
@@ -195,7 +232,10 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 	public void tick() {
 		super.tick();
 		if (!getWorld().isClient && isAlive()) {
-			tickUpkeep();
+			// Solo cobra cuando sirve a alguien.
+			if (ownerUuid != null) {
+				tickUpkeep();
+			}
 			// Bien pagado, se cura poco a poco.
 			if (unpaidDays == 0 && age % 100 == 0 && getHealth() < getMaxHealth()) {
 				heal(1.0F);
@@ -258,13 +298,23 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 	@Override
 	protected ActionResult interactMob(PlayerEntity player, Hand hand) {
 		World world = getWorld();
+		ItemStack held = player.getStackInHand(hand);
+		if (isForHire()) {
+			if (!world.isClient) {
+				if (held.getItem() instanceof RecruitmentContractItem) {
+					hire(player, held);
+				} else {
+					player.sendMessage(Text.translatable("message.evolvedwarfare.for_hire", getName()), true);
+				}
+			}
+			return ActionResult.success(world.isClient);
+		}
 		if (!isOwner(player)) {
 			if (!world.isClient) {
 				player.sendMessage(Text.translatable("message.evolvedwarfare.not_yours", getName()), true);
 			}
 			return ActionResult.success(world.isClient);
 		}
-		ItemStack held = player.getStackInHand(hand);
 		if (!player.isSneaking() && isUpkeepItem(held)) {
 			// Clic con comida/monedas: se guarda directamente como provisiones.
 			if (!world.isClient) {
@@ -285,6 +335,21 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 			openMenu(serverPlayer);
 		}
 		return ActionResult.success(world.isClient);
+	}
+
+	/** Firma el contrato: pasa a servir al jugador y lo sigue. */
+	private void hire(PlayerEntity player, ItemStack contract) {
+		ownerUuid = player.getUuid();
+		home = null;
+		unpaidDays = 0;
+		upkeepTimer = UPKEEP_INTERVAL;
+		setOrder(NpcOrder.FOLLOW);
+		contract.decrementUnlessCreative(1, player);
+		playSound(SoundEvents.ENTITY_VILLAGER_YES, 1.0F, 1.0F);
+		if (getWorld() instanceof ServerWorld serverWorld) {
+			serverWorld.spawnParticles(ParticleTypes.HAPPY_VILLAGER, getX(), getBodyY(0.8), getZ(), 10, 0.4, 0.5, 0.4, 0.0);
+		}
+		player.sendMessage(Text.translatable("message.evolvedwarfare.recruited", getName()), true);
 	}
 
 	private void openMenu(ServerPlayerEntity player) {

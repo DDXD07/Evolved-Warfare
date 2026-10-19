@@ -1,0 +1,22 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 1720193857,
+    "spacing": 26,
+    "separation": 9,
+    "exclusion_zone": {
+      "other_set": "minecraft:villages",
+      "chunk_count": 4
+    }
+  },
+  "structures": [
+    {
+      "structure": "evolvedwarfare:mercenary_camp",
+      "weight": 1
+    },
+    {
+      "structure": "evolvedwarfare:watchtower",
+      "weight": 1
+    }
+  ]
+}

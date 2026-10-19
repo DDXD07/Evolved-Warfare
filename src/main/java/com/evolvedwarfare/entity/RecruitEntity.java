@@ -5,7 +5,10 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 
-/** El recluta: un NPC sin oficio todavía. En fases siguientes podrá convertirse en soldado o trabajador. */
+/**
+ * El recluta: un NPC sin oficio todavía. Vive en las ciudades, campamentos y torres que genera el mod
+ * hasta que alguien lo contrata. En fases siguientes podrá convertirse en soldado o trabajador.
+ */
 public class RecruitEntity extends AbstractNpcEntity {
 	/** Aspectos disponibles: 0-3 hombres, 4-5 mujeres. */
 	public static final int VARIANTS = 6;
@@ -22,8 +25,9 @@ public class RecruitEntity extends AbstractNpcEntity {
 		super(type, world);
 	}
 
-	/** Aspecto y nombre al azar (se llama al contratarlo). */
-	public void randomizeAppearance(Random random) {
+	/** Aspecto y nombre al azar (al generarse en una ciudad, campamento o torre). */
+	@Override
+	protected void initAppearance(Random random) {
 		int variant = random.nextInt(VARIANTS);
 		setVariant(variant);
 		String[] names = variant >= FIRST_FEMALE_VARIANT ? FEMALE_NAMES : MALE_NAMES;

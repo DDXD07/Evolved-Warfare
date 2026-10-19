@@ -1,8 +1,8 @@
 {
 	"itemGroup.evolvedwarfare": "Evolved Warfare",
 	"item.evolvedwarfare.recruitment_contract": "Recruitment Contract",
-	"item.evolvedwarfare.recruitment_contract.tooltip.0": "Use it on the ground to hire",
-	"item.evolvedwarfare.recruitment_contract.tooltip.1": "a recruit into your service.",
+	"item.evolvedwarfare.recruitment_contract.tooltip.0": "Right-click a free recruit in a city,",
+	"item.evolvedwarfare.recruitment_contract.tooltip.1": "camp or watchtower to hire them.",
 	"entity.evolvedwarfare.recruit": "Recruit",
 	"order.evolvedwarfare.follow": "Follow",
 	"order.evolvedwarfare.stay": "Stay",
@@ -21,6 +21,7 @@
 	"gui.evolvedwarfare.unpaid": "Unpaid! Leaves in %s",
 	"gui.evolvedwarfare.provisions": "Provisions:",
 	"message.evolvedwarfare.recruited": "%s has joined you. Don't forget to pay them with food!",
+	"message.evolvedwarfare.for_hire": "%s is looking for work. Hire them with a Recruitment Contract.",
 	"message.evolvedwarfare.not_yours": "%s serves another player.",
 	"message.evolvedwarfare.fed": "%s stores the provisions (pay for %s days).",
 	"message.evolvedwarfare.provisions_full": "%s can't carry more provisions.",

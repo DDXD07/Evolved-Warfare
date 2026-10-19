@@ -1,0 +1,85 @@
+{
+  "elements": [
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "evolvedwarfare:city/houses/cottage",
+        "processors": "evolvedwarfare:city_weathering",
+        "projection": "rigid"
+      },
+      "weight": 6
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "evolvedwarfare:city/houses/townhouse",
+        "processors": "evolvedwarfare:city_weathering",
+        "projection": "rigid"
+      },
+      "weight": 5
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "evolvedwarfare:city/houses/barracks",
+        "processors": "evolvedwarfare:city_weathering",
+        "projection": "rigid"
+      },
+      "weight": 2
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "evolvedwarfare:city/houses/tavern",
+        "processors": "evolvedwarfare:city_weathering",
+        "projection": "rigid"
+      },
+      "weight": 2
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "evolvedwarfare:city/houses/blacksmith",
+        "processors": "evolvedwarfare:city_weathering",
+        "projection": "rigid"
+      },
+      "weight": 2
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "evolvedwarfare:city/houses/guard_post",
+        "processors": "evolvedwarfare:city_weathering",
+        "projection": "rigid"
+      },
+      "weight": 1
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "evolvedwarfare:city/houses/market_stalls",
+        "processors": "evolvedwarfare:city_weathering",
+        "projection": "rigid"
+      },
+      "weight": 2
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "evolvedwarfare:city/houses/garden",
+        "processors": {
+          "processors": []
+        },
+        "projection": "rigid"
+      },
+      "weight": 2
+    },
+    {
+      "element": {
+        "element_type": "minecraft:empty_pool_element"
+      },
+      "weight": 3
+    }
+  ],
+  "fallback": "minecraft:empty"
+}

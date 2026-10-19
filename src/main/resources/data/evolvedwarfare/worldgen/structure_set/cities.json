@@ -1,0 +1,18 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 1593274681,
+    "spacing": 44,
+    "separation": 16,
+    "exclusion_zone": {
+      "other_set": "minecraft:villages",
+      "chunk_count": 6
+    }
+  },
+  "structures": [
+    {
+      "structure": "evolvedwarfare:city",
+      "weight": 1
+    }
+  ]
+}
