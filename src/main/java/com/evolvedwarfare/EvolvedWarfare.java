@@ -1,6 +1,7 @@
 package com.evolvedwarfare;
 
 import com.evolvedwarfare.entity.NpcSides;
+import com.evolvedwarfare.item.RouteSlipItem;
 import com.evolvedwarfare.network.ModNetworking;
 import com.evolvedwarfare.registry.ModBlocks;
 import com.evolvedwarfare.registry.ModComponents;
@@ -46,6 +47,7 @@ public class EvolvedWarfare implements ModInitializer {
 		ModStructures.init();
 		NpcSides.register();
 		BanditSpawner.register();
+		RouteSlipItem.registerEvents();
 		LOGGER.info("Evolved Warfare cargado");
 	}
 }

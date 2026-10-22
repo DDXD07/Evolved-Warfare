@@ -1,6 +1,5 @@
 package com.evolvedwarfare.item;
 
-import com.evolvedwarfare.block.TownHallBlockEntity;
 import com.evolvedwarfare.block.WarehouseBlockEntity;
 import com.evolvedwarfare.block.WorkSiteBlockEntity;
 import com.evolvedwarfare.logistics.RouteData;
@@ -8,6 +7,7 @@ import com.evolvedwarfare.logistics.RouteStop;
 import com.evolvedwarfare.registry.ModComponents;
 import com.evolvedwarfare.screen.RouteSlipScreenHandler;
 import java.util.List;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -51,17 +51,33 @@ public class RouteSlipItem extends Item {
 		return be instanceof Inventory || be instanceof WarehouseBlockEntity;
 	}
 
+	/**
+	 * Los cofres, puestos y el almacén abren su menú al hacer clic derecho antes de que el objeto se entere; con la hoja
+	 * en la mano el clic marca la parada (sin tener que agacharse).
+	 */
+	public static void registerEvents() {
+		UseBlockCallback.EVENT.register((player, world, hand, hit) -> {
+			ItemStack stack = player.getStackInHand(hand);
+			if (player.isSpectator() || !(stack.getItem() instanceof RouteSlipItem)) {
+				return ActionResult.PASS;
+			}
+			return toggleStop(world, hit.getBlockPos(), player, stack);
+		});
+	}
+
 	@Override
 	public ActionResult useOnBlock(ItemUsageContext context) {
-		World world = context.getWorld();
-		BlockPos pos = context.getBlockPos();
-		BlockEntity be = world.getBlockEntity(pos);
 		PlayerEntity player = context.getPlayer();
+		return player == null ? ActionResult.PASS : toggleStop(context.getWorld(), context.getBlockPos(), player, context.getStack());
+	}
+
+	/** Añade o quita esa parada. */
+	private static ActionResult toggleStop(World world, BlockPos pos, PlayerEntity player, ItemStack stack) {
+		BlockEntity be = world.getBlockEntity(pos);
 		if (be == null || !isStop(be)) {
 			return ActionResult.PASS;
 		}
-		if (!world.isClient && player != null) {
-			ItemStack stack = context.getStack();
+		if (!world.isClient) {
 			RouteData data = data(stack);
 			Text name = world.getBlockState(pos).getBlock().getName();
 			int index = data.indexOf(pos);
