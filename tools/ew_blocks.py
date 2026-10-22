@@ -36,6 +36,9 @@ PROFESSIONS = [
     ("charcoal_burner", "item/charcoal", "stone", {"item": "minecraft:furnace"}),
     ("stonemason", "item/brick", "stone", {"item": "minecraft:stonecutter"}),
     ("fletcher", "item/arrow", "stone", {"item": "minecraft:fletching_table"}),
+    # fase 4
+    ("courier", "item/saddle", "wood", {"item": "minecraft:leather"}),
+    ("merchant", "item/emerald", "wood", {"item": "minecraft:gold_ingot"}),
 ]
 
 
@@ -256,6 +259,81 @@ def hall_front():
     return tex(p, 33)
 
 
+# ----------------------------------------------------------------- almacén (fase 4)
+CRATE = hexc("#B08A55")
+CRATE_D = hexc("#82612F")
+STRAP = hexc("#5A3E22")
+
+
+def crate_px(x, y, rnd):
+    """Dos cajas apiladas, con tablas en cruz."""
+    ly = y % 7
+    if ly == 0 or x in (2, 13):
+        return jit(STRAP, rnd, 4)
+    cx, cy = x - 2, ly
+    if cx == cy * 11 // 6 or cx == 11 - cy * 11 // 6:
+        return jit(CRATE_D, rnd, 5)
+    return jit(CRATE, rnd, 7)
+
+
+def warehouse_side():
+    return tex(lambda x, y, r: frame_px(x, y, r) or crate_px(x, y - 1, r), 41)
+
+
+def warehouse_top():
+    def p(x, y, r):
+        f = frame_px(x, y, r)
+        if f:
+            return f
+        # tapa de la caja con una argolla
+        if 6 <= x <= 9 and 6 <= y <= 9 and (x in (6, 9) or y in (6, 9)):
+            return IRON_D
+        return planks_px(x, y, r)
+    return tex(p, 42)
+
+
+def warehouse_front():
+    def p(x, y, r):
+        f = frame_px(x, y, r)
+        if f:
+            return f
+        # estantería oscura con un estante en medio (el dibujo del saco va encima)
+        if y in (8, 13):
+            return jit(PLANK_D, r, 4)
+        if x == 2 or y == 2:
+            return shade(FRAME_D, 0.9)
+        return jit(PANEL if (x * 3 + y) % 7 else PANEL_L, r, 3)
+    return tex(p, 43)
+
+
+def route_slip():
+    """Hoja de ruta: papel con un camino punteado entre paradas rojas y un sello."""
+    im = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    rnd = random.Random(44)
+    paper = hexc("#E9E1C8")
+    edge = hexc("#B9AE8E")
+    for y in range(1, 15):
+        for x in range(2, 14):
+            c = jit(paper, rnd, 5)
+            if x in (2, 13) or y in (1, 14):
+                c = edge
+            im.putpixel((x, y), c)
+    # esquina doblada
+    for (x, y) in ((12, 1), (13, 1), (13, 2)):
+        im.putpixel((x, y), (0, 0, 0, 0))
+    im.putpixel((12, 2), edge)
+    # camino punteado
+    path = [(4, 3), (5, 4), (6, 4), (7, 5), (8, 6), (9, 6), (10, 7), (10, 8), (9, 9), (8, 9), (7, 10), (6, 10), (5, 11),
+            (6, 12), (7, 12), (8, 12), (9, 12), (10, 12)]
+    for i, (x, y) in enumerate(path):
+        if i % 2 == 0:
+            im.putpixel((x, y), hexc("#6B5434"))
+    for (x, y) in ((4, 3), (10, 7), (5, 11), (11, 12)):
+        im.putpixel((x, y), hexc("#B3262B"))
+        im.putpixel((x + 1, y), hexc("#7E1519")) if x < 12 else None
+    return im
+
+
 # ----------------------------------------------------------------- JSON
 def write_json(path, obj):
     os.makedirs(os.path.dirname(path), exist_ok=True)
@@ -348,10 +426,11 @@ if __name__ == "__main__":
         "work_site": {"side": wood_side(), "top": wood_top(), "bottom": wood_bottom(), "front": wood_front()},
         "workshop": {"side": stone_side(), "top": stone_top(), "bottom": stone_bottom(), "front": stone_front()},
         "town_hall": {"side": hall_side(), "top": hall_top(), "bottom": wood_bottom(), "front": hall_front()},
+        "warehouse": {"side": warehouse_side(), "top": warehouse_top(), "bottom": wood_bottom(), "front": warehouse_front()},
     }
     for body, faces in bodies.items():
         for face, im in faces.items():
-            if body == "town_hall" and face == "bottom":
+            if body in ("town_hall", "warehouse") and face == "bottom":
                 continue
             im.save(f"{tdir}/{body}_{face}.png")
 
@@ -373,23 +452,47 @@ if __name__ == "__main__":
                 "P": {"tag": "minecraft:planks"}, "C": {"item": "minecraft:chest"}},
         "result": {"id": f"{NS}:town_hall", "count": 1}})
 
+    # almacén (fase 4): mismo modelo con el dibujo de un saco
+    block_files("warehouse", "warehouse", "item/bundle")
+    with open(f"{ASSETS}/models/block/warehouse.json", encoding="utf-8") as f:
+        m = json.load(f)
+    m["textures"]["bottom"] = f"{NS}:block/work_site_bottom"
+    write_json(f"{ASSETS}/models/block/warehouse.json", m)
+    write_json(f"{DATA}/recipe/warehouse.json", {
+        "type": "minecraft:crafting_shaped", "category": "misc",
+        "pattern": ["PBP", "CPC", "PPP"],
+        "key": {"B": {"item": "minecraft:book"}, "P": {"tag": "minecraft:planks"}, "C": {"item": "minecraft:chest"}},
+        "result": {"id": f"{NS}:warehouse", "count": 1}})
+
+    # hoja de ruta (objeto)
+    idir = f"{ASSETS}/textures/item"
+    os.makedirs(idir, exist_ok=True)
+    route_slip().save(f"{idir}/route_slip.png")
+    write_json(f"{ASSETS}/models/item/route_slip.json", {
+        "parent": "minecraft:item/generated", "textures": {"layer0": f"{NS}:item/route_slip"}})
+    write_json(f"{DATA}/recipe/route_slip.json", {
+        "type": "minecraft:crafting_shapeless", "category": "misc",
+        "ingredients": [{"item": "minecraft:paper"}, {"item": "minecraft:ink_sac"}, {"item": "minecraft:feather"}],
+        "result": {"id": f"{NS}:route_slip", "count": 1}})
+
     # se rompen más rápido con hacha (madera) o pico (talleres)
-    axe = [f"{NS}:{p}_post" for p, _, k, _ in PROFESSIONS if k == "wood"] + [f"{NS}:town_hall"]
+    axe = [f"{NS}:{p}_post" for p, _, k, _ in PROFESSIONS if k == "wood"] + [f"{NS}:town_hall", f"{NS}:warehouse"]
     pick = [f"{NS}:{p}_post" for p, _, k, _ in PROFESSIONS if k == "stone"]
     write_json(f"{RES}/data/minecraft/tags/block/mineable/axe.json", {"replace": False, "values": axe})
     write_json(f"{RES}/data/minecraft/tags/block/mineable/pickaxe.json", {"replace": False, "values": pick})
 
-    # vista previa: los 15 bloques
+    # vista previa: todos los bloques
     tiles = []
-    for prof, icon, kind, _ in PROFESSIONS + [("town_hall", "item/bell", "hall", None)]:
-        body = {"wood": "work_site", "stone": "workshop", "hall": "town_hall"}[kind]
+    for prof, icon, kind, _ in PROFESSIONS + [("town_hall", "item/bell", "hall", None), ("warehouse", "item/bundle", "store", None)]:
+        body = {"wood": "work_site", "stone": "workshop", "hall": "town_hall", "store": "warehouse"}[kind]
         f = bodies[body]
         ic = Image.open(f"{VANILLA}/{icon}.png").convert("RGBA").crop((0, 0, 16, 16))
         tiles.append((prof, iso_block(f["top"], f["front"], f["side"], ic, 5)))
-    cols = 5
+    cols = 6
     tw, th = tiles[0][1].size
     sheet = Image.new("RGBA", (cols * (tw + 10) + 10, ((len(tiles) + cols - 1) // cols) * (th + 10) + 10), (236, 232, 222, 255))
     for i, (_, t) in enumerate(tiles):
         sheet.alpha_composite(t, (10 + (i % cols) * (tw + 10), 10 + (i // cols) * (th + 10)))
     sheet.convert("RGB").save(f"{PREVIEW}/puestos.png")
+    route_slip().resize((128, 128), Image.NEAREST).save(f"{PREVIEW}/hoja_de_ruta.png")
     print("ok", len(tiles), "bloques")

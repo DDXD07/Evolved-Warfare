@@ -10,6 +10,9 @@
     "evolvedwarfare:breeder_post",
     "evolvedwarfare:beekeeper_post",
     "evolvedwarfare:gardener_post",
-    "evolvedwarfare:town_hall"
+    "evolvedwarfare:courier_post",
+    "evolvedwarfare:merchant_post",
+    "evolvedwarfare:town_hall",
+    "evolvedwarfare:warehouse"
   ]
 }

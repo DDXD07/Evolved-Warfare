@@ -8,6 +8,7 @@ import com.evolvedwarfare.building.BuildState;
 import com.evolvedwarfare.building.Material;
 import com.evolvedwarfare.registry.ModBlocks;
 import com.evolvedwarfare.screen.BlueprintScreenHandler;
+import com.evolvedwarfare.screen.ShopScreenHandler;
 import com.evolvedwarfare.screen.WorkSiteScreenHandler;
 import com.evolvedwarfare.work.CookingJob;
 import com.evolvedwarfare.work.ExcavationJob;
@@ -79,6 +80,13 @@ public class WorkSiteBlockEntity extends BlockEntity implements SidedInventory, 
 	private BuildPlan buildPlan;
 	private int buildPlaced;
 	private int buildTotal;
+	/** Tienda del comerciante: precio en monedas y lote (índice en {@link #BUNDLES}) de cada hueco de suministros. */
+	private final int[] shopPrices = new int[SUPPLY_SLOTS];
+	private final int[] shopBundles = new int[SUPPLY_SLOTS];
+	public static final int[] BUNDLES = {1, 2, 4, 8, 16, 32, 64};
+	public static final int MAX_PRICE = 999;
+	/** El comerciante tiene que estar a menos de esto del puesto para que la tienda abra. */
+	public static final double SHOP_RANGE = 16.0;
 
 	// solo en memoria: lo que cuenta el trabajador cada segundo
 	private long lastHeartbeat = Long.MIN_VALUE / 2;
@@ -116,6 +124,7 @@ public class WorkSiteBlockEntity extends BlockEntity implements SidedInventory, 
 
 	public WorkSiteBlockEntity(BlockPos pos, BlockState state) {
 		super(ModBlocks.WORK_SITE_ENTITY, pos, state);
+		java.util.Arrays.fill(shopPrices, 1);
 	}
 
 	private static int[] slots(int from, int to) {
@@ -153,6 +162,10 @@ public class WorkSiteBlockEntity extends BlockEntity implements SidedInventory, 
 	public void addFuel(int amount) {
 		fuel = Math.max(0, fuel + amount);
 		markDirty();
+	}
+
+	public int getNote() {
+		return note;
 	}
 
 	public void setNote(int note) {
@@ -321,6 +334,80 @@ public class WorkSiteBlockEntity extends BlockEntity implements SidedInventory, 
 
 	public int getSupplySlots() {
 		return SUPPLY_SLOTS;
+	}
+
+	// ------------------------------------------------------------------ tienda (comerciante)
+
+	public int getShopPrice(int slot) {
+		return shopPrices[slot];
+	}
+
+	public void addShopPrice(int slot, int delta) {
+		shopPrices[slot] = Math.max(1, Math.min(MAX_PRICE, shopPrices[slot] + delta));
+		markDirty();
+	}
+
+	/** Cuántos objetos se venden de una vez en ese hueco. */
+	public int getShopBundle(int slot) {
+		return BUNDLES[shopBundles[slot]];
+	}
+
+	public void cycleShopBundle(int slot, boolean back) {
+		shopBundles[slot] = Math.floorMod(shopBundles[slot] + (back ? -1 : 1), BUNDLES.length);
+		markDirty();
+	}
+
+	/** ¿Está el comerciante cerca de su puesto? (si no, la tienda está cerrada) */
+	public boolean isMerchantPresent() {
+		if (!(world instanceof ServerWorld serverWorld) || workerUuid == null) {
+			return false;
+		}
+		Entity entity = serverWorld.getEntity(workerUuid);
+		return entity != null && entity.isAlive() && entity.squaredDistanceTo(Vec3d.ofCenter(pos)) <= SHOP_RANGE * SHOP_RANGE;
+	}
+
+	/** Lo que ve el menú de la tienda: precios, lotes y si el comerciante está. */
+	public final PropertyDelegate shopProperties = new PropertyDelegate() {
+		@Override
+		public int get(int index) {
+			if (index < ShopScreenHandler.P_BUNDLE) {
+				return shopPrices[index - ShopScreenHandler.P_PRICE];
+			}
+			if (index < ShopScreenHandler.P_PRESENT) {
+				return getShopBundle(index - ShopScreenHandler.P_BUNDLE);
+			}
+			return index == ShopScreenHandler.P_PRESENT && isMerchantPresent() ? 1 : 0;
+		}
+
+		@Override
+		public void set(int index, int value) {
+		}
+
+		@Override
+		public int size() {
+			return ShopScreenHandler.SITE_PROPERTIES;
+		}
+	};
+
+	/** Abre la tienda (para comprar o, si es tuya, poner precios). */
+	public void openShop(ServerPlayerEntity player) {
+		WorkSiteBlockEntity site = this;
+		player.openHandledScreen(new ExtendedScreenHandlerFactory<BlockPos>() {
+			@Override
+			public BlockPos getScreenOpeningData(ServerPlayerEntity serverPlayer) {
+				return site.getPos();
+			}
+
+			@Override
+			public Text getDisplayName() {
+				return Text.translatable("gui.evolvedwarfare.shop.title");
+			}
+
+			@Override
+			public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+				return new ShopScreenHandler(syncId, playerInventory, site);
+			}
+		});
 	}
 
 	// ------------------------------------------------------------------ dueño y trabajador
@@ -652,6 +739,8 @@ public class WorkSiteBlockEntity extends BlockEntity implements SidedInventory, 
 		nbt.putInt("Seed", seed);
 		nbt.putIntArray("SeedHistory", seedHistory.stream().mapToInt(Integer::intValue).toArray());
 		nbt.putString("BuildState", buildState.id());
+		nbt.putIntArray("ShopPrices", shopPrices);
+		nbt.putIntArray("ShopBundles", shopBundles);
 	}
 
 	@Override
@@ -670,5 +759,11 @@ public class WorkSiteBlockEntity extends BlockEntity implements SidedInventory, 
 		}
 		buildState = nbt.contains("BuildState") ? BuildState.byId(nbt.getString("BuildState")) : BuildState.CHOOSING;
 		buildPlan = null;
+		int[] prices = nbt.getIntArray("ShopPrices");
+		int[] bundles = nbt.getIntArray("ShopBundles");
+		for (int i = 0; i < SUPPLY_SLOTS; i++) {
+			shopPrices[i] = i < prices.length ? Math.max(1, Math.min(MAX_PRICE, prices[i])) : 1;
+			shopBundles[i] = i < bundles.length ? Math.floorMod(bundles[i], BUNDLES.length) : 0;
+		}
 	}
 }

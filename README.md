@@ -1,8 +1,8 @@
 # Evolved Warfare — Minecraft 1.21.1 (Fabric)
 
-NPCs, ejércitos, trabajadores y asedio. Inspirado en *Ancient Warfare*, con código, nombre y texturas propios.
+NPCs, ejércitos, trabajadores, comercio y asedio. Inspirado en *Ancient Warfare*, con código, nombre y texturas propios.
 
-Requiere **Fabric API**. Opcional: **Golden Coin Merchants** (los reclutas aceptan Golden Coins como paga y hay una receta de contrato con monedas).
+Requiere **Fabric API**. Opcional: **Golden Coin Merchants** (los reclutas aceptan Golden Coins como paga, hay una receta de contrato con monedas y es la moneda del comerciante; sin el mod, el comerciante usa esmeraldas).
 
 ## Hoja de ruta
 
@@ -11,7 +11,7 @@ Requiere **Fabric API**. Opcional: **Golden Coin Merchants** (los reclutas acept
 | 1 | **NPC base (el recluta)** y dónde vive: ciudades, campamentos y torres generados; contrato, dueño, equipo, órdenes, paga diaria. Aldeas vanilla con empedrado, farolas y empalizada | ✅ Hecha |
 | 2 | **Soldados y bandidos**: guerrero, bárbaro, arquero, ballestero, médico; bandidos hostiles en fuertes, campamentos, patrullas y asaltos; niveles y bastón de mando | ✅ Hecha |
 | 3 | **Trabajadores**: 14 oficios con su puesto de trabajo (granja, tala, mina, excavación, pesca, ganado, corral, colmenas, huerto, forja, cocina, carbonera, cantería, flechas) y ayuntamiento que paga solo | ✅ Hecha |
-| 4 | Logística y comercio: almacén, mensajero con rutas, comerciante (Golden Coin) | ⏳ |
+| 4 | **Logística y comercio**: almacén en red con buscador, mensajero (automático o con hoja de ruta), comerciante con tienda para jugadores y venta de excedentes (Golden Coin o esmeraldas) | ✅ Hecha |
 | 5 | Más facciones enemigas (vikingos, piratas), reputación y diplomacia | ⏳ |
 | 6 | Estructuras: escáner y constructor de planos; más tipos de ciudad (desierto, nieve) y fortalezas | ⏳ |
 | 7 | Asedio: catapulta, balista, trebuchet, ariete; puente levadizo y rastrillo | ⏳ |
@@ -143,6 +143,8 @@ Al poner un puesto se abre su menú de edificio (luego, con el botón **Edificio
 | Carbonero | Tejadillo, horno de cúpula con hoguera y pila de troncos |
 | Cantero | Taller de piedra con bloques apilados |
 | Flechero | Taller con dianas de paja |
+| Mensajero | Casa de postas con barriles, arcón y barandilla para atar caballos |
+| Comerciante | Puesto de mercado con mostrador, toldo de lana a rayas y género |
 
 ### Los 14 oficios
 Receta de todos los puestos: 7 tablones alrededor, un cofre abajo y el objeto del oficio en el centro.
@@ -171,6 +173,47 @@ El pastor y el criador nunca sacrifican animales con nombre ni atados.
 ### Ayuntamiento
 Receta: lingote de oro, libro y lingote de oro arriba; tablón, cofre y tablón en medio; 3 tablones abajo. Guarda comida o Golden Coins dentro y cada pocos segundos rellena las provisiones de todos tus NPCs (trabajadores, soldados y reclutas) a menos de 48 bloques, hasta 3 días de paga. Así no tienes que ir dándoles de comer uno a uno.
 
+## Fase 4 — Logística y comercio
+
+### Almacén
+Receta: tablón, libro y tablón arriba; cofre, tablón y cofre en medio; 3 tablones abajo. El almacén no guarda nada él
+mismo: **une todos los cofres y barriles a menos de 16 bloques** (8 de alto) en una red. Al abrirlo ves todo lo que hay
+en la red junto, ordenado por cantidad, con un **buscador**:
+- clic: sacar un montón · clic derecho: medio montón · Mayús + clic: directo a tu inventario;
+- clic con algo en el cursor: guardarlo (clic derecho: de uno en uno) · Mayús + clic en tu inventario: guardar ese montón.
+
+Lo que metes va primero junto a lo que ya hay del mismo tipo y luego a huecos libres. Solo lo puede usar su dueño.
+
+### Mensajero
+Un oficio más (puesto con una silla de montar). Busca el almacén tuyo más cercano a menos de 48 bloques y lleva hasta
+9 montones encima.
+
+**Automático** (sin hoja de ruta), por este orden:
+1. Si lleva algo, lo entrega (al puesto que lo pidió o, si no, al almacén).
+2. Lleva del almacén lo que falta: el **material** que le falta a una obra, lo que **gasta cada oficio** (semillas y harina
+   de hueso al granjero, brotes al leñador, antorchas al minero, menas y carbón al herrero, comida cruda al cocinero,
+   troncos al carbonero, piedra al cantero, pedernal, palos, plumas y grava al flechero...), lo que **se está acabando** en
+   los suministros (si lo pusiste tú) y la **paga del ayuntamiento** (si tiene menos de 32).
+3. Recoge la **producción** de los puestos con 16 objetos o más (o llenos) y la lleva al almacén. Deja 16 de lo que el
+   oficio también usa (semillas, brotes).
+
+**Hoja de ruta** (receta: papel, tinta y pluma). Con ella en la mano, clic derecho en cofres, barriles, puestos, el
+almacén o el ayuntamiento para añadirlos como parada (otra vez para quitarla; hasta 6). Clic derecho al aire abre la
+hoja: en cada parada eliges **Recoger** o **Entregar** y hasta 3 **filtros** (clic con un objeto; vacío = todo). Pon la
+hoja en los suministros del mensajero y hará esa ruta en bucle en vez de repartir solo, saltándose las paradas donde no
+hay nada que hacer. En los puestos recoge de la producción y entrega en los suministros.
+
+### Comerciante
+Un oficio más (puesto con una esmeralda). Hace dos cosas:
+- **Tienda para jugadores**: lo que pongas en los suministros del puesto se vende. Los demás jugadores hacen clic derecho
+  en el puesto y compran con monedas, que caen en la producción. Tú pones el precio y el lote (1, 2, 4... 64) de cada
+  hueco con el botón **Tienda** del menú del puesto. La tienda solo abre si el comerciante está a menos de 16 bloques.
+- **Venta de excedentes**: cada 2 minutos va al almacén y vende en el mercado lo que sobra (deja 64 de cada cosa), hasta
+  8 lotes por viaje, a precios parecidos a los de los aldeanos (20 de trigo, 15 de carbón o 4 lingotes de hierro por
+  1 moneda...). Las monedas van a la producción, y el mensajero las lleva al almacén y, de ahí, al ayuntamiento.
+
+**Moneda**: Golden Coin si está instalado *Golden Coin Merchants*; si no, esmeraldas.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque y escribe los `.nbt` y los JSON de generación.
@@ -178,7 +221,7 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
 - `ew_preview.py` — dibuja vistas previas isométricas.
 - `ew_textures.py` — genera las texturas (aspectos de los reclutas, contrato, interfaz).
 - `ew_buildings.py` — compila el generador de edificios (Java puro) y dibuja los diseños de cada oficio con varias semillas.
-- `ew_blocks.py` — texturas, modelos, recetas y botín de los puestos de trabajo y el ayuntamiento.
+- `ew_blocks.py` — texturas, modelos, recetas y botín de los puestos de trabajo, el ayuntamiento, el almacén y la hoja de ruta.
 - `ew_village.py` — prototipo de las aldeas vanilla mejoradas (mismo algoritmo que `VillageExtras.java`) con vista previa.
 
 ```

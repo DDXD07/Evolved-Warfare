@@ -46,7 +46,11 @@ public enum Profession {
 	/** Labra piedra: ladrillos de piedra, piedra pulida, arenisca... */
 	STONEMASON("stonemason", PickaxeItem.class, WorkArea.NONE, ConversionJob::stonemason),
 	/** Hace flechas (pedernal, palo y pluma) y saca pedernal de la grava. */
-	FLETCHER("fletcher", null, WorkArea.NONE, ConversionJob::fletcher);
+	FLETCHER("fletcher", null, WorkArea.NONE, ConversionJob::fletcher),
+	/** Lleva la producción al almacén y del almacén lo que falta en cada puesto; o sigue una hoja de ruta. */
+	COURIER("courier", null, WorkArea.NONE, CourierJob::new),
+	/** Atiende la tienda del puesto y vende en el mercado lo que sobra en el almacén. */
+	MERCHANT("merchant", null, WorkArea.NONE, MerchantJob::new);
 
 	private final String id;
 	@Nullable

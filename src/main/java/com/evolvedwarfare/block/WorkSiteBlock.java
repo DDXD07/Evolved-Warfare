@@ -105,6 +105,9 @@ public class WorkSiteBlock extends BlockWithEntity {
 		if (!world.isClient && world.getBlockEntity(pos) instanceof WorkSiteBlockEntity site) {
 			if (site.canAccess(player)) {
 				player.openHandledScreen(site);
+			} else if (site.getProfession() == Profession.MERCHANT && player instanceof ServerPlayerEntity serverPlayer) {
+				// la tienda del comerciante está abierta a todos
+				site.openShop(serverPlayer);
 			} else {
 				player.sendMessage(Text.translatable("message.evolvedwarfare.site.not_yours"), true);
 			}

@@ -1,0 +1,10 @@
+{
+  "parent": "evolvedwarfare:block/work_site_template",
+  "textures": {
+    "side": "evolvedwarfare:block/warehouse_side",
+    "top": "evolvedwarfare:block/warehouse_top",
+    "bottom": "evolvedwarfare:block/work_site_bottom",
+    "front": "evolvedwarfare:block/warehouse_front",
+    "icon": "minecraft:item/bundle"
+  }
+}

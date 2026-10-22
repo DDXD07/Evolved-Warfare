@@ -3,6 +3,8 @@ package com.evolvedwarfare.registry;
 import com.evolvedwarfare.EvolvedWarfare;
 import com.evolvedwarfare.block.TownHallBlock;
 import com.evolvedwarfare.block.TownHallBlockEntity;
+import com.evolvedwarfare.block.WarehouseBlock;
+import com.evolvedwarfare.block.WarehouseBlockEntity;
 import com.evolvedwarfare.block.WorkSiteBlock;
 import com.evolvedwarfare.block.WorkSiteBlockEntity;
 import com.evolvedwarfare.work.Profession;
@@ -36,6 +38,13 @@ public final class ModBlocks {
 			.strength(2.5F)
 			.sounds(BlockSoundGroup.WOOD)));
 
+	/** Almacén: terminal de la red de cofres y barriles de alrededor. */
+	public static final Block WAREHOUSE = register("warehouse", new WarehouseBlock(AbstractBlock.Settings.create()
+			.mapColor(MapColor.OAK_TAN)
+			.instrument(NoteBlockInstrument.BASS)
+			.strength(2.5F)
+			.sounds(BlockSoundGroup.WOOD)));
+
 	public static final BlockEntityType<WorkSiteBlockEntity> WORK_SITE_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
 			EvolvedWarfare.id("work_site"),
 			BlockEntityType.Builder.create(WorkSiteBlockEntity::new, WORK_SITES.values().toArray(new Block[0])).build(null));
@@ -44,12 +53,19 @@ public final class ModBlocks {
 			EvolvedWarfare.id("town_hall"),
 			BlockEntityType.Builder.create(TownHallBlockEntity::new, TOWN_HALL).build(null));
 
+	public static final BlockEntityType<WarehouseBlockEntity> WAREHOUSE_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
+			EvolvedWarfare.id("warehouse"),
+			BlockEntityType.Builder.create(WarehouseBlockEntity::new, WAREHOUSE).build(null));
+
 	private ModBlocks() {
 	}
 
-	/** Los talleres (sin zona) son de piedra; los puestos de campo, de madera. */
+	/** Los talleres con fuego o piedra son de piedra; el resto de puestos, de madera. */
 	public static boolean isStoneWorkshop(Profession profession) {
-		return !profession.area().exists();
+		return switch (profession) {
+			case BLACKSMITH, COOK, CHARCOAL_BURNER, STONEMASON, FLETCHER -> true;
+			default -> false;
+		};
 	}
 
 	private static AbstractBlock.Settings settingsFor(Profession profession) {

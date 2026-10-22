@@ -5,7 +5,13 @@ import com.evolvedwarfare.client.render.ModModelLayers;
 import com.evolvedwarfare.client.render.RecruitRenderer;
 import com.evolvedwarfare.client.screen.BlueprintScreen;
 import com.evolvedwarfare.client.screen.NpcScreen;
+import com.evolvedwarfare.client.screen.RouteSlipScreen;
+import com.evolvedwarfare.client.screen.ShopScreen;
+import com.evolvedwarfare.client.screen.WarehouseScreen;
 import com.evolvedwarfare.client.screen.WorkSiteScreen;
+import com.evolvedwarfare.network.WarehouseContentsPayload;
+import com.evolvedwarfare.screen.WarehouseScreenHandler;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import com.evolvedwarfare.registry.ModBlocks;
 import com.evolvedwarfare.registry.ModEntities;
 import com.evolvedwarfare.registry.ModScreens;
@@ -27,10 +33,22 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		HandledScreens.register(ModScreens.NPC, NpcScreen::new);
 		HandledScreens.register(ModScreens.WORK_SITE, WorkSiteScreen::new);
 		HandledScreens.register(ModScreens.BLUEPRINT, BlueprintScreen::new);
+		HandledScreens.register(ModScreens.WAREHOUSE, WarehouseScreen::new);
+		HandledScreens.register(ModScreens.ROUTE_SLIP, RouteSlipScreen::new);
+		HandledScreens.register(ModScreens.SHOP, ShopScreen::new);
+		// lo que hay en la red del almacén abierto
+		ClientPlayNetworking.registerGlobalReceiver(WarehouseContentsPayload.ID, (payload, context) -> {
+			if (context.client().player != null
+					&& context.client().player.currentScreenHandler instanceof WarehouseScreenHandler handler
+					&& handler.syncId == payload.syncId()) {
+				handler.setClientContents(payload.containers(), payload.entries());
+			}
+		});
 		// el dibujo del frente de los puestos tiene transparencias
 		for (Block block : ModBlocks.WORK_SITES.values()) {
 			BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout());
 		}
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.TOWN_HALL, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.WAREHOUSE, RenderLayer.getCutout());
 	}
 }

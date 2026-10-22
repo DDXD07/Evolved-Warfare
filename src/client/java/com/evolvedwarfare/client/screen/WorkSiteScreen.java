@@ -58,11 +58,20 @@ public class WorkSiteScreen extends HandledScreen<WorkSiteScreenHandler> {
 		areaButton.setTooltip(Tooltip.of(Text.translatable("gui.evolvedwarfare.button.area.tip")));
 		areaButton.visible = hasArea;
 		addDrawableChild(areaButton);
+		boolean shop = handler.getProfession() == Profession.MERCHANT;
+		boolean narrow = hasArea || shop;
 		ButtonWidget buildingButton = ButtonWidget.builder(Text.translatable("gui.evolvedwarfare.button.building"),
 						b -> click(WorkSiteScreenHandler.BUTTON_BUILDING))
-				.dimensions(hasArea ? x + 119 : x + 67, y + STATUS_TOP + 25, hasArea ? 50 : 102, 14).build();
+				.dimensions(hasArea ? x + 119 : x + 67, y + STATUS_TOP + 25, narrow ? 50 : 102, 14).build();
 		buildingButton.setTooltip(Tooltip.of(Text.translatable("gui.evolvedwarfare.button.building.tip")));
 		addDrawableChild(buildingButton);
+		if (shop) {
+			ButtonWidget shopButton = ButtonWidget.builder(Text.translatable("gui.evolvedwarfare.button.shop"),
+							b -> click(WorkSiteScreenHandler.BUTTON_SHOP))
+					.dimensions(x + 119, y + STATUS_TOP + 25, 50, 14).build();
+			shopButton.setTooltip(Tooltip.of(Text.translatable("gui.evolvedwarfare.button.shop.tip")));
+			addDrawableChild(shopButton);
+		}
 		updateButtons();
 	}
 

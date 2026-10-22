@@ -21,6 +21,7 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
@@ -52,6 +53,9 @@ public class WorkerEntity extends AbstractNpcEntity {
 	private long lastActive = Long.MIN_VALUE / 2;
 	private final Map<Long, Long> ignoredBlocks = new HashMap<>();
 	private final Map<Integer, Long> ignoredEntities = new HashMap<>();
+	/** Lo que lleva encima el mensajero (9 huecos). Se guarda y se suelta al morir o al dejar el oficio. */
+	private final SimpleInventory cargo = new SimpleInventory(CARGO_SLOTS);
+	public static final int CARGO_SLOTS = 9;
 
 	public WorkerEntity(EntityType<? extends WorkerEntity> type, World world) {
 		super(type, world);
@@ -165,14 +169,44 @@ public class WorkerEntity extends AbstractNpcEntity {
 		return getWorld().getTime() - lastActive < 40;
 	}
 
-	/** Los mineros y excavadores no pasean: junto a su puesto hay un pozo. */
+	/** Los mineros y excavadores no pasean (junto a su puesto hay un pozo), ni el comerciante (atiende la tienda). */
 	@Override
 	public boolean canWander() {
-		return !getProfession().area().pit();
+		return !getProfession().area().pit() && getProfession() != Profession.MERCHANT;
 	}
 
 	public void markBusy() {
 		lastActive = getWorld().getTime();
+	}
+
+	// ------------------------------------------------------------------ carga (mensajero)
+
+	public SimpleInventory getCargo() {
+		return cargo;
+	}
+
+	public boolean hasCargo() {
+		return !cargo.isEmpty();
+	}
+
+	private void dropCargo() {
+		for (int i = 0; i < cargo.size(); i++) {
+			ItemStack stack = cargo.removeStack(i);
+			if (!stack.isEmpty()) {
+				dropStack(stack);
+			}
+		}
+	}
+
+	@Override
+	protected void dropInventory() {
+		super.dropInventory();
+		dropCargo();
+	}
+
+	/** Trabajadores: buscan caminos más largos (el mensajero recorre hasta 48 bloques). */
+	public static net.minecraft.entity.attribute.DefaultAttributeContainer.Builder createWorkerAttributes() {
+		return createNpcAttributes().add(net.minecraft.entity.attribute.EntityAttributes.GENERIC_FOLLOW_RANGE, 64.0);
 	}
 
 	/** Avisa a su dueño (si está conectado). */
@@ -281,6 +315,7 @@ public class WorkerEntity extends AbstractNpcEntity {
 	/** Deja el oficio y vuelve a ser recluta (se queda donde está). */
 	@Nullable
 	public RecruitEntity quitJob(boolean notify) {
+		dropCargo();
 		RecruitEntity recruit = convertTo(ModEntities.RECRUIT, true);
 		if (recruit == null) {
 			return null;
@@ -310,6 +345,7 @@ public class WorkerEntity extends AbstractNpcEntity {
 			nbt.putInt("SiteZ", sitePos.getZ());
 		}
 		nbt.putInt("JobsDone", jobsDone);
+		nbt.put("Cargo", cargo.toNbtList(getRegistryManager()));
 	}
 
 	@Override
@@ -318,5 +354,6 @@ public class WorkerEntity extends AbstractNpcEntity {
 		setProfession(Profession.byId(nbt.getString("Profession"), Profession.FARMER));
 		sitePos = nbt.contains("SiteX") ? new BlockPos(nbt.getInt("SiteX"), nbt.getInt("SiteY"), nbt.getInt("SiteZ")) : null;
 		jobsDone = nbt.getInt("JobsDone");
+		cargo.readNbtList(nbt.getList("Cargo", 10), getRegistryManager());
 	}
 }

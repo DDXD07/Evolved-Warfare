@@ -24,7 +24,13 @@ public enum WorkStatus {
 	/** Construyendo el edificio del puesto. */
 	BUILDING(Tone.GOOD),
 	/** La obra está parada: falta algún material en los suministros. */
-	NO_MATERIALS(Tone.BAD);
+	NO_MATERIALS(Tone.BAD),
+	/** Mensajero o comerciante sin almacén cerca. */
+	NO_WAREHOUSE(Tone.BAD),
+	/** Mensajero siguiendo su hoja de ruta (y ahora no hay nada que llevar). */
+	ROUTE_IDLE(Tone.NEUTRAL),
+	/** Comerciante en su puesto: la tienda está abierta. */
+	SHOP_OPEN(Tone.GOOD);
 
 	public enum Tone { GOOD, NEUTRAL, BAD }
 

@@ -19,12 +19,13 @@ from ew_render import render, MISSING  # noqa: E402
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 GEN = os.path.join(ROOT, "src/main/java/com/evolvedwarfare/building")
 DUMP = os.path.join(ROOT, "tools/java/BlueprintDump.java")
-ALL = "farmer,lumberjack,miner,digger,fisherman,shepherd,breeder,beekeeper,gardener,blacksmith,cook,charcoal_burner,stonemason,fletcher"
+ALL = "farmer,lumberjack,miner,digger,fisherman,shepherd,breeder,beekeeper,gardener,blacksmith,cook,charcoal_burner,stonemason,fletcher,courier,merchant"
 NAMES = {
     "farmer": "Granja", "lumberjack": "Cabaña del leñador", "miner": "Granero de la mina", "digger": "Cobertizo",
     "fisherman": "Caseta de pescador", "shepherd": "Establo y cercado", "breeder": "Gallinero y corral",
     "beekeeper": "Colmenar", "gardener": "Invernadero", "blacksmith": "Forja", "cook": "Cocina",
     "charcoal_burner": "Carbonera", "stonemason": "Taller de cantería", "fletcher": "Taller del flechero",
+    "courier": "Casa de postas", "merchant": "Puesto de mercado",
 }
 
 

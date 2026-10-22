@@ -1,7 +1,9 @@
 package com.evolvedwarfare;
 
 import com.evolvedwarfare.entity.NpcSides;
+import com.evolvedwarfare.network.ModNetworking;
 import com.evolvedwarfare.registry.ModBlocks;
+import com.evolvedwarfare.registry.ModComponents;
 import com.evolvedwarfare.registry.ModEntities;
 import com.evolvedwarfare.registry.ModItems;
 import com.evolvedwarfare.registry.ModScreens;
@@ -22,6 +24,8 @@ import org.slf4j.LoggerFactory;
  * patrullas y asaltos, niveles y bastón de mando.</p>
  *
  * <p>Fase 3: trabajadores con 14 oficios, cada uno con su puesto de trabajo, y el ayuntamiento que les paga.</p>
+ *
+ * <p>Fase 4: logística y comercio: almacén en red, mensajeros (automáticos o con hoja de ruta) y comerciantes.</p>
  */
 public class EvolvedWarfare implements ModInitializer {
 	public static final String MOD_ID = "evolvedwarfare";
@@ -33,10 +37,12 @@ public class EvolvedWarfare implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		ModComponents.init();
 		ModBlocks.init();
 		ModEntities.init();
 		ModItems.init();
 		ModScreens.init();
+		ModNetworking.init();
 		ModStructures.init();
 		NpcSides.register();
 		BanditSpawner.register();

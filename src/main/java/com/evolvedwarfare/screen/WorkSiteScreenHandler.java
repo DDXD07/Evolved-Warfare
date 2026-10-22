@@ -30,6 +30,7 @@ public class WorkSiteScreenHandler extends ScreenHandler {
 	public static final int BUTTON_DISMISS = 1;
 	public static final int BUTTON_AREA = 2;
 	public static final int BUTTON_BUILDING = 3;
+	public static final int BUTTON_SHOP = 4;
 
 	public static final int P_STATUS = 0;
 	public static final int P_HAS_WORKER = 1;
@@ -117,6 +118,12 @@ public class WorkSiteScreenHandler extends ScreenHandler {
 			case BUTTON_DISMISS -> site.dismiss(serverPlayer);
 			case BUTTON_AREA -> site.showArea(serverPlayer);
 			case BUTTON_BUILDING -> site.openBlueprint(serverPlayer);
+			case BUTTON_SHOP -> {
+				if (site.getProfession() != Profession.MERCHANT) {
+					return false;
+				}
+				site.openShop(serverPlayer);
+			}
 			default -> {
 				return false;
 			}

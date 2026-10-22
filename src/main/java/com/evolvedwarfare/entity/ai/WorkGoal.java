@@ -19,7 +19,9 @@ import org.jetbrains.annotations.Nullable;
  * 12 segundos lo deja para más tarde.
  */
 public class WorkGoal extends Goal {
+	/** Tiempo para llegar: 12 segundos más lo que haga falta por la distancia (el mensajero va lejos). */
 	private static final int GIVE_UP_TICKS = 240;
+	private int giveUp = GIVE_UP_TICKS;
 	private static final double SPEED = 0.9;
 
 	private final WorkerEntity worker;
@@ -79,6 +81,9 @@ public class WorkGoal extends Goal {
 
 	@Override
 	public void start() {
+		if (action != null) {
+			giveUp = GIVE_UP_TICKS + (int) (Math.sqrt(worker.squaredDistanceTo(action.target())) * 8);
+		}
 		ticks = 0;
 		working = false;
 		worker.markBusy();
@@ -116,7 +121,7 @@ public class WorkGoal extends Goal {
 				if (ticks % 20 == 0 || (ticks % 5 == 0 && worker.getNavigation().isIdle())) {
 					moveToTarget();
 				}
-				if (ticks > GIVE_UP_TICKS) {
+				if (ticks > giveUp) {
 					if (current.remote() || worker.squaredDistanceTo(current.target()) < 64.0) {
 						working = true;
 						ticks = 0;

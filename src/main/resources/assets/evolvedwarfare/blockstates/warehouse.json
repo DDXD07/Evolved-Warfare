@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "evolvedwarfare:block/warehouse"
+    },
+    "facing=east": {
+      "model": "evolvedwarfare:block/warehouse",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "evolvedwarfare:block/warehouse",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "evolvedwarfare:block/warehouse",
+      "y": 270
+    }
+  }
+}

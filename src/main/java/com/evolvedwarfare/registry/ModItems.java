@@ -4,6 +4,7 @@ import com.evolvedwarfare.EvolvedWarfare;
 import com.evolvedwarfare.item.CommandStaffItem;
 import com.evolvedwarfare.item.MedicKitItem;
 import com.evolvedwarfare.item.RecruitmentContractItem;
+import com.evolvedwarfare.item.RouteSlipItem;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -25,6 +26,9 @@ public final class ModItems {
 	/** Botiquín: para entrenar médicos. */
 	public static final Item MEDIC_KIT = register("medic_kit", new MedicKitItem(new Item.Settings().maxCount(16)));
 
+	/** Hoja de ruta: paradas para un mensajero. */
+	public static final Item ROUTE_SLIP = register("route_slip", new RouteSlipItem(new Item.Settings().maxCount(1)));
+
 	/** Huevo de bandido (creativo). */
 	public static final Item BANDIT_SPAWN_EGG = register("bandit_spawn_egg",
 			new SpawnEggItem(ModEntities.BANDIT, 0x3B2A20, 0x7A1C1C, new Item.Settings()));
@@ -38,8 +42,10 @@ public final class ModItems {
 						entries.add(RECRUITMENT_CONTRACT);
 						entries.add(COMMAND_STAFF);
 						entries.add(MEDIC_KIT);
+						entries.add(ROUTE_SLIP);
 						entries.add(BANDIT_SPAWN_EGG);
 						entries.add(ModBlocks.TOWN_HALL);
+						entries.add(ModBlocks.WAREHOUSE);
 						ModBlocks.WORK_SITES.values().forEach(block -> entries.add(block));
 					})
 					.build());

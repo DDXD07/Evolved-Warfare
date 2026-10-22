@@ -38,6 +38,8 @@ public final class BlueprintGenerator {
 			case "charcoal_burner" -> kiln(b, r);
 			case "stonemason" -> masonry(b, r);
 			case "fletcher" -> fletchery(b, r);
+			case "courier" -> postHouse(b, r);
+			case "merchant" -> marketStall(b, r);
 			default -> farm(b, r);
 		}
 		return b;
@@ -843,6 +845,103 @@ public final class BlueprintGenerator {
 			ground(b, x, 0, z, fence(h.wood, false, false, false, false));
 			put(b, x, 1, z, s("hay_block", "axis", "x"));
 			put(b, x, 2, z, s("red_wool"));
+		}
+	}
+
+	/** Casa de postas: casa con barriles y un arcón dentro, barandilla para atar caballos, heno y sacas a un lado. */
+	static void postHouse(Blueprint b, Random r) {
+		House h = randomHouse(r, "spruce", "oak", "dark_oak", "birch");
+		h.half = 2 + r.nextInt(2);
+		house(b, h);
+		furnish(b, h, r, s("barrel", "facing", "up"), s("chest", "facing", "south", "type", "single", "waterlogged", "false"),
+				s("barrel", "facing", "up"), s("cartography_table"));
+		int side = -h.doorX;
+		int x = side * (h.half + 2);
+		int length = 2 + r.nextInt(3);
+		// barandilla para atar los caballos
+		for (int z = 0; z <= length; z++) {
+			ground(b, x, 0, z, fence(h.wood, z > 0, false, z < length, false));
+		}
+		// heno para los caballos
+		ground(b, x + side, 0, 0, s("hay_block", "axis", "y"));
+		if (r.nextBoolean()) {
+			put(b, x + side, 1, 0, s("hay_block", "axis", "x"));
+		}
+		ground(b, x + side, 0, length, s(pick(r, "hay_block", "composter")));
+		// sacas (barriles tumbados) junto a la puerta
+		int bx = h.doorX + (h.doorX > 0 ? 2 : -2);
+		if (Math.abs(bx) <= h.half + 1) {
+			ground(b, bx, 0, -2, s("barrel", "facing", h.doorX > 0 ? "east" : "west"));
+		}
+	}
+
+	/** Puesto de mercado: mostrador delante del puesto, toldo de lana a rayas, barriles y un arcón para el género. */
+	static void marketStall(Blueprint b, Random r) {
+		String wood = pick(r, WOODS);
+		String[][] colors = {{"red", "white"}, {"blue", "white"}, {"yellow", "white"}, {"green", "lime"}, {"orange", "white"},
+				{"purple", "magenta"}, {"cyan", "light_blue"}};
+		String[] stripes = colors[r.nextInt(colors.length)];
+		int a = 2 + r.nextInt(2);
+		int back = 3;
+		int side = r.nextBoolean() ? 1 : -1;
+		boolean stoneCounter = r.nextInt(3) == 0;
+		boolean ridge = r.nextBoolean();
+		String floor = r.nextBoolean() ? planks(wood) : s(pick(r, "cobblestone", "stone_bricks"));
+		// suelo
+		for (int x = -a; x <= a; x++) {
+			for (int z = -1; z <= back; z++) {
+				put(b, x, -1, z, floor, Blueprint.FOUNDATION);
+			}
+		}
+		// postes en las esquinas y hueco dentro
+		for (int x = -a; x <= a; x++) {
+			for (int z = -1; z <= back; z++) {
+				for (int y = 0; y < 3; y++) {
+					boolean corner = Math.abs(x) == a && (z == -1 || z == back);
+					if (corner) {
+						put(b, x, y, z, log(wood, "y"));
+					} else {
+						b.air(x, y, z);
+					}
+				}
+			}
+		}
+		// mostrador delante del puesto
+		for (int x = -a + 1; x <= a - 1; x++) {
+			put(b, x, 0, -1, stoneCounter ? s("smooth_stone_slab", "type", "top") : topSlab(wood));
+		}
+		// pared de atrás con estantes (barriles) y el arcón del género
+		for (int x = -a + 1; x <= a - 1; x++) {
+			for (int y = 0; y < 3; y++) {
+				put(b, x, y, back, planks(wood));
+			}
+		}
+		put(b, 0, 0, back - 1, s("chest", "facing", "north", "type", "single", "waterlogged", "false"));
+		put(b, -side * (a - 1), 0, back - 1, s("barrel", "facing", "up"));
+		put(b, -side * (a - 1), 1, back - 1, s("barrel", "facing", "north"));
+		// un lado cerrado con barriles; por el otro se entra
+		for (int z = 0; z < back; z++) {
+			put(b, -side * a, 0, z, z == 1 ? s("hay_block", "axis", "z") : s("barrel", "facing", "up"));
+		}
+		// toldo a rayas
+		for (int x = -a - 1; x <= a + 1; x++) {
+			String wool = s(stripes[Math.floorMod(x, 2)] + "_wool");
+			for (int z = -2; z <= back + 1; z++) {
+				put(b, x, 3, z, wool);
+			}
+			if (ridge && Math.abs(x) <= a) {
+				for (int z = 0; z <= back - 1; z++) {
+					put(b, x, 4, z, wool);
+				}
+			}
+		}
+		// faroles colgados sobre el mostrador
+		put(b, -a + 1, 2, -1, s("lantern", "hanging", "true", "waterlogged", "false"), Blueprint.LATE);
+		put(b, a - 1, 2, -1, s("lantern", "hanging", "true", "waterlogged", "false"), Blueprint.LATE);
+		// género a la vista fuera, junto a la entrada
+		ground(b, side * (a + 1), 0, back, s("barrel", "facing", "up"));
+		if (r.nextBoolean()) {
+			ground(b, side * (a + 1), 0, back - 1, s(pick(r, "hay_block", "composter")));
 		}
 	}
 }

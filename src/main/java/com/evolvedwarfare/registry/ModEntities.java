@@ -55,7 +55,7 @@ public final class ModEntities {
 	public static void init() {
 		FabricDefaultAttributeRegistry.register(RECRUIT, AbstractNpcEntity.createNpcAttributes());
 		FabricDefaultAttributeRegistry.register(SOLDIER, AbstractNpcEntity.createNpcAttributes());
-		FabricDefaultAttributeRegistry.register(WORKER, AbstractNpcEntity.createNpcAttributes());
+		FabricDefaultAttributeRegistry.register(WORKER, WorkerEntity.createWorkerAttributes());
 		FabricDefaultAttributeRegistry.register(BANDIT, BanditEntity.createBanditAttributes());
 	}
 }
