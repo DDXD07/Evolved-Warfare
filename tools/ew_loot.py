@@ -91,6 +91,67 @@ TABLES["chests/pirate_treasure"]["pools"].append(map_pool([PIRATE_MAP], 2))
 TABLES["chests/viking_hut"]["pools"].append(map_pool([VIKING_MAP, PIRATE_MAP], 8))
 TABLES["chests/pirate_camp"]["pools"].append(map_pool([VIKING_MAP, PIRATE_MAP], 8))
 
+# ------------------------------------------------------------------ botín según el nivel del asentamiento
+LEVEL = "evolvedwarfare:settlement_level"
+
+
+def at_level(n):
+    return [{"condition": LEVEL, "min": n}]
+
+
+def enchanted(name, weight, lo, hi):
+    return item(name, weight, extra=[{"function": "minecraft:enchant_with_levels",
+                                      "levels": {"type": "minecraft:uniform", "min": float(lo), "max": float(hi)}}])
+
+
+def book(weight, lo=None, hi=None):
+    if lo is None:
+        return item("book", weight, extra=[{"function": "minecraft:enchant_randomly"}])
+    return enchanted("book", weight, lo, hi)
+
+
+TIER_1 = [item("diamond", 3, 1, 2), book(3), enchanted("iron_sword", 2, 10, 20), enchanted("iron_axe", 2, 10, 20),
+          enchanted("iron_chestplate", 2, 10, 20), item("golden_apple", 2), item("emerald", 4, 4, 10),
+          item("experience_bottle", 3, 3, 8)]
+TIER_2 = [item("diamond", 4, 2, 4), enchanted("diamond_sword", 2, 20, 30), enchanted("diamond_axe", 2, 20, 30),
+          enchanted("diamond_chestplate", 2, 20, 30), item("golden_apple", 3, 1, 3), book(3, 25, 30),
+          item("experience_bottle", 3, 6, 14), item("emerald_block", 1)]
+TIER_3 = [item("netherite_scrap", 3, 1, 2), item("enchanted_golden_apple", 1), enchanted("diamond_helmet", 2, 30, 30),
+          enchanted("diamond_leggings", 2, 30, 30), item("totem_of_undying", 1), item("diamond_block", 1),
+          book(2, 30, 30)]
+
+
+def level_pools(base_entries):
+    """Más botín cuanto más nivel: tiradas extra del mismo cofre desde el 3, el 6 y el 9; objetos mejores desde el 4
+    (diamantes, libros, equipo de hierro encantado), el 7 (equipo de diamante, manzanas de oro) y el 9 (chatarra de
+    netherita, manzana encantada, tótem)."""
+    def extra(lo, hi, n):
+        return {"rolls": {"type": "minecraft:uniform", "min": float(lo), "max": float(hi)}, "bonus_rolls": 0.0,
+                "entries": base_entries, "conditions": at_level(n)}
+
+    def tier(entries, n, rolls=1.0):
+        return {"rolls": rolls, "bonus_rolls": 0.0, "entries": entries, "conditions": at_level(n)}
+
+    return [extra(1, 2, 3), extra(1, 2, 6), extra(2, 3, 9), tier(TIER_1, 4), tier(TIER_1, 6), tier(TIER_2, 7),
+            tier(TIER_2, 8), tier(TIER_3, 9), tier(TIER_3, 10)]
+
+
+def entity_level_pools():
+    """Los defensores de asentamientos de nivel alto llevan algo encima."""
+    return [{"rolls": 1.0, "bonus_rolls": 0.0, "conditions": at_level(4),
+             "entries": [item("emerald", 1, 1, 2), {"type": "minecraft:empty", "weight": 3}]},
+            {"rolls": 1.0, "bonus_rolls": 0.0, "conditions": at_level(7),
+             "entries": [item("diamond", 1), item("experience_bottle", 1, 1, 3), {"type": "minecraft:empty", "weight": 8}]}]
+
+
+def without_level_pools(table):
+    table["pools"] = [p for p in table["pools"] if not any(c.get("condition") == LEVEL for c in p.get("conditions", []))]
+    return table
+
+
+for _name, _table in TABLES.items():
+    _table["pools"].extend(level_pools(_table["pools"][0]["entries"]))
+
 ENTITIES = {
     "entities/viking": {"type": "minecraft:entity", "pools": [looting("iron_nugget", 0, 3), looting("leather", 0, 2),
                                                                looting("cooked_salmon", 0, 1)]},
@@ -99,7 +160,26 @@ ENTITIES = {
 }
 
 
+for _table in ENTITIES.values():
+    _table["pools"].extend(entity_level_pools())
+
+# tablas de la fase 2 (hechas a mano): se les añaden (o rehacen) los grupos por nivel
+HAND_MADE_CHESTS = ["chests/bandit_camp", "chests/bandit_fort"]
+HAND_MADE_ENTITIES = ["entities/bandit"]
+
+
 def main():
+    for name in HAND_MADE_CHESTS + HAND_MADE_ENTITIES:
+        path = os.path.join(OUT, "loot_table", name + ".json")
+        with open(path, encoding="utf-8") as f:
+            table = without_level_pools(json.load(f))
+        if name in HAND_MADE_CHESTS:
+            table["pools"].extend(level_pools(table["pools"][0]["entries"]))
+        else:
+            table["pools"].extend(entity_level_pools())
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(table, f, indent=2)
+            f.write("\n")
     for name, table in {**TABLES, **ENTITIES}.items():
         path = os.path.join(OUT, "loot_table", name + ".json")
         os.makedirs(os.path.dirname(path), exist_ok=True)

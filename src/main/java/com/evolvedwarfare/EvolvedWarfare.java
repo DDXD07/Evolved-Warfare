@@ -8,6 +8,7 @@ import com.evolvedwarfare.registry.ModBlocks;
 import com.evolvedwarfare.registry.ModComponents;
 import com.evolvedwarfare.registry.ModEntities;
 import com.evolvedwarfare.registry.ModItems;
+import com.evolvedwarfare.registry.ModLoot;
 import com.evolvedwarfare.registry.ModScreens;
 import com.evolvedwarfare.registry.ModStructures;
 import com.evolvedwarfare.world.ExplorationMaps;
@@ -44,6 +45,7 @@ public class EvolvedWarfare implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ModComponents.init();
+		ModLoot.init();
 		ModBlocks.init();
 		ModEntities.init();
 		ModItems.init();

@@ -250,6 +250,16 @@ fuertes de bandidos, uno más. **Cada nivel por encima del 1 da a su guarnición
 el de sus flechas): nivel 5 = +40 %, nivel 10 = +90 %. Al acercarte a menos de 24 bloques sale en pantalla su nombre,
 su nivel (verde 1-3, dorado 4-6, rojo 7-8, morado 9-10) y cómo te trata su facción.
 
+**Botín según el nivel**: los cofres de los asentamientos dan más cuanto más nivel tienen.
+- Más objetos: tiradas extra de lo normal desde el nivel 3, otra vez desde el 6 y otra desde el 9.
+- Mejores objetos: desde el **nivel 4**, diamantes, libros encantados, equipo de hierro encantado, manzanas de oro y
+  frascos de experiencia (y otra tirada desde el 6); desde el **7**, equipo de diamante bien encantado, más diamantes,
+  libros de nivel 25-30 y bloques de esmeralda (otra desde el 8); desde el **9**, chatarra de netherita, manzana de oro
+  encantada, tótem de la inmortalidad, piezas de diamante con encantamientos de nivel 30 y bloques de diamante (otra en
+  el 10).
+- Los defensores de asentamientos de nivel 4 o más pueden soltar esmeraldas, y desde el 7 algún diamante o frasco de
+  experiencia.
+
 **Patrullas y asaltos**: la facción que aparece depende de dónde estés (vikingos en el frío, piratas en la costa y
 bandidos en el resto). Las patrullas solo van a por ti si sois enemigos; si no, pasan de largo. Los asaltos atacan
 aldeas, ciudades y **tu pueblo** (los alrededores de tu ayuntamiento) si la facción de la zona es enemiga tuya. Cada
