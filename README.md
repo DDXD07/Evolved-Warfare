@@ -219,7 +219,7 @@ Un oficio más (puesto con una esmeralda). Hace dos cosas:
 ### Las facciones
 | Facción | Dónde | Clases | Detalles |
 |---|---|---|---|
-| **Bandidos** | Llanuras, bosques, sabanas, badlands | Guerrero, bárbaro, arquero, ballestero, curandero, capitán | No respetan la bandera blanca y nunca serán tus aliados, pero se les puede sobornar. |
+| **Bandidos** | Llanuras, bosques, sabanas, badlands (no en tierras frías) | Guerrero, bárbaro, arquero, ballestero, curandero, capitán | No respetan la bandera blanca y nunca serán tus aliados, pero se les puede sobornar. |
 | **Vikingos** | Taigas, llanuras nevadas, arboledas, colinas | Huscarl (hacha o espada con escudo), berserker, arquero, völva (curandera), jarl | Más duros. El **berserker** entra en furia con poca vida (fuerza, velocidad y resistencia). El **jarl** toca el cuerno de guerra y da fuerza a los suyos. Escudos rojos y blancos. |
 | **Piratas** | Playas y costas | Pirata (alfanje), tirador (ballesta, a veces con flechas incendiarias), matón (hacha), cirujano de a bordo, capitán | No se ahogan. El **capitán** se toma un trago de ron cuando está herido. Escudos negros con calavera. |
 
@@ -229,9 +229,20 @@ Todas las facciones son enemigas entre sí: si se cruzan, pelean.
 el tejado; alrededor, cabañas, herrería, círculo de piedras rúnicas, atalaya, leñera y un **drakkar** varado con vela a
 rayas y escudos en la borda.
 
-**Cala pirata** (playas): un **barco pirata** varado con casco negro, velas negras rotas, cañones asomando por las
+**Cala pirata** (playas, costas rocosas y manglares): un **barco pirata** varado con casco negro, velas negras rotas, cañones asomando por las
 troneras, cofa con bandera negra, camarote del capitán y bodega con tesoro; alrededor, tiendas, un chiringuito, una
 batería de cañones, un vigía y un tesoro enterrado bajo una X roja.
+
+**Cada cuánto se encuentran**:
+- **Asentamiento vikingo**: uno por cada zona de unos 380×380 bloques que caiga en tierras frías (taigas, nieve,
+  arboledas, colinas). En una región fría grande sale más o menos uno cada 400 bloques: el doble que las aldeas.
+- **Cala pirata**: hay un intento cada unos 190×190 bloques, pero solo prospera si cae en playa, costa rocosa o
+  manglar. Siguiendo una costa, cuenta con una cada 500-800 bloques; en los manglares, bastantes más.
+- **Guaridas de bandidos**: en llanuras, bosques, sabanas y badlands (las tierras frías son de los vikingos, así que no
+  se pisan).
+- **Mapas**: los cartógrafos venden el *Mapa del tesoro pirata* (aprendiz: 11 esmeraldas y una brújula) y el *Mapa de
+  asentamiento vikingo* (oficial: 13 esmeraldas y una brújula). También salen en cofres: los vikingos guardan cartas de
+  las calas piratas, los piratas de los asentamientos vikingos, y los fuertes de bandidos de ambos.
 
 **Patrullas y asaltos**: la facción que aparece depende de dónde estés (vikingos en el frío, piratas en la costa y
 bandidos en el resto). Las patrullas solo van a por ti si sois enemigos; si no, pasan de largo. Los asaltos atacan

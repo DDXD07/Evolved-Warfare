@@ -68,6 +68,29 @@ TABLES = {
         item("rotten_flesh", 3, 1, 3)]),
 }
 
+def explorer_map(destination, decoration, name, weight):
+    return {"type": "minecraft:item", "name": "minecraft:map", "weight": weight, "functions": [
+        {"function": "minecraft:exploration_map", "destination": f"evolvedwarfare:{destination}",
+         "decoration": decoration, "zoom": 1, "skip_existing_chunks": False},
+        {"function": "minecraft:set_name", "target": "item_name", "name": {"translate": name}}]}
+
+
+VIKING_MAP = explorer_map("on_viking_maps", "minecraft:village_snowy", "filled_map.evolvedwarfare.viking_settlement", 1)
+PIRATE_MAP = explorer_map("on_pirate_maps", "minecraft:red_x", "filled_map.evolvedwarfare.pirate_cove", 1)
+
+
+def map_pool(entries, empty):
+    """Un mapa de vez en cuando (entries con peso 1 cada uno; 'empty' es el peso de no dar nada)."""
+    return {"rolls": 1.0, "bonus_rolls": 0.0, "entries": entries + [{"type": "minecraft:empty", "weight": empty}]}
+
+
+# los vikingos guardan cartas de las calas piratas (sus rivales) y los piratas de los asentamientos que saquear
+TABLES["chests/viking_longhouse"]["pools"].append(map_pool([PIRATE_MAP], 1))
+TABLES["chests/pirate_ship"]["pools"].append(map_pool([VIKING_MAP], 1))
+TABLES["chests/pirate_treasure"]["pools"].append(map_pool([PIRATE_MAP], 2))
+TABLES["chests/viking_hut"]["pools"].append(map_pool([VIKING_MAP, PIRATE_MAP], 8))
+TABLES["chests/pirate_camp"]["pools"].append(map_pool([VIKING_MAP, PIRATE_MAP], 8))
+
 ENTITIES = {
     "entities/viking": {"type": "minecraft:entity", "pools": [looting("iron_nugget", 0, 3), looting("leather", 0, 2),
                                                                looting("cooked_salmon", 0, 1)]},
@@ -83,7 +106,15 @@ def main():
         with open(path, "w", encoding="utf-8") as f:
             json.dump(table, f, indent=2)
             f.write("\n")
-    print("ok", len(TABLES) + len(ENTITIES))
+    fort = os.path.join(OUT, "loot_table", "chests", "bandit_fort.json")
+    with open(fort, encoding="utf-8") as f:
+        table = json.load(f)
+    table["pools"] = [p for p in table["pools"] if not any(e.get("name") == "minecraft:map" for e in p.get("entries", []))]
+    table["pools"].append(map_pool([VIKING_MAP, PIRATE_MAP], 3))
+    with open(fort, "w", encoding="utf-8") as f:
+        json.dump(table, f, indent=2)
+        f.write("\n")
+    print("ok", len(TABLES) + len(ENTITIES) + 1)
 
 
 if __name__ == "__main__":

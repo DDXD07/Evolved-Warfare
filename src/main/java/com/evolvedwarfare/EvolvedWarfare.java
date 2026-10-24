@@ -10,6 +10,7 @@ import com.evolvedwarfare.registry.ModEntities;
 import com.evolvedwarfare.registry.ModItems;
 import com.evolvedwarfare.registry.ModScreens;
 import com.evolvedwarfare.registry.ModStructures;
+import com.evolvedwarfare.world.ExplorationMaps;
 import com.evolvedwarfare.world.FactionSpawner;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.util.Identifier;
@@ -51,6 +52,7 @@ public class EvolvedWarfare implements ModInitializer {
 		NpcSides.register();
 		FactionSpawner.register();
 		ModCommands.register();
+		ExplorationMaps.register();
 		RouteSlipItem.registerEvents();
 		LOGGER.info("Evolved Warfare cargado");
 	}

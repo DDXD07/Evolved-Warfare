@@ -1546,23 +1546,21 @@ STRUCTURE_SETS = {
         "structures": [{"structure": L("bandit_camp"), "weight": 3}, {"structure": L("bandit_fort"), "weight": 1}],
     },
     "viking_settlements": {
-        "placement": {"type": "minecraft:random_spread", "salt": 1357911131, "spacing": 32, "separation": 12,
+        "placement": {"type": "minecraft:random_spread", "salt": 1357911131, "spacing": 24, "separation": 9,
                       "exclusion_zone": {"other_set": "minecraft:villages", "chunk_count": 6}},
         "structures": [{"structure": L("viking_settlement"), "weight": 1}],
     },
     "pirate_coves": {
-        "placement": {"type": "minecraft:random_spread", "salt": 246813579, "spacing": 22, "separation": 8,
+        "placement": {"type": "minecraft:random_spread", "salt": 246813579, "spacing": 12, "separation": 5,
                       "exclusion_zone": {"other_set": "minecraft:villages", "chunk_count": 4}},
         "structures": [{"structure": L("pirate_cove"), "weight": 1}],
     },
 }
 
+# Las tierras frías son de los vikingos (fase 5): ahí ya no hay guaridas de bandidos, para que no se pisen.
 BANDIT_BIOMES = ["minecraft:plains", "minecraft:sunflower_plains", "minecraft:meadow", "minecraft:forest",
-                 "minecraft:birch_forest", "minecraft:dark_forest", "minecraft:taiga", "minecraft:old_growth_pine_taiga",
-                 "minecraft:old_growth_spruce_taiga", "minecraft:snowy_taiga", "minecraft:snowy_plains",
-                 "minecraft:savanna", "minecraft:savanna_plateau", "minecraft:windswept_hills",
-                 "minecraft:windswept_forest", "minecraft:windswept_savanna", "minecraft:badlands",
-                 "minecraft:wooded_badlands"]
+                 "minecraft:birch_forest", "minecraft:dark_forest", "minecraft:savanna", "minecraft:savanna_plateau",
+                 "minecraft:windswept_savanna", "minecraft:badlands", "minecraft:wooded_badlands"]
 
 VIKING_BIOMES = ["minecraft:snowy_plains", "minecraft:snowy_taiga", "minecraft:taiga", "minecraft:old_growth_pine_taiga",
                  "minecraft:old_growth_spruce_taiga", "minecraft:grove", "minecraft:windswept_hills",
@@ -1571,7 +1569,8 @@ PIRATE_BIOMES = ["minecraft:beach", "minecraft:stony_shore", "minecraft:mangrove
 
 BIOME_TAGS = {
     "viking_settlement": VIKING_BIOMES,
-    "pirate_cove": ["minecraft:beach", "minecraft:stony_shore"],
+    # las playas son franjas estrechas: también se esconden en los manglares
+    "pirate_cove": ["minecraft:beach", "minecraft:stony_shore", "minecraft:mangrove_swamp"],
     "bandit_camp": BANDIT_BIOMES,
     "bandit_fort": BANDIT_BIOMES,
     "city": ["minecraft:plains", "minecraft:sunflower_plains", "minecraft:meadow", "minecraft:savanna",
@@ -1618,6 +1617,9 @@ def write(data_dir):
         "minecraft:ice_spikes", "minecraft:frozen_river", "minecraft:snowy_slopes", "minecraft:snowy_beach",
         "minecraft:frozen_peaks", "minecraft:jagged_peaks"]})
     dump("tags/worldgen/biome/pirate_coasts.json", {"values": PIRATE_BIOMES})
+    # mapas de exploración (cofres y cartógrafos)
+    dump("tags/worldgen/structure/on_viking_maps.json", {"values": [L("viking_settlement")]})
+    dump("tags/worldgen/structure/on_pirate_maps.json", {"values": [L("pirate_cove")]})
     return templates
 
 

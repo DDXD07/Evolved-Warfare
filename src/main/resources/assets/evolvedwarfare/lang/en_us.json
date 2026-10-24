@@ -346,5 +346,7 @@
   "commands.evolvedwarfare.unknown_faction": "Unknown faction (bandits, vikings, pirates)",
   "commands.evolvedwarfare.raid.failed": "Couldn't start a raid here",
   "commands.evolvedwarfare.reputation.changed": "Reputation with %s changed for %s players",
-  "commands.evolvedwarfare.raid.started": "Raid started: %s"
+  "commands.evolvedwarfare.raid.started": "Raid started: %s",
+  "filled_map.evolvedwarfare.viking_settlement": "Viking Settlement Map",
+  "filled_map.evolvedwarfare.pirate_cove": "Pirate Treasure Map"
 }

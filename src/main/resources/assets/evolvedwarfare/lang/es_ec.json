@@ -346,5 +346,7 @@
   "commands.evolvedwarfare.unknown_faction": "Facción desconocida (bandits, vikings, pirates)",
   "commands.evolvedwarfare.raid.failed": "No se pudo lanzar el asalto aquí",
   "commands.evolvedwarfare.reputation.changed": "Reputación con %s cambiada a %s jugadores",
-  "commands.evolvedwarfare.raid.started": "Asalto en marcha: %s"
+  "commands.evolvedwarfare.raid.started": "Asalto en marcha: %s",
+  "filled_map.evolvedwarfare.viking_settlement": "Mapa de asentamiento vikingo",
+  "filled_map.evolvedwarfare.pirate_cove": "Mapa del tesoro pirata"
 }
