@@ -8,6 +8,8 @@ on: [pull_request, push, workflow_dispatch]
 jobs:
   build:
     runs-on: ubuntu-24.04
+    permissions:
+      contents: write
     steps:
       - name: checkout repository
         uses: actions/checkout@v6
@@ -27,3 +29,15 @@ jobs:
         with:
           name: evolved-warfare
           path: build/libs/*.jar
+      # además, deja el .jar en la rama "builds" (un solo commit, se reemplaza en cada compilación)
+      - name: publish jar to the builds branch
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          mkdir -p /tmp/out && cp build/libs/*.jar /tmp/out/
+          cd /tmp/out
+          git init -q -b builds
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Build ${GITHUB_SHA}"
+          git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" builds
