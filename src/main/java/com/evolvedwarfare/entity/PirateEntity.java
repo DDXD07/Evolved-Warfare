@@ -9,7 +9,8 @@ import net.minecraft.world.World;
 
 /**
  * Pirata: saqueador de las costas. Clases: pirata de abordaje (alfanje), tirador (ballesta, a veces con flechas
- * incendiarias), matón (hacha), cirujano de a bordo y capitán (bebe ron cuando está herido). Nadan sin ahogarse.
+ * incendiarias), matón (hacha), cirujano de a bordo y capitán (bebe ron cuando está herido). No se ahogan (etiqueta
+ * {@code minecraft:can_breathe_under_water}).
  */
 public class PirateEntity extends FactionNpcEntity {
 	public static final int VARIANTS = 4;
@@ -54,12 +55,6 @@ public class PirateEntity extends FactionNpcEntity {
 	@Override
 	protected String nameKey() {
 		return "pirate";
-	}
-
-	/** Gente de mar: no se ahogan. */
-	@Override
-	public boolean canBreatheInWater() {
-		return true;
 	}
 
 	@Override

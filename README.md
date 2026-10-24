@@ -239,7 +239,7 @@ aldeas, ciudades y **tu pueblo** (los alrededores de tu ayuntamiento) si la facc
 facción tiene su barra de asalto y su aviso.
 
 ### Reputación
-Cada jugador tiene una reputación de -100 a 100 con cada facción (empieza en -50 con los bandidos y -25 con vikingos y
+Cada jugador tiene una reputación de -100 a 100 con cada facción (empieza en -50 con los bandidos y -40 con vikingos y
 piratas):
 
 | Reputación | Trato | Qué pasa |

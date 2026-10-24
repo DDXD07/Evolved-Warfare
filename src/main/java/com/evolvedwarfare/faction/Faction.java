@@ -17,10 +17,10 @@ public enum Faction {
 	BANDITS("bandits", new UUID(0x45574241_4E444954L, 0x5300000000000001L), -50, Reputation.ALLIED_AT - 1, false,
 			Formatting.DARK_RED, BossBar.Color.RED, DyeColor.BLACK, DyeColor.RED, 0x5E1B1B),
 	/** Vikingos: guerreros del norte, de taigas y llanuras nevadas. */
-	VIKINGS("vikings", new UUID(0x45574249_4B494E47L, 0x5300000000000002L), -25, Reputation.MAX, true,
+	VIKINGS("vikings", new UUID(0x45574249_4B494E47L, 0x5300000000000002L), -40, Reputation.MAX, true,
 			Formatting.AQUA, BossBar.Color.BLUE, DyeColor.RED, DyeColor.WHITE, 0x6B4A2E),
 	/** Piratas: saqueadores de las costas. */
-	PIRATES("pirates", new UUID(0x45575049_52415445L, 0x5300000000000003L), -25, Reputation.MAX, true,
+	PIRATES("pirates", new UUID(0x45575049_52415445L, 0x5300000000000003L), -40, Reputation.MAX, true,
 			Formatting.DARK_PURPLE, BossBar.Color.PURPLE, DyeColor.BLACK, DyeColor.WHITE, 0x7A1E1E);
 
 	private final String id;
