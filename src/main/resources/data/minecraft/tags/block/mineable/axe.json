@@ -12,7 +12,9 @@
     "evolvedwarfare:gardener_post",
     "evolvedwarfare:courier_post",
     "evolvedwarfare:merchant_post",
+    "evolvedwarfare:builder_post",
     "evolvedwarfare:town_hall",
-    "evolvedwarfare:warehouse"
+    "evolvedwarfare:warehouse",
+    "evolvedwarfare:architect_table"
   ]
 }

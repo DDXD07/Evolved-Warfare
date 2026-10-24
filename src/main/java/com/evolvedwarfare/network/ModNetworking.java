@@ -15,6 +15,7 @@ public final class ModNetworking {
 		PayloadTypeRegistry.playS2C().register(DiplomacyDataPayload.ID, DiplomacyDataPayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(DiplomacyActionPayload.ID, DiplomacyActionPayload.CODEC);
 		DiplomacyNetworking.register();
+		BlueprintNetworking.register();
 		ServerPlayNetworking.registerGlobalReceiver(WarehouseActionPayload.ID, (payload, context) -> {
 			if (context.player().currentScreenHandler instanceof WarehouseScreenHandler handler
 					&& handler.syncId == payload.syncId()) {

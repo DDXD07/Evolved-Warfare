@@ -1,0 +1,65 @@
+{
+  "elements": [
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "evolvedwarfare:desert_city/houses/adobe_house",
+        "processors": "evolvedwarfare:desert_weathering",
+        "projection": "rigid"
+      },
+      "weight": 6
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "evolvedwarfare:desert_city/houses/courtyard_house",
+        "processors": "evolvedwarfare:desert_weathering",
+        "projection": "rigid"
+      },
+      "weight": 4
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "evolvedwarfare:desert_city/houses/bazaar",
+        "processors": "evolvedwarfare:desert_weathering",
+        "projection": "rigid"
+      },
+      "weight": 3
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "evolvedwarfare:desert_city/houses/caravanserai",
+        "processors": "evolvedwarfare:desert_weathering",
+        "projection": "rigid"
+      },
+      "weight": 2
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "evolvedwarfare:desert_city/houses/barracks",
+        "processors": "evolvedwarfare:desert_weathering",
+        "projection": "rigid"
+      },
+      "weight": 2
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "evolvedwarfare:desert_city/houses/watchtower",
+        "processors": "evolvedwarfare:desert_weathering",
+        "projection": "rigid"
+      },
+      "weight": 1
+    },
+    {
+      "element": {
+        "element_type": "minecraft:empty_pool_element"
+      },
+      "weight": 3
+    }
+  ],
+  "fallback": "minecraft:empty"
+}

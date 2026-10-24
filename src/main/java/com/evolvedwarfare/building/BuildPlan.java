@@ -54,7 +54,11 @@ public final class BuildPlan {
 	}
 
 	public static BuildPlan create(Profession profession, int seed, BlockPos site, Direction facing) {
-		Blueprint blueprint = BlueprintGenerator.generate(profession.id(), seed);
+		return of(BlueprintGenerator.generate(profession.id(), seed), site, facing);
+	}
+
+	/** Cualquier plano (el del puesto o uno escaneado) colocado en el puesto de 'site' mirando a 'facing'. */
+	public static BuildPlan of(Blueprint blueprint, BlockPos site, Direction facing) {
 		BlockRotation rotation = BlueprintStates.rotationFor(facing);
 		BuildPlan plan = new BuildPlan(site);
 
@@ -116,6 +120,18 @@ public final class BuildPlan {
 
 	public int total() {
 		return placeOrder.size();
+	}
+
+	/** Caja que ocupa la obra (para marcarla con "Ver zona"). */
+	@Nullable
+	public net.minecraft.util.math.BlockBox bounds() {
+		net.minecraft.util.math.BlockBox box = null;
+		for (List<Entry> list : List.of(placeOrder, clearOrder)) {
+			for (Entry entry : list) {
+				box = box == null ? new net.minecraft.util.math.BlockBox(entry.pos) : box.encompass(entry.pos);
+			}
+		}
+		return box;
 	}
 
 	/**

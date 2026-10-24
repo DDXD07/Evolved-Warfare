@@ -48,16 +48,23 @@ public class WorkSiteScreen extends HandledScreen<WorkSiteScreenHandler> {
 	@Override
 	protected void init() {
 		super.init();
-		boolean hasArea = handler.getProfession().area().exists();
+		boolean builder = handler.getProfession() == Profession.BUILDER;
+		boolean hasArea = handler.getProfession().area().exists() || builder;
 		workerButton = ButtonWidget.builder(Text.empty(), b -> click(handler.hasWorker()
 						? WorkSiteScreenHandler.BUTTON_DISMISS : WorkSiteScreenHandler.BUTTON_ASSIGN))
 				.dimensions(x + 7, y + STATUS_TOP + 25, 58, 14).build();
 		addDrawableChild(workerButton);
 		areaButton = ButtonWidget.builder(Text.translatable("gui.evolvedwarfare.button.area"), b -> click(WorkSiteScreenHandler.BUTTON_AREA))
-				.dimensions(x + 67, y + STATUS_TOP + 25, 50, 14).build();
-		areaButton.setTooltip(Tooltip.of(Text.translatable("gui.evolvedwarfare.button.area.tip")));
+				.dimensions(x + 67, y + STATUS_TOP + 25, builder ? 102 : 50, 14).build();
+		areaButton.setTooltip(Tooltip.of(Text.translatable(builder ? "gui.evolvedwarfare.button.area.builder_tip"
+				: "gui.evolvedwarfare.button.area.tip")));
 		areaButton.visible = hasArea;
 		addDrawableChild(areaButton);
+		if (builder) {
+			// el constructor no tiene edificio propio
+			updateButtons();
+			return;
+		}
 		boolean shop = handler.getProfession() == Profession.MERCHANT;
 		boolean narrow = hasArea || shop;
 		ButtonWidget buildingButton = ButtonWidget.builder(Text.translatable("gui.evolvedwarfare.button.building"),
@@ -151,7 +158,12 @@ public class WorkSiteScreen extends HandledScreen<WorkSiteScreenHandler> {
 		context.drawText(textRenderer, Text.translatable("gui.evolvedwarfare.site.output"), 8, 37, TEXT, false);
 		Text extra = extraInfo();
 		Material missing = WorkSiteBlockEntity.missingFromNote(handler.note());
-		if (missing != null) {
+		net.minecraft.item.Item missingItem = WorkSiteBlockEntity.missingItemFromNote(handler.note());
+		if (missingItem != null) {
+			Text note = Text.translatable("gui.evolvedwarfare.site.note.missing", missingItem.getName());
+			context.drawText(textRenderer, trim(note, backgroundWidth - 70), backgroundWidth - 8 - Math.min(textRenderer.getWidth(note),
+					backgroundWidth - 70), 37, BAD, false);
+		} else if (missing != null) {
 			Text note = Text.translatable("gui.evolvedwarfare.site.note.missing", Text.translatable(BuildMaterials.translationKey(missing)));
 			context.drawText(textRenderer, note, backgroundWidth - 8 - textRenderer.getWidth(note), 37, BAD, false);
 		} else if (extra != null) {
@@ -181,6 +193,9 @@ public class WorkSiteScreen extends HandledScreen<WorkSiteScreenHandler> {
 	/** Combustible (talleres con fuego) o capa por la que va la mina. */
 	private Text extraInfo() {
 		Profession profession = handler.getProfession();
+		if (profession == Profession.BUILDER && handler.progress() >= 0) {
+			return Text.translatable("gui.evolvedwarfare.site.progress", handler.progress());
+		}
 		if (profession == Profession.BLACKSMITH || profession == Profession.COOK) {
 			return Text.translatable("gui.evolvedwarfare.site.fuel", handler.fuel());
 		}

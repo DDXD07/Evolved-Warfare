@@ -35,7 +35,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Nivel de los asentamientos de las facciones (campamentos y fuertes de bandidos, asentamientos vikingos y calas
  * piratas), de 1 a {@value #MAX_LEVEL}. Sube con la distancia al punto de aparición del mundo (uno cada
- * {@value #BLOCKS_PER_LEVEL} bloques) más un poco de azar fijo por asentamiento; los fuertes de bandidos, uno más.
+ * {@value #BLOCKS_PER_LEVEL} bloques) más un poco de azar fijo por asentamiento; los fuertes de bandidos, uno más, y
+ * las fortalezas del caudillo, dos más.
  * Cada nivel por encima del 1 da a su guarnición un 10 % más de vida y de daño.
  *
  * <p>Al acercarte a menos de {@value #NOTICE_RANGE} bloques de uno, sale en pantalla su nombre, su nivel y cómo te
@@ -91,8 +92,13 @@ public final class SettlementLevels {
 		long hash = HashCommon.mix(world.getSeed() ^ (chunk.toLong() * 0x9E3779B97F4A7C15L));
 		int level = 1 + distance / BLOCKS_PER_LEVEL + (int) Math.floorMod(hash, 3L);
 		Identifier id = idOf(world, start);
-		if (id != null && id.getPath().equals("bandit_fort")) {
-			level++;
+		if (id != null) {
+			switch (id.getPath()) {
+				case "bandit_fort" -> level += 1;
+				case "bandit_stronghold" -> level += 2;
+				default -> {
+				}
+			}
 		}
 		return MathHelper.clamp(level, 1, MAX_LEVEL);
 	}

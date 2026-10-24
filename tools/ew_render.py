@@ -29,6 +29,11 @@ SPECIAL = {
     "chest": ((160, 115, 50), (140, 100, 45)),
     "wall_torch": ((255, 210, 100), (255, 210, 100)),
     "chain": ((60, 65, 80), (60, 65, 80)),
+    # las hojas vienen grises en la textura (el bioma las tiñe)
+    "jungle_leaves": ((70, 140, 40), (60, 120, 35)),
+    "spruce_leaves": ((70, 105, 70), (60, 90, 60)),
+    "oak_leaves": ((80, 130, 50), (70, 115, 45)),
+    "skeleton_skull": ((215, 215, 205), (190, 190, 180)),
 }
 NPC_COLOR = ((70, 110, 200), (60, 95, 180))      # túnica azul: así se ven los reclutas en la vista previa
 BANDIT_COLOR = ((190, 40, 40), (150, 30, 30))    # rojo: bandidos

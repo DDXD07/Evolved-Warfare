@@ -50,7 +50,9 @@ public enum Profession {
 	/** Lleva la producción al almacén y del almacén lo que falta en cada puesto; o sigue una hoja de ruta. */
 	COURIER("courier", null, WorkArea.NONE, CourierJob::new),
 	/** Atiende la tienda del puesto y vende en el mercado lo que sobra en el almacén. */
-	MERCHANT("merchant", null, WorkArea.NONE, MerchantJob::new);
+	MERCHANT("merchant", null, WorkArea.NONE, MerchantJob::new),
+	/** Construye el plano que le pongas en los suministros, detrás de su puesto, con los materiales exactos. */
+	BUILDER("builder", null, WorkArea.NONE, ConstructionJob::new);
 
 	private final String id;
 	@Nullable

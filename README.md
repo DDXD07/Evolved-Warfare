@@ -13,7 +13,7 @@ Requiere **Fabric API**. Opcional: **Golden Coin Merchants** (los reclutas acept
 | 3 | **Trabajadores**: 14 oficios con su puesto de trabajo (granja, tala, mina, excavación, pesca, ganado, corral, colmenas, huerto, forja, cocina, carbonera, cantería, flechas) y ayuntamiento que paga solo | ✅ Hecha |
 | 4 | **Logística y comercio**: almacén en red con buscador, mensajero (automático o con hoja de ruta), comerciante con tienda para jugadores y venta de excedentes (Golden Coin o esmeraldas) | ✅ Hecha |
 | 5 | **Facciones y diplomacia**: vikingos y piratas con sus asentamientos, patrullas y asaltos (también a tu pueblo); reputación con cada facción, bandera blanca, tributos, treguas, alianzas, ayuda de aliados y mercenarios | ✅ Hecha |
-| 6 | Estructuras: escáner y constructor de planos; más tipos de ciudad (desierto, nieve) y fortalezas | ⏳ |
+| 6 | **Estructuras**: escáner de estructuras, planos, mesa del arquitecto con biblioteca y constructor que los levanta; ciudades del desierto y del norte; castillos y fortalezas del caudillo bandido | ✅ Hecha |
 | 7 | Asedio: catapulta, balista, trebuchet, ariete; puente levadizo y rastrillo | ⏳ |
 | 8 | Armas medievales, árbol de investigación, equilibrio y configuración | ⏳ |
 
@@ -304,21 +304,80 @@ piratas):
 /evolvedwarfare raid <bandits|vikings|pirates>                  lanzar un asalto
 ```
 
+## Fase 6 — Estructuras
+
+### Escáner de estructuras
+Receta: panel de cristal arriba; lingote de oro, brújula y lingote de oro en medio; redstone abajo.
+1. **Clic derecho en dos bloques** para marcar las esquinas de la zona (máximo 48×40×48). Mientras lo llevas, el borde
+   se ve con partículas (cian si cabe, rojo si es demasiado grande). **Agachado + clic al aire** borra las esquinas.
+2. **Clic al aire**: se abre la ventana de escaneo. Ponle nombre y elige cuál es la **fachada** (norte, este, sur u
+   oeste): ese lado quedará mirando al puesto del constructor.
+3. **Escanear** gasta 1 papel (gratis en creativo) y te da un **Plano**. El aire y el agua quedan como hueco (el
+   constructor lo despeja); los bloques indestructibles, los generadores de monstruos y los bloques técnicos se ignoran.
+
+Los planos se guardan en `config/evolvedwarfare/blueprints/`, así que sirven en todos tus mundos (y en un servidor, para
+todos los jugadores).
+
+### Mesa del arquitecto
+Receta: 3 papeles arriba; tablón, mesa de cartografía y tablón en medio; dos tablones abajo (las patas).
+- La **biblioteca**: tus planos y los de los demás jugadores, más **28 edificios del mod** (las casas de las tres
+  ciudades, la torre de vigilancia y piezas de vikingos y piratas, drakkar incluido).
+- **Vista previa en 3D** (arrastrar para girar, rueda para acercar), tamaño, número de bloques, autor y la lista de
+  materiales.
+- **Imprimir**: te da una copia del plano (1 papel). **Borrar**: solo el autor o un administrador.
+
+### Constructor
+Un oficio nuevo: **puesto del constructor** (7 tablones, cofre y ladrillos de piedra en el centro). Asígnale un recluta y
+pon un **plano en sus suministros**:
+- Levanta el edificio **detrás del puesto**, con la fachada mirando hacia el puesto, igual que los demás oficios: limpia
+  lo natural, rellena con tierra bajo el suelo y pone los bloques de abajo arriba (antorchas, faroles, escaleras de
+  mano, alfombras y demás cosas que se apoyan en otras, al final).
+- Cada bloque gasta **su propio objeto** (una escalera de roble gasta una escalera de roble; una losa doble, dos losas).
+  La tierra vale por la hierba y demás suelos, y la mitad de arriba de puertas y camas no cuesta nada.
+- Si le falta algo, el puesto dice qué («Falta: Farol») y el **mensajero lo trae del almacén**.
+- En el menú del puesto se ve el **progreso** de la obra; **Ver zona** marca con partículas dónde irá.
+- Al terminar te avisa. Para otra obra, cambia el plano.
+- En **creativo**, clic derecho con un plano en el suelo lo coloca al instante.
+
+### Ciudades del desierto y del norte
+Comparten la rejilla de las ciudades: en cada sitio sale la que encaja con el bioma (unas 40 casas y 15 reclutas, como
+la ciudad medieval).
+- **Ciudad del desierto** (desiertos): calles de arenisca lisa, plaza del **oasis** con estanque, palmeras y bancos;
+  casas de adobe con azotea y toldo, casas con terraza, **bazares** de toldos de colores, **posada de caravanas** con
+  patio y pozo, cuartel almenado y torres con farol.
+- **Ciudad del norte** (llanuras y taigas nevadas): calles empedradas con nieve, plaza de la **hoguera** con un abeto;
+  cabañas de troncos con chimenea humeante, casas grandes de dos plantas, **taberna** con gran hogar, herrería con fragua,
+  cuartel de piedra y troncos y torres de piedra con tejado puntiagudo.
+
+Las dos se pueden asaltar (como las aldeas y la ciudad medieval).
+
+### Fortalezas
+- **Castillo** (llanuras, praderas, bosques, taigas y sabanas; más o menos uno cada 770×770 bloques, nunca pegado a una
+  ciudad): muralla con adarve y almenas, cuatro torres con trampilla a la azotea, puerta fortificada con rastrillo,
+  **torre del homenaje** de tres plantas (salón del trono, aposentos del señor con el **tesoro** y armería), cuartel,
+  establo con caballos, herrería, pozo y dianas. Lo guardan **reclutas** (se pueden contratar) y se puede asaltar.
+- **Fortaleza del caudillo bandido** (donde los demás bandidos; 1 de cada 7 guaridas): muralla de piedra con estacas,
+  cuatro torres con arqueros, puerta con calaveras, **salón del caudillo** con trono de oro y mesas del festín y, arriba,
+  su tesoro; celdas con prisioneros que puedes liberar, tiendas y una guarnición numerosa con su capitán. Su **nivel es
+  dos más** que el de un campamento en el mismo sitio, así que es de lo más duro del mundo.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
-- `ew_structures.py` — diseña cada edificio bloque a bloque y escribe los `.nbt` y los JSON de generación.
+- `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
+  castillo y fortalezas) y escribe los `.nbt` y los JSON de generación.
 - `ew_jigsaw_sim.py` — simula cómo el juego monta las ciudades (encaje de piezas, tamaño, nº de NPCs).
 - `ew_preview.py` — dibuja vistas previas isométricas.
 - `ew_textures.py` — genera las texturas (aspectos de los reclutas, contrato, interfaz).
 - `ew_buildings.py` — compila el generador de edificios (Java puro) y dibuja los diseños de cada oficio con varias semillas.
 - `ew_blocks.py` — texturas, modelos, recetas y botín de los puestos de trabajo, el ayuntamiento, el almacén y la hoja de ruta.
 - `ew_factions.py` — aspectos de vikingos y piratas, bandera blanca y sello de embajador.
-- `ew_loot.py` — botín de los cofres de vikingos y piratas y de los propios vikingos y piratas.
+- `ew_loot.py` — botín de los cofres de vikingos, piratas, castillos y fortalezas, y de los propios vikingos y piratas.
+- `ew_architect.py` — texturas, modelos y recetas de la mesa del arquitecto, el escáner y el plano.
 - `ew_village.py` — prototipo de las aldeas vanilla mejoradas (mismo algoritmo que `VillageExtras.java`) con vista previa.
 
 ```
 python3 tools/ew_structures.py src/main/resources/data/evolvedwarfare
-python3 tools/ew_jigsaw_sim.py city 60
+python3 tools/ew_jigsaw_sim.py city 60          # o desert_city, snow_city
 ```
 
 ## Compilar

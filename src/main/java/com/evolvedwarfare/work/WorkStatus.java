@@ -30,7 +30,11 @@ public enum WorkStatus {
 	/** Mensajero siguiendo su hoja de ruta (y ahora no hay nada que llevar). */
 	ROUTE_IDLE(Tone.NEUTRAL),
 	/** Comerciante en su puesto: la tienda está abierta. */
-	SHOP_OPEN(Tone.GOOD);
+	SHOP_OPEN(Tone.GOOD),
+	/** Constructor sin plano en los suministros. */
+	NO_BLUEPRINT(Tone.BAD),
+	/** El plano que tiene ya no está en la biblioteca. */
+	BLUEPRINT_MISSING(Tone.BAD);
 
 	public enum Tone { GOOD, NEUTRAL, BAD }
 

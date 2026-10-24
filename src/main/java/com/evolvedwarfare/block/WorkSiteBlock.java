@@ -92,9 +92,12 @@ public class WorkSiteBlock extends BlockWithEntity {
 		super.onPlaced(world, pos, state, placer, stack);
 		if (!world.isClient && placer instanceof PlayerEntity player && world.getBlockEntity(pos) instanceof WorkSiteBlockEntity site) {
 			site.setOwner(player.getUuid());
-			// diseño al azar para su edificio, y se abre el menú para elegirlo
+			// diseño al azar para su edificio, y se abre el menú para elegirlo (el constructor no tiene edificio propio:
+			// construye los planos que le des)
 			site.initSeed(world.getRandom());
-			if (player instanceof ServerPlayerEntity serverPlayer) {
+			if (profession == Profession.BUILDER) {
+				site.skipBuilding();
+			} else if (player instanceof ServerPlayerEntity serverPlayer) {
 				site.openBlueprint(serverPlayer);
 			}
 		}

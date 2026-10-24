@@ -58,6 +58,7 @@ public class EvolvedWarfare implements ModInitializer {
 		ExplorationMaps.register();
 		SettlementLevels.register();
 		RouteSlipItem.registerEvents();
+		com.evolvedwarfare.item.StructureScannerItem.registerEvents();
 		LOGGER.info("Evolved Warfare cargado");
 	}
 }

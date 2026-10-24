@@ -2,6 +2,8 @@ package com.evolvedwarfare.registry;
 
 import com.evolvedwarfare.EvolvedWarfare;
 import com.evolvedwarfare.item.AmbassadorSealItem;
+import com.evolvedwarfare.item.BlueprintItem;
+import com.evolvedwarfare.item.StructureScannerItem;
 import com.evolvedwarfare.item.CommandStaffItem;
 import com.evolvedwarfare.item.MedicKitItem;
 import com.evolvedwarfare.item.RecruitmentContractItem;
@@ -47,6 +49,10 @@ public final class ModItems {
 	/** Sello de embajador: abre la diplomacia con las facciones. */
 	public static final Item AMBASSADOR_SEAL = register("ambassador_seal", new AmbassadorSealItem(new Item.Settings().maxCount(1)));
 
+	/** Escáner de planos y plano (fase 6). */
+	public static final Item STRUCTURE_SCANNER = register("structure_scanner", new StructureScannerItem(new Item.Settings().maxCount(1)));
+	public static final Item BLUEPRINT = register("blueprint", new BlueprintItem(new Item.Settings().maxCount(1)));
+
 	/** Pestaña propia en el inventario creativo. */
 	public static final ItemGroup GROUP = Registry.register(Registries.ITEM_GROUP, EvolvedWarfare.id("main"),
 			FabricItemGroup.builder()
@@ -59,6 +65,8 @@ public final class ModItems {
 						entries.add(ROUTE_SLIP);
 						entries.add(WHITE_FLAG);
 						entries.add(AMBASSADOR_SEAL);
+						entries.add(STRUCTURE_SCANNER);
+						entries.add(ModBlocks.ARCHITECT_TABLE);
 						entries.add(BANDIT_SPAWN_EGG);
 						entries.add(VIKING_SPAWN_EGG);
 						entries.add(PIRATE_SPAWN_EGG);

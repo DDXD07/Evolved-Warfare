@@ -66,6 +66,14 @@ TABLES = {
         item("honey_bottle", 6, 1, 3), item("cooked_cod", 6, 1, 4), item("gold_nugget", 6, 2, 9), item("gunpowder", 5, 1, 4),
         item("string", 4, 1, 4), item("arrow", 4, 4, 12), item("emerald", 3, 1, 3), item("sugar", 4, 1, 4),
         item("rotten_flesh", 3, 1, 3)]),
+    # fase 6: el tesoro del caudillo de la fortaleza de bandidos
+    "chests/bandit_stronghold": chest((5, 9), [
+        item("gold_ingot", 8, 2, 7), item("iron_ingot", 8, 3, 8), item("emerald", 7, 3, 10), item("diamond", 3, 1, 3),
+        item("gold_nugget", 5, 6, 18), item("golden_apple", 3), item("saddle", 2), item("name_tag", 1),
+        item("iron_sword", 3, extra=ENCHANT), item("crossbow", 3, extra=ENCHANT), item("chainmail_chestplate", 3),
+        item("iron_chestplate", 2, extra=ENCHANT), item("arrow", 4, 8, 24), item("experience_bottle", 3, 2, 6)],
+        rare=[item("enchanted_golden_apple", 1), item("diamond", 3, 2, 4), item("totem_of_undying", 1),
+              EMPTY | {"weight": 6}]),
 }
 
 def explorer_map(destination, decoration, name, weight):
@@ -90,6 +98,7 @@ TABLES["chests/pirate_ship"]["pools"].append(map_pool([VIKING_MAP], 1))
 TABLES["chests/pirate_treasure"]["pools"].append(map_pool([PIRATE_MAP], 2))
 TABLES["chests/viking_hut"]["pools"].append(map_pool([VIKING_MAP, PIRATE_MAP], 8))
 TABLES["chests/pirate_camp"]["pools"].append(map_pool([VIKING_MAP, PIRATE_MAP], 8))
+TABLES["chests/bandit_stronghold"]["pools"].append(map_pool([VIKING_MAP, PIRATE_MAP], 2))
 
 # ------------------------------------------------------------------ botín según el nivel del asentamiento
 LEVEL = "evolvedwarfare:settlement_level"
@@ -152,6 +161,25 @@ def without_level_pools(table):
 for _name, _table in TABLES.items():
     _table["pools"].extend(level_pools(_table["pools"][0]["entries"]))
 
+# castillos (fase 6): no son de ninguna facción, así que su botín no depende del nivel
+CASTLE_TABLES = {
+    "chests/castle_armory": chest((4, 7), [
+        item("iron_ingot", 6, 2, 6), item("arrow", 7, 8, 24), item("shield", 4), item("iron_sword", 4),
+        item("iron_helmet", 3), item("iron_chestplate", 2), item("iron_leggings", 2), item("iron_boots", 3),
+        item("chainmail_chestplate", 3), item("crossbow", 3), item("bow", 3), item("iron_horse_armor", 2),
+        item("iron_sword", 2, extra=ENCHANT), item("leather", 4, 2, 6)],
+        rare=[item("diamond_sword", 1), item("diamond_horse_armor", 1), item("diamond", 1, 1, 2), EMPTY | {"weight": 8}]),
+    "chests/castle_treasury": chest((4, 8), [
+        item("gold_ingot", 8, 2, 8), item("emerald", 8, 3, 12), item("gold_nugget", 6, 6, 20), item("diamond", 3, 1, 3),
+        item("golden_apple", 3), item("book", 3, extra=ENCHANT), item("golden_helmet", 2, extra=ENCHANT),
+        item("clock", 2), item("compass", 2), item("name_tag", 2), item("experience_bottle", 3, 3, 8)],
+        rare=[item("enchanted_golden_apple", 1), item("diamond", 2, 2, 4), item("emerald_block", 2), EMPTY | {"weight": 7}]),
+    "chests/castle_stores": chest((3, 6), [
+        item("bread", 8, 2, 6), item("wheat", 6, 3, 9), item("carrot", 5, 2, 6), item("potato", 5, 2, 6),
+        item("apple", 5, 1, 4), item("cooked_beef", 4, 1, 4), item("cooked_porkchop", 4, 1, 4), item("cake", 1),
+        item("candle", 3, 1, 3), item("torch", 4, 4, 12), item("coal", 4, 2, 8)]),
+}
+
 ENTITIES = {
     "entities/viking": {"type": "minecraft:entity", "pools": [looting("iron_nugget", 0, 3), looting("leather", 0, 2),
                                                                looting("cooked_salmon", 0, 1)]},
@@ -180,7 +208,7 @@ def main():
         with open(path, "w", encoding="utf-8") as f:
             json.dump(table, f, indent=2)
             f.write("\n")
-    for name, table in {**TABLES, **ENTITIES}.items():
+    for name, table in {**TABLES, **CASTLE_TABLES, **ENTITIES}.items():
         path = os.path.join(OUT, "loot_table", name + ".json")
         os.makedirs(os.path.dirname(path), exist_ok=True)
         with open(path, "w", encoding="utf-8") as f:
@@ -194,7 +222,7 @@ def main():
     with open(fort, "w", encoding="utf-8") as f:
         json.dump(table, f, indent=2)
         f.write("\n")
-    print("ok", len(TABLES) + len(ENTITIES) + 1)
+    print("ok", len(TABLES) + len(CASTLE_TABLES) + len(ENTITIES) + 1)
 
 
 if __name__ == "__main__":

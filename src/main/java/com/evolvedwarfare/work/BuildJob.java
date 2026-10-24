@@ -12,6 +12,7 @@ import net.minecraft.block.FenceBlock;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.block.PaneBlock;
 import net.minecraft.block.StairsBlock;
+import net.minecraft.block.enums.BedPart;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -19,6 +20,7 @@ import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
@@ -36,12 +38,55 @@ import org.jetbrains.annotations.Nullable;
  * Nunca toca lo que no es natural (cosas puestas por jugadores): esas piezas se quedan sin poner.
  */
 public class BuildJob implements Job {
+	/** Qué se construye: el edificio del puesto o la obra del constructor. */
+	public interface Target {
+		@Nullable
+		BuildPlan plan(WorkContext ctx);
+
+		void progress(WorkContext ctx, int placed, int total);
+
+		/** Obra terminada; devuelve el estado que mostrar. */
+		WorkStatus finished(WorkContext ctx);
+	}
+
+	/** El edificio del propio puesto (fase 3). */
+	private static final Target SITE_BUILDING = new Target() {
+		@Override
+		public BuildPlan plan(WorkContext ctx) {
+			return ctx.site.getBuildPlan();
+		}
+
+		@Override
+		public void progress(WorkContext ctx, int placed, int total) {
+			ctx.site.setBuildProgress(placed, total);
+		}
+
+		@Override
+		public WorkStatus finished(WorkContext ctx) {
+			ctx.site.finishBuilding(ctx.worker);
+			return WorkStatus.WORKING;
+		}
+	};
+
+	private final Target target;
+
+	public BuildJob() {
+		this(SITE_BUILDING);
+	}
+
+	public BuildJob(Target target) {
+		this.target = target;
+	}
+
 	@Override
 	@Nullable
 	public WorkAction plan(WorkContext ctx) {
 		WorkSiteBlockEntity site = ctx.site;
-		BuildPlan plan = site.getBuildPlan();
+		BuildPlan plan = target.plan(ctx);
 		ServerWorld world = ctx.world;
+		if (plan == null) {
+			return ctx.idle(WorkStatus.WAITING);
+		}
 
 		// 1. huecos
 		for (BuildPlan.Entry entry : plan.clearOrder()) {
@@ -65,7 +110,7 @@ public class BuildJob implements Job {
 		// 3. bloques
 		int placed = 0;
 		boolean waiting = false;
-		Material missing = null;
+		int missing = WorkSiteBlockEntity.NOTE_NONE;
 		WorkAction next = null;
 		for (BuildPlan.Entry entry : plan.placeOrder()) {
 			BlockPos pos = plan.resolve(world, entry);
@@ -87,28 +132,30 @@ public class BuildJob implements Job {
 				waiting = true;
 				continue;
 			}
-			if (!BuildMaterials.available(site, entry.piece.material())) {
-				if (missing == null) {
-					missing = entry.piece.material();
+			if (!BuildMaterials.available(site, entry.piece.material(), entry.state)) {
+				if (missing == WorkSiteBlockEntity.NOTE_NONE) {
+					missing = entry.piece.material() == Material.EXACT
+							? WorkSiteBlockEntity.noteMissingItem(BuildMaterials.itemFor(entry.state))
+							: WorkSiteBlockEntity.noteMissing(entry.piece.material());
 				}
 				continue;
 			}
 			next = WorkAction.fromSite(entry.standFor(pos), Vec3d.ofCenter(pos), ctx.ticks(8), c -> place(c, entry, pos));
 		}
-		site.setBuildProgress(placed, plan.total());
+		target.progress(ctx, placed, plan.total());
 		if (next != null) {
 			site.setNote(WorkSiteBlockEntity.NOTE_NONE);
 			return next;
 		}
-		if (missing != null) {
-			site.setNote(WorkSiteBlockEntity.noteMissing(missing));
+		if (missing != WorkSiteBlockEntity.NOTE_NONE) {
+			site.setNote(missing);
 			return ctx.idle(WorkStatus.NO_MATERIALS);
 		}
 		if (waiting) {
 			return ctx.idle(WorkStatus.BUILDING);
 		}
-		site.finishBuilding(ctx.worker);
-		return ctx.idle(WorkStatus.WORKING);
+		site.setNote(WorkSiteBlockEntity.NOTE_NONE);
+		return ctx.idle(target.finished(ctx));
 	}
 
 	// ------------------------------------------------------------------ reglas
@@ -189,7 +236,7 @@ public class BuildJob implements Job {
 				|| occupied(world, pos)) {
 			return false;
 		}
-		if (!BuildMaterials.consume(ctx.site, entry.piece.material())) {
+		if (!BuildMaterials.consume(ctx.site, entry.piece.material(), target)) {
 			return false;
 		}
 		// lo natural que había ahí (tierra, piedra...) se guarda
@@ -197,9 +244,17 @@ public class BuildJob implements Job {
 			ctx.storeAll(ctx.drops(pos, current));
 		}
 		Block block = target.getBlock();
-		if (block instanceof DoorBlock) {
-			world.setBlockState(pos, target.with(DoorBlock.HALF, DoubleBlockHalf.LOWER));
-			world.setBlockState(pos.up(), target.with(DoorBlock.HALF, DoubleBlockHalf.UPPER));
+		if (target.contains(Properties.DOUBLE_BLOCK_HALF)) {
+			// puertas y plantas altas: las dos mitades
+			world.setBlockState(pos, target.with(Properties.DOUBLE_BLOCK_HALF, DoubleBlockHalf.LOWER));
+			world.setBlockState(pos.up(), target.with(Properties.DOUBLE_BLOCK_HALF, DoubleBlockHalf.UPPER));
+		} else if (target.contains(Properties.BED_PART)) {
+			// camas: los pies aquí y la cabecera hacia donde mira
+			BlockPos head = pos.offset(target.get(Properties.HORIZONTAL_FACING));
+			world.setBlockState(pos, target.with(Properties.BED_PART, BedPart.FOOT));
+			if (world.getBlockState(head).isReplaceable()) {
+				world.setBlockState(head, target.with(Properties.BED_PART, BedPart.HEAD));
+			}
 		} else {
 			BlockState state = target;
 			// vallas, cristales y escaleras se unen con lo que ya hay al lado

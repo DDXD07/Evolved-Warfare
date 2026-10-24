@@ -1,6 +1,7 @@
 package com.evolvedwarfare.registry;
 
 import com.evolvedwarfare.EvolvedWarfare;
+import com.evolvedwarfare.block.ArchitectTableBlock;
 import com.evolvedwarfare.block.TownHallBlock;
 import com.evolvedwarfare.block.TownHallBlockEntity;
 import com.evolvedwarfare.block.WarehouseBlock;
@@ -40,6 +41,13 @@ public final class ModBlocks {
 
 	/** Almacén: terminal de la red de cofres y barriles de alrededor. */
 	public static final Block WAREHOUSE = register("warehouse", new WarehouseBlock(AbstractBlock.Settings.create()
+			.mapColor(MapColor.OAK_TAN)
+			.instrument(NoteBlockInstrument.BASS)
+			.strength(2.5F)
+			.sounds(BlockSoundGroup.WOOD)));
+
+	/** Mesa del arquitecto: biblioteca de planos con vista previa (fase 6). */
+	public static final Block ARCHITECT_TABLE = register("architect_table", new ArchitectTableBlock(AbstractBlock.Settings.create()
 			.mapColor(MapColor.OAK_TAN)
 			.instrument(NoteBlockInstrument.BASS)
 			.strength(2.5F)

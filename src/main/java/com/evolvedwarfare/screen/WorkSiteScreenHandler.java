@@ -40,7 +40,9 @@ public class WorkSiteScreenHandler extends ScreenHandler {
 	public static final int P_DEPTH = 5;
 	public static final int P_JOBS = 6;
 	public static final int P_NOTE = 7;
-	public static final int PROPERTY_COUNT = 8;
+	/** Porcentaje de la obra en marcha (-1: ninguna). */
+	public static final int P_PROGRESS = 8;
+	public static final int PROPERTY_COUNT = 9;
 	public static final int NO_DEPTH = Short.MAX_VALUE;
 
 	// posiciones (compartidas con la pantalla)
@@ -207,5 +209,9 @@ public class WorkSiteScreenHandler extends ScreenHandler {
 	/** Aviso (falta un material: ver {@link WorkSiteBlockEntity#missingFromNote}). */
 	public int note() {
 		return properties.get(P_NOTE);
+	}
+
+	public int progress() {
+		return properties.get(P_PROGRESS);
 	}
 }

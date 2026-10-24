@@ -179,6 +179,11 @@ public class CourierJob implements Job {
 	@Nullable
 	private static Request need(WorkSiteBlockEntity site, List<StorageNetwork.Entry> contents) {
 		int slots = WorkSiteBlockEntity.SUPPLY_SLOTS;
+		// el constructor (o una obra de un plano) avisa del objeto exacto que le falta
+		Item missingItem = WorkSiteBlockEntity.missingItemFromNote(site.getNote());
+		if (missingItem != null) {
+			return request(site, 0, slots, contents, s -> s.isOf(missingItem), TRIP);
+		}
 		if (site.getBuildState() == BuildState.BUILDING) {
 			Material missing = WorkSiteBlockEntity.missingFromNote(site.getNote());
 			return missing == null ? null : request(site, 0, slots, contents, s -> BuildMaterials.accepts(missing, s), TRIP);

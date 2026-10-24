@@ -1,6 +1,9 @@
 {
   "values": [
     "#minecraft:village",
-    "evolvedwarfare:city"
+    "evolvedwarfare:city",
+    "evolvedwarfare:desert_city",
+    "evolvedwarfare:snow_city",
+    "evolvedwarfare:castle"
   ]
 }

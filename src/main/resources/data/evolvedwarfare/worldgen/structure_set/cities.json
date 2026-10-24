@@ -13,6 +13,14 @@
     {
       "structure": "evolvedwarfare:city",
       "weight": 1
+    },
+    {
+      "structure": "evolvedwarfare:desert_city",
+      "weight": 1
+    },
+    {
+      "structure": "evolvedwarfare:snow_city",
+      "weight": 1
     }
   ]
 }

@@ -15,7 +15,9 @@ public enum Material {
 	WOOL,
 	HAY,
 	/** No cuesta nada (tierra de los cimientos o de los bancales, la mitad de arriba de una puerta). */
-	FREE;
+	FREE,
+	/** Planos escaneados: cada bloque gasta su propio objeto (una escalera de roble, un farol...). */
+	EXACT;
 
 	public String id() {
 		return name().toLowerCase(java.util.Locale.ROOT);

@@ -108,6 +108,7 @@ public class WorkSiteBlockEntity extends BlockEntity implements SidedInventory, 
 				case WorkSiteScreenHandler.P_DEPTH -> mineY == UNSET ? WorkSiteScreenHandler.NO_DEPTH : mineY;
 				case WorkSiteScreenHandler.P_JOBS -> Math.min(jobsDone, 30000);
 				case WorkSiteScreenHandler.P_NOTE -> workerUuid != null ? note : NOTE_NONE;
+				case WorkSiteScreenHandler.P_PROGRESS -> buildTotal > 0 ? Math.min(100, buildPlaced * 100 / buildTotal) : -1;
 				default -> 0;
 			};
 		}
@@ -175,6 +176,23 @@ public class WorkSiteBlockEntity extends BlockEntity implements SidedInventory, 
 	/** Aviso de "falta este material" para el menú. */
 	public static int noteMissing(Material material) {
 		return 1 + material.ordinal();
+	}
+
+	/** Aviso de "falta este objeto" (obras de planos escaneados). */
+	public static final int NOTE_ITEM_BASE = 1000;
+
+	public static int noteMissingItem(net.minecraft.item.Item item) {
+		return NOTE_ITEM_BASE + net.minecraft.registry.Registries.ITEM.getRawId(item);
+	}
+
+	/** El objeto que falta según el aviso, o null. */
+	@Nullable
+	public static net.minecraft.item.Item missingItemFromNote(int note) {
+		if (note < NOTE_ITEM_BASE) {
+			return null;
+		}
+		net.minecraft.item.Item item = net.minecraft.registry.Registries.ITEM.get(note - NOTE_ITEM_BASE);
+		return item == net.minecraft.item.Items.AIR ? null : item;
 	}
 
 	/** El material que falta según el aviso, o null. */
@@ -519,10 +537,18 @@ public class WorkSiteBlockEntity extends BlockEntity implements SidedInventory, 
 			return;
 		}
 		WorkArea area = getProfession().area();
-		if (!area.exists()) {
+		BlockBox box;
+		if (getProfession() == Profession.BUILDER) {
+			box = constructionBounds();
+			if (box == null) {
+				player.sendMessage(Text.translatable("message.evolvedwarfare.builder.no_blueprint"), true);
+				return;
+			}
+		} else if (!area.exists()) {
 			return;
+		} else {
+			box = area.box(pos, getFacing());
 		}
-		BlockBox box = area.box(pos, getFacing());
 		double y = pos.getY() + 0.15;
 		for (int x = box.getMinX(); x <= box.getMaxX() + 1; x++) {
 			particle(serverWorld, player, x, y, box.getMinZ());
@@ -541,6 +567,18 @@ public class WorkSiteBlockEntity extends BlockEntity implements SidedInventory, 
 						2, 0.1, 0.2, 0.1, 0.0);
 			}
 		}
+	}
+
+	/** Lo que ocuparía la obra del plano que hay en los suministros (constructor), o null. */
+	@Nullable
+	public BlockBox constructionBounds() {
+		ItemStack stack = find(s -> s.contains(com.evolvedwarfare.registry.ModComponents.BLUEPRINT), false);
+		if (stack == null || world == null || world.getServer() == null) {
+			return null;
+		}
+		com.evolvedwarfare.blueprint.StoredBlueprint stored = com.evolvedwarfare.blueprint.BlueprintLibrary.get(world.getServer(),
+				stack.get(com.evolvedwarfare.registry.ModComponents.BLUEPRINT).id());
+		return stored == null ? null : BuildPlan.of(stored.toBlueprint(), pos, getFacing()).bounds();
 	}
 
 	private static void particle(ServerWorld world, ServerPlayerEntity player, double x, double y, double z) {

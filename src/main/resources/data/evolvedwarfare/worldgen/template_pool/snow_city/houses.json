@@ -1,0 +1,65 @@
+{
+  "elements": [
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "evolvedwarfare:snow_city/houses/log_cabin",
+        "processors": "evolvedwarfare:city_weathering",
+        "projection": "rigid"
+      },
+      "weight": 6
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "evolvedwarfare:snow_city/houses/hall_house",
+        "processors": "evolvedwarfare:city_weathering",
+        "projection": "rigid"
+      },
+      "weight": 4
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "evolvedwarfare:snow_city/houses/tavern",
+        "processors": "evolvedwarfare:city_weathering",
+        "projection": "rigid"
+      },
+      "weight": 2
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "evolvedwarfare:snow_city/houses/smithy",
+        "processors": "evolvedwarfare:city_weathering",
+        "projection": "rigid"
+      },
+      "weight": 2
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "evolvedwarfare:snow_city/houses/barracks",
+        "processors": "evolvedwarfare:city_weathering",
+        "projection": "rigid"
+      },
+      "weight": 2
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "evolvedwarfare:snow_city/houses/tower",
+        "processors": "evolvedwarfare:city_weathering",
+        "projection": "rigid"
+      },
+      "weight": 1
+    },
+    {
+      "element": {
+        "element_type": "minecraft:empty_pool_element"
+      },
+      "weight": 3
+    }
+  ],
+  "fallback": "minecraft:empty"
+}

@@ -1,0 +1,41 @@
+{
+  "elements": [
+    {
+      "element": {
+        "element_type": "minecraft:legacy_single_pool_element",
+        "location": "evolvedwarfare:desert_city/streets/straight",
+        "processors": "evolvedwarfare:desert_street",
+        "projection": "terrain_matching"
+      },
+      "weight": 6
+    },
+    {
+      "element": {
+        "element_type": "minecraft:legacy_single_pool_element",
+        "location": "evolvedwarfare:desert_city/streets/crossroad",
+        "processors": "evolvedwarfare:desert_street",
+        "projection": "terrain_matching"
+      },
+      "weight": 2
+    },
+    {
+      "element": {
+        "element_type": "minecraft:legacy_single_pool_element",
+        "location": "evolvedwarfare:desert_city/streets/t_junction",
+        "processors": "evolvedwarfare:desert_street",
+        "projection": "terrain_matching"
+      },
+      "weight": 3
+    },
+    {
+      "element": {
+        "element_type": "minecraft:legacy_single_pool_element",
+        "location": "evolvedwarfare:desert_city/streets/turn",
+        "processors": "evolvedwarfare:desert_street",
+        "projection": "terrain_matching"
+      },
+      "weight": 2
+    }
+  ],
+  "fallback": "evolvedwarfare:desert_city/terminators"
+}

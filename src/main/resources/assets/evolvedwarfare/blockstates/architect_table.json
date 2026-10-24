@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "evolvedwarfare:block/architect_table"
+    },
+    "facing=east": {
+      "model": "evolvedwarfare:block/architect_table",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "evolvedwarfare:block/architect_table",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "evolvedwarfare:block/architect_table",
+      "y": 270
+    }
+  }
+}

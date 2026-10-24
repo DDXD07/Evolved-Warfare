@@ -12,10 +12,14 @@
   "structures": [
     {
       "structure": "evolvedwarfare:bandit_camp",
-      "weight": 3
+      "weight": 4
     },
     {
       "structure": "evolvedwarfare:bandit_fort",
+      "weight": 2
+    },
+    {
+      "structure": "evolvedwarfare:bandit_stronghold",
       "weight": 1
     }
   ]

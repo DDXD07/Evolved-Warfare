@@ -39,6 +39,8 @@ PROFESSIONS = [
     # fase 4
     ("courier", "item/saddle", "wood", {"item": "minecraft:leather"}),
     ("merchant", "item/emerald", "wood", {"item": "minecraft:gold_ingot"}),
+    # fase 6
+    ("builder", "block/scaffolding_side", "wood", {"item": "minecraft:stone_bricks"}),
 ]
 
 
@@ -476,7 +478,8 @@ if __name__ == "__main__":
         "result": {"id": f"{NS}:route_slip", "count": 1}})
 
     # se rompen más rápido con hacha (madera) o pico (talleres)
-    axe = [f"{NS}:{p}_post" for p, _, k, _ in PROFESSIONS if k == "wood"] + [f"{NS}:town_hall", f"{NS}:warehouse"]
+    axe = [f"{NS}:{p}_post" for p, _, k, _ in PROFESSIONS if k == "wood"] + [f"{NS}:town_hall", f"{NS}:warehouse",
+                                                                                 f"{NS}:architect_table"]
     pick = [f"{NS}:{p}_post" for p, _, k, _ in PROFESSIONS if k == "stone"]
     write_json(f"{RES}/data/minecraft/tags/block/mineable/axe.json", {"replace": False, "values": axe})
     write_json(f"{RES}/data/minecraft/tags/block/mineable/pickaxe.json", {"replace": False, "values": pick})

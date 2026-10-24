@@ -24,6 +24,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.render.RenderLayer;
 
@@ -58,6 +59,17 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 				context.client().setScreen(new DiplomacyScreen());
 			}
 		});
+		// planos: el escáner abre su pantalla, la mesa del arquitecto su biblioteca, y llegan los planos para la vista previa
+		com.evolvedwarfare.ClientBridge.openScanner = hand -> MinecraftClient.getInstance().setScreen(
+				new com.evolvedwarfare.client.screen.ScanScreen(hand));
+		ClientPlayNetworking.registerGlobalReceiver(com.evolvedwarfare.network.BlueprintPayloads.Library.ID, (payload, context) -> {
+			com.evolvedwarfare.client.blueprint.ClientBlueprints.library(payload);
+			if (payload.open()) {
+				context.client().setScreen(new com.evolvedwarfare.client.screen.ArchitectScreen());
+			}
+		});
+		ClientPlayNetworking.registerGlobalReceiver(com.evolvedwarfare.network.BlueprintPayloads.Data.ID,
+				(payload, context) -> com.evolvedwarfare.client.blueprint.ClientBlueprints.data(payload));
 		// el dibujo del frente de los puestos tiene transparencias
 		for (Block block : ModBlocks.WORK_SITES.values()) {
 			BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout());
