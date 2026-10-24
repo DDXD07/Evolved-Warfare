@@ -1,5 +1,6 @@
 package com.evolvedwarfare.entity;
 
+import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,6 +17,10 @@ public interface CombatNpc {
 
 	/** Distancia máxima a la que se aleja del centro para perseguir. */
 	double getLeashRadius();
+
+	/** Justo antes de disparar una flecha o virote (para flechas especiales). */
+	default void prepareShot(PersistentProjectileEntity arrow, boolean crossbow) {
+	}
 
 	/** ¿Puede perseguir a este objetivo sin abandonar su puesto? */
 	default boolean withinLeash(Vec3d target) {

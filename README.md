@@ -1,6 +1,6 @@
 # Evolved Warfare — Minecraft 1.21.1 (Fabric)
 
-NPCs, ejércitos, trabajadores, comercio y asedio. Inspirado en *Ancient Warfare*, con código, nombre y texturas propios.
+NPCs, ejércitos, trabajadores, comercio, facciones con diplomacia y asedio. Inspirado en *Ancient Warfare*, con código, nombre y texturas propios.
 
 Requiere **Fabric API**. Opcional: **Golden Coin Merchants** (los reclutas aceptan Golden Coins como paga, hay una receta de contrato con monedas y es la moneda del comerciante; sin el mod, el comerciante usa esmeraldas).
 
@@ -12,7 +12,7 @@ Requiere **Fabric API**. Opcional: **Golden Coin Merchants** (los reclutas acept
 | 2 | **Soldados y bandidos**: guerrero, bárbaro, arquero, ballestero, médico; bandidos hostiles en fuertes, campamentos, patrullas y asaltos; niveles y bastón de mando | ✅ Hecha |
 | 3 | **Trabajadores**: 14 oficios con su puesto de trabajo (granja, tala, mina, excavación, pesca, ganado, corral, colmenas, huerto, forja, cocina, carbonera, cantería, flechas) y ayuntamiento que paga solo | ✅ Hecha |
 | 4 | **Logística y comercio**: almacén en red con buscador, mensajero (automático o con hoja de ruta), comerciante con tienda para jugadores y venta de excedentes (Golden Coin o esmeraldas) | ✅ Hecha |
-| 5 | Más facciones enemigas (vikingos, piratas), reputación y diplomacia | ⏳ |
+| 5 | **Facciones y diplomacia**: vikingos y piratas con sus asentamientos, patrullas y asaltos (también a tu pueblo); reputación con cada facción, bandera blanca, tributos, treguas, alianzas, ayuda de aliados y mercenarios | ✅ Hecha |
 | 6 | Estructuras: escáner y constructor de planos; más tipos de ciudad (desierto, nieve) y fortalezas | ⏳ |
 | 7 | Asedio: catapulta, balista, trebuchet, ariete; puente levadizo y rastrillo | ⏳ |
 | 8 | Armas medievales, árbol de investigación, equilibrio y configuración | ⏳ |
@@ -214,6 +214,69 @@ Un oficio más (puesto con una esmeralda). Hace dos cosas:
 
 **Moneda**: Golden Coin si está instalado *Golden Coin Merchants*; si no, esmeraldas.
 
+## Fase 5 — Facciones y diplomacia
+
+### Las facciones
+| Facción | Dónde | Clases | Detalles |
+|---|---|---|---|
+| **Bandidos** | Llanuras, bosques, sabanas, badlands | Guerrero, bárbaro, arquero, ballestero, curandero, capitán | No respetan la bandera blanca y nunca serán tus aliados, pero se les puede sobornar. |
+| **Vikingos** | Taigas, llanuras nevadas, arboledas, colinas | Huscarl (hacha o espada con escudo), berserker, arquero, völva (curandera), jarl | Más duros. El **berserker** entra en furia con poca vida (fuerza, velocidad y resistencia). El **jarl** toca el cuerno de guerra y da fuerza a los suyos. Escudos rojos y blancos. |
+| **Piratas** | Playas y costas | Pirata (alfanje), tirador (ballesta, a veces con flechas incendiarias), matón (hacha), cirujano de a bordo, capitán | No se ahogan. El **capitán** se toma un trago de ron cuando está herido. Escudos negros con calavera. |
+
+Todas las facciones son enemigas entre sí: si se cruzan, pelean.
+
+**Asentamiento vikingo** (taigas y nieve): casa larga del jarl con hogar alargado, trono, bancos y cabezas de dragón en
+el tejado; alrededor, cabañas, herrería, círculo de piedras rúnicas, atalaya, leñera y un **drakkar** varado con vela a
+rayas y escudos en la borda.
+
+**Cala pirata** (playas): un **barco pirata** varado con casco negro, velas negras rotas, cañones asomando por las
+troneras, cofa con bandera negra, camarote del capitán y bodega con tesoro; alrededor, tiendas, un chiringuito, una
+batería de cañones, un vigía y un tesoro enterrado bajo una X roja.
+
+**Patrullas y asaltos**: la facción que aparece depende de dónde estés (vikingos en el frío, piratas en la costa y
+bandidos en el resto). Las patrullas solo van a por ti si sois enemigos; si no, pasan de largo. Los asaltos atacan
+aldeas, ciudades y **tu pueblo** (los alrededores de tu ayuntamiento) si la facción de la zona es enemiga tuya. Cada
+facción tiene su barra de asalto y su aviso.
+
+### Reputación
+Cada jugador tiene una reputación de -100 a 100 con cada facción (empieza en -50 con los bandidos y -25 con vikingos y
+piratas):
+
+| Reputación | Trato | Qué pasa |
+|---|---|---|
+| Menos de -20 | **Hostil** | Te atacan nada más verte (a ti y a tus NPCs) y asaltan tu pueblo |
+| -20 a 19 | **Neutral** | Te dejan en paz mientras no les ataques |
+| 20 a 59 | **Amistoso** | Puedes contratar mercenarios |
+| Alianza firmada (60+) | **Aliado** | Sus guerreros luchan a tu lado y no se hacen daño contigo; puedes pedirles ayuda |
+
+- Matar a uno de los suyos baja la reputación (4, o 12 si es su jefe; la mitad si lo hacen tus NPCs) y la sube un poco
+  con las demás facciones.
+- Atacar a uno de ellos la baja 2 y les enfada un minuto aunque no fuerais enemigos.
+- Rechazar un asalto sube 3 la reputación con los enemigos de los asaltantes.
+- Una alianza se rompe si la reputación baja de 40.
+- Tus soldados atacan solos a las facciones enemigas tuyas (y a quien vaya a por ellos o a por ti).
+
+### Diplomacia
+- **Bandera blanca** (palo y 4 de lana blanca): mientras la lleves en una mano, vikingos y piratas no te atacan aunque
+  seáis enemigos, así que puedes cruzar sus asentamientos. Si les atacas, durante un minuto ya no vale. Los bandidos no la
+  respetan.
+- **Sello de embajador** (papel, lingote de oro y tinte rojo): clic derecho para abrir la diplomacia. Por cada facción ves
+  la reputación en una barra con las marcas de enemistad, amistad y alianza, el trato y lo que queda de tregua, y estos
+  botones (se paga con monedas: Golden Coin o esmeraldas):
+  - **Tributo**: 5 monedas → +5 de reputación.
+  - **Tregua** (si sois enemigos): 3 días sin ataques ni asaltos; cuesta 10 monedas más 1 por cada 5 puntos por debajo
+    de cero. Si les atacas, se rompe.
+  - **Alianza** (con 60 de reputación): 30 monedas. Con los bandidos no se puede. **Romper alianza** cuesta 25 de reputación.
+  - **Pedir ayuda** (aliados, una vez al día): llegan su jefe y 3 guerreros que te siguen y te defienden 5 minutos.
+  - **Mercenario** (amistosos o aliados): 12 monedas → un soldado tuyo con el equipo de esa facción y 3 días de paga.
+
+### Comandos (administradores)
+```
+/evolvedwarfare reputation <jugadores>                          ver la reputación
+/evolvedwarfare reputation <jugadores> <facción> set|add <n>    cambiarla
+/evolvedwarfare raid <bandits|vikings|pirates>                  lanzar un asalto
+```
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque y escribe los `.nbt` y los JSON de generación.
@@ -222,6 +285,8 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
 - `ew_textures.py` — genera las texturas (aspectos de los reclutas, contrato, interfaz).
 - `ew_buildings.py` — compila el generador de edificios (Java puro) y dibuja los diseños de cada oficio con varias semillas.
 - `ew_blocks.py` — texturas, modelos, recetas y botín de los puestos de trabajo, el ayuntamiento, el almacén y la hoja de ruta.
+- `ew_factions.py` — aspectos de vikingos y piratas, bandera blanca y sello de embajador.
+- `ew_loot.py` — botín de los cofres de vikingos y piratas y de los propios vikingos y piratas.
 - `ew_village.py` — prototipo de las aldeas vanilla mejoradas (mismo algoritmo que `VillageExtras.java`) con vista previa.
 
 ```

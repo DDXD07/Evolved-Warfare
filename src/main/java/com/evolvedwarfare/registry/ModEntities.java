@@ -3,8 +3,11 @@ package com.evolvedwarfare.registry;
 import com.evolvedwarfare.EvolvedWarfare;
 import com.evolvedwarfare.entity.AbstractNpcEntity;
 import com.evolvedwarfare.entity.BanditEntity;
+import com.evolvedwarfare.entity.FactionNpcEntity;
+import com.evolvedwarfare.entity.PirateEntity;
 import com.evolvedwarfare.entity.RecruitEntity;
 import com.evolvedwarfare.entity.SoldierEntity;
+import com.evolvedwarfare.entity.VikingEntity;
 import com.evolvedwarfare.entity.WorkerEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.entity.EntityType;
@@ -49,6 +52,24 @@ public final class ModEntities {
 					.maxTrackingRange(10)
 					.build("bandit"));
 
+	/** Vikingo: guerrero del norte (fase 5). */
+	public static final EntityType<VikingEntity> VIKING = Registry.register(Registries.ENTITY_TYPE,
+			EvolvedWarfare.id("viking"),
+			EntityType.Builder.create(VikingEntity::new, SpawnGroup.MONSTER)
+					.dimensions(0.6F, 1.8F)
+					.eyeHeight(1.62F)
+					.maxTrackingRange(10)
+					.build("viking"));
+
+	/** Pirata: saqueador de las costas (fase 5). */
+	public static final EntityType<PirateEntity> PIRATE = Registry.register(Registries.ENTITY_TYPE,
+			EvolvedWarfare.id("pirate"),
+			EntityType.Builder.create(PirateEntity::new, SpawnGroup.MONSTER)
+					.dimensions(0.6F, 1.8F)
+					.eyeHeight(1.62F)
+					.maxTrackingRange(10)
+					.build("pirate"));
+
 	private ModEntities() {
 	}
 
@@ -57,5 +78,7 @@ public final class ModEntities {
 		FabricDefaultAttributeRegistry.register(SOLDIER, AbstractNpcEntity.createNpcAttributes());
 		FabricDefaultAttributeRegistry.register(WORKER, WorkerEntity.createWorkerAttributes());
 		FabricDefaultAttributeRegistry.register(BANDIT, BanditEntity.createBanditAttributes());
+		FabricDefaultAttributeRegistry.register(VIKING, FactionNpcEntity.createFactionAttributes());
+		FabricDefaultAttributeRegistry.register(PIRATE, FactionNpcEntity.createFactionAttributes());
 	}
 }

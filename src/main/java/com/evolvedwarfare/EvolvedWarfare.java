@@ -1,5 +1,6 @@
 package com.evolvedwarfare;
 
+import com.evolvedwarfare.command.ModCommands;
 import com.evolvedwarfare.entity.NpcSides;
 import com.evolvedwarfare.item.RouteSlipItem;
 import com.evolvedwarfare.network.ModNetworking;
@@ -9,7 +10,7 @@ import com.evolvedwarfare.registry.ModEntities;
 import com.evolvedwarfare.registry.ModItems;
 import com.evolvedwarfare.registry.ModScreens;
 import com.evolvedwarfare.registry.ModStructures;
-import com.evolvedwarfare.world.BanditSpawner;
+import com.evolvedwarfare.world.FactionSpawner;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
@@ -27,6 +28,8 @@ import org.slf4j.LoggerFactory;
  * <p>Fase 3: trabajadores con 14 oficios, cada uno con su puesto de trabajo, y el ayuntamiento que les paga.</p>
  *
  * <p>Fase 4: logística y comercio: almacén en red, mensajeros (automáticos o con hoja de ruta) y comerciantes.</p>
+ *
+ * <p>Fase 5: vikingos y piratas, reputación con cada facción y diplomacia (tributos, treguas, alianzas, mercenarios).</p>
  */
 public class EvolvedWarfare implements ModInitializer {
 	public static final String MOD_ID = "evolvedwarfare";
@@ -46,7 +49,8 @@ public class EvolvedWarfare implements ModInitializer {
 		ModNetworking.init();
 		ModStructures.init();
 		NpcSides.register();
-		BanditSpawner.register();
+		FactionSpawner.register();
+		ModCommands.register();
 		RouteSlipItem.registerEvents();
 		LOGGER.info("Evolved Warfare cargado");
 	}

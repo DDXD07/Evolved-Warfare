@@ -1,10 +1,12 @@
 package com.evolvedwarfare.registry;
 
 import com.evolvedwarfare.EvolvedWarfare;
+import com.evolvedwarfare.item.AmbassadorSealItem;
 import com.evolvedwarfare.item.CommandStaffItem;
 import com.evolvedwarfare.item.MedicKitItem;
 import com.evolvedwarfare.item.RecruitmentContractItem;
 import com.evolvedwarfare.item.RouteSlipItem;
+import com.evolvedwarfare.item.WhiteFlagItem;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -33,6 +35,18 @@ public final class ModItems {
 	public static final Item BANDIT_SPAWN_EGG = register("bandit_spawn_egg",
 			new SpawnEggItem(ModEntities.BANDIT, 0x3B2A20, 0x7A1C1C, new Item.Settings()));
 
+	/** Huevos de vikingo y de pirata (creativo). */
+	public static final Item VIKING_SPAWN_EGG = register("viking_spawn_egg",
+			new SpawnEggItem(ModEntities.VIKING, 0x6B4A2E, 0xB8342A, new Item.Settings()));
+	public static final Item PIRATE_SPAWN_EGG = register("pirate_spawn_egg",
+			new SpawnEggItem(ModEntities.PIRATE, 0x1A1A1A, 0xD8D0B8, new Item.Settings()));
+
+	/** Bandera blanca: con ella en la mano, vikingos y piratas no te atacan (si no les atacas tú). */
+	public static final Item WHITE_FLAG = register("white_flag", new WhiteFlagItem(new Item.Settings().maxCount(1)));
+
+	/** Sello de embajador: abre la diplomacia con las facciones. */
+	public static final Item AMBASSADOR_SEAL = register("ambassador_seal", new AmbassadorSealItem(new Item.Settings().maxCount(1)));
+
 	/** Pestaña propia en el inventario creativo. */
 	public static final ItemGroup GROUP = Registry.register(Registries.ITEM_GROUP, EvolvedWarfare.id("main"),
 			FabricItemGroup.builder()
@@ -43,7 +57,11 @@ public final class ModItems {
 						entries.add(COMMAND_STAFF);
 						entries.add(MEDIC_KIT);
 						entries.add(ROUTE_SLIP);
+						entries.add(WHITE_FLAG);
+						entries.add(AMBASSADOR_SEAL);
 						entries.add(BANDIT_SPAWN_EGG);
+						entries.add(VIKING_SPAWN_EGG);
+						entries.add(PIRATE_SPAWN_EGG);
 						entries.add(ModBlocks.TOWN_HALL);
 						entries.add(ModBlocks.WAREHOUSE);
 						ModBlocks.WORK_SITES.values().forEach(block -> entries.add(block));

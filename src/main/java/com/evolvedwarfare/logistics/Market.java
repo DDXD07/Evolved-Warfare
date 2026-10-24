@@ -152,6 +152,41 @@ public final class Market {
 		return null;
 	}
 
+	/** Monedas sueltas (sin nombre ni nada) que lleva un jugador. */
+	public static int countCoins(net.minecraft.entity.player.PlayerInventory inventory) {
+		Item coin = currency();
+		int total = 0;
+		for (int i = 0; i < inventory.size(); i++) {
+			ItemStack stack = inventory.getStack(i);
+			if (isPlainCoin(stack, coin)) {
+				total += stack.getCount();
+			}
+		}
+		return total;
+	}
+
+	/** Le quita monedas al jugador (si no tiene bastantes, no quita ninguna). */
+	public static boolean takeCoins(net.minecraft.entity.player.PlayerInventory inventory, int amount) {
+		if (countCoins(inventory) < amount) {
+			return false;
+		}
+		Item coin = currency();
+		for (int i = 0; i < inventory.size() && amount > 0; i++) {
+			ItemStack stack = inventory.getStack(i);
+			if (isPlainCoin(stack, coin)) {
+				int take = Math.min(amount, stack.getCount());
+				stack.decrement(take);
+				amount -= take;
+			}
+		}
+		inventory.markDirty();
+		return true;
+	}
+
+	private static boolean isPlainCoin(ItemStack stack, Item coin) {
+		return !stack.isEmpty() && stack.isOf(coin) && stack.getComponentChanges().isEmpty();
+	}
+
 	/** Monedas en montones del tamaño máximo. */
 	public static java.util.List<ItemStack> coins(int amount) {
 		java.util.List<ItemStack> stacks = new java.util.ArrayList<>();

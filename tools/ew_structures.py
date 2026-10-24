@@ -879,6 +879,472 @@ def bandit_fort():
     return t
 
 
+# ======================================================================== VIKINGOS (fase 5)
+P_VIKINGS = f"{NS}:npc/vikings"
+P_VIKING_ARCHERS = f"{NS}:npc/viking_archers"
+P_VIKING_JARL = f"{NS}:npc/viking_jarl"
+P_VIKING_PIECES = f"{NS}:viking/pieces"
+LOOT_VIKING_HALL = f"{NS}:chests/viking_longhouse"
+LOOT_VIKING_HUT = f"{NS}:chests/viking_hut"
+
+
+def npc_faction(entity, role=None):
+    t = Template(1, 2, 1)
+    t.jigsaw(0, 0, 0, "down_south", f"{NS}:npc", f"{NS}:npc", "minecraft:empty")
+    data = {"id": f"{NS}:{entity}", "PersistenceRequired": nbt.Byte(1)}
+    if role:
+        data["Role"] = role
+    t.entity(data, 0, 0, 0, YAW["west"])
+    return t
+
+
+def ground_pad(t, x0, x1, z0, z1, blocks, y=0):
+    """Suelo variado (el primero sale más a menudo)."""
+    for x in range(x0, x1 + 1):
+        for z in range(z0, z1 + 1):
+            h = (x * 7 + z * 13 + x * z) % 11
+            t.put(x, y, z, blocks[0] if h >= len(blocks) - 1 else blocks[1 + h % (len(blocks) - 1)])
+
+
+def viking_longhouse():
+    """Casa larga del jarl: muros de troncos, tejado muy inclinado con cabezas de dragón, hogar alargado y trono."""
+    t = Template(27, 13, 15)
+    for x in range(27):
+        for z in range(15):
+            h = (x * 5 + z * 11) % 13
+            b = "podzol" if h == 0 else ("gravel" if h == 1 else "coarse_dirt")
+            if 6 <= z <= 8 and x < 4:
+                b = "dirt_path"
+            t.put(x, 0, z, b)
+    x0, x1, z0, z1 = 4, 22, 3, 11
+    foundation(t, x0, x1, z0, z1, ring=S("cobblestone"), inner=S("spruce_planks"))
+    clear(t, x0 + 1, 1, z0 + 1, x1 - 1, 9, z1 - 1)
+    for y in range(1, 4):
+        for x in range(x0, x1 + 1):
+            for z in (z0, z1):
+                t.put(x, y, z, S("spruce_log", axis="x"))
+        for z in range(z0 + 1, z1):
+            for x in (x0, x1):
+                t.put(x, y, z, S("spruce_log", axis="z"))
+    for x in (x0, 10, 16, x1):
+        for z in (z0, z1):
+            for y in range(1, 4):
+                t.put(x, y, z, S("stripped_dark_oak_log", axis="y"))
+    # vigas de atar (de ellas cuelgan los faroles)
+    for x in (10, 16):
+        for z in range(z0, z1 + 1):
+            t.put(x, 4, z, S("stripped_spruce_log", axis="z"))
+    gable_x(t, x0 - 1, x1 + 1, z0 - 1, z1 + 1, 4, "dark_oak", "dark_oak", gable_xs=(x0, x1),
+            gable_block=S("spruce_planks"))
+    for z in range(z0, z1 + 1):
+        t.put(x0, 4, z, S("spruce_planks"))
+        t.put(x1, 4, z, S("spruce_planks"))
+    # cabezas de dragón en los extremos de la cumbrera
+    for (x, f) in ((x0 - 1, "east"), (x1 + 1, "west")):
+        t.put(x, 10, 7, "dark_oak_fence")
+        t.put(x, 11, 7, stairs("dark_oak", f))
+    # puertas (hastial oeste y lateral sur) y ventanucos
+    door(t, x0, 1, 7, "east")
+    door(t, 13, 1, z1, "north")
+    for x in (7, 19):
+        t.put(x, 2, z0, "air")
+        t.put(x, 2, z1, "air")
+    t.put(x0 - 1, 3, 6, S("red_wall_banner", facing="west"))
+    t.put(x0 - 1, 3, 8, S("white_wall_banner", facing="west"))
+    # hogar alargado
+    for x in range(9, 18):
+        for z in (6, 7, 8):
+            t.put(x, 0, z, "cobblestone" if z != 7 else "stone_bricks")
+    for x in (11, 15):
+        t.put(x, 1, 7, S("campfire", facing="north", lit="true", signal_fire="false", waterlogged="false"))
+    for x in (10, 16):
+        t.put(x, 3, 7, lantern(hanging=True))
+    # bancos, camas, barriles y arcones
+    for x in list(range(6, 9)) + list(range(17, 20)):
+        t.put(x, 1, z0 + 1, stairs("spruce", "north"))
+        t.put(x, 1, z1 - 1, stairs("spruce", "south"))
+    bed(t, 12, 1, z0 + 1, "east", "red")
+    bed(t, 15, 1, z1 - 1, "east", "white")
+    t.put(x0 + 1, 1, z0 + 1, *barrel("up"))
+    t.put(x0 + 1, 1, z1 - 1, *barrel("up", LOOT_VIKING_HUT))
+    t.put(x1 - 1, 1, z0 + 1, *chest("west", LOOT_VIKING_HALL))
+    t.put(x1 - 1, 1, z1 - 1, *chest("west", LOOT_VIKING_HALL))
+    # trono del jarl
+    t.put(x1 - 1, 1, 7, stairs("dark_oak", "east"))
+    t.put(x1 - 1, 1, 6, slab("dark_oak", "top"))
+    t.put(x1 - 1, 1, 8, slab("dark_oak", "top"))
+    t.put(x1 - 1, 3, 6, S("red_wall_banner", facing="west"))
+    t.put(x1 - 1, 3, 8, S("red_wall_banner", facing="west"))
+    # armero junto a la entrada
+    t.entity(armor_stand(head="iron_helmet", chest_="chainmail_chestplate", main="iron_axe", off="shield"), 2, 1, 3, YAW["east"])
+    t.put(2, 1, 11, "spruce_fence")
+    t.put(2, 2, 11, lantern())
+    # quién vive aquí
+    t.npc_slot(x1 - 2, 0, 7, P_VIKING_JARL)
+    for (x, z) in ((8, 5), (14, 9), (18, 5)):
+        t.npc_slot(x, 0, z, P_VIKINGS)
+    t.npc_slot(2, 0, 5, P_VIKINGS)
+    t.npc_slot(2, 0, 9, P_VIKINGS)
+    # casas de alrededor
+    for (x, z, f) in ((8, 0, "north"), (18, 0, "north"), (8, 14, "south"), (18, 14, "south"), (26, 7, "east")):
+        t.jigsaw(x, 1, z, f + "_up", TENT, TENT, P_VIKING_PIECES)
+    return t
+
+
+def viking_hut():
+    t = Template(10, 9, 9)
+    ground_pad(t, 1, 9, 0, 8, ["coarse_dirt", "podzol", "gravel"])
+    foundation(t, 2, 8, 1, 7, ring=S("cobblestone"), inner=S("spruce_planks"))
+    clear(t, 3, 1, 2, 7, 6, 6)
+    for y in (1, 2):
+        for x in range(2, 9):
+            for z in (1, 7):
+                t.put(x, y, z, S("spruce_log", axis="x"))
+        for z in range(2, 7):
+            for x in (2, 8):
+                t.put(x, y, z, S("spruce_log", axis="z"))
+        for (x, z) in ((2, 1), (8, 1), (2, 7), (8, 7)):
+            t.put(x, y, z, S("stripped_dark_oak_log", axis="y"))
+    gable_x(t, 1, 9, 0, 8, 3, "dark_oak", "dark_oak", gable_xs=(2, 8), gable_block=S("spruce_planks"))
+    for z in range(1, 8):
+        t.put(2, 3, z, S("spruce_planks"))
+        t.put(8, 3, z, S("spruce_planks"))
+    door(t, 2, 1, 4, "east")
+    t.put(8, 2, 4, "air")
+    bed(t, 6, 1, 6, "east", "red")
+    t.put(7, 1, 2, *barrel("up", LOOT_VIKING_HUT))
+    t.put(3, 1, 6, "crafting_table")
+    t.put(3, 1, 2, lantern())
+    t.npc_slot(5, 0, 4, P_VIKINGS)
+    tent_jigsaw(t, 4)
+    return t
+
+
+def viking_smithy():
+    t = Template(9, 6, 9)
+    ground_pad(t, 1, 8, 0, 8, ["coarse_dirt", "gravel"])
+    for x in range(2, 8):
+        for z in range(1, 8):
+            t.put(x, 0, z, "cobblestone")
+    for (x, z) in ((2, 1), (7, 1), (2, 7), (7, 7)):
+        for y in range(1, 4):
+            t.put(x, y, z, S("spruce_log", axis="y"))
+    for x in range(1, 9):
+        for z in range(0, 9):
+            t.put(x, 4, z, slab("spruce"))
+    t.put(5, 1, 3, S("anvil", facing="north"))
+    t.put(6, 1, 6, "smithing_table")
+    t.put(7, 1, 4, S("blast_furnace", facing="west", lit="false"))
+    t.put(7, 1, 5, *chest("west", LOOT_WEAPONS))
+    t.put(3, 1, 7, S("grindstone", face="floor", facing="north"))
+    t.entity(armor_stand(head="iron_helmet", chest_="chainmail_chestplate", main="iron_axe"), 6, 1, 2, YAW["west"])
+    t.put(2, 4, 4, lantern())
+    t.npc_slot(4, 0, 5, P_VIKINGS)
+    tent_jigsaw(t, 4)
+    return t
+
+
+def viking_runestones():
+    """Círculo de piedras rúnicas con una hoguera de almas en el centro."""
+    t = Template(11, 5, 11)
+    for x in range(0, 11):
+        for z in range(0, 11):
+            if (x - 5) ** 2 + (z - 5) ** 2 <= 26:
+                t.put(x, 0, z, "moss_block" if (x + z) % 3 == 0 else ("gravel" if (x * z) % 4 == 1 else "coarse_dirt"))
+    for (x, z) in ((5, 1), (9, 3), (9, 7), (5, 9), (1, 7), (1, 3)):
+        t.put(x, 0, z, "cobblestone")
+        t.put(x, 1, z, "mossy_stone_bricks")
+        t.put(x, 2, z, "chiseled_stone_bricks")
+        t.put(x, 3, z, "mossy_stone_bricks" if (x + z) % 2 else "stone_bricks")
+    t.put(5, 0, 5, "cobblestone")
+    t.put(5, 1, 5, S("soul_campfire", facing="north", lit="true", signal_fire="false", waterlogged="false"))
+    t.put(4, 1, 5, stairs("cobblestone", "east"))
+    t.npc_slot(6, 0, 7, P_VIKINGS)
+    t.jigsaw(0, 1, 5, "west_up", TENT, TENT, "minecraft:empty")
+    return t
+
+
+def viking_longship():
+    """Drakkar varado: casco de abeto, escudos en la borda, vela a rayas rojas y blancas y cabeza de dragón."""
+    t = Template(18, 12, 9)
+    c = 4
+
+    def hw(x):
+        return {1: 0, 17: 0, 2: 1, 16: 1, 3: 2, 15: 2}.get(x, 3)
+
+    for x in range(1, 18):
+        for z in range(1, 8):
+            t.put(x, 0, z, "gravel" if (x + z) % 3 else "sand")
+    for x in range(1, 18):
+        w = hw(x)
+        for dz in range(-w, w + 1):
+            t.put(x, 1, c + dz, "spruce_planks")
+        if w > 0:
+            t.put(x, 2, c - w, "spruce_planks")
+            t.put(x, 2, c + w, "spruce_planks")
+    for y in range(1, 6):
+        t.put(17, y, c, S("spruce_log", axis="y"))
+    t.put(17, 6, c, stairs("dark_oak", "west"))
+    for y in range(1, 5):
+        t.put(1, y, c, S("spruce_log", axis="y"))
+    t.put(1, 5, c, stairs("dark_oak", "east"))
+    # escudos en la borda
+    for i, x in enumerate(range(5, 14, 2)):
+        color = "red" if i % 2 == 0 else "white"
+        t.put(x, 2, 0, S(f"{color}_wall_banner", facing="north"))
+        t.put(x, 2, 8, S(f"{color}_wall_banner", facing="south"))
+    # mástil, verga y vela
+    for y in range(2, 11):
+        t.put(9, y, c, S("spruce_log", axis="y"))
+    for z in range(1, 8):
+        t.put(10, 9, z, S("stripped_spruce_log", axis="z"))
+    for y in range(4, 9):
+        for z in range(2, 7):
+            t.put(10, y, z, "red_wool" if z % 2 == 0 else "white_wool")
+    t.put(6, 2, c, *barrel("up", LOOT_VIKING_HUT))
+    t.put(13, 2, c, *barrel("up"))
+    t.npc_slot(5, 1, 3, P_VIKINGS)
+    t.npc_slot(13, 1, 5, P_VIKING_ARCHERS)
+    t.jigsaw(0, 1, c, "west_up", TENT, TENT, "minecraft:empty")
+    return t
+
+
+def viking_watch():
+    """Atalaya de madera sobre pilotes, con un arquero."""
+    t = Template(7, 9, 7)
+    ground_pad(t, 0, 6, 0, 6, ["coarse_dirt", "gravel"])
+    for (x, z) in ((1, 1), (5, 1), (1, 5), (5, 5)):
+        for y in range(1, 5):
+            t.put(x, y, z, S("spruce_log", axis="y"))
+    for y in range(1, 5):
+        t.put(3, y, 3, S("spruce_log", axis="y"))
+        t.put(2, y, 3, S("ladder", facing="west", waterlogged="false"))
+    for x in range(1, 6):
+        for z in range(1, 6):
+            t.put(x, 5, z, "spruce_planks")
+            if x in (1, 5) or z in (1, 5):
+                t.put(x, 6, z, "spruce_fence")
+    t.put(2, 5, 3, S("ladder", facing="west", waterlogged="false"))
+    t.put(1, 7, 1, lantern())
+    t.put(5, 7, 5, S("red_banner", rotation="4"))
+    t.npc_slot(4, 5, 4, P_VIKING_ARCHERS)
+    tent_jigsaw(t, 3)
+    return t
+
+
+def viking_storage():
+    """Leñera, heno y barriles."""
+    t = Template(9, 5, 7)
+    ground_pad(t, 1, 8, 0, 6, ["coarse_dirt", "podzol"])
+    for x in range(3, 8):
+        for y in (1, 2):
+            t.put(x, y, 1, S("spruce_log", axis="x"))
+        t.put(x, 3, 1, slab("spruce"))
+    for (x, y, z) in ((3, 1, 5), (4, 1, 5), (3, 2, 5)):
+        t.put(x, y, z, S("hay_block", axis="y"))
+    for (x, y, z) in ((6, 1, 4), (7, 1, 4), (7, 1, 5), (6, 2, 4)):
+        t.put(x, y, z, *barrel("up"))
+    t.put(7, 2, 5, *barrel("up", LOOT_VIKING_HUT))
+    for z in (3, 5):
+        t.put(1, 1, z, "spruce_fence")
+    t.npc_slot(4, 0, 3, P_VIKINGS)
+    tent_jigsaw(t, 3)
+    return t
+
+
+# ======================================================================== PIRATAS (fase 5)
+P_PIRATES = f"{NS}:npc/pirates"
+P_PIRATE_GUNNERS = f"{NS}:npc/pirate_gunners"
+P_PIRATE_CAPTAIN = f"{NS}:npc/pirate_captain"
+P_PIRATE_PIECES = f"{NS}:pirate/pieces"
+LOOT_PIRATE_SHIP = f"{NS}:chests/pirate_ship"
+LOOT_PIRATE_TREASURE = f"{NS}:chests/pirate_treasure"
+LOOT_PIRATE_CAMP = f"{NS}:chests/pirate_camp"
+
+
+def pirate_ship():
+    """Barco pirata varado en la playa: casco negro, dos mástiles con velas negras rotas, cañones, camarote del
+    capitán a popa, bodega con escotilla y pasarela."""
+    t = Template(28, 21, 15)
+    c = 6
+    ground_pad(t, 0, 27, 0, 14, ["sand", "sand", "gravel", "sandstone"])
+    widths = {1: 4, 2: 4, 3: 4, 21: 3, 22: 3, 23: 2, 24: 1, 25: 0}
+
+    def hw(x):
+        return widths.get(x, 4)
+
+    hull = "dark_oak_planks"
+    for x in range(1, 26):
+        w = hw(x)
+        for dz in range(-w, w + 1):
+            z = c + dz
+            if abs(dz) < w:
+                t.put(x, 1, z, hull)
+                for y in (2, 3, 4):
+                    t.put(x, y, z, "air")
+            else:
+                for y in (1, 2, 4):
+                    t.put(x, y, z, hull)
+                t.put(x, 3, z, S("stripped_dark_oak_log", axis="x"))
+            t.put(x, 5, z, "spruce_planks")
+            if abs(dz) == w and w > 0:
+                t.put(x, 6, z, "dark_oak_fence")
+    t.put(25, 6, c, "dark_oak_fence")
+    t.put(26, 6, c, S("stripped_spruce_log", axis="x"))
+    t.put(27, 7, c, S("stripped_spruce_log", axis="x"))
+    # cañones (dispensadores asomando por las troneras)
+    for x in (8, 11, 14, 17):
+        t.put(x, 3, c - 4, S("dispenser", facing="north", triggered="false"))
+        t.put(x, 3, c + 4, S("dispenser", facing="south", triggered="false"))
+    # castillo de popa con el camarote
+    for x in range(1, 7):
+        w = hw(x)
+        for dz in range(-w, w + 1):
+            z = c + dz
+            for y in (6, 7, 8):
+                edge = x in (1, 6) or abs(dz) == w
+                t.put(x, y, z, "dark_oak_planks" if edge else "air")
+            t.put(x, 9, z, "spruce_planks")
+            if abs(dz) == w or x == 1 or x == 6:
+                t.put(x, 10, z, "dark_oak_fence")
+    door(t, 6, 6, c, "east", kind="dark_oak_door")
+    for z in (c - 2, c + 2):
+        t.put(1, 7, z, "glass_pane")
+        t.put(6, 7, z, "glass_pane")
+    t.put(2, 6, c - 3, *chest("east", LOOT_PIRATE_TREASURE))
+    t.put(2, 6, c + 3, *barrel("up", LOOT_PIRATE_SHIP))
+    t.put(4, 8, c, lantern(hanging=True))
+    t.put(5, 6, c + 3, slab("dark_oak", "top"))
+    # mástiles, vergas y velas negras (con algún roto)
+    for (mx, top, yards) in ((12, 19, (10, 17)), (19, 15, (9, 14))):
+        for y in range(6, top + 1):
+            t.put(mx, y, c, S("spruce_log", axis="y"))
+        sx = mx + 1
+        for yy in yards:
+            for z in range(c - 4, c + 5):
+                t.put(sx, yy, z, S("stripped_spruce_log", axis="z"))
+        for y in range(yards[0] + 1, yards[1]):
+            for z in range(c - 3, c + 4):
+                torn = (y * 7 + z * 5 + mx) % 11 == 0
+                t.put(sx, y, z, "air" if torn else "black_wool")
+    # cofa y bandera negra
+    for (dx, dz) in ((-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)):
+        t.put(12 + dx, 18, c + dz, slab("spruce", "top"))
+        t.put(12 + dx, 19, c + dz, "spruce_fence")
+    t.put(12, 20, c, S("black_banner", rotation="4"))
+    # escotilla a la bodega
+    for y in range(2, 5):
+        t.put(16, y, c + 1, "spruce_planks")
+    for y in range(2, 6):
+        t.put(16, y, c, S("ladder", facing="north", waterlogged="false"))
+    for (x, z) in ((8, c - 2), (8, c + 2), (14, c - 3)):
+        t.put(x, 2, z, *barrel("up", LOOT_PIRATE_SHIP))
+    t.put(20, 2, c, *chest("west", LOOT_PIRATE_TREASURE))
+    t.put(10, 4, c, lantern(hanging=True))
+    # pasarela hasta la arena
+    t.put(12, 6, c + 4, "air")
+    for i, y in enumerate((4, 3, 2, 1)):
+        t.put(12, y, c + 5 + i, stairs("spruce", "north"))
+    # tripulación
+    t.npc_slot(3, 5, c, P_PIRATE_CAPTAIN)
+    for (x, z) in ((9, c - 2), (16, c + 2), (22, c)):
+        t.npc_slot(x, 5, z, P_PIRATES)
+    t.npc_slot(9, 5, c + 2, P_PIRATE_GUNNERS)
+    t.npc_slot(3, 9, c, P_PIRATE_GUNNERS)
+    t.npc_slot(5, 0, 13, P_PIRATES)
+    # campamento alrededor
+    for (x, z, f) in ((6, 0, "north"), (20, 0, "north"), (4, 14, "south"), (20, 14, "south"), (0, c, "west"),
+                      (27, c, "east")):
+        t.jigsaw(x, 1, z, f + "_up", TENT, TENT, P_PIRATE_PIECES)
+    return t
+
+
+def pirate_tavern():
+    """Chiringuito de madera de deriva: barriles de ron, mesa y taburetes."""
+    t = Template(9, 7, 8)
+    ground_pad(t, 1, 8, 0, 7, ["sand", "gravel"])
+    foundation(t, 2, 8, 1, 6, ring=S("stripped_oak_log", axis="y"), inner=S("spruce_planks"))
+    clear(t, 3, 1, 2, 7, 4, 5)
+    for y in (1, 2, 3):
+        for x in range(2, 9):
+            for z in (1, 6):
+                t.put(x, y, z, "stripped_oak_log" if x in (2, 8) else ("spruce_planks" if y != 2 or x % 3 else "air"))
+        for z in range(2, 6):
+            for x in (2, 8):
+                t.put(x, y, z, "spruce_planks")
+    for x in range(1, 10 - 1):
+        for z in range(0, 8):
+            t.put(x, 4, z, slab("spruce"))
+    door(t, 2, 1, 3, "east", kind="spruce_door")
+    for (x, y, z) in ((7, 1, 2), (7, 1, 3), (7, 2, 2)):
+        t.put(x, y, z, *barrel("east", LOOT_PIRATE_CAMP if (x, y, z) == (7, 1, 3) else None))
+    t.put(5, 1, 4, "spruce_fence")
+    t.put(5, 2, 4, S("spruce_pressure_plate", powered="false"))
+    t.put(4, 1, 4, stairs("spruce", "west"))
+    t.put(6, 1, 4, stairs("spruce", "east"))
+    t.put(5, 3, 3, lantern(hanging=True))
+    t.npc_slot(4, 0, 2, P_PIRATES)
+    t.npc_slot(6, 0, 5, P_PIRATES)
+    tent_jigsaw(t, 3)
+    return t
+
+
+def pirate_cannons():
+    """Batería de costa: dos cañones tras un parapeto y balas apiladas."""
+    t = Template(7, 4, 9)
+    ground_pad(t, 0, 6, 0, 8, ["sand", "gravel"])
+    for z in range(1, 8):
+        t.put(5, 1, z, "sandstone" if z % 3 else "smooth_sandstone")
+    for z in (2, 6):
+        t.put(4, 1, z, S("dispenser", facing="east", triggered="false"))
+        t.put(3, 1, z, S("polished_blackstone_stairs", facing="east", half="bottom", shape="straight", waterlogged="false"))
+        t.put(4, 1, z - 1, S("dark_oak_trapdoor", facing="north", half="bottom", open="true", powered="false", waterlogged="false"))
+        t.put(4, 1, z + 1, S("dark_oak_trapdoor", facing="south", half="bottom", open="true", powered="false", waterlogged="false"))
+    for (x, y, z) in ((2, 1, 4), (3, 1, 4), (2, 2, 4)):
+        t.put(x, y, z, "blackstone")
+    t.put(1, 1, 7, *barrel("up", LOOT_PIRATE_CAMP))
+    t.npc_slot(2, 0, 2, P_PIRATE_GUNNERS)
+    tent_jigsaw(t, 4)
+    return t
+
+
+def pirate_treasure():
+    """El tesoro: una X roja en la arena, el cofre enterrado, una calavera y un arbusto seco."""
+    t = Template(7, 3, 7)
+    for x in range(0, 7):
+        for z in range(0, 7):
+            t.put(x, 0, z, "red_sand" if (x - z == 0 or x + z == 6) and 1 <= x <= 5 else "sand")
+    t.put(3, 0, 3, *chest("north", LOOT_PIRATE_TREASURE))
+    t.put(5, 1, 1, S("skeleton_skull", rotation="6"))
+    t.put(1, 1, 5, "dead_bush")
+    t.entity(armor_stand(main="iron_shovel"), 5, 1, 5, YAW["north"])
+    t.npc_slot(1, 0, 1, P_PIRATES)
+    tent_jigsaw(t, 3)
+    return t
+
+
+def pirate_lookout():
+    """Vigía: un poste alto con plataforma, escalera de mano y bandera negra."""
+    t = Template(6, 12, 6)
+    ground_pad(t, 0, 5, 0, 5, ["sand", "gravel"])
+    for y in range(1, 10):
+        t.put(3, y, 3, S("spruce_log", axis="y"))
+    for y in range(1, 9):
+        t.put(2, y, 3, S("ladder", facing="west", waterlogged="false"))
+    for x in range(1, 6):
+        for z in range(1, 6):
+            if (x, z) in ((3, 3), (2, 3)):
+                continue
+            t.put(x, 8, z, "spruce_planks")
+            if x in (1, 5) or z in (1, 5):
+                t.put(x, 9, z, "spruce_fence")
+    t.put(3, 10, 3, S("black_banner", rotation="4"))
+    t.put(1, 10, 1, lantern())
+    t.npc_slot(4, 8, 4, P_PIRATE_GUNNERS)
+    tent_jigsaw(t, 3)
+    return t
+
+
 # ======================================================================== JSON
 def element(location, projection="rigid", processors=None, legacy=False):
     return {
@@ -957,6 +1423,25 @@ TEMPLATES = {
     "bandit_camp/tent_large": lambda: tent_large("red_wool", "black_wool", "black", P_BANDITS, LOOT_BANDIT_CAMP),
     "bandit_camp/cage": bandit_cage,
     "bandit_fort/fort": bandit_fort,
+    "npc/viking": lambda: npc_faction("viking"),
+    "npc/viking_archer": lambda: npc_faction("viking", "archer"),
+    "npc/viking_jarl": lambda: npc_faction("viking", "captain"),
+    "npc/pirate": lambda: npc_faction("pirate"),
+    "npc/pirate_gunner": lambda: npc_faction("pirate", "crossbowman"),
+    "npc/pirate_captain": lambda: npc_faction("pirate", "captain"),
+    "viking/longhouse": viking_longhouse,
+    "viking/hut": viking_hut,
+    "viking/smithy": viking_smithy,
+    "viking/runestones": viking_runestones,
+    "viking/longship": viking_longship,
+    "viking/watch": viking_watch,
+    "viking/storage": viking_storage,
+    "pirate/ship": pirate_ship,
+    "pirate/tent": lambda: tent_large("black_wool", "red_wool", "black", P_PIRATES, LOOT_PIRATE_CAMP),
+    "pirate/tavern": pirate_tavern,
+    "pirate/cannons": pirate_cannons,
+    "pirate/treasure": pirate_treasure,
+    "pirate/lookout": pirate_lookout,
 }
 
 
@@ -1001,6 +1486,20 @@ POOLS = {
     "bandit_camp/tents": pool([(element(L("bandit_camp/tent_small")), 3), (element(L("bandit_camp/tent_large")), 2),
                                (element(L("bandit_camp/cage")), 2), (element(L("camp/supply")), 1), (EMPTY, 1)]),
     "bandit_fort/base": pool([(element(L("bandit_fort/fort"), processors=WEATHER), 1)]),
+    "npc/vikings": pool([(element(L("npc/viking"), legacy=True), 5), (EMPTY, 1)]),
+    "npc/viking_archers": pool([(element(L("npc/viking_archer"), legacy=True), 3), (EMPTY, 1)]),
+    "npc/viking_jarl": pool([(element(L("npc/viking_jarl"), legacy=True), 1)]),
+    "npc/pirates": pool([(element(L("npc/pirate"), legacy=True), 5), (EMPTY, 1)]),
+    "npc/pirate_gunners": pool([(element(L("npc/pirate_gunner"), legacy=True), 3), (EMPTY, 1)]),
+    "npc/pirate_captain": pool([(element(L("npc/pirate_captain"), legacy=True), 1)]),
+    "viking/centers": pool([(element(L("viking/longhouse"), processors=WEATHER), 1)]),
+    "viking/pieces": pool([(element(L("viking/hut"), processors=WEATHER), 4), (element(L("viking/smithy")), 2),
+                           (element(L("viking/runestones"), processors=WEATHER), 1), (element(L("viking/longship")), 2),
+                           (element(L("viking/watch")), 2), (element(L("viking/storage")), 2), (EMPTY, 1)]),
+    "pirate/centers": pool([(element(L("pirate/ship")), 1)]),
+    "pirate/pieces": pool([(element(L("pirate/tent")), 3), (element(L("pirate/tavern")), 2),
+                           (element(L("pirate/cannons")), 2), (element(L("pirate/treasure")), 1),
+                           (element(L("pirate/lookout")), 2), (EMPTY, 1)]),
 }
 
 
@@ -1026,6 +1525,8 @@ STRUCTURES = {
     "watchtower": jigsaw_structure(L("watchtower/base"), 1, 16, f"#{NS}:has_structure/watchtower", False),
     "bandit_camp": jigsaw_structure(L("bandit_camp/centers"), 2, 32, f"#{NS}:has_structure/bandit_camp", False),
     "bandit_fort": jigsaw_structure(L("bandit_fort/base"), 1, 24, f"#{NS}:has_structure/bandit_fort", False),
+    "viking_settlement": jigsaw_structure(L("viking/centers"), 2, 40, f"#{NS}:has_structure/viking_settlement", False),
+    "pirate_cove": jigsaw_structure(L("pirate/centers"), 2, 40, f"#{NS}:has_structure/pirate_cove", False),
 }
 
 STRUCTURE_SETS = {
@@ -1044,6 +1545,16 @@ STRUCTURE_SETS = {
                       "exclusion_zone": {"other_set": "minecraft:villages", "chunk_count": 6}},
         "structures": [{"structure": L("bandit_camp"), "weight": 3}, {"structure": L("bandit_fort"), "weight": 1}],
     },
+    "viking_settlements": {
+        "placement": {"type": "minecraft:random_spread", "salt": 1357911131, "spacing": 32, "separation": 12,
+                      "exclusion_zone": {"other_set": "minecraft:villages", "chunk_count": 6}},
+        "structures": [{"structure": L("viking_settlement"), "weight": 1}],
+    },
+    "pirate_coves": {
+        "placement": {"type": "minecraft:random_spread", "salt": 246813579, "spacing": 22, "separation": 8,
+                      "exclusion_zone": {"other_set": "minecraft:villages", "chunk_count": 4}},
+        "structures": [{"structure": L("pirate_cove"), "weight": 1}],
+    },
 }
 
 BANDIT_BIOMES = ["minecraft:plains", "minecraft:sunflower_plains", "minecraft:meadow", "minecraft:forest",
@@ -1053,7 +1564,14 @@ BANDIT_BIOMES = ["minecraft:plains", "minecraft:sunflower_plains", "minecraft:me
                  "minecraft:windswept_forest", "minecraft:windswept_savanna", "minecraft:badlands",
                  "minecraft:wooded_badlands"]
 
+VIKING_BIOMES = ["minecraft:snowy_plains", "minecraft:snowy_taiga", "minecraft:taiga", "minecraft:old_growth_pine_taiga",
+                 "minecraft:old_growth_spruce_taiga", "minecraft:grove", "minecraft:windswept_hills",
+                 "minecraft:windswept_forest", "minecraft:windswept_gravelly_hills"]
+PIRATE_BIOMES = ["minecraft:beach", "minecraft:stony_shore", "minecraft:mangrove_swamp"]
+
 BIOME_TAGS = {
+    "viking_settlement": VIKING_BIOMES,
+    "pirate_cove": ["minecraft:beach", "minecraft:stony_shore"],
     "bandit_camp": BANDIT_BIOMES,
     "bandit_fort": BANDIT_BIOMES,
     "city": ["minecraft:plains", "minecraft:sunflower_plains", "minecraft:meadow", "minecraft:savanna",
@@ -1095,6 +1613,11 @@ def write(data_dir):
         dump(f"worldgen/structure_set/{name}.json", obj)
     for name, biomes in BIOME_TAGS.items():
         dump(f"tags/worldgen/biome/has_structure/{name}.json", {"values": biomes})
+    # tierras de cada facción (patrullas y asaltos)
+    dump("tags/worldgen/biome/viking_lands.json", {"values": VIKING_BIOMES + [
+        "minecraft:ice_spikes", "minecraft:frozen_river", "minecraft:snowy_slopes", "minecraft:snowy_beach",
+        "minecraft:frozen_peaks", "minecraft:jagged_peaks"]})
+    dump("tags/worldgen/biome/pirate_coasts.json", {"values": PIRATE_BIOMES})
     return templates
 
 

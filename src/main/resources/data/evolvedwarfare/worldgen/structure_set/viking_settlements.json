@@ -1,0 +1,18 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 1357911131,
+    "spacing": 32,
+    "separation": 12,
+    "exclusion_zone": {
+      "other_set": "minecraft:villages",
+      "chunk_count": 6
+    }
+  },
+  "structures": [
+    {
+      "structure": "evolvedwarfare:viking_settlement",
+      "weight": 1
+    }
+  ]
+}

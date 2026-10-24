@@ -58,6 +58,9 @@ public final class NpcCombat {
 			arrow.setCritical(true);
 		}
 		arrow.pickupType = PersistentProjectileEntity.PickupPermission.DISALLOWED;
+		if (shooter instanceof CombatNpc npc) {
+			npc.prepareShot(arrow, crossbow);
+		}
 		world.spawnEntity(arrow);
 		shooter.playSound(crossbow ? SoundEvents.ITEM_CROSSBOW_SHOOT : SoundEvents.ENTITY_SKELETON_SHOOT, 1.0F,
 				1.0F / (shooter.getRandom().nextFloat() * 0.4F + 0.8F));

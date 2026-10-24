@@ -5,6 +5,7 @@ import com.evolvedwarfare.entity.ai.HealAlliesGoal;
 import com.evolvedwarfare.entity.ai.NpcMeleeAttackGoal;
 import com.evolvedwarfare.entity.ai.NpcRangedAttackGoal;
 import com.evolvedwarfare.entity.ai.OwnerTargetGoal;
+import com.evolvedwarfare.faction.Reputation;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -91,6 +92,12 @@ public class SoldierEntity extends AbstractNpcEntity implements CombatNpc {
 	}
 
 	/** Cambia la clase y ajusta vida, daño base y velocidad. */
+	/** Fija la clase antes de initialize (mercenarios). */
+	public void presetRole(NpcRole role) {
+		getDataTracker().set(ROLE, role.ordinal());
+		roleFromNbt = true;
+	}
+
 	public void setRole(NpcRole role) {
 		getDataTracker().set(ROLE, role.ordinal());
 		setBase(EntityAttributes.GENERIC_MAX_HEALTH, role.health());
@@ -160,8 +167,8 @@ public class SoldierEntity extends AbstractNpcEntity implements CombatNpc {
 	public boolean onKilledOther(ServerWorld world, LivingEntity other) {
 		boolean result = super.onKilledOther(world, other);
 		int gained = 0;
-		if (other instanceof BanditEntity bandit) {
-			gained = bandit.getRole() == NpcRole.CAPTAIN ? 10 : 3;
+		if (other instanceof FactionNpcEntity enemy) {
+			gained = enemy.getRole() == NpcRole.CAPTAIN ? 10 : 3;
 		} else if (other instanceof PlayerEntity) {
 			gained = 3;
 		} else if (other instanceof Monster) {
@@ -191,13 +198,18 @@ public class SoldierEntity extends AbstractNpcEntity implements CombatNpc {
 		return withinLeash(target.getPos());
 	}
 
-	/** Enemigos que ataca por su cuenta: bandidos y monstruos (no los neutrales, y los cuerpo a cuerpo no van a por creepers). */
+	/**
+	 * Enemigos que ataca por su cuenta: guerreros de facciones enemigas de su dueño (o que vayan a por él o su dueño) y
+	 * monstruos (no los neutrales, y los cuerpo a cuerpo no van a por creepers).
+	 */
 	private boolean isHostileTarget(LivingEntity target) {
 		if (!canFight(target)) {
 			return false;
 		}
-		if (target instanceof BanditEntity) {
-			return true;
+		if (target instanceof FactionNpcEntity enemy) {
+			LivingEntity enemyTarget = enemy.getTarget();
+			return Reputation.hostile(getWorld(), getOwnerUuid(), enemy.getFaction()) || enemyTarget == this
+					|| (enemyTarget != null && NpcSides.allies(this, enemyTarget));
 		}
 		if (!(target instanceof Monster) || target instanceof Angerable) {
 			return false;

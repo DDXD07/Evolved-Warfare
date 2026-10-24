@@ -1,6 +1,6 @@
 package com.evolvedwarfare.entity.ai;
 
-import com.evolvedwarfare.entity.BanditEntity;
+import com.evolvedwarfare.entity.FactionNpcEntity;
 import java.util.EnumSet;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.util.math.BlockPos;
@@ -15,10 +15,10 @@ public class MarchGoal extends Goal {
 	private static final double ARRIVED_SQ = 8.0 * 8.0;
 	private static final double STEP = 16.0;
 
-	private final BanditEntity bandit;
+	private final FactionNpcEntity bandit;
 	private int repathTimer;
 
-	public MarchGoal(BanditEntity bandit) {
+	public MarchGoal(FactionNpcEntity bandit) {
 		this.bandit = bandit;
 		setControls(EnumSet.of(Goal.Control.MOVE));
 	}
