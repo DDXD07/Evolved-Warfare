@@ -348,5 +348,12 @@
   "commands.evolvedwarfare.reputation.changed": "Reputación con %s cambiada a %s jugadores",
   "commands.evolvedwarfare.raid.started": "Asalto en marcha: %s",
   "filled_map.evolvedwarfare.viking_settlement": "Mapa de asentamiento vikingo",
-  "filled_map.evolvedwarfare.pirate_cove": "Mapa del tesoro pirata"
+  "filled_map.evolvedwarfare.pirate_cove": "Mapa del tesoro pirata",
+  "structure.evolvedwarfare.bandit_camp": "Campamento de bandidos",
+  "structure.evolvedwarfare.bandit_fort": "Fuerte de bandidos",
+  "structure.evolvedwarfare.viking_settlement": "Asentamiento vikingo",
+  "structure.evolvedwarfare.pirate_cove": "Cala pirata",
+  "structure.evolvedwarfare.settlement": "Asentamiento",
+  "gui.evolvedwarfare.settlement.level": "Nivel %s (+%s%% vida y daño)",
+  "gui.evolvedwarfare.settlement.level_base": "Nivel %s"
 }

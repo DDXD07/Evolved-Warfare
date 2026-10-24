@@ -244,6 +244,12 @@ batería de cañones, un vigía y un tesoro enterrado bajo una X roja.
   asentamiento vikingo* (oficial: 13 esmeraldas y una brújula). También salen en cofres: los vikingos guardan cartas de
   las calas piratas, los piratas de los asentamientos vikingos, y los fuertes de bandidos de ambos.
 
+**Nivel de los asentamientos**: cada campamento, fuerte, asentamiento o cala tiene un nivel del 1 al 10. Sube uno
+cada 750 bloques de distancia al punto de aparición del mundo, más 0-2 al azar (siempre el mismo para cada sitio); los
+fuertes de bandidos, uno más. **Cada nivel por encima del 1 da a su guarnición un 10 % más de vida y de daño** (también
+el de sus flechas): nivel 5 = +40 %, nivel 10 = +90 %. Al acercarte a menos de 24 bloques sale en pantalla su nombre,
+su nivel (verde 1-3, dorado 4-6, rojo 7-8, morado 9-10) y cómo te trata su facción.
+
 **Patrullas y asaltos**: la facción que aparece depende de dónde estés (vikingos en el frío, piratas en la costa y
 bandidos en el resto). Las patrullas solo van a por ti si sois enemigos; si no, pasan de largo. Los asaltos atacan
 aldeas, ciudades y **tu pueblo** (los alrededores de tu ayuntamiento) si la facción de la zona es enemiga tuya. Cada

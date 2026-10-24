@@ -10,6 +10,7 @@ import com.evolvedwarfare.faction.Faction;
 import com.evolvedwarfare.faction.Reputation;
 import com.evolvedwarfare.item.WhiteFlagItem;
 import com.evolvedwarfare.world.FactionRaids;
+import com.evolvedwarfare.world.SettlementLevels;
 import java.util.UUID;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityData;
@@ -27,6 +28,7 @@ import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -36,6 +38,7 @@ import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -66,6 +69,8 @@ import org.jetbrains.annotations.Nullable;
 public abstract class FactionNpcEntity extends HostileEntity implements CombatNpc {
 	private static final double GARRISON_RADIUS = 24.0;
 	private static final double ESCORT_RADIUS = 20.0;
+	private static final net.minecraft.util.Identifier LEVEL_HEALTH = com.evolvedwarfare.EvolvedWarfare.id("settlement_level_health");
+	private static final net.minecraft.util.Identifier LEVEL_DAMAGE = com.evolvedwarfare.EvolvedWarfare.id("settlement_level_damage");
 
 	private static final TrackedData<Integer> ROLE = DataTracker.registerData(FactionNpcEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	private static final TrackedData<Integer> VARIANT = DataTracker.registerData(FactionNpcEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -80,6 +85,8 @@ public abstract class FactionNpcEntity extends HostileEntity implements CombatNp
 	@Nullable
 	private UUID escortOf;
 	private long escortUntil;
+	/** Nivel del asentamiento que defiende (0: aún sin mirar; los que no son guarnición se quedan en 1). */
+	private int settlementLevel;
 
 	protected FactionNpcEntity(EntityType<? extends FactionNpcEntity> type, World world) {
 		super(type, world);
@@ -213,6 +220,35 @@ public abstract class FactionNpcEntity extends HostileEntity implements CombatNp
 		return getDataTracker().get(VARIANT);
 	}
 
+	public int getSettlementLevel() {
+		return Math.max(1, settlementLevel);
+	}
+
+	/** Cada nivel del asentamiento por encima del 1: +10 % de vida y de daño (también el de sus flechas). */
+	public void applySettlementLevel(int level) {
+		boolean first = settlementLevel == 0;
+		settlementLevel = Math.max(1, Math.min(SettlementLevels.MAX_LEVEL, level));
+		double bonus = SettlementLevels.multiplier(settlementLevel) - 1.0;
+		EntityAttributeInstance health = getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
+		if (health != null) {
+			health.overwritePersistentModifier(new EntityAttributeModifier(LEVEL_HEALTH, bonus,
+					EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+		}
+		EntityAttributeInstance damage = getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+		if (damage != null) {
+			damage.overwritePersistentModifier(new EntityAttributeModifier(LEVEL_DAMAGE, bonus,
+					EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+		}
+		if (first) {
+			setHealth(getMaxHealth());
+		}
+	}
+
+	@Override
+	public void prepareShot(PersistentProjectileEntity arrow, boolean crossbow) {
+		arrow.setDamage(arrow.getDamage() * SettlementLevels.multiplier(getSettlementLevel()));
+	}
+
 	@Override
 	public int getCombatLevel() {
 		return getRole() == NpcRole.CAPTAIN ? 3 : 1;
@@ -342,6 +378,10 @@ public abstract class FactionNpcEntity extends HostileEntity implements CombatNp
 			endRaid();
 		}
 		if (age % 20 == 0) {
+			if (settlementLevel == 0 && getWorld() instanceof ServerWorld serverWorld) {
+				// la guarnición mira de qué nivel es su asentamiento (una vez)
+				applySettlementLevel(garrison && home != null ? SettlementLevels.levelAt(serverWorld, home) : 1);
+			}
 			if (escortOf != null && (escortUntil <= getWorld().getTime() || getEscortedPlayer() == null && age % 200 == 0)) {
 				leave();
 				return;
@@ -453,6 +493,7 @@ public abstract class FactionNpcEntity extends HostileEntity implements CombatNp
 		putPos(nbt, "Home", home);
 		putPos(nbt, "March", marchTarget);
 		nbt.putLong("RaidUntil", raidUntil);
+		nbt.putInt("SettlementLevel", settlementLevel);
 		if (escortOf != null) {
 			nbt.putUuid("EscortOf", escortOf);
 			nbt.putLong("EscortUntil", escortUntil);
@@ -471,6 +512,7 @@ public abstract class FactionNpcEntity extends HostileEntity implements CombatNp
 		home = readPos(nbt, "Home");
 		marchTarget = readPos(nbt, "March");
 		raidUntil = nbt.getLong("RaidUntil");
+		settlementLevel = nbt.getInt("SettlementLevel");
 		escortOf = nbt.containsUuid("EscortOf") ? nbt.getUuid("EscortOf") : null;
 		escortUntil = nbt.getLong("EscortUntil");
 		if (garrison) {

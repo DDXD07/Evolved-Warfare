@@ -1620,6 +1620,9 @@ def write(data_dir):
     # mapas de exploración (cofres y cartógrafos)
     dump("tags/worldgen/structure/on_viking_maps.json", {"values": [L("viking_settlement")]})
     dump("tags/worldgen/structure/on_pirate_maps.json", {"values": [L("pirate_cove")]})
+    # asentamientos de facciones (tienen nivel)
+    dump("tags/worldgen/structure/faction_settlements.json",
+         {"values": [L("bandit_camp"), L("bandit_fort"), L("viking_settlement"), L("pirate_cove")]})
     return templates
 
 

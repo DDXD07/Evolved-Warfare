@@ -348,5 +348,12 @@
   "commands.evolvedwarfare.reputation.changed": "Reputation with %s changed for %s players",
   "commands.evolvedwarfare.raid.started": "Raid started: %s",
   "filled_map.evolvedwarfare.viking_settlement": "Viking Settlement Map",
-  "filled_map.evolvedwarfare.pirate_cove": "Pirate Treasure Map"
+  "filled_map.evolvedwarfare.pirate_cove": "Pirate Treasure Map",
+  "structure.evolvedwarfare.bandit_camp": "Bandit Camp",
+  "structure.evolvedwarfare.bandit_fort": "Bandit Fort",
+  "structure.evolvedwarfare.viking_settlement": "Viking Settlement",
+  "structure.evolvedwarfare.pirate_cove": "Pirate Cove",
+  "structure.evolvedwarfare.settlement": "Settlement",
+  "gui.evolvedwarfare.settlement.level": "Level %s (+%s%% health and damage)",
+  "gui.evolvedwarfare.settlement.level_base": "Level %s"
 }

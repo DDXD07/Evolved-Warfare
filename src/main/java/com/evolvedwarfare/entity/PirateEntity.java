@@ -59,6 +59,7 @@ public class PirateEntity extends FactionNpcEntity {
 
 	@Override
 	public void prepareShot(PersistentProjectileEntity arrow, boolean crossbow) {
+		super.prepareShot(arrow, crossbow);
 		if (crossbow && getRandom().nextFloat() < 0.35F) {
 			arrow.setOnFireFor(5.0F);
 		}

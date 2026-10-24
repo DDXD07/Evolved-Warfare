@@ -12,6 +12,7 @@ import com.evolvedwarfare.registry.ModScreens;
 import com.evolvedwarfare.registry.ModStructures;
 import com.evolvedwarfare.world.ExplorationMaps;
 import com.evolvedwarfare.world.FactionSpawner;
+import com.evolvedwarfare.world.SettlementLevels;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
@@ -53,6 +54,7 @@ public class EvolvedWarfare implements ModInitializer {
 		FactionSpawner.register();
 		ModCommands.register();
 		ExplorationMaps.register();
+		SettlementLevels.register();
 		RouteSlipItem.registerEvents();
 		LOGGER.info("Evolved Warfare cargado");
 	}
