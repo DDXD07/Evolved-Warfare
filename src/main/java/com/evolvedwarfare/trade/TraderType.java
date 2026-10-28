@@ -16,8 +16,7 @@ import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Los oficios de los comerciantes de las ciudades y su catálogo completo. Todo se paga en Golden Coins (o esmeraldas si
- * no está el mod de la moneda).
+ * Los oficios de los comerciantes de las ciudades y su catálogo completo. Todo se paga en Glory Coins, la moneda del mod.
  *
  * <p>Cada línea tiene una rareza ({@link Tier}); las ciudades de más nivel (más lejos del punto de aparición)
  * desbloquean las más raras, y además venden más caro: cada nivel por encima del 1 sube los precios de venta un 10 %
@@ -180,9 +179,7 @@ public enum TraderType {
 						.sell(c, Items.AMETHYST_SHARD, 4, 1).sell(c, Items.COPPER_INGOT, 8, 1)
 						.sell(u, Items.COMPASS, 1, 3).sell(u, Items.CLOCK, 1, 4).sell(u, Items.ENDER_PEARL, 1, 4)
 						.sell(u, Items.EXPERIENCE_BOTTLE, 3, 2).sell(u, Items.GOLD_BLOCK, 1, 5);
-				if (Market.currency() != Items.EMERALD) {
-					b.sell(u, Items.EMERALD, 1, 2);
-				}
+				b.sell(u, Items.EMERALD, 1, 2);
 				b.sell(r, Items.DIAMOND, 1, 6).sell(r, Items.NAME_TAG, 1, 8).sell(r, Items.GOLDEN_APPLE, 1, 9)
 						.sell(r, Items.SPYGLASS, 1, 4).sell(r, Items.ENDER_EYE, 1, 5)
 						.sell(e, Items.DIAMOND_BLOCK, 1, 55).sell(e, Items.TOTEM_OF_UNDYING, 1, 25)

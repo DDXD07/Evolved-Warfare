@@ -9,22 +9,14 @@
 			"item": "minecraft:ink_sac"
 		},
 		{
-			"item": "goldencoin:golden_coin"
+			"item": "evolvedwarfare:glory_coin"
 		},
 		{
-			"item": "goldencoin:golden_coin"
+			"item": "evolvedwarfare:glory_coin"
 		}
 	],
 	"result": {
 		"id": "evolvedwarfare:recruitment_contract",
 		"count": 1
-	},
-	"fabric:load_conditions": [
-		{
-			"condition": "fabric:all_mods_loaded",
-			"values": [
-				"goldencoin"
-			]
-		}
-	]
+	}
 }

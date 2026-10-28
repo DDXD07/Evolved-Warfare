@@ -2,7 +2,9 @@
 
 NPCs, ejércitos, trabajadores, comercio, facciones con diplomacia, asedio, armas medievales e investigación. Inspirado en *Ancient Warfare*, con código, nombre y texturas propios.
 
-Requiere **Fabric API**. Opcional: **Mod Menu** (pantalla de configuración); **Golden Coin Merchants** (los reclutas aceptan Golden Coins como paga, hay una receta de contrato con monedas y es la moneda del comerciante; sin el mod, el comerciante usa esmeraldas).
+Requiere **Fabric API**. Opcional: **Mod Menu** (pantalla de configuración).
+
+**Moneda: la Glory Coin.** El mod tiene su propia moneda. No se fabrica: se gana vendiendo a los comerciantes de las ciudades y al mercado, y sale en los cofres de campamentos, fuertes, asentamientos y castillos y en el botín de bandidos, vikingos y piratas. Con ella se paga a los NPCs, se compra en las tiendas, se pagan tributos y treguas y se hace el contrato de reclutamiento. (Ya no usa la Golden Coin del mod *Golden Coin Merchants* ni esmeraldas como moneda: si tenías ese mod, los dos pueden convivir, pero no se mezclan.)
 
 ## Hoja de ruta
 
@@ -11,12 +13,12 @@ Requiere **Fabric API**. Opcional: **Mod Menu** (pantalla de configuración); **
 | 1 | **NPC base (el recluta)** y dónde vive: ciudades, campamentos y torres generados; contrato, dueño, equipo, órdenes, paga diaria. Aldeas vanilla con empedrado, farolas y empalizada | ✅ Hecha |
 | 2 | **Soldados y bandidos**: guerrero, bárbaro, arquero, ballestero, médico; bandidos hostiles en fuertes, campamentos, patrullas y asaltos; niveles y bastón de mando | ✅ Hecha |
 | 3 | **Trabajadores**: 14 oficios con su puesto de trabajo (granja, tala, mina, excavación, pesca, ganado, corral, colmenas, huerto, forja, cocina, carbonera, cantería, flechas) y ayuntamiento que paga solo | ✅ Hecha |
-| 4 | **Logística y comercio**: almacén en red con buscador, mensajero (automático o con hoja de ruta), comerciante con tienda para jugadores y venta de excedentes (Golden Coin o esmeraldas) | ✅ Hecha |
+| 4 | **Logística y comercio**: almacén en red con buscador, mensajero (automático o con hoja de ruta), comerciante con tienda para jugadores y venta de excedentes (Glory Coins) | ✅ Hecha |
 | 5 | **Facciones y diplomacia**: vikingos y piratas con sus asentamientos, patrullas y asaltos (también a tu pueblo); reputación con cada facción, bandera blanca, tributos, treguas, alianzas, ayuda de aliados y mercenarios | ✅ Hecha |
 | 6 | **Estructuras**: escáner de estructuras, planos, mesa del arquitecto con biblioteca y constructor que los levanta; ciudades del desierto y del norte; castillos y fortalezas del caudillo bandido | ✅ Hecha |
 | 7 | **Asedio**: catapulta, balista, trebuchet y ariete (para ti, para tus soldados y en los asaltos enemigos); rastrillo y puente levadizo con torno | ✅ Hecha |
 | 8 | **Armas medievales** (daga, lanza, mandoble, alabarda, martillo de guerra, mangual, hacha de batalla, arco largo y jabalina), **árbol de investigación** con su mesa, **equilibrio** y **configuración** (archivo, comando y pantalla con Mod Menu) | ✅ Hecha |
-| 9 | **Comerciantes y niveles de las ciudades**: ciudades de nivel 1 a 10 según la distancia; tendero, armero, cantero, joyero, sastre, mercader de especias y peletero con tienda de catálogo completo por Golden Coins (o esmeraldas); más nivel, mejores cosas y más caras | ✅ Hecha |
+| 9 | **Comerciantes y niveles de las ciudades**: ciudades de nivel 1 a 10 según la distancia; tendero, armero, cantero, joyero, sastre, mercader de especias y peletero con tienda de catálogo completo por Glory Coins; más nivel, mejores cosas y más caras | ✅ Hecha |
 
 ## Fase 1 — El recluta
 
@@ -43,7 +45,7 @@ Las aldeas normales de Minecraft también cambian (solo las que se generen despu
 
 ### Contratar
 **Contrato de reclutamiento** (receta sin forma): papel + saco de tinta + pluma + lingote de oro + pan.
-Con *Golden Coin Merchants* instalado también: papel + saco de tinta + 2 Golden Coins.
+También: papel + saco de tinta + 2 Glory Coins.
 
 Clic derecho con el contrato sobre un recluta **libre** → firma, te sigue y te sirve **solo a ti**.
 Sin contrato en la mano, te dice que busca trabajo. Mientras está libre no cobra.
@@ -55,10 +57,10 @@ Clic derecho sobre tu recluta abre su menú:
 - **Botones**: *Seguir* (te sigue; si se queda a más de 24 bloques aparece a tu lado), *Quieto*, *Ir a casa* y *Casa aquí* (fija su casa donde está y se queda por allí paseando).
 - Muestra su vida, la orden actual y para cuántos días tiene paga.
 
-Atajo: clic derecho con comida (o Golden Coins) en la mano → se la guarda como provisiones sin abrir el menú.
+Atajo: clic derecho con comida (o Glory Coins) en la mano → se la guarda como provisiones sin abrir el menú.
 
 ### Paga
-- Cada día de juego consume **1 provisión**: pan, patata asada, carne o pescado cocinados, zanahoria dorada, tarta de calabaza o Golden Coin.
+- Cada día de juego consume **1 provisión**: pan, patata asada, carne o pescado cocinados, zanahoria dorada, tarta de calabaza o Glory Coin.
 - Si un día no cobra, te avisa por el chat. Tras **3 días sin paga deserta**: deja su equipo en el suelo y se va.
 - Bien pagado, se cura poco a poco.
 - Su dueño no puede herirlo por accidente. Si muere, te avisa y su equipo queda en el suelo.
@@ -100,7 +102,7 @@ Atacan a cualquier jugador, a tus reclutas y soldados y a los gólems de hierro.
 - **Patrullas**: de vez en cuando (desde el día 2) aparece un grupo de 3-6 bandidos cerca de un jugador y va a por él.
 - **Asaltos**: cada 3-5 días de juego, si estás dentro de una aldea o de una ciudad del mod, suena un cuerno y llega un grupo de 4-12 bandidos (con capitán en difícil). Atacan también a los aldeanos. Una barra muestra cuántos quedan; si en 10 minutos no los derrotas, se retiran.
 
-Sueltan pepitas de oro, flechas, pan y, a veces, esmeraldas; el capitán suelta esmeraldas, hierro y a veces una manzana dorada.
+Sueltan pepitas de oro, flechas, pan, alguna Glory Coin y, a veces, esmeraldas; el capitán suelta esmeraldas, hierro y a veces una manzana dorada.
 
 Para encontrarlos: `/locate structure evolvedwarfare:bandit_camp` o `evolvedwarfare:bandit_fort`. En creativo hay un **huevo de bandido** (clase al azar).
 
@@ -172,7 +174,7 @@ El pastor y el criador nunca sacrifican animales con nombre ni atados.
 **La mina bajo tierra** (minero): detrás del puesto deja un pasillo de un bloque y cava una escalera de 5 escalones (3 de alto, se puede bajar andando) que acaba en un rellano a 5 bloques de profundidad. Desde ahí vacía el pozo, que empieza bajo tierra con 3 bloques de techo, así que en la superficie solo se ve la boca de la escalera, dentro de su granero. Si le das antorchas, pone una en la escalera y otra en el rellano. **Ver zona** marca en la superficie dónde irá el pozo y por dónde baja la escalera.
 
 ### Ayuntamiento
-Receta: lingote de oro, libro y lingote de oro arriba; tablón, cofre y tablón en medio; 3 tablones abajo. Guarda comida o Golden Coins dentro y cada pocos segundos rellena las provisiones de todos tus NPCs (trabajadores, soldados y reclutas) a menos de 48 bloques, hasta 3 días de paga. Así no tienes que ir dándoles de comer uno a uno.
+Receta: lingote de oro, libro y lingote de oro arriba; tablón, cofre y tablón en medio; 3 tablones abajo. Guarda comida o Glory Coins dentro y cada pocos segundos rellena las provisiones de todos tus NPCs (trabajadores, soldados y reclutas) a menos de 48 bloques, hasta 3 días de paga. Así no tienes que ir dándoles de comer uno a uno.
 
 ## Fase 4 — Logística y comercio
 
@@ -213,7 +215,7 @@ Un oficio más (puesto con una esmeralda). Hace dos cosas:
   8 lotes por viaje, a precios parecidos a los de los aldeanos (20 de trigo, 15 de carbón o 4 lingotes de hierro por
   1 moneda...). Las monedas van a la producción, y el mensajero las lleva al almacén y, de ahí, al ayuntamiento.
 
-**Moneda**: Golden Coin si está instalado *Golden Coin Merchants*; si no, esmeraldas.
+**Moneda**: la Glory Coin.
 
 ## Fase 5 — Facciones y diplomacia
 
@@ -290,7 +292,7 @@ piratas):
   respetan.
 - **Sello de embajador** (papel, lingote de oro y tinte rojo): clic derecho para abrir la diplomacia. Por cada facción ves
   la reputación en una barra con las marcas de enemistad, amistad y alianza, el trato y lo que queda de tregua, y estos
-  botones (se paga con monedas: Golden Coin o esmeraldas):
+  botones (se paga con Glory Coins):
   - **Tributo**: 5 monedas → +5 de reputación.
   - **Tregua** (si sois enemigos): 3 días sin ataques ni asaltos; cuesta 10 monedas más 1 por cada 5 puntos por debajo
     de cero. Si les atacas, se rompe.
@@ -504,8 +506,7 @@ Cada nivel por encima del 1 sube los precios de venta un **10 %**. Lo que **te c
 
 ### Los comerciantes
 
-En los puestos de las ciudades viven **comerciantes** que comercian **siempre con Golden Coins** (si no está el mod
-*Golden Coin*, con esmeraldas). No se van, no desaparecen y no se alejan más de 8 bloques de su puesto; huyen de
+En los puestos de las ciudades viven **comerciantes** que comercian **siempre con Glory Coins**, la moneda del mod. No se van, no desaparecen y no se alejan más de 8 bloques de su puesto; huyen de
 monstruos y asaltantes (que también van a por ellos, así que defiende el mercado).
 
 | Comerciante | Dónde | Vende |

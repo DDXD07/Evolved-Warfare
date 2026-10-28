@@ -61,7 +61,7 @@ import org.jetbrains.annotations.Nullable;
  *   <li><b>Dueño</b>: el jugador que lo contrató. Solo él puede darle órdenes y abrir su menú.</li>
  *   <li><b>Órdenes</b>: seguir, quedarse quieto o volver a casa.</li>
  *   <li><b>Equipo</b>: armadura y armas en sus manos (se ven puestas y se sueltan al morir).</li>
- *   <li><b>Paga</b>: cada día de juego consume 1 provisión (comida o Golden Coin). Si pasa
+ *   <li><b>Paga</b>: cada día de juego consume 1 provisión (comida o Glory Coin). Si pasa
  *       los días sin cobrar que diga la configuración (3), deserta.</li>
  * </ul>
  */
@@ -71,7 +71,7 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 		return Math.max(1, EwConfig.get().maxUnpaidDays);
 	}
 	public static final int PROVISION_SLOTS = 2;
-	/** Lo que acepta como paga (comida cocinada y, si está instalado, la Golden Coin). */
+	/** Lo que acepta como paga (comida cocinada y la Glory Coin). */
 	public static final TagKey<Item> UPKEEP = TagKey.of(RegistryKeys.ITEM, EvolvedWarfare.id("upkeep"));
 
 	private static final TrackedData<Integer> VARIANT =

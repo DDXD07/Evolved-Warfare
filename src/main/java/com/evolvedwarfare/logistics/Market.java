@@ -6,20 +6,17 @@ import java.util.Map;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * El mercado: con qué se paga y cuánto se saca por cada cosa.
  *
- * <p>La moneda es la Golden Coin del mod <i>goldencoin</i> si está instalado; si no, esmeraldas. Los precios son
+ * <p>La moneda es la Glory Coin del mod. Los precios son
  * parecidos a los que pagan los aldeanos: "tantos objetos por tantas monedas".</p>
  */
 public final class Market {
-	public static final Identifier GOLDEN_COIN = Identifier.of("goldencoin", "golden_coin");
 
 	/** {@code items} objetos se venden por {@code coins} monedas. */
 	public record Price(int items, int coins) {
@@ -125,9 +122,9 @@ public final class Market {
 		TAG_PRICES.put(tag, new Price(items, coins));
 	}
 
-	/** La moneda: Golden Coin si está el mod, si no esmeraldas. */
+	/** La moneda: la Glory Coin. */
 	public static Item currency() {
-		return Registries.ITEM.getOrEmpty(GOLDEN_COIN).orElse(Items.EMERALD);
+		return com.evolvedwarfare.registry.ModItems.GLORY_COIN;
 	}
 
 	public static boolean isCurrency(ItemStack stack) {

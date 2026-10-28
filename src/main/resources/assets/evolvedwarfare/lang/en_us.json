@@ -703,5 +703,6 @@
   "config.evolvedwarfare.cityMaxLevel": "Max city level",
   "config.evolvedwarfare.cityMaxLevel.tip": "Rarer goods unlock at levels 3, 5, 7 and 9 (or at the max, if lower).",
   "config.evolvedwarfare.traderPricePerLevel": "Price rise per level",
-  "config.evolvedwarfare.traderPricePerLevel.tip": "How much more traders charge for each city level above 1 (0.10 = 10%)."
+  "config.evolvedwarfare.traderPricePerLevel.tip": "How much more traders charge for each city level above 1 (0.10 = 10%).",
+  "item.evolvedwarfare.glory_coin": "Glory Coin"
 }

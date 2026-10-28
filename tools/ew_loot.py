@@ -208,6 +208,43 @@ HAND_MADE_CHESTS = ["chests/bandit_camp", "chests/bandit_fort"]
 HAND_MADE_ENTITIES = ["entities/bandit"]
 
 
+# fase 9: la Glory Coin, moneda propia del mod
+COIN = EW + "glory_coin"
+COIN_CHESTS = {
+    "chests/viking_longhouse": (3, 10), "chests/viking_hut": (1, 4), "chests/pirate_ship": (4, 12),
+    "chests/pirate_treasure": (10, 30), "chests/pirate_camp": (2, 6), "chests/bandit_camp": (2, 6),
+    "chests/bandit_fort": (4, 10), "chests/bandit_stronghold": (8, 20), "chests/castle_treasury": (12, 32),
+    "chests/castle_armory": (2, 6),
+}
+
+
+def is_coin_pool(pool):
+    return any(e.get("name") == COIN for e in pool.get("entries", []))
+
+
+def coin_chest_pool(lo, hi):
+    return {"rolls": 1.0, "bonus_rolls": 0.0, "entries": [item(COIN, 1, lo, hi)]}
+
+
+def coin_entity_pool():
+    """Los enemigos llevan alguna moneda encima (la mitad de las veces; botín la aumenta)."""
+    return {"rolls": 1.0, "bonus_rolls": 0.0,
+            "conditions": [{"condition": "minecraft:random_chance", "chance": 0.5}],
+            "entries": [{"type": "minecraft:item", "name": COIN, "functions": [
+                {"function": "minecraft:set_count", "add": False, "count": {"type": "minecraft:uniform", "min": 1.0, "max": 3.0}},
+                {"function": "minecraft:enchanted_count_increase", "enchantment": "minecraft:looting",
+                 "count": {"type": "minecraft:uniform", "min": 0.0, "max": 1.0}}]}]}
+
+
+def add_coins(name, table):
+    table["pools"] = [p for p in table["pools"] if not is_coin_pool(p)]
+    if name in COIN_CHESTS:
+        table["pools"].append(coin_chest_pool(*COIN_CHESTS[name]))
+    elif name.startswith("entities/"):
+        table["pools"].append(coin_entity_pool())
+    return table
+
+
 def main():
     for name in HAND_MADE_CHESTS + HAND_MADE_ENTITIES:
         path = os.path.join(OUT, "loot_table", name + ".json")
@@ -217,10 +254,12 @@ def main():
             table["pools"].extend(level_pools(table["pools"][0]["entries"]))
         else:
             table["pools"].extend(entity_level_pools())
+        add_coins(name, table)
         with open(path, "w", encoding="utf-8") as f:
             json.dump(table, f, indent=2)
             f.write("\n")
     for name, table in {**TABLES, **CASTLE_TABLES, **ENTITIES}.items():
+        add_coins(name, table)
         path = os.path.join(OUT, "loot_table", name + ".json")
         os.makedirs(os.path.dirname(path), exist_ok=True)
         with open(path, "w", encoding="utf-8") as f:

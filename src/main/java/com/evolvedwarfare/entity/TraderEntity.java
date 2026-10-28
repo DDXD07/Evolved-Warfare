@@ -54,7 +54,7 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Comerciante de ciudad: vive en su puesto (mercado, fragua, taberna, bazar...), no se va ni desaparece, y comercia
- * siempre con Golden Coins (o esmeraldas si no está ese mod). Al hablarle abre su tienda con todo su catálogo a la vez;
+ * siempre con Glory Coins. Al hablarle abre su tienda con todo su catálogo a la vez;
  * lo que tiene depende del nivel de su ciudad ({@link CityLevels}). Repone sus existencias cada mañana.
  * Huye de los monstruos y de los asaltantes.
  */

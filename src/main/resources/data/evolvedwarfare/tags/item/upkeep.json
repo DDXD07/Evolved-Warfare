@@ -12,9 +12,6 @@
 		"minecraft:cooked_salmon",
 		"minecraft:golden_carrot",
 		"minecraft:pumpkin_pie",
-		{
-			"id": "goldencoin:golden_coin",
-			"required": false
-		}
+		"evolvedwarfare:glory_coin"
 	]
 }

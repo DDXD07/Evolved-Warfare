@@ -48,7 +48,7 @@ public final class ModEntities {
 					.maxTrackingRange(10)
 					.build("worker"));
 
-	/** Comerciante de ciudad (fase 9): comercia con Golden Coins. */
+	/** Comerciante de ciudad (fase 9): comercia con Glory Coins. */
 	public static final EntityType<TraderEntity> TRADER = Registry.register(Registries.ENTITY_TYPE,
 			EvolvedWarfare.id("trader"),
 			EntityType.Builder.create(TraderEntity::new, SpawnGroup.MISC)
