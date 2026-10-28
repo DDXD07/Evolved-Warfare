@@ -271,8 +271,9 @@ public enum TraderType {
 				int price = markup > 1.0 ? niceCeil(lot[1] * markup) : lot[1];
 				sells.add(new Deal(true, entry.item(), lot[0], price, tier.sellStock, tier, minLevel));
 			} else {
-				// la mitad del precio nuevo, y nunca más de la mitad de lo que cuesta en cualquier tienda
-				double reference = Math.min(fair, pricing.sold().getOrDefault(entry.item(), Double.MAX_VALUE));
+				// la mitad del precio nuevo: lo que cuesta en la tienda más barata que lo vende (o, si nadie lo vende, lo
+				// que costaría en su rareza)
+				double reference = pricing.sold().getOrDefault(entry.item(), fair);
 				int[] lot = buyLot(0.5 * reference * variance, entry.count(), maxCount);
 				buys.add(new Deal(false, entry.item(), lot[0], lot[1], tier.buyStock, tier, minLevel));
 			}
