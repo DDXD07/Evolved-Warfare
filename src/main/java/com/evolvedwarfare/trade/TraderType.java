@@ -3,25 +3,26 @@ package com.evolvedwarfare.trade;
 import com.evolvedwarfare.logistics.Market;
 import com.evolvedwarfare.registry.ModItems;
 import com.evolvedwarfare.weapon.WeaponType;
+import com.evolvedwarfare.world.CityLevels;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.function.Supplier;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.village.TradeOffer;
-import net.minecraft.village.TradedItem;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Los oficios de los comerciantes de las ciudades. Cada uno vende unas cosas y compra otras, siempre por Golden
- * Coins (o esmeraldas si no está el mod de la moneda). Lo que compran lo pagan al mismo precio que el mercado
- * ({@link Market#priceOf}); lo que venden cuesta algo más.
+ * Los oficios de los comerciantes de las ciudades y su catálogo completo. Todo se paga en Golden Coins (o esmeraldas si
+ * no está el mod de la moneda).
+ *
+ * <p>Cada línea tiene una rareza ({@link Tier}); las ciudades de más nivel (más lejos del punto de aparición)
+ * desbloquean las más raras, y además venden más caro: cada nivel por encima del 1 sube los precios de venta un 10 %
+ * (configurable). Lo que te compran lo pagan al precio del mercado ({@link Market#priceOf}) en todas partes.
+ * Cada comerciante tiene sus propios precios (±10 %), así que conviene comparar.</p>
  */
 public enum TraderType {
 	/** Tendero: comida. En todas las ciudades. */
@@ -39,11 +40,8 @@ public enum TraderType {
 	/** Peletero (ciudades de la nieve). */
 	FURRIER(0xEDEDED, () -> new ItemStack(Items.RABBIT_HIDE));
 
-	/** Cuántas cosas vende y cuántas compra cada comerciante (al azar de su lista). */
-	private static final int SELLS = 5;
-	private static final int BUYS = 3;
-	private static final int SELL_USES = 12;
-	private static final int BUY_USES = 16;
+	/** Variación de precios entre comerciantes. */
+	private static final double VARIANCE = 0.10;
 
 	/** Color del delantal (peto de cuero teñido). */
 	public final int apron;
@@ -77,180 +75,228 @@ public enum TraderType {
 		return values[random.nextInt(values.length)];
 	}
 
-	/** Lo que vende: {@code count} de esto por {@code coins} monedas. */
-	private record Sell(Supplier<ItemStack> stack, int coins) {
+	// ------------------------------------------------------------------ catálogo
+
+	/** Una línea antes de poner precio: {@code value} monedas por unidad (a nivel 1). */
+	private record Entry(boolean sell, Item item, double value, Tier tier) {
 	}
 
-	private static Sell sell(ItemConvertible item, int count, int coins) {
-		return new Sell(() -> new ItemStack(item, count), coins);
+	private static final class Builder {
+		final List<Entry> entries = new ArrayList<>();
+
+		/** Vende {@code count} por {@code coins}. */
+		Builder sell(Tier tier, ItemConvertible item, int count, int coins) {
+			entries.add(new Entry(true, item.asItem(), coins / (double) count, tier));
+			return this;
+		}
+
+		/** Compra al precio del mercado. */
+		Builder buy(Tier tier, ItemConvertible... items) {
+			for (ItemConvertible item : items) {
+				Market.Price price = Market.priceOf(new ItemStack(item));
+				if (price != null) {
+					entries.add(new Entry(false, item.asItem(), price.coins() / (double) price.items(), tier));
+				}
+			}
+			return this;
+		}
+
+		/** Compra {@code count} por {@code coins} (lo que no está en el mercado). */
+		Builder buy(Tier tier, ItemConvertible item, int count, int coins) {
+			entries.add(new Entry(false, item.asItem(), coins / (double) count, tier));
+			return this;
+		}
 	}
 
-	private List<Sell> sells() {
-		List<Sell> list = new ArrayList<>();
+	private List<Entry> entries() {
+		Builder b = new Builder();
+		Tier c = Tier.COMMON;
+		Tier u = Tier.UNCOMMON;
+		Tier r = Tier.RARE;
+		Tier e = Tier.EPIC;
+		Tier l = Tier.LEGENDARY;
 		switch (this) {
-			case GROCER -> {
-				list.add(sell(Items.BREAD, 4, 1));
-				list.add(sell(Items.COOKED_BEEF, 3, 1));
-				list.add(sell(Items.COOKED_PORKCHOP, 3, 1));
-				list.add(sell(Items.BAKED_POTATO, 8, 1));
-				list.add(sell(Items.APPLE, 8, 1));
-				list.add(sell(Items.PUMPKIN_PIE, 3, 1));
-				list.add(sell(Items.COOKIE, 12, 1));
-				list.add(sell(Items.CAKE, 1, 3));
-				list.add(sell(Items.HONEY_BOTTLE, 2, 1));
-				list.add(sell(Items.GOLDEN_CARROT, 3, 2));
-			}
+			case GROCER -> b
+					.sell(c, Items.BREAD, 4, 1).sell(c, Items.BAKED_POTATO, 8, 1).sell(c, Items.COOKED_BEEF, 3, 1)
+					.sell(c, Items.COOKED_PORKCHOP, 3, 1).sell(c, Items.COOKED_CHICKEN, 4, 1).sell(c, Items.APPLE, 8, 1)
+					.sell(c, Items.COOKIE, 12, 1).sell(c, Items.CARROT, 16, 1)
+					.sell(u, Items.PUMPKIN_PIE, 3, 1).sell(u, Items.CAKE, 1, 3).sell(u, Items.HONEY_BOTTLE, 2, 1)
+					.sell(u, Items.COOKED_SALMON, 4, 1).sell(u, Items.MUSHROOM_STEW, 1, 1)
+					.sell(r, Items.GOLDEN_CARROT, 3, 2).sell(r, Items.RABBIT_STEW, 1, 2).sell(r, Items.GOLDEN_APPLE, 1, 8)
+					.sell(e, Items.HONEY_BLOCK, 1, 4).sell(e, Items.GLISTERING_MELON_SLICE, 2, 3)
+					.sell(l, Items.ENCHANTED_GOLDEN_APPLE, 1, 45)
+					.buy(c, Items.WHEAT, Items.CARROT, Items.POTATO, Items.BEETROOT, Items.MELON_SLICE, Items.PUMPKIN,
+							Items.SWEET_BERRIES, Items.EGG)
+					.buy(u, Items.BEEF, Items.CHICKEN, Items.PORKCHOP, Items.MUTTON, Items.HONEY_BOTTLE, Items.COCOA_BEANS)
+					.buy(r, Items.GLOW_BERRIES, Items.RABBIT);
 			case ARMORER -> {
-				list.add(sell(Items.IRON_HELMET, 1, 5));
-				list.add(sell(Items.IRON_CHESTPLATE, 1, 9));
-				list.add(sell(Items.IRON_LEGGINGS, 1, 7));
-				list.add(sell(Items.IRON_BOOTS, 1, 4));
-				list.add(sell(Items.SHIELD, 1, 3));
-				list.add(sell(Items.CROSSBOW, 1, 3));
-				list.add(sell(Items.ARROW, 16, 1));
-				list.add(sell(Items.DIAMOND_SWORD, 1, 18));
-				list.add(sell(Items.DIAMOND_CHESTPLATE, 1, 30));
-				list.add(sell(ModItems.LONGBOW, 1, 6));
-				list.add(sell(ModItems.JAVELIN, 4, 2));
-				list.add(sell(ModItems.BALLISTA_BOLT, 4, 2));
-				for (WeaponType weapon : WeaponType.values()) {
-					Item iron = ModItems.weapon(weapon, "iron");
-					list.add(sell(iron, 1, 3 + weapon.damage));
+				b.sell(c, Items.ARROW, 16, 1).sell(c, Items.SHIELD, 1, 3).sell(c, Items.IRON_HELMET, 1, 5)
+						.sell(c, Items.IRON_BOOTS, 1, 4).sell(c, Items.CHAINMAIL_CHESTPLATE, 1, 5)
+						.sell(c, ModItems.weapon(WeaponType.DAGGER, "iron"), 1, 4)
+						.sell(c, ModItems.weapon(WeaponType.SPEAR, "iron"), 1, 5)
+						.sell(c, ModItems.JAVELIN, 4, 2);
+				b.sell(u, Items.IRON_CHESTPLATE, 1, 9).sell(u, Items.IRON_LEGGINGS, 1, 7).sell(u, Items.CROSSBOW, 1, 3)
+						.sell(u, ModItems.LONGBOW, 1, 6).sell(u, ModItems.BALLISTA_BOLT, 4, 2);
+				for (WeaponType weapon : new WeaponType[] {WeaponType.LONGSWORD, WeaponType.HALBERD, WeaponType.WARHAMMER,
+						WeaponType.FLAIL, WeaponType.BATTLE_AXE}) {
+					b.sell(u, ModItems.weapon(weapon, "iron"), 1, 3 + weapon.damage);
 				}
-				list.add(sell(ModItems.weapon(WeaponType.LONGSWORD, "diamond"), 1, 22));
-				list.add(sell(ModItems.weapon(WeaponType.HALBERD, "diamond"), 1, 24));
+				b.sell(r, Items.DIAMOND_SWORD, 1, 18).sell(r, Items.DIAMOND_HELMET, 1, 20).sell(r, Items.DIAMOND_BOOTS, 1, 18)
+						.sell(r, Items.IRON_HORSE_ARMOR, 1, 6).sell(r, ModItems.FIRE_POT, 2, 3)
+						.sell(r, ModItems.weapon(WeaponType.DAGGER, "diamond"), 1, 16)
+						.sell(r, ModItems.weapon(WeaponType.SPEAR, "diamond"), 1, 18)
+						.sell(r, ModItems.weapon(WeaponType.LONGSWORD, "diamond"), 1, 22);
+				b.sell(e, Items.DIAMOND_CHESTPLATE, 1, 30).sell(e, Items.DIAMOND_LEGGINGS, 1, 26)
+						.sell(e, Items.DIAMOND_HORSE_ARMOR, 1, 20)
+						.sell(e, ModItems.weapon(WeaponType.HALBERD, "diamond"), 1, 24)
+						.sell(e, ModItems.weapon(WeaponType.WARHAMMER, "diamond"), 1, 24)
+						.sell(e, ModItems.weapon(WeaponType.FLAIL, "diamond"), 1, 23)
+						.sell(e, ModItems.weapon(WeaponType.BATTLE_AXE, "diamond"), 1, 26);
+				b.sell(l, Items.NETHERITE_SWORD, 1, 70).sell(l, Items.NETHERITE_CHESTPLATE, 1, 90)
+						.sell(l, ModItems.weapon(WeaponType.LONGSWORD, "netherite"), 1, 75)
+						.sell(l, ModItems.weapon(WeaponType.HALBERD, "netherite"), 1, 80)
+						.sell(l, Items.TRIDENT, 1, 40);
+				b.buy(c, Items.COAL, Items.IRON_INGOT, Items.FLINT, Items.LEATHER, Items.STRING, Items.FEATHER)
+						.buy(u, Items.RAW_IRON, Items.GOLD_INGOT, Items.CHARCOAL)
+						.buy(r, Items.DIAMOND)
+						.buy(e, Items.NETHERITE_SCRAP, 1, 10);
 			}
-			case MASON -> {
-				list.add(sell(Items.STONE_BRICKS, 16, 1));
-				list.add(sell(Items.CHISELED_STONE_BRICKS, 8, 1));
-				list.add(sell(Items.POLISHED_ANDESITE, 16, 1));
-				list.add(sell(Items.BRICKS, 10, 1));
-				list.add(sell(Items.TERRACOTTA, 8, 1));
-				list.add(sell(Items.GLASS, 8, 1));
-				list.add(sell(Items.QUARTZ_BLOCK, 1, 1));
-				list.add(sell(Items.LANTERN, 2, 1));
-				list.add(sell(Items.SMOOTH_STONE, 12, 1));
-				list.add(sell(Items.DEEPSLATE_TILES, 12, 1));
-			}
+			case MASON -> b
+					.sell(c, Items.STONE_BRICKS, 16, 1).sell(c, Items.POLISHED_ANDESITE, 16, 1).sell(c, Items.BRICKS, 10, 1)
+					.sell(c, Items.SMOOTH_STONE, 12, 1).sell(c, Items.GLASS, 8, 1).sell(c, Items.TORCH, 32, 1)
+					.sell(u, Items.CHISELED_STONE_BRICKS, 8, 1).sell(u, Items.TERRACOTTA, 8, 1)
+					.sell(u, Items.DEEPSLATE_TILES, 12, 1).sell(u, Items.LANTERN, 2, 1).sell(u, Items.QUARTZ_BLOCK, 1, 1)
+					.sell(u, Items.MUD_BRICKS, 16, 1)
+					.sell(r, Items.OBSIDIAN, 4, 3).sell(r, Items.POLISHED_BLACKSTONE_BRICKS, 12, 2)
+					.sell(r, Items.PRISMARINE_BRICKS, 4, 2).sell(r, Items.SEA_LANTERN, 1, 2).sell(r, Items.CALCITE, 8, 2)
+					.sell(e, Items.CRYING_OBSIDIAN, 2, 3).sell(e, Items.END_STONE_BRICKS, 8, 4).sell(e, Items.PURPUR_BLOCK, 8, 5)
+					.sell(e, Items.GILDED_BLACKSTONE, 1, 4)
+					.sell(l, Items.LODESTONE, 1, 50).sell(l, Items.BEACON, 1, 64)
+					.buy(c, Items.COBBLESTONE, Items.STONE, Items.SAND, Items.GRAVEL, Items.CLAY_BALL, Items.COBBLED_DEEPSLATE)
+					.buy(u, Items.SANDSTONE, Items.STONE_BRICKS, Items.TUFF_BRICKS, Items.POLISHED_GRANITE)
+					.buy(r, Items.OBSIDIAN, 4, 1);
 			case JEWELER -> {
-				list.add(sell(Items.DIAMOND, 1, 6));
-				list.add(sell(Items.GOLD_INGOT, 2, 1));
-				list.add(sell(Items.GOLD_BLOCK, 1, 5));
-				list.add(sell(Items.LAPIS_LAZULI, 6, 1));
-				list.add(sell(Items.AMETHYST_SHARD, 4, 1));
-				list.add(sell(Items.NAME_TAG, 1, 8));
-				list.add(sell(Items.CLOCK, 1, 4));
-				list.add(sell(Items.COMPASS, 1, 3));
-				list.add(sell(Items.GOLDEN_APPLE, 1, 10));
-				list.add(sell(Items.ENDER_PEARL, 1, 4));
-				list.add(sell(Items.EXPERIENCE_BOTTLE, 3, 2));
+				b.sell(c, Items.GOLD_NUGGET, 18, 1).sell(c, Items.GOLD_INGOT, 2, 1).sell(c, Items.LAPIS_LAZULI, 6, 1)
+						.sell(c, Items.AMETHYST_SHARD, 4, 1).sell(c, Items.COPPER_INGOT, 8, 1)
+						.sell(u, Items.COMPASS, 1, 3).sell(u, Items.CLOCK, 1, 4).sell(u, Items.ENDER_PEARL, 1, 4)
+						.sell(u, Items.EXPERIENCE_BOTTLE, 3, 2).sell(u, Items.GOLD_BLOCK, 1, 5);
 				if (Market.currency() != Items.EMERALD) {
-					list.add(sell(Items.EMERALD, 1, 2));
+					b.sell(u, Items.EMERALD, 1, 2);
 				}
+				b.sell(r, Items.DIAMOND, 1, 6).sell(r, Items.NAME_TAG, 1, 8).sell(r, Items.GOLDEN_APPLE, 1, 9)
+						.sell(r, Items.SPYGLASS, 1, 4).sell(r, Items.ENDER_EYE, 1, 5)
+						.sell(e, Items.DIAMOND_BLOCK, 1, 55).sell(e, Items.TOTEM_OF_UNDYING, 1, 25)
+						.sell(e, Items.HEART_OF_THE_SEA, 1, 32).sell(e, Items.NETHERITE_SCRAP, 1, 20)
+						.sell(e, Items.ECHO_SHARD, 1, 10)
+						.sell(l, Items.NETHERITE_INGOT, 1, 84).sell(l, Items.NETHER_STAR, 1, 60)
+						.sell(l, Items.ELYTRA, 1, 80).sell(l, Items.ENCHANTED_GOLDEN_APPLE, 1, 40)
+						.buy(c, Items.GOLD_INGOT, Items.RAW_GOLD, Items.QUARTZ, Items.LAPIS_LAZULI)
+						.buy(u, Items.AMETHYST_SHARD, Items.REDSTONE, Items.RAW_COPPER)
+						.buy(r, Items.DIAMOND).buy(r, Items.ENDER_PEARL, 2, 1)
+						.buy(e, Items.ECHO_SHARD, 1, 4).buy(e, Items.NAUTILUS_SHELL, 1, 3)
+						.buy(l, Items.NETHER_STAR, 1, 30).buy(l, Items.NETHERITE_INGOT, 1, 42);
 			}
 			case TAILOR -> {
-				for (Item wool : new Item[] {Items.WHITE_WOOL, Items.RED_WOOL, Items.BLUE_WOOL, Items.YELLOW_WOOL, Items.GREEN_WOOL}) {
-					list.add(sell(wool, 4, 1));
+				for (Item wool : new Item[] {Items.WHITE_WOOL, Items.RED_WOOL, Items.BLUE_WOOL, Items.YELLOW_WOOL,
+						Items.GREEN_WOOL, Items.BLACK_WOOL}) {
+					b.sell(c, wool, 4, 1);
 				}
-				list.add(sell(Items.WHITE_CARPET, 8, 1));
-				list.add(sell(Items.RED_BED, 1, 2));
-				list.add(sell(Items.WHITE_BANNER, 1, 2));
-				list.add(sell(Items.PAINTING, 1, 2));
-				list.add(sell(Items.ITEM_FRAME, 2, 1));
-				list.add(sell(Items.LEATHER_CHESTPLATE, 1, 3));
-				list.add(sell(Items.SADDLE, 1, 6));
-				list.add(sell(Items.SHEARS, 1, 2));
+				b.sell(c, Items.WHITE_CARPET, 8, 1).sell(c, Items.RED_BED, 1, 2).sell(c, Items.SHEARS, 1, 2)
+						.sell(c, Items.ITEM_FRAME, 2, 1)
+						.sell(u, Items.WHITE_BANNER, 1, 2).sell(u, Items.RED_BANNER, 1, 2).sell(u, Items.PAINTING, 1, 2)
+						.sell(u, Items.LEATHER_CHESTPLATE, 1, 3).sell(u, Items.LEAD, 1, 2)
+						.sell(r, Items.SADDLE, 1, 6).sell(r, Items.NAME_TAG, 1, 8).sell(r, Items.LEATHER_HORSE_ARMOR, 1, 4)
+						.sell(r, Items.GLOW_ITEM_FRAME, 2, 3)
+						.sell(e, Items.GOLDEN_HORSE_ARMOR, 1, 12).sell(e, Items.FLOWER_BANNER_PATTERN, 1, 8)
+						.sell(e, Items.GLOBE_BANNER_PATTERN, 1, 10)
+						.sell(l, Items.PIGLIN_BANNER_PATTERN, 1, 30).sell(l, Items.MOJANG_BANNER_PATTERN, 1, 40)
+						.buy(c, Items.STRING, Items.WHITE_WOOL, Items.FEATHER)
+						.buy(u, Items.LEATHER, Items.RABBIT_HIDE)
+						.buy(r, Items.INK_SAC, 8, 1).buy(r, Items.GLOW_INK_SAC, 4, 1)
+						.buy(e, Items.PHANTOM_MEMBRANE, 2, 1);
 			}
-			case SPICE_MERCHANT -> {
-				list.add(sell(Items.SUGAR, 12, 1));
-				list.add(sell(Items.COCOA_BEANS, 10, 1));
-				list.add(sell(Items.GLOW_BERRIES, 10, 1));
-				list.add(sell(Items.RED_DYE, 6, 1));
-				list.add(sell(Items.ORANGE_DYE, 6, 1));
-				list.add(sell(Items.YELLOW_DYE, 6, 1));
-				list.add(sell(Items.RABBIT_STEW, 1, 1));
-				list.add(sell(Items.BROWN_MUSHROOM, 6, 1));
-				list.add(sell(Items.BLAZE_POWDER, 2, 3));
-				list.add(sell(Items.GLISTERING_MELON_SLICE, 2, 3));
-				list.add(sell(Items.DRIED_KELP, 16, 1));
-			}
-			case FURRIER -> {
-				list.add(sell(Items.LEATHER, 3, 1));
-				list.add(sell(Items.RABBIT_HIDE, 4, 1));
-				list.add(sell(Items.LEATHER_HELMET, 1, 2));
-				list.add(sell(Items.LEATHER_CHESTPLATE, 1, 3));
-				list.add(sell(Items.LEATHER_LEGGINGS, 1, 3));
-				list.add(sell(Items.LEATHER_BOOTS, 1, 2));
-				list.add(sell(Items.WHITE_WOOL, 4, 1));
-				list.add(sell(Items.PACKED_ICE, 4, 1));
-				list.add(sell(Items.BLUE_ICE, 1, 2));
-				list.add(sell(Items.CAMPFIRE, 1, 1));
-				list.add(sell(Items.COOKED_SALMON, 6, 1));
-			}
+			case SPICE_MERCHANT -> b
+					.sell(c, Items.SUGAR, 12, 1).sell(c, Items.COCOA_BEANS, 10, 1).sell(c, Items.RED_DYE, 6, 1)
+					.sell(c, Items.ORANGE_DYE, 6, 1).sell(c, Items.YELLOW_DYE, 6, 1).sell(c, Items.DRIED_KELP, 16, 1)
+					.sell(c, Items.BROWN_MUSHROOM, 6, 1)
+					.sell(u, Items.GLOW_BERRIES, 10, 1).sell(u, Items.RABBIT_STEW, 1, 1).sell(u, Items.PURPLE_DYE, 4, 1)
+					.sell(u, Items.FERMENTED_SPIDER_EYE, 2, 1).sell(u, Items.HONEY_BOTTLE, 2, 1)
+					.sell(r, Items.BLAZE_POWDER, 2, 3).sell(r, Items.GLISTERING_MELON_SLICE, 2, 3)
+					.sell(r, Items.MAGMA_CREAM, 2, 3).sell(r, Items.GHAST_TEAR, 1, 4).sell(r, Items.NETHER_WART, 8, 2)
+					.sell(e, Items.DRAGON_BREATH, 1, 6).sell(e, Items.SHULKER_SHELL, 1, 12).sell(e, Items.SNIFFER_EGG, 1, 16)
+					.sell(l, Items.SHULKER_BOX, 1, 30).sell(l, Items.HEART_OF_THE_SEA, 1, 40)
+					.buy(c, Items.CACTUS, Items.SUGAR_CANE, Items.SWEET_BERRIES)
+					.buy(u, Items.COCOA_BEANS, Items.RABBIT_HIDE, Items.NETHER_WART)
+					.buy(r, Items.RABBIT_FOOT).buy(r, Items.BLAZE_ROD, 2, 1)
+					.buy(e, Items.GHAST_TEAR, 1, 2);
+			case FURRIER -> b
+					.sell(c, Items.LEATHER, 3, 1).sell(c, Items.RABBIT_HIDE, 4, 1).sell(c, Items.WHITE_WOOL, 4, 1)
+					.sell(c, Items.CAMPFIRE, 1, 1).sell(c, Items.COOKED_SALMON, 6, 1).sell(c, Items.COOKED_COD, 6, 1)
+					.sell(u, Items.LEATHER_HELMET, 1, 2).sell(u, Items.LEATHER_CHESTPLATE, 1, 3)
+					.sell(u, Items.LEATHER_LEGGINGS, 1, 3).sell(u, Items.LEATHER_BOOTS, 1, 2).sell(u, Items.PACKED_ICE, 4, 1)
+					.sell(u, Items.LEAD, 1, 2)
+					.sell(r, Items.BLUE_ICE, 1, 2).sell(r, Items.SADDLE, 1, 6).sell(r, Items.POWDER_SNOW_BUCKET, 1, 3)
+					.sell(r, Items.RABBIT_FOOT, 1, 3)
+					.sell(e, Items.WOLF_ARMOR, 1, 14).sell(e, Items.TURTLE_HELMET, 1, 18)
+					.sell(l, Items.TOTEM_OF_UNDYING, 1, 36)
+					.buy(c, Items.LEATHER, Items.COD, Items.SALMON, Items.WHITE_WOOL)
+					.buy(u, Items.RABBIT_HIDE, Items.MUTTON, Items.FEATHER)
+					.buy(r, Items.RABBIT_FOOT).buy(r, Items.ARMADILLO_SCUTE, 1, 1)
+					.buy(e, Items.TURTLE_SCUTE, 1, 3);
 		}
-		return list;
+		return b.entries;
 	}
 
-	/** Lo que compra (al precio del mercado). */
-	private List<Item> buys() {
-		return switch (this) {
-			case GROCER -> List.of(Items.WHEAT, Items.CARROT, Items.POTATO, Items.BEETROOT, Items.MELON_SLICE, Items.PUMPKIN,
-					Items.SWEET_BERRIES, Items.EGG, Items.BEEF, Items.CHICKEN, Items.PORKCHOP);
-			case ARMORER -> List.of(Items.COAL, Items.IRON_INGOT, Items.RAW_IRON, Items.GOLD_INGOT, Items.FLINT, Items.LEATHER,
-					Items.STRING);
-			case MASON -> List.of(Items.COBBLESTONE, Items.STONE, Items.CLAY_BALL, Items.SAND, Items.GRAVEL, Items.COBBLED_DEEPSLATE);
-			case JEWELER -> List.of(Items.DIAMOND, Items.GOLD_INGOT, Items.RAW_GOLD, Items.QUARTZ, Items.AMETHYST_SHARD,
-					Items.REDSTONE, Items.LAPIS_LAZULI);
-			case TAILOR -> List.of(Items.STRING, Items.WHITE_WOOL, Items.LEATHER, Items.RABBIT_HIDE, Items.FEATHER);
-			case SPICE_MERCHANT -> List.of(Items.CACTUS, Items.SUGAR_CANE, Items.COCOA_BEANS, Items.SWEET_BERRIES, Items.RABBIT_HIDE,
-					Items.RABBIT_FOOT);
-			case FURRIER -> List.of(Items.LEATHER, Items.RABBIT_HIDE, Items.COD, Items.SALMON, Items.MUTTON, Items.WHITE_WOOL);
-		};
-	}
-
-	/** Las ofertas de un comerciante nuevo: unas cuantas ventas y compras al azar de su oficio. */
-	public List<TradeOffer> rollOffers(Random random) {
-		List<TradeOffer> offers = new ArrayList<>();
-		List<Sell> sells = new ArrayList<>(sells());
-		Collections.shuffle(sells, new java.util.Random(random.nextLong()));
-		for (int i = 0; i < Math.min(SELLS, sells.size()); i++) {
-			Sell sell = sells.get(i);
-			offers.add(sellOffer(sell.stack().get(), sell.coins()));
-		}
-		List<Item> buys = new ArrayList<>(buys());
-		Collections.shuffle(buys, new java.util.Random(random.nextLong()));
-		int added = 0;
-		for (Item item : buys) {
-			if (added >= BUYS) {
-				break;
-			}
-			TradeOffer offer = buyOffer(item);
-			if (offer != null) {
-				offers.add(offer);
-				added++;
+	/**
+	 * El catálogo de un comerciante concreto (siempre el mismo para la misma semilla y nivel): todo lo que vende primero
+	 * y luego todo lo que compra, cada cosa con su lote, su precio y cuánto mueve al día.
+	 */
+	public List<Deal> catalog(int cityLevel, long seed) {
+		java.util.Random random = new java.util.Random(seed * 31L + ordinal());
+		double markup = CityLevels.priceMultiplier(cityLevel);
+		List<Deal> sells = new ArrayList<>();
+		List<Deal> buys = new ArrayList<>();
+		for (Entry entry : entries()) {
+			double variance = 1.0 + (random.nextDouble() * 2.0 - 1.0) * VARIANCE;
+			int maxCount = Math.min(64, entry.item().getMaxCount());
+			int minLevel = entry.tier().minLevel();
+			if (entry.sell()) {
+				int[] fit = fit(entry.value() * variance * markup, maxCount, true);
+				sells.add(new Deal(true, entry.item(), fit[0], fit[1], entry.tier().sellStock, entry.tier(), minLevel));
+			} else {
+				int[] fit = fit(entry.value() * variance, maxCount, false);
+				buys.add(new Deal(false, entry.item(), fit[0], fit[1], entry.tier().buyStock, entry.tier(), minLevel));
 			}
 		}
-		return offers;
+		sells.addAll(buys);
+		return sells;
 	}
 
-	/** El comerciante vende {@code stack} por {@code coins} monedas (en dos huecos si no caben en uno). */
-	private static TradeOffer sellOffer(ItemStack stack, int coins) {
-		Item coin = Market.currency();
-		int max = coin.getMaxCount();
-		int first = Math.min(coins, max);
-		int rest = Math.min(coins - first, max);
-		Optional<TradedItem> second = rest > 0 ? Optional.of(new TradedItem(coin, rest)) : Optional.empty();
-		return new TradeOffer(new TradedItem(coin, first), second, stack, SELL_USES, 1, 0.05F);
-	}
-
-	/** El comerciante compra este objeto al precio del mercado. */
-	@Nullable
-	private static TradeOffer buyOffer(Item item) {
-		Market.Price price = Market.priceOf(new ItemStack(item));
-		if (price == null) {
-			return null;
+	/**
+	 * Lote y precio que mejor se ajustan a {@code coinsPerItem}, con números sencillos ("4 por 1", no "7 por 2").
+	 * Al vender redondea a favor del comerciante; al comprar, al más cercano.
+	 *
+	 * @return {lote, monedas}
+	 */
+	private static int[] fit(double coinsPerItem, int maxCount, boolean sell) {
+		int bestCount = 1;
+		int bestCoins = Math.max(1, (int) Math.round(coinsPerItem));
+		double bestScore = Double.MAX_VALUE;
+		for (int count = 1; count <= maxCount; count++) {
+			double exact = count * coinsPerItem;
+			int coins = sell ? (int) Math.ceil(exact - 1.0E-9) : (int) Math.round(exact);
+			if (coins < 1) {
+				continue;
+			}
+			double error = Math.abs(coins / (double) count - coinsPerItem) / coinsPerItem;
+			// premia los precios exactos, pero sin agrupar cosas caras en lotes raros
+			double score = error + 0.04 * Math.min(coins - 1, 20) + 0.002 * count;
+			if (score < bestScore) {
+				bestScore = score;
+				bestCount = count;
+				bestCoins = coins;
+			}
 		}
-		int count = Math.min(price.items(), item.getMaxCount());
-		return new TradeOffer(new TradedItem(item, count), Market.coins(price.coins()).get(0), BUY_USES, 1, 0.05F);
+		return new int[] {bestCount, bestCoins};
 	}
 }

@@ -5,6 +5,7 @@ import com.evolvedwarfare.screen.BlueprintScreenHandler;
 import com.evolvedwarfare.screen.NpcScreenHandler;
 import com.evolvedwarfare.screen.RouteSlipScreenHandler;
 import com.evolvedwarfare.screen.ShopScreenHandler;
+import com.evolvedwarfare.screen.TraderScreenHandler;
 import com.evolvedwarfare.screen.WarehouseScreenHandler;
 import com.evolvedwarfare.screen.WorkSiteScreenHandler;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
@@ -45,6 +46,11 @@ public final class ModScreens {
 	public static final ScreenHandlerType<ShopScreenHandler> SHOP = Registry.register(Registries.SCREEN_HANDLER,
 			EvolvedWarfare.id("shop"),
 			new ExtendedScreenHandlerType<>(ShopScreenHandler::new, BlockPos.PACKET_CODEC));
+
+	/** Tienda de un comerciante de ciudad. Al abrirse se envía su catálogo entero. */
+	public static final ScreenHandlerType<TraderScreenHandler> TRADER = Registry.register(Registries.SCREEN_HANDLER,
+			EvolvedWarfare.id("trader"),
+			new ExtendedScreenHandlerType<>(TraderScreenHandler::new, TraderScreenHandler.Data.PACKET_CODEC));
 
 	private ModScreens() {
 	}

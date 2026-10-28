@@ -57,6 +57,13 @@ public final class EwConfig {
 	public int settlementBlocksPerLevel = 750;
 	public int settlementMaxLevel = 10;
 
+	// ------------------------------------------------------------------ ciudades y comercio
+	/** Bloques de distancia al punto de aparición por cada nivel de ciudad. */
+	public int cityBlocksPerLevel = 600;
+	public int cityMaxLevel = 10;
+	/** Cuánto suben los precios de venta de los comerciantes por cada nivel de la ciudad por encima del 1. */
+	public double traderPricePerLevel = 0.10;
+
 	// ------------------------------------------------------------------ tus NPCs
 	/** Días seguidos sin cobrar antes de que un NPC tuyo deserte. */
 	public int maxUnpaidDays = 3;
@@ -126,6 +133,9 @@ public final class EwConfig {
 			new Option("settlementBonusPerLevel", "settlements", 0.0, 1.0, 0.01),
 			new Option("settlementBlocksPerLevel", "settlements", 100, 100000, 50),
 			new Option("settlementMaxLevel", "settlements", 1, 10, 1),
+			new Option("cityBlocksPerLevel", "trade", 100, 100000, 50),
+			new Option("cityMaxLevel", "trade", 1, 10, 1),
+			new Option("traderPricePerLevel", "trade", 0.0, 1.0, 0.01),
 			new Option("maxUnpaidDays", "npcs", 1, 30, 1),
 			new Option("soldierHealth", "npcs", 0.1, 10.0, 0.1),
 			new Option("soldierDamage", "npcs", 0.1, 10.0, 0.1),

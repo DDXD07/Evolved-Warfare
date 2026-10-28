@@ -65,6 +65,7 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		HandledScreens.register(ModScreens.WAREHOUSE, WarehouseScreen::new);
 		HandledScreens.register(ModScreens.ROUTE_SLIP, RouteSlipScreen::new);
 		HandledScreens.register(ModScreens.SHOP, ShopScreen::new);
+		HandledScreens.register(ModScreens.TRADER, com.evolvedwarfare.client.screen.TraderScreen::new);
 		// lo que hay en la red del almacén abierto
 		ClientPlayNetworking.registerGlobalReceiver(WarehouseContentsPayload.ID, (payload, context) -> {
 			if (context.client().player != null

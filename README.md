@@ -16,7 +16,7 @@ Requiere **Fabric API**. Opcional: **Mod Menu** (pantalla de configuración); **
 | 6 | **Estructuras**: escáner de estructuras, planos, mesa del arquitecto con biblioteca y constructor que los levanta; ciudades del desierto y del norte; castillos y fortalezas del caudillo bandido | ✅ Hecha |
 | 7 | **Asedio**: catapulta, balista, trebuchet y ariete (para ti, para tus soldados y en los asaltos enemigos); rastrillo y puente levadizo con torno | ✅ Hecha |
 | 8 | **Armas medievales** (daga, lanza, mandoble, alabarda, martillo de guerra, mangual, hacha de batalla, arco largo y jabalina), **árbol de investigación** con su mesa, **equilibrio** y **configuración** (archivo, comando y pantalla con Mod Menu) | ✅ Hecha |
-| 9 | **Comerciantes de las ciudades**: tendero, armero, cantero, joyero, sastre, mercader de especias y peletero; venden y compran por Golden Coins (o esmeraldas) y reponen cada mañana | ✅ Hecha |
+| 9 | **Comerciantes y niveles de las ciudades**: ciudades de nivel 1 a 10 según la distancia; tendero, armero, cantero, joyero, sastre, mercader de especias y peletero con tienda de catálogo completo por Golden Coins (o esmeraldas); más nivel, mejores cosas y más caras | ✅ Hecha |
 
 ## Fase 1 — El recluta
 
@@ -482,35 +482,62 @@ Investigación de los jugadores (administradores):
 /evolvedwarfare research <jugadores> grant|revoke <técnica|all>
 ```
 
-## Fase 9 — Comerciantes de las ciudades
+## Fase 9 — Comerciantes y niveles de las ciudades
 
-Las ciudades ya no solo tienen reclutas: en sus puestos viven **comerciantes** con los que se comercia como con un
-aldeano (clic derecho), pero **siempre con Golden Coins** (si no está el mod *Golden Coin*, con esmeraldas). No se van,
-no desaparecen y no se alejan más de 8 bloques de su puesto; huyen de monstruos y asaltantes (que también van a por
-ellos, así que defiende el mercado). Cada mañana reponen lo que les hayas comprado.
+### Niveles de las ciudades
 
-| Comerciante | Dónde | Vende | Compra |
-|---|---|---|---|
-| **Tendero** | todas las ciudades | pan, carne asada, tartas, galletas, zanahorias doradas... | trigo, patatas, zanahorias, huevos, carne cruda... |
-| **Armero** | fraguas (siempre) y a veces en mercados | armadura de hierro, escudos, ballestas, flechas, **las armas medievales del mod**, arco largo, jabalinas, virotes; a veces piezas de diamante | carbón, hierro, oro, pedernal, cuero, cuerda |
-| **Cantero** | ciudades | ladrillos de piedra, cincelados, ladrillo, terracota, cristal, cuarzo, farolillos | roca, piedra, arcilla, arena, grava |
-| **Joyero** | ciudades | diamantes, oro, lapislázuli, amatista, etiquetas, brújulas, relojes, manzanas de oro, perlas de ender, frascos de experiencia | diamantes, oro, cuarzo, amatista, redstone, lapislázuli |
-| **Sastre** | ciudades medievales | lana de colores, alfombras, camas, estandartes, cuadros, marcos, sillas de montar, tijeras | cuerda, lana, cuero, piel de conejo, plumas |
-| **Mercader de especias** | ciudades del desierto | azúcar, cacao, bayas luminosas, tintes, estofado de conejo, polvo de blaze, sandía reluciente | cactus, caña, cacao, bayas, piel y pata de conejo |
-| **Peletero** | ciudades del norte | cuero, piel de conejo, ropa de cuero, lana, hielo compacto y azul, hogueras, salmón | cuero, piel de conejo, bacalao, salmón, cordero, lana |
+Las ciudades (medievales, del desierto y del norte) tienen **nivel del 1 al 10**: cuanto más lejos del punto de
+aparición, más nivel (uno cada **600 bloques**, más un poco de azar fijo por ciudad). Al entrar en una sale en pantalla
+su nombre y su nivel. El nivel decide **qué venden** sus comerciantes y **a qué precio**:
 
-- Cada uno saca **5 ventas y 3 compras** al azar de su lista, así que dos tenderos no venden lo mismo.
-- Lo que compran lo pagan **al precio del mercado** (el mismo que el comerciante de la fase 4 y la venta de excedentes);
-  lo que venden cuesta algo más. Lo que pasa de 64 monedas se paga con dos montones.
+| Nivel de la ciudad | Desbloquea | Precios de venta |
+|---|---|---|
+| 1–2 | **Común** | normales |
+| 3–4 | + **Poco común** | +20 % a +30 % |
+| 5–6 | + **Raro** (diamantes, armas de diamante, obsidiana, manzanas de oro...) | +40 % a +50 % |
+| 7–8 | + **Épico** (tótems, corazón del mar, netherita en bruto, armaduras de diamante...) | +60 % a +70 % |
+| 9–10 | + **Legendario** (élitros, estrella del Nether, lingotes y armas de netherita, faro, manzana de Notch...) | +80 % a +90 % |
+
+Cada nivel por encima del 1 sube los precios de venta un **10 %**. Lo que **te compran** lo pagan igual en todas partes
+(al precio del mercado), y las ciudades lejanas también compran cosas más raras. Se puede cambiar en la configuración
+(categoría *Comercio*: bloques por nivel, nivel máximo y subida por nivel).
+
+### Los comerciantes
+
+En los puestos de las ciudades viven **comerciantes** que comercian **siempre con Golden Coins** (si no está el mod
+*Golden Coin*, con esmeraldas). No se van, no desaparecen y no se alejan más de 8 bloques de su puesto; huyen de
+monstruos y asaltantes (que también van a por ellos, así que defiende el mercado).
+
+| Comerciante | Dónde | Vende |
+|---|---|---|
+| **Tendero** | todas las ciudades | comida; en ciudades altas, manzanas de oro y de Notch |
+| **Armero** | fraguas (siempre) y a veces en mercados | armaduras, escudos, ballestas, **todas las armas medievales del mod** (de hierro, de diamante y de netherita según el nivel), arco largo, jabalinas, virotes y vasijas incendiarias |
+| **Cantero** | ciudades | piedra labrada, ladrillos, cristal...; luego obsidiana, prismarina, ladrillo del End, piedra imán y faros |
+| **Joyero** | ciudades | oro, gemas, brújulas...; luego diamantes, tótems, corazón del mar, netherita, élitros y estrellas del Nether |
+| **Sastre** | ciudades medievales | lana, camas, estandartes...; luego sillas, armaduras de caballo y diseños de estandarte |
+| **Mercader de especias** | ciudades del desierto | azúcar, cacao, tintes...; luego polvo de blaze, lágrimas de ghast, aliento de dragón, cajas de shulker |
+| **Peletero** | ciudades del norte | cuero, ropa de cuero, hielo...; luego armadura de lobo, caparazón de tortuga y tótems |
+
+### La tienda
+
+Clic derecho a un comerciante abre su **tienda con todo el catálogo a la vez**, en fichas:
+
+- Dos pestañas: **Vende** (lo que te vende) y **Compra** (lo que te compra). Con la rueda o la barra se recorre todo.
+- Cada ficha enseña el **lote**, el **precio** en monedas y **cuántos lotes le quedan hoy**; el marco va del color de
+  su rareza (gris, verde, azul, morado, dorado). El precio sale en rojo si no te llega.
+- Lo que tu ciudad aún no desbloquea **también sale**, tapado y con el nivel que hace falta, para que sepas qué hay
+  en las ciudades lejanas.
+- **Clic**: un lote. **Mayús+clic**: un montón entero (al comprar) o todo lo que lleves (al vender).
+- Arriba: tus monedas, el nivel de la ciudad y cuánto más caro vende. Cada comerciante tiene sus propios precios
+  (±10 %), así que conviene comparar.
+- **Repone cada mañana.** Lo que pasa de 64 monedas se cobra igual: no hay tope de precio.
 - Las armas que vende el armero **no necesitan investigación**: comprarlas es la alternativa (cara) a investigarlas.
-- Dónde aparecen: en el **mercado**, la **fragua**, la **taberna** y la **plaza** de las ciudades medievales; en el
-  **bazar**, el **caravasar** y el **oasis** del desierto; en la **taberna**, la **herrería** y la **hoguera** del norte.
-  Solo en ciudades nuevas (chunks sin generar).
-- Hay **huevo generador** en la pestaña del mod, y con comandos:
-  `/summon evolvedwarfare:trader ~ ~ ~ {TraderType:"jeweler"}` (`grocer`, `armorer`, `mason`, `jeweler`, `tailor`,
-  `spice_merchant`, `furrier`).
-- Si instalas el mod de la Golden Coin en un mundo que ya tenía comerciantes con esmeraldas, a la mañana siguiente
-  cambian sus ofertas a monedas.
+
+Dónde aparecen: en el **mercado**, la **fragua**, la **taberna** y la **plaza** de las ciudades medievales; en el
+**bazar**, el **caravasar** y el **oasis** del desierto; en la **taberna**, la **herrería** y la **hoguera** del norte.
+Solo en ciudades nuevas (chunks sin generar). Hay **huevo generador** en la pestaña del mod, y con comandos:
+`/summon evolvedwarfare:trader ~ ~ ~ {TraderType:"jeweler"}` (`grocer`, `armorer`, `mason`, `jeweler`, `tailor`,
+`spice_merchant`, `furrier`). Fuera de una ciudad, el comerciante toma el nivel que le tocaría por la distancia.
 
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):

@@ -2813,6 +2813,9 @@ def write(data_dir):
     dump("tags/worldgen/structure/faction_settlements.json",
          {"values": [L("bandit_camp"), L("bandit_fort"), L("bandit_stronghold"), L("viking_settlement"),
                      L("pirate_cove")]})
+    # ciudades con nivel y comerciantes (fase 9)
+    dump("tags/worldgen/structure/trade_cities.json",
+         {"values": [L("city"), L("desert_city"), L("snow_city")]})
     # sitios que las facciones asaltan (aldeas, ciudades y castillos)
     dump("tags/worldgen/structure/raidable.json",
          {"values": ["#minecraft:village", L("city"), L("desert_city"), L("snow_city"), L("castle")]})

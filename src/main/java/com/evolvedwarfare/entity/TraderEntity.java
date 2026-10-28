@@ -1,13 +1,17 @@
 package com.evolvedwarfare.entity;
 
-import com.evolvedwarfare.logistics.Market;
+import com.evolvedwarfare.screen.TraderScreenHandler;
+import com.evolvedwarfare.trade.Deal;
 import com.evolvedwarfare.trade.TraderType;
+import com.evolvedwarfare.world.CityLevels;
+import java.util.Arrays;
+import java.util.List;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.DyedColorComponent;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.FleeEntityGoal;
 import net.minecraft.entity.ai.goal.GoToWalkTargetGoal;
@@ -28,10 +32,12 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.MerchantEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -41,7 +47,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.village.TradeOffer;
-import net.minecraft.village.TradeOfferList;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
@@ -49,7 +54,8 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Comerciante de ciudad: vive en su puesto (mercado, fragua, taberna, bazar...), no se va ni desaparece, y comercia
- * como un aldeano pero siempre con Golden Coins (o esmeraldas si no está ese mod). Repone sus existencias cada mañana.
+ * siempre con Golden Coins (o esmeraldas si no está ese mod). Al hablarle abre su tienda con todo su catálogo a la vez;
+ * lo que tiene depende del nivel de su ciudad ({@link CityLevels}). Repone sus existencias cada mañana.
  * Huye de los monstruos y de los asaltantes.
  */
 public class TraderEntity extends MerchantEntity {
@@ -63,6 +69,13 @@ public class TraderEntity extends MerchantEntity {
 	@Nullable
 	private BlockPos home;
 	private long lastRestockDay = -1L;
+	/** Nivel de su ciudad (0 = aún no calculado). */
+	private int cityLevel;
+	/** Semilla de sus precios. */
+	private long priceSeed;
+	/** Lotes que le quedan hoy de cada línea del catálogo (null = todo lleno). */
+	@Nullable
+	private int[] stock;
 
 	public TraderEntity(EntityType<? extends TraderEntity> type, World world) {
 		super(type, world);
@@ -157,6 +170,12 @@ public class TraderEntity extends MerchantEntity {
 			prepare();
 			home = getBlockPos();
 		}
+		if (cityLevel <= 0) {
+			cityLevel = CityLevels.levelAt(world, home);
+		}
+		if (priceSeed == 0L) {
+			priceSeed = random.nextLong() | 1L;
+		}
 		if (getPositionTarget() == null || !getPositionTarget().equals(home) || getPositionTargetRange() != HOME_RANGE) {
 			setPositionTarget(home, HOME_RANGE);
 		}
@@ -165,7 +184,7 @@ public class TraderEntity extends MerchantEntity {
 		}
 	}
 
-	/** Cada mañana repone lo vendido (y, si ha cambiado la moneda del mundo, renueva las ofertas). */
+	/** Cada mañana repone lo vendido y lo comprado. */
 	private void restockIfNewDay(ServerWorld world) {
 		long day = world.getTimeOfDay() / 24000L;
 		if (day == lastRestockDay) {
@@ -173,66 +192,102 @@ public class TraderEntity extends MerchantEntity {
 		}
 		boolean first = lastRestockDay < 0L;
 		lastRestockDay = day;
-		if (first || hasCustomer()) {
-			return;
+		if (!first && stock != null) {
+			stock = null;
+			playSound(SoundEvents.ENTITY_VILLAGER_WORK_CARTOGRAPHER, 0.6F, 1.0F);
 		}
-		TradeOfferList offers = getOffers();
-		if (usesOldCurrency(offers)) {
-			offers.clear();
-			fillRecipes();
-		} else {
-			for (TradeOffer offer : offers) {
-				offer.resetUses();
-			}
-		}
-		playSound(SoundEvents.ENTITY_VILLAGER_WORK_CARTOGRAPHER, 0.6F, 1.0F);
-	}
-
-	private static boolean usesOldCurrency(TradeOfferList offers) {
-		Item coin = Market.currency();
-		for (TradeOffer offer : offers) {
-			Item paid = offer.getOriginalFirstBuyItem().getItem();
-			Item sold = offer.getSellItem().getItem();
-			if (paid != coin && sold != coin) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	// ------------------------------------------------------------------ comercio
+	public int getCityLevel() {
+		return Math.max(1, Math.min(cityLevel, CityLevels.maxLevel()));
+	}
+
+	/** Todo lo que vende y compra este comerciante, con los precios de su ciudad. */
+	public List<Deal> catalog() {
+		return getTraderType().catalog(getCityLevel(), priceSeed);
+	}
+
+	/** Lotes que le quedan hoy de la línea {@code index}. */
+	public int stockLeft(int index, Deal deal) {
+		if (stock == null || index < 0 || index >= stock.length) {
+			return deal.stock();
+		}
+		return Math.min(stock[index], deal.stock());
+	}
+
+	public void consumeStock(int index, int lots) {
+		List<Deal> deals = catalog();
+		if (index < 0 || index >= deals.size()) {
+			return;
+		}
+		if (stock == null || stock.length != deals.size()) {
+			stock = new int[deals.size()];
+			for (int i = 0; i < stock.length; i++) {
+				stock[i] = deals.get(i).stock();
+			}
+		}
+		stock[index] = Math.max(0, stock[index] - lots);
+	}
+
+	/** Después de cada trato. */
+	public void onTrade(PlayerEntity player) {
+		playSound(getYesSound(), 0.8F, getSoundPitch());
+	}
+
 	@Override
 	protected void fillRecipes() {
-		TradeOfferList offers = getOffers();
-		offers.addAll(getTraderType().rollOffers(random));
+		// no usa las ofertas de los aldeanos: tiene su propia tienda (TraderScreenHandler)
 	}
 
 	@Override
 	protected void afterUsing(TradeOffer offer) {
-		if (offer.shouldRewardPlayerExperience()) {
-			int xp = 2 + random.nextInt(3);
-			getWorld().spawnEntity(new ExperienceOrbEntity(getWorld(), getX(), getY() + 0.5, getZ(), xp));
-		}
 	}
 
 	@Override
 	public ActionResult interactMob(PlayerEntity player, Hand hand) {
 		ItemStack stack = player.getStackInHand(hand);
-		if (stack.getItem() instanceof net.minecraft.item.SpawnEggItem || stack.isOf(Items.NAME_TAG) || !isAlive()
-				|| hasCustomer()) {
+		if (stack.getItem() instanceof net.minecraft.item.SpawnEggItem || stack.isOf(Items.NAME_TAG) || !isAlive()) {
 			return super.interactMob(player, hand);
 		}
 		if (hand == Hand.MAIN_HAND) {
 			player.incrementStat(Stats.TALKED_TO_VILLAGER);
 		}
-		if (!getWorld().isClient) {
-			if (getOffers().isEmpty()) {
-				return ActionResult.CONSUME;
-			}
-			setCustomer(player);
-			sendOffers(player, getDisplayName(), 1);
+		if (player instanceof ServerPlayerEntity serverPlayer) {
+			openShop(serverPlayer);
 		}
 		return ActionResult.success(getWorld().isClient);
+	}
+
+	private void openShop(ServerPlayerEntity player) {
+		if (cityLevel <= 0 && getWorld() instanceof ServerWorld world) {
+			cityLevel = CityLevels.levelAt(world, home != null ? home : getBlockPos());
+		}
+		if (priceSeed == 0L) {
+			priceSeed = random.nextLong() | 1L;
+		}
+		if (getCustomer() == null) {
+			setCustomer(player);
+		}
+		TraderEntity trader = this;
+		int percent = (int) Math.round((CityLevels.priceMultiplier(getCityLevel()) - 1.0) * 100.0);
+		TraderScreenHandler.Data data = new TraderScreenHandler.Data(getId(), getCityLevel(), percent, catalog());
+		player.openHandledScreen(new ExtendedScreenHandlerFactory<TraderScreenHandler.Data>() {
+			@Override
+			public TraderScreenHandler.Data getScreenOpeningData(ServerPlayerEntity serverPlayer) {
+				return data;
+			}
+
+			@Override
+			public Text getDisplayName() {
+				return trader.getDisplayName();
+			}
+
+			@Override
+			public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+				return new TraderScreenHandler(syncId, playerInventory, trader, data);
+			}
+		});
 	}
 
 	@Override
@@ -289,6 +344,11 @@ public class TraderEntity extends MerchantEntity {
 		nbt.putString("TraderType", getTraderType().id());
 		nbt.putInt("Variant", getVariant());
 		nbt.putLong("LastRestock", lastRestockDay);
+		nbt.putInt("CityLevel", cityLevel);
+		nbt.putLong("PriceSeed", priceSeed);
+		if (stock != null) {
+			nbt.putIntArray("Stock", stock);
+		}
 		if (home != null) {
 			nbt.putInt("HomeX", home.getX());
 			nbt.putInt("HomeY", home.getY());
@@ -312,6 +372,13 @@ public class TraderEntity extends MerchantEntity {
 		if (nbt.contains("LastRestock")) {
 			lastRestockDay = nbt.getLong("LastRestock");
 		}
+		if (nbt.contains("CityLevel")) {
+			cityLevel = nbt.getInt("CityLevel");
+		}
+		if (nbt.contains("PriceSeed")) {
+			priceSeed = nbt.getLong("PriceSeed");
+		}
+		stock = nbt.contains("Stock") ? Arrays.copyOf(nbt.getIntArray("Stock"), nbt.getIntArray("Stock").length) : null;
 		if (nbt.contains("HomeX")) {
 			home = new BlockPos(nbt.getInt("HomeX"), nbt.getInt("HomeY"), nbt.getInt("HomeZ"));
 		}
