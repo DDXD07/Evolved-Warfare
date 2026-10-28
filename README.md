@@ -523,6 +523,11 @@ monstruos y asaltantes (que también van a por ellos, así que defiende el merca
 
 Clic derecho a un comerciante abre su **tienda con todo el catálogo a la vez**, en fichas:
 
+- **Cada oficio tiene su propio diseño**: el tendero, tablones de roble con toldo de rayas; el armero, acero oscuro con
+  remaches; el cantero, ladrillo de piedra con esquinas cinceladas; el joyero, terciopelo morado con ribete de oro y
+  gemas; el sastre, paño azul con costura; el mercader de especias, arenisca con cenefas de alfombra; y el peletero,
+  abeto oscuro con nieve y escarcha. A los lados del inventario lleva cuatro objetos de su oficio.
+
 - Dos pestañas: **Vende** (lo que te vende) y **Compra** (lo que te compra). Con la rueda o la barra se recorre todo.
 - Cada ficha enseña el **lote**, el **precio** en monedas y **cuántos lotes le quedan hoy**; el marco va del color de
   su rareza (gris, verde, azul, morado, dorado). El precio sale en rojo si no te llega.

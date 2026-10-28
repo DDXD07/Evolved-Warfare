@@ -21,8 +21,6 @@ import net.minecraft.util.math.MathHelper;
  * lo que la ciudad aún no desbloquea sale tapado con el nivel que hace falta. Clic: un lote; Mayús+clic: muchos.
  */
 public class TraderScreen extends HandledScreen<TraderScreenHandler> {
-	private static final int TEXT = 0x404040;
-	private static final int PRICE = 0x7A5A00;
 	private static final int EARN = 0x2E7D32;
 	private static final int BAD = 0xC62828;
 	private static final int COLUMNS = TraderScreenHandler.COLUMNS;
@@ -45,6 +43,7 @@ public class TraderScreen extends HandledScreen<TraderScreenHandler> {
 	private ButtonWidget sellTab;
 	private ButtonWidget buyTab;
 	private ItemStack coin = ItemStack.EMPTY;
+	private final TraderTheme theme;
 
 	public TraderScreen(TraderScreenHandler handler, PlayerInventory inventory, Text title) {
 		super(handler, inventory, title);
@@ -52,6 +51,7 @@ public class TraderScreen extends HandledScreen<TraderScreenHandler> {
 		this.backgroundHeight = TraderScreenHandler.HEIGHT;
 		this.playerInventoryTitleX = TraderScreenHandler.INVENTORY_X;
 		this.playerInventoryTitleY = TraderScreenHandler.INVENTORY_Y - 11;
+		this.theme = TraderTheme.of(handler.traderType());
 		List<Deal> deals = handler.deals();
 		for (int i = 0; i < deals.size(); i++) {
 			(deals.get(i).sell() ? sells : buys).add(i);
@@ -63,7 +63,7 @@ public class TraderScreen extends HandledScreen<TraderScreenHandler> {
 		super.init();
 		coin = new ItemStack(Market.currency());
 		int tabW = 62;
-		int tabY = y + 15;
+		int tabY = y + 17;
 		sellTab = addDrawableChild(ButtonWidget.builder(Text.translatable("gui.evolvedwarfare.trader.tab_sells", sells.size()),
 				b -> setTab(true)).dimensions(x + GRID_X, tabY, tabW, 14).build());
 		buyTab = addDrawableChild(ButtonWidget.builder(Text.translatable("gui.evolvedwarfare.trader.tab_buys", buys.size()),
@@ -202,7 +202,7 @@ public class TraderScreen extends HandledScreen<TraderScreenHandler> {
 
 	@Override
 	protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
-		Panels.panel(context, x, y, backgroundWidth, backgroundHeight);
+		theme.drawPanel(context, x, y, backgroundWidth, backgroundHeight, GRID_Y + ROWS * STEP_Y, TraderScreenHandler.INVENTORY_Y);
 		List<Integer> shown = shown();
 		int hovered = dealAt(mouseX, mouseY);
 		for (int slot = 0; slot < COLUMNS * ROWS; slot++) {
@@ -210,42 +210,43 @@ public class TraderScreen extends HandledScreen<TraderScreenHandler> {
 			int cy = y + GRID_Y + (slot / COLUMNS) * STEP_Y;
 			int pos = scroll * COLUMNS + slot;
 			if (pos >= shown.size()) {
-				context.fill(cx, cy, cx + CARD_W, cy + CARD_H, 0xFFBDBDBD);
+				context.fill(cx, cy, cx + CARD_W, cy + CARD_H, theme.cardEmpty());
 				continue;
 			}
 			int index = shown.get(pos);
 			Deal deal = handler.deals().get(index);
 			// marco del color de la rareza y ficha (más clara bajo el ratón)
 			context.fill(cx, cy, cx + CARD_W, cy + CARD_H, deal.tier().frame);
-			int face = !deal.unlocked(handler.cityLevel()) ? 0xFF9C9C9C : 0xFFB5B5B5;
-			context.fill(cx + 1, cy + 1, cx + CARD_W - 1, cy + CARD_H - 1, index == hovered ? 0xFFD2D2D2 : face);
-			Panels.slot(context, cx + 2, cy + 6);
+			int face = !deal.unlocked(handler.cityLevel()) ? theme.cardLocked() : theme.card();
+			context.fill(cx + 1, cy + 1, cx + CARD_W - 1, cy + CARD_H - 1, index == hovered ? theme.cardHover() : face);
+			Panels.slot(context, cx + 2, cy + 6, theme.slotInner());
 		}
 		// barra de desplazamiento
-		context.fill(x + BAR_X, y + GRID_Y, x + BAR_X + BAR_W, y + GRID_Y + BAR_H, 0xFF555555);
+		context.fill(x + BAR_X, y + GRID_Y, x + BAR_X + BAR_W, y + GRID_Y + BAR_H, theme.bar());
 		int max = maxScroll();
 		int knobH = max == 0 ? BAR_H : Math.max(12, BAR_H * ROWS / (ROWS + max));
 		int knobY = max == 0 ? 0 : (BAR_H - knobH) * scroll / max;
-		context.fill(x + BAR_X, y + GRID_Y + knobY, x + BAR_X + BAR_W, y + GRID_Y + knobY + knobH, max == 0 ? 0xFF8B8B8B : 0xFFE0E0E0);
+		context.fill(x + BAR_X, y + GRID_Y + knobY, x + BAR_X + BAR_W, y + GRID_Y + knobY + knobH, max == 0 ? (theme.knob() & 0x00FFFFFF) | 0x80000000 : theme.knob());
 		for (net.minecraft.screen.slot.Slot slot : handler.slots) {
-			Panels.slot(context, x + slot.x - 1, y + slot.y - 1);
+			Panels.slot(context, x + slot.x - 1, y + slot.y - 1, theme.slotInner());
 		}
+		theme.drawEmblems(context, x, y, backgroundWidth, TraderScreenHandler.INVENTORY_Y, TraderScreenHandler.INVENTORY_X);
 	}
 
 	@Override
 	protected void drawForeground(DrawContext context, int mouseX, int mouseY) {
-		context.drawText(textRenderer, title, 8, 6, TEXT, false);
+		context.drawText(textRenderer, title, 12, 8, theme.headerText(), false);
 		// monedas que llevas, arriba a la derecha
 		String money = Integer.toString(coins());
-		int moneyX = backgroundWidth - 8 - 10 - textRenderer.getWidth(money);
-		context.drawText(textRenderer, money, moneyX, 6, PRICE, false);
-		smallCoin(context, backgroundWidth - 8 - 9, 5);
+		int moneyX = backgroundWidth - 12 - 10 - textRenderer.getWidth(money);
+		context.drawText(textRenderer, money, moneyX, 8, theme.money(), false);
+		smallCoin(context, backgroundWidth - 12 - 9, 7);
 		// nivel de la ciudad
 		int level = handler.cityLevel();
 		Text city = handler.pricePercent() > 0
 				? Text.translatable("gui.evolvedwarfare.trader.city", level, handler.pricePercent())
 				: Text.translatable("gui.evolvedwarfare.trader.city_base", level);
-		context.drawText(textRenderer, city, 8 + textRenderer.getWidth(title) + 6, 6, levelColor(level), false);
+		context.drawText(textRenderer, city, backgroundWidth - 9 - textRenderer.getWidth(city), 20, theme.levelColor(level), false);
 
 		int have = coins();
 		List<Integer> shown = shown();
@@ -274,11 +275,11 @@ public class TraderScreen extends HandledScreen<TraderScreenHandler> {
 			String price = Integer.toString(deal.price());
 			int color;
 			if (locked) {
-				color = 0x7A7A7A;
+				color = theme.sub();
 			} else if (deal.sell()) {
-				color = have >= deal.price() ? PRICE : BAD;
+				color = have >= deal.price() ? theme.price() : theme.lockText();
 			} else {
-				color = carried(deal) >= deal.count() ? EARN : 0x6F6F6F;
+				color = carried(deal) >= deal.count() ? earn() : theme.sub();
 			}
 			context.drawText(textRenderer, price, cx + 22, cy + 5, color, false);
 			smallCoin(context, cx + 23 + textRenderer.getWidth(price), cy + 4);
@@ -287,13 +288,13 @@ public class TraderScreen extends HandledScreen<TraderScreenHandler> {
 			int secondColor;
 			if (locked) {
 				second = Text.translatable("gui.evolvedwarfare.trader.lock", deal.minLevel()).getString();
-				secondColor = 0x8B1A1A;
+				secondColor = theme.lockText();
 			} else if (left <= 0) {
 				second = Text.translatable(deal.sell() ? "gui.evolvedwarfare.trader.sold_out" : "gui.evolvedwarfare.trader.full").getString();
-				secondColor = BAD;
+				secondColor = theme.lockText();
 			} else {
 				second = left + "/" + deal.stock();
-				secondColor = 0x505050;
+				secondColor = theme.sub();
 			}
 			context.getMatrices().push();
 			context.getMatrices().translate(cx + 22, cy + 18, 0);
@@ -303,12 +304,19 @@ public class TraderScreen extends HandledScreen<TraderScreenHandler> {
 		}
 		if (shown.isEmpty()) {
 			Text none = Text.translatable("gui.evolvedwarfare.trader.empty");
-			context.drawText(textRenderer, none, GRID_X + 4, GRID_Y + 4, 0x606060, false);
+			context.drawText(textRenderer, none, GRID_X + 4, GRID_Y + 4, theme.labelText(), false);
 		}
 		Text hint = Text.translatable(showSells ? "gui.evolvedwarfare.trader.hint_sells" : "gui.evolvedwarfare.trader.hint_buys");
 		String line = textRenderer.trimToWidth(hint.getString(), backgroundWidth - 16);
-		context.drawText(textRenderer, line, 8, GRID_Y + ROWS * STEP_Y + 1, 0x606060, false);
-		context.drawText(textRenderer, playerInventoryTitle, playerInventoryTitleX, playerInventoryTitleY, TEXT, false);
+		context.drawText(textRenderer, line, 8, GRID_Y + ROWS * STEP_Y + 1, theme.hintText(), false);
+		context.drawText(textRenderer, playerInventoryTitle, playerInventoryTitleX, playerInventoryTitleY, theme.labelText(), false);
+	}
+
+	/** Verde de "te lo compra", legible sobre las fichas oscuras. */
+	private int earn() {
+		int c = theme.card();
+		int luminance = ((c >> 16) & 255) * 3 + ((c >> 8) & 255) * 6 + (c & 255);
+		return luminance < 1000 ? 0xFF7CE08A : EARN;
 	}
 
 	private void smallCoin(DrawContext context, int px, int py) {
@@ -317,16 +325,6 @@ public class TraderScreen extends HandledScreen<TraderScreenHandler> {
 		context.getMatrices().scale(0.6F, 0.6F, 1.0F);
 		context.drawItem(coin, 0, 0);
 		context.getMatrices().pop();
-	}
-
-	private static int levelColor(int level) {
-		if (level <= 3) {
-			return 0x2E7D32;
-		}
-		if (level <= 6) {
-			return 0xB26A00;
-		}
-		return level <= 8 ? 0xC62828 : 0x7B1FA2;
 	}
 
 	private List<Text> tooltip(int index) {

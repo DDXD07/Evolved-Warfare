@@ -271,7 +271,7 @@ public class TraderEntity extends MerchantEntity {
 		}
 		TraderEntity trader = this;
 		int percent = (int) Math.round((CityLevels.priceMultiplier(getCityLevel()) - 1.0) * 100.0);
-		TraderScreenHandler.Data data = new TraderScreenHandler.Data(getId(), getCityLevel(), percent, catalog());
+		TraderScreenHandler.Data data = new TraderScreenHandler.Data(getId(), getTraderType().ordinal(), getCityLevel(), percent, catalog());
 		player.openHandledScreen(new ExtendedScreenHandlerFactory<TraderScreenHandler.Data>() {
 			@Override
 			public TraderScreenHandler.Data getScreenOpeningData(ServerPlayerEntity serverPlayer) {

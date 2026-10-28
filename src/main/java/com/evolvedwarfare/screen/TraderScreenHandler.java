@@ -30,9 +30,10 @@ import org.jetbrains.annotations.Nullable;
  */
 public class TraderScreenHandler extends ScreenHandler {
 	/** Lo que se manda al cliente al abrir. */
-	public record Data(int entityId, int cityLevel, int pricePercent, List<Deal> deals) {
+	public record Data(int entityId, int traderType, int cityLevel, int pricePercent, List<Deal> deals) {
 		public static final PacketCodec<RegistryByteBuf, Data> PACKET_CODEC = PacketCodec.tuple(
 				PacketCodecs.VAR_INT, Data::entityId,
+				PacketCodecs.VAR_INT, Data::traderType,
 				PacketCodecs.VAR_INT, Data::cityLevel,
 				PacketCodecs.VAR_INT, Data::pricePercent,
 				Deal.PACKET_CODEC.collect(PacketCodecs.toList()), Data::deals,
@@ -47,7 +48,7 @@ public class TraderScreenHandler extends ScreenHandler {
 	public static final int CARD_H = 30;
 	public static final int CARD_GAP = 2;
 	public static final int GRID_X = 7;
-	public static final int GRID_Y = 32;
+	public static final int GRID_Y = 34;
 	public static final int INVENTORY_X = (WIDTH - 162) / 2;
 	public static final int INVENTORY_Y = GRID_Y + ROWS * (CARD_H + CARD_GAP) + 22;
 	public static final int HOTBAR_Y = INVENTORY_Y + 58;
@@ -112,6 +113,12 @@ public class TraderScreenHandler extends ScreenHandler {
 	/** Cuánto más caro vende que en una ciudad de nivel 1 (%). */
 	public int pricePercent() {
 		return data.pricePercent();
+	}
+
+	/** El oficio del comerciante (cada uno tiene su propio diseño de tienda). */
+	public com.evolvedwarfare.trade.TraderType traderType() {
+		com.evolvedwarfare.trade.TraderType[] types = com.evolvedwarfare.trade.TraderType.values();
+		return types[Math.floorMod(data.traderType(), types.length)];
 	}
 
 	public int entityId() {
