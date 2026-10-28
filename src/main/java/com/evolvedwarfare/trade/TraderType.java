@@ -5,8 +5,10 @@ import com.evolvedwarfare.registry.ModItems;
 import com.evolvedwarfare.weapon.WeaponType;
 import com.evolvedwarfare.world.CityLevels;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.function.Supplier;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
@@ -18,10 +20,14 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Los oficios de los comerciantes de las ciudades y su catálogo completo. Todo se paga en Glory Coins, la moneda del mod.
  *
- * <p>Cada línea tiene una rareza ({@link Tier}); las ciudades de más nivel (más lejos del punto de aparición)
- * desbloquean las más raras, y además venden más caro: cada nivel por encima del 1 sube los precios de venta un 10 %
- * (configurable). Lo que te compran lo pagan al precio del mercado ({@link Market#priceOf}) en todas partes.
- * Cada comerciante tiene sus propios precios (±10 %), así que conviene comparar.</p>
+ * <p>Cada línea tiene una rareza ({@link Tier}) y su precio cae dentro del rango de esa rareza (común 1–500, poco común
+ * 501–2.000, rara 2.001–5.000, épica 5.001–10.000, legendaria 10.001–500.000) en una ciudad de nivel 1. Las ciudades de
+ * más nivel (más lejos del punto de aparición) desbloquean las más raras y cobran un recargo encima: cada nivel por
+ * encima del 1 sube los precios de venta un 10 % (configurable). Lo que te compran lo pagan a la mitad del precio nuevo,
+ * igual en todas partes. Cada comerciante tiene sus propios precios (±10 %), así que conviene comparar.</p>
+ *
+ * <p>Los precios salen del valor de cada cosa: dentro de una rareza, el doble de valor cuesta el doble (así fabricar o
+ * deshacer cosas no da dinero gratis); solo se recorta lo que se saldría del rango.</p>
  */
 public enum TraderType {
 	/** Tendero: comida. En todas las ciudades. */
@@ -76,33 +82,33 @@ public enum TraderType {
 
 	// ------------------------------------------------------------------ catálogo
 
-	/** Una línea antes de poner precio: {@code value} monedas por unidad (a nivel 1). */
-	private record Entry(boolean sell, Item item, double value, Tier tier) {
+	/** Una línea antes de poner precio: {@code count} por lote y {@code value} monedas viejas por unidad (su valor). */
+	private record Entry(boolean sell, Item item, int count, double value, Tier tier) {
 	}
 
 	private static final class Builder {
 		final List<Entry> entries = new ArrayList<>();
 
-		/** Vende {@code count} por {@code coins}. */
+		/** Vende {@code count} por {@code coins} (valor). */
 		Builder sell(Tier tier, ItemConvertible item, int count, int coins) {
-			entries.add(new Entry(true, item.asItem(), coins / (double) count, tier));
+			entries.add(new Entry(true, item.asItem(), count, coins / (double) count, tier));
 			return this;
 		}
 
-		/** Compra al precio del mercado. */
+		/** Compra según el valor del mercado. */
 		Builder buy(Tier tier, ItemConvertible... items) {
 			for (ItemConvertible item : items) {
 				Market.Price price = Market.priceOf(new ItemStack(item));
 				if (price != null) {
-					entries.add(new Entry(false, item.asItem(), price.coins() / (double) price.items(), tier));
+					entries.add(new Entry(false, item.asItem(), price.items(), price.coins() / (double) price.items(), tier));
 				}
 			}
 			return this;
 		}
 
-		/** Compra {@code count} por {@code coins} (lo que no está en el mercado). */
+		/** Compra {@code count} que valen {@code coins} (lo que no está en el mercado). */
 		Builder buy(Tier tier, ItemConvertible item, int count, int coins) {
-			entries.add(new Entry(false, item.asItem(), coins / (double) count, tier));
+			entries.add(new Entry(false, item.asItem(), count, coins / (double) count, tier));
 			return this;
 		}
 	}
@@ -120,9 +126,9 @@ public enum TraderType {
 					.sell(c, Items.COOKED_PORKCHOP, 3, 1).sell(c, Items.COOKED_CHICKEN, 4, 1).sell(c, Items.APPLE, 8, 1)
 					.sell(c, Items.COOKIE, 12, 1).sell(c, Items.CARROT, 16, 1)
 					.sell(u, Items.PUMPKIN_PIE, 3, 1).sell(u, Items.CAKE, 1, 3).sell(u, Items.HONEY_BOTTLE, 2, 1)
-					.sell(u, Items.COOKED_SALMON, 4, 1).sell(u, Items.MUSHROOM_STEW, 1, 1)
-					.sell(r, Items.GOLDEN_CARROT, 3, 2).sell(r, Items.RABBIT_STEW, 1, 2).sell(r, Items.GOLDEN_APPLE, 1, 8)
-					.sell(e, Items.HONEY_BLOCK, 1, 4).sell(e, Items.GLISTERING_MELON_SLICE, 2, 3)
+					.sell(c, Items.COOKED_SALMON, 4, 1).sell(u, Items.MUSHROOM_STEW, 1, 1)
+					.sell(r, Items.GOLDEN_CARROT, 3, 2).sell(u, Items.RABBIT_STEW, 1, 2).sell(r, Items.GOLDEN_APPLE, 1, 8)
+					.sell(r, Items.GLISTERING_MELON_SLICE, 2, 3).sell(e, Items.HONEY_BLOCK, 1, 4)
 					.sell(l, Items.ENCHANTED_GOLDEN_APPLE, 1, 45)
 					.buy(c, Items.WHEAT, Items.CARROT, Items.POTATO, Items.BEETROOT, Items.MELON_SLICE, Items.PUMPKIN,
 							Items.SWEET_BERRIES, Items.EGG)
@@ -156,7 +162,7 @@ public enum TraderType {
 						.sell(l, ModItems.weapon(WeaponType.HALBERD, "netherite"), 1, 80)
 						.sell(l, Items.TRIDENT, 1, 40);
 				b.buy(c, Items.COAL, Items.IRON_INGOT, Items.FLINT, Items.LEATHER, Items.STRING, Items.FEATHER)
-						.buy(u, Items.RAW_IRON, Items.GOLD_INGOT, Items.CHARCOAL)
+						.buy(c, Items.RAW_IRON).buy(u, Items.GOLD_INGOT, Items.CHARCOAL)
 						.buy(r, Items.DIAMOND)
 						.buy(e, Items.NETHERITE_SCRAP, 1, 10);
 			}
@@ -182,9 +188,9 @@ public enum TraderType {
 				b.sell(u, Items.EMERALD, 1, 2);
 				b.sell(r, Items.DIAMOND, 1, 6).sell(r, Items.NAME_TAG, 1, 8).sell(r, Items.GOLDEN_APPLE, 1, 9)
 						.sell(r, Items.SPYGLASS, 1, 4).sell(r, Items.ENDER_EYE, 1, 5)
-						.sell(e, Items.DIAMOND_BLOCK, 1, 55).sell(e, Items.TOTEM_OF_UNDYING, 1, 25)
-						.sell(e, Items.HEART_OF_THE_SEA, 1, 32).sell(e, Items.NETHERITE_SCRAP, 1, 20)
-						.sell(e, Items.ECHO_SHARD, 1, 10)
+						.sell(e, Items.DIAMOND_BLOCK, 1, 55).sell(e, Items.ECHO_SHARD, 1, 10)
+						.sell(l, Items.NETHERITE_SCRAP, 1, 20).sell(l, Items.TOTEM_OF_UNDYING, 1, 25)
+						.sell(l, Items.HEART_OF_THE_SEA, 1, 32)
 						.sell(l, Items.NETHERITE_INGOT, 1, 84).sell(l, Items.NETHER_STAR, 1, 60)
 						.sell(l, Items.ELYTRA, 1, 80).sell(l, Items.ENCHANTED_GOLDEN_APPLE, 1, 40)
 						.buy(c, Items.GOLD_INGOT, Items.RAW_GOLD, Items.QUARTZ, Items.LAPIS_LAZULI)
@@ -251,49 +257,203 @@ public enum TraderType {
 	public List<Deal> catalog(int cityLevel, long seed) {
 		java.util.Random random = new java.util.Random(seed * 31L + ordinal());
 		double markup = CityLevels.priceMultiplier(cityLevel);
+		Pricing pricing = pricing();
 		List<Deal> sells = new ArrayList<>();
 		List<Deal> buys = new ArrayList<>();
 		for (Entry entry : entries()) {
 			double variance = 1.0 + (random.nextDouble() * 2.0 - 1.0) * VARIANCE;
-			int maxCount = Math.min(64, entry.item().getMaxCount());
-			int minLevel = entry.tier().minLevel();
+			int maxCount = maxCount(entry.item());
+			Tier tier = entry.tier();
+			int minLevel = tier.minLevel();
+			double fair = pricing.factor()[tier.ordinal()] * entry.value();
 			if (entry.sell()) {
-				int[] fit = fit(entry.value() * variance * markup, maxCount, true);
-				sells.add(new Deal(true, entry.item(), fit[0], fit[1], entry.tier().sellStock, entry.tier(), minLevel));
+				int[] lot = sellLot(fair * variance, entry.count(), maxCount, tier);
+				int price = markup > 1.0 ? niceCeil(lot[1] * markup) : lot[1];
+				sells.add(new Deal(true, entry.item(), lot[0], price, tier.sellStock, tier, minLevel));
 			} else {
-				int[] fit = fit(entry.value() * variance, maxCount, false);
-				buys.add(new Deal(false, entry.item(), fit[0], fit[1], entry.tier().buyStock, entry.tier(), minLevel));
+				// la mitad del precio nuevo, y nunca más de la mitad de lo que cuesta en cualquier tienda
+				double reference = Math.min(fair, pricing.sold().getOrDefault(entry.item(), Double.MAX_VALUE));
+				int[] lot = buyLot(0.5 * reference * variance, entry.count(), maxCount);
+				buys.add(new Deal(false, entry.item(), lot[0], lot[1], tier.buyStock, tier, minLevel));
 			}
 		}
 		sells.addAll(buys);
 		return sells;
 	}
 
+	// ------------------------------------------------------------------ precios
+
+	/** Lotes "redondos" en los que se agrupa lo barato para llegar al precio mínimo de su rareza. */
+	private static final int[] LOTS = {1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24, 32, 48, 64};
+
 	/**
-	 * Lote y precio que mejor se ajustan a {@code coinsPerItem}, con números sencillos ("4 por 1", no "7 por 2").
-	 * Al vender redondea a favor del comerciante; al comprar, al más cercano.
+	 * Lo que se calcula una vez para todos: cuántas monedas nuevas vale cada moneda de valor en cada rareza, y lo más
+	 * barato (por unidad, en una ciudad de nivel 1) que se vende cada cosa en cualquier tienda.
+	 */
+	private record Pricing(double[] factor, Map<Item, Double> sold) {
+	}
+
+	@Nullable
+	private static volatile Pricing pricing;
+
+	private static Pricing pricing() {
+		Pricing p = pricing;
+		if (p == null) {
+			p = computePricing();
+			pricing = p;
+		}
+		return p;
+	}
+
+	private static Pricing computePricing() {
+		List<Entry> all = new ArrayList<>();
+		for (TraderType type : values()) {
+			all.addAll(type.entries());
+		}
+		double[] factor = new double[Tier.values().length];
+		for (Tier tier : Tier.values()) {
+			factor[tier.ordinal()] = factor(all, tier);
+		}
+		Map<Item, Double> sold = new HashMap<>();
+		for (Entry entry : all) {
+			if (entry.sell()) {
+				int[] lot = sellLot(factor[entry.tier().ordinal()] * entry.value(), entry.count(), maxCount(entry.item()), entry.tier());
+				sold.merge(entry.item(), lot[1] / (double) lot[0], Math::min);
+			}
+		}
+		return new Pricing(factor, sold);
+	}
+
+	/**
+	 * Monedas nuevas por moneda de valor en una rareza: la que menos tiene que recortar (para meterlas en el rango) a las
+	 * cosas que se venden de una en una, como armas y armaduras; a igualdad, la más alta.
+	 */
+	private static double factor(List<Entry> all, Tier tier) {
+		List<Double> values = new ArrayList<>();
+		for (Entry entry : all) {
+			if (entry.sell() && entry.tier() == tier && maxCount(entry.item()) == 1) {
+				values.add(entry.value());
+			}
+		}
+		if (values.isEmpty()) {
+			for (Entry entry : all) {
+				if (entry.sell() && entry.tier() == tier) {
+					values.add(entry.value());
+				}
+			}
+		}
+		if (values.isEmpty()) {
+			return 1.0;
+		}
+		double min = tier.minPrice;
+		double max = tier.maxPrice;
+		double best = max / values.get(0);
+		double bestCost = Double.MAX_VALUE;
+		List<Double> candidates = new ArrayList<>();
+		for (double value : values) {
+			candidates.add(min / value);
+			candidates.add(max / value);
+		}
+		candidates.sort(null);
+		for (double candidate : candidates) {
+			double cost = 0.0;
+			for (double value : values) {
+				double price = candidate * value;
+				cost += Math.abs(Math.log(Math.min(max, Math.max(min, price)) / price));
+			}
+			if (cost <= bestCost + 1.0E-9) {
+				bestCost = cost;
+				best = candidate;
+			}
+		}
+		return best;
+	}
+
+	private static int maxCount(Item item) {
+		return Math.max(1, Math.min(64, item.getMaxCount()));
+	}
+
+	/**
+	 * Lote y precio de algo que vende: el lote de siempre, más grande si hace falta para llegar al mínimo de su rareza
+	 * (o más pequeño si se pasa del máximo), y el precio redondeado hacia arriba y dentro del rango.
 	 *
 	 * @return {lote, monedas}
 	 */
-	private static int[] fit(double coinsPerItem, int maxCount, boolean sell) {
-		int bestCount = 1;
-		int bestCoins = Math.max(1, (int) Math.round(coinsPerItem));
-		double bestScore = Double.MAX_VALUE;
-		for (int count = 1; count <= maxCount; count++) {
-			double exact = count * coinsPerItem;
-			int coins = sell ? (int) Math.ceil(exact - 1.0E-9) : (int) Math.round(exact);
-			if (coins < 1) {
-				continue;
+	private static int[] sellLot(double unit, int count, int maxCount, Tier tier) {
+		int min = tier.minPrice;
+		int max = tier.maxPrice;
+		count = Math.min(count, maxCount);
+		if (unit * count < min) {
+			int bigger = count;
+			for (int lot : LOTS) {
+				if (lot > count && lot <= maxCount) {
+					bigger = lot;
+					if (unit * lot >= min) {
+						break;
+					}
+				}
 			}
-			double error = Math.abs(coins / (double) count - coinsPerItem) / coinsPerItem;
-			// premia los precios exactos, pero sin agrupar cosas caras en lotes raros
-			double score = error + 0.04 * Math.min(coins - 1, 20) + 0.002 * count;
-			if (score < bestScore) {
-				bestScore = score;
-				bestCount = count;
-				bestCoins = coins;
+			count = bigger;
+		} else if (unit * count > max && count > 1) {
+			int smaller = 1;
+			for (int lot : LOTS) {
+				if (lot < count && unit * lot <= max) {
+					smaller = lot;
+				}
 			}
+			count = smaller;
 		}
-		return new int[] {bestCount, bestCoins};
+		int price = Math.min(max, Math.max(min, niceCeil(Math.max(unit * count, min))));
+		return new int[] {count, price};
+	}
+
+	/**
+	 * Lote y precio de algo que compra: el lote de siempre (más grande si no llega a una moneda) y el precio redondeado
+	 * hacia abajo.
+	 *
+	 * @return {lote, monedas}
+	 */
+	private static int[] buyLot(double unit, int count, int maxCount) {
+		count = Math.min(count, maxCount);
+		if (niceFloor(unit * count) < 1) {
+			int bigger = count;
+			for (int lot : LOTS) {
+				if (lot > count && lot <= maxCount) {
+					bigger = lot;
+					if (niceFloor(unit * lot) >= 1) {
+						break;
+					}
+				}
+			}
+			count = bigger;
+		}
+		return new int[] {count, Math.max(1, niceFloor(unit * count))};
+	}
+
+	/** De cuánto en cuánto se redondea un precio: 1 hasta 100, 5 hasta 1.000, 50 hasta 10.000, 500 hasta 100.000... */
+	private static long step(double price) {
+		if (price < 100) {
+			return 1;
+		}
+		if (price < 1000) {
+			return 5;
+		}
+		if (price < 10000) {
+			return 50;
+		}
+		if (price < 100000) {
+			return 500;
+		}
+		return 5000;
+	}
+
+	static int niceCeil(double price) {
+		long step = step(price);
+		return (int) Math.min(Integer.MAX_VALUE, (long) Math.ceil(price / step - 1.0E-9) * step);
+	}
+
+	static int niceFloor(double price) {
+		long step = step(price);
+		return (int) Math.min(Integer.MAX_VALUE, Math.max(0L, (long) Math.floor(price / step + 1.0E-9) * step));
 	}
 }

@@ -200,11 +200,11 @@ public class ShopScreenHandler extends ScreenHandler {
 		Item coin = Market.currency();
 		PlayerInventory inventory = player.getInventory();
 		if (!player.isCreative()) {
-			if (countCoins(inventory, coin) < price) {
+			if (Market.countCoins(inventory) < price) {
 				player.sendMessage(Text.translatable("message.evolvedwarfare.shop.no_money", price, coin.getName()), true);
 				return;
 			}
-			takeCoins(inventory, coin, price);
+			Market.takeCoins(inventory, price);
 		}
 		ItemStack bought = offer.split(bundle);
 		site.markDirty();
@@ -218,33 +218,6 @@ public class ShopScreenHandler extends ScreenHandler {
 		}
 		player.getWorld().playSound(null, pos, SoundEvents.ENTITY_VILLAGER_TRADE, SoundCategory.NEUTRAL, 0.6F, 1.0F);
 		player.sendMessage(Text.translatable("message.evolvedwarfare.shop.bought", bundle, bought.getName(), price, coin.getName()), true);
-	}
-
-	private static int countCoins(PlayerInventory inventory, Item coin) {
-		int total = 0;
-		for (int i = 0; i < inventory.size(); i++) {
-			ItemStack stack = inventory.getStack(i);
-			if (isPlainCoin(stack, coin)) {
-				total += stack.getCount();
-			}
-		}
-		return total;
-	}
-
-	private static void takeCoins(PlayerInventory inventory, Item coin, int amount) {
-		for (int i = 0; i < inventory.size() && amount > 0; i++) {
-			ItemStack stack = inventory.getStack(i);
-			if (isPlainCoin(stack, coin)) {
-				int take = Math.min(amount, stack.getCount());
-				stack.decrement(take);
-				amount -= take;
-			}
-		}
-		inventory.markDirty();
-	}
-
-	private static boolean isPlainCoin(ItemStack stack, Item coin) {
-		return !stack.isEmpty() && stack.isOf(coin) && stack.getComponentChanges().isEmpty();
 	}
 
 	// ------------------------------------------------------------------ ranuras

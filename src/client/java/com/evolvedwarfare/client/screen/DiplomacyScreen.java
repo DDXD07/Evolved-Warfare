@@ -154,7 +154,7 @@ public class DiplomacyScreen extends Screen {
 		context.drawText(textRenderer, title, left + 10, top + 8, TEXT, false);
 		// tus monedas, arriba a la derecha
 		int coins = client != null && client.player != null ? Market.countCoins(client.player.getInventory()) : 0;
-		String money = Integer.toString(coins);
+		String money = com.evolvedwarfare.logistics.Money.full(coins);
 		int mx = left + W - 28 - textRenderer.getWidth(money);
 		context.drawText(textRenderer, money, mx, top + 8, 0x7A5A00, false);
 		context.drawItem(coin, left + W - 26, top + 3);

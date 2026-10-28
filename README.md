@@ -4,7 +4,7 @@ NPCs, ejércitos, trabajadores, comercio, facciones con diplomacia, asedio, arma
 
 Requiere **Fabric API**. Opcional: **Mod Menu** (pantalla de configuración).
 
-**Moneda: la Glory Coin.** El mod tiene su propia moneda. No se fabrica: se gana vendiendo a los comerciantes de las ciudades y al mercado, y sale en los cofres de campamentos, fuertes, asentamientos y castillos y en el botín de bandidos, vikingos y piratas. Con ella se paga a los NPCs, se compra en las tiendas, se pagan tributos y treguas y se hace el contrato de reclutamiento. (Ya no usa la Golden Coin del mod *Golden Coin Merchants* ni esmeraldas como moneda: si tenías ese mod, los dos pueden convivir, pero no se mezclan.)
+**Moneda: la Glory Coin.** El mod tiene su propia moneda. No se fabrica: se gana vendiendo a los comerciantes de las ciudades y al mercado, y sale en los cofres de campamentos, fuertes, asentamientos y castillos y en el botín de bandidos, vikingos y piratas. Con ella se paga a los NPCs, se compra en las tiendas, se pagan tributos y treguas y se hace el contrato de reclutamiento. Como un montón de monedas solo llega a 64, la **Bolsa de Gloria** (cordel arriba, cuero, Glory Coin y cuero en medio, 3 de cuero abajo) guarda todas las que quieras en un hueco: clic derecho mete las monedas sueltas, Mayús + clic derecho saca 64, y en el inventario se meten y se sacan con clic derecho como en un saco. Las tiendas cobran de la bolsa y pagan en ella (si no llevas ninguna y te pagan más de 64, te dan una). (Ya no usa la Golden Coin del mod *Golden Coin Merchants* ni esmeraldas como moneda: si tenías ese mod, los dos pueden convivir, pero no se mezclan.)
 
 ## Hoja de ruta
 
@@ -490,19 +490,22 @@ Investigación de los jugadores (administradores):
 
 Las ciudades (medievales, del desierto y del norte) tienen **nivel del 1 al 10**: cuanto más lejos del punto de
 aparición, más nivel (uno cada **600 bloques**, más un poco de azar fijo por ciudad). Al entrar en una sale en pantalla
-su nombre y su nivel. El nivel decide **qué venden** sus comerciantes y **a qué precio**:
+su nombre y su nivel. El nivel decide **qué venden** sus comerciantes y **a qué precio**. Cada rareza tiene su rango de
+precios (lo que cuesta un lote en una ciudad de nivel 1):
 
-| Nivel de la ciudad | Desbloquea | Precios de venta |
-|---|---|---|
-| 1–2 | **Común** | normales |
-| 3–4 | + **Poco común** | +20 % a +30 % |
-| 5–6 | + **Raro** (diamantes, armas de diamante, obsidiana, manzanas de oro...) | +40 % a +50 % |
-| 7–8 | + **Épico** (tótems, corazón del mar, netherita en bruto, armaduras de diamante...) | +60 % a +70 % |
-| 9–10 | + **Legendario** (élitros, estrella del Nether, lingotes y armas de netherita, faro, manzana de Notch...) | +80 % a +90 % |
+| Rareza | Desde el nivel | Precio de un lote | Ejemplos |
+|---|---|---|---|
+| **Común** | 1 | 1 – 500 | comida, piedra, lana, armadura de hierro suelta, escudos |
+| **Poco común** | 3 | 501 – 2.000 | pechera de hierro, armas medievales de hierro, brújulas, perlas de Ender |
+| **Raro** | 5 | 2.001 – 5.000 | diamantes, armas y armaduras de diamante, obsidiana, manzanas de oro, sillas |
+| **Épico** | 7 | 5.001 – 10.000 | pechera de diamante, alabarda de diamante, bloque de diamante, aliento de dragón |
+| **Legendario** | 9 | 10.001 – 500.000 | élitros, estrella del Nether, netherita, tótems, faro, manzana de Notch |
 
-Cada nivel por encima del 1 sube los precios de venta un **10 %**. Lo que **te compran** lo pagan igual en todas partes
-(al precio del mercado), y las ciudades lejanas también compran cosas más raras. Se puede cambiar en la configuración
-(categoría *Comercio*: bloques por nivel, nivel máximo y subida por nivel).
+Dentro de cada rareza, lo que vale el doble cuesta el doble (lo barato se vende en lotes más grandes para llegar al
+mínimo), así que fabricar o deshacer cosas no da dinero gratis. Encima, cada nivel por encima del 1 sube los precios de
+venta un **10 %** (nivel 10 = +90 %, por encima del rango). Lo que **te compran** lo pagan a **la mitad del precio
+nuevo**, igual en todas partes, y las ciudades lejanas también compran cosas más raras. Se puede cambiar en la
+configuración (categoría *Comercio*: bloques por nivel, nivel máximo y subida por nivel).
 
 ### Los comerciantes
 
@@ -536,7 +539,8 @@ Clic derecho a un comerciante abre su **tienda con todo el catálogo a la vez**,
 - **Clic**: un lote. **Mayús+clic**: un montón entero (al comprar) o todo lo que lleves (al vender).
 - Arriba: tus monedas, el nivel de la ciudad y cuánto más caro vende. Cada comerciante tiene sus propios precios
   (±10 %), así que conviene comparar.
-- **Repone cada mañana.** Lo que pasa de 64 monedas se cobra igual: no hay tope de precio.
+- **Repone cada mañana.** Cobra de tu Bolsa de Gloria y de las monedas sueltas, y te paga en la bolsa.
+- En las fichas los precios largos salen cortos (12,5k = 12.500; 1,2M = 1.200.000); el número entero, en la descripción.
 - Las armas que vende el armero **no necesitan investigación**: comprarlas es la alternativa (cara) a investigarlas.
 
 Dónde aparecen: en el **mercado**, la **fragua**, la **taberna** y la **plaza** de las ciudades medievales; en el

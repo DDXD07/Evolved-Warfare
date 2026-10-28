@@ -679,6 +679,8 @@
   "gui.evolvedwarfare.trader.tab_buys": "Buys (%s)",
   "gui.evolvedwarfare.trader.city": "City lv. %s · +%s%%",
   "gui.evolvedwarfare.trader.city_base": "City lv. %s",
+  "gui.evolvedwarfare.thousands": ",",
+  "gui.evolvedwarfare.decimal": ".",
   "gui.evolvedwarfare.trader.lock": "Level %s",
   "gui.evolvedwarfare.trader.sold_out": "Sold out",
   "gui.evolvedwarfare.trader.full": "Full",
@@ -704,5 +706,11 @@
   "config.evolvedwarfare.cityMaxLevel.tip": "Rarer goods unlock at levels 3, 5, 7 and 9 (or at the max, if lower).",
   "config.evolvedwarfare.traderPricePerLevel": "Price rise per level",
   "config.evolvedwarfare.traderPricePerLevel.tip": "How much more traders charge for each city level above 1 (0.10 = 10%).",
-  "item.evolvedwarfare.glory_coin": "Glory Coin"
+  "item.evolvedwarfare.glory_coin": "Glory Coin",
+  "item.evolvedwarfare.glory_pouch": "Glory Pouch",
+  "item.evolvedwarfare.glory_pouch.balance": "Balance: %s Glory Coins",
+  "item.evolvedwarfare.glory_pouch.hint_use": "Right-click: store all your coins",
+  "item.evolvedwarfare.glory_pouch.hint_sneak": "Sneak + right-click: take out 64",
+  "item.evolvedwarfare.glory_pouch.hint_inventory": "In your inventory: right-click with coins to put them in or take them out",
+  "message.evolvedwarfare.pouch.balance": "Glory Pouch: %s %s"
 }

@@ -1,6 +1,7 @@
 package com.evolvedwarfare.client.screen;
 
 import com.evolvedwarfare.logistics.Market;
+import com.evolvedwarfare.logistics.Money;
 import com.evolvedwarfare.screen.TraderScreenHandler;
 import com.evolvedwarfare.trade.Deal;
 import java.util.ArrayList;
@@ -34,6 +35,8 @@ public class TraderScreen extends HandledScreen<TraderScreenHandler> {
 	private static final int BAR_X = GRID_X + COLUMNS * STEP_X + 1;
 	private static final int BAR_W = 6;
 	private static final int BAR_H = ROWS * STEP_Y - 2;
+	/** Ancho que tiene el precio en una ficha (lo que queda entre el objeto y la moneda). */
+	private static final int PRICE_ROOM = CARD_W - 22 - 12;
 
 	private final List<Integer> sells = new ArrayList<>();
 	private final List<Integer> buys = new ArrayList<>();
@@ -237,7 +240,7 @@ public class TraderScreen extends HandledScreen<TraderScreenHandler> {
 	protected void drawForeground(DrawContext context, int mouseX, int mouseY) {
 		context.drawText(textRenderer, title, 12, 8, theme.headerText(), false);
 		// monedas que llevas, arriba a la derecha
-		String money = Integer.toString(coins());
+		String money = Money.full(coins());
 		int moneyX = backgroundWidth - 12 - 10 - textRenderer.getWidth(money);
 		context.drawText(textRenderer, money, moneyX, 8, theme.money(), false);
 		smallCoin(context, backgroundWidth - 12 - 9, 7);
@@ -272,7 +275,7 @@ public class TraderScreen extends HandledScreen<TraderScreenHandler> {
 				context.getMatrices().pop();
 			}
 			// precio
-			String price = Integer.toString(deal.price());
+			String price = Money.compact(deal.price());
 			int color;
 			if (locked) {
 				color = theme.sub();
@@ -281,8 +284,15 @@ public class TraderScreen extends HandledScreen<TraderScreenHandler> {
 			} else {
 				color = carried(deal) >= deal.count() ? earn() : theme.sub();
 			}
-			context.drawText(textRenderer, price, cx + 22, cy + 5, color, false);
-			smallCoin(context, cx + 23 + textRenderer.getWidth(price), cy + 4);
+			// los precios largos ("12,5k") se encogen un poco para que quepan con la moneda
+			int priceW = textRenderer.getWidth(price);
+			float priceScale = priceW > PRICE_ROOM ? Math.max(0.7F, PRICE_ROOM / (float) priceW) : 1.0F;
+			context.getMatrices().push();
+			context.getMatrices().translate(cx + 22, cy + 5 + (1.0F - priceScale) * 4.0F, 0);
+			context.getMatrices().scale(priceScale, priceScale, 1.0F);
+			context.drawText(textRenderer, price, 0, 0, color, false);
+			context.getMatrices().pop();
+			smallCoin(context, cx + 23 + Math.round(priceW * priceScale), cy + 4);
 			// segunda línea: existencias de hoy, agotado o el nivel que hace falta
 			String second;
 			int secondColor;
@@ -334,10 +344,10 @@ public class TraderScreen extends HandledScreen<TraderScreenHandler> {
 		Text coinName = coin.getName();
 		lines.add(Text.translatable(deal.tier().translationKey()).formatted(deal.tier().color));
 		if (deal.sell()) {
-			lines.add(Text.translatable("gui.evolvedwarfare.trader.offer_sell", deal.count(), deal.price(), coinName)
+			lines.add(Text.translatable("gui.evolvedwarfare.trader.offer_sell", deal.count(), Money.full(deal.price()), coinName)
 					.formatted(Formatting.GOLD));
 		} else {
-			lines.add(Text.translatable("gui.evolvedwarfare.trader.offer_buy", deal.count(), deal.price(), coinName)
+			lines.add(Text.translatable("gui.evolvedwarfare.trader.offer_buy", deal.count(), Money.full(deal.price()), coinName)
 					.formatted(Formatting.GREEN));
 			lines.add(Text.translatable("gui.evolvedwarfare.trader.you_have", carried(deal)).formatted(Formatting.GRAY));
 		}

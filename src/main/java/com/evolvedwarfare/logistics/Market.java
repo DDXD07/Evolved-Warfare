@@ -1,5 +1,6 @@
 package com.evolvedwarfare.logistics;
 
+import com.evolvedwarfare.item.GloryPouchItem;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -13,8 +14,9 @@ import org.jetbrains.annotations.Nullable;
 /**
  * El mercado: con qué se paga y cuánto se saca por cada cosa.
  *
- * <p>La moneda es la Glory Coin del mod. Los precios son
- * parecidos a los que pagan los aldeanos: "tantos objetos por tantas monedas".</p>
+ * <p>La moneda es la Glory Coin del mod; la Bolsa de Gloria guarda tantas como quieras. Estos precios (parecidos a los
+ * que pagan los aldeanos: "tantos objetos por tantas monedas") son el valor de cada cosa: los usan el mercader de tu
+ * pueblo y, como punto de partida, los comerciantes de las ciudades.</p>
  */
 public final class Market {
 
@@ -149,39 +151,80 @@ public final class Market {
 		return null;
 	}
 
-	/** Monedas sueltas (sin nombre ni nada) que lleva un jugador. */
+	/** Todas las Glory Coins que lleva un jugador: las sueltas (sin nombre ni nada) y las de sus Bolsas de Gloria. */
 	public static int countCoins(net.minecraft.entity.player.PlayerInventory inventory) {
-		Item coin = currency();
-		int total = 0;
+		long total = 0;
 		for (int i = 0; i < inventory.size(); i++) {
 			ItemStack stack = inventory.getStack(i);
-			if (isPlainCoin(stack, coin)) {
+			if (isPlainCoin(stack)) {
 				total += stack.getCount();
+			} else if (GloryPouchItem.isPouch(stack)) {
+				total += GloryPouchItem.balance(stack);
 			}
 		}
-		return total;
+		return (int) Math.min(Integer.MAX_VALUE, total);
 	}
 
-	/** Le quita monedas al jugador (si no tiene bastantes, no quita ninguna). */
+	/** Le cobra al jugador, primero de sus bolsas y luego de las monedas sueltas (si no le llega, no cobra nada). */
 	public static boolean takeCoins(net.minecraft.entity.player.PlayerInventory inventory, int amount) {
+		if (amount <= 0) {
+			return true;
+		}
 		if (countCoins(inventory) < amount) {
 			return false;
 		}
-		Item coin = currency();
-		for (int i = 0; i < inventory.size() && amount > 0; i++) {
+		int left = amount;
+		for (int i = 0; i < inventory.size() && left > 0; i++) {
 			ItemStack stack = inventory.getStack(i);
-			if (isPlainCoin(stack, coin)) {
-				int take = Math.min(amount, stack.getCount());
+			if (GloryPouchItem.isPouch(stack)) {
+				left -= GloryPouchItem.withdraw(stack, left);
+			}
+		}
+		for (int i = 0; i < inventory.size() && left > 0; i++) {
+			ItemStack stack = inventory.getStack(i);
+			if (isPlainCoin(stack)) {
+				int take = Math.min(left, stack.getCount());
 				stack.decrement(take);
-				amount -= take;
+				left -= take;
 			}
 		}
 		inventory.markDirty();
 		return true;
 	}
 
-	private static boolean isPlainCoin(ItemStack stack, Item coin) {
-		return !stack.isEmpty() && stack.isOf(coin) && stack.getComponentChanges().isEmpty();
+	/**
+	 * Le paga al jugador: en su Bolsa de Gloria si lleva una; si no, en monedas sueltas si es poco (hasta un montón) o
+	 * en una bolsa nueva si es más.
+	 */
+	public static void giveCoins(net.minecraft.entity.player.PlayerInventory inventory, long amount) {
+		if (amount <= 0) {
+			return;
+		}
+		for (int i = 0; i < inventory.size() && amount > 0; i++) {
+			ItemStack stack = inventory.getStack(i);
+			if (GloryPouchItem.isPouch(stack)) {
+				amount = GloryPouchItem.deposit(stack, amount);
+			}
+		}
+		inventory.markDirty();
+		if (amount <= 0) {
+			return;
+		}
+		Item coin = currency();
+		if (amount <= coin.getMaxCount()) {
+			inventory.offerOrDrop(new ItemStack(coin, (int) amount));
+			return;
+		}
+		while (amount > 0) {
+			ItemStack pouch = new ItemStack(com.evolvedwarfare.registry.ModItems.GLORY_POUCH);
+			amount = GloryPouchItem.deposit(pouch, amount);
+			inventory.offerOrDrop(pouch);
+		}
+	}
+
+	/** Una Glory Coin normal (sin nombre ni nada). */
+	public static boolean isPlainCoin(ItemStack stack) {
+		return !stack.isEmpty() && stack.isOf(currency()) && stack.getComponentChanges().isEmpty();
 	}
 
 	/** Monedas en montones del tamaño máximo. */

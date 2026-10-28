@@ -202,9 +202,7 @@ public class TraderScreenHandler extends ScreenHandler {
 			return;
 		}
 		take(inventory, deal.item(), deal.count() * lots);
-		for (ItemStack coins : Market.coins(deal.price() * lots)) {
-			inventory.offerOrDrop(coins);
-		}
+		Market.giveCoins(inventory, (long) deal.price() * lots);
 		trader.consumeStock(index, lots);
 		done(player, lots, deal);
 	}

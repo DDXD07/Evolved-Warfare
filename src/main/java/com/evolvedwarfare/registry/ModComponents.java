@@ -24,6 +24,12 @@ public final class ModComponents {
 			ComponentType.<com.evolvedwarfare.blueprint.BlueprintRef>builder().codec(com.evolvedwarfare.blueprint.BlueprintRef.CODEC)
 					.packetCodec(com.evolvedwarfare.blueprint.BlueprintRef.PACKET_CODEC).build());
 
+	/** Las Glory Coins que guarda una Bolsa de Gloria. */
+	public static final ComponentType<Integer> GLORY_BALANCE = Registry.register(Registries.DATA_COMPONENT_TYPE,
+			EvolvedWarfare.id("glory_balance"),
+			ComponentType.<Integer>builder().codec(net.minecraft.util.dynamic.Codecs.NONNEGATIVE_INT)
+					.packetCodec(net.minecraft.network.codec.PacketCodecs.VAR_INT).build());
+
 	private ModComponents() {
 	}
 

@@ -35,6 +35,9 @@ public final class ModItems {
 	/** Contrato de reclutamiento: úsalo sobre un recluta libre para contratarlo. */
 	/** La Glory Coin: la moneda del mod. No se fabrica; se gana vendiendo, en cofres y en el botín de los enemigos. */
 	public static final Item GLORY_COIN = register("glory_coin", new Item(new Item.Settings().rarity(net.minecraft.util.Rarity.UNCOMMON)));
+	/** Bolsa de Gloria: guarda todas las Glory Coins que quieras en un hueco; las tiendas cobran y pagan en ella. */
+	public static final Item GLORY_POUCH = register("glory_pouch", new com.evolvedwarfare.item.GloryPouchItem(
+			new Item.Settings().maxCount(1).rarity(net.minecraft.util.Rarity.UNCOMMON)));
 	public static final Item RECRUITMENT_CONTRACT = register("recruitment_contract",
 			new RecruitmentContractItem(new Item.Settings().maxCount(16)));
 
@@ -136,6 +139,7 @@ public final class ModItems {
 					.displayName(Text.translatable("itemGroup.evolvedwarfare"))
 					.entries((context, entries) -> {
 						entries.add(GLORY_COIN);
+						entries.add(GLORY_POUCH);
 						entries.add(RECRUITMENT_CONTRACT);
 						entries.add(COMMAND_STAFF);
 						entries.add(MEDIC_KIT);
