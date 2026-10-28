@@ -14,7 +14,7 @@ Requiere **Fabric API**. Opcional: **Golden Coin Merchants** (los reclutas acept
 | 4 | **Logística y comercio**: almacén en red con buscador, mensajero (automático o con hoja de ruta), comerciante con tienda para jugadores y venta de excedentes (Golden Coin o esmeraldas) | ✅ Hecha |
 | 5 | **Facciones y diplomacia**: vikingos y piratas con sus asentamientos, patrullas y asaltos (también a tu pueblo); reputación con cada facción, bandera blanca, tributos, treguas, alianzas, ayuda de aliados y mercenarios | ✅ Hecha |
 | 6 | **Estructuras**: escáner de estructuras, planos, mesa del arquitecto con biblioteca y constructor que los levanta; ciudades del desierto y del norte; castillos y fortalezas del caudillo bandido | ✅ Hecha |
-| 7 | Asedio: catapulta, balista, trebuchet, ariete; puente levadizo y rastrillo | ⏳ |
+| 7 | **Asedio**: catapulta, balista, trebuchet y ariete (para ti, para tus soldados y en los asaltos enemigos); rastrillo y puente levadizo con torno | ✅ Hecha |
 | 8 | Armas medievales, árbol de investigación, equilibrio y configuración | ⏳ |
 
 ## Fase 1 — El recluta
@@ -301,7 +301,7 @@ piratas):
 ```
 /evolvedwarfare reputation <jugadores>                          ver la reputación
 /evolvedwarfare reputation <jugadores> <facción> set|add <n>    cambiarla
-/evolvedwarfare raid <bandits|vikings|pirates>                  lanzar un asalto
+/evolvedwarfare raid <bandits|vikings|pirates> [siege]          lanzar un asalto (con máquinas de asedio)
 ```
 
 ## Fase 6 — Estructuras
@@ -361,6 +361,59 @@ Las dos se pueden asaltar (como las aldeas y la ciudad medieval).
   su tesoro; celdas con prisioneros que puedes liberar, tiendas y una guarnición numerosa con su capitán. Su **nivel es
   dos más** que el de un campamento en el mismo sitio, así que es de lo más duro del mundo.
 
+## Fase 7 — Asedio
+
+### Las máquinas
+| Máquina | Receta | Qué hace | Munición |
+|---|---|---|---|
+| **Catapulta** | tronco arriba a la derecha; cuerda, tronco, cuerda; tablón, lingote de hierro, tablón | Piedras en parábola, hasta unos 55 bloques; rompen piedra y madera alrededor del impacto | 1 piedra o 1 vasija incendiaria |
+| **Balista** | hierro, ballesta, hierro; cuerda, tronco, cuerda; tablón, —, tablón | Tiro tenso hasta más de 150 bloques: mucho daño a una sola cosa (también a otras máquinas); rompe cristal y hojas | 1 virote |
+| **Trebuchet** | tronco, cuerda, tronco; tronco, **catapulta**, tronco; hierro, bloque de hierro, hierro | Pedruscos hasta unos 100 bloques, con un radio mayor: derriba casi cualquier muro (hasta el hierro en el centro del impacto) | 3 piedras o 1 vasija |
+| **Ariete** | 3 tablones; tronco, tronco, bloque de hierro; tablón, —, tablón | Cubierto con tejado. Golpea lo que tiene delante: daña a quien esté ahí y va rompiendo el bloque (más golpes cuanto más duro: madera 4-5, puerta de hierro 8, rastrillo 10). No rompe obsidiana ni cofres | — |
+
+- **Virotes** (lingote de hierro, palo y pluma, en columna → 4) y **vasijas incendiarias** (cuerda, ladrillo, carga ígnea y
+  ladrillos → 2): la vasija prende fuego alrededor y quema a quien pille; no rompe muros. Vale cualquier piedra como
+  munición: roca, piedra, pizarra abismal, andesita, diorita, granito, toba, piedra negra, arenisca...
+- **Ponerla**: clic derecho en el suelo; mira hacia donde mires.
+- **Manejarla**: clic derecho para subirte. **W/S** la empujan, **A/D** la giran y **Espacio** dispara (o golpea, con el
+  ariete). Para apuntar, **mira el blanco**: el tiro calcula solo la elevación para caer ahí. Mientras la manejas ves el
+  recorrido con puntos y un círculo donde caerá (verde si llega, rojo si se queda corto); abajo, si está lista o
+  recargando, la munición y la vida. Recarga: balista 2 s, catapulta 3,5 s, trebuchet 7 s, ariete 1,5 s.
+- **Cargarla**: clic derecho con piedras, vasijas o virotes los mete dentro (hasta 256 de cada). Si no lleva, gasta los de
+  tu inventario (con la vasija en la mano, dispara vasijas).
+- **Tu soldado la maneja**: clic derecho con el **bastón de mando** y el soldado tuyo más cercano (a menos de 24 bloques)
+  se sube y dispara solo a tus enemigos (facciones enemigas y monstruos) con la munición que tenga dentro. No tira a
+  nada que tenga a uno de los tuyos cerca. Otro clic con el bastón y se baja.
+- **Repararla**: clic derecho con tablones (+10 % de vida cada uno). Sufre el doble con hachas y el triple con fuego (la balista, el doble).
+- **Desmontarla**: agachado y con la mano vacía (la que es tuya, y no en pleno combate): vuelve al inventario con su munición.
+- Destrozada, suelta parte de la madera, la cuerda y el hierro.
+
+### Rastrillo y puente levadizo
+- **Rastrillo** (5 barrotes de hierro y 4 lingotes en X → 8): una reja de hierro gruesa que no se abre a mano.
+- **Tablones de puente levadizo** (tablones, pepitas de hierro, tablones → 6).
+- **Torno** (tablón, cadena, tablón; tronco, lingote de hierro, tronco; 3 tablones): ponlo **pegado** al rastrillo o al
+  puente. La primera vez que lo usas se lo aprende entero. Clic derecho para abrir o cerrar; con **redstone**,
+  encendido = abierto (rastrillo arriba, puente bajado).
+  - El **rastrillo** sube tantos bloques como alto es (necesita hueco encima) y al cerrar baja hasta el suelo,
+    aplastando a quien pille.
+  - El **puente** es un rectángulo de tablones, tumbado (bajado) o de pie (subido). Pon el torno **mirando hacia donde
+    tiene que bajar**: gira sobre la fila de dentro, que hace de bisagra.
+  - Solo lo maneja quien lo puso (con redstone, cualquiera que llegue a la palanca).
+- Los **castillos** ya traen un rastrillo subido en la puerta (su torno está en la cara del patio, sobre la puerta), una
+  balista sobre la puerta y una catapulta en el patio, para quien las coja. Las **fortalezas del caudillo bandido**
+  tienen una catapulta manejada por un bandido que dispara a quien se acerque.
+
+### Asedios enemigos
+Cuando una facción asalta **tu pueblo** (tu ayuntamiento) o un **castillo**, a veces (30 % en fácil, 45 % en normal,
+60 % en difícil) trae máquinas: un **ariete** que va hacia el centro derribando muros y puertas, o una **catapulta**
+que se queda a unos 38 bloques y bombardea el pueblo. Su dotación cuenta como asaltante. Si ganas, las máquinas se
+quedan y **son tuyas** si te subes; si se retiran, se las llevan. Cualquier máquina de una facción que se quede sin
+nadie dentro se puede **capturar** igual.
+
+Reglas del mundo (`/gamerule`): `evolvedwarfareSiegeBlockDamage` (los proyectiles y el ariete rompen bloques; sí por
+defecto) y `evolvedwarfareSiegeRaids` (los asaltos traen máquinas; sí por defecto). Para probar un asedio:
+`/evolvedwarfare raid bandits siege`.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -373,6 +426,8 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
 - `ew_factions.py` — aspectos de vikingos y piratas, bandera blanca y sello de embajador.
 - `ew_loot.py` — botín de los cofres de vikingos, piratas, castillos y fortalezas, y de los propios vikingos y piratas.
 - `ew_architect.py` — texturas, modelos y recetas de la mesa del arquitecto, el escáner y el plano.
+- `ew_siege.py` — iconos de las máquinas de asedio y su munición, y texturas, modelos y recetas del rastrillo, el
+  puente levadizo y el torno (las máquinas se dibujan en el juego con bloques escalados, sin textura propia).
 - `ew_village.py` — prototipo de las aldeas vanilla mejoradas (mismo algoritmo que `VillageExtras.java`) con vista previa.
 
 ```

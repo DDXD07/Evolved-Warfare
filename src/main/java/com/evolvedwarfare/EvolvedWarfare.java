@@ -33,6 +33,11 @@ import org.slf4j.LoggerFactory;
  * <p>Fase 4: logística y comercio: almacén en red, mensajeros (automáticos o con hoja de ruta) y comerciantes.</p>
  *
  * <p>Fase 5: vikingos y piratas, reputación con cada facción y diplomacia (tributos, treguas, alianzas, mercenarios).</p>
+ *
+ * <p>Fase 6: escáner de estructuras, planos y constructor; ciudades del desierto y del norte, castillos y fortalezas.</p>
+ *
+ * <p>Fase 7: asedio: catapulta, balista, trebuchet y ariete (que también traen los asaltos), rastrillo y puente
+ * levadizo con su torno.</p>
  */
 public class EvolvedWarfare implements ModInitializer {
 	public static final String MOD_ID = "evolvedwarfare";
@@ -59,6 +64,7 @@ public class EvolvedWarfare implements ModInitializer {
 		SettlementLevels.register();
 		RouteSlipItem.registerEvents();
 		com.evolvedwarfare.item.StructureScannerItem.registerEvents();
+		com.evolvedwarfare.siege.SiegeRules.init();
 		LOGGER.info("Evolved Warfare cargado");
 	}
 }

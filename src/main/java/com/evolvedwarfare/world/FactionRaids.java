@@ -6,6 +6,11 @@ import com.evolvedwarfare.entity.NpcRole;
 import com.evolvedwarfare.faction.Faction;
 import com.evolvedwarfare.faction.Reputation;
 import com.evolvedwarfare.logistics.Logistics;
+import com.evolvedwarfare.registry.ModEntities;
+import com.evolvedwarfare.siege.SiegeBallistics;
+import com.evolvedwarfare.siege.SiegeEngineEntity;
+import com.evolvedwarfare.siege.SiegeKind;
+import com.evolvedwarfare.siege.SiegeRules;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,6 +41,10 @@ import org.jetbrains.annotations.Nullable;
  * Asaltos de una facción a aldeas, ciudades y pueblos de jugadores (alrededor de un ayuntamiento): suena un cuerno,
  * aparece una barra con los que quedan y el grupo marcha hacia el centro. Acaba al derrotarlos a todos o a los
  * 10 minutos (entonces se retiran). Solo asalta la facción de la zona y solo si es enemiga de alguien de allí.
+ *
+ * <p>Asedio (fase 7): contra los pueblos de los jugadores y los castillos, a veces traen un ariete (que va hacia el
+ * centro derribando lo que encuentra) o una catapulta (que bombardea desde lejos). Si los derrotas, las máquinas se
+ * quedan ahí: súbete y son tuyas. Si se retiran, se las llevan.</p>
  */
 public final class FactionRaids {
 	private static final int DURATION = 12000;
@@ -54,8 +63,10 @@ public final class FactionRaids {
 		final int total;
 		final long until;
 		final ServerBossBar bar;
+		final List<UUID> engines;
 
-		Raid(Faction faction, BlockPos center, Set<UUID> raiders, long until) {
+		Raid(Faction faction, BlockPos center, Set<UUID> raiders, long until, List<UUID> engines) {
+			this.engines = engines;
 			this.faction = faction;
 			this.center = center;
 			this.remaining = raiders;
@@ -66,9 +77,14 @@ public final class FactionRaids {
 		}
 	}
 
-	/** Un sitio que se puede asaltar y quién lo asaltaría. */
-	private record Target(BlockPos center, int radius, Faction faction) {
+	/** Un sitio que se puede asaltar, quién lo asaltaría y si merece máquinas de asedio. */
+	private record Target(BlockPos center, int radius, Faction faction, boolean siege) {
 	}
+
+	/** Máquinas de asedio en un asalto: ninguna, quizá (según la dificultad) o seguro (comando). */
+	public static final int SIEGE_NONE = 0;
+	public static final int SIEGE_MAYBE = 1;
+	public static final int SIEGE_FORCED = 2;
 
 	public static boolean hasActive(ServerWorld world) {
 		return ACTIVE.containsKey(world.getRegistryKey());
@@ -129,12 +145,27 @@ public final class FactionRaids {
 					}
 				}
 			}
+			int abandoned = 0;
+			for (UUID id : raid.engines) {
+				if (world.getEntity(id) instanceof SiegeEngineEntity engine && engine.isRaidEngine()) {
+					engine.abandon();
+					abandoned++;
+				}
+			}
+			if (abandoned > 0) {
+				tellNear(world, raid.center, Text.translatable("message.evolvedwarfare.raid.engines_left", abandoned).formatted(Formatting.GOLD));
+			}
 			raid.bar.clearPlayers();
 			ACTIVE.remove(world.getRegistryKey());
 		} else if (world.getTime() > raid.until) {
 			for (UUID id : raid.remaining) {
 				if (world.getEntity(id) instanceof FactionNpcEntity raider) {
 					raider.endRaid();
+				}
+			}
+			for (UUID id : raid.engines) {
+				if (world.getEntity(id) instanceof SiegeEngineEntity engine && engine.isRaidEngine()) {
+					engine.discard();
 				}
 			}
 			tellNear(world, raid.center, Text.translatable("message.evolvedwarfare.raid.retreat", raid.faction.displayName())
@@ -174,7 +205,9 @@ public final class FactionRaids {
 						faction = Faction.BANDITS;
 					}
 					if (forced != null || hostileNear(world, center, faction)) {
-						targets.add(new Target(center, radius, faction));
+						net.minecraft.util.Identifier id = world.getRegistryManager().get(net.minecraft.registry.RegistryKeys.STRUCTURE)
+								.getId(start.getStructure());
+						targets.add(new Target(center, radius, faction, id != null && id.getPath().equals("castle")));
 					}
 				}
 			}
@@ -187,7 +220,7 @@ public final class FactionRaids {
 				Faction faction = forced != null ? forced : FactionSpawner.factionAt(world, hall.getPos());
 				if (forced != null || Reputation.hostile(world, owner, faction)) {
 					BlockPos center = FactionSpawner.surface(world, hall.getPos().getX(), hall.getPos().getZ());
-					targets.add(new Target(center != null ? center : hall.getPos(), 48, faction));
+					targets.add(new Target(center != null ? center : hall.getPos(), 48, faction, true));
 				}
 			}
 		}
@@ -198,16 +231,25 @@ public final class FactionRaids {
 	 * Busca dónde asaltar y, a veces, lanza el asalto ('forced': una facción concreta, siempre; lo usan los comandos).
 	 */
 	public static boolean tryStart(ServerWorld world, Random random, @Nullable Faction forced) {
+		return tryStart(world, random, forced, false);
+	}
+
+	public static boolean tryStart(ServerWorld world, Random random, @Nullable Faction forced, boolean forceSiege) {
 		List<Target> targets = targets(world, forced);
 		if (targets.isEmpty() || (forced == null && random.nextInt(3) != 0)) {
 			return false;
 		}
 		Target target = targets.get(random.nextInt(targets.size()));
-		return start(world, random, target.faction(), target.center(), target.radius());
+		int siege = forceSiege ? SIEGE_FORCED : target.siege() ? SIEGE_MAYBE : SIEGE_NONE;
+		return start(world, random, target.faction(), target.center(), target.radius(), siege);
+	}
+
+	public static boolean start(ServerWorld world, Random random, Faction faction, BlockPos center, int radius) {
+		return start(world, random, faction, center, radius, SIEGE_NONE);
 	}
 
 	/** Lanza un asalto de esa facción contra ese sitio. */
-	public static boolean start(ServerWorld world, Random random, Faction faction, BlockPos center, int radius) {
+	public static boolean start(ServerWorld world, Random random, Faction faction, BlockPos center, int radius, int siege) {
 		if (hasActive(world)) {
 			return false;
 		}
@@ -239,11 +281,73 @@ public final class FactionRaids {
 		if (raiders.isEmpty()) {
 			return false;
 		}
-		ACTIVE.put(world.getRegistryKey(), new Raid(faction, center, raiders, until));
+		List<UUID> engines = new ArrayList<>();
+		float chance = difficulty == Difficulty.HARD ? 0.6F : difficulty == Difficulty.NORMAL ? 0.45F : 0.3F;
+		if (siege == SIEGE_FORCED || (siege == SIEGE_MAYBE && SiegeRules.siegeRaids(world) && random.nextFloat() < chance)) {
+			boolean both = siege == SIEGE_FORCED || difficulty == Difficulty.HARD && random.nextInt(3) == 0;
+			boolean ram = both || random.nextFloat() < 0.55F;
+			if (ram) {
+				spawnEngine(world, random, SiegeKind.RAM, faction, center, spot, until, raiders, engines);
+			}
+			if (both || !ram) {
+				BlockPos battery = batterySpot(world, center, spot);
+				if (battery != null) {
+					spawnEngine(world, random, SiegeKind.CATAPULT, faction, center, battery, until, raiders, engines);
+				}
+			}
+			if (!engines.isEmpty()) {
+				tellNear(world, center, Text.translatable("message.evolvedwarfare.raid.siege").formatted(Formatting.DARK_RED));
+			}
+		}
+		ACTIVE.put(world.getRegistryKey(), new Raid(faction, center, raiders, until, engines));
 		world.playSound(null, spot.getX(), spot.getY(), spot.getZ(), SoundEvents.EVENT_RAID_HORN.value(), SoundCategory.HOSTILE,
 				64.0F, faction == Faction.PIRATES ? 0.8F : 1.0F);
 		tellNear(world, center, Text.translatable("message.evolvedwarfare.raid.start." + faction.id()).formatted(Formatting.RED));
 		return true;
+	}
+
+	/** Una máquina de asedio con su dotación (que cuenta como asaltante). */
+	private static void spawnEngine(ServerWorld world, Random random, SiegeKind kind, Faction faction, BlockPos center, BlockPos at,
+			long until, Set<UUID> raiders, List<UUID> engines) {
+		SiegeEngineEntity engine = ModEntities.engineType(kind).create(world);
+		if (engine == null) {
+			return;
+		}
+		float yaw = SiegeBallistics.yawTo(net.minecraft.util.math.Vec3d.ofBottomCenter(at), net.minecraft.util.math.Vec3d.ofBottomCenter(center));
+		engine.refreshPositionAndAngles(at.getX() + 0.5, at.getY(), at.getZ() + 0.5, yaw, 0.0F);
+		if (!world.isSpaceEmpty(engine)) {
+			return;
+		}
+		FactionNpcEntity crew = FactionSpawner.spawnMember(world, faction, at, null, SpawnReason.EVENT, random);
+		if (crew == null) {
+			return;
+		}
+		engine.setFaction(faction, true, center);
+		world.spawnEntity(engine);
+		crew.startRaid(center, until);
+		crew.startRiding(engine, true);
+		raiders.add(crew.getUuid());
+		engines.add(engine.getUuid());
+	}
+
+	/** Dónde poner la catapulta: a tiro del centro (unos 38 bloques), del lado por el que llegan. */
+	@Nullable
+	private static BlockPos batterySpot(ServerWorld world, BlockPos center, BlockPos edge) {
+		double dx = edge.getX() - center.getX();
+		double dz = edge.getZ() - center.getZ();
+		double length = Math.sqrt(dx * dx + dz * dz);
+		if (length < 1.0) {
+			return null;
+		}
+		for (int distance : new int[] {38, 34, 42, 30}) {
+			int x = center.getX() + MathHelper.floor(dx / length * distance);
+			int z = center.getZ() + MathHelper.floor(dz / length * distance);
+			BlockPos pos = FactionSpawner.surface(world, x, z);
+			if (pos != null) {
+				return pos;
+			}
+		}
+		return null;
 	}
 
 	@Nullable

@@ -9,6 +9,9 @@ import com.evolvedwarfare.entity.RecruitEntity;
 import com.evolvedwarfare.entity.SoldierEntity;
 import com.evolvedwarfare.entity.VikingEntity;
 import com.evolvedwarfare.entity.WorkerEntity;
+import com.evolvedwarfare.siege.SiegeEngineEntity;
+import com.evolvedwarfare.siege.SiegeKind;
+import com.evolvedwarfare.siege.SiegeShotEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -69,6 +72,39 @@ public final class ModEntities {
 					.eyeHeight(1.62F)
 					.maxTrackingRange(10)
 					.build("pirate"));
+
+	/** Máquinas de asedio (fase 7). */
+	public static final EntityType<SiegeEngineEntity> CATAPULT = engine(SiegeKind.CATAPULT, 2.4F, 1.9F);
+	public static final EntityType<SiegeEngineEntity> BALLISTA = engine(SiegeKind.BALLISTA, 1.6F, 1.5F);
+	public static final EntityType<SiegeEngineEntity> TREBUCHET = engine(SiegeKind.TREBUCHET, 3.0F, 3.6F);
+	public static final EntityType<SiegeEngineEntity> RAM = engine(SiegeKind.RAM, 2.0F, 2.2F);
+
+	/** Proyectiles de las máquinas (piedra, pedrusco, vasija incendiaria, virote). */
+	public static final EntityType<SiegeShotEntity> SIEGE_SHOT = Registry.register(Registries.ENTITY_TYPE,
+			EvolvedWarfare.id("siege_shot"),
+			EntityType.Builder.<SiegeShotEntity>create(SiegeShotEntity::new, SpawnGroup.MISC)
+					.dimensions(0.5F, 0.5F)
+					.maxTrackingRange(10)
+					.trackingTickInterval(10)
+					.build("siege_shot"));
+
+	private static EntityType<SiegeEngineEntity> engine(SiegeKind kind, float width, float height) {
+		return Registry.register(Registries.ENTITY_TYPE, EvolvedWarfare.id(kind.id()),
+				EntityType.Builder.<SiegeEngineEntity>create((type, world) -> new SiegeEngineEntity(type, world, kind), SpawnGroup.MISC)
+						.dimensions(width, height)
+						.maxTrackingRange(10)
+						.trackingTickInterval(2)
+						.build(kind.id()));
+	}
+
+	public static EntityType<SiegeEngineEntity> engineType(SiegeKind kind) {
+		return switch (kind) {
+			case CATAPULT -> CATAPULT;
+			case BALLISTA -> BALLISTA;
+			case TREBUCHET -> TREBUCHET;
+			case RAM -> RAM;
+		};
+	}
 
 	private ModEntities() {
 	}

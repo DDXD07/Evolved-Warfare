@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "evolvedwarfare:block/portcullis"
+    },
+    "axis=z": {
+      "model": "evolvedwarfare:block/portcullis",
+      "y": 90
+    }
+  }
+}

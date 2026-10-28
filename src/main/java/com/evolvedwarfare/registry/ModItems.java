@@ -8,6 +8,8 @@ import com.evolvedwarfare.item.CommandStaffItem;
 import com.evolvedwarfare.item.MedicKitItem;
 import com.evolvedwarfare.item.RecruitmentContractItem;
 import com.evolvedwarfare.item.RouteSlipItem;
+import com.evolvedwarfare.item.SiegeEngineItem;
+import com.evolvedwarfare.siege.SiegeKind;
 import com.evolvedwarfare.item.WhiteFlagItem;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.item.Item;
@@ -53,6 +55,27 @@ public final class ModItems {
 	public static final Item STRUCTURE_SCANNER = register("structure_scanner", new StructureScannerItem(new Item.Settings().maxCount(1)));
 	public static final Item BLUEPRINT = register("blueprint", new BlueprintItem(new Item.Settings().maxCount(1)));
 
+	/** Máquinas de asedio y su munición (fase 7). */
+	public static final Item CATAPULT = register("catapult",
+			new SiegeEngineItem(SiegeKind.CATAPULT, () -> ModEntities.CATAPULT, new Item.Settings().maxCount(1)));
+	public static final Item BALLISTA = register("ballista",
+			new SiegeEngineItem(SiegeKind.BALLISTA, () -> ModEntities.BALLISTA, new Item.Settings().maxCount(1)));
+	public static final Item TREBUCHET = register("trebuchet",
+			new SiegeEngineItem(SiegeKind.TREBUCHET, () -> ModEntities.TREBUCHET, new Item.Settings().maxCount(1)));
+	public static final Item BATTERING_RAM = register("battering_ram",
+			new SiegeEngineItem(SiegeKind.RAM, () -> ModEntities.RAM, new Item.Settings().maxCount(1)));
+	public static final Item BALLISTA_BOLT = register("ballista_bolt", new Item(new Item.Settings()));
+	public static final Item FIRE_POT = register("fire_pot", new Item(new Item.Settings().maxCount(16)));
+
+	public static Item siegeItem(SiegeKind kind) {
+		return switch (kind) {
+			case CATAPULT -> CATAPULT;
+			case BALLISTA -> BALLISTA;
+			case TREBUCHET -> TREBUCHET;
+			case RAM -> BATTERING_RAM;
+		};
+	}
+
 	/** Pestaña propia en el inventario creativo. */
 	public static final ItemGroup GROUP = Registry.register(Registries.ITEM_GROUP, EvolvedWarfare.id("main"),
 			FabricItemGroup.builder()
@@ -67,6 +90,15 @@ public final class ModItems {
 						entries.add(AMBASSADOR_SEAL);
 						entries.add(STRUCTURE_SCANNER);
 						entries.add(ModBlocks.ARCHITECT_TABLE);
+						entries.add(CATAPULT);
+						entries.add(BALLISTA);
+						entries.add(TREBUCHET);
+						entries.add(BATTERING_RAM);
+						entries.add(BALLISTA_BOLT);
+						entries.add(FIRE_POT);
+						entries.add(ModBlocks.PORTCULLIS);
+						entries.add(ModBlocks.DRAWBRIDGE);
+						entries.add(ModBlocks.GATE_WINCH);
 						entries.add(BANDIT_SPAWN_EGG);
 						entries.add(VIKING_SPAWN_EGG);
 						entries.add(PIRATE_SPAWN_EGG);

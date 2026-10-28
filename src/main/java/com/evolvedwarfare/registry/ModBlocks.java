@@ -2,6 +2,10 @@ package com.evolvedwarfare.registry;
 
 import com.evolvedwarfare.EvolvedWarfare;
 import com.evolvedwarfare.block.ArchitectTableBlock;
+import com.evolvedwarfare.block.DrawbridgeBlock;
+import com.evolvedwarfare.block.GateWinchBlock;
+import com.evolvedwarfare.block.GateWinchBlockEntity;
+import com.evolvedwarfare.block.PortcullisBlock;
 import com.evolvedwarfare.block.TownHallBlock;
 import com.evolvedwarfare.block.TownHallBlockEntity;
 import com.evolvedwarfare.block.WarehouseBlock;
@@ -53,6 +57,25 @@ public final class ModBlocks {
 			.strength(2.5F)
 			.sounds(BlockSoundGroup.WOOD)));
 
+	/** Rastrillo, tablones de puente levadizo y el torno que los mueve (fase 7). */
+	public static final Block PORTCULLIS = register("portcullis", new PortcullisBlock(AbstractBlock.Settings.create()
+			.mapColor(MapColor.IRON_GRAY)
+			.requiresTool()
+			.strength(6.0F, 8.0F)
+			.sounds(BlockSoundGroup.CHAIN)
+			.nonOpaque()));
+	public static final Block DRAWBRIDGE = register("drawbridge", new DrawbridgeBlock(AbstractBlock.Settings.create()
+			.mapColor(MapColor.SPRUCE_BROWN)
+			.instrument(NoteBlockInstrument.BASS)
+			.strength(3.0F, 4.0F)
+			.sounds(BlockSoundGroup.WOOD)
+			.burnable()));
+	public static final Block GATE_WINCH = register("gate_winch", new GateWinchBlock(AbstractBlock.Settings.create()
+			.mapColor(MapColor.OAK_TAN)
+			.instrument(NoteBlockInstrument.BASS)
+			.strength(3.0F, 6.0F)
+			.sounds(BlockSoundGroup.WOOD)));
+
 	public static final BlockEntityType<WorkSiteBlockEntity> WORK_SITE_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
 			EvolvedWarfare.id("work_site"),
 			BlockEntityType.Builder.create(WorkSiteBlockEntity::new, WORK_SITES.values().toArray(new Block[0])).build(null));
@@ -64,6 +87,10 @@ public final class ModBlocks {
 	public static final BlockEntityType<WarehouseBlockEntity> WAREHOUSE_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
 			EvolvedWarfare.id("warehouse"),
 			BlockEntityType.Builder.create(WarehouseBlockEntity::new, WAREHOUSE).build(null));
+
+	public static final BlockEntityType<GateWinchBlockEntity> GATE_WINCH_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
+			EvolvedWarfare.id("gate_winch"),
+			BlockEntityType.Builder.create(GateWinchBlockEntity::new, GATE_WINCH).build(null));
 
 	private ModBlocks() {
 	}

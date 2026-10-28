@@ -40,7 +40,7 @@ PARTIAL = ("stairs", "slab", "door", "pane", "torch", "lantern", "bed", "carpet"
            "_wall", "banner", "ladder", "trapdoor", "air", "jigsaw", "chest", "campfire", "anvil", "grindstone",
            "bars", "button", "pressure_plate", "flower_pot", "cauldron", "water", "lava", "wheat", "carrots",
            "potatoes", "beetroots", "composter", "rail", "chain", "bell", "lectern", "brewing", "candle",
-           "head", "skull", "bush", "sapling", "grass", "fern", "flower", "tulip", "poppy", "dandelion")
+           "head", "skull", "bush", "sapling", "grass", "fern", "flower", "tulip", "poppy", "dandelion", "portcullis")
 
 
 def is_full(st):

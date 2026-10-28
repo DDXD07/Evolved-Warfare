@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "evolvedwarfare:block/gate_winch_top",
+    "front": "evolvedwarfare:block/gate_winch_front",
+    "side": "evolvedwarfare:block/gate_winch_side"
+  }
+}

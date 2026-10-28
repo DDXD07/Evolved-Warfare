@@ -26,7 +26,7 @@ import net.minecraft.util.math.BlockPos;
  * <pre>
  * /evolvedwarfare reputation &lt;jugadores&gt;                          ver la reputación
  * /evolvedwarfare reputation &lt;jugadores&gt; &lt;facción&gt; set|add &lt;n&gt;  cambiarla
- * /evolvedwarfare raid &lt;facción&gt;                                   lanzar un asalto aquí
+ * /evolvedwarfare raid &lt;facción&gt; [siege]                           lanzar un asalto aquí (con máquinas de asedio)
  * </pre>
  */
 public final class ModCommands {
@@ -61,7 +61,9 @@ public final class ModCommands {
 						.then(CommandManager.argument("faction", StringArgumentType.word())
 								.suggests((context, builder) -> CommandSource.suggestMatching(
 										java.util.Arrays.stream(Faction.values()).map(Faction::id), builder))
-								.executes(ModCommands::raid))));
+								.executes(context -> raid(context, false))
+								.then(CommandManager.literal("siege")
+										.executes(context -> raid(context, true))))));
 	}
 
 	private static Faction faction(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
@@ -105,12 +107,13 @@ public final class ModCommands {
 		return count;
 	}
 
-	private static int raid(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+	private static int raid(CommandContext<ServerCommandSource> context, boolean siege) throws CommandSyntaxException {
 		Faction faction = faction(context);
 		ServerCommandSource source = context.getSource();
 		ServerWorld world = source.getWorld();
 		BlockPos center = BlockPos.ofFloored(source.getPosition());
-		if (!FactionRaids.tryStart(world, world.getRandom(), faction) && !FactionRaids.start(world, world.getRandom(), faction, center, 40)) {
+		if (!FactionRaids.tryStart(world, world.getRandom(), faction, siege) && !FactionRaids.start(world, world.getRandom(), faction, center, 48,
+				siege ? FactionRaids.SIEGE_FORCED : FactionRaids.SIEGE_NONE)) {
 			throw RAID_FAILED.create();
 		}
 		source.sendFeedback(() -> Text.translatable("commands.evolvedwarfare.raid.started", faction.displayName()), true);

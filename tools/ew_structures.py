@@ -1627,6 +1627,14 @@ def castle():
     t.put(5, 6, 20, S("red_wall_banner", facing="east"))
     t.npc_slot(2, 10, 14, RESIDENTS)
     t.npc_slot(2, 10, 20, RESIDENTS)
+    # rastrillo (fase 7): subido dentro de la puerta; lo baja el torno que hay en la cara del patio
+    for z in (16, 17, 18):
+        for y in range(5, 9):
+            t.put(4, y, z, S(f"{NS}:portcullis", axis="z"))
+    t.put(5, 9, 15, S(f"{NS}:gate_winch", facing="west", powered="false"))
+    # una balista sobre la puerta y una catapulta en el patio (sin dueño: el primero que las use)
+    t.entity({"id": f"{NS}:ballista"}, 2, 11, 17, YAW["west"])
+    t.entity({"id": f"{NS}:catapult"}, 20, 1, 27, YAW["west"])
     # ---------------------------------------------------------------- torre del homenaje
     x0, x1, z0, z1 = 19, 29, 12, 22
     for x in range(x0, x1 + 1):
@@ -1919,6 +1927,8 @@ def bandit_stronghold():
         bed(t, tx + 2, 1, 5, "east", "black")
         t.npc_slot(tx + 1, 0, 5, P_BANDITS)
     t.put(20, 1, 3, *chest("south", LOOT_BANDIT_CAMP))
+    # catapulta de los bandidos (fase 7): uno de ellos la maneja y dispara a quien se acerque
+    t.entity({"id": f"{NS}:catapult", "Faction": "bandits"}, 12, 1, 9, YAW["west"])
     # ---------------------------------------------------------------- hoguera, armeros y guardias
     t.put(12, 1, 21, S("campfire", facing="north", lit="true", signal_fire="false", waterlogged="false"))
     for x in (10, 14):

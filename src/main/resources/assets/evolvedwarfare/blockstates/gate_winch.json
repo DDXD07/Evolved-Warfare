@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,powered=false": {
+      "model": "evolvedwarfare:block/gate_winch",
+      "y": 180
+    },
+    "facing=north,powered=true": {
+      "model": "evolvedwarfare:block/gate_winch",
+      "y": 180
+    },
+    "facing=east,powered=false": {
+      "model": "evolvedwarfare:block/gate_winch",
+      "y": 270
+    },
+    "facing=east,powered=true": {
+      "model": "evolvedwarfare:block/gate_winch",
+      "y": 270
+    },
+    "facing=south,powered=false": {
+      "model": "evolvedwarfare:block/gate_winch"
+    },
+    "facing=south,powered=true": {
+      "model": "evolvedwarfare:block/gate_winch"
+    },
+    "facing=west,powered=false": {
+      "model": "evolvedwarfare:block/gate_winch",
+      "y": 90
+    },
+    "facing=west,powered=true": {
+      "model": "evolvedwarfare:block/gate_winch",
+      "y": 90
+    }
+  }
+}

@@ -38,6 +38,13 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		EntityRendererRegistry.register(ModEntities.BANDIT, context -> new FactionNpcRenderer<>(context, "bandit", BanditEntity.VARIANTS));
 		EntityRendererRegistry.register(ModEntities.VIKING, context -> new FactionNpcRenderer<>(context, "viking", VikingEntity.VARIANTS));
 		EntityRendererRegistry.register(ModEntities.PIRATE, context -> new FactionNpcRenderer<>(context, "pirate", PirateEntity.VARIANTS));
+		// asedio (fase 7)
+		for (com.evolvedwarfare.siege.SiegeKind kind : com.evolvedwarfare.siege.SiegeKind.values()) {
+			EntityRendererRegistry.register(ModEntities.engineType(kind),
+					context -> com.evolvedwarfare.client.render.SiegeEngineRenderer.forKind(context, kind));
+		}
+		EntityRendererRegistry.register(ModEntities.SIEGE_SHOT, com.evolvedwarfare.client.render.SiegeShotRenderer::new);
+		net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents.END_CLIENT_TICK.register(SiegeAimPreview::tick);
 		HandledScreens.register(ModScreens.NPC, NpcScreen::new);
 		HandledScreens.register(ModScreens.WORK_SITE, WorkSiteScreen::new);
 		HandledScreens.register(ModScreens.BLUEPRINT, BlueprintScreen::new);
@@ -76,5 +83,6 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		}
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.TOWN_HALL, RenderLayer.getCutout());
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.WAREHOUSE, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.PORTCULLIS, RenderLayer.getCutout());
 	}
 }
