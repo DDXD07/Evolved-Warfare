@@ -133,7 +133,7 @@ public class NpcScreen extends HandledScreen<NpcScreenHandler> {
 		context.drawText(textRenderer, Text.translatable("gui.evolvedwarfare.order", orderText), infoX, 28, TEXT, false);
 
 		if (handler.unpaidDays() > 0) {
-			int left = AbstractNpcEntity.MAX_UNPAID_DAYS - handler.unpaidDays();
+			int left = AbstractNpcEntity.maxUnpaidDays() - handler.unpaidDays();
 			context.drawText(textRenderer, Text.translatable("gui.evolvedwarfare.unpaid", left), infoX, 38, WARN, false);
 		} else {
 			int days = handler.provisionDays();

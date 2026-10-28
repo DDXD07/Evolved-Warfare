@@ -170,6 +170,26 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:iron_flail",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "minecraft:enchant_randomly"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:iron_longsword",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:diamond_dagger",
+          "weight": 1
         }
       ]
     },
@@ -430,6 +450,26 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:iron_flail",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "minecraft:enchant_randomly"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:iron_longsword",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:diamond_dagger",
+          "weight": 1
         }
       ],
       "conditions": [
@@ -608,6 +648,26 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:iron_flail",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "minecraft:enchant_randomly"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:iron_longsword",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:diamond_dagger",
+          "weight": 1
         }
       ],
       "conditions": [
@@ -786,6 +846,26 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:iron_flail",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "minecraft:enchant_randomly"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:iron_longsword",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:diamond_dagger",
+          "weight": 1
         }
       ],
       "conditions": [

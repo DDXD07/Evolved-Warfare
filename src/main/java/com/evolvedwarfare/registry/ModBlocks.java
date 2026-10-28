@@ -6,6 +6,8 @@ import com.evolvedwarfare.block.DrawbridgeBlock;
 import com.evolvedwarfare.block.GateWinchBlock;
 import com.evolvedwarfare.block.GateWinchBlockEntity;
 import com.evolvedwarfare.block.PortcullisBlock;
+import com.evolvedwarfare.block.ResearchDeskBlock;
+import com.evolvedwarfare.block.ResearchDeskBlockEntity;
 import com.evolvedwarfare.block.TownHallBlock;
 import com.evolvedwarfare.block.TownHallBlockEntity;
 import com.evolvedwarfare.block.WarehouseBlock;
@@ -76,6 +78,13 @@ public final class ModBlocks {
 			.strength(3.0F, 6.0F)
 			.sounds(BlockSoundGroup.WOOD)));
 
+	/** Mesa de investigación (fase 8). */
+	public static final Block RESEARCH_DESK = register("research_desk", new ResearchDeskBlock(AbstractBlock.Settings.create()
+			.mapColor(MapColor.OAK_TAN)
+			.instrument(NoteBlockInstrument.BASS)
+			.strength(2.5F)
+			.sounds(BlockSoundGroup.WOOD)));
+
 	public static final BlockEntityType<WorkSiteBlockEntity> WORK_SITE_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
 			EvolvedWarfare.id("work_site"),
 			BlockEntityType.Builder.create(WorkSiteBlockEntity::new, WORK_SITES.values().toArray(new Block[0])).build(null));
@@ -91,6 +100,10 @@ public final class ModBlocks {
 	public static final BlockEntityType<GateWinchBlockEntity> GATE_WINCH_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
 			EvolvedWarfare.id("gate_winch"),
 			BlockEntityType.Builder.create(GateWinchBlockEntity::new, GATE_WINCH).build(null));
+
+	public static final BlockEntityType<ResearchDeskBlockEntity> RESEARCH_DESK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
+			EvolvedWarfare.id("research_desk"),
+			BlockEntityType.Builder.create(ResearchDeskBlockEntity::new, RESEARCH_DESK).build(null));
 
 	private ModBlocks() {
 	}

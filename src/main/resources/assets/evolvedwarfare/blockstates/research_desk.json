@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "evolvedwarfare:block/research_desk"
+    },
+    "facing=east": {
+      "model": "evolvedwarfare:block/research_desk",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "evolvedwarfare:block/research_desk",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "evolvedwarfare:block/research_desk",
+      "y": 270
+    }
+  }
+}

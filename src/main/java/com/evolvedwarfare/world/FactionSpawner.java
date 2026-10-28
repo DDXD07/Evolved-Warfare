@@ -10,6 +10,7 @@ import java.util.List;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.entity.EntityType;
+import com.evolvedwarfare.config.EwConfig;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BiomeTags;
@@ -46,11 +47,8 @@ public final class FactionSpawner {
 	public static final TagKey<Biome> PIRATE_COASTS = TagKey.of(RegistryKeys.BIOME, EvolvedWarfare.id("pirate_coasts"));
 
 	private static final int CHECK_INTERVAL = 200;
-	private static final int PATROL_MIN = 12000;
-	private static final int PATROL_MAX = 24000;
-	private static final int FIRST_RAID = 48000;
-	private static final int RAID_MIN = 72000;
-	private static final int RAID_MAX = 120000;
+	/** Tics por minuto real (los tiempos se configuran en minutos). */
+	private static final int MINUTE = 1200;
 
 	private FactionSpawner() {
 	}
@@ -79,24 +77,30 @@ public final class FactionSpawner {
 		Random random = world.getRandom();
 		BanditWorldState state = BanditWorldState.get(world);
 		if (state.nextPatrol < 0) {
-			state.nextPatrol = time + between(random, PATROL_MIN, PATROL_MAX);
+			state.nextPatrol = time + patrolDelay(random);
 			state.markDirty();
 		}
 		if (state.nextRaid < 0) {
-			state.nextRaid = time + FIRST_RAID;
+			state.nextRaid = time + (long) EwConfig.get().firstRaidMinutes * MINUTE;
 			state.markDirty();
 		}
 		if (time >= state.nextPatrol) {
-			state.nextPatrol = time + between(random, PATROL_MIN, PATROL_MAX);
+			state.nextPatrol = time + patrolDelay(random);
 			state.markDirty();
 			if (random.nextFloat() < 0.35F) {
 				spawnPatrol(world, random);
 			}
 		}
 		if (time >= state.nextRaid && !FactionRaids.hasActive(world) && FactionRaids.tryStart(world, random, null)) {
-			state.nextRaid = time + between(random, RAID_MIN, RAID_MAX);
+			EwConfig config = EwConfig.get();
+			state.nextRaid = time + between(random, config.raidMinMinutes * MINUTE, config.raidMaxMinutes * MINUTE);
 			state.markDirty();
 		}
+	}
+
+	private static long patrolDelay(Random random) {
+		EwConfig config = EwConfig.get();
+		return between(random, config.patrolMinMinutes * MINUTE, config.patrolMaxMinutes * MINUTE);
 	}
 
 	static List<ServerPlayerEntity> activePlayers(ServerWorld world) {

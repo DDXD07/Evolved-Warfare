@@ -3,6 +3,7 @@
 	"package": "com.evolvedwarfare.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
+		"CraftingScreenHandlerMixin",
 		"LivingEntityAccessor",
 		"PoolStructurePieceAccessor",
 		"SinglePoolElementAccessor",

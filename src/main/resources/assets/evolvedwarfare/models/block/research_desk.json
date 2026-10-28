@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "evolvedwarfare:block/research_desk_top",
+    "front": "evolvedwarfare:block/research_desk_side",
+    "side": "evolvedwarfare:block/research_desk_side"
+  }
+}

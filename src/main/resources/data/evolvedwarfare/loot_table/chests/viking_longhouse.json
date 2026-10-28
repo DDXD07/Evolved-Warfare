@@ -182,6 +182,37 @@
           "type": "minecraft:item",
           "name": "minecraft:iron_helmet",
           "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:iron_battle_axe",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:enchant_randomly"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:iron_spear",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:javelin",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2.0,
+                "max": 5.0
+              }
+            }
+          ]
         }
       ]
     },
@@ -428,6 +459,37 @@
           "type": "minecraft:item",
           "name": "minecraft:iron_helmet",
           "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:iron_battle_axe",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:enchant_randomly"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:iron_spear",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:javelin",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2.0,
+                "max": 5.0
+              }
+            }
+          ]
         }
       ],
       "conditions": [
@@ -618,6 +680,37 @@
           "type": "minecraft:item",
           "name": "minecraft:iron_helmet",
           "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:iron_battle_axe",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:enchant_randomly"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:iron_spear",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:javelin",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2.0,
+                "max": 5.0
+              }
+            }
+          ]
         }
       ],
       "conditions": [
@@ -808,6 +901,37 @@
           "type": "minecraft:item",
           "name": "minecraft:iron_helmet",
           "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:iron_battle_axe",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:enchant_randomly"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:iron_spear",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:javelin",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2.0,
+                "max": 5.0
+              }
+            }
+          ]
         }
       ],
       "conditions": [

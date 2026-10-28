@@ -1,5 +1,6 @@
 package com.evolvedwarfare.entity;
 
+import com.evolvedwarfare.config.EwConfig;
 import com.evolvedwarfare.EvolvedWarfare;
 import com.evolvedwarfare.entity.ai.FollowOwnerNpcGoal;
 import com.evolvedwarfare.entity.ai.ReturnHomeGoal;
@@ -61,12 +62,14 @@ import org.jetbrains.annotations.Nullable;
  *   <li><b>Órdenes</b>: seguir, quedarse quieto o volver a casa.</li>
  *   <li><b>Equipo</b>: armadura y armas en sus manos (se ven puestas y se sueltan al morir).</li>
  *   <li><b>Paga</b>: cada día de juego consume 1 provisión (comida o Golden Coin). Si pasa
- *       {@value #MAX_UNPAID_DAYS} días sin cobrar, deserta.</li>
+ *       los días sin cobrar que diga la configuración (3), deserta.</li>
  * </ul>
  */
 public abstract class AbstractNpcEntity extends PathAwareEntity {
 	public static final int UPKEEP_INTERVAL = 24000;
-	public static final int MAX_UNPAID_DAYS = 3;
+	public static int maxUnpaidDays() {
+		return Math.max(1, EwConfig.get().maxUnpaidDays);
+	}
 	public static final int PROVISION_SLOTS = 2;
 	/** Lo que acepta como paga (comida cocinada y, si está instalado, la Golden Coin). */
 	public static final TagKey<Item> UPKEEP = TagKey.of(RegistryKeys.ITEM, EvolvedWarfare.id("upkeep"));
@@ -105,6 +108,14 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 	protected void initDataTracker(DataTracker.Builder builder) {
 		super.initDataTracker(builder);
 		builder.add(VARIANT, 0);
+	}
+
+	/** Con lanza o alabarda llega más lejos (fase 8). */
+	@Override
+	protected net.minecraft.util.math.Box getAttackBox() {
+		net.minecraft.util.math.Box box = super.getAttackBox();
+		double extra = com.evolvedwarfare.weapon.MedievalWeapons.npcReach(getMainHandStack());
+		return extra > 0.0 ? box.expand(extra, 0.0, extra) : box;
 	}
 
 	@Override
@@ -304,11 +315,11 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 			return;
 		}
 		unpaidDays++;
-		if (unpaidDays >= MAX_UNPAID_DAYS) {
+		if (unpaidDays >= maxUnpaidDays()) {
 			notifyOwner(Text.translatable("message.evolvedwarfare.deserted", getName()));
 			desert();
 		} else {
-			notifyOwner(Text.translatable("message.evolvedwarfare.unpaid", getName(), MAX_UNPAID_DAYS - unpaidDays));
+			notifyOwner(Text.translatable("message.evolvedwarfare.unpaid", getName(), maxUnpaidDays() - unpaidDays));
 		}
 	}
 

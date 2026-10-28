@@ -34,6 +34,10 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import com.evolvedwarfare.config.EwConfig;
+import com.evolvedwarfare.research.Research;
+import com.evolvedwarfare.research.Tech;
+import java.util.UUID;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
@@ -52,6 +56,8 @@ public class SoldierEntity extends AbstractNpcEntity implements CombatNpc {
 	private static final int[] XP_FOR_LEVEL = {0, 0, 5, 15, 30, 50};
 	private static final Identifier LEVEL_HEALTH = EvolvedWarfare.id("level_health");
 	private static final Identifier LEVEL_DAMAGE = EvolvedWarfare.id("level_damage");
+	private static final Identifier BONUS_HEALTH = EvolvedWarfare.id("research_health");
+	private static final Identifier BONUS_DAMAGE = EvolvedWarfare.id("research_damage");
 	private static final NpcRole[] TRAINABLE = {NpcRole.WARRIOR, NpcRole.BARBARIAN, NpcRole.ARCHER, NpcRole.CROSSBOWMAN, NpcRole.MEDIC};
 
 	private static final TrackedData<Integer> ROLE = DataTracker.registerData(SoldierEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -132,7 +138,8 @@ public class SoldierEntity extends AbstractNpcEntity implements CombatNpc {
 	}
 
 	public void gainExperience(int amount) {
-		experience += amount;
+		// veteranos (investigación): el doble de experiencia
+		experience += Research.hasBonus(getWorld(), getOwnerUuid(), Tech.VETERANS) ? amount * 2 : amount;
 		int level = getCombatLevel();
 		int newLevel = level;
 		while (newLevel < MAX_LEVEL && experience >= XP_FOR_LEVEL[newLevel + 1]) {
@@ -146,6 +153,41 @@ public class SoldierEntity extends AbstractNpcEntity implements CombatNpc {
 				world.spawnParticles(ParticleTypes.HAPPY_VILLAGER, getX(), getBodyY(0.8), getZ(), 12, 0.4, 0.6, 0.4, 0.0);
 			}
 			notifyOwner(Text.translatable("message.evolvedwarfare.level_up", getName(), Text.translatable(getRole().translationKey()), newLevel));
+		}
+	}
+
+	@Override
+	public void tick() {
+		super.tick();
+		if (!getWorld().isClient && age % 100 == 0) {
+			applyBonuses();
+		}
+	}
+
+	/**
+	 * La configuración (vida y daño de los soldados) y lo investigado por su dueño: instrucción (+20 % de vida),
+	 * tácticas (+15 % de daño) y medicina de campaña (se cura 1 de vida cada 5 segundos fuera de combate).
+	 */
+	private void applyBonuses() {
+		EwConfig config = EwConfig.get();
+		UUID owner = getOwnerUuid();
+		double health = config.soldierHealth * (Research.hasBonus(getWorld(), owner, Tech.DRILL) ? 1.2 : 1.0);
+		double damage = config.soldierDamage * (Research.hasBonus(getWorld(), owner, Tech.TACTICS) ? 1.15 : 1.0);
+		EntityAttributeInstance maxHealth = getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
+		if (maxHealth != null) {
+			maxHealth.overwritePersistentModifier(new EntityAttributeModifier(BONUS_HEALTH, health - 1.0,
+					EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+		}
+		EntityAttributeInstance attack = getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+		if (attack != null) {
+			attack.overwritePersistentModifier(new EntityAttributeModifier(BONUS_DAMAGE, damage - 1.0,
+					EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+		}
+		if (getHealth() > getMaxHealth()) {
+			setHealth(getMaxHealth());
+		}
+		if (getTarget() == null && getHealth() < getMaxHealth() && Research.hasBonus(getWorld(), owner, Tech.FIELD_MEDICINE)) {
+			heal(1.0F);
 		}
 	}
 

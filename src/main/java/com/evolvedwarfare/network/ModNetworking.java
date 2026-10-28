@@ -14,7 +14,10 @@ public final class ModNetworking {
 		PayloadTypeRegistry.playC2S().register(WarehouseActionPayload.ID, WarehouseActionPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(DiplomacyDataPayload.ID, DiplomacyDataPayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(DiplomacyActionPayload.ID, DiplomacyActionPayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(ResearchPayloads.Data.ID, ResearchPayloads.Data.CODEC);
+		PayloadTypeRegistry.playC2S().register(ResearchPayloads.Action.ID, ResearchPayloads.Action.CODEC);
 		DiplomacyNetworking.register();
+		com.evolvedwarfare.research.Research.register();
 		BlueprintNetworking.register();
 		ServerPlayNetworking.registerGlobalReceiver(WarehouseActionPayload.ID, (payload, context) -> {
 			if (context.player().currentScreenHandler instanceof WarehouseScreenHandler handler

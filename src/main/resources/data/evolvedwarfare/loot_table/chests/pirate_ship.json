@@ -177,6 +177,21 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:iron_dagger",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:enchant_randomly"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:iron_flail",
+          "weight": 1
         }
       ]
     },
@@ -387,6 +402,21 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:iron_dagger",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:enchant_randomly"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:iron_flail",
+          "weight": 1
         }
       ],
       "conditions": [
@@ -572,6 +602,21 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:iron_dagger",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:enchant_randomly"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:iron_flail",
+          "weight": 1
         }
       ],
       "conditions": [
@@ -757,6 +802,21 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:iron_dagger",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:enchant_randomly"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:iron_flail",
+          "weight": 1
         }
       ],
       "conditions": [

@@ -90,7 +90,11 @@ public class HealAlliesGoal extends Goal {
 		}
 		if (distance <= 3.5 * 3.5 && --cooldown <= 0) {
 			cooldown = 40;
-			patient.heal(HEAL);
+			// medicina de campaña (investigación del dueño): cura la mitad más
+			boolean trained = medic instanceof com.evolvedwarfare.entity.AbstractNpcEntity npc
+					&& com.evolvedwarfare.research.Research.hasBonus(medic.getWorld(), npc.getOwnerUuid(),
+							com.evolvedwarfare.research.Tech.FIELD_MEDICINE);
+			patient.heal(trained ? HEAL * 1.5F : HEAL);
 			medic.swingHand(Hand.MAIN_HAND);
 			medic.playSound(SoundEvents.ENTITY_GENERIC_DRINK, 0.6F, 1.2F);
 			if (medic.getWorld() instanceof ServerWorld world) {

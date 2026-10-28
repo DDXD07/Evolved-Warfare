@@ -86,7 +86,8 @@ public final class FactionGear {
 		switch (role) {
 			case BARBARIAN -> {
 				// berserker: hacha a dos manos, sin casco ni camisa, con calzas y botas de piel
-				mob.equipStack(EquipmentSlot.MAINHAND, new ItemStack(elite || r.nextFloat() < 0.6F ? Items.IRON_AXE : Items.STONE_AXE));
+				mob.equipStack(EquipmentSlot.MAINHAND, new ItemStack(r.nextFloat() < 0.35F ? com.evolvedwarfare.registry.ModItems.weapon(com.evolvedwarfare.weapon.WeaponType.BATTLE_AXE, "iron")
+						: elite || r.nextFloat() < 0.6F ? Items.IRON_AXE : Items.STONE_AXE));
 				mob.equipStack(EquipmentSlot.LEGS, dyed(Items.LEATHER_LEGGINGS, 0x8A7A5A));
 				mob.equipStack(EquipmentSlot.FEET, dyed(Items.LEATHER_BOOTS, 0x5A4632));
 			}
@@ -109,7 +110,9 @@ public final class FactionGear {
 			}
 			case CAPTAIN -> {
 				// jarl
-				mob.equipStack(EquipmentSlot.MAINHAND, new ItemStack(elite && r.nextFloat() < 0.25F ? Items.DIAMOND_AXE : Items.IRON_AXE));
+				mob.equipStack(EquipmentSlot.MAINHAND, new ItemStack(r.nextFloat() < 0.5F
+						? com.evolvedwarfare.registry.ModItems.weapon(com.evolvedwarfare.weapon.WeaponType.BATTLE_AXE, elite && r.nextFloat() < 0.4F ? "diamond" : "iron")
+						: elite && r.nextFloat() < 0.25F ? Items.DIAMOND_AXE : Items.IRON_AXE));
 				mob.equipStack(EquipmentSlot.OFFHAND, shield(world, Faction.VIKINGS));
 				mob.equipStack(EquipmentSlot.HEAD, new ItemStack(Items.IRON_HELMET));
 				mob.equipStack(EquipmentSlot.CHEST, new ItemStack(Items.CHAINMAIL_CHESTPLATE));
@@ -137,7 +140,8 @@ public final class FactionGear {
 		switch (role) {
 			case BARBARIAN -> {
 				// matón: hacha y el pecho al aire
-				mob.equipStack(EquipmentSlot.MAINHAND, new ItemStack(elite || r.nextFloat() < 0.5F ? Items.IRON_AXE : Items.STONE_AXE));
+				mob.equipStack(EquipmentSlot.MAINHAND, new ItemStack(r.nextFloat() < 0.3F ? com.evolvedwarfare.registry.ModItems.weapon(com.evolvedwarfare.weapon.WeaponType.FLAIL, "iron")
+						: elite || r.nextFloat() < 0.5F ? Items.IRON_AXE : Items.STONE_AXE));
 				mob.equipStack(EquipmentSlot.LEGS, dyed(Items.LEATHER_LEGGINGS, color));
 			}
 			case ARCHER, CROSSBOWMAN -> {
@@ -162,7 +166,9 @@ public final class FactionGear {
 			}
 			default -> {
 				// pirata de abordaje: alfanje (espada) y a veces un escudo con la calavera
-				mob.equipStack(EquipmentSlot.MAINHAND, new ItemStack(r.nextFloat() < 0.15F ? Items.GOLDEN_SWORD
+				float pick = r.nextFloat();
+				mob.equipStack(EquipmentSlot.MAINHAND, new ItemStack(pick < 0.15F ? Items.GOLDEN_SWORD
+						: pick < 0.35F ? com.evolvedwarfare.registry.ModItems.weapon(com.evolvedwarfare.weapon.WeaponType.DAGGER, "iron")
 						: elite || r.nextFloat() < 0.6F ? Items.IRON_SWORD : Items.STONE_SWORD));
 				if (elite || r.nextFloat() < 0.25F) {
 					mob.equipStack(EquipmentSlot.OFFHAND, shield(world, Faction.PIRATES));

@@ -104,7 +104,7 @@ public class SiegeEngineRenderer extends EntityRenderer<SiegeEngineEntity> {
 
 	/** Cuánto ha pasado desde el último disparo (0..1), y si está lista. */
 	private static float elapsed(SiegeEngineEntity engine, float tickDelta) {
-		int total = engine.getKind().reload;
+		int total = engine.getReloadTotal();
 		int reload = engine.getReload();
 		if (reload <= 0) {
 			return 1.0F;
@@ -113,7 +113,7 @@ public class SiegeEngineRenderer extends EntityRenderer<SiegeEngineEntity> {
 	}
 
 	private static float armAngle(SiegeEngineEntity engine, float tickDelta, float cocked, float fired, int swingTicks) {
-		int total = engine.getKind().reload;
+		int total = engine.getReloadTotal();
 		int reload = engine.getReload();
 		if (reload <= 0) {
 			return cocked;

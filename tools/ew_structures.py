@@ -1693,7 +1693,7 @@ def castle():
     for z in (19, 20, 21):
         t.put(20, 6, z, "bookshelf")
         t.put(20, 7, z, "bookshelf")
-    t.put(23, 6, 21, S("lectern", facing="north", has_book="false", powered="false"))
+    t.put(23, 6, 21, S(f"{NS}:research_desk", facing="north"))
     for x in range(22, 27):
         for z in range(15, 20):
             t.put(x, 6, z, "red_carpet")

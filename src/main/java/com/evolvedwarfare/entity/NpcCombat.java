@@ -51,9 +51,16 @@ public final class NpcCombat {
 		double dy = target.getBodyY(0.3333333333333333) - arrow.getY();
 		double horizontal = Math.sqrt(dx * dx + dz * dz);
 		float speed = crossbow ? 2.2F : 1.6F * Math.max(0.35F, pull);
+		boolean longbow = weapon.getItem() instanceof com.evolvedwarfare.weapon.LongbowItem;
+		if (longbow) {
+			speed *= com.evolvedwarfare.weapon.LongbowItem.power();
+		}
 		float spread = (float) (14 - world.getDifficulty().getId() * 4);
 		arrow.setVelocity(dx, dy + horizontal * (crossbow ? 0.12 : 0.2), dz, speed, spread);
 		arrow.setDamage(arrow.getDamage() * damageMultiplier * (crossbow ? 1.5 : 1.0));
+		if (longbow) {
+			arrow.setDamage(arrow.getDamage() * (0.5 + 0.5 * com.evolvedwarfare.weapon.LongbowItem.power()));
+		}
 		if (crossbow || pull >= 1.0F) {
 			arrow.setCritical(true);
 		}
@@ -102,7 +109,10 @@ public final class NpcCombat {
 	public static void equip(MobEntity mob, NpcRole role, Random r, int color, boolean elite) {
 		switch (role) {
 			case WARRIOR -> {
-				mob.equipStack(EquipmentSlot.MAINHAND, new ItemStack(elite || r.nextFloat() < 0.6F ? Items.IRON_SWORD : Items.STONE_SWORD));
+				float pick = r.nextFloat();
+				mob.equipStack(EquipmentSlot.MAINHAND, new ItemStack(pick < 0.2F ? com.evolvedwarfare.registry.ModItems.weapon(com.evolvedwarfare.weapon.WeaponType.SPEAR, "iron")
+						: pick < 0.3F ? com.evolvedwarfare.registry.ModItems.weapon(com.evolvedwarfare.weapon.WeaponType.DAGGER, "iron")
+						: elite || r.nextFloat() < 0.6F ? Items.IRON_SWORD : Items.STONE_SWORD));
 				if (r.nextFloat() < 0.5F || elite) {
 					mob.equipStack(EquipmentSlot.OFFHAND, new ItemStack(Items.SHIELD));
 				}
@@ -113,7 +123,10 @@ public final class NpcCombat {
 				mob.equipStack(EquipmentSlot.LEGS, dyed(Items.LEATHER_LEGGINGS, color));
 			}
 			case BARBARIAN -> {
-				mob.equipStack(EquipmentSlot.MAINHAND, new ItemStack(elite || r.nextFloat() < 0.5F ? Items.IRON_AXE : Items.STONE_AXE));
+				float pick = r.nextFloat();
+				mob.equipStack(EquipmentSlot.MAINHAND, new ItemStack(pick < 0.2F ? com.evolvedwarfare.registry.ModItems.weapon(com.evolvedwarfare.weapon.WeaponType.FLAIL, "iron")
+						: pick < 0.35F ? com.evolvedwarfare.registry.ModItems.weapon(com.evolvedwarfare.weapon.WeaponType.BATTLE_AXE, "iron")
+						: elite || r.nextFloat() < 0.5F ? Items.IRON_AXE : Items.STONE_AXE));
 				if (r.nextFloat() < 0.6F) {
 					mob.equipStack(EquipmentSlot.HEAD, dyed(Items.LEATHER_HELMET, color));
 				}
@@ -140,7 +153,7 @@ public final class NpcCombat {
 				mob.equipStack(EquipmentSlot.HEAD, dyed(Items.LEATHER_HELMET, color));
 			}
 			case CAPTAIN -> {
-				mob.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
+				mob.equipStack(EquipmentSlot.MAINHAND, new ItemStack(r.nextFloat() < 0.4F ? com.evolvedwarfare.registry.ModItems.weapon(com.evolvedwarfare.weapon.WeaponType.LONGSWORD, "iron") : Items.IRON_SWORD));
 				mob.equipStack(EquipmentSlot.OFFHAND, new ItemStack(Items.SHIELD));
 				mob.equipStack(EquipmentSlot.HEAD, new ItemStack(Items.IRON_HELMET));
 				mob.equipStack(EquipmentSlot.CHEST, new ItemStack(Items.IRON_CHESTPLATE));

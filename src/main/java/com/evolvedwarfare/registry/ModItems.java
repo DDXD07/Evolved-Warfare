@@ -10,6 +10,17 @@ import com.evolvedwarfare.item.RecruitmentContractItem;
 import com.evolvedwarfare.item.RouteSlipItem;
 import com.evolvedwarfare.item.SiegeEngineItem;
 import com.evolvedwarfare.siege.SiegeKind;
+import com.evolvedwarfare.weapon.BattleAxeItem;
+import com.evolvedwarfare.weapon.JavelinItem;
+import com.evolvedwarfare.weapon.LongbowItem;
+import com.evolvedwarfare.weapon.MedievalWeaponItem;
+import com.evolvedwarfare.weapon.WeaponType;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import net.minecraft.item.ToolMaterial;
+import net.minecraft.item.ToolMaterials;
 import com.evolvedwarfare.item.WhiteFlagItem;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.item.Item;
@@ -67,6 +78,44 @@ public final class ModItems {
 	public static final Item BALLISTA_BOLT = register("ballista_bolt", new Item(new Item.Settings()));
 	public static final Item FIRE_POT = register("fire_pot", new Item(new Item.Settings().maxCount(16)));
 
+	/** Armas medievales (fase 8): cada tipo en hierro, diamante y netherita. */
+	public static final String[] WEAPON_MATERIALS = {"iron", "diamond", "netherite"};
+	public static final Map<WeaponType, List<Item>> WEAPONS = new EnumMap<>(WeaponType.class);
+
+	static {
+		for (WeaponType type : WeaponType.values()) {
+			List<Item> items = new ArrayList<>();
+			for (String material : WEAPON_MATERIALS) {
+				ToolMaterial tool = switch (material) {
+					case "diamond" -> ToolMaterials.DIAMOND;
+					case "netherite" -> ToolMaterials.NETHERITE;
+					default -> ToolMaterials.IRON;
+				};
+				Item.Settings settings = new Item.Settings();
+				if (material.equals("netherite")) {
+					settings.fireproof();
+				}
+				Item item = type == WeaponType.BATTLE_AXE ? new BattleAxeItem(tool, settings) : new MedievalWeaponItem(tool, type, settings);
+				items.add(register(material + "_" + type.id(), item));
+			}
+			WEAPONS.put(type, items);
+		}
+	}
+
+	public static final Item LONGBOW = register("longbow", new LongbowItem(new Item.Settings().maxDamage(500)));
+	public static final Item JAVELIN = register("javelin", new JavelinItem(new Item.Settings().maxCount(16)));
+
+	/** Un arma concreta: tipo y material ("iron", "diamond" o "netherite"). */
+	public static Item weapon(WeaponType type, String material) {
+		List<Item> items = WEAPONS.get(type);
+		for (int i = 0; i < WEAPON_MATERIALS.length; i++) {
+			if (WEAPON_MATERIALS[i].equals(material)) {
+				return items.get(i);
+			}
+		}
+		return items.get(0);
+	}
+
 	public static Item siegeItem(SiegeKind kind) {
 		return switch (kind) {
 			case CATAPULT -> CATAPULT;
@@ -99,6 +148,12 @@ public final class ModItems {
 						entries.add(ModBlocks.PORTCULLIS);
 						entries.add(ModBlocks.DRAWBRIDGE);
 						entries.add(ModBlocks.GATE_WINCH);
+						entries.add(ModBlocks.RESEARCH_DESK);
+						for (List<Item> items : WEAPONS.values()) {
+							items.forEach(entries::add);
+						}
+						entries.add(LONGBOW);
+						entries.add(JAVELIN);
 						entries.add(BANDIT_SPAWN_EGG);
 						entries.add(VIKING_SPAWN_EGG);
 						entries.add(PIRATE_SPAWN_EGG);

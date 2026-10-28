@@ -1,5 +1,6 @@
 package com.evolvedwarfare.siege;
 
+import com.evolvedwarfare.config.EwConfig;
 import com.evolvedwarfare.entity.NpcSides;
 import com.evolvedwarfare.registry.ModEntities;
 import com.evolvedwarfare.registry.ModItems;
@@ -122,7 +123,7 @@ public class SiegeShotEntity extends ThrownEntity {
 		if (owner != null && NpcSides.allies(owner, target)) {
 			return;
 		}
-		target.damage(source(), Kind.BOLT.damage);
+		target.damage(source(), Kind.BOLT.damage * (float) EwConfig.get().siegeDamage);
 		Vec3d push = getVelocity().normalize().multiply(0.8);
 		target.addVelocity(push.x, 0.25, push.z);
 		target.velocityModified = true;
@@ -177,7 +178,7 @@ public class SiegeShotEntity extends ThrownEntity {
 			if (distance > reach) {
 				continue;
 			}
-			float falloff = (float) (1.0 - distance / (reach + 0.5));
+			float falloff = (float) ((1.0 - distance / (reach + 0.5)) * EwConfig.get().siegeDamage);
 			if (kind == Kind.FIRE_POT) {
 				entity.setOnFireFor(8.0F);
 				entity.damage(source(), kind.damage * falloff);
@@ -204,7 +205,7 @@ public class SiegeShotEntity extends ThrownEntity {
 		world.spawnParticles(new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.COBBLESTONE.getDefaultState()),
 				at.x, at.y + 0.2, at.z, 30, 0.6, 0.4, 0.6, 0.15);
 		if (SiegeRules.blockDamage(world)) {
-			breakBlocks(world, at, kind.radius, kind.power);
+			breakBlocks(world, at, kind.radius, kind.power * (float) EwConfig.get().siegeBlockPower);
 		}
 	}
 

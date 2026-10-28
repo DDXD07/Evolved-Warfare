@@ -480,7 +480,8 @@ if __name__ == "__main__":
     # se rompen más rápido con hacha (madera) o pico (talleres)
     axe = [f"{NS}:{p}_post" for p, _, k, _ in PROFESSIONS if k == "wood"] + [f"{NS}:town_hall", f"{NS}:warehouse",
                                                                                  f"{NS}:architect_table",
-                                                                                 f"{NS}:drawbridge", f"{NS}:gate_winch"]
+                                                                                 f"{NS}:drawbridge", f"{NS}:gate_winch",
+                                                                                 f"{NS}:research_desk"]
     pick = [f"{NS}:{p}_post" for p, _, k, _ in PROFESSIONS if k == "stone"] + [f"{NS}:portcullis"]
     write_json(f"{RES}/data/minecraft/tags/block/mineable/axe.json", {"replace": False, "values": axe})
     write_json(f"{RES}/data/minecraft/tags/block/mineable/pickaxe.json", {"replace": False, "values": pick})

@@ -11,6 +11,11 @@ base {
 
 repositories {
 	// Loom añade automáticamente los repositorios de Minecraft y Fabric.
+	// Mod Menu (opcional): solo para compilar la pantalla de configuración.
+	maven {
+		name = "TerraformersMC"
+		url = "https://maven.terraformersmc.com/releases/"
+	}
 }
 
 loom {
@@ -30,6 +35,10 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+	// Mod Menu no es obligatorio: si está instalado, enseña la pantalla de configuración del mod.
+	modCompileOnly("com.terraformersmc:modmenu:${project.modmenu_version}") {
+		transitive = false
+	}
 	// Opcional: pon aquí (carpeta libs/) el .jar de Golden Coin Merchants para probar la integración.
 	modLocalRuntime fileTree(dir: "libs", include: "*.jar")
 }

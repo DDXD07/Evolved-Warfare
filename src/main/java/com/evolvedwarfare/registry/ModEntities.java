@@ -12,6 +12,7 @@ import com.evolvedwarfare.entity.WorkerEntity;
 import com.evolvedwarfare.siege.SiegeEngineEntity;
 import com.evolvedwarfare.siege.SiegeKind;
 import com.evolvedwarfare.siege.SiegeShotEntity;
+import com.evolvedwarfare.weapon.JavelinEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -87,6 +88,16 @@ public final class ModEntities {
 					.maxTrackingRange(10)
 					.trackingTickInterval(10)
 					.build("siege_shot"));
+
+	/** Jabalina lanzada (fase 8). */
+	public static final EntityType<JavelinEntity> JAVELIN = Registry.register(Registries.ENTITY_TYPE,
+			EvolvedWarfare.id("javelin"),
+			EntityType.Builder.<JavelinEntity>create(JavelinEntity::new, SpawnGroup.MISC)
+					.dimensions(0.5F, 0.5F)
+					.eyeHeight(0.13F)
+					.maxTrackingRange(4)
+					.trackingTickInterval(20)
+					.build("javelin"));
 
 	private static EntityType<SiegeEngineEntity> engine(SiegeKind kind, float width, float height) {
 		return Registry.register(Registries.ENTITY_TYPE, EvolvedWarfare.id(kind.id()),

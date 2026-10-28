@@ -1,5 +1,6 @@
 package com.evolvedwarfare.world;
 
+import com.evolvedwarfare.config.EwConfig;
 import com.evolvedwarfare.block.TownHallBlockEntity;
 import com.evolvedwarfare.entity.FactionNpcEntity;
 import com.evolvedwarfare.entity.NpcRole;
@@ -236,7 +237,7 @@ public final class FactionRaids {
 
 	public static boolean tryStart(ServerWorld world, Random random, @Nullable Faction forced, boolean forceSiege) {
 		List<Target> targets = targets(world, forced);
-		if (targets.isEmpty() || (forced == null && random.nextInt(3) != 0)) {
+		if (targets.isEmpty() || (forced == null && random.nextFloat() >= EwConfig.get().raidChance)) {
 			return false;
 		}
 		Target target = targets.get(random.nextInt(targets.size()));
@@ -282,7 +283,9 @@ public final class FactionRaids {
 			return false;
 		}
 		List<UUID> engines = new ArrayList<>();
-		float chance = difficulty == Difficulty.HARD ? 0.6F : difficulty == Difficulty.NORMAL ? 0.45F : 0.3F;
+		EwConfig config = EwConfig.get();
+		double chance = difficulty == Difficulty.HARD ? config.siegeChanceHard
+				: difficulty == Difficulty.NORMAL ? config.siegeChanceNormal : config.siegeChanceEasy;
 		if (siege == SIEGE_FORCED || (siege == SIEGE_MAYBE && SiegeRules.siegeRaids(world) && random.nextFloat() < chance)) {
 			boolean both = siege == SIEGE_FORCED || difficulty == Difficulty.HARD && random.nextInt(3) == 0;
 			boolean ram = both || random.nextFloat() < 0.55F;

@@ -49,6 +49,7 @@ public class EvolvedWarfare implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		com.evolvedwarfare.config.EwConfig.load();
 		ModComponents.init();
 		ModLoot.init();
 		ModBlocks.init();

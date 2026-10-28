@@ -1,8 +1,8 @@
 # Evolved Warfare — Minecraft 1.21.1 (Fabric)
 
-NPCs, ejércitos, trabajadores, comercio, facciones con diplomacia y asedio. Inspirado en *Ancient Warfare*, con código, nombre y texturas propios.
+NPCs, ejércitos, trabajadores, comercio, facciones con diplomacia, asedio, armas medievales e investigación. Inspirado en *Ancient Warfare*, con código, nombre y texturas propios.
 
-Requiere **Fabric API**. Opcional: **Golden Coin Merchants** (los reclutas aceptan Golden Coins como paga, hay una receta de contrato con monedas y es la moneda del comerciante; sin el mod, el comerciante usa esmeraldas).
+Requiere **Fabric API**. Opcional: **Mod Menu** (pantalla de configuración); **Golden Coin Merchants** (los reclutas aceptan Golden Coins como paga, hay una receta de contrato con monedas y es la moneda del comerciante; sin el mod, el comerciante usa esmeraldas).
 
 ## Hoja de ruta
 
@@ -15,7 +15,7 @@ Requiere **Fabric API**. Opcional: **Golden Coin Merchants** (los reclutas acept
 | 5 | **Facciones y diplomacia**: vikingos y piratas con sus asentamientos, patrullas y asaltos (también a tu pueblo); reputación con cada facción, bandera blanca, tributos, treguas, alianzas, ayuda de aliados y mercenarios | ✅ Hecha |
 | 6 | **Estructuras**: escáner de estructuras, planos, mesa del arquitecto con biblioteca y constructor que los levanta; ciudades del desierto y del norte; castillos y fortalezas del caudillo bandido | ✅ Hecha |
 | 7 | **Asedio**: catapulta, balista, trebuchet y ariete (para ti, para tus soldados y en los asaltos enemigos); rastrillo y puente levadizo con torno | ✅ Hecha |
-| 8 | Armas medievales, árbol de investigación, equilibrio y configuración | ⏳ |
+| 8 | **Armas medievales** (daga, lanza, mandoble, alabarda, martillo de guerra, mangual, hacha de batalla, arco largo y jabalina), **árbol de investigación** con su mesa, **equilibrio** y **configuración** (archivo, comando y pantalla con Mod Menu) | ✅ Hecha |
 
 ## Fase 1 — El recluta
 
@@ -414,6 +414,73 @@ Reglas del mundo (`/gamerule`): `evolvedwarfareSiegeBlockDamage` (los proyectile
 defecto) y `evolvedwarfareSiegeRaids` (los asaltos traen máquinas; sí por defecto). Para probar un asedio:
 `/evolvedwarfare raid bandits siege`.
 
+## Fase 8 — Armas, investigación, equilibrio y configuración
+
+### Armas medievales
+Cada una en hierro y diamante (en la mesa de crafteo, con palos) y en netherita (en la mesa de herrería, con la plantilla
+y un lingote de netherita, como las demás armas). Se encantan como las espadas (el hacha de batalla, como las hachas) y
+los soldados las usan: con una lanza o una alabarda, los NPCs también golpean desde más lejos.
+
+| Arma | Receta (M = lingote o diamante, S = palo) | Daño (hierro) | Golpes/s | Especial |
+|---|---|---|---|---|
+| **Daga** | M sobre S | 4 | 2,4 | Por la espalda, ×1,5 |
+| **Lanza** | M arriba a la derecha y dos S en diagonal | 5 | 1,4 | +1,5 bloques de alcance |
+| **Mandoble** | M, M y abajo M S M | 8 | 1,1 | Barrido amplio, +0,5 de alcance |
+| **Alabarda** | M _ M, S, S | 9 | 0,9 | +2 de alcance; ×1,5 contra jinetes y monturas |
+| **Martillo de guerra** | 3 M, M S M, S | 9 | 0,8 | Atraviesa armadura (+35 % de la armadura del blanco en daño) y empuja |
+| **Mangual** | S, cadena, M en una fila | 8 | 1,0 | 25 %: aturde (lentitud y debilidad 2 s) |
+| **Hacha de batalla** | 3 M, M S, S | 11 | 0,8 | Desarma escudos |
+
+- **Arco largo** (palos, cuerdas y un lingote de hierro en el centro): flechas un 25 % más rápidas y rectas, y más daño.
+  Se encanta como un arco.
+- **Jabalina** (lingote, palo y pluma en diagonal → 2): mantén pulsado clic derecho y suéltala; hace unos 9 de daño y se
+  queda clavada para recogerla.
+- Los **bandidos** llevan a veces lanzas, dagas, manguales, hachas de batalla y mandobles (el capitán); los **vikingos**,
+  hachas de batalla (el jarl, a veces de diamante); los **piratas**, dagas y manguales. También salen en sus cofres y en
+  la armería de los castillos.
+
+### Árbol de investigación
+**Mesa de investigación** (libro, pluma, libro; tablón, mesa de crafteo, tablón; dos tablones): clic derecho para abrir
+tu árbol. Eliges una técnica, pagas sus materiales (se gastan al empezar) y avanza sola mientras la mesa esté cargada.
+Cada **estantería** alrededor (como en la mesa de encantamientos, hasta 15) la hace un 10 % más rápida. Se puede cancelar
+recuperando la mitad. Los castillos tienen una en los aposentos del señor.
+
+| Rama | Nivel 1 | Nivel 2 | Nivel 3 |
+|---|---|---|---|
+| Armas | Herrería militar: dagas, lanzas, jabalinas | Armas pesadas: mandoble, martillo, mangual, hacha de batalla | Armas de asta: alabarda |
+| Arquería | Arquería larga: arco largo | | |
+| Asedio | Carpintería de asedio: ariete | Máquinas de torsión: catapulta, balista, virotes | Contrapeso: trebuchet · Fuego de asedio: vasijas |
+| Fortificación | Fortificación: rastrillo, puente levadizo, torno | | |
+| Ejército | Instrucción: +20 % de vida a tus soldados | Tácticas: +15 % de daño · Medicina de campaña: médicos curan +50 % y los soldados se recuperan solos | Veteranos: el doble de experiencia |
+
+Tardan de 3 a 10 minutos reales a velocidad normal. Mientras no lo investigues, lo de cada técnica **no se puede
+fabricar** (el resultado de la mesa de crafteo sale vacío y te dice qué te falta; la descripción del objeto también lo
+dice). Lo que encuentres en cofres o quites a los enemigos sí lo puedes usar. En creativo no hace falta investigar, y la
+investigación obligatoria se puede quitar en la configuración.
+
+### Equilibrio
+- Las armas nuevas tienen el mismo daño por segundo que una espada (o algo menos) y lo compensan con su especial.
+- Lo que antes eran números fijos ahora se configura: cada cuánto hay patrullas y asaltos, la probabilidad de asalto y
+  de que traiga máquinas, la vida y el daño de las facciones y de tus soldados, la mejora por nivel de los asentamientos,
+  los días sin cobrar, y el daño, la fuerza contra los bloques, la vida y la recarga de las máquinas de asedio.
+- Tus soldados suman las mejoras investigadas; los de las facciones, el nivel de su asentamiento y la configuración.
+
+### Configuración
+Archivo `config/evolvedwarfare.json` (se crea solo). Se puede cambiar sin salir del juego:
+```
+/evolvedwarfare config                     ver todas las opciones
+/evolvedwarfare config <opción> <valor>    cambiar una (se guarda al momento)
+/evolvedwarfare config reload | reset      volver a leer el archivo | valores de fábrica
+```
+Con **Mod Menu** instalado, el botón de configuración del mod abre una pantalla con pestañas (Investigación,
+Facciones, Asentamientos, Tus NPCs, Asedio, Armas). En un servidor manda la configuración del servidor.
+
+Investigación de los jugadores (administradores):
+```
+/evolvedwarfare research <jugadores>                          ver lo investigado
+/evolvedwarfare research <jugadores> grant|revoke <técnica|all>
+```
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -426,6 +493,8 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
 - `ew_factions.py` — aspectos de vikingos y piratas, bandera blanca y sello de embajador.
 - `ew_loot.py` — botín de los cofres de vikingos, piratas, castillos y fortalezas, y de los propios vikingos y piratas.
 - `ew_architect.py` — texturas, modelos y recetas de la mesa del arquitecto, el escáner y el plano.
+- `ew_weapons.py` — iconos, modelos, recetas (con la mejora a netherita) y etiquetas de las armas medievales, el arco
+  largo y la jabalina, y la mesa de investigación.
 - `ew_siege.py` — iconos de las máquinas de asedio y su munición, y texturas, modelos y recetas del rastrillo, el
   puente levadizo y el torno (las máquinas se dibujan en el juego con bloques escalados, sin textura propia).
 - `ew_village.py` — prototipo de las aldeas vanilla mejoradas (mismo algoritmo que `VillageExtras.java`) con vista previa.

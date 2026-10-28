@@ -1,0 +1,23 @@
+{
+  "replace": false,
+  "values": [
+    "evolvedwarfare:iron_dagger",
+    "evolvedwarfare:diamond_dagger",
+    "evolvedwarfare:netherite_dagger",
+    "evolvedwarfare:iron_spear",
+    "evolvedwarfare:diamond_spear",
+    "evolvedwarfare:netherite_spear",
+    "evolvedwarfare:iron_longsword",
+    "evolvedwarfare:diamond_longsword",
+    "evolvedwarfare:netherite_longsword",
+    "evolvedwarfare:iron_halberd",
+    "evolvedwarfare:diamond_halberd",
+    "evolvedwarfare:netherite_halberd",
+    "evolvedwarfare:iron_warhammer",
+    "evolvedwarfare:diamond_warhammer",
+    "evolvedwarfare:netherite_warhammer",
+    "evolvedwarfare:iron_flail",
+    "evolvedwarfare:diamond_flail",
+    "evolvedwarfare:netherite_flail"
+  ]
+}

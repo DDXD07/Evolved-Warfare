@@ -145,6 +145,16 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:diamond_dagger",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:enchant_randomly"
+            }
+          ]
         }
       ]
     },
@@ -359,6 +369,16 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:diamond_dagger",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:enchant_randomly"
+            }
+          ]
         }
       ],
       "conditions": [
@@ -512,6 +532,16 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:diamond_dagger",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:enchant_randomly"
+            }
+          ]
         }
       ],
       "conditions": [
@@ -663,6 +693,16 @@
                 "min": 2.0,
                 "max": 6.0
               }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:diamond_dagger",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:enchant_randomly"
             }
           ]
         }

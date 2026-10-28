@@ -3,7 +3,7 @@
 	"id": "evolvedwarfare",
 	"version": "${version}",
 	"name": "Evolved Warfare",
-	"description": "NPCs, ejércitos, trabajadores y asedio para Minecraft 1.21.1. Inspirado en Ancient Warfare.",
+	"description": "NPCs, ejércitos, trabajadores, comercio, facciones, asedio, armas medievales e investigación para Minecraft 1.21.1. Inspirado en Ancient Warfare.",
 	"license": "MIT",
 	"icon": "assets/evolvedwarfare/icon.png",
 	"environment": "*",
@@ -13,6 +13,9 @@
 		],
 		"client": [
 			"com.evolvedwarfare.client.EvolvedWarfareClient"
+		],
+		"modmenu": [
+			"com.evolvedwarfare.client.config.ModMenuIntegration"
 		]
 	},
 	"mixins": [
@@ -25,6 +28,7 @@
 		"fabric-api": "*"
 	},
 	"suggests": {
-		"goldencoin": "*"
+		"goldencoin": "*",
+		"modmenu": "*"
 	}
 }

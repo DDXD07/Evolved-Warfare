@@ -17,6 +17,7 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import com.evolvedwarfare.config.EwConfig;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
@@ -27,6 +28,7 @@ import net.minecraft.util.math.BlockPos;
  * /evolvedwarfare reputation &lt;jugadores&gt;                          ver la reputación
  * /evolvedwarfare reputation &lt;jugadores&gt; &lt;facción&gt; set|add &lt;n&gt;  cambiarla
  * /evolvedwarfare raid &lt;facción&gt; [siege]                           lanzar un asalto aquí (con máquinas de asedio)
+ * /evolvedwarfare config [&lt;opción&gt; [&lt;valor&gt;] | reload | reset]       ver o cambiar la configuración
  * </pre>
  */
 public final class ModCommands {
@@ -63,7 +65,78 @@ public final class ModCommands {
 										java.util.Arrays.stream(Faction.values()).map(Faction::id), builder))
 								.executes(context -> raid(context, false))
 								.then(CommandManager.literal("siege")
-										.executes(context -> raid(context, true))))));
+										.executes(context -> raid(context, true)))))
+				.then(CommandManager.literal("config")
+						.executes(ModCommands::configList)
+						.then(CommandManager.literal("reload").executes(context -> {
+							EwConfig.load();
+							context.getSource().sendFeedback(() -> Text.translatable("commands.evolvedwarfare.config.reloaded"), true);
+							return 1;
+						}))
+						.then(CommandManager.literal("reset").executes(context -> {
+							EwConfig.reset();
+							context.getSource().sendFeedback(() -> Text.translatable("commands.evolvedwarfare.config.reset"), true);
+							return 1;
+						}))
+						.then(CommandManager.argument("option", StringArgumentType.word())
+								.suggests((context, builder) -> CommandSource.suggestMatching(
+										EwConfig.OPTIONS.stream().map(EwConfig.Option::key), builder))
+								.executes(ModCommands::configShow)
+								.then(CommandManager.argument("value", StringArgumentType.word())
+										.executes(ModCommands::configSet)))));
+		ResearchCommands.register(dispatcher);
+	}
+
+	private static final SimpleCommandExceptionType UNKNOWN_OPTION =
+			new SimpleCommandExceptionType(Text.translatable("commands.evolvedwarfare.config.unknown"));
+	private static final SimpleCommandExceptionType BAD_VALUE =
+			new SimpleCommandExceptionType(Text.translatable("commands.evolvedwarfare.config.bad_value"));
+
+	private static MutableText optionLine(EwConfig.Option option) {
+		EwConfig config = EwConfig.get();
+		return Text.literal(option.key()).formatted(net.minecraft.util.Formatting.YELLOW)
+				.append(Text.literal(" = " + config.display(option)).formatted(net.minecraft.util.Formatting.WHITE))
+				.append(Text.literal("  ").append(Text.translatable(option.translationKey())).formatted(net.minecraft.util.Formatting.GRAY));
+	}
+
+	private static int configList(CommandContext<ServerCommandSource> context) {
+		ServerCommandSource source = context.getSource();
+		for (String category : EwConfig.categories()) {
+			source.sendFeedback(() -> Text.translatable("config.evolvedwarfare.category." + category)
+					.formatted(net.minecraft.util.Formatting.GOLD, net.minecraft.util.Formatting.BOLD), false);
+			for (EwConfig.Option option : EwConfig.OPTIONS) {
+				if (option.category().equals(category)) {
+					source.sendFeedback(() -> optionLine(option), false);
+				}
+			}
+		}
+		return EwConfig.OPTIONS.size();
+	}
+
+	private static EwConfig.Option option(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+		EwConfig.Option option = EwConfig.option(StringArgumentType.getString(context, "option"));
+		if (option == null) {
+			throw UNKNOWN_OPTION.create();
+		}
+		return option;
+	}
+
+	private static int configShow(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+		EwConfig.Option option = option(context);
+		context.getSource().sendFeedback(() -> optionLine(option), false);
+		return 1;
+	}
+
+	private static int configSet(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+		EwConfig.Option option = option(context);
+		Double value = EwConfig.parse(option, StringArgumentType.getString(context, "value"));
+		if (value == null) {
+			throw BAD_VALUE.create();
+		}
+		EwConfig.get().set(option, value);
+		EwConfig.save();
+		context.getSource().sendFeedback(() -> Text.translatable("commands.evolvedwarfare.config.set").append(" ").append(optionLine(option)), true);
+		return 1;
 	}
 
 	private static Faction faction(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {

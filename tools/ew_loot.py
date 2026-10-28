@@ -10,7 +10,7 @@ OUT = sys.argv[1]
 
 
 def item(name, weight, lo=1, hi=1, extra=None):
-    e = {"type": "minecraft:item", "name": "minecraft:" + name, "weight": weight}
+    e = {"type": "minecraft:item", "name": name if ":" in name else "minecraft:" + name, "weight": weight}
     fns = []
     if (lo, hi) != (1, 1):
         fns.append({"function": "minecraft:set_count", "add": False,
@@ -158,6 +158,16 @@ def without_level_pools(table):
     return table
 
 
+# fase 8: armas medievales en los cofres de cada facción
+EW = "evolvedwarfare:"
+TABLES["chests/viking_longhouse"]["pools"][0]["entries"] += [item(EW + "iron_battle_axe", 3, extra=ENCHANT), item(EW + "iron_spear", 2),
+                                                              item(EW + "javelin", 3, 2, 5)]
+TABLES["chests/viking_hut"]["pools"][0]["entries"] += [item(EW + "javelin", 2, 1, 3)]
+TABLES["chests/pirate_ship"]["pools"][0]["entries"] += [item(EW + "iron_dagger", 3, extra=ENCHANT), item(EW + "iron_flail", 1)]
+TABLES["chests/pirate_treasure"]["pools"][0]["entries"] += [item(EW + "diamond_dagger", 1, extra=ENCHANT)]
+TABLES["chests/bandit_stronghold"]["pools"][0]["entries"] += [item(EW + "iron_flail", 2, extra=ENCHANT),
+                                                              item(EW + "iron_longsword", 2), item(EW + "diamond_dagger", 1)]
+
 for _name, _table in TABLES.items():
     _table["pools"].extend(level_pools(_table["pools"][0]["entries"]))
 
@@ -167,7 +177,9 @@ CASTLE_TABLES = {
         item("iron_ingot", 6, 2, 6), item("arrow", 7, 8, 24), item("shield", 4), item("iron_sword", 4),
         item("iron_helmet", 3), item("iron_chestplate", 2), item("iron_leggings", 2), item("iron_boots", 3),
         item("chainmail_chestplate", 3), item("crossbow", 3), item("bow", 3), item("iron_horse_armor", 2),
-        item("iron_sword", 2, extra=ENCHANT), item("leather", 4, 2, 6)],
+        item("iron_sword", 2, extra=ENCHANT), item("leather", 4, 2, 6),
+        item(EW + "iron_spear", 3), item(EW + "iron_longsword", 2), item(EW + "iron_halberd", 1), item(EW + "iron_warhammer", 1),
+        item(EW + "javelin", 3, 2, 4), item(EW + "longbow", 1)],
         rare=[item("diamond_sword", 1), item("diamond_horse_armor", 1), item("diamond", 1, 1, 2), EMPTY | {"weight": 8}]),
     "chests/castle_treasury": chest((4, 8), [
         item("gold_ingot", 8, 2, 8), item("emerald", 8, 3, 12), item("gold_nugget", 6, 6, 20), item("diamond", 3, 1, 3),

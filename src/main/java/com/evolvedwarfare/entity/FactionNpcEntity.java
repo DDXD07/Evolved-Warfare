@@ -1,5 +1,6 @@
 package com.evolvedwarfare.entity;
 
+import com.evolvedwarfare.config.EwConfig;
 import com.evolvedwarfare.entity.ai.EscortFollowGoal;
 import com.evolvedwarfare.entity.ai.EscortTargetGoal;
 import com.evolvedwarfare.entity.ai.HealAlliesGoal;
@@ -133,6 +134,14 @@ public abstract class FactionNpcEntity extends HostileEntity implements CombatNp
 		builder.add(VARIANT, 0);
 	}
 
+	/** Con lanza o alabarda llega más lejos (fase 8). */
+	@Override
+	protected net.minecraft.util.math.Box getAttackBox() {
+		net.minecraft.util.math.Box box = super.getAttackBox();
+		double extra = com.evolvedwarfare.weapon.MedievalWeapons.npcReach(getMainHandStack());
+		return extra > 0.0 ? box.expand(extra, 0.0, extra) : box;
+	}
+
 	@Override
 	protected void initGoals() {
 		goalSelector.add(0, new SwimGoal(this));
@@ -227,16 +236,18 @@ public abstract class FactionNpcEntity extends HostileEntity implements CombatNp
 	/** Cada nivel del asentamiento por encima del 1: +10 % de vida y de daño (también el de sus flechas). */
 	public void applySettlementLevel(int level) {
 		boolean first = settlementLevel == 0;
-		settlementLevel = Math.max(1, Math.min(SettlementLevels.MAX_LEVEL, level));
-		double bonus = SettlementLevels.multiplier(settlementLevel) - 1.0;
+		settlementLevel = Math.max(1, Math.min(SettlementLevels.maxLevel(), level));
+		// el nivel del asentamiento y lo que diga la configuración, juntos
+		double multiplier = SettlementLevels.multiplier(settlementLevel);
+		EwConfig config = EwConfig.get();
 		EntityAttributeInstance health = getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
 		if (health != null) {
-			health.overwritePersistentModifier(new EntityAttributeModifier(LEVEL_HEALTH, bonus,
+			health.overwritePersistentModifier(new EntityAttributeModifier(LEVEL_HEALTH, multiplier * config.factionHealth - 1.0,
 					EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
 		}
 		EntityAttributeInstance damage = getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE);
 		if (damage != null) {
-			damage.overwritePersistentModifier(new EntityAttributeModifier(LEVEL_DAMAGE, bonus,
+			damage.overwritePersistentModifier(new EntityAttributeModifier(LEVEL_DAMAGE, multiplier * config.factionDamage - 1.0,
 					EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
 		}
 		if (first) {
@@ -246,7 +257,7 @@ public abstract class FactionNpcEntity extends HostileEntity implements CombatNp
 
 	@Override
 	public void prepareShot(PersistentProjectileEntity arrow, boolean crossbow) {
-		arrow.setDamage(arrow.getDamage() * SettlementLevels.multiplier(getSettlementLevel()));
+		arrow.setDamage(arrow.getDamage() * SettlementLevels.multiplier(getSettlementLevel()) * EwConfig.get().factionDamage);
 	}
 
 	@Override

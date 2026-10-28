@@ -1,5 +1,6 @@
 package com.evolvedwarfare.siege;
 
+import com.evolvedwarfare.config.EwConfig;
 import com.evolvedwarfare.entity.FactionNpcEntity;
 import com.evolvedwarfare.entity.NpcSides;
 import com.evolvedwarfare.faction.Faction;
@@ -65,6 +66,7 @@ public class SiegeEngineEntity extends Entity {
 	private static final TrackedData<Integer> RELOAD = DataTracker.registerData(SiegeEngineEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	private static final TrackedData<Integer> HURT = DataTracker.registerData(SiegeEngineEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	private static final TrackedData<Integer> STRIKE = DataTracker.registerData(SiegeEngineEntity.class, TrackedDataHandlerRegistry.INTEGER);
+	private static final TrackedData<Integer> RELOAD_TOTAL = DataTracker.registerData(SiegeEngineEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	/** Animación del golpe del ariete (tics). */
 	public static final int STRIKE_TICKS = 12;
 	/** Tiempo sin recibir daño para poder desmontarla. */
@@ -110,6 +112,7 @@ public class SiegeEngineEntity extends Entity {
 		builder.add(RELOAD, 0);
 		builder.add(HURT, 0);
 		builder.add(STRIKE, 0);
+		builder.add(RELOAD_TOTAL, Math.max(1, kind.reload));
 	}
 
 	// ------------------------------------------------------------------ estado
@@ -123,7 +126,23 @@ public class SiegeEngineEntity extends Entity {
 	}
 
 	public float getHealth() {
-		return Math.max(0.0F, kind.health - getDamageTaken());
+		return Math.max(0.0F, maxHealth() - getDamageTaken());
+	}
+
+	/** Vida máxima (la de la máquina por lo que diga la configuración). */
+	public float maxHealth() {
+		return kind.health * (float) EwConfig.get().siegeEngineHealth;
+	}
+
+	/** Cuánto dura la recarga entera (para la animación). */
+	public int getReloadTotal() {
+		return Math.max(1, getDataTracker().get(RELOAD_TOTAL));
+	}
+
+	private void startReload() {
+		int total = Math.max(1, Math.round(kind.reload * (float) EwConfig.get().siegeReload));
+		getDataTracker().set(RELOAD_TOTAL, total);
+		setReload(total);
 	}
 
 	public int getReload() {
@@ -220,13 +239,18 @@ public class SiegeEngineEntity extends Entity {
 		return false;
 	}
 
+	/** Fuerza contra los bloques (con la configuración). */
+	public float power() {
+		return kind.power * (float) EwConfig.get().siegeBlockPower;
+	}
+
 	boolean canBreakAhead() {
 		World world = getWorld();
 		for (BlockPos pos : frontBlocks()) {
 			BlockState state = world.getBlockState(pos);
 			if (!state.getCollisionShape(world, pos).isEmpty()) {
 				float hardness = state.getHardness(world, pos);
-				if (hardness >= 0.0F && hardness <= kind.power && world.getBlockEntity(pos) == null) {
+				if (hardness >= 0.0F && hardness <= power() && world.getBlockEntity(pos) == null) {
 					return true;
 				}
 			}
@@ -429,7 +453,7 @@ public class SiegeEngineEntity extends Entity {
 		SiegeShotEntity shot = new SiegeShotEntity(world, used.shotFor(kind), aim.muzzle(), shooter);
 		shot.setVelocity(SiegeBallistics.velocity(yaw, elevation, kind.shotSpeed));
 		world.spawnEntity(shot);
-		setReload(kind.reload);
+		startReload();
 		if (kind == SiegeKind.BALLISTA) {
 			world.playSound(null, getX(), getY(), getZ(), SoundEvents.ITEM_CROSSBOW_SHOOT, SoundCategory.PLAYERS, 1.6F, 0.6F);
 		} else {
@@ -441,7 +465,7 @@ public class SiegeEngineEntity extends Entity {
 	/** Golpe del ariete: daña a quien esté delante y va rompiendo los bloques de delante (más golpes cuanto más duros). */
 	void strike(LivingEntity driver) {
 		World world = getWorld();
-		setReload(kind.reload);
+		startReload();
 		getDataTracker().set(STRIKE, STRIKE_TICKS);
 		world.playSound(null, getX(), getY(), getZ(), SoundEvents.ENTITY_ZOMBIE_ATTACK_WOODEN_DOOR, SoundCategory.BLOCKS, 1.5F, 0.7F);
 		Vec3d fwd = forward();
@@ -466,7 +490,7 @@ public class SiegeEngineEntity extends Entity {
 				continue;
 			}
 			float hardness = state.getHardness(world, pos);
-			if (hardness < 0.0F || hardness > kind.power || world.getBlockEntity(pos) != null) {
+			if (hardness < 0.0F || hardness > power() || world.getBlockEntity(pos) != null) {
 				continue;
 			}
 			int needed = Math.max(1, MathHelper.ceil(hardness * 1.6F));
@@ -524,7 +548,7 @@ public class SiegeEngineEntity extends Entity {
 			}
 		}
 		line.append(Text.literal("  ")).append(Text.translatable("hud.evolvedwarfare.siege.health",
-				MathHelper.ceil(getHealth()), MathHelper.ceil(kind.health)).formatted(Formatting.RED));
+				MathHelper.ceil(getHealth()), MathHelper.ceil(maxHealth())).formatted(Formatting.RED));
 		player.sendMessage(line, true);
 	}
 
@@ -622,13 +646,13 @@ public class SiegeEngineEntity extends Entity {
 	}
 
 	private void repair(PlayerEntity player, ItemStack stack) {
-		setDamageTaken(getDamageTaken() - kind.health * 0.1F);
+		setDamageTaken(getDamageTaken() - maxHealth() * 0.1F);
 		if (!player.getAbilities().creativeMode) {
 			stack.decrement(1);
 		}
 		getWorld().playSound(null, getX(), getY(), getZ(), SoundEvents.BLOCK_WOOD_PLACE, SoundCategory.PLAYERS, 1.0F, 0.9F);
 		player.sendMessage(Text.translatable("message.evolvedwarfare.siege.repaired", MathHelper.ceil(getHealth()),
-				MathHelper.ceil(kind.health)), true);
+				MathHelper.ceil(maxHealth())), true);
 	}
 
 	/** Agachado y con la mano vacía: se desmonta y vuelve al inventario (con su munición). */
@@ -697,7 +721,7 @@ public class SiegeEngineEntity extends Entity {
 		getDataTracker().set(HURT, 10);
 		lastHurtTime = world.getTime();
 		emitGameEvent(GameEvent.ENTITY_DAMAGE, attacker);
-		if (getDamageTaken() >= kind.health) {
+		if (getDamageTaken() >= maxHealth()) {
 			breakApart();
 		} else {
 			world.playSound(null, getX(), getY(), getZ(), SoundEvents.BLOCK_WOOD_HIT, SoundCategory.BLOCKS, 1.0F, 0.8F);

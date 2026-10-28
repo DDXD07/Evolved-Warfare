@@ -44,6 +44,19 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 					context -> com.evolvedwarfare.client.render.SiegeEngineRenderer.forKind(context, kind));
 		}
 		EntityRendererRegistry.register(ModEntities.SIEGE_SHOT, com.evolvedwarfare.client.render.SiegeShotRenderer::new);
+		// fase 8: jabalina, arco largo (se tensa como el arco) y pantalla de investigación
+		EntityRendererRegistry.register(ModEntities.JAVELIN, com.evolvedwarfare.client.render.JavelinEntityRenderer::new);
+		net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry.register(
+				com.evolvedwarfare.registry.ModItems.LONGBOW, net.minecraft.util.Identifier.ofVanilla("pull"), (stack, world, entity, seed) ->
+						entity == null || entity.getActiveItem() != stack ? 0.0F
+								: (stack.getMaxUseTime(entity) - entity.getItemUseTimeLeft()) / 30.0F);
+		net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry.register(
+				com.evolvedwarfare.registry.ModItems.LONGBOW, net.minecraft.util.Identifier.ofVanilla("pulling"), (stack, world, entity, seed) ->
+						entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0F : 0.0F);
+		net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry.register(
+				com.evolvedwarfare.registry.ModItems.JAVELIN, net.minecraft.util.Identifier.ofVanilla("throwing"), (stack, world, entity, seed) ->
+						entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0F : 0.0F);
+		ClientResearch.register();
 		net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents.END_CLIENT_TICK.register(SiegeAimPreview::tick);
 		HandledScreens.register(ModScreens.NPC, NpcScreen::new);
 		HandledScreens.register(ModScreens.WORK_SITE, WorkSiteScreen::new);

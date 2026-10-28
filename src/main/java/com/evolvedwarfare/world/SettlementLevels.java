@@ -1,5 +1,6 @@
 package com.evolvedwarfare.world;
 
+import com.evolvedwarfare.config.EwConfig;
 import com.evolvedwarfare.EvolvedWarfare;
 import com.evolvedwarfare.faction.Faction;
 import com.evolvedwarfare.faction.Reputation;
@@ -34,8 +35,8 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Nivel de los asentamientos de las facciones (campamentos y fuertes de bandidos, asentamientos vikingos y calas
- * piratas), de 1 a {@value #MAX_LEVEL}. Sube con la distancia al punto de aparición del mundo (uno cada
- * {@value #BLOCKS_PER_LEVEL} bloques) más un poco de azar fijo por asentamiento; los fuertes de bandidos, uno más, y
+ * piratas), de 1 a 10. Sube con la distancia al punto de aparición del mundo (uno cada 750 bloques, se puede
+ * configurar) más un poco de azar fijo por asentamiento; los fuertes de bandidos, uno más, y
  * las fortalezas del caudillo, dos más.
  * Cada nivel por encima del 1 da a su guarnición un 10 % más de vida y de daño.
  *
@@ -44,9 +45,8 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class SettlementLevels {
 	public static final TagKey<Structure> SETTLEMENTS = TagKey.of(RegistryKeys.STRUCTURE, EvolvedWarfare.id("faction_settlements"));
+	/** El tope absoluto (la configuración puede bajarlo). */
 	public static final int MAX_LEVEL = 10;
-	public static final double BONUS_PER_LEVEL = 0.10;
-	public static final int BLOCKS_PER_LEVEL = 750;
 	public static final int NOTICE_RANGE = 24;
 	/** No repetir el aviso del mismo asentamiento antes de esto (por si entras y sales del borde). */
 	private static final long REPEAT_TICKS = 1200L;
@@ -68,9 +68,13 @@ public final class SettlementLevels {
 		});
 	}
 
+	public static int maxLevel() {
+		return MathHelper.clamp(EwConfig.get().settlementMaxLevel, 1, MAX_LEVEL);
+	}
+
 	/** Multiplicador de vida y daño de un nivel (nivel 1: x1; nivel 10: x1,9). */
 	public static double multiplier(int level) {
-		return 1.0 + BONUS_PER_LEVEL * (Math.max(1, level) - 1);
+		return 1.0 + EwConfig.get().settlementBonusPerLevel * (Math.max(1, level) - 1);
 	}
 
 	private static Registry<Structure> structures(World world) {
@@ -90,7 +94,7 @@ public final class SettlementLevels {
 		double dz = chunk.getCenterZ() - spawn.getZ();
 		int distance = (int) Math.sqrt(dx * dx + dz * dz);
 		long hash = HashCommon.mix(world.getSeed() ^ (chunk.toLong() * 0x9E3779B97F4A7C15L));
-		int level = 1 + distance / BLOCKS_PER_LEVEL + (int) Math.floorMod(hash, 3L);
+		int level = 1 + distance / Math.max(1, EwConfig.get().settlementBlocksPerLevel) + (int) Math.floorMod(hash, 3L);
 		Identifier id = idOf(world, start);
 		if (id != null) {
 			switch (id.getPath()) {
@@ -100,7 +104,7 @@ public final class SettlementLevels {
 				}
 			}
 		}
-		return MathHelper.clamp(level, 1, MAX_LEVEL);
+		return MathHelper.clamp(level, 1, maxLevel());
 	}
 
 	/** Nivel del asentamiento que contiene ese sitio, o 0 si no hay ninguno. */
