@@ -79,9 +79,14 @@ public class TraderScreen extends HandledScreen<TraderScreenHandler> {
 
 	private void updateTabs() {
 		if (sellTab != null) {
-			sellTab.active = !showSells;
-			buyTab.active = showSells;
+			sellTab.setMessage(tabLabel("gui.evolvedwarfare.trader.tab_sells", sells.size(), showSells));
+			buyTab.setMessage(tabLabel("gui.evolvedwarfare.trader.tab_buys", buys.size(), !showSells));
 		}
+	}
+
+	private static Text tabLabel(String key, int count, boolean selected) {
+		return selected ? Text.translatable(key, count).formatted(Formatting.YELLOW, Formatting.UNDERLINE)
+				: Text.translatable(key, count);
 	}
 
 	private List<Integer> shown() {
@@ -212,7 +217,8 @@ public class TraderScreen extends HandledScreen<TraderScreenHandler> {
 			Deal deal = handler.deals().get(index);
 			// marco del color de la rareza y ficha (más clara bajo el ratón)
 			context.fill(cx, cy, cx + CARD_W, cy + CARD_H, deal.tier().frame);
-			context.fill(cx + 1, cy + 1, cx + CARD_W - 1, cy + CARD_H - 1, index == hovered ? 0xFFD2D2D2 : 0xFFB5B5B5);
+			int face = !deal.unlocked(handler.cityLevel()) ? 0xFF9C9C9C : 0xFFB5B5B5;
+			context.fill(cx + 1, cy + 1, cx + CARD_W - 1, cy + CARD_H - 1, index == hovered ? 0xFFD2D2D2 : face);
 			Panels.slot(context, cx + 2, cy + 6);
 		}
 		// barra de desplazamiento
@@ -257,33 +263,43 @@ public class TraderScreen extends HandledScreen<TraderScreenHandler> {
 			context.drawItemInSlot(textRenderer, stack, cx + 3, cy + 7);
 			boolean locked = !deal.unlocked(level);
 			int left = handler.left(index);
+			if (locked || left <= 0) {
+				// el objeto, apagado
+				context.getMatrices().push();
+				context.getMatrices().translate(0, 0, 300);
+				context.fill(cx + 3, cy + 7, cx + 19, cy + 23, locked ? 0xB0303030 : 0x80303030);
+				context.getMatrices().pop();
+			}
 			// precio
 			String price = Integer.toString(deal.price());
-			int color = deal.sell() ? (have >= deal.price() ? PRICE : BAD) : (carried(deal) >= deal.count() ? EARN : 0x6F6F6F);
+			int color;
+			if (locked) {
+				color = 0x7A7A7A;
+			} else if (deal.sell()) {
+				color = have >= deal.price() ? PRICE : BAD;
+			} else {
+				color = carried(deal) >= deal.count() ? EARN : 0x6F6F6F;
+			}
 			context.drawText(textRenderer, price, cx + 22, cy + 5, color, false);
 			smallCoin(context, cx + 23 + textRenderer.getWidth(price), cy + 4);
-			// existencias de hoy
-			String stock = left + "/" + deal.stock();
+			// segunda línea: existencias de hoy, agotado o el nivel que hace falta
+			String second;
+			int secondColor;
+			if (locked) {
+				second = Text.translatable("gui.evolvedwarfare.trader.lock", deal.minLevel()).getString();
+				secondColor = 0x8B1A1A;
+			} else if (left <= 0) {
+				second = Text.translatable(deal.sell() ? "gui.evolvedwarfare.trader.sold_out" : "gui.evolvedwarfare.trader.full").getString();
+				secondColor = BAD;
+			} else {
+				second = left + "/" + deal.stock();
+				secondColor = 0x505050;
+			}
 			context.getMatrices().push();
 			context.getMatrices().translate(cx + 22, cy + 18, 0);
 			context.getMatrices().scale(0.75F, 0.75F, 1.0F);
-			context.drawText(textRenderer, stock, 0, 0, left > 0 ? 0x505050 : BAD, false);
+			context.drawText(textRenderer, textRenderer.trimToWidth(second, 44), 0, 0, secondColor, false);
 			context.getMatrices().pop();
-			if (locked) {
-				context.getMatrices().push();
-				context.getMatrices().translate(0, 0, 300);
-				context.fill(cx + 1, cy + 1, cx + CARD_W - 1, cy + CARD_H - 1, 0xB0202020);
-				Text lock = Text.translatable("gui.evolvedwarfare.trader.lock", deal.minLevel());
-				context.drawText(textRenderer, lock, cx + (CARD_W - textRenderer.getWidth(lock)) / 2, cy + 11, 0xFFC0C0C0, false);
-				context.getMatrices().pop();
-			} else if (left <= 0) {
-				context.getMatrices().push();
-				context.getMatrices().translate(0, 0, 300);
-				context.fill(cx + 1, cy + 1, cx + CARD_W - 1, cy + CARD_H - 1, 0x80404040);
-				Text out = Text.translatable(deal.sell() ? "gui.evolvedwarfare.trader.sold_out" : "gui.evolvedwarfare.trader.full");
-				context.drawText(textRenderer, out, cx + (CARD_W - textRenderer.getWidth(out)) / 2, cy + 11, 0xFFFF8080, false);
-				context.getMatrices().pop();
-			}
 		}
 		if (shown.isEmpty()) {
 			Text none = Text.translatable("gui.evolvedwarfare.trader.empty");
