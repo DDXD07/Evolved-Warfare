@@ -26,6 +26,11 @@ P_HOUSES = f"{NS}:city/houses"
 P_TERMINATORS = f"{NS}:city/terminators"
 P_TENTS = f"{NS}:camp/tents"
 RESIDENTS = f"{NS}:npc/residents"
+TRADERS_CITY = f"{NS}:npc/traders_city"
+TRADERS_DESERT = f"{NS}:npc/traders_desert"
+TRADERS_SNOW = f"{NS}:npc/traders_snow"
+TRADERS_ARMORER = f"{NS}:npc/traders_armorer"
+TRADER_TYPES = ["grocer", "armorer", "mason", "jeweler", "tailor", "spice_merchant", "furrier"]
 
 LOOT_WEAPONS = "minecraft:chests/village/village_weaponsmith"
 LOOT_ARMOR = "minecraft:chests/village/village_armorer"
@@ -288,7 +293,7 @@ def tavern():
     t.put(5, 9, 4, lantern(hanging=True))
     t.put(5, 9, 8, lantern(hanging=True))
     t.npc_slot(5, 0, 5)
-    t.npc_slot(3, 0, 6)
+    t.npc_slot(3, 0, 6, TRADERS_CITY)
     # letrero
     t.put(0, 3, 6, *wall_sign("spruce_wall_sign", "west",
                               ["", ("Taberna", {"color": "gold", "bold": True}), "Tavern", ""]))
@@ -327,7 +332,7 @@ def blacksmith():
     for y in range(4, 9):
         t.put(3, y, 5, S("chain", axis="y", waterlogged="false"))
     t.put(3, 3, 5, lantern(hanging=True))
-    t.npc_slot(3, 0, 5, RESIDENTS)
+    t.npc_slot(3, 0, 5, TRADERS_ARMORER)
     # taller
     t.put(7, 1, 2, *chest("west", LOOT_TOOLS))
     t.put(7, 1, 3, *barrel())
@@ -384,7 +389,7 @@ def market_stalls():
     t.put(2, 2, 2, "pumpkin")
     t.put(2, 2, 8, "melon")
     lamp_post(t, 3, 1, 5, base="cobblestone_wall")
-    t.npc_slot(4, 0, 6, RESIDENTS)
+    t.npc_slot(4, 0, 6, TRADERS_CITY)
     entrance(t, 5, step("cobblestone"))
     return t
 
@@ -462,7 +467,7 @@ def plaza_fountain():
         t.put(c - 4, 1, c + dx, stairs("spruce", "west"))
         t.put(c + 4, 1, c + dx, stairs("spruce", "east"))
     t.npc_slot(6, 0, 12)
-    t.npc_slot(12, 0, 6)
+    t.npc_slot(12, 0, 6, TRADERS_CITY)
     plaza_jigsaws(t, n)
     return t
 
@@ -595,6 +600,14 @@ def npc_recruit():
     t = Template(1, 2, 1)
     t.jigsaw(0, 0, 0, "down_south", f"{NS}:npc", f"{NS}:npc", "minecraft:empty")
     t.entity({"id": f"{NS}:recruit", "PersistenceRequired": nbt.Byte(1)}, 0, 0, 0, YAW["west"])
+    return t
+
+
+def npc_trader(kind):
+    """Comerciante de ciudad (fase 9) con su oficio."""
+    t = Template(1, 2, 1)
+    t.jigsaw(0, 0, 0, "down_south", f"{NS}:npc", f"{NS}:npc", "minecraft:empty")
+    t.entity({"id": f"{NS}:trader", "TraderType": kind, "PersistenceRequired": nbt.Byte(1)}, 0, 0, 0, YAW["west"])
     return t
 
 
@@ -1032,7 +1045,7 @@ def d_bazaar():
     t.put(2, 2, 8, "pumpkin")
     t.put(4, 2, 8, "potted_cactus")
     lamp_post(t, 3, 1, 5, base="sandstone_wall", pole="acacia_fence")
-    t.npc_slot(4, 0, 6, RESIDENTS)
+    t.npc_slot(4, 0, 6, TRADERS_DESERT)
     entrance(t, 5, "minecraft:smooth_sandstone")
     return t
 
@@ -1087,7 +1100,7 @@ def d_caravanserai():
     for (x, z) in ((3, 3), (7, 3), (3, 9), (7, 9)):
         t.put(x, 4, z, lantern(hanging=True))
     t.npc_slot(3, 0, 6)
-    t.npc_slot(7, 0, 8)
+    t.npc_slot(7, 0, 8, TRADERS_DESERT)
     t.put(0, 3, 6, *wall_sign("acacia_wall_sign", "west", ["", ("Posada", {"color": "gold", "bold": True}), "Caravanserai", ""]))
     t.put(0, 2, 4, S("wall_torch", facing="west"))
     t.put(0, 2, 8, S("wall_torch", facing="west"))
@@ -1193,7 +1206,7 @@ def d_plaza_oasis():
         t.put(c + dx, 1, c - 4, stairs("acacia", "north"))
         t.put(c + dx, 1, c + 4, stairs("acacia", "south"))
     t.npc_slot(6, 0, 12)
-    t.npc_slot(12, 0, 6)
+    t.npc_slot(12, 0, 6, TRADERS_DESERT)
     plaza_jigsaws(t, n, DESERT)
     return t
 
@@ -1348,7 +1361,7 @@ def s_tavern():
     t.put(8, 1, 10, *barrel("west"))
     chain_lamp(t, 5, 4, 6, 9)
     t.npc_slot(5, 0, 6)
-    t.npc_slot(3, 0, 7)
+    t.npc_slot(3, 0, 7, TRADERS_SNOW)
     t.put(0, 3, 6, *wall_sign("spruce_wall_sign", "west", ["", ("Taberna", {"color": "gold", "bold": True}), "Tavern", ""]))
     t.put(0, 2, 4, S("wall_torch", facing="west"))
     t.put(0, 2, 8, S("wall_torch", facing="west"))
@@ -1385,7 +1398,7 @@ def s_smithy():
     t.put(7, 1, 2, *chest("west", LOOT_TOOLS))
     bed(t, 6, 1, 8, "east", "gray")
     chain_lamp(t, 3, 3, 5, 8)
-    t.npc_slot(3, 0, 5, RESIDENTS)
+    t.npc_slot(3, 0, 5, TRADERS_ARMORER)
     entrance(t, 5, step("stone_brick"))
     return t
 
@@ -1493,7 +1506,7 @@ def s_plaza_bonfire():
     for (x, z) in ((3, n - 4), (n - 4, 3), (n - 4, n - 4)):
         lamp_post(t, x, 1, z, base="cobblestone_wall", pole="spruce_fence")
     t.npc_slot(6, 0, 12)
-    t.npc_slot(12, 0, 6)
+    t.npc_slot(12, 0, 6, TRADERS_SNOW)
     plaza_jigsaws(t, n, SNOW)
     return t
 
@@ -2495,6 +2508,7 @@ TEMPLATES = {
     "city/houses/market_stalls": market_stalls,
     "city/houses/garden": garden,
     "npc/recruit": npc_recruit,
+    **{f"npc/trader_{k}": (lambda k=k: npc_trader(k)) for k in TRADER_TYPES},
     "camp/center": camp_center,
     "camp/tent_small": tent_small,
     "camp/tent_large": tent_large,
@@ -2606,6 +2620,22 @@ POOLS = {
                          (EMPTY, 3)]),
     "npc/recruits": pool([(element(L("npc/recruit"), legacy=True), 4), (EMPTY, 1)]),
     "npc/residents": pool([(element(L("npc/recruit"), legacy=True), 1), (EMPTY, 2)]),
+    "npc/traders_city": pool([(element(L("npc/trader_grocer"), legacy=True), 3),
+                              (element(L("npc/trader_tailor"), legacy=True), 3),
+                              (element(L("npc/trader_mason"), legacy=True), 2),
+                              (element(L("npc/trader_jeweler"), legacy=True), 1),
+                              (element(L("npc/trader_armorer"), legacy=True), 1)]),
+    "npc/traders_desert": pool([(element(L("npc/trader_spice_merchant"), legacy=True), 3),
+                                (element(L("npc/trader_grocer"), legacy=True), 2),
+                                (element(L("npc/trader_jeweler"), legacy=True), 2),
+                                (element(L("npc/trader_mason"), legacy=True), 1),
+                                (element(L("npc/trader_armorer"), legacy=True), 1)]),
+    "npc/traders_snow": pool([(element(L("npc/trader_furrier"), legacy=True), 3),
+                              (element(L("npc/trader_grocer"), legacy=True), 2),
+                              (element(L("npc/trader_mason"), legacy=True), 1),
+                              (element(L("npc/trader_jeweler"), legacy=True), 1),
+                              (element(L("npc/trader_armorer"), legacy=True), 1)]),
+    "npc/traders_armorer": pool([(element(L("npc/trader_armorer"), legacy=True), 1)]),
     "camp/centers": pool([(element(L("camp/center")), 1)]),
     "camp/tents": pool([(element(L("camp/tent_small")), 3), (element(L("camp/tent_large")), 2),
                         (element(L("camp/supply")), 2), (element(L("camp/weapon_rack")), 1), (EMPTY, 1)]),

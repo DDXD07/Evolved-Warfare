@@ -53,6 +53,8 @@ public final class ModItems {
 	/** Huevos de vikingo y de pirata (creativo). */
 	public static final Item VIKING_SPAWN_EGG = register("viking_spawn_egg",
 			new SpawnEggItem(ModEntities.VIKING, 0x6B4A2E, 0xB8342A, new Item.Settings()));
+	public static final Item TRADER_SPAWN_EGG = register("trader_spawn_egg",
+			new SpawnEggItem(ModEntities.TRADER, 0x7A5230, 0xE3B53B, new Item.Settings()));
 	public static final Item PIRATE_SPAWN_EGG = register("pirate_spawn_egg",
 			new SpawnEggItem(ModEntities.PIRATE, 0x1A1A1A, 0xD8D0B8, new Item.Settings()));
 
@@ -157,6 +159,7 @@ public final class ModItems {
 						entries.add(BANDIT_SPAWN_EGG);
 						entries.add(VIKING_SPAWN_EGG);
 						entries.add(PIRATE_SPAWN_EGG);
+						entries.add(TRADER_SPAWN_EGG);
 						entries.add(ModBlocks.TOWN_HALL);
 						entries.add(ModBlocks.WAREHOUSE);
 						ModBlocks.WORK_SITES.values().forEach(block -> entries.add(block));

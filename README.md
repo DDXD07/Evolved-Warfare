@@ -16,6 +16,7 @@ Requiere **Fabric API**. Opcional: **Mod Menu** (pantalla de configuración); **
 | 6 | **Estructuras**: escáner de estructuras, planos, mesa del arquitecto con biblioteca y constructor que los levanta; ciudades del desierto y del norte; castillos y fortalezas del caudillo bandido | ✅ Hecha |
 | 7 | **Asedio**: catapulta, balista, trebuchet y ariete (para ti, para tus soldados y en los asaltos enemigos); rastrillo y puente levadizo con torno | ✅ Hecha |
 | 8 | **Armas medievales** (daga, lanza, mandoble, alabarda, martillo de guerra, mangual, hacha de batalla, arco largo y jabalina), **árbol de investigación** con su mesa, **equilibrio** y **configuración** (archivo, comando y pantalla con Mod Menu) | ✅ Hecha |
+| 9 | **Comerciantes de las ciudades**: tendero, armero, cantero, joyero, sastre, mercader de especias y peletero; venden y compran por Golden Coins (o esmeraldas) y reponen cada mañana | ✅ Hecha |
 
 ## Fase 1 — El recluta
 
@@ -480,6 +481,36 @@ Investigación de los jugadores (administradores):
 /evolvedwarfare research <jugadores>                          ver lo investigado
 /evolvedwarfare research <jugadores> grant|revoke <técnica|all>
 ```
+
+## Fase 9 — Comerciantes de las ciudades
+
+Las ciudades ya no solo tienen reclutas: en sus puestos viven **comerciantes** con los que se comercia como con un
+aldeano (clic derecho), pero **siempre con Golden Coins** (si no está el mod *Golden Coin*, con esmeraldas). No se van,
+no desaparecen y no se alejan más de 8 bloques de su puesto; huyen de monstruos y asaltantes (que también van a por
+ellos, así que defiende el mercado). Cada mañana reponen lo que les hayas comprado.
+
+| Comerciante | Dónde | Vende | Compra |
+|---|---|---|---|
+| **Tendero** | todas las ciudades | pan, carne asada, tartas, galletas, zanahorias doradas... | trigo, patatas, zanahorias, huevos, carne cruda... |
+| **Armero** | fraguas (siempre) y a veces en mercados | armadura de hierro, escudos, ballestas, flechas, **las armas medievales del mod**, arco largo, jabalinas, virotes; a veces piezas de diamante | carbón, hierro, oro, pedernal, cuero, cuerda |
+| **Cantero** | ciudades | ladrillos de piedra, cincelados, ladrillo, terracota, cristal, cuarzo, farolillos | roca, piedra, arcilla, arena, grava |
+| **Joyero** | ciudades | diamantes, oro, lapislázuli, amatista, etiquetas, brújulas, relojes, manzanas de oro, perlas de ender, frascos de experiencia | diamantes, oro, cuarzo, amatista, redstone, lapislázuli |
+| **Sastre** | ciudades medievales | lana de colores, alfombras, camas, estandartes, cuadros, marcos, sillas de montar, tijeras | cuerda, lana, cuero, piel de conejo, plumas |
+| **Mercader de especias** | ciudades del desierto | azúcar, cacao, bayas luminosas, tintes, estofado de conejo, polvo de blaze, sandía reluciente | cactus, caña, cacao, bayas, piel y pata de conejo |
+| **Peletero** | ciudades del norte | cuero, piel de conejo, ropa de cuero, lana, hielo compacto y azul, hogueras, salmón | cuero, piel de conejo, bacalao, salmón, cordero, lana |
+
+- Cada uno saca **5 ventas y 3 compras** al azar de su lista, así que dos tenderos no venden lo mismo.
+- Lo que compran lo pagan **al precio del mercado** (el mismo que el comerciante de la fase 4 y la venta de excedentes);
+  lo que venden cuesta algo más. Lo que pasa de 64 monedas se paga con dos montones.
+- Las armas que vende el armero **no necesitan investigación**: comprarlas es la alternativa (cara) a investigarlas.
+- Dónde aparecen: en el **mercado**, la **fragua**, la **taberna** y la **plaza** de las ciudades medievales; en el
+  **bazar**, el **caravasar** y el **oasis** del desierto; en la **taberna**, la **herrería** y la **hoguera** del norte.
+  Solo en ciudades nuevas (chunks sin generar).
+- Hay **huevo generador** en la pestaña del mod, y con comandos:
+  `/summon evolvedwarfare:trader ~ ~ ~ {TraderType:"jeweler"}` (`grocer`, `armorer`, `mason`, `jeweler`, `tailor`,
+  `spice_merchant`, `furrier`).
+- Si instalas el mod de la Golden Coin en un mundo que ya tenía comerciantes con esmeraldas, a la mañana siguiente
+  cambian sus ofertas a monedas.
 
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):

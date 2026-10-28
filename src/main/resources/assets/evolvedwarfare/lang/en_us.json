@@ -658,5 +658,14 @@
   "config.evolvedwarfare.flailStunChance": "Flail: stun chance",
   "config.evolvedwarfare.flailStunChance.tip": "Chance to stun on each hit.",
   "config.evolvedwarfare.longbowPower": "Longbow power",
-  "config.evolvedwarfare.longbowPower.tip": "Speed and damage of its arrows (x)."
+  "config.evolvedwarfare.longbowPower.tip": "Speed and damage of its arrows (x).",
+  "entity.evolvedwarfare.trader": "Trader",
+  "entity.evolvedwarfare.trader.grocer": "Grocer",
+  "entity.evolvedwarfare.trader.armorer": "Armorer",
+  "entity.evolvedwarfare.trader.mason": "Mason",
+  "entity.evolvedwarfare.trader.jeweler": "Jeweler",
+  "entity.evolvedwarfare.trader.tailor": "Tailor",
+  "entity.evolvedwarfare.trader.spice_merchant": "Spice Merchant",
+  "entity.evolvedwarfare.trader.furrier": "Furrier",
+  "item.evolvedwarfare.trader_spawn_egg": "Trader Spawn Egg"
 }

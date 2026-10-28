@@ -35,6 +35,7 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		EntityRendererRegistry.register(ModEntities.RECRUIT, RecruitRenderer::new);
 		EntityRendererRegistry.register(ModEntities.SOLDIER, RecruitRenderer::new);
 		EntityRendererRegistry.register(ModEntities.WORKER, RecruitRenderer::new);
+		EntityRendererRegistry.register(ModEntities.TRADER, com.evolvedwarfare.client.render.TraderRenderer::new);
 		EntityRendererRegistry.register(ModEntities.BANDIT, context -> new FactionNpcRenderer<>(context, "bandit", BanditEntity.VARIANTS));
 		EntityRendererRegistry.register(ModEntities.VIKING, context -> new FactionNpcRenderer<>(context, "viking", VikingEntity.VARIANTS));
 		EntityRendererRegistry.register(ModEntities.PIRATE, context -> new FactionNpcRenderer<>(context, "pirate", PirateEntity.VARIANTS));

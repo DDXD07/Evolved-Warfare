@@ -7,6 +7,7 @@ import com.evolvedwarfare.entity.FactionNpcEntity;
 import com.evolvedwarfare.entity.PirateEntity;
 import com.evolvedwarfare.entity.RecruitEntity;
 import com.evolvedwarfare.entity.SoldierEntity;
+import com.evolvedwarfare.entity.TraderEntity;
 import com.evolvedwarfare.entity.VikingEntity;
 import com.evolvedwarfare.entity.WorkerEntity;
 import com.evolvedwarfare.siege.SiegeEngineEntity;
@@ -46,6 +47,15 @@ public final class ModEntities {
 					.eyeHeight(1.62F)
 					.maxTrackingRange(10)
 					.build("worker"));
+
+	/** Comerciante de ciudad (fase 9): comercia con Golden Coins. */
+	public static final EntityType<TraderEntity> TRADER = Registry.register(Registries.ENTITY_TYPE,
+			EvolvedWarfare.id("trader"),
+			EntityType.Builder.create(TraderEntity::new, SpawnGroup.MISC)
+					.dimensions(0.6F, 1.8F)
+					.eyeHeight(1.62F)
+					.maxTrackingRange(10)
+					.build("trader"));
 
 	/** Bandido: enemigo de los jugadores. */
 	public static final EntityType<BanditEntity> BANDIT = Registry.register(Registries.ENTITY_TYPE,
@@ -127,5 +137,6 @@ public final class ModEntities {
 		FabricDefaultAttributeRegistry.register(BANDIT, BanditEntity.createBanditAttributes());
 		FabricDefaultAttributeRegistry.register(VIKING, FactionNpcEntity.createFactionAttributes());
 		FabricDefaultAttributeRegistry.register(PIRATE, FactionNpcEntity.createFactionAttributes());
+		FabricDefaultAttributeRegistry.register(TRADER, TraderEntity.createTraderAttributes());
 	}
 }

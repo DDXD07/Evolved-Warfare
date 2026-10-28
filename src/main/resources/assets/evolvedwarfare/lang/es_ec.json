@@ -658,5 +658,14 @@
   "config.evolvedwarfare.flailStunChance": "Mangual: aturdir",
   "config.evolvedwarfare.flailStunChance.tip": "Probabilidad de aturdir con cada golpe.",
   "config.evolvedwarfare.longbowPower": "Fuerza del arco largo",
-  "config.evolvedwarfare.longbowPower.tip": "Velocidad y daño de sus flechas (x)."
+  "config.evolvedwarfare.longbowPower.tip": "Velocidad y daño de sus flechas (x).",
+  "entity.evolvedwarfare.trader": "Comerciante",
+  "entity.evolvedwarfare.trader.grocer": "Tendero",
+  "entity.evolvedwarfare.trader.armorer": "Armero",
+  "entity.evolvedwarfare.trader.mason": "Cantero",
+  "entity.evolvedwarfare.trader.jeweler": "Joyero",
+  "entity.evolvedwarfare.trader.tailor": "Sastre",
+  "entity.evolvedwarfare.trader.spice_merchant": "Mercader de especias",
+  "entity.evolvedwarfare.trader.furrier": "Peletero",
+  "item.evolvedwarfare.trader_spawn_egg": "Huevo generador de comerciante"
 }
