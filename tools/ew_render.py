@@ -34,6 +34,9 @@ SPECIAL = {
     "spruce_leaves": ((70, 105, 70), (60, 90, 60)),
     "oak_leaves": ((80, 130, 50), (70, 115, 45)),
     "skeleton_skull": ((215, 215, 205), (190, 190, 180)),
+    "portcullis": ((120, 120, 120), (95, 95, 95)),
+    "gate_winch": ((160, 120, 70), (120, 85, 50)),
+    "drawbridge": ((110, 74, 42), (90, 60, 34)),
 }
 NPC_COLOR = ((70, 110, 200), (60, 95, 180))      # túnica azul: así se ven los reclutas en la vista previa
 BANDIT_COLOR = ((190, 40, 40), (150, 30, 30))    # rojo: bandidos
