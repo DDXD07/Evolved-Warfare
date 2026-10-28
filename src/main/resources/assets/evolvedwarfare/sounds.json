@@ -1,0 +1,35 @@
+{
+  "musket_fire": {
+    "subtitle": "subtitles.evolvedwarfare.musket_fire",
+    "sounds": [
+      {
+        "name": "evolvedwarfare:musket_fire",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "musket_ball_in": {
+    "subtitle": "subtitles.evolvedwarfare.musket_ball_in",
+    "sounds": [
+      "evolvedwarfare:musket_ball_in"
+    ]
+  },
+  "musket_ramrod": {
+    "subtitle": "subtitles.evolvedwarfare.musket_ramrod",
+    "sounds": [
+      "evolvedwarfare:musket_ramrod"
+    ]
+  },
+  "musket_cock": {
+    "subtitle": "subtitles.evolvedwarfare.musket_cock",
+    "sounds": [
+      "evolvedwarfare:musket_cock"
+    ]
+  },
+  "musket_empty": {
+    "subtitle": "subtitles.evolvedwarfare.musket_empty",
+    "sounds": [
+      "evolvedwarfare:musket_empty"
+    ]
+  }
+}

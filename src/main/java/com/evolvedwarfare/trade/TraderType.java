@@ -146,7 +146,7 @@ public enum TraderType {
 						WeaponType.FLAIL, WeaponType.BATTLE_AXE}) {
 					b.sell(u, ModItems.weapon(weapon, "iron"), 1, 3 + weapon.damage);
 				}
-				b.sell(r, Items.DIAMOND_SWORD, 1, 18).sell(r, Items.DIAMOND_HELMET, 1, 20).sell(r, Items.DIAMOND_BOOTS, 1, 18)
+				b.sell(r, ModItems.MUSKET, 1, 20).sell(r, Items.DIAMOND_SWORD, 1, 18).sell(r, Items.DIAMOND_HELMET, 1, 20).sell(r, Items.DIAMOND_BOOTS, 1, 18)
 						.sell(r, Items.IRON_HORSE_ARMOR, 1, 6).sell(r, ModItems.FIRE_POT, 2, 3)
 						.sell(r, ModItems.weapon(WeaponType.DAGGER, "diamond"), 1, 16)
 						.sell(r, ModItems.weapon(WeaponType.SPEAR, "diamond"), 1, 18)

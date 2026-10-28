@@ -47,6 +47,13 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		EntityRendererRegistry.register(ModEntities.SIEGE_SHOT, com.evolvedwarfare.client.render.SiegeShotRenderer::new);
 		// fase 8: jabalina, arco largo (se tensa como el arco) y pantalla de investigación
 		EntityRendererRegistry.register(ModEntities.JAVELIN, com.evolvedwarfare.client.render.JavelinEntityRenderer::new);
+		// fase 10: mosquete (modelo 3D animado) y su bala
+		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(
+				com.evolvedwarfare.client.render.musket.MusketModel.LAYER, com.evolvedwarfare.client.render.musket.MusketModel::getTexturedModelData);
+		net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry.INSTANCE.register(com.evolvedwarfare.registry.ModItems.MUSKET,
+				new com.evolvedwarfare.client.render.musket.MusketItemRenderer());
+		EntityRendererRegistry.register(ModEntities.MUSKET_BALL,
+				context -> new net.minecraft.client.render.entity.FlyingItemEntityRenderer<>(context, 0.5F, true));
 		net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry.register(
 				com.evolvedwarfare.registry.ModItems.LONGBOW, net.minecraft.util.Identifier.ofVanilla("pull"), (stack, world, entity, seed) ->
 						entity == null || entity.getActiveItem() != stack ? 0.0F

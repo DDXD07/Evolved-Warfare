@@ -109,6 +109,16 @@ public final class ModEntities {
 					.trackingTickInterval(20)
 					.build("javelin"));
 
+	/** Bala de mosquete en vuelo (fase 10). */
+	public static final EntityType<com.evolvedwarfare.weapon.MusketBallEntity> MUSKET_BALL = Registry.register(Registries.ENTITY_TYPE,
+			EvolvedWarfare.id("musket_ball"),
+			EntityType.Builder.<com.evolvedwarfare.weapon.MusketBallEntity>create(com.evolvedwarfare.weapon.MusketBallEntity::new,
+							SpawnGroup.MISC)
+					.dimensions(0.15F, 0.15F)
+					.maxTrackingRange(4)
+					.trackingTickInterval(10)
+					.build("musket_ball"));
+
 	private static EntityType<SiegeEngineEntity> engine(SiegeKind kind, float width, float height) {
 		return Registry.register(Registries.ENTITY_TYPE, EvolvedWarfare.id(kind.id()),
 				EntityType.Builder.<SiegeEngineEntity>create((type, world) -> new SiegeEngineEntity(type, world, kind), SpawnGroup.MISC)

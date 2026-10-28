@@ -51,6 +51,7 @@ public class EvolvedWarfare implements ModInitializer {
 	public void onInitialize() {
 		com.evolvedwarfare.config.EwConfig.load();
 		ModComponents.init();
+		com.evolvedwarfare.registry.ModSounds.init();
 		ModLoot.init();
 		ModBlocks.init();
 		ModEntities.init();

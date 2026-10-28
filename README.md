@@ -19,6 +19,7 @@ Requiere **Fabric API**. Opcional: **Mod Menu** (pantalla de configuración).
 | 7 | **Asedio**: catapulta, balista, trebuchet y ariete (para ti, para tus soldados y en los asaltos enemigos); rastrillo y puente levadizo con torno | ✅ Hecha |
 | 8 | **Armas medievales** (daga, lanza, mandoble, alabarda, martillo de guerra, mangual, hacha de batalla, arco largo y jabalina), **árbol de investigación** con su mesa, **equilibrio** y **configuración** (archivo, comando y pantalla con Mod Menu) | ✅ Hecha |
 | 9 | **Comerciantes y niveles de las ciudades**: ciudades de nivel 1 a 10 según la distancia; tendero, armero, cantero, joyero, sastre, mercader de especias y peletero con tienda de catálogo completo por Glory Coins; más nivel, mejores cosas y más caras | ✅ Hecha |
+| 10 | **Armas de fuego primitivas**: mosquete de chispa (modelo 3D animado, recarga y disparo con humo) y balas de mosquete | 🔨 En curso |
 
 ## Fase 1 — El recluta
 
@@ -515,7 +516,7 @@ monstruos y asaltantes (que también van a por ellos, así que defiende el merca
 | Comerciante | Dónde | Vende |
 |---|---|---|
 | **Tendero** | todas las ciudades | comida; en ciudades altas, manzanas de oro y de Notch |
-| **Armero** | fraguas (siempre) y a veces en mercados | armaduras, escudos, ballestas, **todas las armas medievales del mod** (de hierro, de diamante y de netherita según el nivel), arco largo, jabalinas, virotes y vasijas incendiarias |
+| **Armero** | fraguas (siempre) y a veces en mercados | armaduras, escudos, ballestas, **mosquetes** (raro), **todas las armas medievales del mod** (de hierro, de diamante y de netherita según el nivel), arco largo, jabalinas, virotes y vasijas incendiarias |
 | **Cantero** | ciudades | piedra labrada, ladrillos, cristal...; luego obsidiana, prismarina, ladrillo del End, piedra imán y faros |
 | **Joyero** | ciudades | oro, gemas, brújulas...; luego diamantes, tótems, corazón del mar, netherita, élitros y estrellas del Nether |
 | **Sastre** | ciudades medievales | lana, camas, estandartes...; luego sillas, armaduras de caballo y diseños de estandarte |
@@ -549,6 +550,29 @@ Solo en ciudades nuevas (chunks sin generar). Hay **huevo generador** en la pest
 `/summon evolvedwarfare:trader ~ ~ ~ {TraderType:"jeweler"}` (`grocer`, `armorer`, `mason`, `jeweler`, `tailor`,
 `spice_merchant`, `furrier`). Fuera de una ciudad, el comerciante toma el nivel que le tocaría por la distancia.
 
+## Fase 10 — Armas de fuego primitivas
+
+### Mosquete
+
+Un mosquete de chispa. **No se fabrica**: lo vende el **armero** a partir de ciudades de nivel 5 (rareza **rara**).
+Tiene 300 usos y se repara con lingotes de hierro en el yunque.
+
+- **Cargar**: con el mosquete descargado, **mantén clic derecho 2 segundos** (gasta una bala de mosquete; vas más
+  despacio mientras tanto). Se ve, en primera y en tercera persona, cómo alza el arma con la boca hacia arriba, cae la
+  bala por el cañón, la aprieta con la baqueta, baja el arma, cierra la cazoleta y **sube el rastrillo**. Si sueltas
+  antes, no se carga.
+- **Disparar**: cargado, **clic derecho**. El **rastrillo cae** contra el acero (que se abre), el arma da un golpe hacia
+  atrás y sale **humo** y fogonazo por la boca (y una bocanada de la cazoleta). La bala vuela muy rápido y casi recta
+  y hace **5 corazones** de daño y **empuja un bloque** hacia atrás. Los escudos la paran.
+- En tercera persona se apunta con las dos manos; al recargar, el arma se pone de pie delante del cuerpo.
+- En la descripción del objeto pone si está cargado.
+
+**Balas de mosquete**: pólvora + lingote de hierro + papel (sin forma) → **9 balas**.
+
+El modelo 3D (cañón, caja, culata, abrazaderas, llave con rastrillo, acero y cazoleta, guardamonte y baqueta) lo
+genera `tools/ew_musket.py`, que también dibuja vistas previas de la recarga y el disparo sin abrir el juego. Los
+sonidos (disparo, bala, baqueta, rastrillo, clic sin balas) los sintetiza `tools/ew_sounds.py`.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -566,6 +590,9 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
 - `ew_siege.py` — iconos de las máquinas de asedio y su munición, y texturas, modelos y recetas del rastrillo, el
   puente levadizo y el torno (las máquinas se dibujan en el juego con bloques escalados, sin textura propia).
 - `ew_village.py` — prototipo de las aldeas vanilla mejoradas (mismo algoritmo que `VillageExtras.java`) con vista previa.
+- `ew_musket.py` (+ `ew_musket_preview.py`) — el mosquete en 3D: piezas, textura, la clase `MusketModel.java` y vistas
+  previas de la recarga y el disparo en primera y tercera persona.
+- `ew_sounds.py` — sonidos sintetizados del mosquete (`.ogg`).
 
 ```
 python3 tools/ew_structures.py src/main/resources/data/evolvedwarfare

@@ -112,6 +112,11 @@ public final class ModItems {
 	public static final Item LONGBOW = register("longbow", new LongbowItem(new Item.Settings().maxDamage(500)));
 	public static final Item JAVELIN = register("javelin", new JavelinItem(new Item.Settings().maxCount(16)));
 
+	/** Mosquete (fase 10): no se fabrica, lo vende el armero. Y su munición: pólvora + lingote de hierro + papel = 9. */
+	public static final Item MUSKET = register("musket", new com.evolvedwarfare.weapon.MusketItem(
+			new Item.Settings().maxDamage(300).rarity(net.minecraft.util.Rarity.RARE)));
+	public static final Item MUSKET_BALL = register("musket_ball", new Item(new Item.Settings()));
+
 	/** Un arma concreta: tipo y material ("iron", "diamond" o "netherite"). */
 	public static Item weapon(WeaponType type, String material) {
 		List<Item> items = WEAPONS.get(type);
@@ -163,6 +168,8 @@ public final class ModItems {
 						}
 						entries.add(LONGBOW);
 						entries.add(JAVELIN);
+						entries.add(MUSKET);
+						entries.add(MUSKET_BALL);
 						entries.add(BANDIT_SPAWN_EGG);
 						entries.add(VIKING_SPAWN_EGG);
 						entries.add(PIRATE_SPAWN_EGG);

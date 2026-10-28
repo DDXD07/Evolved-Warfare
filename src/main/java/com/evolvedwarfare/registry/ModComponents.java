@@ -30,6 +30,18 @@ public final class ModComponents {
 			ComponentType.<Integer>builder().codec(net.minecraft.util.dynamic.Codecs.NONNEGATIVE_INT)
 					.packetCodec(net.minecraft.network.codec.PacketCodecs.VAR_INT).build());
 
+	/** Si un mosquete está cargado. */
+	public static final ComponentType<Boolean> MUSKET_LOADED = Registry.register(Registries.DATA_COMPONENT_TYPE,
+			EvolvedWarfare.id("musket_loaded"),
+			ComponentType.<Boolean>builder().codec(com.mojang.serialization.Codec.BOOL)
+					.packetCodec(net.minecraft.network.codec.PacketCodecs.BOOL).build());
+
+	/** Cuándo disparó por última vez (tiempo del mundo; para la animación del rastrillo y el retroceso). */
+	public static final ComponentType<Long> MUSKET_FIRED = Registry.register(Registries.DATA_COMPONENT_TYPE,
+			EvolvedWarfare.id("musket_fired"),
+			ComponentType.<Long>builder().codec(com.mojang.serialization.Codec.LONG)
+					.packetCodec(net.minecraft.network.codec.PacketCodecs.VAR_LONG).build());
+
 	private ModComponents() {
 	}
 
