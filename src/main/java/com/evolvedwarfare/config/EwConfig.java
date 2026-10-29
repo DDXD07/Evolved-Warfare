@@ -93,6 +93,17 @@ public final class EwConfig {
 	/** Fuerza del arco largo (velocidad y daño de la flecha, x). */
 	public double longbowPower = 1.25;
 
+	// ------------------------------------------------------------------ combate
+	/** Daño locacional: cabeza, torso, brazos y piernas reciben distinto daño (jugadores y NPCs del mod). */
+	public boolean locationalDamage = true;
+	/** Cuánto daño recibe cada parte (x). */
+	public double headDamage = 2.5;
+	public double torsoDamage = 1.0;
+	public double armsDamage = 0.5;
+	public double legsDamage = 0.7;
+	/** También a las criaturas con forma de persona de Minecraft (zombis, esqueletos, aldeanos, illagers, piglins...). */
+	public boolean locationalVanillaMobs = false;
+
 	/** Una opción: nombre del campo, categoría y límites (para el comando y la pantalla). */
 	public record Option(String key, String category, double min, double max, double step) {
 		public Field field() {
@@ -147,7 +158,13 @@ public final class EwConfig {
 			new Option("halberdVsMounted", "weapons", 1.0, 5.0, 0.1),
 			new Option("warhammerArmorPierce", "weapons", 0.0, 2.0, 0.05),
 			new Option("flailStunChance", "weapons", 0.0, 1.0, 0.05),
-			new Option("longbowPower", "weapons", 0.5, 3.0, 0.05));
+			new Option("longbowPower", "weapons", 0.5, 3.0, 0.05),
+			new Option("locationalDamage", "combat", 0, 1, 1),
+			new Option("headDamage", "combat", 0.0, 10.0, 0.1),
+			new Option("torsoDamage", "combat", 0.0, 10.0, 0.1),
+			new Option("armsDamage", "combat", 0.0, 10.0, 0.1),
+			new Option("legsDamage", "combat", 0.0, 10.0, 0.1),
+			new Option("locationalVanillaMobs", "combat", 0, 1, 1));
 
 	public static EwConfig get() {
 		return instance;

@@ -19,7 +19,7 @@ Requiere **Fabric API**. Opcional: **Mod Menu** (pantalla de configuración).
 | 7 | **Asedio**: catapulta, balista, trebuchet y ariete (para ti, para tus soldados y en los asaltos enemigos); rastrillo y puente levadizo con torno | ✅ Hecha |
 | 8 | **Armas medievales** (daga, lanza, mandoble, alabarda, martillo de guerra, mangual, hacha de batalla, arco largo y jabalina), **árbol de investigación** con su mesa, **equilibrio** y **configuración** (archivo, comando y pantalla con Mod Menu) | ✅ Hecha |
 | 9 | **Comerciantes y niveles de las ciudades**: ciudades de nivel 1 a 10 según la distancia; tendero, armero, cantero, joyero, sastre, mercader de especias y peletero con tienda de catálogo completo por Glory Coins; más nivel, mejores cosas y más caras | ✅ Hecha |
-| 10 | **Armas de fuego primitivas**: mosquete de chispa (modelo 3D animado, recarga y disparo con humo), balas de mosquete y bolsa de munición (1000 balas) | 🔨 En curso |
+| 10 | **Armas de fuego primitivas**: mosquete de chispa (modelo 3D animado, recarga y disparo con humo), balas de mosquete, bolsa de munición (1000 balas) y **daño locacional** (cabeza, torso, brazos y piernas) | 🔨 En curso |
 
 ## Fase 1 — El recluta
 
@@ -563,7 +563,7 @@ Tiene 300 usos y se repara con lingotes de hierro en el yunque.
   antes, no se carga.
 - **Disparar**: cargado, **clic derecho**. El **rastrillo cae** contra el acero (que se abre), el arma da un golpe hacia
   atrás y sale **humo** y fogonazo por la boca (y una bocanada de la cazoleta). La bala vuela muy rápido y casi recta
-  y hace **5 corazones** de daño y **empuja un bloque** hacia atrás. Los escudos la paran.
+  y hace **5 corazones** de daño al torso (con el daño locacional: 12,5 en la cabeza, 2,5 en un brazo, 3,5 en una pierna) y **empuja un bloque** hacia atrás. Los escudos la paran.
 - En tercera persona se apunta con las dos manos; al recargar, el arma se pone de pie delante del cuerpo.
 - En la descripción del objeto pone si está cargado.
 
@@ -585,6 +585,29 @@ cuero, lingote de hierro y cuero en medio; 3 de cuero abajo.
 El modelo 3D (cañón, caja, culata, abrazaderas, llave con rastrillo, acero y cazoleta, guardamonte y baqueta) lo
 genera `tools/ew_musket.py`, que también dibuja vistas previas de la recarga y el disparo sin abrir el juego. Los
 sonidos (disparo, bala, baqueta, rastrillo, clic sin balas) los sintetiza `tools/ew_sounds.py`.
+
+### Daño locacional
+
+A los **jugadores** y a los **NPCs del mod** (reclutas, soldados, trabajadores, comerciantes, bandidos, vikingos y
+piratas) se les divide el cuerpo en cuatro partes, y cada una recibe distinto daño:
+
+| Parte | Daño | Dónde está |
+|---|---|---|
+| **Cabeza** | **2,5x** | el cuarto de arriba |
+| **Torso** | 1,0x | el centro del cuerpo |
+| **Brazos** | 0,5x | a los lados del torso |
+| **Piernas** | 0,7x | el 37,5 % de abajo |
+
+- **Proyectiles** (balas de mosquete, flechas, jabalinas, tridentes...): cuenta donde corta su trayectoria.
+- **Golpes de un jugador**: cuenta donde apunta.
+- **Golpes de criaturas y NPCs** (no apuntan): al azar según el tamaño de cada parte (cabeza 15 %, torso 40 %,
+  brazos 20 %, piernas 25 %; de media, casi igual que sin daño locacional).
+- El multiplicador va antes de la armadura. Caídas, fuego, explosiones, magia y las piedras de las máquinas de asedio
+  no cambian. Tumbado, nadando o planeando, todo cuenta como torso.
+- Un **tiro a la cabeza** suelta chispas y, si lo das tú, suena un "ding".
+- En la configuración (pestaña *Combate*) se puede apagar, cambiar cada multiplicador y extenderlo a las criaturas
+  con forma de persona de Minecraft (zombis, esqueletos, aldeanos, illagers, brujas y piglins). A quién se aplica
+  está en las etiquetas `evolvedwarfare:locational_damage` y `evolvedwarfare:locational_damage_vanilla`.
 
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):

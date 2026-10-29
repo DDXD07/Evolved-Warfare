@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:player",
+    "evolvedwarfare:recruit",
+    "evolvedwarfare:soldier",
+    "evolvedwarfare:worker",
+    "evolvedwarfare:trader",
+    "evolvedwarfare:bandit",
+    "evolvedwarfare:viking",
+    "evolvedwarfare:pirate"
+  ]
+}
