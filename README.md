@@ -18,7 +18,7 @@ Requiere **Fabric API**. Opcional: **Mod Menu** (pantalla de configuración).
 | 6 | **Estructuras**: escáner de estructuras, planos, mesa del arquitecto con biblioteca y constructor que los levanta; ciudades del desierto y del norte; castillos y fortalezas del caudillo bandido | ✅ Hecha |
 | 7 | **Asedio**: catapulta, balista, trebuchet y ariete (para ti, para tus soldados y en los asaltos enemigos); rastrillo y puente levadizo con torno | ✅ Hecha |
 | 8 | **Armas medievales** (daga, lanza, mandoble, alabarda, martillo de guerra, mangual, hacha de batalla, arco largo y jabalina), **árbol de investigación** con su mesa, **equilibrio** y **configuración** (archivo, comando y pantalla con Mod Menu) | ✅ Hecha |
-| 9 | **Comerciantes y niveles de las ciudades**: ciudades de nivel 1 a 10 según la distancia; tendero, armero, cantero, joyero, sastre, mercader de especias y peletero con tienda de catálogo completo por Glory Coins (Compra y Venta, al menos 20 de cada cosa al día); más nivel, más caras | ✅ Hecha |
+| 9 | **Comerciantes y niveles de las ciudades**: ciudades de nivel 1 a 10 según la distancia; tendero, armero, cantero, joyero, sastre, mercader de especias y peletero con tienda de catálogo completo por Glory Coins (Compra y Venta, al menos 20 de cada cosa al día); más nivel, mejor calidad (de gastado a obra maestra encantada) y más caras | ✅ Hecha |
 | 10 | **Armas de fuego primitivas**: mosquete de chispa (modelo 3D animado, recarga y disparo con humo), balas de mosquete, bolsa de munición (1000 balas) y **daño locacional** (cabeza, torso, brazos y piernas) | 🔨 En curso |
 
 ## Fase 1 — El recluta
@@ -507,6 +507,21 @@ mínimo), así que fabricar o deshacer cosas no da dinero gratis. Encima, cada n
 venta un **10 %** (nivel 10 = +90 %, por encima del rango). Lo que **te compran** lo pagan a **la mitad del precio
 nuevo**, igual en todas partes. Se puede cambiar en la configuración (categoría *Comercio*: bloques por nivel, nivel
 máximo, subida por nivel y mínimo al día por objeto).
+
+El nivel también decide la **calidad** de lo que tiene durabilidad (armas, armaduras, herramientas, arcos, escudos,
+el mosquete...). Al entrar en la ciudad sale en el aviso, y en la tienda, en la descripción de cada cosa:
+
+| Nivel | Calidad | Cómo vienen |
+|---|---|---|
+| 1–2 | **Desgastado** | gastados: les falta entre un 35 % y un 55 % de durabilidad |
+| 3–4 | **Normal** | nuevos, sin encantar |
+| 5–6 | **Bueno** | encantados como en una mesa con poca experiencia (nivel 5–10) |
+| 7–8 | **Excelente** | encantados a media potencia (nivel 15–22) |
+| 9–10 | **Obra maestra** | encantados casi al máximo de la mesa (nivel 26–30) |
+
+Los encantamientos cambian cada día con la reposición, y cada comerciante tiene los suyos (lo que no se puede
+encantar, como el mosquete, solo cambia en el desgaste). En la tienda se ve el brillo de lo encantado y la barra de
+lo gastado.
 
 ### Los comerciantes
 

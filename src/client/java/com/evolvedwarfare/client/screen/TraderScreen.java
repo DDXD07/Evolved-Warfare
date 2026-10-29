@@ -337,6 +337,15 @@ public class TraderScreen extends HandledScreen<TraderScreenHandler> {
 		List<Text> lines = new ArrayList<>(getTooltipFromItem(client, stack));
 		Text coinName = coin.getName();
 		lines.add(Text.translatable(deal.tier().translationKey()).formatted(deal.tier().color));
+		com.evolvedwarfare.trade.Quality quality = deal.quality();
+		if (quality != null) {
+			lines.add(Text.translatable("gui.evolvedwarfare.trader.quality", Text.translatable(quality.translationKey()).formatted(quality.color))
+					.formatted(Formatting.GRAY));
+			if (stack.isDamaged()) {
+				int percent = Math.round(100.0F * (stack.getMaxDamage() - stack.getDamage()) / stack.getMaxDamage());
+				lines.add(Text.translatable("gui.evolvedwarfare.trader.durability", percent).formatted(Formatting.GRAY));
+			}
+		}
 		if (deal.sell()) {
 			lines.add(Text.translatable("gui.evolvedwarfare.trader.offer_sell", deal.count(), Money.full(deal.price()), coinName)
 					.formatted(Formatting.GOLD));

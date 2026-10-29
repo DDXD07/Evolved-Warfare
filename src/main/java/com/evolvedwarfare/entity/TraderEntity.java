@@ -203,9 +203,9 @@ public class TraderEntity extends MerchantEntity {
 		return Math.max(1, Math.min(cityLevel, CityLevels.maxLevel()));
 	}
 
-	/** Todo lo que vende y compra este comerciante, con los precios de su ciudad. */
+	/** Todo lo que vende y compra este comerciante, con los precios y la calidad de su ciudad (y lo de hoy). */
 	public List<Deal> catalog() {
-		return getTraderType().catalog(getCityLevel(), priceSeed);
+		return getTraderType().catalog(getCityLevel(), priceSeed, Math.max(0L, lastRestockDay), getWorld().getRegistryManager());
 	}
 
 	/** Lotes que le quedan hoy de la línea {@code index}. */

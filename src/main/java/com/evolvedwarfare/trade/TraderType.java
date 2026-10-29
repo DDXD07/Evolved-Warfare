@@ -252,11 +252,15 @@ public enum TraderType {
 	}
 
 	/**
-	 * El catálogo de un comerciante concreto (siempre el mismo para la misma semilla y nivel): todo lo que vende primero
-	 * y luego todo lo que compra, cada cosa con su lote, su precio y cuánto mueve al día.
+	 * El catálogo de un comerciante concreto (siempre el mismo para la misma semilla, nivel y día): todo lo que vende
+	 * primero y luego todo lo que compra, cada cosa con su lote, su precio, cuánto mueve al día y, lo que tiene
+	 * durabilidad, con la {@link Quality calidad} de la ciudad (gastado, nuevo o encantado; los encantamientos cambian
+	 * cada día).
 	 */
-	public List<Deal> catalog(int cityLevel, long seed) {
+	public List<Deal> catalog(int cityLevel, long seed, long day, @Nullable net.minecraft.registry.DynamicRegistryManager registries) {
 		java.util.Random random = new java.util.Random(seed * 31L + ordinal());
+		Quality quality = Quality.forLevel(cityLevel);
+		int index = 0;
 		double markup = CityLevels.priceMultiplier(cityLevel);
 		Pricing pricing = pricing();
 		List<Deal> sells = new ArrayList<>();
@@ -269,14 +273,22 @@ public enum TraderType {
 			if (entry.sell()) {
 				int[] lot = sellLot(fair * variance, entry.count(), maxCount, tier);
 				int price = markup > 1.0 ? niceCeil(lot[1] * markup) : lot[1];
-				sells.add(new Deal(true, entry.item(), lot[0], price, dailyLots(tier.sellStock, lot[0]), tier));
+				ItemStack prototype = new ItemStack(entry.item());
+				int grade = -1;
+				if (Quality.affects(prototype)) {
+					Random rolls = Random.create(seed * 961L + day * 7919L + index * 104729L + ordinal());
+					prototype = quality.apply(prototype, rolls, registries);
+					grade = quality.ordinal();
+				}
+				sells.add(new Deal(true, prototype, lot[0], price, dailyLots(tier.sellStock, lot[0]), tier, grade));
 			} else {
 				// la mitad del precio nuevo: lo que cuesta en la tienda más barata que lo vende (o, si nadie lo vende, lo
 				// que costaría en su rareza)
 				double reference = pricing.sold().getOrDefault(entry.item(), fair);
 				int[] lot = buyLot(0.5 * reference * variance, entry.count(), maxCount);
-				buys.add(new Deal(false, entry.item(), lot[0], lot[1], dailyLots(tier.buyStock, lot[0]), tier));
+				buys.add(new Deal(false, new ItemStack(entry.item()), lot[0], lot[1], dailyLots(tier.buyStock, lot[0]), tier, -1));
 			}
+			index++;
 		}
 		sells.addAll(buys);
 		return sells;

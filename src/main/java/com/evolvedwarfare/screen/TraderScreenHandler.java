@@ -176,7 +176,7 @@ public class TraderScreenHandler extends ScreenHandler {
 		int max = deal.item().getMaxCount();
 		while (total > 0) {
 			int n = Math.min(max, total);
-			inventory.offerOrDrop(new ItemStack(deal.item(), n));
+			inventory.offerOrDrop(deal.prototype().copyWithCount(n));
 			total -= n;
 		}
 		trader.consumeStock(index, lots);

@@ -154,8 +154,9 @@ public final class CityLevels {
 		Text title = Text.translatable("structure.evolvedwarfare." + (id != null ? id.getPath() : "city"))
 				.formatted(Formatting.GOLD, Formatting.BOLD);
 		int percent = (int) Math.round((priceMultiplier(level) - 1.0) * 100.0);
-		Text subtitle = (level > 1 ? Text.translatable("gui.evolvedwarfare.city.level", level, percent)
-				: Text.translatable("gui.evolvedwarfare.city.level_base", level)).formatted(levelColor(level));
+		Text goods = Text.translatable(com.evolvedwarfare.trade.Quality.forLevel(level).cityKey());
+		Text subtitle = (level > 1 ? Text.translatable("gui.evolvedwarfare.city.level", level, goods, percent)
+				: Text.translatable("gui.evolvedwarfare.city.level_base", level, goods)).formatted(levelColor(level));
 		player.networkHandler.sendPacket(new TitleFadeS2CPacket(10, 60, 20));
 		player.networkHandler.sendPacket(new SubtitleS2CPacket(subtitle));
 		player.networkHandler.sendPacket(new TitleS2CPacket(title));
