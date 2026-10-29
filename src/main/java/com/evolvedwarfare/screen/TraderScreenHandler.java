@@ -141,10 +141,6 @@ public class TraderScreenHandler extends ScreenHandler {
 			return false;
 		}
 		Deal deal = data.deals().get(index);
-		if (!deal.unlocked(data.cityLevel())) {
-			serverPlayer.sendMessage(Text.translatable("message.evolvedwarfare.trader.locked", deal.minLevel()), true);
-			return false;
-		}
 		boolean many = id % 2 == 1;
 		if (deal.sell()) {
 			sellToPlayer(serverPlayer, index, deal, many);

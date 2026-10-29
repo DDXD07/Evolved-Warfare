@@ -21,9 +21,10 @@ import org.jetbrains.annotations.Nullable;
  * Los oficios de los comerciantes de las ciudades y su catálogo completo. Todo se paga en Glory Coins, la moneda del mod.
  *
  * <p>Cada línea tiene una rareza ({@link Tier}) y su precio cae dentro del rango de esa rareza (común 1–500, poco común
- * 501–2.000, rara 2.001–5.000, épica 5.001–10.000, legendaria 10.001–500.000) en una ciudad de nivel 1. Las ciudades de
- * más nivel (más lejos del punto de aparición) desbloquean las más raras y cobran un recargo encima: cada nivel por
- * encima del 1 sube los precios de venta un 10 % (configurable). Lo que te compran lo pagan a la mitad del precio nuevo,
+ * 501–2.000, rara 2.001–5.000, épica 5.001–10.000, legendaria 10.001–500.000) en una ciudad de nivel 1. Todo se puede
+ * comprar y vender en cualquier ciudad; las de más nivel (más lejos del punto de aparición) cobran un recargo encima:
+ * cada nivel por encima del 1 sube los precios de venta un 10 % (configurable). De cada cosa mueven al menos 20 unidades
+ * al día, y reponen cada mañana. Lo que te compran lo pagan a la mitad del precio nuevo,
  * igual en todas partes. Cada comerciante tiene sus propios precios (±10 %), así que conviene comparar.</p>
  *
  * <p>Los precios salen del valor de cada cosa: dentro de una rareza, el doble de valor cuesta el doble (así fabricar o
@@ -264,22 +265,27 @@ public enum TraderType {
 			double variance = 1.0 + (random.nextDouble() * 2.0 - 1.0) * VARIANCE;
 			int maxCount = maxCount(entry.item());
 			Tier tier = entry.tier();
-			int minLevel = tier.minLevel();
 			double fair = pricing.factor()[tier.ordinal()] * entry.value();
 			if (entry.sell()) {
 				int[] lot = sellLot(fair * variance, entry.count(), maxCount, tier);
 				int price = markup > 1.0 ? niceCeil(lot[1] * markup) : lot[1];
-				sells.add(new Deal(true, entry.item(), lot[0], price, tier.sellStock, tier, minLevel));
+				sells.add(new Deal(true, entry.item(), lot[0], price, dailyLots(tier.sellStock, lot[0]), tier));
 			} else {
 				// la mitad del precio nuevo: lo que cuesta en la tienda más barata que lo vende (o, si nadie lo vende, lo
 				// que costaría en su rareza)
 				double reference = pricing.sold().getOrDefault(entry.item(), fair);
 				int[] lot = buyLot(0.5 * reference * variance, entry.count(), maxCount);
-				buys.add(new Deal(false, entry.item(), lot[0], lot[1], tier.buyStock, tier, minLevel));
+				buys.add(new Deal(false, entry.item(), lot[0], lot[1], dailyLots(tier.buyStock, lot[0]), tier));
 			}
 		}
 		sells.addAll(buys);
 		return sells;
+	}
+
+	/** Lotes al día: los de su rareza, pero siempre los que hagan falta para mover al menos 20 unidades (configurable). */
+	private static int dailyLots(int tierLots, int lotSize) {
+		int minimum = Math.max(1, com.evolvedwarfare.config.EwConfig.get().traderMinDaily);
+		return Math.max(tierLots, (minimum + lotSize - 1) / Math.max(1, lotSize));
 	}
 
 	// ------------------------------------------------------------------ precios

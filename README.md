@@ -18,7 +18,7 @@ Requiere **Fabric API**. Opcional: **Mod Menu** (pantalla de configuración).
 | 6 | **Estructuras**: escáner de estructuras, planos, mesa del arquitecto con biblioteca y constructor que los levanta; ciudades del desierto y del norte; castillos y fortalezas del caudillo bandido | ✅ Hecha |
 | 7 | **Asedio**: catapulta, balista, trebuchet y ariete (para ti, para tus soldados y en los asaltos enemigos); rastrillo y puente levadizo con torno | ✅ Hecha |
 | 8 | **Armas medievales** (daga, lanza, mandoble, alabarda, martillo de guerra, mangual, hacha de batalla, arco largo y jabalina), **árbol de investigación** con su mesa, **equilibrio** y **configuración** (archivo, comando y pantalla con Mod Menu) | ✅ Hecha |
-| 9 | **Comerciantes y niveles de las ciudades**: ciudades de nivel 1 a 10 según la distancia; tendero, armero, cantero, joyero, sastre, mercader de especias y peletero con tienda de catálogo completo por Glory Coins; más nivel, mejores cosas y más caras | ✅ Hecha |
+| 9 | **Comerciantes y niveles de las ciudades**: ciudades de nivel 1 a 10 según la distancia; tendero, armero, cantero, joyero, sastre, mercader de especias y peletero con tienda de catálogo completo por Glory Coins (Compra y Venta, al menos 20 de cada cosa al día); más nivel, más caras | ✅ Hecha |
 | 10 | **Armas de fuego primitivas**: mosquete de chispa (modelo 3D animado, recarga y disparo con humo), balas de mosquete, bolsa de munición (1000 balas) y **daño locacional** (cabeza, torso, brazos y piernas) | 🔨 En curso |
 
 ## Fase 1 — El recluta
@@ -491,22 +491,22 @@ Investigación de los jugadores (administradores):
 
 Las ciudades (medievales, del desierto y del norte) tienen **nivel del 1 al 10**: cuanto más lejos del punto de
 aparición, más nivel (uno cada **600 bloques**, más un poco de azar fijo por ciudad). Al entrar en una sale en pantalla
-su nombre y su nivel. El nivel decide **qué venden** sus comerciantes y **a qué precio**. Cada rareza tiene su rango de
-precios (lo que cuesta un lote en una ciudad de nivel 1):
+su nombre y su nivel. **Todos los comerciantes venden y compran su catálogo entero en cualquier ciudad**; el nivel solo
+decide **a qué precio**. Cada rareza tiene su rango de precios (lo que cuesta un lote en una ciudad de nivel 1):
 
-| Rareza | Desde el nivel | Precio de un lote | Ejemplos |
-|---|---|---|---|
-| **Común** | 1 | 1 – 500 | comida, piedra, lana, armadura de hierro suelta, escudos |
-| **Poco común** | 3 | 501 – 2.000 | pechera de hierro, armas medievales de hierro, brújulas, perlas de Ender |
-| **Raro** | 5 | 2.001 – 5.000 | diamantes, armas y armaduras de diamante, obsidiana, manzanas de oro, sillas |
-| **Épico** | 7 | 5.001 – 10.000 | pechera de diamante, alabarda de diamante, bloque de diamante, aliento de dragón |
-| **Legendario** | 9 | 10.001 – 500.000 | élitros, estrella del Nether, netherita, tótems, faro, manzana de Notch |
+| Rareza | Precio de un lote | Ejemplos |
+|---|---|---|
+| **Común** | 1 – 500 | comida, piedra, lana, armadura de hierro suelta, escudos |
+| **Poco común** | 501 – 2.000 | pechera de hierro, armas medievales de hierro, brújulas, perlas de Ender |
+| **Raro** | 2.001 – 5.000 | mosquete, diamantes, armas y armaduras de diamante, obsidiana, manzanas de oro, sillas |
+| **Épico** | 5.001 – 10.000 | pechera de diamante, alabarda de diamante, bloque de diamante, aliento de dragón |
+| **Legendario** | 10.001 – 500.000 | élitros, estrella del Nether, netherita, tótems, faro, manzana de Notch |
 
 Dentro de cada rareza, lo que vale el doble cuesta el doble (lo barato se vende en lotes más grandes para llegar al
 mínimo), así que fabricar o deshacer cosas no da dinero gratis. Encima, cada nivel por encima del 1 sube los precios de
 venta un **10 %** (nivel 10 = +90 %, por encima del rango). Lo que **te compran** lo pagan a **la mitad del precio
-nuevo**, igual en todas partes, y las ciudades lejanas también compran cosas más raras. Se puede cambiar en la
-configuración (categoría *Comercio*: bloques por nivel, nivel máximo y subida por nivel).
+nuevo**, igual en todas partes. Se puede cambiar en la configuración (categoría *Comercio*: bloques por nivel, nivel
+máximo, subida por nivel y mínimo al día por objeto).
 
 ### Los comerciantes
 
@@ -532,15 +532,16 @@ Clic derecho a un comerciante abre su **tienda con todo el catálogo a la vez**,
   gemas; el sastre, paño azul con costura; el mercader de especias, arenisca con cenefas de alfombra; y el peletero,
   abeto oscuro con nieve y escarcha. A los lados del inventario lleva cuatro objetos de su oficio.
 
-- Dos pestañas: **Vende** (lo que te vende) y **Compra** (lo que te compra). Con la rueda o la barra se recorre todo.
-- Cada ficha enseña el **lote**, el **precio** en monedas y **cuántos lotes le quedan hoy**; el marco va del color de
+- Dos pestañas: **Compra** (**todo** lo que vende, y todo se puede comprar) y **Venta** (**todo** lo que te compra).
+  Con la rueda o la barra se recorre todo.
+- Cada ficha enseña el **lote**, el **precio** en monedas y **cuántas unidades le quedan hoy**; el marco va del color de
   su rareza (gris, verde, azul, morado, dorado). El precio sale en rojo si no te llega.
-- Lo que tu ciudad aún no desbloquea **también sale**, tapado y con el nivel que hace falta, para que sepas qué hay
-  en las ciudades lejanas.
+- De **cada cosa** vende y compra **al menos 20 unidades al día** (lo barato, más: p. ej. 16 lotes de 4 panes); cuando se
+  acaba sale *Agotado* (o *Completo* en Venta) hasta el día siguiente.
 - **Clic**: un lote. **Mayús+clic**: un montón entero (al comprar) o todo lo que lleves (al vender).
 - Arriba: tus monedas, el nivel de la ciudad y cuánto más caro vende. Cada comerciante tiene sus propios precios
   (±10 %), así que conviene comparar.
-- **Repone cada mañana.** Cobra de tu Bolsa de Gloria y de las monedas sueltas, y te paga en la bolsa.
+- **Repone todo cada mañana** (cada día del juego). Cobra de tu Bolsa de Gloria y de las monedas sueltas, y te paga en la bolsa.
 - En las fichas los precios largos salen cortos (12,5k = 12.500; 1,2M = 1.200.000); el número entero, en la descripción.
 - Las armas que vende el armero **no necesitan investigación**: comprarlas es la alternativa (cara) a investigarlas.
 
@@ -554,7 +555,7 @@ Solo en ciudades nuevas (chunks sin generar). Hay **huevo generador** en la pest
 
 ### Mosquete
 
-Un mosquete de chispa. **No se fabrica**: lo vende el **armero** a partir de ciudades de nivel 5 (rareza **rara**).
+Un mosquete de chispa. **No se fabrica**: lo vende el **armero** en cualquier ciudad (rareza **rara**).
 Tiene 300 usos y se repara con lingotes de hierro en el yunque.
 
 - **Cargar**: con el mosquete descargado, **mantén clic derecho 2 segundos** (gasta una bala de mosquete; vas más

@@ -13,18 +13,13 @@ import net.minecraft.util.Identifier;
  * @param sell     true si el comerciante lo vende (pagas monedas); false si te lo compra (te paga monedas)
  * @param count    tamaño del lote
  * @param price    monedas por lote
- * @param stock    lotes por día
- * @param minLevel nivel de ciudad que hace falta
+ * @param stock    lotes por día (siempre al menos 20 unidades del objeto)
  */
-public record Deal(boolean sell, Item item, int count, int price, int stock, Tier tier, int minLevel) {
+public record Deal(boolean sell, Item item, int count, int price, int stock, Tier tier) {
 	public static final PacketCodec<RegistryByteBuf, Deal> PACKET_CODEC = PacketCodec.of(Deal::write, Deal::read);
 
 	public ItemStack stack() {
 		return new ItemStack(item, count);
-	}
-
-	public boolean unlocked(int cityLevel) {
-		return cityLevel >= minLevel;
 	}
 
 	private void write(RegistryByteBuf buf) {
@@ -34,7 +29,6 @@ public record Deal(boolean sell, Item item, int count, int price, int stock, Tie
 		buf.writeVarInt(price);
 		buf.writeVarInt(stock);
 		buf.writeVarInt(tier.ordinal());
-		buf.writeVarInt(minLevel);
 	}
 
 	private static Deal read(RegistryByteBuf buf) {
@@ -45,7 +39,6 @@ public record Deal(boolean sell, Item item, int count, int price, int stock, Tie
 		int stock = buf.readVarInt();
 		Tier[] tiers = Tier.values();
 		Tier tier = tiers[Math.floorMod(buf.readVarInt(), tiers.length)];
-		int minLevel = buf.readVarInt();
-		return new Deal(sell, Registries.ITEM.get(id), count, price, stock, tier, minLevel);
+		return new Deal(sell, Registries.ITEM.get(id), count, price, stock, tier);
 	}
 }

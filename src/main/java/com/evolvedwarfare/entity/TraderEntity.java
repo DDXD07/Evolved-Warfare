@@ -260,6 +260,9 @@ public class TraderEntity extends MerchantEntity {
 	}
 
 	private void openShop(ServerPlayerEntity player) {
+		if (getWorld() instanceof ServerWorld world) {
+			restockIfNewDay(world); // por si es el primer cliente del día
+		}
 		if (cityLevel <= 0 && getWorld() instanceof ServerWorld world) {
 			cityLevel = CityLevels.levelAt(world, home != null ? home : getBlockPos());
 		}

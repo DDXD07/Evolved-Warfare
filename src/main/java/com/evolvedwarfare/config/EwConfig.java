@@ -63,6 +63,8 @@ public final class EwConfig {
 	public int cityMaxLevel = 10;
 	/** Cuánto suben los precios de venta de los comerciantes por cada nivel de la ciudad por encima del 1. */
 	public double traderPricePerLevel = 0.10;
+	/** Unidades de cada cosa que, como mínimo, venden y compran los comerciantes al día. */
+	public int traderMinDaily = 20;
 
 	// ------------------------------------------------------------------ tus NPCs
 	/** Días seguidos sin cobrar antes de que un NPC tuyo deserte. */
@@ -147,6 +149,7 @@ public final class EwConfig {
 			new Option("cityBlocksPerLevel", "trade", 100, 100000, 50),
 			new Option("cityMaxLevel", "trade", 1, 10, 1),
 			new Option("traderPricePerLevel", "trade", 0.0, 1.0, 0.01),
+			new Option("traderMinDaily", "trade", 1, 1000, 1),
 			new Option("maxUnpaidDays", "npcs", 1, 30, 1),
 			new Option("soldierHealth", "npcs", 0.1, 10.0, 0.1),
 			new Option("soldierDamage", "npcs", 0.1, 10.0, 0.1),

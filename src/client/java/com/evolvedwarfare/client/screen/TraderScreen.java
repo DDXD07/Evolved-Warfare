@@ -17,9 +17,10 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.math.MathHelper;
 
 /**
- * Tienda de un comerciante de ciudad: todo lo que vende (o compra) a la vez, en fichas de 4 columnas con barra de
- * desplazamiento. Cada ficha lleva el lote, el precio y lo que le queda hoy, con el marco del color de su rareza;
- * lo que la ciudad aún no desbloquea sale tapado con el nivel que hace falta. Clic: un lote; Mayús+clic: muchos.
+ * Tienda de un comerciante de ciudad, en dos pestañas: <b>Compra</b> (todo lo que vende) y <b>Venta</b> (todo lo que te
+ * compra), en fichas de 4 columnas con barra de desplazamiento. Cada ficha lleva el lote, el precio y cuántas unidades
+ * le quedan hoy (al menos 20 de cada cosa; repone cada mañana), con el marco del color de su rareza.
+ * Clic: un lote; Mayús+clic: muchos.
  */
 public class TraderScreen extends HandledScreen<TraderScreenHandler> {
 	private static final int EARN = 0x2E7D32;
@@ -220,8 +221,7 @@ public class TraderScreen extends HandledScreen<TraderScreenHandler> {
 			Deal deal = handler.deals().get(index);
 			// marco del color de la rareza y ficha (más clara bajo el ratón)
 			context.fill(cx, cy, cx + CARD_W, cy + CARD_H, deal.tier().frame);
-			int face = !deal.unlocked(handler.cityLevel()) ? theme.cardLocked() : theme.card();
-			context.fill(cx + 1, cy + 1, cx + CARD_W - 1, cy + CARD_H - 1, index == hovered ? theme.cardHover() : face);
+			context.fill(cx + 1, cy + 1, cx + CARD_W - 1, cy + CARD_H - 1, index == hovered ? theme.cardHover() : theme.card());
 			Panels.slot(context, cx + 2, cy + 6, theme.slotInner());
 		}
 		// barra de desplazamiento
@@ -265,21 +265,18 @@ public class TraderScreen extends HandledScreen<TraderScreenHandler> {
 			ItemStack stack = deal.stack();
 			context.drawItem(stack, cx + 3, cy + 7);
 			context.drawItemInSlot(textRenderer, stack, cx + 3, cy + 7);
-			boolean locked = !deal.unlocked(level);
 			int left = handler.left(index);
-			if (locked || left <= 0) {
-				// el objeto, apagado
+			if (left <= 0) {
+				// agotado (o ya no compra más): el objeto, apagado
 				context.getMatrices().push();
 				context.getMatrices().translate(0, 0, 300);
-				context.fill(cx + 3, cy + 7, cx + 19, cy + 23, locked ? 0xB0303030 : 0x80303030);
+				context.fill(cx + 3, cy + 7, cx + 19, cy + 23, 0x80303030);
 				context.getMatrices().pop();
 			}
 			// precio
 			String price = Money.compact(deal.price());
 			int color;
-			if (locked) {
-				color = theme.sub();
-			} else if (deal.sell()) {
+			if (deal.sell()) {
 				color = have >= deal.price() ? theme.price() : theme.lockText();
 			} else {
 				color = carried(deal) >= deal.count() ? earn() : theme.sub();
@@ -293,17 +290,14 @@ public class TraderScreen extends HandledScreen<TraderScreenHandler> {
 			context.drawText(textRenderer, price, 0, 0, color, false);
 			context.getMatrices().pop();
 			smallCoin(context, cx + 23 + Math.round(priceW * priceScale), cy + 4);
-			// segunda línea: existencias de hoy, agotado o el nivel que hace falta
+			// segunda línea: cuántas unidades le quedan hoy (de las que mueve al día) o agotado
 			String second;
 			int secondColor;
-			if (locked) {
-				second = Text.translatable("gui.evolvedwarfare.trader.lock", deal.minLevel()).getString();
-				secondColor = theme.lockText();
-			} else if (left <= 0) {
+			if (left <= 0) {
 				second = Text.translatable(deal.sell() ? "gui.evolvedwarfare.trader.sold_out" : "gui.evolvedwarfare.trader.full").getString();
 				secondColor = theme.lockText();
 			} else {
-				second = left + "/" + deal.stock();
+				second = left * deal.count() + "/" + deal.stock() * deal.count();
 				secondColor = theme.sub();
 			}
 			context.getMatrices().push();
@@ -351,13 +345,10 @@ public class TraderScreen extends HandledScreen<TraderScreenHandler> {
 					.formatted(Formatting.GREEN));
 			lines.add(Text.translatable("gui.evolvedwarfare.trader.you_have", carried(deal)).formatted(Formatting.GRAY));
 		}
-		lines.add(Text.translatable("gui.evolvedwarfare.trader.left", handler.left(index), deal.stock()).formatted(Formatting.GRAY));
-		if (!deal.unlocked(handler.cityLevel())) {
-			lines.add(Text.translatable("gui.evolvedwarfare.trader.locked", deal.minLevel()).formatted(Formatting.RED));
-		} else {
-			lines.add(Text.translatable(deal.sell() ? "gui.evolvedwarfare.trader.click_sell" : "gui.evolvedwarfare.trader.click_buy")
-					.formatted(Formatting.DARK_GRAY));
-		}
+		lines.add(Text.translatable(deal.sell() ? "gui.evolvedwarfare.trader.left" : "gui.evolvedwarfare.trader.left_buy",
+				handler.left(index) * deal.count(), deal.stock() * deal.count()).formatted(Formatting.GRAY));
+		lines.add(Text.translatable(deal.sell() ? "gui.evolvedwarfare.trader.click_sell" : "gui.evolvedwarfare.trader.click_buy")
+				.formatted(Formatting.DARK_GRAY));
 		return lines;
 	}
 }
