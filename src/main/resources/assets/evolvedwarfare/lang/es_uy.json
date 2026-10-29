@@ -528,9 +528,16 @@
   "item.evolvedwarfare.musket.loaded": "Cargado",
   "item.evolvedwarfare.musket.unloaded": "Sin cargar",
   "item.evolvedwarfare.musket.tip_damage": "5 corazones de daño; empuja un bloque",
-  "item.evolvedwarfare.musket.tip_reload": "Mantén clic derecho para cargar (gasta 1 bala de mosquete)",
+  "item.evolvedwarfare.musket.tip_reload": "Mantén clic derecho para cargar (gasta 1 bala, suelta o de la bolsa de munición)",
   "item.evolvedwarfare.musket.tip_fire": "Cargado: clic derecho para disparar",
   "item.evolvedwarfare.musket_ball": "Bala de mosquete",
+  "item.evolvedwarfare.ammo_pouch": "Bolsa de munición",
+  "item.evolvedwarfare.ammo_pouch.empty": "Vacía (caben 1000 balas)",
+  "item.evolvedwarfare.ammo_pouch.contents": "%s: %s / %s",
+  "item.evolvedwarfare.ammo_pouch.hint_reload": "Al cargar un arma de fuego, la bala sale de aquí",
+  "item.evolvedwarfare.ammo_pouch.hint_use": "Clic derecho: guarda tus balas sueltas",
+  "item.evolvedwarfare.ammo_pouch.hint_sneak": "Mayús + clic derecho: saca 64",
+  "item.evolvedwarfare.ammo_pouch.hint_inventory": "En el inventario: clic derecho con balas para meterlas o sacarlas",
   "entity.evolvedwarfare.javelin": "Jabalina",
   "weapon.evolvedwarfare.dagger.tip": "Rápida. Por la espalda hace mucho más daño.",
   "weapon.evolvedwarfare.spear.tip": "Llega más lejos (+1,5 bloques).",
@@ -729,5 +736,8 @@
   "subtitles.evolvedwarfare.musket_ball_in": "Bala cayendo por el cañón",
   "subtitles.evolvedwarfare.musket_ramrod": "Baqueta",
   "subtitles.evolvedwarfare.musket_cock": "Rastrillo montado",
-  "subtitles.evolvedwarfare.musket_empty": "Mosquete sin balas"
+  "subtitles.evolvedwarfare.musket_empty": "Mosquete sin balas",
+  "message.evolvedwarfare.ammo_pouch.empty": "Bolsa de munición vacía",
+  "message.evolvedwarfare.ammo_pouch.status": "Bolsa de munición: %s/%s %s",
+  "message.evolvedwarfare.musket.loaded": "Cargado · te quedan %s balas"
 }

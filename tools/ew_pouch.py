@@ -1,4 +1,4 @@
-"""Fase 9: la Bolsa de Gloria (textura y modelo).
+"""Fase 9 y 10: la Bolsa de Gloria y la bolsa de munición (texturas y modelos).
 
 Uso: python3 tools/ew_pouch.py src/main/resources/assets/evolvedwarfare
 """
@@ -44,17 +44,54 @@ ART = [
 ]
 
 
-def main():
+# 16x16: cartuchera de cuero negro con su correa, chapa de latón en la tapa y remaches
+AMMO_COLORS = {
+    "o": (20, 18, 16, 255),      # contorno
+    "S": (122, 84, 46, 255),     # correa
+    "s": (88, 58, 30, 255),      # correa en sombra
+    "F": (54, 48, 44, 255),      # tapa
+    "H": (92, 84, 78, 255),      # tapa con luz
+    "D": (40, 36, 33, 255),      # caja
+    "B": (156, 114, 38, 255),    # latón en sombra
+    "Y": (226, 182, 72, 255),    # latón
+    "K": (168, 158, 136, 255),   # remaches
+}
+AMMO_ART = [
+    "................",
+    "....oooooooo....",
+    "...oSso..osSo...",
+    "..oSso....osSo..",
+    ".oooooooooooooo.",
+    ".oHHFFFFFFFFFFo.",
+    ".oHFFFFBBFFFFFo.",
+    ".oFFFFBYYBFFFFo.",
+    ".oFFFFBYYBFFFFo.",
+    ".oFFFFFBBFFFFFo.",
+    ".oooooooooooooo.",
+    ".oDKDDDDDDDDKDo.",
+    ".oDDDDDDDDDDDDo.",
+    ".oDDDDDDDDDDDDo.",
+    "..oooooooooooo..",
+    "................",
+]
+
+
+def draw(art, colors, name):
     img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
-    for y, row in enumerate(ART):
+    for y, row in enumerate(art):
         assert len(row) == 16, (y, row)
         for x, ch in enumerate(row):
             if ch != ".":
-                img.putpixel((x, y), COLORS[ch])
-    img.save(os.path.join(OUT, "textures/item/glory_pouch.png"))
-    with open(os.path.join(OUT, "models/item/glory_pouch.json"), "w", encoding="utf-8") as f:
-        json.dump({"parent": "minecraft:item/generated", "textures": {"layer0": "evolvedwarfare:item/glory_pouch"}}, f, indent=2)
+                img.putpixel((x, y), colors[ch])
+    img.save(os.path.join(OUT, "textures/item/%s.png" % name))
+    with open(os.path.join(OUT, "models/item/%s.json" % name), "w", encoding="utf-8") as f:
+        json.dump({"parent": "minecraft:item/generated", "textures": {"layer0": "evolvedwarfare:item/" + name}}, f, indent=2)
         f.write("\n")
+
+
+def main():
+    draw(ART, COLORS, "glory_pouch")
+    draw(AMMO_ART, AMMO_COLORS, "ammo_pouch")
 
 
 if __name__ == "__main__":

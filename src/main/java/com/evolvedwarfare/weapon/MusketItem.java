@@ -1,5 +1,6 @@
 package com.evolvedwarfare.weapon;
 
+import com.evolvedwarfare.item.AmmoPouchItem;
 import com.evolvedwarfare.registry.ModComponents;
 import com.evolvedwarfare.registry.ModItems;
 import com.evolvedwarfare.registry.ModSounds;
@@ -30,7 +31,8 @@ import net.minecraft.world.event.GameEvent;
 /**
  * Mosquete de chispa. No se fabrica: lo vende el armero (raro).
  * <ul>
- *   <li>Descargado: mantén clic derecho 2 segundos para cargarlo (gasta una bala de mosquete). Se ve cómo alza el
+ *   <li>Descargado: mantén clic derecho 2 segundos para cargarlo (gasta una bala de mosquete, suelta o de una bolsa de
+ *   munición). Se ve cómo alza el
  *   arma, mete la bala, la aprieta con la baqueta y sube el rastrillo.</li>
  *   <li>Cargado: clic derecho dispara. El rastrillo cae, sale humo de la boca y la bala hace 5 corazones de daño y
  *   empuja un bloque hacia atrás.</li>
@@ -75,7 +77,7 @@ public class MusketItem extends Item {
 			fire(world, user, hand, stack);
 			return TypedActionResult.consume(stack);
 		}
-		if (user.getAbilities().creativeMode || !findAmmo(user.getInventory()).isEmpty()) {
+		if (user.getAbilities().creativeMode || hasAmmo(user.getInventory())) {
 			user.setCurrentHand(hand);
 			return TypedActionResult.consume(stack);
 		}
@@ -116,8 +118,12 @@ public class MusketItem extends Item {
 	@Override
 	public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
 		if (!world.isClient && user instanceof PlayerEntity player) {
-			if (player.getAbilities().creativeMode || takeAmmo(player.getInventory())) {
+			if (player.getAbilities().creativeMode) {
 				stack.set(ModComponents.MUSKET_LOADED, true);
+			} else if (takeAmmo(player.getInventory())) {
+				stack.set(ModComponents.MUSKET_LOADED, true);
+				player.sendMessage(Text.translatable("message.evolvedwarfare.musket.loaded", ammoLeft(player.getInventory()))
+						.formatted(Formatting.GRAY), true);
 			} else {
 				world.playSound(null, user.getX(), user.getY(), user.getZ(), ModSounds.MUSKET_EMPTY, SoundCategory.PLAYERS, 0.8F, 1.0F);
 				player.sendMessage(Text.translatable("message.evolvedwarfare.musket.no_ammo").formatted(Formatting.RED), true);
@@ -171,29 +177,46 @@ public class MusketItem extends Item {
 		world.spawnParticles(ParticleTypes.POOF, muzzle.x, muzzle.y, muzzle.z, 4, 0.06, 0.06, 0.06, 0.02);
 	}
 
-	/** Las balas que lleva: primero las de la otra mano, luego el resto del inventario. */
-	private static ItemStack findAmmo(PlayerInventory inventory) {
+	/** Si lleva alguna bala: suelta o en una bolsa de munición. */
+	private static boolean hasAmmo(PlayerInventory inventory) {
+		return ammoLeft(inventory) > 0;
+	}
+
+	/** Las balas que le quedan (sueltas y en bolsas de munición). */
+	private static int ammoLeft(PlayerInventory inventory) {
+		int total = AmmoPouchItem.countIn(inventory, ModItems.MUSKET_BALL);
+		for (int i = 0; i < inventory.size(); i++) {
+			ItemStack stack = inventory.getStack(i);
+			if (stack.isOf(ModItems.MUSKET_BALL)) {
+				total += stack.getCount();
+			}
+		}
+		return total;
+	}
+
+	/**
+	 * Gasta una bala: primero una suelta en la otra mano (si la has puesto ahí es que quieres usar esa), luego de las
+	 * bolsas de munición y por último las sueltas del inventario.
+	 */
+	private static boolean takeAmmo(PlayerInventory inventory) {
 		ItemStack offhand = inventory.offHand.get(0);
 		if (offhand.isOf(ModItems.MUSKET_BALL)) {
-			return offhand;
+			offhand.decrement(1);
+			inventory.markDirty();
+			return true;
+		}
+		if (AmmoPouchItem.takeOne(inventory, ModItems.MUSKET_BALL)) {
+			return true;
 		}
 		for (int i = 0; i < inventory.size(); i++) {
 			ItemStack stack = inventory.getStack(i);
 			if (stack.isOf(ModItems.MUSKET_BALL)) {
-				return stack;
+				stack.decrement(1);
+				inventory.markDirty();
+				return true;
 			}
 		}
-		return ItemStack.EMPTY;
-	}
-
-	private static boolean takeAmmo(PlayerInventory inventory) {
-		ItemStack ammo = findAmmo(inventory);
-		if (ammo.isEmpty()) {
-			return false;
-		}
-		ammo.decrement(1);
-		inventory.markDirty();
-		return true;
+		return false;
 	}
 
 	/** Cargar o disparar no hace que el arma "se guarde y se vuelva a sacar" en la mano. */

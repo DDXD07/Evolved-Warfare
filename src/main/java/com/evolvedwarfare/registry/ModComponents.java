@@ -42,6 +42,12 @@ public final class ModComponents {
 			ComponentType.<Long>builder().codec(com.mojang.serialization.Codec.LONG)
 					.packetCodec(net.minecraft.network.codec.PacketCodecs.VAR_LONG).build());
 
+	/** Lo que lleva una bolsa de munición (tipo de bala y cuántas, hasta 1000). */
+	public static final ComponentType<com.evolvedwarfare.item.AmmoPouchItem.Contents> AMMO_POUCH = Registry.register(
+			Registries.DATA_COMPONENT_TYPE, EvolvedWarfare.id("ammo_pouch"),
+			ComponentType.<com.evolvedwarfare.item.AmmoPouchItem.Contents>builder().codec(com.evolvedwarfare.item.AmmoPouchItem.Contents.CODEC)
+					.packetCodec(com.evolvedwarfare.item.AmmoPouchItem.Contents.PACKET_CODEC).build());
+
 	private ModComponents() {
 	}
 

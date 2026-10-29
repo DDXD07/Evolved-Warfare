@@ -19,7 +19,7 @@ Requiere **Fabric API**. Opcional: **Mod Menu** (pantalla de configuración).
 | 7 | **Asedio**: catapulta, balista, trebuchet y ariete (para ti, para tus soldados y en los asaltos enemigos); rastrillo y puente levadizo con torno | ✅ Hecha |
 | 8 | **Armas medievales** (daga, lanza, mandoble, alabarda, martillo de guerra, mangual, hacha de batalla, arco largo y jabalina), **árbol de investigación** con su mesa, **equilibrio** y **configuración** (archivo, comando y pantalla con Mod Menu) | ✅ Hecha |
 | 9 | **Comerciantes y niveles de las ciudades**: ciudades de nivel 1 a 10 según la distancia; tendero, armero, cantero, joyero, sastre, mercader de especias y peletero con tienda de catálogo completo por Glory Coins; más nivel, mejores cosas y más caras | ✅ Hecha |
-| 10 | **Armas de fuego primitivas**: mosquete de chispa (modelo 3D animado, recarga y disparo con humo) y balas de mosquete | 🔨 En curso |
+| 10 | **Armas de fuego primitivas**: mosquete de chispa (modelo 3D animado, recarga y disparo con humo), balas de mosquete y bolsa de munición (1000 balas) | 🔨 En curso |
 
 ## Fase 1 — El recluta
 
@@ -569,6 +569,19 @@ Tiene 300 usos y se repara con lingotes de hierro en el yunque.
 
 **Balas de mosquete**: pólvora + lingote de hierro + papel (sin forma) → **9 balas**.
 
+### Bolsa de munición
+
+Guarda hasta **1000 balas** de un mismo tipo en un solo hueco (de momento, balas de mosquete). Receta: cordel arriba;
+cuero, lingote de hierro y cuero en medio; 3 de cuero abajo.
+
+- **Clic derecho**: mete todas las balas sueltas que lleves. **Mayús + clic derecho**: saca 64.
+- En el inventario se mete y se saca con clic derecho, como un saco. La barra dorada debajo del icono enseña lo llena
+  que está, y la descripción, cuántas lleva.
+- **Al cargar el mosquete, la bala se descuenta de la bolsa.** Orden: primero una bala suelta en la otra mano (si la
+  has puesto ahí), luego las bolsas de munición (la de la otra mano antes que las demás) y por último las sueltas del
+  inventario. Al terminar de cargar sale cuántas balas te quedan.
+- Puedes llevar varias bolsas; cada una, hasta 1000.
+
 El modelo 3D (cañón, caja, culata, abrazaderas, llave con rastrillo, acero y cazoleta, guardamonte y baqueta) lo
 genera `tools/ew_musket.py`, que también dibuja vistas previas de la recarga y el disparo sin abrir el juego. Los
 sonidos (disparo, bala, baqueta, rastrillo, clic sin balas) los sintetiza `tools/ew_sounds.py`.
@@ -593,6 +606,7 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
 - `ew_musket.py` (+ `ew_musket_preview.py`) — el mosquete en 3D: piezas, textura, la clase `MusketModel.java` y vistas
   previas de la recarga y el disparo en primera y tercera persona.
 - `ew_sounds.py` — sonidos sintetizados del mosquete (`.ogg`).
+- `ew_pouch.py` — iconos de la Bolsa de Gloria y de la bolsa de munición.
 
 ```
 python3 tools/ew_structures.py src/main/resources/data/evolvedwarfare

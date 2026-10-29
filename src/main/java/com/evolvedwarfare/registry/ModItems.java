@@ -116,6 +116,8 @@ public final class ModItems {
 	public static final Item MUSKET = register("musket", new com.evolvedwarfare.weapon.MusketItem(
 			new Item.Settings().maxDamage(300).rarity(net.minecraft.util.Rarity.RARE)));
 	public static final Item MUSKET_BALL = register("musket_ball", new Item(new Item.Settings()));
+	/** Bolsa de munición: hasta 1000 balas de un tipo; las armas de fuego recargan de ella. */
+	public static final Item AMMO_POUCH = register("ammo_pouch", new com.evolvedwarfare.item.AmmoPouchItem(new Item.Settings().maxCount(1)));
 
 	/** Un arma concreta: tipo y material ("iron", "diamond" o "netherite"). */
 	public static Item weapon(WeaponType type, String material) {
@@ -170,6 +172,7 @@ public final class ModItems {
 						entries.add(JAVELIN);
 						entries.add(MUSKET);
 						entries.add(MUSKET_BALL);
+						entries.add(AMMO_POUCH);
 						entries.add(BANDIT_SPAWN_EGG);
 						entries.add(VIKING_SPAWN_EGG);
 						entries.add(PIRATE_SPAWN_EGG);

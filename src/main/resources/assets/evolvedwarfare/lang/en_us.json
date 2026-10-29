@@ -528,9 +528,16 @@
   "item.evolvedwarfare.musket.loaded": "Loaded",
   "item.evolvedwarfare.musket.unloaded": "Not loaded",
   "item.evolvedwarfare.musket.tip_damage": "5 hearts of damage; knocks back one block",
-  "item.evolvedwarfare.musket.tip_reload": "Hold right-click to load (uses 1 musket ball)",
+  "item.evolvedwarfare.musket.tip_reload": "Hold right-click to load (uses 1 musket ball, loose or from an ammo pouch)",
   "item.evolvedwarfare.musket.tip_fire": "Loaded: right-click to fire",
   "item.evolvedwarfare.musket_ball": "Musket Ball",
+  "item.evolvedwarfare.ammo_pouch": "Ammo Pouch",
+  "item.evolvedwarfare.ammo_pouch.empty": "Empty (holds 1000 rounds)",
+  "item.evolvedwarfare.ammo_pouch.contents": "%s: %s / %s",
+  "item.evolvedwarfare.ammo_pouch.hint_reload": "Firearms reload from this pouch",
+  "item.evolvedwarfare.ammo_pouch.hint_use": "Right-click: store your loose rounds",
+  "item.evolvedwarfare.ammo_pouch.hint_sneak": "Sneak + right-click: take out 64",
+  "item.evolvedwarfare.ammo_pouch.hint_inventory": "In your inventory: right-click with rounds to put them in or take them out",
   "entity.evolvedwarfare.javelin": "Javelin",
   "weapon.evolvedwarfare.dagger.tip": "Fast. Deals much more damage from behind.",
   "weapon.evolvedwarfare.spear.tip": "Longer reach (+1.5 blocks).",
@@ -729,5 +736,8 @@
   "subtitles.evolvedwarfare.musket_ball_in": "Ball rattles down the barrel",
   "subtitles.evolvedwarfare.musket_ramrod": "Ramrod",
   "subtitles.evolvedwarfare.musket_cock": "Musket cocked",
-  "subtitles.evolvedwarfare.musket_empty": "Musket clicks empty"
+  "subtitles.evolvedwarfare.musket_empty": "Musket clicks empty",
+  "message.evolvedwarfare.ammo_pouch.empty": "Ammo pouch empty",
+  "message.evolvedwarfare.ammo_pouch.status": "Ammo pouch: %s/%s %s",
+  "message.evolvedwarfare.musket.loaded": "Loaded · %s rounds left"
 }
