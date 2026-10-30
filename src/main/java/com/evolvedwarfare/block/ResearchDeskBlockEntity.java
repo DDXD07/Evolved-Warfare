@@ -1,7 +1,6 @@
 package com.evolvedwarfare.block;
 
 import com.evolvedwarfare.registry.ModBlocks;
-import com.evolvedwarfare.research.Research;
 import java.util.UUID;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -67,7 +66,6 @@ public class ResearchDeskBlockEntity extends BlockEntity {
 		if (world.getTime() % 100 == 0) {
 			desk.shelves = desk.countShelves(world);
 		}
-		Research.progress(serverWorld, desk.owner, desk.speed());
 		if (world.getTime() % 40 == 0 && world.random.nextInt(3) == 0) {
 			serverWorld.spawnParticles(ParticleTypes.ENCHANT, pos.getX() + 0.5, pos.getY() + 1.3, pos.getZ() + 0.5, 4, 0.3, 0.2, 0.3, 0.2);
 		}

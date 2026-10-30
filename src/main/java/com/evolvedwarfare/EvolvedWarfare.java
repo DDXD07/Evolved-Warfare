@@ -59,6 +59,7 @@ public class EvolvedWarfare implements ModInitializer {
 		ModScreens.init();
 		ModNetworking.init();
 		ModStructures.init();
+		com.evolvedwarfare.registry.ModEffects.init();
 		NpcSides.register();
 		FactionSpawner.register();
 		ModCommands.register();

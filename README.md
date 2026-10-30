@@ -1,6 +1,6 @@
 # Evolved Warfare — Minecraft 1.21.1 (Fabric)
 
-NPCs, ejércitos, trabajadores, comercio, facciones con diplomacia, asedio, armas medievales e investigación. Inspirado en *Ancient Warfare*, con código, nombre y texturas propios.
+NPCs, ejércitos, trabajadores, comercio, facciones con diplomacia, asedio, armas medievales y un árbol de habilidades al estilo *Skyrim*. Inspirado en *Ancient Warfare*, con código, nombre y texturas propios.
 
 Requiere **Fabric API**. Opcional: **Mod Menu** (pantalla de configuración).
 
@@ -17,7 +17,7 @@ Requiere **Fabric API**. Opcional: **Mod Menu** (pantalla de configuración).
 | 5 | **Facciones y diplomacia**: vikingos y piratas con sus asentamientos, patrullas y asaltos (también a tu pueblo); reputación con cada facción, bandera blanca, tributos, treguas, alianzas, ayuda de aliados y mercenarios | ✅ Hecha |
 | 6 | **Estructuras**: escáner de estructuras, planos, mesa del arquitecto con biblioteca y constructor que los levanta; ciudades del desierto y del norte; castillos y fortalezas del caudillo bandido | ✅ Hecha |
 | 7 | **Asedio**: catapulta, balista, trebuchet y ariete (para ti, para tus soldados y en los asaltos enemigos); rastrillo y puente levadizo con torno | ✅ Hecha |
-| 8 | **Armas medievales** (daga, lanza, mandoble, alabarda, martillo de guerra, mangual, hacha de batalla, arco largo y jabalina), **árbol de investigación** con su mesa, **equilibrio** y **configuración** (archivo, comando y pantalla con Mod Menu) | ✅ Hecha |
+| 8 | **Armas medievales** (daga, lanza, mandoble, alabarda, martillo de guerra, mangual, hacha de batalla, arco largo y jabalina), **árbol de habilidades** al estilo *Skyrim* (11 habilidades que suben usándolas, 76 ventajas), **equilibrio** y **configuración** (archivo, comando y pantalla con Mod Menu) | ✅ Hecha |
 | 9 | **Comerciantes y niveles de las ciudades**: ciudades de nivel 1 a 10 según la distancia; tendero, armero, cantero, joyero, sastre, mercader de especias y peletero con tienda de catálogo completo por Glory Coins (Compra y Venta, al menos 20 de cada cosa al día); más nivel, mejor calidad (de gastado a obra maestra encantada) y más caras | ✅ Hecha |
 | 10 | **Armas de fuego primitivas**: mosquete de chispa (modelo 3D animado, recarga y disparo con humo), balas de mosquete, bolsa de munición (1000 balas) y **daño locacional** (cabeza, torso, brazos y piernas) | 🔨 En curso |
 
@@ -425,7 +425,7 @@ Reglas del mundo (`/gamerule`): `evolvedwarfareSiegeBlockDamage` (los proyectile
 defecto) y `evolvedwarfareSiegeRaids` (los asaltos traen máquinas; sí por defecto). Para probar un asedio:
 `/evolvedwarfare raid bandits siege`.
 
-## Fase 8 — Armas, investigación, equilibrio y configuración
+## Fase 8 — Armas, habilidades, equilibrio y configuración
 
 ### Armas medievales
 Cada una en hierro y diamante (en la mesa de crafteo, con palos) y en netherita (en la mesa de herrería, con la plantilla
@@ -466,31 +466,54 @@ La animación no cambia el daño ni la velocidad de ataque (los de la tabla de a
   hachas de batalla (el jarl, a veces de diamante); los **piratas**, dagas y manguales. También salen en sus cofres y en
   la armería de los castillos.
 
-### Árbol de investigación
-**Mesa de investigación** (libro, pluma, libro; tablón, mesa de crafteo, tablón; dos tablones): clic derecho para abrir
-tu árbol. Eliges una técnica, pagas sus materiales (se gastan al empezar) y avanza sola mientras la mesa esté cargada.
-Cada **estantería** alrededor (como en la mesa de encantamientos, hasta 15) la hace un 10 % más rápida. Se puede cancelar
-recuperando la mitad. Los castillos tienen una en los aposentos del señor.
+### Árbol de habilidades
+Como en *Skyrim*: **las habilidades suben usándolas**, y cada vez que sube una, sube un poco tu **nivel de personaje**.
+Cada nivel de personaje da **1 punto de ventaja** (empiezas con 1) para gastar en el árbol. Se abre con la **tecla K**
+(se cambia en Controles) o con clic derecho en la **mesa de investigación** (libro, pluma, libro; tablón, mesa de
+crafteo, tablón; dos tablones; los castillos tienen una en los aposentos del señor).
 
-| Rama | Nivel 1 | Nivel 2 | Nivel 3 |
-|---|---|---|---|
-| Armas | Herrería militar: dagas, lanzas, jabalinas | Armas pesadas: mandoble, martillo, mangual, hacha de batalla | Armas de asta: alabarda |
-| Arquería | Arquería larga: arco largo | | |
-| Asedio | Carpintería de asedio: ariete | Máquinas de torsión: catapulta, balista, virotes | Contrapeso: trebuchet · Fuego de asedio: vasijas |
-| Fortificación | Fortificación: rastrillo, puente levadizo, torno | | |
-| Ejército | Instrucción: +20 % de vida a tus soldados | Tácticas: +15 % de daño · Medicina de campaña: médicos curan +50 % y los soldados se recuperan solos | Veteranos: el doble de experiencia |
+Hay **11 habilidades** (de 0 a 100) en cuatro grupos:
 
-Tardan de 3 a 10 minutos reales a velocidad normal. Mientras no lo investigues, lo de cada técnica **no se puede
-fabricar** (el resultado de la mesa de crafteo sale vacío y te dice qué te falta; la descripción del objeto también lo
-dice). Lo que encuentres en cofres o quites a los enemigos sí lo puedes usar. En creativo no hace falta investigar, y la
-investigación obligatoria se puede quitar en la configuración.
+| Grupo | Habilidad | Sube… |
+|---|---|---|
+| Cuerpo a cuerpo | **Hojas** (espadas, dagas, mandobles) · **Hachas** (hachas, hachas de batalla) · **Mazas** (martillos de guerra, manguales, la maza) · **Astas** (lanzas, alabardas, tridentes) | golpeando con esa arma (según el daño) |
+| A distancia | **Arquería** (arcos, ballestas, jabalinas) · **Armas de fuego** (mosquete) | acertando con flechas, virotes, jabalinas o balas |
+| Defensa | **Escudo** · **Armadura pesada** (hierro, diamante, netherita) · **Armadura ligera** (cuero, cota de malla, oro, caparazón) | parando con el escudo · recibiendo golpes con esas piezas puestas |
+| Mando | **Liderazgo** · **Asedio** | cuando tus soldados luchan y cobran · disparando y rompiendo con las máquinas de asedio |
+
+La pantalla es un cielo estrellado: cada habilidad, su constelación (abajo, las pestañas; o flechas, A/D o la rueda).
+Cada estrella es una **ventaja**: **dorada** si la tienes, **blanca** si la puedes coger, **gris** si aún no (te dice
+qué nivel o qué ventaja anterior te falta). Clic para cogerla; algunas tienen varios rangos. Al subir una habilidad o de
+nivel sale un aviso arriba en pantalla.
+
+| Habilidad | Ventajas (nivel que piden) |
+|---|---|
+| Hojas | Maestría +10…50 % de daño (0/20/40/60/80) · Forja de dagas (0) · Forja de mandobles (25) · Danza de acero +15 % de velocidad (30) · Puñalada trapera +50 % por la espalda (35) · Golpe certero 10…20 % de crítico (50/70/90) · Torbellino: barrido +50 % (75) |
+| Hachas | Maestría (0…80) · Leñador: talar +40 % (10) · Forja de hachas de batalla (25) · Sangrado 1…2 por segundo (30/60/90) · Hachazo: críticos +50 % (45) · Carnicero +25 % al que sangra (65) · Furia: fuerza al matar (85) |
+| Mazas | Maestría (0…80) · Forja de martillos y manguales (0) · Rompehuesos: atraviesa armadura (30/60/90) · Aturdir 15 % (40) · Conmoción en los críticos (60) · Golpe de gracia +30 % a los heridos (70) · Aplastar: el crítico daña alrededor (90) |
+| Astas | Maestría (0…80) · Forja de lanzas (0) · Mantener a raya +0,5 de alcance (20) · Estocada corriendo +20…50 % (30/60/90) · Forja de alabardas (40) · Contra jinetes +50 % (45) · Muro de picas: empuja al que te golpea de frente (65) · Empalar (90) |
+| Arquería | Tensar +10…50 % (0…80) · Jabalinas (0) · Arco largo (20) · Cazador +30 % a animales (20) · Recuperar flechas 33 % (30) · Tiro crítico (40/60/80) · Diana: cabeza +50 % (70) · Explorador +10 % de velocidad (90) |
+| Armas de fuego | Pólvora fina +10…50 % (0…80) · Recarga rápida −15…45 % (20/50/80) · Bolsillo de balas: 25 % sin gastar (30) · Pulso firme +25 % apuntando (40) · Atronador (60) · Tirador de élite: cabeza +50 % (75) |
+| Escudo | Escudo recio: se gasta hasta un 75 % menos (0/30/60) · Inamovible (20) · Guardia rápida 1,5 s (30) · Contraataque 30 % (45) · Golpe de escudo (60) · Muro de escudos: tus soldados cerca, −20 % de daño (80) |
+| Armadura pesada | Coloso +8…40 % de armadura (0…80) · Bien ajustada (30) · Firme como una roca (40) · Acolchado: caídas −50 % (50) · Conquistador +10 % de daño (60) · Devolver golpes 10 % (90) |
+| Armadura ligera | Defensa ágil +8…40 % (0…80) · Paso ligero +10 % de velocidad (20) · A medida (30) · Evasión 5…15 % (40/60/80) · Caída de gato (50) · Segundo aliento (70) |
+| Liderazgo | Instrucción +20 % de vida (0) · Tácticas +15 % de daño (20) · Medicina de campaña (20) · Intendencia: 25 % de días sin paga (30) · Inspirar: fuerza cerca de ti (40) · Veteranos: doble experiencia (50) · Estandarte: resistencia cerca de ti (70) |
+| Asedio | Carpintería de asedio: ariete (0) · Fortificación: rastrillo, puente levadizo y torno (0) · Máquinas de torsión: catapulta, balista y virotes (20) · Artillero: recarga −15…45 % (20/50/80) · Ahorro 25 % (30) · Fuego de asedio: vasijas (40) · Zapador +30 % contra muros (40) · Contrapeso: trebuchet (60) |
+
+Las ventajas de **forja** son las que dejan fabricar las armas, máquinas y fortificaciones del mod: sin ellas, el
+resultado de la mesa de crafteo sale vacío y te dice qué ventaja te falta (la descripción del objeto también lo dice).
+Lo que encuentres en cofres, quites a los enemigos o compres al armero sí lo puedes usar. En creativo no hace falta nada
+y las ventajas no gastan puntos. Las de Liderazgo valen aunque no estés conectado (tus soldados las llevan siempre).
+
+**Si venías de la investigación de antes** (hasta la 0.19): lo que tenías investigado pasa solo al árbol como ventajas
+gratis la primera vez que entras (te lo dice en el chat).
 
 ### Equilibrio
 - Las armas nuevas tienen el mismo daño por segundo que una espada (o algo menos) y lo compensan con su especial.
 - Lo que antes eran números fijos ahora se configura: cada cuánto hay patrullas y asaltos, la probabilidad de asalto y
   de que traiga máquinas, la vida y el daño de las facciones y de tus soldados, la mejora por nivel de los asentamientos,
   los días sin cobrar, y el daño, la fuerza contra los bloques, la vida y la recarga de las máquinas de asedio.
-- Tus soldados suman las mejoras investigadas; los de las facciones, el nivel de su asentamiento y la configuración.
+- Tus soldados suman tus ventajas de Liderazgo; los de las facciones, el nivel de su asentamiento y la configuración.
 
 ### Configuración
 Archivo `config/evolvedwarfare.json` (se crea solo). Se puede cambiar sin salir del juego:
@@ -499,13 +522,19 @@ Archivo `config/evolvedwarfare.json` (se crea solo). Se puede cambiar sin salir 
 /evolvedwarfare config <opción> <valor>    cambiar una (se guarda al momento)
 /evolvedwarfare config reload | reset      volver a leer el archivo | valores de fábrica
 ```
-Con **Mod Menu** instalado, el botón de configuración del mod abre una pantalla con pestañas (Investigación,
+Con **Mod Menu** instalado, el botón de configuración del mod abre una pantalla con pestañas (Habilidades,
 Facciones, Asentamientos, Tus NPCs, Asedio, Armas). En un servidor manda la configuración del servidor.
 
-Investigación de los jugadores (administradores):
+En **Habilidades**: `skillXpRate` (lo rápido que suben; 1 = normal) y `researchRequired` (si hacen falta las ventajas de
+forja para fabricar).
+
+Habilidades de los jugadores (administradores):
 ```
-/evolvedwarfare research <jugadores>                          ver lo investigado
-/evolvedwarfare research <jugadores> grant|revoke <técnica|all>
+/evolvedwarfare skills <jugadores>                              ver niveles, puntos y ventajas
+/evolvedwarfare skills <jugadores> points <n>                   dar (o quitar) puntos de ventaja
+/evolvedwarfare skills <jugadores> level <habilidad> <nivel>    poner una habilidad en un nivel
+/evolvedwarfare skills <jugadores> perk <ventaja|all> [rango]   dar una ventaja sin pedir nada
+/evolvedwarfare skills <jugadores> reset                        quitar las ventajas y devolver los puntos
 ```
 
 ## Fase 9 — Comerciantes y niveles de las ciudades
@@ -581,7 +610,7 @@ Clic derecho a un comerciante abre su **tienda con todo el catálogo a la vez**,
   (±10 %), así que conviene comparar.
 - **Repone todo cada mañana** (cada día del juego). Cobra de tu Bolsa de Gloria y de las monedas sueltas, y te paga en la bolsa.
 - En las fichas los precios largos salen cortos (12,5k = 12.500; 1,2M = 1.200.000); el número entero, en la descripción.
-- Las armas que vende el armero **no necesitan investigación**: comprarlas es la alternativa (cara) a investigarlas.
+- Las armas que vende el armero **no necesitan la ventaja de forja**: comprarlas es la alternativa (cara) a fabricarlas.
 
 Dónde aparecen: en el **mercado**, la **fragua**, la **taberna** y la **plaza** de las ciudades medievales; en el
 **bazar**, el **caravasar** y el **oasis** del desierto; en la **taberna**, la **herrería** y la **hoguera** del norte.
@@ -679,6 +708,8 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
 - `ew_towers.py` (+ `java/TowerDump.java`) — vistas previas de las torres de vigilancia: compila `TowerDesigner.java` (Java
   puro, el mismo que usa el juego) y dibuja las torres de varias semillas y estilos, avisando si alguna no se puede subir.
 - `ew_village.py` — prototipo de las aldeas vanilla mejoradas (mismo algoritmo que `VillageExtras.java`) con vista previa.
+- `ew_skills.py` — los textos del árbol de habilidades (nombres y descripciones de las 11 habilidades y las 76 ventajas
+  en todos los idiomas, comprobando que cuadran con `Perk.java`) y el icono del sangrado.
 - `ew_musket.py` (+ `ew_musket_preview.py`) — el mosquete en 3D: piezas, textura, la clase `MusketModel.java` y vistas
   previas de la recarga y el disparo en primera y tercera persona.
 - `ew_sounds.py` — sonidos sintetizados del mosquete (`.ogg`).
@@ -696,5 +727,7 @@ En un PC: `./gradlew build` (Java 21+). Para probar: `./gradlew runClient`.
 **Pruebas dentro del juego**: `./gradlew runGametest` arranca un servidor sin pantalla que coloca cada máquina de asedio
 (también a los pies del jugador), se sube y dispara, comprueba que el ariete golpea y que el tiro de la vista aérea va
 al punto marcado; que el golpe con cada arma dura lo que le toca; y 800 torres de vigilancia (se suben, todos sus bloques
-existen, salen distintas) y una colocada de verdad con su botín y sus reclutas. GitHub las pasa en cada cambio
+existen, salen distintas) y una colocada de verdad con su botín y sus reclutas; y que el árbol de habilidades está bien
+hecho, que las habilidades suben al usarlas y dan puntos, que las ventajas desbloquean la fabricación y suman daño, y que
+la investigación de antes pasa al árbol. GitHub las pasa en cada cambio
 (trabajo `gametest`) y deja el registro en la rama `gametest-logs`. El código está en `src/gametest` y no va en el `.jar`.

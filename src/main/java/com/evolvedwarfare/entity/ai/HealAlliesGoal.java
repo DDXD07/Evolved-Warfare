@@ -92,8 +92,8 @@ public class HealAlliesGoal extends Goal {
 			cooldown = 40;
 			// medicina de campaña (investigación del dueño): cura la mitad más
 			boolean trained = medic instanceof com.evolvedwarfare.entity.AbstractNpcEntity npc
-					&& com.evolvedwarfare.research.Research.hasBonus(medic.getWorld(), npc.getOwnerUuid(),
-							com.evolvedwarfare.research.Tech.FIELD_MEDICINE);
+					&& com.evolvedwarfare.skill.Skills.has(medic.getWorld(), npc.getOwnerUuid(),
+							com.evolvedwarfare.skill.Perk.FIELD_MEDICINE);
 			patient.heal(trained ? HEAL * 1.5F : HEAL);
 			medic.swingHand(Hand.MAIN_HAND);
 			medic.playSound(SoundEvents.ENTITY_GENERIC_DRINK, 0.6F, 1.2F);

@@ -205,7 +205,12 @@ public class SiegeShotEntity extends ThrownEntity {
 		world.spawnParticles(new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.COBBLESTONE.getDefaultState()),
 				at.x, at.y + 0.2, at.z, 30, 0.6, 0.4, 0.6, 0.15);
 		if (SiegeRules.blockDamage(world)) {
-			breakBlocks(world, at, kind.radius, kind.power * (float) EwConfig.get().siegeBlockPower);
+			float power = kind.power * (float) EwConfig.get().siegeBlockPower;
+			if (getOwner() instanceof net.minecraft.entity.player.PlayerEntity player) {
+				// "Zapador" (Asedio): más fuerza contra los muros
+				power *= 1.0F + com.evolvedwarfare.skill.Skills.value(player, com.evolvedwarfare.skill.Perk.SAPPER) / 100.0F;
+			}
+			breakBlocks(world, at, kind.radius, power);
 		}
 	}
 
@@ -214,6 +219,7 @@ public class SiegeShotEntity extends ThrownEntity {
 		BlockPos center = BlockPos.ofFloored(at);
 		int r = MathHelper.ceil(radius);
 		Entity breaker = getOwner();
+		int broken = 0;
 		for (int dx = -r; dx <= r; dx++) {
 			for (int dy = -r; dy <= r; dy++) {
 				for (int dz = -r; dz <= r; dz++) {
@@ -232,8 +238,12 @@ public class SiegeShotEntity extends ThrownEntity {
 						continue;
 					}
 					world.breakBlock(pos, random.nextFloat() < 0.35F, breaker);
+					broken++;
 				}
 			}
+		}
+		if (broken > 0 && breaker instanceof net.minecraft.server.network.ServerPlayerEntity player) {
+			com.evolvedwarfare.skill.Skills.gain(player, com.evolvedwarfare.skill.Skill.SIEGE, broken * 1.5F);
 		}
 	}
 

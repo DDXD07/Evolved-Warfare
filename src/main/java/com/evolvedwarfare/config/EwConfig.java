@@ -26,11 +26,14 @@ public final class EwConfig {
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	private static EwConfig instance = new EwConfig();
 
-	// ------------------------------------------------------------------ investigación
-	/** Hay que investigar las armas, las máquinas y las fortificaciones antes de fabricarlas. */
+	// ------------------------------------------------------------------ habilidades
+	/**
+	 * Hace falta la ventaja de "forja" del árbol de habilidades para fabricar las armas, las máquinas y las
+	 * fortificaciones (se llama así por la investigación de antes, para no perder lo que hubiera en el archivo).
+	 */
 	public boolean researchRequired = true;
-	/** Velocidad de la investigación (1 = normal; 2 = el doble de rápido). */
-	public double researchSpeed = 1.0;
+	/** Lo rápido que suben las habilidades (1 = normal; 2 = el doble de rápido). */
+	public double skillXpRate = 1.0;
 
 	// ------------------------------------------------------------------ facciones
 	/** Cada cuánto (minutos reales, al azar entre los dos) pasa una patrulla cerca de un jugador. */
@@ -131,7 +134,7 @@ public final class EwConfig {
 
 	public static final List<Option> OPTIONS = List.of(
 			new Option("researchRequired", "research", 0, 1, 1),
-			new Option("researchSpeed", "research", 0.1, 20.0, 0.25),
+			new Option("skillXpRate", "research", 0.1, 20.0, 0.25),
 			new Option("patrolMinMinutes", "factions", 1, 240, 1),
 			new Option("patrolMaxMinutes", "factions", 1, 240, 1),
 			new Option("firstRaidMinutes", "factions", 1, 600, 5),

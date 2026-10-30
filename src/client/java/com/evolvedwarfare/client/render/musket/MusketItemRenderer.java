@@ -100,7 +100,8 @@ public class MusketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
 		float reload = -1.0F;
 		Long reloadStart = stack.get(ModComponents.MUSKET_RELOAD);
 		if (inHand && reloadStart != null && client.world != null) {
-			reload = MathHelper.clamp((client.world.getTime() - reloadStart + tickDelta) / MusketItem.RELOAD_TICKS, 0.0F, 1.0F);
+			int ticks = MusketItem.reloadTicks(holder instanceof net.minecraft.entity.player.PlayerEntity p ? p : null);
+			reload = MathHelper.clamp((client.world.getTime() - reloadStart + tickDelta) / ticks, 0.0F, 1.0F);
 		}
 		float aim = 0.0F;
 		if (user != null && reload < 0.0F && MusketItem.isAiming(user)) {

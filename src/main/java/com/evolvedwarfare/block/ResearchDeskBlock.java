@@ -1,7 +1,6 @@
 package com.evolvedwarfare.block;
 
 import com.evolvedwarfare.registry.ModBlocks;
-import com.evolvedwarfare.research.Research;
 import com.mojang.serialization.MapCodec;
 import java.util.List;
 import net.minecraft.block.Block;
@@ -30,7 +29,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-/** Mesa de investigación: abre el árbol de investigación de su dueño; las estanterías alrededor la aceleran. */
+/** Mesa de investigación: abre el árbol de habilidades de quien la usa (lo mismo que la tecla K). */
 public class ResearchDeskBlock extends BlockWithEntity {
 	public static final MapCodec<ResearchDeskBlock> CODEC = createCodec(ResearchDeskBlock::new);
 	public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
@@ -96,7 +95,7 @@ public class ResearchDeskBlock extends BlockWithEntity {
 				&& world.getBlockEntity(pos) instanceof ResearchDeskBlockEntity desk) {
 			if (desk.canUse(player)) {
 				desk.claim(player);
-				Research.sync(serverPlayer, pos, true);
+				com.evolvedwarfare.skill.Skills.sync(serverPlayer, true);
 			} else {
 				player.sendMessage(Text.translatable("message.evolvedwarfare.site.not_yours"), true);
 			}

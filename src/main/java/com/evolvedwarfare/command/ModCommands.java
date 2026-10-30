@@ -84,7 +84,7 @@ public final class ModCommands {
 								.executes(ModCommands::configShow)
 								.then(CommandManager.argument("value", StringArgumentType.word())
 										.executes(ModCommands::configSet)))));
-		ResearchCommands.register(dispatcher);
+		SkillCommands.register(dispatcher);
 	}
 
 	private static final SimpleCommandExceptionType UNKNOWN_OPTION =

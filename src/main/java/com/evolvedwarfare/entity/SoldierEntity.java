@@ -35,8 +35,8 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import com.evolvedwarfare.config.EwConfig;
-import com.evolvedwarfare.research.Research;
-import com.evolvedwarfare.research.Tech;
+import com.evolvedwarfare.skill.Perk;
+import com.evolvedwarfare.skill.Skills;
 import java.util.UUID;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -138,8 +138,8 @@ public class SoldierEntity extends AbstractNpcEntity implements CombatNpc {
 	}
 
 	public void gainExperience(int amount) {
-		// veteranos (investigación): el doble de experiencia
-		experience += Research.hasBonus(getWorld(), getOwnerUuid(), Tech.VETERANS) ? amount * 2 : amount;
+		// veteranos (Liderazgo de su dueño): el doble de experiencia
+		experience += Skills.has(getWorld(), getOwnerUuid(), Perk.VETERANS) ? amount * 2 : amount;
 		int level = getCombatLevel();
 		int newLevel = level;
 		while (newLevel < MAX_LEVEL && experience >= XP_FOR_LEVEL[newLevel + 1]) {
@@ -165,14 +165,14 @@ public class SoldierEntity extends AbstractNpcEntity implements CombatNpc {
 	}
 
 	/**
-	 * La configuración (vida y daño de los soldados) y lo investigado por su dueño: instrucción (+20 % de vida),
-	 * tácticas (+15 % de daño) y medicina de campaña (se cura 1 de vida cada 5 segundos fuera de combate).
+	 * La configuración (vida y daño de los soldados) y las ventajas de Liderazgo de su dueño: instrucción (+20 % de
+	 * vida), tácticas (+15 % de daño) y medicina de campaña (se cura 1 de vida cada 5 segundos fuera de combate).
 	 */
 	private void applyBonuses() {
 		EwConfig config = EwConfig.get();
 		UUID owner = getOwnerUuid();
-		double health = config.soldierHealth * (Research.hasBonus(getWorld(), owner, Tech.DRILL) ? 1.2 : 1.0);
-		double damage = config.soldierDamage * (Research.hasBonus(getWorld(), owner, Tech.TACTICS) ? 1.15 : 1.0);
+		double health = config.soldierHealth * (1.0 + Perk.DRILL.value(Skills.rank(getWorld(), owner, Perk.DRILL)) / 100.0);
+		double damage = config.soldierDamage * (1.0 + Perk.TACTICS.value(Skills.rank(getWorld(), owner, Perk.TACTICS)) / 100.0);
 		EntityAttributeInstance maxHealth = getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
 		if (maxHealth != null) {
 			maxHealth.overwritePersistentModifier(new EntityAttributeModifier(BONUS_HEALTH, health - 1.0,
@@ -186,7 +186,7 @@ public class SoldierEntity extends AbstractNpcEntity implements CombatNpc {
 		if (getHealth() > getMaxHealth()) {
 			setHealth(getMaxHealth());
 		}
-		if (getTarget() == null && getHealth() < getMaxHealth() && Research.hasBonus(getWorld(), owner, Tech.FIELD_MEDICINE)) {
+		if (getTarget() == null && getHealth() < getMaxHealth() && Skills.has(getWorld(), owner, Perk.FIELD_MEDICINE)) {
 			heal(1.0F);
 		}
 	}

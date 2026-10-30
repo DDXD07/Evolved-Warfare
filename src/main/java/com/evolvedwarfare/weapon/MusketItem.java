@@ -44,6 +44,15 @@ import net.minecraft.world.event.GameEvent;
 public class MusketItem extends Item {
 	/** Lo que tarda en cargar (ticks). */
 	public static final int RELOAD_TICKS = 40;
+
+	/** Lo que tarda en recargar este jugador ("Recarga rápida" de Armas de fuego la acorta). */
+	public static int reloadTicks(@org.jetbrains.annotations.Nullable PlayerEntity player) {
+		if (player == null) {
+			return RELOAD_TICKS;
+		}
+		float faster = com.evolvedwarfare.skill.Skills.value(player, com.evolvedwarfare.skill.Perk.QUICK_RELOAD) / 100.0F;
+		return Math.max(10, Math.round(RELOAD_TICKS * (1.0F - faster)));
+	}
 	/** Daño de la bala: 5 corazones (al torso). */
 	public static final float DAMAGE = 10.0F;
 	/** Empuje del impacto (más o menos un bloque). */
@@ -149,27 +158,35 @@ public class MusketItem extends Item {
 			return;
 		}
 		long tick = world.getTime() - start;
+		int reload = reloadTicks(player);
+		// los sonidos van al mismo paso que la recarga (más deprisa con "Recarga rápida")
+		long now = tick * RELOAD_TICKS / reload;
+		long before = (tick - 1) * RELOAD_TICKS / reload;
 		SoundEvent sound = null;
 		float pitch = 1.0F;
-		if (tick == 15) {
-			sound = ModSounds.MUSKET_BALL_IN;
-		} else if (tick == 19 || tick == 25) {
-			sound = ModSounds.MUSKET_RAMROD;
-		} else if (tick == 32) {
-			sound = ModSounds.MUSKET_COCK;
-			pitch = 1.3F;
-		} else if (tick == 37) {
-			sound = ModSounds.MUSKET_COCK;
+		if (now != before || tick == 0) {
+			if (now == 15) {
+				sound = ModSounds.MUSKET_BALL_IN;
+			} else if (now == 19 || now == 25) {
+				sound = ModSounds.MUSKET_RAMROD;
+			} else if (now == 32) {
+				sound = ModSounds.MUSKET_COCK;
+				pitch = 1.3F;
+			} else if (now == 37) {
+				sound = ModSounds.MUSKET_COCK;
+			}
 		}
 		if (sound != null) {
 			world.playSound(null, player.getX(), player.getY(), player.getZ(), sound, SoundCategory.PLAYERS, 0.8F,
 					pitch * (0.95F + world.getRandom().nextFloat() * 0.1F));
 		}
-		if (tick < RELOAD_TICKS) {
+		if (tick < reload) {
 			return;
 		}
 		stack.remove(ModComponents.MUSKET_RELOAD);
-		if (player.getAbilities().creativeMode) {
+		float spare = com.evolvedwarfare.skill.Skills.value(player, com.evolvedwarfare.skill.Perk.SPARE_BALLS) / 100.0F;
+		if (player.getAbilities().creativeMode || (spare > 0.0F && hasAmmo(player.getInventory()) && world.getRandom().nextFloat() < spare)) {
+			// creativo, o "Bolsillo de balas": carga sin gastar la bala
 			stack.set(ModComponents.MUSKET_LOADED, true);
 		} else if (takeAmmo(player.getInventory())) {
 			stack.set(ModComponents.MUSKET_LOADED, true);

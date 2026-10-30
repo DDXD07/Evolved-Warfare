@@ -4,7 +4,7 @@ import com.evolvedwarfare.screen.WarehouseScreenHandler;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
-/** Paquetes propios del mod: el terminal del almacén, la diplomacia, las armas de fuego y la cámara aérea de las máquinas de asedio (el resto de menús usa los botones de vanilla). */
+/** Paquetes propios del mod: el terminal del almacén, la diplomacia, el árbol de habilidades, las armas de fuego y la cámara aérea de las máquinas de asedio (el resto de menús usa los botones de vanilla). */
 public final class ModNetworking {
 	private ModNetworking() {
 	}
@@ -14,8 +14,6 @@ public final class ModNetworking {
 		PayloadTypeRegistry.playC2S().register(WarehouseActionPayload.ID, WarehouseActionPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(DiplomacyDataPayload.ID, DiplomacyDataPayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(DiplomacyActionPayload.ID, DiplomacyActionPayload.CODEC);
-		PayloadTypeRegistry.playS2C().register(ResearchPayloads.Data.ID, ResearchPayloads.Data.CODEC);
-		PayloadTypeRegistry.playC2S().register(ResearchPayloads.Action.ID, ResearchPayloads.Action.CODEC);
 		PayloadTypeRegistry.playC2S().register(FirearmPayload.ID, FirearmPayload.CODEC);
 		ServerPlayNetworking.registerGlobalReceiver(FirearmPayload.ID, (payload, context) -> {
 			if (payload.action() == FirearmPayload.FIRE) {
@@ -32,7 +30,7 @@ public final class ModNetworking {
 			}
 		});
 		DiplomacyNetworking.register();
-		com.evolvedwarfare.research.Research.register();
+		com.evolvedwarfare.skill.Skills.register();
 		BlueprintNetworking.register();
 		ServerPlayNetworking.registerGlobalReceiver(WarehouseActionPayload.ID, (payload, context) -> {
 			if (context.player().currentScreenHandler instanceof WarehouseScreenHandler handler

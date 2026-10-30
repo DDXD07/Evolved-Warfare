@@ -150,7 +150,12 @@ public class SiegeEngineEntity extends Entity {
 	}
 
 	private void startReload() {
-		int total = Math.max(1, Math.round(kind.reload * (float) EwConfig.get().siegeReload));
+		float faster = 0.0F;
+		if (getFirstPassenger() instanceof PlayerEntity player) {
+			// "Artillero" (Asedio): recarga antes
+			faster = com.evolvedwarfare.skill.Skills.value(player, com.evolvedwarfare.skill.Perk.GUNNER) / 100.0F;
+		}
+		int total = Math.max(1, Math.round(kind.reload * (float) EwConfig.get().siegeReload * (1.0F - faster)));
 		getDataTracker().set(RELOAD_TOTAL, total);
 		setReload(total);
 	}
@@ -249,9 +254,13 @@ public class SiegeEngineEntity extends Entity {
 		return false;
 	}
 
-	/** Fuerza contra los bloques (con la configuración). */
+	/** Fuerza contra los bloques (con la configuración y, si la empuja un jugador, su "Zapador"). */
 	public float power() {
-		return kind.power * (float) EwConfig.get().siegeBlockPower;
+		float power = kind.power * (float) EwConfig.get().siegeBlockPower;
+		if (getFirstPassenger() instanceof PlayerEntity player) {
+			power *= 1.0F + com.evolvedwarfare.skill.Skills.value(player, com.evolvedwarfare.skill.Perk.SAPPER) / 100.0F;
+		}
+		return power;
 	}
 
 	boolean canBreakAhead() {
@@ -450,8 +459,16 @@ public class SiegeEngineEntity extends Entity {
 			return true;
 		}
 		int cost = kind.cost(this.kind);
+		boolean thrift = player != null && getWorld().getRandom().nextFloat()
+				< com.evolvedwarfare.skill.Skills.value(player, com.evolvedwarfare.skill.Perk.THRIFT) / 100.0F;
 		if (ammo[kind.ordinal()] >= cost) {
-			ammo[kind.ordinal()] -= cost;
+			if (!thrift) {
+				ammo[kind.ordinal()] -= cost;
+			}
+			return true;
+		}
+		if (thrift && count(player, kind) >= cost) {
+			// "Ahorro" (Asedio): esta vez no se gasta
 			return true;
 		}
 		if (player == null || count(player, kind) < cost) {
@@ -534,6 +551,9 @@ public class SiegeEngineEntity extends Entity {
 			}
 			int needed = Math.max(1, MathHelper.ceil(hardness * 1.6F));
 			int done = strikes.merge(pos, 1, Integer::sum);
+			if (driver instanceof ServerPlayerEntity player) {
+				com.evolvedwarfare.skill.Skills.gain(player, com.evolvedwarfare.skill.Skill.SIEGE, 2.0F);
+			}
 			serverWorld.spawnParticles(new BlockStateParticleEffect(ParticleTypes.BLOCK, state), pos.getX() + 0.5, pos.getY() + 0.5,
 					pos.getZ() + 0.5, 12, 0.3, 0.3, 0.3, 0.1);
 			if (done >= needed) {

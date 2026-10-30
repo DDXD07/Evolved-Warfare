@@ -307,7 +307,17 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 			return;
 		}
 		upkeepTimer = UPKEEP_INTERVAL;
+		// intendencia (Liderazgo de su dueño): algunos días no gasta su paga
+		com.evolvedwarfare.skill.Perk quartermaster = com.evolvedwarfare.skill.Perk.QUARTERMASTER;
+		float free = quartermaster.value(com.evolvedwarfare.skill.Skills.rank(getWorld(), ownerUuid, quartermaster)) / 100.0F;
+		if (free > 0.0F && getRandom().nextFloat() < free) {
+			unpaidDays = 0;
+			return;
+		}
 		if (consumeProvision()) {
+			if (getServer() != null && getServer().getPlayerManager().getPlayer(ownerUuid) instanceof net.minecraft.server.network.ServerPlayerEntity owner) {
+				com.evolvedwarfare.skill.Skills.gain(owner, com.evolvedwarfare.skill.Skill.LEADERSHIP, 4.0F);
+			}
 			unpaidDays = 0;
 			if (getProvisionDays() == 0) {
 				notifyOwner(Text.translatable("message.evolvedwarfare.last_provision", getName()));

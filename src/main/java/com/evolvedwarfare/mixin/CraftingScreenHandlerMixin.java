@@ -1,7 +1,7 @@
 package com.evolvedwarfare.mixin;
 
-import com.evolvedwarfare.research.Research;
-import com.evolvedwarfare.research.Tech;
+import com.evolvedwarfare.skill.Perk;
+import com.evolvedwarfare.skill.Skills;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingResultInventory;
 import net.minecraft.inventory.RecipeInputInventory;
@@ -22,8 +22,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * Investigación obligatoria: si el resultado de la mesa de crafteo (o del inventario) es algo que el jugador aún no ha
- * investigado, el resultado se queda vacío y se le dice qué le falta.
+ * Ventajas de "forja" (árbol de habilidades): si el resultado de la mesa de crafteo (o del inventario) es algo cuya
+ * ventaja el jugador aún no tiene, el resultado se queda vacío y se le dice qué le falta.
  */
 @Mixin(CraftingScreenHandler.class)
 public abstract class CraftingScreenHandlerMixin {
@@ -35,16 +35,16 @@ public abstract class CraftingScreenHandlerMixin {
 			return;
 		}
 		ItemStack result = resultInventory.getStack(0);
-		if (result.isEmpty() || Research.canCraft(serverPlayer, result)) {
+		if (result.isEmpty() || Skills.canCraft(serverPlayer, result)) {
 			return;
 		}
-		Tech tech = Research.lockOf(result.getItem());
+		Perk perk = Skills.lockOf(result.getItem());
 		resultInventory.setStack(0, ItemStack.EMPTY);
 		handler.setPreviousTrackedSlot(0, ItemStack.EMPTY);
 		serverPlayer.networkHandler.sendPacket(new ScreenHandlerSlotUpdateS2CPacket(handler.syncId, handler.nextRevision(), 0, ItemStack.EMPTY));
-		if (tech != null) {
-			serverPlayer.sendMessage(Text.translatable("message.evolvedwarfare.research.locked", Text.translatable(tech.translationKey()))
-					.formatted(Formatting.RED), true);
+		if (perk != null) {
+			serverPlayer.sendMessage(Text.translatable("message.evolvedwarfare.skills.locked", Text.translatable(perk.translationKey()),
+					Text.translatable(perk.skill.translationKey()), perk.levelFor(1)).formatted(Formatting.RED), true);
 		}
 	}
 }

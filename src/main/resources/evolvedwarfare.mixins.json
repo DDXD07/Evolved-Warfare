@@ -6,7 +6,9 @@
 		"CraftingScreenHandlerMixin",
 		"LivingEntityAccessor",
 		"LivingEntityDamageMixin",
+		"LivingEntitySkillMixin",
 		"LivingEntitySwingMixin",
+		"PlayerEntitySkillMixin",
 		"PoolStructurePieceAccessor",
 		"SinglePoolElementAccessor",
 		"StructurePoolBasedGeneratorMixin"
