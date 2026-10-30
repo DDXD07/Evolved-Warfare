@@ -5,6 +5,10 @@ import com.evolvedwarfare.registry.ModComponents;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.List;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.event.player.UseEntityCallback;
+import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -16,8 +20,12 @@ import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.dynamic.Codecs;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,6 +33,9 @@ import org.jetbrains.annotations.Nullable;
  * La Caja de cultivos como objeto. Vacía, o llena de un cultivo (hasta {@value #CAPACITY}): lo que lleva va en el
  * componente {@code evolvedwarfare:crop_crate}, así al ponerla vuelve a salir con lo suyo. Las cajas iguales (mismo
  * cultivo y misma cantidad) se apilan. Los comerciantes de las ciudades solo compran los cultivos así, en cajas llenas.
+ *
+ * <p>Se lleva con las dos manos: no cabe en la mano izquierda (pasa al inventario) y, mientras la llevas, lo de la otra
+ * mano no se puede usar (ni se ve). Para dejarla, clic derecho en el suelo.</p>
  */
 public class CropCrateItem extends BlockItem {
 	/** Cuánto cabe: un montón. */
@@ -53,6 +64,30 @@ public class CropCrateItem extends BlockItem {
 
 	public CropCrateItem(Block block, Settings settings) {
 		super(block, settings);
+	}
+
+	public static boolean isCrate(ItemStack stack) {
+		return !stack.isEmpty() && stack.getItem() instanceof CropCrateItem;
+	}
+
+	/** Las dos manos: con una caja, la otra mano no hace nada; y en la izquierda no se puede llevar. */
+	public static void registerEvents() {
+		UseItemCallback.EVENT.register((player, world, hand) -> hand == Hand.OFF_HAND && isCrate(player.getMainHandStack())
+				? TypedActionResult.fail(player.getStackInHand(hand)) : TypedActionResult.pass(player.getStackInHand(hand)));
+		UseBlockCallback.EVENT.register((player, world, hand, hit) -> hand == Hand.OFF_HAND && isCrate(player.getMainHandStack())
+				? ActionResult.FAIL : ActionResult.PASS);
+		UseEntityCallback.EVENT.register((player, world, hand, entity, hit) -> hand == Hand.OFF_HAND && isCrate(player.getMainHandStack())
+				? ActionResult.FAIL : ActionResult.PASS);
+		ServerTickEvents.END_SERVER_TICK.register(server -> {
+			for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
+				ItemStack off = player.getOffHandStack();
+				if (isCrate(off)) {
+					player.setStackInHand(Hand.OFF_HAND, ItemStack.EMPTY);
+					player.getInventory().offerOrDrop(off);
+					player.sendMessage(Text.translatable("message.evolvedwarfare.crop_crate.two_hands"), true);
+				}
+			}
+		});
 	}
 
 	/** Si se puede guardar en una caja (los cultivos de la etiqueta, sin nombre ni nada raro). */

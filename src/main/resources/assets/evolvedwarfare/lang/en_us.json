@@ -942,9 +942,10 @@
   "tooltip.evolvedwarfare.crop_crate.count": "%s/%s %s",
   "tooltip.evolvedwarfare.crop_crate.full": "Full: traders will buy it",
   "tooltip.evolvedwarfare.crop_crate.not_full": "%s more to fill it (traders only buy full crates)",
-  "tooltip.evolvedwarfare.crop_crate.pickup": "Sneak + right-click with an empty hand to pick it up",
+  "tooltip.evolvedwarfare.crop_crate.pickup": "Sneak + right-click with an empty hand to carry it (with both hands)",
   "gui.evolvedwarfare.crop_crate.empty": "Empty",
   "gui.evolvedwarfare.crop_crate.full": "Full!",
   "gui.evolvedwarfare.crop_crate.missing": "%s to go",
-  "gui.evolvedwarfare.trader.crates_only": "Crops are only bought in full crates (Crop Crate)"
+  "gui.evolvedwarfare.trader.crates_only": "Crops are only bought in full crates (Crop Crate)",
+  "message.evolvedwarfare.crop_crate.two_hands": "Crates are carried with both hands"
 }

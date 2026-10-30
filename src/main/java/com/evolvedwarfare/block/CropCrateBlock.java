@@ -28,7 +28,8 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Caja de cultivos: clic derecho abre su hueco (hasta 64 de un cultivo); agachado y con la mano vacía, clic derecho
- * la coge con lo que lleva dentro. Rota, también suelta la caja con lo suyo (en creativo, si lleva algo).
+ * la coge con lo que lleva dentro (y se lleva con las dos manos: {@link com.evolvedwarfare.item.CropCrateItem}). Rota,
+ * también suelta la caja con lo suyo (en creativo, si lleva algo).
  */
 public class CropCrateBlock extends BlockWithEntity {
 	public static final MapCodec<CropCrateBlock> CODEC = createCodec(CropCrateBlock::new);
@@ -119,6 +120,9 @@ public class CropCrateBlock extends BlockWithEntity {
 			player.getInventory().offerOrDrop(stack);
 		}
 		world.playSound(null, pos, SoundEvents.BLOCK_BARREL_CLOSE, SoundCategory.BLOCKS, 0.7F, 1.15F);
+		if (player instanceof net.minecraft.server.network.ServerPlayerEntity serverPlayer) {
+			com.evolvedwarfare.network.CratePickupPayload.send(serverPlayer);
+		}
 		return true;
 	}
 

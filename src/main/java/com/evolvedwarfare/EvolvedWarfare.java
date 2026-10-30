@@ -69,6 +69,7 @@ public class EvolvedWarfare implements ModInitializer {
 		RouteSlipItem.registerEvents();
 		com.evolvedwarfare.item.StructureScannerItem.registerEvents();
 		com.evolvedwarfare.block.CropCrateBlock.registerEvents();
+		com.evolvedwarfare.item.CropCrateItem.registerEvents();
 		com.evolvedwarfare.siege.SiegeRules.init();
 		LOGGER.info("Evolved Warfare cargado");
 	}

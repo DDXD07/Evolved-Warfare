@@ -105,6 +105,7 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 				com.evolvedwarfare.client.render.CropCrateRenderer::new);
 		net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry.INSTANCE.register(ModBlocks.CROP_CRATE_ITEM,
 				com.evolvedwarfare.client.render.CropCrateRenderer.ITEM);
+		com.evolvedwarfare.client.render.CrateCarry.register();
 		// lo que hay en la red del almacén abierto
 		ClientPlayNetworking.registerGlobalReceiver(WarehouseContentsPayload.ID, (payload, context) -> {
 			if (context.client().player != null

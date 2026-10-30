@@ -16,6 +16,7 @@ public final class ModNetworking {
 		PayloadTypeRegistry.playC2S().register(DiplomacyActionPayload.ID, DiplomacyActionPayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(FirearmPayload.ID, FirearmPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(PlaceNoticePayload.ID, PlaceNoticePayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(CratePickupPayload.ID, CratePickupPayload.CODEC);
 		ServerPlayNetworking.registerGlobalReceiver(FirearmPayload.ID, (payload, context) -> {
 			if (payload.action() == FirearmPayload.FIRE) {
 				com.evolvedwarfare.weapon.MusketItem.tryFire(context.player());

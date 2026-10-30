@@ -7,7 +7,8 @@
     "inside": "evolvedwarfare:block/crop_crate_inside",
     "rim": "evolvedwarfare:block/crop_crate_rim",
     "floor": "evolvedwarfare:block/crop_crate_floor",
-    "bottom": "evolvedwarfare:block/crop_crate_bottom"
+    "bottom": "evolvedwarfare:block/crop_crate_bottom",
+    "handle": "evolvedwarfare:block/crop_crate_handle"
   },
   "elements": [
     {
@@ -287,6 +288,124 @@
             2,
             16,
             14
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        -1,
+        10,
+        5
+      ],
+      "to": [
+        0,
+        12,
+        11
+      ],
+      "faces": {
+        "west": {
+          "texture": "#handle",
+          "uv": [
+            5,
+            7,
+            11,
+            9
+          ]
+        },
+        "up": {
+          "texture": "#handle",
+          "uv": [
+            5,
+            0,
+            11,
+            1
+          ]
+        },
+        "down": {
+          "texture": "#handle",
+          "uv": [
+            5,
+            15,
+            11,
+            16
+          ]
+        },
+        "north": {
+          "texture": "#handle",
+          "uv": [
+            0,
+            7,
+            1,
+            9
+          ]
+        },
+        "south": {
+          "texture": "#handle",
+          "uv": [
+            15,
+            7,
+            16,
+            9
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        16,
+        10,
+        5
+      ],
+      "to": [
+        17,
+        12,
+        11
+      ],
+      "faces": {
+        "east": {
+          "texture": "#handle",
+          "uv": [
+            5,
+            7,
+            11,
+            9
+          ]
+        },
+        "up": {
+          "texture": "#handle",
+          "uv": [
+            5,
+            0,
+            11,
+            1
+          ]
+        },
+        "down": {
+          "texture": "#handle",
+          "uv": [
+            5,
+            15,
+            11,
+            16
+          ]
+        },
+        "north": {
+          "texture": "#handle",
+          "uv": [
+            0,
+            7,
+            1,
+            9
+          ]
+        },
+        "south": {
+          "texture": "#handle",
+          "uv": [
+            15,
+            7,
+            16,
+            9
           ]
         }
       }

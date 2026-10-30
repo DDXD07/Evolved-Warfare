@@ -119,6 +119,18 @@ def floor():
     return tex(p, 74)
 
 
+def handle():
+    """Las asas: listón oscuro, gastado por el medio de tanto agarrarlo."""
+    def p(x, y, r):
+        c = jit(POST, r, 5)
+        if y in (0, 15) or x in (0, 15):
+            c = POST_D
+        if 5 <= x <= 10:
+            c = shade(c, 1.12)
+        return c
+    return tex(p, 76)
+
+
 def bottom():
     def p(x, y, r):
         if x <= 1 or x >= 14 or y <= 1 or y >= 14:
@@ -148,6 +160,7 @@ def model():
             "rim": "evolvedwarfare:block/crop_crate_rim",
             "floor": "evolvedwarfare:block/crop_crate_floor",
             "bottom": "evolvedwarfare:block/crop_crate_bottom",
+            "handle": "evolvedwarfare:block/crop_crate_handle",
         },
         "elements": [
             {"from": [0, 0, 0], "to": [16, 2, 16], "faces": {
@@ -177,6 +190,15 @@ def model():
                 "east": face("side", [2, 1, 14, 14], "east"),
                 "west": face("inside", [2, 1, 14, 14]),
                 "up": face("rim", [14, 2, 16, 14])}},
+            # asas a los lados (por donde se agarra para llevarla)
+            {"from": [-1, 10, 5], "to": [0, 12, 11], "faces": {
+                "west": face("handle", [5, 7, 11, 9]), "up": face("handle", [5, 0, 11, 1]),
+                "down": face("handle", [5, 15, 11, 16]), "north": face("handle", [0, 7, 1, 9]),
+                "south": face("handle", [15, 7, 16, 9])}},
+            {"from": [16, 10, 5], "to": [17, 12, 11], "faces": {
+                "east": face("handle", [5, 7, 11, 9]), "up": face("handle", [5, 0, 11, 1]),
+                "down": face("handle", [5, 15, 11, 16]), "north": face("handle", [0, 7, 1, 9]),
+                "south": face("handle", [15, 7, 16, 9])}},
         ],
     }
 
@@ -279,11 +301,12 @@ TEXTS = {
     "tooltip.evolvedwarfare.crop_crate.full": ("Llena: los comerciantes te la compran", "Full: traders will buy it"),
     "tooltip.evolvedwarfare.crop_crate.not_full": ("Faltan %s para llenarla (solo compran cajas llenas)",
                                                    "%s more to fill it (traders only buy full crates)"),
-    "tooltip.evolvedwarfare.crop_crate.pickup": ("Agáchate + clic derecho con la mano vacía para llevártela",
-                                                 "Sneak + right-click with an empty hand to pick it up"),
+    "tooltip.evolvedwarfare.crop_crate.pickup": ("Agáchate + clic derecho con la mano vacía para llevártela (con las dos manos)",
+                                                 "Sneak + right-click with an empty hand to carry it (with both hands)"),
     "gui.evolvedwarfare.crop_crate.empty": ("Vacía", "Empty"),
     "gui.evolvedwarfare.crop_crate.full": ("¡Llena!", "Full!"),
     "gui.evolvedwarfare.crop_crate.missing": ("Faltan %s", "%s to go"),
+    "message.evolvedwarfare.crop_crate.two_hands": ("Las cajas se llevan con las dos manos", "Crates are carried with both hands"),
     "gui.evolvedwarfare.trader.crates_only": ("Los cultivos solo los compra en cajas llenas (Caja de cultivos)",
                                               "Crops are only bought in full crates (Crop Crate)"),
 }
@@ -307,7 +330,7 @@ def add_to_tag(path, value):
 def main():
     block = os.path.join(ASSETS, "textures/block")
     os.makedirs(block, exist_ok=True)
-    textures = {"side": side(), "inside": inside(), "rim": rim(), "floor": floor(), "bottom": bottom()}
+    textures = {"side": side(), "inside": inside(), "rim": rim(), "floor": floor(), "bottom": bottom(), "handle": handle()}
     for name, im in textures.items():
         im.save(os.path.join(block, f"crop_crate_{name}.png"))
     write_json(os.path.join(ASSETS, "models/block/crop_crate.json"), model())
@@ -329,7 +352,7 @@ def main():
         write_json(path, lang)
     if PREVIEW:
         os.makedirs(PREVIEW, exist_ok=True)
-        strip = Image.new("RGBA", (16 * 5 + 8, 16), (0, 0, 0, 0))
+        strip = Image.new("RGBA", (18 * len(textures), 16), (0, 0, 0, 0))
         for i, im in enumerate(textures.values()):
             strip.paste(im, (i * 18, 0))
         strip.resize((strip.width * 8, strip.height * 8), Image.NEAREST).save(os.path.join(PREVIEW, "crate_textures.png"))

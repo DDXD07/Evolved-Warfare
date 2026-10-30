@@ -122,6 +122,36 @@ public class CropCrateGameTests implements FabricGameTest {
 		ctx.complete();
 	}
 
+	/** Con una caja en la mano, la otra mano no sirve; y en la mano izquierda no se puede llevar (pasa al inventario). */
+	@GameTest(templateName = EMPTY_STRUCTURE)
+	public void crateNeedsBothHands(TestContext ctx) {
+		ServerWorld world = ctx.getWorld();
+		ServerPlayerEntity player = ctx.createMockCreativeServerPlayerInWorld();
+		player.changeGameMode(GameMode.SURVIVAL);
+		player.getInventory().clear();
+		player.setStackInHand(Hand.MAIN_HAND, CropCrateItem.filled(ModBlocks.CROP_CRATE_ITEM, Items.CARROT));
+		player.setStackInHand(Hand.OFF_HAND, new ItemStack(Items.BREAD, 4));
+		net.minecraft.util.ActionResult off = net.fabricmc.fabric.api.event.player.UseItemCallback.EVENT.invoker()
+				.interact(player, world, Hand.OFF_HAND).getResult();
+		net.minecraft.util.ActionResult main = net.fabricmc.fabric.api.event.player.UseItemCallback.EVENT.invoker()
+				.interact(player, world, Hand.MAIN_HAND).getResult();
+		if (off != net.minecraft.util.ActionResult.FAIL || main == net.minecraft.util.ActionResult.FAIL) {
+			throw new GameTestException("Con la caja, la otra mano se puede usar: " + off + " / " + main);
+		}
+		// una caja en la mano izquierda: al siguiente tic pasa al inventario
+		player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
+		player.setStackInHand(Hand.OFF_HAND, CropCrateItem.filled(ModBlocks.CROP_CRATE_ITEM, Items.CARROT));
+		ctx.waitAndRun(3, () -> {
+			int crates = player.getInventory().count(ModBlocks.CROP_CRATE_ITEM);
+			LOG.info("[EW-GAMETEST] dos manos: otra mano {} / mano principal {}; caja en la izquierda -> izquierda={}, cajas en el inventario={}",
+					off, main, player.getOffHandStack(), crates);
+			if (!player.getOffHandStack().isEmpty() || crates != 1) {
+				throw new GameTestException("La caja se queda en la mano izquierda: " + player.getOffHandStack());
+			}
+			ctx.complete();
+		});
+	}
+
 	private static Deal crateDeal(List<Deal> deals, Item crop) {
 		for (Deal deal : deals) {
 			CropCrateItem.Contents contents = CropCrateItem.contents(deal.prototype());

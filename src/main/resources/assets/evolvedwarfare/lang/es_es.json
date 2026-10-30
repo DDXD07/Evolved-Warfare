@@ -942,9 +942,10 @@
   "tooltip.evolvedwarfare.crop_crate.count": "%s/%s de %s",
   "tooltip.evolvedwarfare.crop_crate.full": "Llena: los comerciantes te la compran",
   "tooltip.evolvedwarfare.crop_crate.not_full": "Faltan %s para llenarla (solo compran cajas llenas)",
-  "tooltip.evolvedwarfare.crop_crate.pickup": "Agáchate + clic derecho con la mano vacía para llevártela",
+  "tooltip.evolvedwarfare.crop_crate.pickup": "Agáchate + clic derecho con la mano vacía para llevártela (con las dos manos)",
   "gui.evolvedwarfare.crop_crate.empty": "Vacía",
   "gui.evolvedwarfare.crop_crate.full": "¡Llena!",
   "gui.evolvedwarfare.crop_crate.missing": "Faltan %s",
-  "gui.evolvedwarfare.trader.crates_only": "Los cultivos solo los compra en cajas llenas (Caja de cultivos)"
+  "gui.evolvedwarfare.trader.crates_only": "Los cultivos solo los compra en cajas llenas (Caja de cultivos)",
+  "message.evolvedwarfare.crop_crate.two_hands": "Las cajas se llevan con las dos manos"
 }
