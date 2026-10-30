@@ -251,8 +251,9 @@ batería de cañones, un vigía y un tesoro enterrado bajo una X roja.
 **Nivel de los asentamientos**: cada campamento, fuerte, asentamiento o cala tiene un nivel del 1 al 10. Sube uno
 cada 750 bloques de distancia al punto de aparición del mundo, más 0-2 al azar (siempre el mismo para cada sitio); los
 fuertes de bandidos, uno más. **Cada nivel por encima del 1 da a su guarnición un 10 % más de vida y de daño** (también
-el de sus flechas): nivel 5 = +40 %, nivel 10 = +90 %. Al acercarte a menos de 24 bloques sale en pantalla su nombre,
-su nivel (verde 1-3, dorado 4-6, rojo 7-8, morado 9-10) y cómo te trata su facción.
+el de sus flechas): nivel 5 = +40 %, nivel 10 = +90 %. Al acercarte a menos de 24 bloques sale su nombre,
+su nivel (verde 1-3, dorado 4-6, rojo 7-8, morado 9-10) y cómo te trata su facción, en pequeño encima de los corazones y
+la barra de hambre.
 
 **Botín según el nivel**: los cofres de los asentamientos dan más cuanto más nivel tienen.
 - Más objetos: tiradas extra de lo normal desde el nivel 3, otra vez desde el 6 y otra desde el 9.
@@ -542,8 +543,8 @@ Habilidades de los jugadores (administradores):
 ### Niveles de las ciudades
 
 Las ciudades (medievales, del desierto y del norte) tienen **nivel del 1 al 10**: cuanto más lejos del punto de
-aparición, más nivel (uno cada **600 bloques**, más un poco de azar fijo por ciudad). Al entrar en una sale en pantalla
-su nombre y su nivel. **Todos los comerciantes venden y compran su catálogo entero en cualquier ciudad**; el nivel solo
+aparición, más nivel (uno cada **600 bloques**, más un poco de azar fijo por ciudad). Al entrar en una sale su nombre y
+su nivel, en pequeño encima de los corazones y la barra de hambre. **Todos los comerciantes venden y compran su catálogo entero en cualquier ciudad**; el nivel solo
 decide **a qué precio**. Cada rareza tiene su rango de precios (lo que cuesta un lote en una ciudad de nivel 1):
 
 | Rareza | Precio de un lote | Ejemplos |

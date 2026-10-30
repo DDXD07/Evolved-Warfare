@@ -2,15 +2,13 @@ package com.evolvedwarfare.world;
 
 import com.evolvedwarfare.EvolvedWarfare;
 import com.evolvedwarfare.config.EwConfig;
+import com.evolvedwarfare.network.PlaceNoticePayload;
 import it.unimi.dsi.fastutil.HashCommon;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.minecraft.network.packet.s2c.play.SubtitleS2CPacket;
-import net.minecraft.network.packet.s2c.play.TitleFadeS2CPacket;
-import net.minecraft.network.packet.s2c.play.TitleS2CPacket;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
@@ -157,9 +155,7 @@ public final class CityLevels {
 		Text goods = Text.translatable(com.evolvedwarfare.trade.Quality.forLevel(level).cityKey());
 		Text subtitle = (level > 1 ? Text.translatable("gui.evolvedwarfare.city.level", level, goods, percent)
 				: Text.translatable("gui.evolvedwarfare.city.level_base", level, goods)).formatted(levelColor(level));
-		player.networkHandler.sendPacket(new TitleFadeS2CPacket(10, 60, 20));
-		player.networkHandler.sendPacket(new SubtitleS2CPacket(subtitle));
-		player.networkHandler.sendPacket(new TitleS2CPacket(title));
+		PlaceNoticePayload.send(player, title, subtitle);
 		player.playSoundToPlayer(SoundEvents.BLOCK_NOTE_BLOCK_CHIME.value(), SoundCategory.AMBIENT, 0.7F, 1.2F);
 	}
 }

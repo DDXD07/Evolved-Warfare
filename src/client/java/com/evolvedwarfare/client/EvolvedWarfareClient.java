@@ -81,6 +81,7 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 				com.evolvedwarfare.registry.ModItems.JAVELIN, net.minecraft.util.Identifier.ofVanilla("throwing"), (stack, world, entity, seed) ->
 						entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0F : 0.0F);
 		ClientSkills.register();
+		PlaceNoticeHud.register();
 		// máquinas de asedio: sus modelos 3D, la cámara aérea (clic izquierdo mantenido) y la vista previa del tiro
 		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(
 				com.evolvedwarfare.client.render.siege.SiegeModels.CATAPULT, com.evolvedwarfare.client.render.siege.SiegeModels::catapult);

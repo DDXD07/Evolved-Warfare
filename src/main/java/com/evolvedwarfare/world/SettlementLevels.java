@@ -1,19 +1,17 @@
 package com.evolvedwarfare.world;
 
-import com.evolvedwarfare.config.EwConfig;
 import com.evolvedwarfare.EvolvedWarfare;
+import com.evolvedwarfare.config.EwConfig;
 import com.evolvedwarfare.faction.Faction;
 import com.evolvedwarfare.faction.Reputation;
 import com.evolvedwarfare.faction.Standing;
+import com.evolvedwarfare.network.PlaceNoticePayload;
 import it.unimi.dsi.fastutil.HashCommon;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.minecraft.network.packet.s2c.play.SubtitleS2CPacket;
-import net.minecraft.network.packet.s2c.play.TitleFadeS2CPacket;
-import net.minecraft.network.packet.s2c.play.TitleS2CPacket;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
@@ -205,9 +203,7 @@ public final class SettlementLevels {
 				.append(faction.displayName())
 				.append(Text.literal(": ").formatted(Formatting.GRAY))
 				.append(Text.translatable(standing.translationKey()).formatted(standing.color()));
-		player.networkHandler.sendPacket(new TitleFadeS2CPacket(10, 60, 20));
-		player.networkHandler.sendPacket(new SubtitleS2CPacket(subtitle));
-		player.networkHandler.sendPacket(new TitleS2CPacket(title));
+		PlaceNoticePayload.send(player, title, subtitle);
 		player.playSoundToPlayer(standing == Standing.HOSTILE ? SoundEvents.EVENT_RAID_HORN.value() : SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(),
 				SoundCategory.AMBIENT, standing == Standing.HOSTILE ? 0.4F : 0.8F, 1.0F);
 	}
