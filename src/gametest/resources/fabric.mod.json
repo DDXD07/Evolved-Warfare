@@ -3,11 +3,12 @@
 	"id": "evolvedwarfare-gametest",
 	"version": "1.0.0",
 	"name": "Evolved Warfare: pruebas",
-	"description": "Pruebas automáticas dentro del juego (solo para desarrollo).",
+	"description": "Pruebas autom\u00e1ticas dentro del juego (solo para desarrollo).",
 	"environment": "*",
 	"entrypoints": {
 		"fabric-gametest": [
-			"com.evolvedwarfare.gametest.SiegeGameTests"
+			"com.evolvedwarfare.gametest.SiegeGameTests",
+			"com.evolvedwarfare.gametest.MeleeGameTests"
 		]
 	},
 	"depends": {

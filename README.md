@@ -442,6 +442,22 @@ los soldados las usan: con una lanza o una alabarda, los NPCs también golpean d
 | **Mangual** | S, cadena, M en una fila | 8 | 1,0 | 25 %: aturde (lentitud y debilidad 2 s) |
 | **Hacha de batalla** | 3 M, M S, S | 11 | 0,8 | Desarma escudos |
 
+**En 3D y con su propio golpe.** En la mano (en primera y tercera persona), en el suelo y en los marcos se ven con
+modelo 3D (en el inventario, el icono de siempre), y cada una ataca a su manera; los soldados, bandidos, vikingos y
+piratas golpean igual. Las de dos manos (lanza, mandoble, alabarda y martillo) meten también la otra mano si va libre.
+
+| Arma | El golpe | Dura |
+|---|---|---|
+| **Daga** | Puñalada rápida al frente | 0,25 s |
+| **Lanza** | Estocada larga, la lanza en horizontal | 0,35 s |
+| **Mandoble** | Tajo horizontal de derecha a izquierda | 0,45 s |
+| **Alabarda** | La alza por encima de la cabeza y la deja caer | 0,5 s |
+| **Martillo de guerra** | Mazazo por encima de la cabeza, con rebote al dar | 0,55 s |
+| **Mangual** | Voltea la bola por encima y golpea cruzado; la cadena cuelga y se estira al girar | 0,5 s |
+| **Hacha de batalla** | Hachazo en diagonal, de arriba a la derecha hacia abajo | 0,5 s |
+
+La animación no cambia el daño ni la velocidad de ataque (los de la tabla de arriba).
+
 - **Arco largo** (palos, cuerdas y un lingote de hierro en el centro): flechas un 25 % más rápidas y rectas, y más daño.
   Se encanta como un arco.
 - **Jabalina** (lingote, palo y pluma en diagonal → 2): mantén pulsado clic derecho y suéltala; hace unos 9 de daño y se
@@ -650,8 +666,11 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
 - `ew_factions.py` — aspectos de vikingos y piratas, bandera blanca y sello de embajador.
 - `ew_loot.py` — botín de los cofres de vikingos, piratas, castillos y fortalezas, y de los propios vikingos y piratas.
 - `ew_architect.py` — texturas, modelos y recetas de la mesa del arquitecto, el escáner y el plano.
-- `ew_weapons.py` — iconos, modelos, recetas (con la mejora a netherita) y etiquetas de las armas medievales, el arco
-  largo y la jabalina, y la mesa de investigación.
+- `ew_weapons.py` — iconos, recetas (con la mejora a netherita) y etiquetas de las armas medievales, el arco largo y la
+  jabalina, y la mesa de investigación.
+- `ew_melee.py` (+ `ew_melee_preview.py`) — las armas cuerpo a cuerpo en 3D: piezas, texturas por material, las clases
+  `MeleeModels.java`, `MeleeAnimations.java` (fotogramas clave del golpe en primera y tercera persona) y `MeleeSwing.java`,
+  los modelos de objeto y vistas previas de cada golpe.
 - `ew_siege.py` — iconos de las máquinas de asedio y su munición, y texturas, modelos y recetas del rastrillo, el
   puente levadizo y el torno.
 - `ew_siege_models.py` (+ `ew_siege_preview.py`) — los modelos 3D de la catapulta, la balista, el trebuchet y el ariete:
@@ -674,5 +693,5 @@ En un PC: `./gradlew build` (Java 21+). Para probar: `./gradlew runClient`.
 
 **Pruebas dentro del juego**: `./gradlew runGametest` arranca un servidor sin pantalla que coloca cada máquina de asedio
 (también a los pies del jugador), se sube y dispara, comprueba que el ariete golpea y que el tiro de la vista aérea va
-al punto marcado. GitHub las pasa en cada cambio
+al punto marcado; y que el golpe con cada arma dura lo que le toca. GitHub las pasa en cada cambio
 (trabajo `gametest`) y deja el registro en la rama `gametest-logs`. El código está en `src/gametest` y no va en el `.jar`.

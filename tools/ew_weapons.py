@@ -395,8 +395,9 @@ if __name__ == "__main__":
             im = painter(material)
             im.save(f"{idir}/{name}.png")
             row.append(im)
-            write_json(f"{ASSETS}/models/item/{name}.json", {"parent": "minecraft:item/handheld",
-                                                             "textures": {"layer0": f"{NS}:item/{name}"}})
+            # el icono plano (inventario); el modelo del objeto es el 3D de tools/ew_melee.py
+            write_json(f"{ASSETS}/models/item/{name}_icon.json", {"parent": "minecraft:item/handheld",
+                                                                  "textures": {"layer0": f"{NS}:item/{name}"}})
             (axes if weapon == "battle_axe" else swords).append(f"{NS}:{name}")
             if material == "netherite":
                 write_json(f"{DATA}/recipe/{name}_smithing.json", {

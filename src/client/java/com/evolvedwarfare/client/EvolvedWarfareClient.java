@@ -53,6 +53,21 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry.INSTANCE.register(com.evolvedwarfare.registry.ModItems.MUSKET,
 				new com.evolvedwarfare.client.render.musket.MusketItemRenderer());
 		MusketControls.register();
+		// armas cuerpo a cuerpo: modelos 3D en la mano (el icono plano en el inventario) y su golpe animado
+		java.util.List<net.minecraft.util.Identifier> meleeIcons = new java.util.ArrayList<>();
+		for (com.evolvedwarfare.weapon.WeaponType type : com.evolvedwarfare.weapon.WeaponType.values()) {
+			net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(
+					com.evolvedwarfare.client.render.melee.MeleeModels.layer(type), () -> com.evolvedwarfare.client.render.melee.MeleeModels.of(type));
+			java.util.List<net.minecraft.item.Item> items = com.evolvedwarfare.registry.ModItems.WEAPONS.get(type);
+			for (int i = 0; i < items.size(); i++) {
+				String material = com.evolvedwarfare.registry.ModItems.WEAPON_MATERIALS[i];
+				net.minecraft.util.Identifier icon = com.evolvedwarfare.EvolvedWarfare.id("item/" + material + "_" + type.id() + "_icon");
+				meleeIcons.add(icon);
+				net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry.INSTANCE.register(items.get(i),
+						new com.evolvedwarfare.client.render.melee.MeleeWeaponRenderer(type, material, icon));
+			}
+		}
+		net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin.register(plugin -> plugin.addModels(meleeIcons));
 		EntityRendererRegistry.register(ModEntities.MUSKET_BALL,
 				context -> new net.minecraft.client.render.entity.FlyingItemEntityRenderer<>(context, 0.5F, true));
 		net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry.register(
