@@ -12,6 +12,7 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.MathHelper;
@@ -331,33 +332,57 @@ public class TraderScreen extends HandledScreen<TraderScreenHandler> {
 		context.getMatrices().pop();
 	}
 
+	/**
+	 * Lo justo de cada ficha: el nombre (y sus encantamientos), la rareza con la calidad, el precio del lote y cuántas
+	 * quedan hoy. Los controles ya salen debajo de las fichas.
+	 */
 	private List<Text> tooltip(int index) {
 		Deal deal = handler.deals().get(index);
 		ItemStack stack = deal.stack();
-		List<Text> lines = new ArrayList<>(getTooltipFromItem(client, stack));
-		Text coinName = coin.getName();
-		lines.add(Text.translatable(deal.tier().translationKey()).formatted(deal.tier().color));
+		List<Text> lines = new ArrayList<>();
+		lines.add(Text.empty().append(stack.getName()).formatted(stack.getRarity().getFormatting()));
+		Text enchantments = enchantments(stack);
+		if (enchantments != null) {
+			lines.add(enchantments);
+		}
+		MutableText info = Text.translatable(deal.tier().translationKey()).formatted(deal.tier().color);
 		com.evolvedwarfare.trade.Quality quality = deal.quality();
 		if (quality != null) {
-			lines.add(Text.translatable("gui.evolvedwarfare.trader.quality", Text.translatable(quality.translationKey()).formatted(quality.color))
-					.formatted(Formatting.GRAY));
+			info.append(Text.literal(" · ").formatted(Formatting.DARK_GRAY))
+					.append(Text.translatable(quality.translationKey()).formatted(quality.color));
 			if (stack.isDamaged()) {
 				int percent = Math.round(100.0F * (stack.getMaxDamage() - stack.getDamage()) / stack.getMaxDamage());
-				lines.add(Text.translatable("gui.evolvedwarfare.trader.durability", percent).formatted(Formatting.GRAY));
+				info.append(Text.literal(" · ").formatted(Formatting.DARK_GRAY))
+						.append(Text.translatable("gui.evolvedwarfare.trader.durability", percent).formatted(Formatting.GRAY));
 			}
 		}
-		if (deal.sell()) {
-			lines.add(Text.translatable("gui.evolvedwarfare.trader.offer_sell", deal.count(), Money.full(deal.price()), coinName)
-					.formatted(Formatting.GOLD));
-		} else {
-			lines.add(Text.translatable("gui.evolvedwarfare.trader.offer_buy", deal.count(), Money.full(deal.price()), coinName)
-					.formatted(Formatting.GREEN));
-			lines.add(Text.translatable("gui.evolvedwarfare.trader.you_have", carried(deal)).formatted(Formatting.GRAY));
-		}
-		lines.add(Text.translatable(deal.sell() ? "gui.evolvedwarfare.trader.left" : "gui.evolvedwarfare.trader.left_buy",
-				handler.left(index) * deal.count(), deal.stock() * deal.count()).formatted(Formatting.GRAY));
-		lines.add(Text.translatable(deal.sell() ? "gui.evolvedwarfare.trader.click_sell" : "gui.evolvedwarfare.trader.click_buy")
-				.formatted(Formatting.DARK_GRAY));
+		lines.add(info);
+		lines.add(Text.translatable("gui.evolvedwarfare.trader.lot", deal.count(), Money.full(deal.price()), coin.getName())
+				.formatted(deal.sell() ? Formatting.GOLD : Formatting.GREEN));
+		int left = handler.left(index) * deal.count();
+		int total = deal.stock() * deal.count();
+		lines.add((deal.sell() ? Text.translatable("gui.evolvedwarfare.trader.left", left, total)
+				: Text.translatable("gui.evolvedwarfare.trader.left_buy", left, total, carried(deal))).formatted(Formatting.GRAY));
 		return lines;
+	}
+
+	/** Los encantamientos en una sola línea ("Protección IV, Irrompibilidad III"), o null si no tiene. */
+	@org.jetbrains.annotations.Nullable
+	private static Text enchantments(ItemStack stack) {
+		net.minecraft.component.type.ItemEnchantmentsComponent component = stack.getEnchantments();
+		if (component.isEmpty()) {
+			return null;
+		}
+		MutableText out = Text.empty();
+		boolean first = true;
+		for (it.unimi.dsi.fastutil.objects.Object2IntMap.Entry<net.minecraft.registry.entry.RegistryEntry<net.minecraft.enchantment.Enchantment>> entry
+				: component.getEnchantmentEntries()) {
+			if (!first) {
+				out.append(Text.literal(", "));
+			}
+			out.append(net.minecraft.enchantment.Enchantment.getName(entry.getKey(), entry.getIntValue()));
+			first = false;
+		}
+		return out.formatted(Formatting.GRAY);
 	}
 }
