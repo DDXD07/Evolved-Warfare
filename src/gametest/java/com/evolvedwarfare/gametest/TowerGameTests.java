@@ -100,6 +100,28 @@ public class TowerGameTests implements FabricGameTest {
 	/** Una torre puesta de verdad (girada), lejos de las demás pruebas: trampilla arriba, botín y reclutas. */
 	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "watchtower", tickLimit = 200)
 	public void towerPlacesInWorld(TestContext ctx) {
+		// Los reclutas solo se ven (y viven) en chunks cargados de verdad: se fuerzan los de alrededor y se espera un poco.
+		ServerWorld world = ctx.getWorld();
+		ChunkPos center = new ChunkPos(ctx.getAbsolutePos(new BlockPos(48, 0, 4)));
+		for (int dx = -3; dx <= 3; dx++) {
+			for (int dz = -3; dz <= 3; dz++) {
+				world.setChunkForced(center.x + dx, center.z + dz, true);
+			}
+		}
+		ctx.waitAndRun(10, () -> {
+			try {
+				placeTower(ctx);
+			} finally {
+				for (int dx = -3; dx <= 3; dx++) {
+					for (int dz = -3; dz <= 3; dz++) {
+						world.setChunkForced(center.x + dx, center.z + dz, false);
+					}
+				}
+			}
+		});
+	}
+
+	private static void placeTower(TestContext ctx) {
 		ServerWorld world = ctx.getWorld();
 		BlockPos origin = ctx.getAbsolutePos(new BlockPos(48, 0, 4));
 		long seed = 0x5EEDL;
