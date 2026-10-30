@@ -31,7 +31,7 @@ Cada uno tiene nombre y aspecto al azar (6 aspectos) y pasea cerca de su sitio e
 |---|---|---|
 | **Ciudad medieval** | Llanuras, praderas, sabanas, bosques, taiga y llanuras nevadas | Plaza (fuente o patio de armas), calles empedradas con farolas y puertas de entrada, casas de entramado, casas de dos plantas, cuartel, taberna, herrería, torres de guardia, puestos de mercado y huertos. Se genera por piezas, así que cada ciudad es distinta: unos 40 edificios y una docena de reclutas de media. |
 | **Campamento de mercenarios** | Bosques, taigas, llanuras, praderas y sabanas | Hoguera, tiendas de lona, armero y suministros. 2-6 reclutas. |
-| **Torre de vigilancia** | Llanuras, bosques, taigas, colinas y costas rocosas | Torre de piedra con parapeto. 1-2 reclutas (uno arriba vigilando). |
+| **Torre de vigilancia** | Llanuras, bosques, sabanas, taigas, colinas y costas rocosas | **Cada una distinta** (sale de la semilla del mundo): cuadrada, octogonal o redonda, de 7 a 11 de ancho y de 2 a 4 pisos; arriba almenas con bandera, hoguera de señales, mirador con campana o garita de entramado; a veces voladizo con matacanes, pináculos, contrafuertes, balcón, cuadra adosada, cerca con portón, farolas, pozo, leñera o dianas. Dentro: cuerpo de guardia, literas y armería o sala de mapas, con cofres. Piedra, mampostería, adobe, arenisca, pizarra o toba según el bioma (con nieve en las taigas nevadas). 1-2 reclutas (uno arriba vigilando). |
 
 Para encontrarlas rápido (con trucos activados): `/locate structure evolvedwarfare:city`, `evolvedwarfare:mercenary_camp` o `evolvedwarfare:watchtower`.
 
@@ -676,6 +676,8 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
 - `ew_siege_models.py` (+ `ew_siege_preview.py`) — los modelos 3D de la catapulta, la balista, el trebuchet y el ariete:
   piezas, textura, la clase `SiegeModels.java`, los asientos y vistas previas (cargada, disparando y el balanceo del
   trebuchet).
+- `ew_towers.py` (+ `java/TowerDump.java`) — vistas previas de las torres de vigilancia: compila `TowerDesigner.java` (Java
+  puro, el mismo que usa el juego) y dibuja las torres de varias semillas y estilos, avisando si alguna no se puede subir.
 - `ew_village.py` — prototipo de las aldeas vanilla mejoradas (mismo algoritmo que `VillageExtras.java`) con vista previa.
 - `ew_musket.py` (+ `ew_musket_preview.py`) — el mosquete en 3D: piezas, textura, la clase `MusketModel.java` y vistas
   previas de la recarga y el disparo en primera y tercera persona.
@@ -693,5 +695,6 @@ En un PC: `./gradlew build` (Java 21+). Para probar: `./gradlew runClient`.
 
 **Pruebas dentro del juego**: `./gradlew runGametest` arranca un servidor sin pantalla que coloca cada máquina de asedio
 (también a los pies del jugador), se sube y dispara, comprueba que el ariete golpea y que el tiro de la vista aérea va
-al punto marcado; y que el golpe con cada arma dura lo que le toca. GitHub las pasa en cada cambio
+al punto marcado; que el golpe con cada arma dura lo que le toca; y 800 torres de vigilancia (se suben, todos sus bloques
+existen, salen distintas) y una colocada de verdad con su botín y sus reclutas. GitHub las pasa en cada cambio
 (trabajo `gametest`) y deja el registro en la rama `gametest-logs`. El código está en `src/gametest` y no va en el `.jar`.

@@ -2639,7 +2639,8 @@ POOLS = {
     "camp/centers": pool([(element(L("camp/center")), 1)]),
     "camp/tents": pool([(element(L("camp/tent_small")), 3), (element(L("camp/tent_large")), 2),
                         (element(L("camp/supply")), 2), (element(L("camp/weapon_rack")), 1), (EMPTY, 1)]),
-    "watchtower/base": pool([(element(L("watchtower/tower"), processors=WEATHER), 1)]),
+    # (la torre de vigilancia ya no es una plantilla fija: la genera TowerDesigner.java por semilla; la plantilla
+    # "watchtower/tower" se queda solo como plano para la mesa del arquitecto)
     "npc/bandits": pool([(element(L("npc/bandit"), legacy=True), 5), (EMPTY, 1)]),
     "npc/bandit_archers": pool([(element(L("npc/bandit_archer"), legacy=True), 3),
                                 (element(L("npc/bandit_crossbowman"), legacy=True), 2), (EMPTY, 1)]),
@@ -2693,7 +2694,9 @@ def jigsaw_structure(start_pool, size, max_distance, biomes, expansion_hack, ada
 STRUCTURES = {
     "city": jigsaw_structure(L("city/town_centers"), 5, 72, f"#{NS}:has_structure/city", True),
     "mercenary_camp": jigsaw_structure(L("camp/centers"), 2, 32, f"#{NS}:has_structure/mercenary_camp", False),
-    "watchtower": jigsaw_structure(L("watchtower/base"), 1, 16, f"#{NS}:has_structure/watchtower", False),
+    # torre de vigilancia: tipo propio (WatchtowerStructure), cada una sale de su semilla
+    "watchtower": {"type": f"{NS}:watchtower", "biomes": f"#{NS}:has_structure/watchtower", "spawn_overrides": {},
+                   "step": "surface_structures", "terrain_adaptation": "beard_thin"},
     "bandit_camp": jigsaw_structure(L("bandit_camp/centers"), 2, 32, f"#{NS}:has_structure/bandit_camp", False),
     "bandit_fort": jigsaw_structure(L("bandit_fort/base"), 1, 24, f"#{NS}:has_structure/bandit_fort", False),
     "viking_settlement": jigsaw_structure(L("viking/centers"), 2, 40, f"#{NS}:has_structure/viking_settlement", False),
