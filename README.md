@@ -4,6 +4,11 @@ NPCs, ejércitos, trabajadores, comercio, facciones con diplomacia, asedio, arma
 
 Requiere **Fabric API**. Opcional: **Mod Menu** (pantalla de configuración).
 
+**Guía**: la primera vez que entras en un mundo te dan la **Guía de Evolved Warfare** (clic derecho para leerla). Es
+un libro con cuatro secciones cortas, con una cinta de color para cada una: **Ciudades y comercio**, **Tu gente**,
+**Facciones y guerra** y **Habilidades**. Cada página tiene tres cosas en una o dos frases, con su icono. Se cambia de
+sección con las cintas, las flechas o las teclas 1-4. Si la pierdes, se fabrica otra con un libro y un papel.
+
 **Moneda: la Glory Coin.** El mod tiene su propia moneda. No se fabrica: se gana vendiendo a los comerciantes de las ciudades y al mercado, y sale en los cofres de campamentos, fuertes, asentamientos y castillos y en el botín de bandidos, vikingos y piratas. Con ella se paga a los NPCs, se compra en las tiendas, se pagan tributos y treguas y se hace el contrato de reclutamiento. Como un montón de monedas solo llega a 64, la **Bolsa de Gloria** (cordel arriba, cuero, Glory Coin y cuero en medio, 3 de cuero abajo) guarda todas las que quieras en un hueco: clic derecho mete las monedas sueltas, Mayús + clic derecho saca 64, y en el inventario se meten y se sacan con clic derecho como en un saco. Las tiendas cobran de la bolsa y pagan en ella (si no llevas ninguna y te pagan más de 64, te dan una). (Ya no usa la Golden Coin del mod *Golden Coin Merchants* ni esmeraldas como moneda: si tenías ese mod, los dos pueden convivir, pero no se mezclan.)
 
 ## Hoja de ruta
@@ -761,6 +766,8 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
 - `ew_voices.py` — las voces de los NPCs, sintetizadas por formantes (un timbre por facción, sus frases y quejas), sus
   entradas en `sounds.json` y los subtítulos; con `--preview carpeta` dibuja el espectrograma de cada voz.
 - `ew_pouch.py` — iconos de la Bolsa de Gloria y de la bolsa de munición.
+- `ew_guide.py` — la Guía: icono, el libro abierto de la pantalla, la receta y los textos de las cuatro secciones;
+  comprueba con los anchos de la letra del juego que cada página cabe, y con `--preview carpeta` dibuja cómo quedan.
 - `ew_crate.py` (+ `ew_crate_preview.py`) — la Caja de cultivos: texturas, modelo con asas, pantalla, receta, botín
   (suelta la caja llena), la etiqueta de lo que cabe y los textos; y vistas previas de cómo se lleva con las dos manos
   (primera y tercera persona, al cogerla y andando), con las mismas cuentas que `CrateCarry.java`.
@@ -781,5 +788,5 @@ existen, salen distintas) y una colocada de verdad con su botín y sus reclutas;
 hecho, que las habilidades suben al usarlas y dan puntos, que las ventajas desbloquean la fabricación y suman daño, y que
 la investigación de antes pasa al árbol; y que cada facción habla con su voz y todos sus sonidos existen; y que la
 Caja de cultivos guarda un solo cultivo hasta 64, se coge y se pone sin perder nada, se lleva con las dos manos, y que
-los comerciantes solo compran los cultivos en cajas llenas. GitHub las pasa en cada cambio
+los comerciantes solo compran los cultivos en cajas llenas; y que la guía se da una sola vez. GitHub las pasa en cada cambio
 (trabajo `gametest`) y deja el registro en la rama `gametest-logs`. El código está en `src/gametest` y no va en el `.jar`.

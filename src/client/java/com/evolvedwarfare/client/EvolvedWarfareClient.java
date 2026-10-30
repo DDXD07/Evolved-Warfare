@@ -122,6 +122,7 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 			}
 		});
 		// planos: el escáner abre su pantalla, la mesa del arquitecto su biblioteca, y llegan los planos para la vista previa
+		com.evolvedwarfare.ClientBridge.openGuide = () -> MinecraftClient.getInstance().setScreen(new com.evolvedwarfare.client.screen.GuideScreen());
 		com.evolvedwarfare.ClientBridge.openScanner = hand -> MinecraftClient.getInstance().setScreen(
 				new com.evolvedwarfare.client.screen.ScanScreen(hand));
 		ClientPlayNetworking.registerGlobalReceiver(com.evolvedwarfare.network.BlueprintPayloads.Library.ID, (payload, context) -> {
