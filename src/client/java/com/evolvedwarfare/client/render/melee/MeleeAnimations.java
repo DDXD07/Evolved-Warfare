@@ -41,7 +41,7 @@ public final class MeleeAnimations {
 	};
 	private static final float[][] DAGGER_TP = {
 			{0F, -18F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
-			{0.18F, -40F, 8F, 0F, 0F, 0F, 0F, 12F, -40F, 0F},
+			{0.18F, -40F, 8F, 0F, 0F, 0F, 0F, 12F, -30F, 0F},
 			{0.4F, -95F, -6F, 0F, 0F, 0F, 0F, -18F, -88F, 0F},
 			{0.62F, -82F, -4F, 0F, 0F, 0F, 0F, -10F, -80F, 0F},
 			{1F, -18F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
@@ -55,9 +55,9 @@ public final class MeleeAnimations {
 	};
 	private static final float[][] SPEAR_TP = {
 			{0F, -18F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
-			{0.18F, -48F, 14F, 0F, -58F, 38F, 0F, 18F, -48F, 0F},
-			{0.4F, -88F, -4F, 0F, -84F, 30F, 0F, -22F, -90F, 0F},
-			{0.62F, -80F, 0F, 0F, -76F, 30F, 0F, -12F, -88F, 0F},
+			{0.18F, -48F, 14F, 0F, -58F, 38F, 0F, 18F, -40F, 0F},
+			{0.4F, -88F, -4F, 0F, -84F, 30F, 0F, -22F, -80F, 0F},
+			{0.62F, -80F, 0F, 0F, -76F, 30F, 0F, -12F, -78F, 0F},
 			{1F, -18F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
 	};
 	private static final float[][] LONGSWORD_FP = {
