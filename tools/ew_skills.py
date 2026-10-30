@@ -243,7 +243,31 @@ def bleeding_icon(path):
     img.save(path)
 
 
+def check():
+    """Que cada ventaja de Perk.java tenga sus textos y que los %s cuadren con sus valores."""
+    import re
+    with open(os.path.join(ROOT, "src/main/java/com/evolvedwarfare/skill/Perk.java"), encoding="utf-8") as f:
+        java = f.read()
+    found = re.findall(r"^\t([A-Z_]+)\(Skill\.[A-Z_]+,.*?amounts\(([^)]*)\)", java, re.M)
+    bad = []
+    for name, amounts in found:
+        texts = PERKS.get(name.lower())
+        if texts is None:
+            bad.append(name + ": sin textos")
+            continue
+        wanted = 1 if amounts.strip() else 0
+        for desc in (texts[1], texts[3]):
+            if desc.count("%s") != wanted:
+                bad.append(name + ": " + desc)
+    extra = set(PERKS) - {name.lower() for name, _ in found}
+    bad += ["sobra " + name for name in sorted(extra)]
+    print(f"{len(found)} ventajas en Perk.java, {len(PERKS)} con textos")
+    if bad:
+        raise SystemExit("\n".join(bad))
+
+
 def main():
+    check()
     for path in sorted(glob.glob(os.path.join(LANG, "*.json"))):
         english = path.endswith("en_us.json")
         with open(path, encoding="utf-8") as f:
