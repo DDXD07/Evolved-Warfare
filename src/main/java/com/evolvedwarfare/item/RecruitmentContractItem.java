@@ -20,7 +20,6 @@ public class RecruitmentContractItem extends Item {
 	@Override
 	public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
 		tooltip.add(Text.translatable("item.evolvedwarfare.recruitment_contract.tooltip.0").withColor(GRAY));
-		tooltip.add(Text.translatable("item.evolvedwarfare.recruitment_contract.tooltip.1").withColor(GRAY));
 		super.appendTooltip(stack, context, tooltip, type);
 	}
 }

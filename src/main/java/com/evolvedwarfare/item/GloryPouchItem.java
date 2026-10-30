@@ -155,8 +155,6 @@ public class GloryPouchItem extends Item {
 	public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
 		tooltip.add(Text.translatable("item.evolvedwarfare.glory_pouch.balance", Money.full(balance(stack))).formatted(Formatting.GOLD));
 		tooltip.add(Text.translatable("item.evolvedwarfare.glory_pouch.hint_use").formatted(Formatting.GRAY));
-		tooltip.add(Text.translatable("item.evolvedwarfare.glory_pouch.hint_sneak").formatted(Formatting.GRAY));
-		tooltip.add(Text.translatable("item.evolvedwarfare.glory_pouch.hint_inventory").formatted(Formatting.DARK_GRAY));
 		super.appendTooltip(stack, context, tooltip, type);
 	}
 }

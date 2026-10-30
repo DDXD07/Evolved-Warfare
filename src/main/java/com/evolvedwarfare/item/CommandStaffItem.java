@@ -95,7 +95,7 @@ public class CommandStaffItem extends Item {
 
 	@Override
 	public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 2; i++) {
 			tooltip.add(Text.translatable("item.evolvedwarfare.command_staff.tooltip." + i).withColor(GRAY));
 		}
 		super.appendTooltip(stack, context, tooltip, type);

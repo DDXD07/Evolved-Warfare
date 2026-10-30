@@ -288,9 +288,7 @@ public class MusketItem extends Item {
 		tooltip.add(Text.translatable(isLoaded(stack) ? "item.evolvedwarfare.musket.loaded" : "item.evolvedwarfare.musket.unloaded")
 				.formatted(isLoaded(stack) ? Formatting.GREEN : Formatting.GRAY));
 		tooltip.add(Text.translatable("item.evolvedwarfare.musket.tip_damage").formatted(Formatting.DARK_GREEN));
-		tooltip.add(Text.translatable("item.evolvedwarfare.musket.tip_fire").formatted(Formatting.GRAY));
-		tooltip.add(Text.translatable("item.evolvedwarfare.musket.tip_aim").formatted(Formatting.GRAY));
-		tooltip.add(Text.translatable("item.evolvedwarfare.musket.tip_reload", Text.keybind("key.evolvedwarfare.reload"))
+		tooltip.add(Text.translatable("item.evolvedwarfare.musket.tip_controls", Text.keybind("key.evolvedwarfare.reload"))
 				.formatted(Formatting.GRAY));
 	}
 }

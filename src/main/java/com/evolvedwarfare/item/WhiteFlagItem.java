@@ -23,8 +23,7 @@ public class WhiteFlagItem extends Item {
 
 	@Override
 	public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-		tooltip.add(Text.translatable("item.evolvedwarfare.white_flag.tooltip.0").withColor(0xAAAAAA));
-		tooltip.add(Text.translatable("item.evolvedwarfare.white_flag.tooltip.1").withColor(0x777777));
+		tooltip.add(Text.translatable("item.evolvedwarfare.white_flag.tooltip").withColor(0xAAAAAA));
 		super.appendTooltip(stack, context, tooltip, type);
 	}
 }

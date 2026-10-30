@@ -15,13 +15,19 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
-/** Una máquina de asedio desmontada: clic derecho en el suelo para montarla mirando hacia donde miras. */
+/**
+ * Una máquina de asedio desmontada: clic derecho en el suelo para montarla mirando hacia donde miras.
+ *
+ * <p>Solo no cabe si hay bloques sólidos en su sitio u otra máquina (o una barca, vagoneta...). Quien la coloca no
+ * cuenta: si la caja de la máquina le pisa, se pone delante de él; las criaturas que estén en medio se apartan solas.</p>
+ */
 public class SiegeEngineItem extends Item {
 	private final SiegeKind kind;
 	private final Supplier<EntityType<SiegeEngineEntity>> type;
@@ -39,15 +45,28 @@ public class SiegeEngineItem extends Item {
 	@Override
 	public ActionResult useOnBlock(ItemUsageContext context) {
 		World world = context.getWorld();
-		if (context.getSide() == Direction.DOWN) {
+		BlockPos clicked = context.getBlockPos();
+		// en hierba alta, nieve fina, flores...: en ese mismo sitio (no un bloque más arriba)
+		boolean replaceable = world.getBlockState(clicked).isReplaceable();
+		if (context.getSide() == Direction.DOWN && !replaceable) {
 			return ActionResult.FAIL;
 		}
 		PlayerEntity player = context.getPlayer();
-		Vec3d at = Vec3d.ofBottomCenter(context.getSide() == Direction.UP ? context.getBlockPos().up()
-				: context.getBlockPos().offset(context.getSide()));
+		Vec3d at = Vec3d.ofBottomCenter(replaceable ? clicked : clicked.offset(context.getSide()));
 		EntityType<SiegeEngineEntity> entityType = type.get();
 		Box box = entityType.getDimensions().getBoxAt(at);
-		if (!world.isSpaceEmpty(null, box) || !world.getOtherEntities(null, box).isEmpty()) {
+		if (player != null && box.intersects(player.getBoundingBox())) {
+			// la máquina es grande: si caería encima de quien la pone, se aparta hacia delante
+			Vec3d forward = Vec3d.fromPolar(0.0F, player.getYaw());
+			for (int i = 0; i < 16 && box.intersects(player.getBoundingBox()); i++) {
+				at = at.add(forward.multiply(0.25));
+				box = entityType.getDimensions().getBoxAt(at);
+			}
+		}
+		Box inside = box.contract(1.0E-3);
+		boolean blocked = !world.isSpaceEmpty(null, inside)
+				|| !world.getOtherEntities(player, inside, e -> e instanceof SiegeEngineEntity || e.isCollidable()).isEmpty();
+		if (blocked) {
 			if (player != null && !world.isClient) {
 				player.sendMessage(Text.translatable("message.evolvedwarfare.siege.no_room"), true);
 			}

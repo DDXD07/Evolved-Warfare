@@ -97,7 +97,6 @@ public class WarehouseBlock extends BlockWithEntity {
 	@Override
 	public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
 		super.appendTooltip(stack, context, tooltip, options);
-		tooltip.add(Text.translatable("block.evolvedwarfare.warehouse.tooltip.0", StorageNetwork.RANGE).withColor(GRAY));
-		tooltip.add(Text.translatable("block.evolvedwarfare.warehouse.tooltip.1").withColor(GRAY));
+		tooltip.add(Text.translatable("block.evolvedwarfare.warehouse.tooltip", StorageNetwork.RANGE).withColor(GRAY));
 	}
 }

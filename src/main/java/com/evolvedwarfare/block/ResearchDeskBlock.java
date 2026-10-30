@@ -107,7 +107,6 @@ public class ResearchDeskBlock extends BlockWithEntity {
 	@Override
 	public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
 		super.appendTooltip(stack, context, tooltip, options);
-		tooltip.add(Text.translatable("block.evolvedwarfare.research_desk.tooltip.0").withColor(0xAAAAAA));
-		tooltip.add(Text.translatable("block.evolvedwarfare.research_desk.tooltip.1").withColor(0xAAAAAA));
+		tooltip.add(Text.translatable("block.evolvedwarfare.research_desk.tooltip").withColor(0xAAAAAA));
 	}
 }

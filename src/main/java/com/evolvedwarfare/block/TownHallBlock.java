@@ -131,7 +131,7 @@ public class TownHallBlock extends BlockWithEntity {
 	@Override
 	public void appendTooltip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options) {
 		super.appendTooltip(stack, context, tooltip, options);
-		tooltip.add(Text.translatable("block.evolvedwarfare.town_hall.tooltip.0", TownHallBlockEntity.RANGE).withColor(GRAY));
-		tooltip.add(Text.translatable("block.evolvedwarfare.town_hall.tooltip.1", TownHallBlockEntity.TARGET_DAYS).withColor(GRAY));
+		tooltip.add(Text.translatable("block.evolvedwarfare.town_hall.tooltip", TownHallBlockEntity.RANGE, TownHallBlockEntity.TARGET_DAYS)
+				.withColor(GRAY));
 	}
 }

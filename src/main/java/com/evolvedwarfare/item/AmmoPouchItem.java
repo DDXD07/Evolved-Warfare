@@ -266,8 +266,6 @@ public class AmmoPouchItem extends Item {
 		}
 		tooltip.add(Text.translatable("item.evolvedwarfare.ammo_pouch.hint_reload").formatted(Formatting.DARK_GREEN));
 		tooltip.add(Text.translatable("item.evolvedwarfare.ammo_pouch.hint_use").formatted(Formatting.GRAY));
-		tooltip.add(Text.translatable("item.evolvedwarfare.ammo_pouch.hint_sneak").formatted(Formatting.GRAY));
-		tooltip.add(Text.translatable("item.evolvedwarfare.ammo_pouch.hint_inventory").formatted(Formatting.DARK_GRAY));
 		super.appendTooltip(stack, context, tooltip, type);
 	}
 }
