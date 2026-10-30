@@ -8,6 +8,7 @@
 		"CameraMixin",
 		"EntityLookMixin",
 		"HeldItemRendererMixin",
+		"InGameHudMixin",
 		"PlayerEntityRendererMixin"
 	],
 	"injectors": {

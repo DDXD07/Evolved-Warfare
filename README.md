@@ -630,7 +630,7 @@ Controles (como un arma de fuego):
 | Botón | Qué hace |
 |---|---|
 | **Clic izquierdo** | **Dispara** (si está cargado; si no, chasquido y aviso). Con el mosquete en la mano no se pega ni se pican bloques. |
-| **Clic derecho** (mantener) | **Apunta con la mira metálica**: en primera persona el arma va a la cara con el punto de mira en la cruz y hay un poco de zoom; en tercera, se lo echa a la cara con las dos manos. Vas más despacio. Apuntando, la bala va casi exacta; desde la cadera se desvía bastante. |
+| **Clic derecho** (mantener) | **Apunta con la mira metálica**: en primera persona el arma va a la cara con el punto de mira en el centro, hay un poco de zoom y la cruz de la pantalla se cambia por un punto diminuto; en tercera, se lo echa a la cara con las dos manos. Vas más despacio. Apuntando, la bala va casi exacta; desde la cadera se desvía bastante. |
 | **R** | **Recarga** (2 segundos; se cambia en *Controles → Evolved Warfare*). Gasta una bala de mosquete. Si cambias de objeto, se interrumpe. |
 
 - **Recargar** se ve en primera y en tercera persona: alza el arma con la boca hacia arriba, cae la bala por el cañón,
