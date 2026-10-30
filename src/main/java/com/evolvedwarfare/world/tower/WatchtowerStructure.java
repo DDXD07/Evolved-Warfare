@@ -36,12 +36,15 @@ public class WatchtowerStructure extends Structure {
 			ChunkPos chunk = context.chunkPos();
 			int x = chunk.getCenterX();
 			int z = chunk.getCenterZ();
-			int[] corners = getCornerHeights(context, x - 8, 17, z - 8, 17);
 			int min = Integer.MAX_VALUE;
 			int max = Integer.MIN_VALUE;
-			for (int h : corners) {
-				min = Math.min(min, h);
-				max = Math.max(max, h);
+			for (int dx = -8; dx <= 8; dx += 8) {
+				for (int dz = -8; dz <= 8; dz += 8) {
+					int h = context.chunkGenerator().getHeightOnGround(x + dx, z + dz, Heightmap.Type.WORLD_SURFACE_WG, context.world(),
+							context.noiseConfig());
+					min = Math.min(min, h);
+					max = Math.max(max, h);
+				}
 			}
 			if (max - min > MAX_SLOPE) {
 				return Optional.empty();
