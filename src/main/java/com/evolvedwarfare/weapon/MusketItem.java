@@ -5,6 +5,7 @@ import com.evolvedwarfare.registry.ModComponents;
 import com.evolvedwarfare.registry.ModItems;
 import com.evolvedwarfare.registry.ModSounds;
 import java.util.List;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -13,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -29,27 +31,32 @@ import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
 /**
- * Mosquete de chispa. No se fabrica: lo vende el armero (raro).
+ * Mosquete de chispa. No se fabrica: lo vende el armero (raro). Se usa como un arma de fuego:
  * <ul>
- *   <li>Descargado: mantén clic derecho 2 segundos para cargarlo (gasta una bala de mosquete, suelta o de una bolsa de
- *   munición). Se ve cómo alza el
- *   arma, mete la bala, la aprieta con la baqueta y sube el rastrillo.</li>
- *   <li>Cargado: clic derecho dispara. El rastrillo cae, sale humo de la boca y la bala hace 5 corazones de daño y
- *   empuja un bloque hacia atrás.</li>
+ *   <li><b>Clic izquierdo</b>: dispara (si está cargado). El rastrillo cae, sale humo de la boca y la bala hace
+ *   5 corazones de daño al torso y empuja un bloque hacia atrás. Apuntando es mucho más preciso que desde la cadera.</li>
+ *   <li><b>Clic derecho</b> (mantener): apunta con la mira metálica (el punto de mira al centro y un poco de zoom).</li>
+ *   <li><b>R</b>: recarga (2 segundos; gasta una bala de mosquete, suelta o de una bolsa de munición). Se ve cómo alza el
+ *   arma, mete la bala, la aprieta con la baqueta y sube el rastrillo. Si cambias de objeto, se interrumpe.</li>
  * </ul>
+ * El clic izquierdo y la R llegan del cliente por red ({@code FirearmPayload}); el servidor lo comprueba todo.
  */
 public class MusketItem extends Item {
 	/** Lo que tarda en cargar (ticks). */
 	public static final int RELOAD_TICKS = 40;
-	/** Daño de la bala: 5 corazones. */
+	/** Daño de la bala: 5 corazones (al torso). */
 	public static final float DAMAGE = 10.0F;
 	/** Empuje del impacto (más o menos un bloque). */
 	public static final double KNOCKBACK = 0.25;
-	/** Velocidad de la bala (bloques por tick) y su desvío. */
+	/** Velocidad de la bala (bloques por tick). */
 	private static final float SPEED = 5.0F;
-	private static final float SPREAD = 0.6F;
-	/** Tras disparar, un momento sin poder volver a cargar (para el retroceso). */
+	/** Desvío de la bala: apuntando con la mira, casi nada; desde la cadera, bastante. */
+	private static final float SPREAD_AIMED = 0.25F;
+	private static final float SPREAD_HIP = 1.6F;
+	/** Tras disparar, un momento sin poder hacer nada (el retroceso). */
 	private static final int COOLDOWN = 12;
+	/** Cuánto sube la vista al disparar (grados). */
+	public static final float KICK = 2.5F;
 
 	public MusketItem(Settings settings) {
 		super(settings);
@@ -59,106 +66,152 @@ public class MusketItem extends Item {
 		return stack.getOrDefault(ModComponents.MUSKET_LOADED, false);
 	}
 
+	public static boolean isReloading(ItemStack stack) {
+		return stack.contains(ModComponents.MUSKET_RELOAD);
+	}
+
+	/** Si está apuntando con un mosquete (mantiene clic derecho). */
+	public static boolean isAiming(LivingEntity user) {
+		return user.isUsingItem() && user.getActiveItem().getItem() instanceof MusketItem;
+	}
+
 	@Override
 	public UseAction getUseAction(ItemStack stack) {
-		// NONE para que en primera persona no se mueva como otra cosa: la animación la hace su renderizador
+		// NONE para que vanilla no lo mueva en primera persona: apuntar lo hace su renderizador
 		return UseAction.NONE;
 	}
 
 	@Override
 	public int getMaxUseTime(ItemStack stack, LivingEntity user) {
-		return RELOAD_TICKS;
+		return 72000;
 	}
 
+	/** Clic derecho: apuntar con la mira (mientras se mantiene). No mientras recarga ni en la otra mano. */
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
 		ItemStack stack = user.getStackInHand(hand);
-		if (isLoaded(stack)) {
-			fire(world, user, hand, stack);
-			return TypedActionResult.consume(stack);
+		if (hand != Hand.MAIN_HAND || isReloading(stack)) {
+			return TypedActionResult.fail(stack);
 		}
-		if (user.getAbilities().creativeMode || hasAmmo(user.getInventory())) {
-			user.setCurrentHand(hand);
-			return TypedActionResult.consume(stack);
-		}
-		if (!world.isClient) {
-			world.playSound(null, user.getX(), user.getY(), user.getZ(), ModSounds.MUSKET_EMPTY, SoundCategory.PLAYERS, 0.8F, 1.0F);
-			user.sendMessage(Text.translatable("message.evolvedwarfare.musket.no_ammo").formatted(Formatting.RED), true);
-		}
-		return TypedActionResult.fail(stack);
+		user.setCurrentHand(hand);
+		return TypedActionResult.consume(stack);
 	}
 
-	/** Los sonidos de la carga, a la vez que la animación. */
-	@Override
-	public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-		if (world.isClient) {
+	/** Clic izquierdo (llega por red): dispara si está cargado; si no, chasquido y aviso de que se recarga con R. */
+	public static void tryFire(ServerPlayerEntity player) {
+		ItemStack stack = player.getMainHandStack();
+		if (!(stack.getItem() instanceof MusketItem musket) || player.getItemCooldownManager().isCoolingDown(musket)
+				|| isReloading(stack)) {
 			return;
 		}
-		int tick = RELOAD_TICKS - remainingUseTicks;
+		if (!isLoaded(stack)) {
+			player.getWorld().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.MUSKET_EMPTY, SoundCategory.PLAYERS,
+					0.7F, 1.0F);
+			player.getItemCooldownManager().set(musket, 6);
+			player.sendMessage(Text.translatable("message.evolvedwarfare.musket.press_reload", Text.keybind("key.evolvedwarfare.reload"))
+					.formatted(Formatting.GRAY), true);
+			return;
+		}
+		musket.fire(player.getServerWorld(), player, stack, isAiming(player));
+	}
+
+	/** Tecla R (llega por red): empieza a recargar. */
+	public static void tryReload(ServerPlayerEntity player) {
+		ItemStack stack = player.getMainHandStack();
+		if (!(stack.getItem() instanceof MusketItem musket) || isReloading(stack) || player.getItemCooldownManager().isCoolingDown(musket)) {
+			return;
+		}
+		if (isLoaded(stack)) {
+			player.sendMessage(Text.translatable("message.evolvedwarfare.musket.already_loaded").formatted(Formatting.GRAY), true);
+			return;
+		}
+		if (!player.getAbilities().creativeMode && !hasAmmo(player.getInventory())) {
+			player.getWorld().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.MUSKET_EMPTY, SoundCategory.PLAYERS,
+					0.8F, 1.0F);
+			player.sendMessage(Text.translatable("message.evolvedwarfare.musket.no_ammo").formatted(Formatting.RED), true);
+			return;
+		}
+		if (isAiming(player)) {
+			player.stopUsingItem();
+		}
+		stack.set(ModComponents.MUSKET_RELOAD, player.getWorld().getTime());
+	}
+
+	/** Lleva la recarga: sus sonidos y, a los 2 segundos, la bala dentro. Se corta si deja de tenerlo en la mano. */
+	@Override
+	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+		Long start = stack.get(ModComponents.MUSKET_RELOAD);
+		if (start == null || world.isClient) {
+			return;
+		}
+		if (!selected || !(entity instanceof PlayerEntity player)) {
+			stack.remove(ModComponents.MUSKET_RELOAD);
+			return;
+		}
+		long tick = world.getTime() - start;
 		SoundEvent sound = null;
 		float pitch = 1.0F;
-		switch (tick) {
-			case 15 -> sound = ModSounds.MUSKET_BALL_IN;
-			case 19, 25 -> sound = ModSounds.MUSKET_RAMROD;
-			case 32 -> {
-				sound = ModSounds.MUSKET_COCK;
-				pitch = 1.3F;
-			}
-			case 37 -> sound = ModSounds.MUSKET_COCK;
-			default -> {
-			}
+		if (tick == 15) {
+			sound = ModSounds.MUSKET_BALL_IN;
+		} else if (tick == 19 || tick == 25) {
+			sound = ModSounds.MUSKET_RAMROD;
+		} else if (tick == 32) {
+			sound = ModSounds.MUSKET_COCK;
+			pitch = 1.3F;
+		} else if (tick == 37) {
+			sound = ModSounds.MUSKET_COCK;
 		}
 		if (sound != null) {
-			world.playSound(null, user.getX(), user.getY(), user.getZ(), sound, SoundCategory.PLAYERS, 0.8F,
+			world.playSound(null, player.getX(), player.getY(), player.getZ(), sound, SoundCategory.PLAYERS, 0.8F,
 					pitch * (0.95F + world.getRandom().nextFloat() * 0.1F));
 		}
-	}
-
-	/** Al terminar la carga: gasta una bala y queda cargado. */
-	@Override
-	public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
-		if (!world.isClient && user instanceof PlayerEntity player) {
-			if (player.getAbilities().creativeMode) {
-				stack.set(ModComponents.MUSKET_LOADED, true);
-			} else if (takeAmmo(player.getInventory())) {
-				stack.set(ModComponents.MUSKET_LOADED, true);
-				player.sendMessage(Text.translatable("message.evolvedwarfare.musket.loaded", ammoLeft(player.getInventory()))
-						.formatted(Formatting.GRAY), true);
-			} else {
-				world.playSound(null, user.getX(), user.getY(), user.getZ(), ModSounds.MUSKET_EMPTY, SoundCategory.PLAYERS, 0.8F, 1.0F);
-				player.sendMessage(Text.translatable("message.evolvedwarfare.musket.no_ammo").formatted(Formatting.RED), true);
-			}
+		if (tick < RELOAD_TICKS) {
+			return;
 		}
-		return stack;
+		stack.remove(ModComponents.MUSKET_RELOAD);
+		if (player.getAbilities().creativeMode) {
+			stack.set(ModComponents.MUSKET_LOADED, true);
+		} else if (takeAmmo(player.getInventory())) {
+			stack.set(ModComponents.MUSKET_LOADED, true);
+			player.sendMessage(Text.translatable("message.evolvedwarfare.musket.loaded", ammoLeft(player.getInventory()))
+					.formatted(Formatting.GRAY), true);
+		} else {
+			world.playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.MUSKET_EMPTY, SoundCategory.PLAYERS, 0.8F, 1.0F);
+			player.sendMessage(Text.translatable("message.evolvedwarfare.musket.no_ammo").formatted(Formatting.RED), true);
+		}
 	}
 
-	private void fire(World world, PlayerEntity user, Hand hand, ItemStack stack) {
+	/** Lo que el cliente adelanta al disparar (para que el rastrillo caiga sin esperar al servidor). */
+	public static void predictFire(ItemStack stack, PlayerEntity player) {
+		stack.remove(ModComponents.MUSKET_LOADED);
+		stack.set(ModComponents.MUSKET_FIRED, player.getWorld().getTime());
+		player.getItemCooldownManager().set(stack.getItem(), COOLDOWN);
+	}
+
+	private void fire(ServerWorld world, PlayerEntity user, ItemStack stack, boolean aimed) {
 		stack.remove(ModComponents.MUSKET_LOADED);
 		stack.set(ModComponents.MUSKET_FIRED, world.getTime());
 		user.getItemCooldownManager().set(this, COOLDOWN);
-		if (!(world instanceof ServerWorld server)) {
-			return;
-		}
 		MusketBallEntity ball = new MusketBallEntity(world, user);
-		ball.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, SPEED, SPREAD);
+		ball.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, SPEED, aimed ? SPREAD_AIMED : SPREAD_HIP);
 		world.spawnEntity(ball);
 
-		// humo y fogonazo en la boca del cañón (delante y un poco hacia el lado de la mano)
+		// humo y fogonazo en la boca del cañón (delante y, desde la cadera, un poco hacia el lado de la mano)
 		Vec3d look = user.getRotationVec(1.0F);
 		Vec3d right = look.crossProduct(new Vec3d(0.0, 1.0, 0.0));
 		right = right.lengthSquared() < 1.0E-4 ? new Vec3d(1.0, 0.0, 0.0) : right.normalize();
-		boolean rightHand = (user.getMainArm() == Arm.RIGHT) == (hand == Hand.MAIN_HAND);
-		double side = rightHand ? 1.0 : -1.0;
-		Vec3d muzzle = user.getEyePos().add(look.multiply(1.5)).add(right.multiply(0.25 * side)).add(0.0, -0.18, 0.0);
-		smoke(server, muzzle, look);
+		double side = (user.getMainArm() == Arm.RIGHT ? 1.0 : -1.0) * (aimed ? 0.3 : 1.0);
+		Vec3d muzzle = user.getEyePos().add(look.multiply(aimed ? 2.0 : 1.5)).add(right.multiply(0.25 * side))
+				.add(0.0, aimed ? -0.05 : -0.18, 0.0);
+		smoke(world, muzzle, look);
 		Vec3d pan = user.getEyePos().add(look.multiply(0.45)).add(right.multiply(0.3 * side)).add(0.0, -0.22, 0.0);
-		server.spawnParticles(ParticleTypes.SMOKE, pan.x, pan.y, pan.z, 3, 0.03, 0.03, 0.03, 0.01);
+		world.spawnParticles(ParticleTypes.SMOKE, pan.x, pan.y, pan.z, 3, 0.03, 0.03, 0.03, 0.01);
 
 		world.playSound(null, user.getX(), user.getEyeY(), user.getZ(), ModSounds.MUSKET_FIRE, SoundCategory.PLAYERS, 3.0F,
 				0.9F + world.getRandom().nextFloat() * 0.15F);
 		world.emitGameEvent(user, GameEvent.PROJECTILE_SHOOT, user.getPos());
 		user.incrementStat(Stats.USED.getOrCreateStat(this));
-		stack.damage(1, user, LivingEntity.getSlotForHand(hand));
+		stack.damage(1, user, net.minecraft.entity.EquipmentSlot.MAINHAND);
 	}
 
 	private static void smoke(ServerWorld world, Vec3d muzzle, Vec3d look) {
@@ -235,7 +288,9 @@ public class MusketItem extends Item {
 		tooltip.add(Text.translatable(isLoaded(stack) ? "item.evolvedwarfare.musket.loaded" : "item.evolvedwarfare.musket.unloaded")
 				.formatted(isLoaded(stack) ? Formatting.GREEN : Formatting.GRAY));
 		tooltip.add(Text.translatable("item.evolvedwarfare.musket.tip_damage").formatted(Formatting.DARK_GREEN));
-		tooltip.add(Text.translatable("item.evolvedwarfare.musket.tip_reload").formatted(Formatting.GRAY));
 		tooltip.add(Text.translatable("item.evolvedwarfare.musket.tip_fire").formatted(Formatting.GRAY));
+		tooltip.add(Text.translatable("item.evolvedwarfare.musket.tip_aim").formatted(Formatting.GRAY));
+		tooltip.add(Text.translatable("item.evolvedwarfare.musket.tip_reload", Text.keybind("key.evolvedwarfare.reload"))
+				.formatted(Formatting.GRAY));
 	}
 }

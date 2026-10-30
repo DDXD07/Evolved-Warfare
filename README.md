@@ -573,14 +573,20 @@ Solo en ciudades nuevas (chunks sin generar). Hay **huevo generador** en la pest
 Un mosquete de chispa. **No se fabrica**: lo vende el **armero** en cualquier ciudad (rareza **rara**).
 Tiene 300 usos y se repara con lingotes de hierro en el yunque.
 
-- **Cargar**: con el mosquete descargado, **mantén clic derecho 2 segundos** (gasta una bala de mosquete; vas más
-  despacio mientras tanto). Se ve, en primera y en tercera persona, cómo alza el arma con la boca hacia arriba, cae la
-  bala por el cañón, la aprieta con la baqueta, baja el arma, cierra la cazoleta y **sube el rastrillo**. Si sueltas
-  antes, no se carga.
-- **Disparar**: cargado, **clic derecho**. El **rastrillo cae** contra el acero (que se abre), el arma da un golpe hacia
-  atrás y sale **humo** y fogonazo por la boca (y una bocanada de la cazoleta). La bala vuela muy rápido y casi recta
+Controles (como un arma de fuego):
+
+| Botón | Qué hace |
+|---|---|
+| **Clic izquierdo** | **Dispara** (si está cargado; si no, chasquido y aviso). Con el mosquete en la mano no se pega ni se pican bloques. |
+| **Clic derecho** (mantener) | **Apunta con la mira metálica**: en primera persona el arma va a la cara con el punto de mira en la cruz y hay un poco de zoom; en tercera, se lo echa a la cara con las dos manos. Vas más despacio. Apuntando, la bala va casi exacta; desde la cadera se desvía bastante. |
+| **R** | **Recarga** (2 segundos; se cambia en *Controles → Evolved Warfare*). Gasta una bala de mosquete. Si cambias de objeto, se interrumpe. |
+
+- **Recargar** se ve en primera y en tercera persona: alza el arma con la boca hacia arriba, cae la bala por el cañón,
+  la aprieta con la baqueta, baja el arma, cierra la cazoleta y **sube el rastrillo**.
+- **Disparar**: el **rastrillo cae** contra el acero (que se abre), el arma da un golpe hacia atrás, la vista sube un
+  poco y sale **humo** y fogonazo por la boca (y una bocanada de la cazoleta). La bala vuela muy rápido y casi recta
   y hace **5 corazones** de daño al torso (con el daño locacional: 12,5 en la cabeza, 2,5 en un brazo, 3,5 en una pierna) y **empuja un bloque** hacia atrás. Los escudos la paran.
-- En tercera persona se apunta con las dos manos; al recargar, el arma se pone de pie delante del cuerpo.
+- En tercera persona, sin apuntar, lo lleva bajado en una mano.
 - En la descripción del objeto pone si está cargado.
 
 **Balas de mosquete**: pólvora + lingote de hierro + papel (sin forma) → **9 balas**.
@@ -593,7 +599,7 @@ cuero, lingote de hierro y cuero en medio; 3 de cuero abajo.
 - **Clic derecho**: mete todas las balas sueltas que lleves. **Mayús + clic derecho**: saca 64.
 - En el inventario se mete y se saca con clic derecho, como un saco. La barra dorada debajo del icono enseña lo llena
   que está, y la descripción, cuántas lleva.
-- **Al cargar el mosquete, la bala se descuenta de la bolsa.** Orden: primero una bala suelta en la otra mano (si la
+- **Al recargar el mosquete (R), la bala se descuenta de la bolsa.** Orden: primero una bala suelta en la otra mano (si la
   has puesto ahí), luego las bolsas de munición (la de la otra mano antes que las demás) y por último las sueltas del
   inventario. Al terminar de cargar sale cuántas balas te quedan.
 - Puedes llevar varias bolsas; cada una, hasta 1000.

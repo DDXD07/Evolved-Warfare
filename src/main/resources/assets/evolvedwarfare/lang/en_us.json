@@ -528,8 +528,9 @@
   "item.evolvedwarfare.musket.loaded": "Loaded",
   "item.evolvedwarfare.musket.unloaded": "Not loaded",
   "item.evolvedwarfare.musket.tip_damage": "5 hearts to the torso (x2.5 head, x0.5 arms, x0.7 legs); knocks back one block",
-  "item.evolvedwarfare.musket.tip_reload": "Hold right-click to load (uses 1 musket ball, loose or from an ammo pouch)",
-  "item.evolvedwarfare.musket.tip_fire": "Loaded: right-click to fire",
+  "item.evolvedwarfare.musket.tip_reload": "%s: reload (uses 1 ball, loose or from an ammo pouch)",
+  "item.evolvedwarfare.musket.tip_fire": "Left-click: fire",
+  "item.evolvedwarfare.musket.tip_aim": "Right-click (hold): aim down the sights",
   "item.evolvedwarfare.musket_ball": "Musket Ball",
   "item.evolvedwarfare.ammo_pouch": "Ammo Pouch",
   "item.evolvedwarfare.ammo_pouch.empty": "Empty (holds 1000 rounds)",
@@ -754,6 +755,8 @@
   "message.evolvedwarfare.pouch.balance": "Glory Pouch: %s %s",
   "entity.evolvedwarfare.musket_ball": "Musket Ball",
   "message.evolvedwarfare.musket.no_ammo": "You have no musket balls",
+  "message.evolvedwarfare.musket.press_reload": "Not loaded: press %s to reload",
+  "message.evolvedwarfare.musket.already_loaded": "Already loaded",
   "death.attack.evolvedwarfare.musket_ball": "%1$s was shot by %2$s",
   "death.attack.evolvedwarfare.musket_ball.item": "%1$s was shot by %2$s using %3$s",
   "death.attack.evolvedwarfare.musket_ball.player": "%1$s was shot while fleeing %2$s",
@@ -768,5 +771,7 @@
   "combat.evolvedwarfare.zone.head": "Head",
   "combat.evolvedwarfare.zone.torso": "Torso",
   "combat.evolvedwarfare.zone.arms": "Arms",
-  "combat.evolvedwarfare.zone.legs": "Legs"
+  "combat.evolvedwarfare.zone.legs": "Legs",
+  "key.evolvedwarfare.reload": "Reload firearm",
+  "key.categories.evolvedwarfare": "Evolved Warfare"
 }

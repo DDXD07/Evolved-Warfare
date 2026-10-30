@@ -20,6 +20,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Dibuja el mosquete en 3D y lo anima (las mismas cuentas que tools/ew_musket_preview.py):
  * <ul>
+ *   <li>Apuntando (clic derecho), en primera persona: el arma va al centro con el punto de mira en la cruz.</li>
+ *   <li>Sin apuntar, en tercera persona: lo lleva bajado, con la boca un poco hacia el suelo.</li>
  *   <li>Recarga (2 s): alza el arma con la boca hacia arriba, cae la bala por el cañón, la baqueta la aprieta dos
  *   veces, baja el arma, se cierra la cazoleta y sube el rastrillo.</li>
  *   <li>Disparo: el rastrillo cae contra el acero (que se abre) y el arma da un golpe hacia arriba y atrás.</li>
@@ -39,6 +41,15 @@ public class MusketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
 	private static final float HAMMER_DOWN = -30.0F, HAMMER_COCKED = 25.0F;
 	private static final float FRIZZEN_OPEN = -55.0F, FRIZZEN_CLOSED = 0.0F;
 	private static final float RELOAD_TILT_FP = 60.0F, RELOAD_YAW_FP = 12.0F, RELOAD_TILT_TP = 95.0F;
+	private static final float TP_IDLE_TILT = 70.0F;
+	/** Lo que tarda en echárselo a la cara (ticks). */
+	private static final float AIM_TICKS = 4.0F;
+	// apuntar: el punto de mira (píxeles) queda en el centro de la pantalla, a ADS_Z bloques del ojo
+	private static final float SIGHT_X = 8.0F / 16, SIGHT_Y = 10.9F / 16, SIGHT_Z = -7.2F / 16;
+	private static final float ADS_Y = -0.004F, ADS_Z = -1.15F;
+	// lo que hacen vanilla y musket.json en primera persona (mano derecha): desplazamiento de la mano y del modelo
+	private static final float EQUIP_X = 0.56F, EQUIP_Y = -0.52F, EQUIP_Z = -0.72F;
+	private static final float FP_X = -1.5F / 16, FP_Y = 2.5F / 16, FP_Z = -3.0F / 16, FP_YAW = 4.0F, FP_SCALE = 0.6F;
 
 	@Nullable
 	private ModelPart body;
@@ -87,17 +98,25 @@ public class MusketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
 		LivingEntity user = inHand ? holder : null;
 
 		float reload = -1.0F;
-		if (user != null && user.isUsingItem() && user.getActiveItem().getItem() instanceof MusketItem) {
-			reload = MathHelper.clamp((user.getItemUseTime() + tickDelta) / MusketItem.RELOAD_TICKS, 0.0F, 1.0F);
+		Long reloadStart = stack.get(ModComponents.MUSKET_RELOAD);
+		if (inHand && reloadStart != null && client.world != null) {
+			reload = MathHelper.clamp((client.world.getTime() - reloadStart + tickDelta) / MusketItem.RELOAD_TICKS, 0.0F, 1.0F);
+		}
+		float aim = 0.0F;
+		if (user != null && reload < 0.0F && MusketItem.isAiming(user)) {
+			aim = smooth((user.getItemUseTime() + tickDelta) / AIM_TICKS);
 		}
 		float sinceFire = Float.MAX_VALUE;
 		Long fired = stack.get(ModComponents.MUSKET_FIRED);
 		if (fired != null && client.world != null) {
 			sinceFire = Math.max(0.0F, client.world.getTime() - fired + tickDelta);
 		}
-		Pose pose = pose(reload, MusketItem.isLoaded(stack), sinceFire, firstPerson, inHand);
+		Pose pose = pose(reload, MusketItem.isLoaded(stack), sinceFire, firstPerson, inHand, aim > 0.0F);
 
 		matrices.push();
+		if (firstPerson && aim > 0.0F) {
+			aimDownSights(matrices, aim, leftHand ? -1.0F : 1.0F);
+		}
 		matrices.translate(0.0F, 0.0F, pose.back / 16.0F);
 		matrices.translate(GRIP_X / 16.0F, GRIP_Y / 16.0F, GRIP_Z / 16.0F);
 		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(leftHand ? -pose.yaw : pose.yaw));
@@ -132,10 +151,32 @@ public class MusketItemRenderer implements BuiltinItemRendererRegistry.DynamicIt
 		matrices.pop();
 	}
 
-	private static Pose pose(float reload, boolean loaded, float sinceFire, boolean firstPerson, boolean inHand) {
+	/**
+	 * Lleva el arma de la cadera a la cara: deshace el desplazamiento de la mano y del modelo para que el punto de mira
+	 * quede en el centro de la pantalla y el cañón mire recto (a medias mientras se la echa a la cara).
+	 */
+	private static void aimDownSights(MatrixStack matrices, float aim, float side) {
+		float vx = -side * EQUIP_X - side * FP_X;
+		float vy = ADS_Y - EQUIP_Y - FP_Y;
+		float vz = ADS_Z - EQUIP_Z - FP_Z;
+		float a = -side * FP_YAW * MathHelper.RADIANS_PER_DEGREE;
+		float cos = MathHelper.cos(a);
+		float sin = MathHelper.sin(a);
+		float kx = 0.5F + (vx * cos + vz * sin) / FP_SCALE;
+		float ky = 0.5F + vy / FP_SCALE;
+		float kz = 0.5F + (-vx * sin + vz * cos) / FP_SCALE;
+		matrices.translate(MathHelper.lerp(aim, SIGHT_X, kx), MathHelper.lerp(aim, SIGHT_Y, ky), MathHelper.lerp(aim, SIGHT_Z, kz));
+		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-side * FP_YAW * aim));
+		matrices.translate(-SIGHT_X, -SIGHT_Y, -SIGHT_Z);
+	}
+
+	private static Pose pose(float reload, boolean loaded, float sinceFire, boolean firstPerson, boolean inHand, boolean aiming) {
 		Pose s = new Pose();
 		s.hammer = loaded ? HAMMER_COCKED : HAMMER_DOWN;
 		s.frizzen = loaded ? FRIZZEN_CLOSED : FRIZZEN_OPEN;
+		if (inHand && !firstPerson && !aiming && reload < 0.0F) {
+			s.tilt = TP_IDLE_TILT; // bajado
+		}
 		if (reload >= 0.0F) {
 			float p = reload;
 			float a;

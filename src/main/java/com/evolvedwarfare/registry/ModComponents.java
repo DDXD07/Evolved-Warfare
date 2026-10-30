@@ -48,6 +48,12 @@ public final class ModComponents {
 			ComponentType.<com.evolvedwarfare.item.AmmoPouchItem.Contents>builder().codec(com.evolvedwarfare.item.AmmoPouchItem.Contents.CODEC)
 					.packetCodec(com.evolvedwarfare.item.AmmoPouchItem.Contents.PACKET_CODEC).build());
 
+	/** Cuándo empezó a recargar el mosquete (tiempo del mundo); no está si no recarga. */
+	public static final ComponentType<Long> MUSKET_RELOAD = Registry.register(Registries.DATA_COMPONENT_TYPE,
+			EvolvedWarfare.id("musket_reload"),
+			ComponentType.<Long>builder().codec(com.mojang.serialization.Codec.LONG)
+					.packetCodec(net.minecraft.network.codec.PacketCodecs.VAR_LONG).build());
+
 	private ModComponents() {
 	}
 

@@ -17,6 +17,13 @@ FRIZZEN_OPEN, FRIZZEN_CLOSED = -55.0, 0.0
 BORE = (8.0, 9.8)
 ROD_HEAD = (8.0, 7.65, -7.3)
 RELOAD_TILT_FP, RELOAD_YAW_FP, RELOAD_TILT_TP = 60.0, 12.0, 95.0
+# apuntar con la mira (primera persona): el punto de mira queda en el centro de la pantalla, a ADS_Z bloques
+FRONT_SIGHT = (8.0, 10.9, -7.2)
+ADS_Y, ADS_Z = -0.004, -1.15
+# en tercera persona, sin apuntar: el arma baja con la boca un poco hacia el suelo
+TP_IDLE_TILT = 70.0
+# lo mismo que el modelo musket.json en primera persona (mano derecha) y el desplazamiento de la mano de vanilla
+EQUIP = (0.56, -0.52, -0.72)
 
 DISPLAY = json.load(open(os.path.join(os.path.dirname(__file__), "..", "src/main/resources/assets/evolvedwarfare/models/item/musket.json")))["display"]
 
@@ -34,10 +41,12 @@ def seg(p, a, b):
     return (p - a) / (b - a)
 
 
-def state(reload, loaded, since_fire, first_person):
-    """reload: progreso 0..1 o None; since_fire: ticks desde el disparo o None."""
+def state(reload, loaded, since_fire, first_person, aim=0.0, idle_tp=False):
+    """reload: progreso 0..1 o None; since_fire: ticks desde el disparo o None; aim: 0..1 apuntando."""
     s = dict(tilt=0.0, yaw=0.0, back=0.0, hammer=HAMMER_COCKED if loaded else HAMMER_DOWN,
-             frizzen=FRIZZEN_CLOSED if loaded else FRIZZEN_OPEN, ball=None, rod=None)
+             frizzen=FRIZZEN_CLOSED if loaded else FRIZZEN_OPEN, ball=None, rod=None, aim=aim if reload is None and first_person else 0.0)
+    if idle_tp and reload is None and aim == 0.0:
+        s["tilt"] = TP_IDLE_TILT
     if reload is not None:
         p = reload
         if p < 0.15:
@@ -117,10 +126,28 @@ def display(mode, left=False):
     return T(tx, ty, tz) @ RX(D(rx)) @ RY(D(ry)) @ RZ(D(rz)) @ S(sx, sy, sz)
 
 
+def ads_matrix(aim):
+    """Lleva el punto de mira al centro de la pantalla (deshace el desplazamiento de la mano y del modelo)."""
+    if aim <= 0:
+        return np.eye(4)
+    d = DISPLAY["firstperson_righthand"]
+    yaw = d["rotation"][1]
+    sc = d["scale"][0]
+    td = [v / 16.0 for v in d["translation"]]
+    q = np.array([c / 16.0 for c in FRONT_SIGHT])
+    v = np.array([0.0 - EQUIP[0] - td[0], ADS_Y - EQUIP[1] - td[1], ADS_Z - EQUIP[2] - td[2]])
+    a = D(-yaw)
+    rv = np.array([v[0] * math.cos(a) + v[2] * math.sin(a), v[1], -v[0] * math.sin(a) + v[2] * math.cos(a)])
+    k = 0.5 + rv / sc
+    t = q + (k - q) * aim
+    return T(*t) @ RY(D(-yaw * aim)) @ T(*(-q))
+
+
 def gun_matrix(st):
     """Movimiento de todo el arma (en el espacio del objeto, en bloques), alrededor de la empuñadura."""
     g = [c / 16.0 for c in GRIP]
-    return T(0, 0, st["back"] / 16.0) @ T(*g) @ RY(D(st["yaw"])) @ RX(D(st["tilt"])) @ T(-g[0], -g[1], -g[2])
+    return (ads_matrix(st.get("aim", 0.0)) @ T(0, 0, st["back"] / 16.0) @ T(*g) @ RY(D(st["yaw"])) @ RX(D(st["tilt"]))
+            @ T(-g[0], -g[1], -g[2]))
 
 
 def part_matrix(pivot, rot):
@@ -312,6 +339,8 @@ def grid(frames, cols):
 
 
 HOLD = ((-math.pi / 2 + 0.1, -0.3, 0), (-1.5, 0.6, 0))
+# postura normal con algo en la mano (brazo casi colgando, un poco adelantado)
+ITEM_POSE = ((-0.31, 0, 0), (0, 0, 0))
 
 
 def charge(h):
@@ -322,6 +351,8 @@ def render_all(parts, zones, tex, out):
     os.makedirs(out, exist_ok=True)
     fp = [
         fp_frame(parts, state(None, True, None, True), "1ª persona: cargado (rastrillo arriba)"),
+        fp_frame(parts, state(None, True, None, True, aim=1.0), "Clic derecho: apuntar con la mira"),
+        fp_frame(parts, state(None, False, 1.0, True, aim=1.0), "Clic izquierdo apuntando: disparo"),
         fp_frame(parts, state(None, False, 1.0, True), "Disparo: cae el rastrillo y retrocede"),
         fp_frame(parts, state(0.10, False, None, True), "Recarga 10 %: alza el arma"),
         fp_frame(parts, state(0.30, False, None, True), "Recarga 30 %: la bala entra"),
@@ -330,10 +361,11 @@ def render_all(parts, zones, tex, out):
     ]
     grid(fp, 2).save(os.path.join(out, "musket_first_person.png"))
     tp = [
-        tp_frame(parts, state(None, True, None, False), HOLD, "3ª persona: apuntando"),
+        tp_frame(parts, state(None, True, None, False, idle_tp=True), ITEM_POSE, "3ª persona: sin apuntar"),
+        tp_frame(parts, state(None, True, None, False, aim=1.0), HOLD, "3ª persona: apuntando"),
         tp_frame(parts, state(0.30, False, None, False), charge(1.0), "3ª persona: recargando (bala)"),
         tp_frame(parts, state(0.50, False, None, False), charge(1.0), "3ª persona: baqueta"),
-        tp_frame(parts, state(None, False, 1.0, False), HOLD, "3ª persona: disparo"),
+        tp_frame(parts, state(None, False, 1.0, False, aim=1.0), HOLD, "3ª persona: disparo"),
     ]
-    grid(tp, 2).save(os.path.join(out, "musket_third_person.png"))
+    grid(tp, 3).save(os.path.join(out, "musket_third_person.png"))
     gui_frame(parts, "Inventario").save(os.path.join(out, "musket_gui.png"))

@@ -11,19 +11,22 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-/** Con el mosquete, en tercera persona: apunta con las dos manos (como la ballesta cargada) y al recargar mueve los brazos. */
+/**
+ * Con el mosquete, en tercera persona: recargando mueve los dos brazos; apuntando, se lo echa a la cara con las dos
+ * manos (como la ballesta cargada); si no, lo lleva bajado en una mano (lo normal de vanilla).
+ */
 @Mixin(PlayerEntityRenderer.class)
 public abstract class PlayerEntityRendererMixin {
 	@Inject(method = "getArmPose", at = @At("HEAD"), cancellable = true)
 	private static void evolvedwarfare$musketPose(AbstractClientPlayerEntity player, Hand hand,
 			CallbackInfoReturnable<BipedEntityModel.ArmPose> cir) {
 		ItemStack stack = player.getStackInHand(hand);
-		if (!(stack.getItem() instanceof MusketItem)) {
+		if (!(stack.getItem() instanceof MusketItem) || hand != Hand.MAIN_HAND) {
 			return;
 		}
-		if (player.isUsingItem() && player.getActiveHand() == hand) {
+		if (MusketItem.isReloading(stack)) {
 			cir.setReturnValue(BipedEntityModel.ArmPose.CROSSBOW_CHARGE);
-		} else if (!player.handSwinging) {
+		} else if (MusketItem.isAiming(player)) {
 			cir.setReturnValue(BipedEntityModel.ArmPose.CROSSBOW_HOLD);
 		}
 	}

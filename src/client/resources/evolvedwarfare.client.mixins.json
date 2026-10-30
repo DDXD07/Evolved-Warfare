@@ -3,6 +3,7 @@
 	"package": "com.evolvedwarfare.mixin.client",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
+		"AbstractClientPlayerEntityMixin",
 		"HeldItemRendererMixin",
 		"PlayerEntityRendererMixin"
 	],

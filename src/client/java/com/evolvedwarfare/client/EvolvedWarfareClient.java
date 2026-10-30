@@ -52,6 +52,7 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 				com.evolvedwarfare.client.render.musket.MusketModel.LAYER, com.evolvedwarfare.client.render.musket.MusketModel::getTexturedModelData);
 		net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry.INSTANCE.register(com.evolvedwarfare.registry.ModItems.MUSKET,
 				new com.evolvedwarfare.client.render.musket.MusketItemRenderer());
+		MusketControls.register();
 		EntityRendererRegistry.register(ModEntities.MUSKET_BALL,
 				context -> new net.minecraft.client.render.entity.FlyingItemEntityRenderer<>(context, 0.5F, true));
 		net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry.register(
