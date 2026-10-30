@@ -73,8 +73,11 @@ public class SkillGameTests implements FabricGameTest {
 		ctx.complete();
 	}
 
-	/** Golpear con una daga sube Hojas; llevar hierro y recibir golpes sube la armadura pesada. */
-	@GameTest(templateName = EMPTY_STRUCTURE)
+	/**
+	 * Golpear con una daga sube Hojas; llevar hierro y recibir golpes sube la armadura pesada (el golpe al jugador, pasados
+	 * los 3 s en que un jugador recién entrado no recibe daño).
+	 */
+	@GameTest(templateName = EMPTY_STRUCTURE, timeoutTicks = 200)
 	public void skillsRiseWithUse(TestContext ctx) {
 		floor(ctx);
 		ServerPlayerEntity player = ctx.createMockCreativeServerPlayerInWorld();
@@ -85,21 +88,25 @@ public class SkillGameTests implements FabricGameTest {
 		zombie.setAiDisabled(true);
 		for (int i = 0; i < 5; i++) {
 			zombie.timeUntilRegen = 0;
+			zombie.setHealth(zombie.getMaxHealth());
 			zombie.damage(player.getDamageSources().playerAttack(player), 4.0F);
 		}
-		player.timeUntilRegen = 0;
-		player.damage(zombie.getDamageSources().mobAttack(zombie), 3.0F);
 		SkillData data = Skills.get(ctx.getWorld().getServer(), player.getUuid());
-		LOG.info("[EW-GAMETEST] habilidades al usar: hojas nivel {} (+{}), armadura pesada {} (+{})", data.level(Skill.BLADES),
-				data.xp(Skill.BLADES), data.level(Skill.HEAVY_ARMOR), data.xp(Skill.HEAVY_ARMOR));
 		if (data.level(Skill.BLADES) == 0 && data.xp(Skill.BLADES) <= 0.0F) {
 			throw new GameTestException("Golpear con la daga no sube Hojas");
 		}
-		if (data.level(Skill.HEAVY_ARMOR) == 0 && data.xp(Skill.HEAVY_ARMOR) <= 0.0F) {
-			throw new GameTestException("Recibir golpes con armadura de hierro no sube Armadura pesada");
-		}
-		zombie.discard();
-		ctx.complete();
+		ctx.waitAndRun(70, () -> {
+			player.timeUntilRegen = 0;
+			player.setHealth(player.getMaxHealth());
+			boolean hit = player.damage(zombie.getDamageSources().mobAttack(zombie), 3.0F);
+			LOG.info("[EW-GAMETEST] habilidades al usar: hojas nivel {} (+{}), armadura pesada {} (+{}), golpe al jugador={}",
+					data.level(Skill.BLADES), data.xp(Skill.BLADES), data.level(Skill.HEAVY_ARMOR), data.xp(Skill.HEAVY_ARMOR), hit);
+			if (data.level(Skill.HEAVY_ARMOR) == 0 && data.xp(Skill.HEAVY_ARMOR) <= 0.0F) {
+				throw new GameTestException("Recibir golpes con armadura de hierro no sube Armadura pesada (golpe=" + hit + ")");
+			}
+			zombie.discard();
+			ctx.complete();
+		});
 	}
 
 	/** Subir mucho una habilidad sube el personaje y da puntos; la ventaja de forja permite fabricar. */
