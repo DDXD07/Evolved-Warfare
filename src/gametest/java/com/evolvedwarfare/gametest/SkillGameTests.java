@@ -77,7 +77,7 @@ public class SkillGameTests implements FabricGameTest {
 	 * Golpear con una daga sube Hojas; llevar hierro y recibir golpes sube la armadura pesada (el golpe al jugador, pasados
 	 * los 3 s en que un jugador recién entrado no recibe daño).
 	 */
-	@GameTest(templateName = EMPTY_STRUCTURE, timeoutTicks = 200)
+	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 200)
 	public void skillsRiseWithUse(TestContext ctx) {
 		floor(ctx);
 		ServerPlayerEntity player = ctx.createMockCreativeServerPlayerInWorld();
