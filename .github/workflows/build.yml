@@ -60,11 +60,12 @@ jobs:
       - name: run game tests
         run: |
           mkdir -p build/gametest && echo "eula=true" > build/gametest/eula.txt
-          ./gradlew runGametest --stacktrace
+          set -o pipefail
+          ./gradlew runGametest --stacktrace 2>&1 | tee build/gametest-gradle.log
       - name: show test results
         if: always()
         run: |
-          LOG=build/gametest/logs/latest.log
+          LOG=build/gametest-gradle.log
           grep -h "EW-GAMETEST" $LOG | head -n 10 | sed 's/^.*\[EW-GAMETEST\]/::notice::/' || true
           grep -hiE "failed|exception|error" $LOG | grep -v "EW-GAMETEST" | head -n 10 | sed 's/^/::error::/' || true
       # el registro entero, en la rama "gametest-logs" (para leerlo sin descargar artefactos)
@@ -73,6 +74,7 @@ jobs:
         run: |
           mkdir -p /tmp/gt && cp -r build/gametest/logs /tmp/gt/ 2>/dev/null || true
           cp build/gametest/junit.xml /tmp/gt/ 2>/dev/null || true
+          cp build/gametest-gradle.log /tmp/gt/ 2>/dev/null || true
           cd /tmp/gt
           git init -q -b gametest-logs
           git config user.name "github-actions[bot]"
