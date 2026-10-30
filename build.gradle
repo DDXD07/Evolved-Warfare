@@ -18,6 +18,16 @@ repositories {
 	}
 }
 
+// Pruebas dentro del juego (servidor sin pantalla): ./gradlew runGametest. No van en el .jar.
+sourceSets {
+	gametest {
+		compileClasspath += sourceSets.main.compileClasspath
+		compileClasspath += sourceSets.main.output
+		runtimeClasspath += sourceSets.main.runtimeClasspath
+		runtimeClasspath += sourceSets.main.output
+	}
+}
+
 loom {
 	splitEnvironmentSourceSets()
 
@@ -25,6 +35,20 @@ loom {
 		"evolvedwarfare" {
 			sourceSet sourceSets.main
 			sourceSet sourceSets.client
+		}
+		"evolvedwarfare-gametest" {
+			sourceSet sourceSets.gametest
+		}
+	}
+
+	runs {
+		gametest {
+			server()
+			name "Game Test"
+			source sourceSets.gametest
+			vmArg "-Dfabric-api.gametest"
+			vmArg "-Dfabric-api.gametest.report-file=${project.file('build/gametest/junit.xml')}"
+			runDir "build/gametest"
 		}
 	}
 }

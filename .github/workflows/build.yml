@@ -41,3 +41,34 @@ jobs:
           git add -A
           git commit -q -m "Build ${GITHUB_SHA}"
           git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" builds
+
+  # pruebas dentro del juego: un servidor sin pantalla coloca las máquinas de asedio, se sube y dispara
+  gametest:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v6
+      - name: setup jdk
+        uses: actions/setup-java@v5
+        with:
+          java-version: '25'
+          distribution: 'microsoft'
+      - name: make gradle wrapper executable
+        run: chmod +x ./gradlew
+      - name: run game tests
+        run: |
+          mkdir -p build/gametest && echo "eula=true" > build/gametest/eula.txt
+          ./gradlew runGametest --stacktrace
+      - name: show test results
+        if: always()
+        run: |
+          grep -h "EW-GAMETEST\|GameTest\|tests\|failed\|passed" build/gametest/logs/latest.log | tail -n 120 || true
+          cat build/gametest/junit.xml || true
+      - name: keep test logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: gametest-logs
+          path: |
+            build/gametest/logs/
+            build/gametest/junit.xml

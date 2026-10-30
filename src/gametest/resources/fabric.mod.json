@@ -1,0 +1,17 @@
+{
+	"schemaVersion": 1,
+	"id": "evolvedwarfare-gametest",
+	"version": "1.0.0",
+	"name": "Evolved Warfare: pruebas",
+	"description": "Pruebas automáticas dentro del juego (solo para desarrollo).",
+	"environment": "*",
+	"entrypoints": {
+		"fabric-gametest": [
+			"com.evolvedwarfare.gametest.SiegeGameTests"
+		]
+	},
+	"depends": {
+		"evolvedwarfare": "*",
+		"fabric-gametest-api-v1": "*"
+	}
+}
