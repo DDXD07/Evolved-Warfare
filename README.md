@@ -661,3 +661,7 @@ python3 tools/ew_jigsaw_sim.py city 60          # o desert_city, snow_city
 ## Compilar
 Cada vez que se suben cambios, GitHub Actions compila el mod (pestaña **Actions** → artefacto `evolved-warfare`).
 En un PC: `./gradlew build` (Java 21+). Para probar: `./gradlew runClient`.
+
+**Pruebas dentro del juego**: `./gradlew runGametest` arranca un servidor sin pantalla que coloca cada máquina de asedio
+(también a los pies del jugador), se sube y dispara, y comprueba que el ariete golpea. GitHub las pasa en cada cambio
+(trabajo `gametest`) y deja el registro en la rama `gametest-logs`. El código está en `src/gametest` y no va en el `.jar`.
