@@ -100,6 +100,8 @@ public class SiegeEngineEntity extends Entity {
 		super(type, world);
 		this.kind = kind;
 		this.intersectionChecked = true;
+		// initDataTracker corre dentro de super(), antes de saber qué máquina es: el total de recarga se pone aquí
+		getDataTracker().set(RELOAD_TOTAL, Math.max(1, kind.reload));
 	}
 
 	public SiegeKind getKind() {
@@ -112,7 +114,7 @@ public class SiegeEngineEntity extends Entity {
 		builder.add(RELOAD, 0);
 		builder.add(HURT, 0);
 		builder.add(STRIKE, 0);
-		builder.add(RELOAD_TOTAL, Math.max(1, kind.reload));
+		builder.add(RELOAD_TOTAL, 1); // aquí "kind" aún no existe (lo llama el constructor de Entity)
 	}
 
 	// ------------------------------------------------------------------ estado
