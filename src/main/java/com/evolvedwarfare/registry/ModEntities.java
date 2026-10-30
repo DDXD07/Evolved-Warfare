@@ -85,10 +85,10 @@ public final class ModEntities {
 					.build("pirate"));
 
 	/** Máquinas de asedio (fase 7). */
-	public static final EntityType<SiegeEngineEntity> CATAPULT = engine(SiegeKind.CATAPULT, 2.4F, 1.9F);
-	public static final EntityType<SiegeEngineEntity> BALLISTA = engine(SiegeKind.BALLISTA, 1.6F, 1.5F);
-	public static final EntityType<SiegeEngineEntity> TREBUCHET = engine(SiegeKind.TREBUCHET, 3.0F, 3.6F);
-	public static final EntityType<SiegeEngineEntity> RAM = engine(SiegeKind.RAM, 2.0F, 2.2F);
+	public static final EntityType<SiegeEngineEntity> CATAPULT = engine(SiegeKind.CATAPULT, 3.0F, 2.0F);
+	public static final EntityType<SiegeEngineEntity> BALLISTA = engine(SiegeKind.BALLISTA, 1.6F, 1.7F);
+	public static final EntityType<SiegeEngineEntity> TREBUCHET = engine(SiegeKind.TREBUCHET, 5.0F, 6.3F);
+	public static final EntityType<SiegeEngineEntity> RAM = engine(SiegeKind.RAM, 3.0F, 2.9F);
 
 	/** Proyectiles de las máquinas (piedra, pedrusco, vasija incendiaria, virote). */
 	public static final EntityType<SiegeShotEntity> SIEGE_SHOT = Registry.register(Registries.ENTITY_TYPE,

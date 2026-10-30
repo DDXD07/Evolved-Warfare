@@ -47,7 +47,9 @@ public final class MusketControls {
 		if (player == null || client.interactionManager == null) {
 			return;
 		}
-		boolean musket = holdsMusket(player) && !player.isSpectator();
+		// montado en una máquina de asedio el clic izquierdo es su cámara aérea
+		boolean musket = holdsMusket(player) && !player.isSpectator()
+				&& !(player.getVehicle() instanceof com.evolvedwarfare.siege.SiegeEngineEntity);
 		if (musket && client.currentScreen == null) {
 			while (client.options.attackKey.wasPressed()) {
 				fire(player);

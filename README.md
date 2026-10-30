@@ -370,9 +370,9 @@ Las dos se pueden asaltar (como las aldeas y la ciudad medieval).
 ### Las máquinas
 | Máquina | Receta | Qué hace | Munición |
 |---|---|---|---|
-| **Catapulta** | tronco arriba a la derecha; cuerda, tronco, cuerda; tablón, lingote de hierro, tablón | Piedras en parábola, hasta unos 55 bloques; rompen piedra y madera alrededor del impacto | 1 piedra o 1 vasija incendiaria |
+| **Catapulta** | tronco arriba a la derecha; cuerda, tronco, cuerda; tablón, lingote de hierro, tablón | Piedras en parábola, de unos 35 a 57 bloques; rompen piedra y madera alrededor del impacto | 1 piedra o 1 vasija incendiaria |
 | **Balista** | hierro, ballesta, hierro; cuerda, tronco, cuerda; tablón, —, tablón | Tiro tenso hasta más de 150 bloques: mucho daño a una sola cosa (también a otras máquinas); rompe cristal y hojas | 1 virote |
-| **Trebuchet** | tronco, cuerda, tronco; tronco, **catapulta**, tronco; hierro, bloque de hierro, hierro | Pedruscos hasta unos 100 bloques, con un radio mayor: derriba casi cualquier muro (hasta el hierro en el centro del impacto) | 3 piedras o 1 vasija |
+| **Trebuchet** | tronco, cuerda, tronco; tronco, **catapulta**, tronco; hierro, bloque de hierro, hierro | Casi a tamaño real (5 × 5 bloques, 6 de alto; el brazo sube hasta los 12). Pedruscos de unos 60 a 110 bloques, con un radio mayor: derriba casi cualquier muro (hasta el hierro en el centro del impacto) | 3 piedras o 1 vasija |
 | **Ariete** | 3 tablones; tronco, tronco, bloque de hierro; tablón, —, tablón | Cubierto con tejado. Golpea lo que tiene delante: daña a quien esté ahí y va rompiendo el bloque (más golpes cuanto más duro: madera 4-5, puerta de hierro 8, rastrillo 10). No rompe obsidiana ni cofres | — |
 
 - **Virotes** (lingote de hierro, palo y pluma, en columna → 4) y **vasijas incendiarias** (cuerda, ladrillo, carga ígnea y
@@ -381,8 +381,15 @@ Las dos se pueden asaltar (como las aldeas y la ciudad medieval).
 - **Ponerla**: clic derecho en el suelo; mira hacia donde mires.
 - **Manejarla**: clic derecho para subirte. **W/S** la empujan, **A/D** la giran y **Espacio** dispara (o golpea, con el
   ariete). Para apuntar, **mira el blanco**: el tiro calcula solo la elevación para caer ahí. Mientras la manejas ves el
-  recorrido con puntos y un círculo donde caerá (verde si llega, rojo si se queda corto); abajo, si está lista o
-  recargando, la munición y la vida. Recarga: balista 2 s, catapulta 3,5 s, trebuchet 7 s, ariete 1,5 s.
+  recorrido del tiro con una línea y, donde caerá, un círculo del tamaño de la zona que alcanza (verde si llega; rojo,
+  con una cruz donde apuntas, si se queda corto o se pasa); abajo, si está lista o recargando, la munición y la vida.
+  Recarga: balista 2 s, catapulta 3,5 s, trebuchet 7 s, ariete 1,5 s.
+- **Vista aérea**: montado en la catapulta, la balista o el trebuchet, **mantén el clic izquierdo** y la cámara sube por
+  encima del blanco. El ratón mueve el punto al que apuntas por el suelo (también detrás de los muros, que desde el
+  asiento no se ven), dentro del arco que cubre la máquina; arriba pone a cuántos bloques está y si llega. **Espacio**
+  dispara ahí; al soltar el clic vuelves al asiento. Montado, el clic izquierdo no pega ni rompe bloques.
+- **Dónde te sientas**: en el banco de atrás, a un lado del brazo (catapulta); en el taburete detrás del arco (balista);
+  en el banco de atrás, lejos del contrapeso (trebuchet); y dentro del ariete, a un lado del tronco.
 - **Cargarla**: clic derecho con piedras, vasijas o virotes los mete dentro (hasta 256 de cada). Si no lleva, gasta los de
   tu inventario (con la vasija en la mano, dispara vasijas).
 - **Tu soldado la maneja**: clic derecho con el **bastón de mando** y el soldado tuyo más cercano (a menos de 24 bloques)
@@ -646,7 +653,10 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
 - `ew_weapons.py` — iconos, modelos, recetas (con la mejora a netherita) y etiquetas de las armas medievales, el arco
   largo y la jabalina, y la mesa de investigación.
 - `ew_siege.py` — iconos de las máquinas de asedio y su munición, y texturas, modelos y recetas del rastrillo, el
-  puente levadizo y el torno (las máquinas se dibujan en el juego con bloques escalados, sin textura propia).
+  puente levadizo y el torno.
+- `ew_siege_models.py` (+ `ew_siege_preview.py`) — los modelos 3D de la catapulta, la balista, el trebuchet y el ariete:
+  piezas, textura, la clase `SiegeModels.java`, los asientos y vistas previas (cargada, disparando y el balanceo del
+  trebuchet).
 - `ew_village.py` — prototipo de las aldeas vanilla mejoradas (mismo algoritmo que `VillageExtras.java`) con vista previa.
 - `ew_musket.py` (+ `ew_musket_preview.py`) — el mosquete en 3D: piezas, textura, la clase `MusketModel.java` y vistas
   previas de la recarga y el disparo en primera y tercera persona.
@@ -663,5 +673,6 @@ Cada vez que se suben cambios, GitHub Actions compila el mod (pestaña **Actions
 En un PC: `./gradlew build` (Java 21+). Para probar: `./gradlew runClient`.
 
 **Pruebas dentro del juego**: `./gradlew runGametest` arranca un servidor sin pantalla que coloca cada máquina de asedio
-(también a los pies del jugador), se sube y dispara, y comprueba que el ariete golpea. GitHub las pasa en cada cambio
+(también a los pies del jugador), se sube y dispara, comprueba que el ariete golpea y que el tiro de la vista aérea va
+al punto marcado. GitHub las pasa en cada cambio
 (trabajo `gametest`) y deja el registro en la rama `gametest-logs`. El código está en `src/gametest` y no va en el `.jar`.

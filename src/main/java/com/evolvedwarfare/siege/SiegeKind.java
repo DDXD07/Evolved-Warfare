@@ -87,19 +87,19 @@ public enum SiegeKind {
 	/** Desde dónde sale el proyectil: altura y adelanto respecto al centro de la máquina. */
 	public double muzzleHeight() {
 		return switch (this) {
-			case CATAPULT -> 2.2;
-			case BALLISTA -> 1.25;
-			case TREBUCHET -> 5.5;
+			case CATAPULT -> 3.2;
+			case BALLISTA -> 1.35;
+			case TREBUCHET -> 11.0;
 			case RAM -> 1.0;
 		};
 	}
 
 	public double muzzleForward() {
 		return switch (this) {
-			case CATAPULT -> 0.6;
+			case CATAPULT -> 0.4;
 			case BALLISTA -> 1.2;
 			case TREBUCHET -> 1.5;
-			case RAM -> 2.2;
+			case RAM -> 1.8;
 		};
 	}
 }

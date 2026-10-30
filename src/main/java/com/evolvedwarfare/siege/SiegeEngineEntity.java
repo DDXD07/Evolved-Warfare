@@ -90,6 +90,14 @@ public class SiegeEngineEntity extends Entity {
 	@Nullable
 	private Vec3d lastStrikePos;
 
+	/** Lo que apunta con la cámara aérea quien la maneja (llega del cliente), y cuándo llegó. */
+	@Nullable
+	private Vec3d pilotAim;
+	private long pilotAimTime;
+	/** Cuánto ha rodado (solo en el cliente, para girar las ruedas). */
+	public float wheelTravel;
+	public float prevWheelTravel;
+
 	private int lerpTicks;
 	private double lerpX;
 	private double lerpY;
@@ -269,7 +277,10 @@ public class SiegeEngineEntity extends Entity {
 		}
 		super.tick();
 		if (getWorld().isClient) {
+			prevWheelTravel = wheelTravel;
 			tickLerp();
+			Vec3d fwd = forward();
+			wheelTravel += (float) ((getX() - prevX) * fwd.x + (getZ() - prevZ) * fwd.z);
 			return;
 		}
 		if (getReload() > 0) {
@@ -363,10 +374,36 @@ public class SiegeEngineEntity extends Entity {
 			getWorld().playSound(null, getX(), getY(), getZ(), SoundEvents.BLOCK_DISPENSER_FAIL, SoundCategory.PLAYERS, 1.0F, 1.0F);
 			return;
 		}
-		SiegeBallistics.Aim aim = SiegeBallistics.aimFor(kind, getWorld(), muzzle(), getYaw(), player);
+		Vec3d aimed = pilotAim(player);
+		SiegeBallistics.Aim aim = aimed != null ? SiegeBallistics.aimAt(kind, muzzle(), getYaw(), aimed)
+				: SiegeBallistics.aimFor(kind, getWorld(), muzzle(), getYaw(), player);
 		if (takeAmmo(player, chosen)) {
 			fire(player, aim, chosen, 0.25F);
 		}
+	}
+
+	/**
+	 * El punto que marca con la cámara aérea (clic izquierdo mantenido) quien la maneja, o null si no la está usando.
+	 * Así se puede tirar por encima de un muro a lo que hay detrás, que mirando desde el asiento no se ve.
+	 */
+	public void setPilotAim(PlayerEntity player, @Nullable Vec3d target) {
+		if (player != getFirstPassenger()) {
+			return;
+		}
+		if (target != null && (!Double.isFinite(target.x) || !Double.isFinite(target.y) || !Double.isFinite(target.z)
+				|| target.squaredDistanceTo(getPos()) > SiegeBallistics.LOOK_RANGE * SiegeBallistics.LOOK_RANGE * 1.5)) {
+			return;
+		}
+		pilotAim = target;
+		pilotAimTime = getWorld().getTime();
+	}
+
+	@Nullable
+	private Vec3d pilotAim(PlayerEntity player) {
+		if (pilotAim == null || player != getFirstPassenger() || getWorld().getTime() - pilotAimTime > 20L) {
+			return null;
+		}
+		return pilotAim;
 	}
 
 	/** La munición que toca: la de la mano si vale, si no la primera que haya (dentro de la máquina o en el inventario). */
@@ -793,16 +830,20 @@ public class SiegeEngineEntity extends Entity {
 		return getPassengerList().isEmpty() && passenger instanceof LivingEntity;
 	}
 
-	/** Dónde se sienta quien la maneja (detrás). */
+	/**
+	 * Dónde se sienta quien la maneja (el asiento de cada modelo, ver tools/ew_siege_models.py): en el banco de atrás a
+	 * un lado de la catapulta, en el taburete detrás de la balista, en el banco de atrás del trebuchet (lejos del
+	 * contrapeso) y dentro del ariete, en el banco de un lado del tronco.
+	 */
 	@Override
 	protected Vec3d getPassengerAttachmentPos(Entity passenger, EntityDimensions dimensions, float scaleFactor) {
-		double back = switch (kind) {
-			case CATAPULT -> -1.6;
-			case BALLISTA -> -1.25;
-			case TREBUCHET -> -2.2;
-			case RAM -> -0.4;
+		Vec3d seat = switch (kind) {
+			case CATAPULT -> new Vec3d(-1.5625, 0.7125, -1.5);
+			case BALLISTA -> new Vec3d(0.0, 0.525, -1.22);
+			case TREBUCHET -> new Vec3d(0.0, 0.9, -2.28);
+			case RAM -> new Vec3d(-0.5625, 0.775, -0.875);
 		};
-		return new Vec3d(0.0, 0.3, back).rotateY(-getYaw() * MathHelper.RADIANS_PER_DEGREE);
+		return seat.rotateY(-getYaw() * MathHelper.RADIANS_PER_DEGREE);
 	}
 
 	@Override

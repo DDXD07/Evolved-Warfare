@@ -66,7 +66,16 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 				com.evolvedwarfare.registry.ModItems.JAVELIN, net.minecraft.util.Identifier.ofVanilla("throwing"), (stack, world, entity, seed) ->
 						entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0F : 0.0F);
 		ClientResearch.register();
-		net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents.END_CLIENT_TICK.register(SiegeAimPreview::tick);
+		// máquinas de asedio: sus modelos 3D, la cámara aérea (clic izquierdo mantenido) y la vista previa del tiro
+		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(
+				com.evolvedwarfare.client.render.siege.SiegeModels.CATAPULT, com.evolvedwarfare.client.render.siege.SiegeModels::catapult);
+		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(
+				com.evolvedwarfare.client.render.siege.SiegeModels.BALLISTA, com.evolvedwarfare.client.render.siege.SiegeModels::ballista);
+		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(
+				com.evolvedwarfare.client.render.siege.SiegeModels.TREBUCHET, com.evolvedwarfare.client.render.siege.SiegeModels::trebuchet);
+		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(
+				com.evolvedwarfare.client.render.siege.SiegeModels.RAM, com.evolvedwarfare.client.render.siege.SiegeModels::ram);
+		SiegeAerialCamera.register();
 		HandledScreens.register(ModScreens.NPC, NpcScreen::new);
 		HandledScreens.register(ModScreens.WORK_SITE, WorkSiteScreen::new);
 		HandledScreens.register(ModScreens.BLUEPRINT, BlueprintScreen::new);

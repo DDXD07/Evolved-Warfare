@@ -99,6 +99,51 @@ public final class SiegeBallistics {
 		return (lo + hi) * 0.5F;
 	}
 
+	/**
+	 * Si no hay elevación que lo haga caer justo ahí: la que lo deja lo más cerca posible (corto si está lejos, largo si
+	 * está más cerca de lo que llega la máquina). Así la vista previa marca dónde caerá de verdad.
+	 */
+	public static float closestElevation(SiegeKind kind, double distance, double dy) {
+		float best = farthestElevation(kind);
+		double bestError = Double.MAX_VALUE;
+		for (float e = kind.minElevation; e <= kind.maxElevation + 1.0E-3F; e += 1.0F) {
+			double landing = landingDistance(kind, e, dy);
+			if (Double.isNaN(landing)) {
+				continue;
+			}
+			double error = Math.abs(landing - distance);
+			if (error < bestError) {
+				bestError = error;
+				best = e;
+			}
+		}
+		return best;
+	}
+
+	/** Distancia horizontal a la que baja a esa altura (respecto a la salida), o NaN si nunca llega a ella. */
+	private static double landingDistance(SiegeKind kind, float elevation, double dy) {
+		double e = elevation * MathHelper.RADIANS_PER_DEGREE;
+		double vx = Math.cos(e) * kind.shotSpeed;
+		double vy = Math.sin(e) * kind.shotSpeed;
+		double x = 0.0;
+		double y = 0.0;
+		for (int t = 0; t < MAX_TICKS; t++) {
+			double nx = x + vx;
+			double ny = y + vy;
+			if (vy < 0.0 && ny <= dy && y >= dy) {
+				return x + (nx - x) * (y - dy) / Math.max(1.0E-9, y - ny);
+			}
+			if (ny < -256.0) {
+				return Double.NaN;
+			}
+			x = nx;
+			y = ny;
+			vx *= DRAG;
+			vy = vy * DRAG - kind.shotGravity;
+		}
+		return Double.NaN;
+	}
+
 	/** La elevación con la que llega más lejos (para cuando el blanco está fuera de alcance). */
 	public static float farthestElevation(SiegeKind kind) {
 		float best = kind.minElevation;
@@ -149,7 +194,7 @@ public final class SiegeBallistics {
 		double distance = Math.sqrt(MathHelper.squaredHypot(target.x - muzzle.x, target.z - muzzle.z));
 		Float elevation = solve(kind, distance, target.y - muzzle.y, kind.lob);
 		boolean reachable = elevation != null;
-		float e = reachable ? elevation : farthestElevation(kind);
+		float e = reachable ? elevation : closestElevation(kind, distance, target.y - muzzle.y);
 		return new Aim(muzzle, yaw, e, velocity(yaw, e, kind.shotSpeed), target, reachable);
 	}
 

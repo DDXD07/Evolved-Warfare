@@ -4,7 +4,7 @@ import com.evolvedwarfare.screen.WarehouseScreenHandler;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
-/** Paquetes propios del mod: el terminal del almacén, la diplomacia y las armas de fuego (el resto de menús usa los botones de vanilla). */
+/** Paquetes propios del mod: el terminal del almacén, la diplomacia, las armas de fuego y la cámara aérea de las máquinas de asedio (el resto de menús usa los botones de vanilla). */
 public final class ModNetworking {
 	private ModNetworking() {
 	}
@@ -22,6 +22,13 @@ public final class ModNetworking {
 				com.evolvedwarfare.weapon.MusketItem.tryFire(context.player());
 			} else if (payload.action() == FirearmPayload.RELOAD) {
 				com.evolvedwarfare.weapon.MusketItem.tryReload(context.player());
+			}
+		});
+		PayloadTypeRegistry.playC2S().register(SiegeAimPayload.ID, SiegeAimPayload.CODEC);
+		ServerPlayNetworking.registerGlobalReceiver(SiegeAimPayload.ID, (payload, context) -> {
+			if (context.player().getVehicle() instanceof com.evolvedwarfare.siege.SiegeEngineEntity engine) {
+				engine.setPilotAim(context.player(), payload.active()
+						? new net.minecraft.util.math.Vec3d(payload.x(), payload.y(), payload.z()) : null);
 			}
 		});
 		DiplomacyNetworking.register();

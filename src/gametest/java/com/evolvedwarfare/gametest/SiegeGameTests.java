@@ -2,7 +2,9 @@ package com.evolvedwarfare.gametest;
 
 import com.evolvedwarfare.registry.ModEntities;
 import com.evolvedwarfare.registry.ModItems;
+import com.evolvedwarfare.siege.SiegeBallistics;
 import com.evolvedwarfare.siege.SiegeEngineEntity;
+import com.evolvedwarfare.siege.SiegeKind;
 import com.evolvedwarfare.siege.SiegeShotEntity;
 import java.util.List;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
@@ -20,6 +22,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,6 +116,43 @@ public class SiegeGameTests implements FabricGameTest {
 						engine.getFirstPassenger(), engine.getReload(), shots.size());
 				if (shots.isEmpty()) {
 					throw new GameTestException("No sale ningún proyectil (" + type + "): montado=" + riding + ", recarga=" + engine.getReload());
+				}
+				ctx.complete();
+			});
+		});
+	}
+
+	/**
+	 * Cámara aérea: el cliente marca un punto 45 bloques al frente y el disparo va ahí (con la parábola alta), no a lo
+	 * que mira el jugador (al cielo: eso sería el tiro más largo).
+	 */
+	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 100)
+	public void aerialAimCatapult(TestContext ctx) {
+		floor(ctx);
+		ServerPlayerEntity player = player(ctx);
+		SiegeEngineEntity engine = ctx.spawnEntity(ModEntities.CATAPULT, 4.5F, 1.0F, 4.5F);
+		boolean riding = player.startRiding(engine, true);
+		player.setPitch(-15.0F);
+		Vec3d target = ctx.getAbsolute(new Vec3d(4.5, 1.0, 49.5));
+		ctx.waitAndRun(3, () -> {
+			engine.setPilotAim(player, target);
+			SiegeBallistics.Aim expected = SiegeBallistics.aimAt(SiegeKind.CATAPULT, engine.muzzle(), engine.getYaw(), target);
+			player.setJumping(true);
+			ctx.waitAndRun(1, () -> {
+				Box around = new Box(engine.getBlockPos()).expand(48.0);
+				List<SiegeShotEntity> shots = ctx.getWorld().getEntitiesByClass(SiegeShotEntity.class, around, s -> s.getOwner() == player);
+				if (shots.isEmpty()) {
+					throw new GameTestException("No sale ningún proyectil con la cámara aérea: montado=" + riding);
+				}
+				Vec3d v = shots.get(0).getVelocity();
+				double elevation = Math.toDegrees(Math.atan2(v.y, Math.sqrt(v.x * v.x + v.z * v.z)));
+				double yaw = Math.toDegrees(Math.atan2(-v.x, v.z));
+				LOG.info("[EW-GAMETEST] cámara aérea: esperado yaw={} elev={} (llega={}), sale yaw={} elev={}", expected.yaw(),
+						expected.elevation(), expected.reachable(), yaw, elevation);
+				if (!expected.reachable() || Math.abs(elevation - expected.elevation()) > 3.0
+						|| Math.abs(MathHelper.wrapDegrees(yaw - expected.yaw())) > 2.0) {
+					throw new GameTestException("El tiro no va al punto de la cámara aérea: elevación " + elevation + " (esperada "
+							+ expected.elevation() + ")");
 				}
 				ctx.complete();
 			});
