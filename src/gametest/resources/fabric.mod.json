@@ -11,7 +11,8 @@
 			"com.evolvedwarfare.gametest.MeleeGameTests",
 			"com.evolvedwarfare.gametest.TowerGameTests",
 			"com.evolvedwarfare.gametest.SkillGameTests",
-			"com.evolvedwarfare.gametest.NpcVoiceGameTests"
+			"com.evolvedwarfare.gametest.NpcVoiceGameTests",
+			"com.evolvedwarfare.gametest.CropCrateGameTests"
 		]
 	},
 	"depends": {

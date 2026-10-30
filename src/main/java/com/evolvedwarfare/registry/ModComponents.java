@@ -54,6 +54,12 @@ public final class ModComponents {
 			ComponentType.<Long>builder().codec(com.mojang.serialization.Codec.LONG)
 					.packetCodec(net.minecraft.network.codec.PacketCodecs.VAR_LONG).build());
 
+	/** Lo que lleva una Caja de cultivos (qué cultivo y cuántos, hasta 64). */
+	public static final ComponentType<com.evolvedwarfare.item.CropCrateItem.Contents> CROP_CRATE = Registry.register(
+			Registries.DATA_COMPONENT_TYPE, EvolvedWarfare.id("crop_crate"),
+			ComponentType.<com.evolvedwarfare.item.CropCrateItem.Contents>builder().codec(com.evolvedwarfare.item.CropCrateItem.Contents.CODEC)
+					.packetCodec(com.evolvedwarfare.item.CropCrateItem.Contents.PACKET_CODEC).build());
+
 	private ModComponents() {
 	}
 

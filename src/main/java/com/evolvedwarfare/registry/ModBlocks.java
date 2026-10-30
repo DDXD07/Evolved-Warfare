@@ -85,6 +85,18 @@ public final class ModBlocks {
 			.strength(2.5F)
 			.sounds(BlockSoundGroup.WOOD)));
 
+	/** Caja de cultivos: hasta 64 de un cultivo; así los compran los comerciantes. */
+	public static final Block CROP_CRATE = Registry.register(Registries.BLOCK, EvolvedWarfare.id("crop_crate"),
+			new com.evolvedwarfare.block.CropCrateBlock(AbstractBlock.Settings.create()
+					.mapColor(MapColor.OAK_TAN)
+					.instrument(NoteBlockInstrument.BASS)
+					.strength(2.0F)
+					.sounds(BlockSoundGroup.WOOD)
+					.nonOpaque()
+					.burnable()));
+	public static final Item CROP_CRATE_ITEM = Registry.register(Registries.ITEM, EvolvedWarfare.id("crop_crate"),
+			new com.evolvedwarfare.item.CropCrateItem(CROP_CRATE, new Item.Settings().maxCount(16)));
+
 	public static final BlockEntityType<WorkSiteBlockEntity> WORK_SITE_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
 			EvolvedWarfare.id("work_site"),
 			BlockEntityType.Builder.create(WorkSiteBlockEntity::new, WORK_SITES.values().toArray(new Block[0])).build(null));
@@ -104,6 +116,10 @@ public final class ModBlocks {
 	public static final BlockEntityType<ResearchDeskBlockEntity> RESEARCH_DESK_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
 			EvolvedWarfare.id("research_desk"),
 			BlockEntityType.Builder.create(ResearchDeskBlockEntity::new, RESEARCH_DESK).build(null));
+
+	public static final BlockEntityType<com.evolvedwarfare.block.CropCrateBlockEntity> CROP_CRATE_ENTITY = Registry.register(
+			Registries.BLOCK_ENTITY_TYPE, EvolvedWarfare.id("crop_crate"),
+			BlockEntityType.Builder.create(com.evolvedwarfare.block.CropCrateBlockEntity::new, CROP_CRATE).build(null));
 
 	private ModBlocks() {
 	}

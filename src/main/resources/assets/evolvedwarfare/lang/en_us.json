@@ -935,5 +935,16 @@
   "subtitles.evolvedwarfare.npc.trader.death": "Trader dies",
   "subtitles.evolvedwarfare.npc.recruit.yes": "NPC agrees",
   "subtitles.evolvedwarfare.npc.trader.yes": "Trader agrees",
-  "subtitles.evolvedwarfare.npc.trader.no": "Trader disagrees"
+  "subtitles.evolvedwarfare.npc.trader.no": "Trader disagrees",
+  "block.evolvedwarfare.crop_crate": "Crop Crate",
+  "item.evolvedwarfare.crop_crate.filled": "Crate of %s",
+  "tooltip.evolvedwarfare.crop_crate.empty": "Empty: place it and right-click to fill it with a crop (up to 64)",
+  "tooltip.evolvedwarfare.crop_crate.count": "%s/%s %s",
+  "tooltip.evolvedwarfare.crop_crate.full": "Full: traders will buy it",
+  "tooltip.evolvedwarfare.crop_crate.not_full": "%s more to fill it (traders only buy full crates)",
+  "tooltip.evolvedwarfare.crop_crate.pickup": "Sneak + right-click with an empty hand to pick it up",
+  "gui.evolvedwarfare.crop_crate.empty": "Empty",
+  "gui.evolvedwarfare.crop_crate.full": "Full!",
+  "gui.evolvedwarfare.crop_crate.missing": "%s to go",
+  "gui.evolvedwarfare.trader.crates_only": "Crops are only bought in full crates (Crop Crate)"
 }

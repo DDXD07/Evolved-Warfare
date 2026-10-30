@@ -52,6 +52,11 @@ public final class ModScreens {
 			EvolvedWarfare.id("trader"),
 			new ExtendedScreenHandlerType<>(TraderScreenHandler::new, TraderScreenHandler.Data.PACKET_CODEC));
 
+	/** El hueco de una Caja de cultivos. Al abrirse se envía la posición de la caja. */
+	public static final ScreenHandlerType<com.evolvedwarfare.screen.CropCrateScreenHandler> CROP_CRATE = Registry.register(
+			Registries.SCREEN_HANDLER, EvolvedWarfare.id("crop_crate"),
+			new ExtendedScreenHandlerType<>(com.evolvedwarfare.screen.CropCrateScreenHandler::new, BlockPos.PACKET_CODEC));
+
 	private ModScreens() {
 	}
 

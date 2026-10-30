@@ -165,6 +165,7 @@ public final class ModItems {
 						entries.add(ModBlocks.DRAWBRIDGE);
 						entries.add(ModBlocks.GATE_WINCH);
 						entries.add(ModBlocks.RESEARCH_DESK);
+						entries.add(ModBlocks.CROP_CRATE_ITEM);
 						for (List<Item> items : WEAPONS.values()) {
 							items.forEach(entries::add);
 						}

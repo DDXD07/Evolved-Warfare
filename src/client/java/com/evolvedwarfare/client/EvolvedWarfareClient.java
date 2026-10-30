@@ -99,6 +99,12 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		HandledScreens.register(ModScreens.ROUTE_SLIP, RouteSlipScreen::new);
 		HandledScreens.register(ModScreens.SHOP, ShopScreen::new);
 		HandledScreens.register(ModScreens.TRADER, com.evolvedwarfare.client.screen.TraderScreen::new);
+		// caja de cultivos: su hueco, lo que lleva dentro (en el mundo y en el icono)
+		HandledScreens.register(ModScreens.CROP_CRATE, com.evolvedwarfare.client.screen.CropCrateScreen::new);
+		net.minecraft.client.render.block.entity.BlockEntityRendererFactories.register(ModBlocks.CROP_CRATE_ENTITY,
+				com.evolvedwarfare.client.render.CropCrateRenderer::new);
+		net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry.INSTANCE.register(ModBlocks.CROP_CRATE_ITEM,
+				com.evolvedwarfare.client.render.CropCrateRenderer.ITEM);
 		// lo que hay en la red del almacén abierto
 		ClientPlayNetworking.registerGlobalReceiver(WarehouseContentsPayload.ID, (payload, context) -> {
 			if (context.client().player != null

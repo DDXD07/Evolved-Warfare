@@ -7,7 +7,6 @@ import com.evolvedwarfare.trade.Deal;
 import java.util.List;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
@@ -189,13 +188,13 @@ public class TraderScreenHandler extends ScreenHandler {
 			return;
 		}
 		PlayerInventory inventory = player.getInventory();
-		int have = count(inventory, deal.item());
+		int have = count(inventory, deal);
 		int lots = Math.min(have / deal.count(), many ? left : 1);
 		if (lots <= 0) {
-			player.sendMessage(Text.translatable("message.evolvedwarfare.trader.missing", deal.count(), deal.item().getName()), true);
+			player.sendMessage(Text.translatable("message.evolvedwarfare.trader.missing", deal.count(), deal.prototype().getName()), true);
 			return;
 		}
-		take(inventory, deal.item(), deal.count() * lots);
+		take(inventory, deal, deal.count() * lots);
 		Market.giveCoins(inventory, (long) deal.price() * lots);
 		trader.consumeStock(index, lots);
 		done(player, lots, deal);
@@ -207,32 +206,28 @@ public class TraderScreenHandler extends ScreenHandler {
 		sendContentUpdates();
 	}
 
-	/** Objetos "limpios" (sin nombre, encantamientos ni daño) de ese tipo que lleva el jugador. */
-	private static int count(PlayerInventory inventory, Item item) {
+	/** Cuántos de los que le valen a esa línea lleva el jugador (objetos "limpios"; los cultivos, en cajas llenas). */
+	public static int count(PlayerInventory inventory, Deal deal) {
 		int total = 0;
 		for (int i = 0; i < inventory.size(); i++) {
 			ItemStack stack = inventory.getStack(i);
-			if (plain(stack, item)) {
+			if (deal.accepts(stack)) {
 				total += stack.getCount();
 			}
 		}
 		return total;
 	}
 
-	private static void take(PlayerInventory inventory, Item item, int amount) {
+	private static void take(PlayerInventory inventory, Deal deal, int amount) {
 		for (int i = 0; i < inventory.size() && amount > 0; i++) {
 			ItemStack stack = inventory.getStack(i);
-			if (plain(stack, item)) {
+			if (deal.accepts(stack)) {
 				int n = Math.min(amount, stack.getCount());
 				stack.decrement(n);
 				amount -= n;
 			}
 		}
 		inventory.markDirty();
-	}
-
-	private static boolean plain(ItemStack stack, Item item) {
-		return !stack.isEmpty() && stack.isOf(item) && stack.getComponentChanges().isEmpty();
 	}
 
 	// ------------------------------------------------------------------ ranuras

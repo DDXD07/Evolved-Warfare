@@ -132,7 +132,7 @@ public class TraderScreen extends HandledScreen<TraderScreenHandler> {
 		int total = 0;
 		for (int i = 0; i < inventory.size(); i++) {
 			ItemStack stack = inventory.getStack(i);
-			if (!stack.isEmpty() && stack.isOf(deal.item()) && stack.getComponentChanges().isEmpty()) {
+			if (deal.accepts(stack)) {
 				total += stack.getCount();
 			}
 		}
@@ -363,6 +363,9 @@ public class TraderScreen extends HandledScreen<TraderScreenHandler> {
 		int total = deal.stock() * deal.count();
 		lines.add((deal.sell() ? Text.translatable("gui.evolvedwarfare.trader.left", left, total)
 				: Text.translatable("gui.evolvedwarfare.trader.left_buy", left, total, carried(deal))).formatted(Formatting.GRAY));
+		if (!deal.sell() && com.evolvedwarfare.item.CropCrateItem.contents(stack) != null) {
+			lines.add(Text.translatable("gui.evolvedwarfare.trader.crates_only").formatted(Formatting.DARK_GREEN));
+		}
 		return lines;
 	}
 

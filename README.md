@@ -606,6 +606,26 @@ monstruos y asaltantes (que también van a por ellos, así que defiende el merca
 | **Mercader de especias** | ciudades del desierto | azúcar, cacao, tintes...; luego polvo de blaze, lágrimas de ghast, aliento de dragón, cajas de shulker |
 | **Peletero** | ciudades del norte | cuero, ropa de cuero, hielo...; luego armadura de lobo, caparazón de tortuga y tótems |
 
+### Caja de cultivos
+
+Los comerciantes **ya no compran los cultivos sueltos: solo en cajas llenas**. La **Caja de cultivos** se fabrica con
+dos palos arriba (`S _ S`), dos tablones a los lados (`P _ P`) y tres tablones abajo (`P P P`).
+
+- **Llenarla**: ponla en el suelo y haz clic derecho. Tiene **un hueco** donde cabe un solo cultivo, **hasta 64**. La
+  pantalla te dice cuántos lleva y cuántos faltan. También la llenan las **tolvas**.
+- **Se ve por dentro**: la caja vacía enseña el fondo; al meterle algo, el cultivo aparece amontonado dentro, más alto
+  cuanto más lleva, sobre una cama de paja. Las calabazas, los melones y los cactus se ven como cubitos.
+- **Llevártela**: **agáchate y haz clic derecho con la mano vacía**. La caja pasa a tu mano con todo lo de dentro, y en
+  el inventario se llama *Caja de trigo*, *Caja de zanahorias*… con su icono lleno. Al ponerla otra vez sigue llena, y
+  si la rompes suelta la caja con lo suyo (en creativo también). Las cajas iguales se apilan (hasta 16).
+- **Venderla**: el tendero y el mercader de especias compran **una caja llena por lote**, al precio de sus 64 cultivos y
+  un 10 % más por venir en caja. Compran tantas cajas al día como cultivos sueltos movían antes (2 como mínimo). Una caja
+  a medio llenar no la compran.
+- **Qué cabe**: trigo, zanahorias, patatas, remolachas, rodajas de melón, melones, calabazas, bayas dulces, bayas
+  luminosas, cacao, caña de azúcar, cactus, bambú, verrugas del Nether y manzanas. Se pueden añadir más con la etiqueta
+  `evolvedwarfare:crate_crops`.
+- El mercader de tu pueblo sigue vendiendo los excedentes del almacén sueltos.
+
 ### La tienda
 
 Clic derecho a un comerciante abre su **tienda con todo el catálogo a la vez**, en fichas:
@@ -732,6 +752,8 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
 - `ew_voices.py` — las voces de los NPCs, sintetizadas por formantes (un timbre por facción, sus frases y quejas), sus
   entradas en `sounds.json` y los subtítulos; con `--preview carpeta` dibuja el espectrograma de cada voz.
 - `ew_pouch.py` — iconos de la Bolsa de Gloria y de la bolsa de munición.
+- `ew_crate.py` — la Caja de cultivos: texturas, modelo, pantalla, receta, botín (suelta la caja llena), la etiqueta de
+  lo que cabe y los textos.
 
 ```
 python3 tools/ew_structures.py src/main/resources/data/evolvedwarfare
@@ -747,5 +769,7 @@ En un PC: `./gradlew build` (Java 21+). Para probar: `./gradlew runClient`.
 al punto marcado; que el golpe con cada arma dura lo que le toca; y 800 torres de vigilancia (se suben, todos sus bloques
 existen, salen distintas) y una colocada de verdad con su botín y sus reclutas; y que el árbol de habilidades está bien
 hecho, que las habilidades suben al usarlas y dan puntos, que las ventajas desbloquean la fabricación y suman daño, y que
-la investigación de antes pasa al árbol; y que cada facción habla con su voz y todos sus sonidos existen. GitHub las pasa en cada cambio
+la investigación de antes pasa al árbol; y que cada facción habla con su voz y todos sus sonidos existen; y que la
+Caja de cultivos guarda un solo cultivo hasta 64, se coge y se pone sin perder nada, y que los comerciantes solo compran
+los cultivos en cajas llenas. GitHub las pasa en cada cambio
 (trabajo `gametest`) y deja el registro en la rama `gametest-logs`. El código está en `src/gametest` y no va en el `.jar`.

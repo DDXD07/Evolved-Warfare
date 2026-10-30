@@ -1,6 +1,8 @@
 package com.evolvedwarfare.trade;
 
+import com.evolvedwarfare.item.CropCrateItem;
 import com.evolvedwarfare.logistics.Market;
+import com.evolvedwarfare.registry.ModBlocks;
 import com.evolvedwarfare.registry.ModItems;
 import com.evolvedwarfare.weapon.WeaponType;
 import com.evolvedwarfare.world.CityLevels;
@@ -25,7 +27,8 @@ import org.jetbrains.annotations.Nullable;
  * comprar y vender en cualquier ciudad; las de más nivel (más lejos del punto de aparición) cobran un recargo encima:
  * cada nivel por encima del 1 sube los precios de venta un 10 % (configurable). De cada cosa mueven al menos 20 unidades
  * al día, y reponen cada mañana. Lo que te compran lo pagan a la mitad del precio nuevo,
- * igual en todas partes. Cada comerciante tiene sus propios precios (±10 %), así que conviene comparar.</p>
+ * igual en todas partes. Cada comerciante tiene sus propios precios (±10 %), así que conviene comparar. Los cultivos solo
+ * los compran en {@link CropCrateItem cajas} llenas.</p>
  *
  * <p>Los precios salen del valor de cada cosa: dentro de una rareza, el doble de valor cuesta el doble (así fabricar o
  * deshacer cosas no da dinero gratis); solo se recorta lo que se saldría del rango.</p>
@@ -48,6 +51,10 @@ public enum TraderType {
 
 	/** Variación de precios entre comerciantes. */
 	private static final double VARIANCE = 0.10;
+	/** Lo que pagan de más por los cultivos en caja (la caja también cuesta). */
+	private static final double CRATE_BONUS = 1.10;
+	/** Cajas que compran al día como mínimo. */
+	private static final int MIN_CRATES = 2;
 
 	/** Color del delantal (peto de cuero teñido). */
 	public final int apron;
@@ -286,7 +293,17 @@ public enum TraderType {
 				// que costaría en su rareza)
 				double reference = pricing.sold().getOrDefault(entry.item(), fair);
 				int[] lot = buyLot(0.5 * reference * variance, entry.count(), maxCount);
-				buys.add(new Deal(false, new ItemStack(entry.item()), lot[0], lot[1], dailyLots(tier.buyStock, lot[0]), tier, -1));
+				int daily = dailyLots(tier.buyStock, lot[0]);
+				if (CropCrateItem.isCrop(entry.item())) {
+					// los cultivos, solo en cajas llenas: una caja por lote, lo que vale lo de dentro (y un poco más por
+					// venir en caja), y tantas cajas al día como cultivos sueltos movía
+					int inside = CropCrateItem.capacity(entry.item());
+					int price = Math.max(1, niceFloor(0.5 * reference * variance * inside * CRATE_BONUS));
+					int crates = Math.max(MIN_CRATES, (int) Math.round(daily * lot[0] / (double) inside));
+					buys.add(new Deal(false, CropCrateItem.filled(ModBlocks.CROP_CRATE_ITEM, entry.item()), 1, price, crates, tier, -1));
+				} else {
+					buys.add(new Deal(false, new ItemStack(entry.item()), lot[0], lot[1], daily, tier, -1));
+				}
 			}
 			index++;
 		}

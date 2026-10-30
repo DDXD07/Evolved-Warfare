@@ -27,6 +27,14 @@ public record Deal(boolean sell, ItemStack prototype, int count, int price, int 
 		return prototype.copyWithCount(count);
 	}
 
+	/**
+	 * Si ese objeto le vale para esta línea: el mismo, sin nombre, encantamientos ni daño; y si es una caja de cultivos,
+	 * llena de ese cultivo.
+	 */
+	public boolean accepts(ItemStack stack) {
+		return !stack.isEmpty() && ItemStack.areItemsAndComponentsEqual(stack, prototype);
+	}
+
 	@Nullable
 	public Quality quality() {
 		Quality[] all = Quality.values();

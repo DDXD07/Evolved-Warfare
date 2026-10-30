@@ -1,0 +1,295 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": true,
+  "textures": {
+    "particle": "evolvedwarfare:block/crop_crate_side",
+    "side": "evolvedwarfare:block/crop_crate_side",
+    "inside": "evolvedwarfare:block/crop_crate_inside",
+    "rim": "evolvedwarfare:block/crop_crate_rim",
+    "floor": "evolvedwarfare:block/crop_crate_floor",
+    "bottom": "evolvedwarfare:block/crop_crate_bottom"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        2,
+        16
+      ],
+      "faces": {
+        "down": {
+          "texture": "#bottom",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "cullface": "down"
+        },
+        "up": {
+          "texture": "#floor",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "north": {
+          "texture": "#side",
+          "uv": [
+            0,
+            14,
+            16,
+            16
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#side",
+          "uv": [
+            0,
+            14,
+            16,
+            16
+          ],
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#side",
+          "uv": [
+            0,
+            14,
+            16,
+            16
+          ],
+          "cullface": "west"
+        },
+        "east": {
+          "texture": "#side",
+          "uv": [
+            0,
+            14,
+            16,
+            16
+          ],
+          "cullface": "east"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        2,
+        0
+      ],
+      "to": [
+        16,
+        15,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#side",
+          "uv": [
+            0,
+            1,
+            16,
+            14
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#inside",
+          "uv": [
+            0,
+            1,
+            16,
+            14
+          ]
+        },
+        "up": {
+          "texture": "#rim",
+          "uv": [
+            0,
+            0,
+            16,
+            2
+          ]
+        },
+        "west": {
+          "texture": "#side",
+          "uv": [
+            0,
+            1,
+            2,
+            14
+          ],
+          "cullface": "west"
+        },
+        "east": {
+          "texture": "#side",
+          "uv": [
+            14,
+            1,
+            16,
+            14
+          ],
+          "cullface": "east"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        2,
+        14
+      ],
+      "to": [
+        16,
+        15,
+        16
+      ],
+      "faces": {
+        "south": {
+          "texture": "#side",
+          "uv": [
+            0,
+            1,
+            16,
+            14
+          ],
+          "cullface": "south"
+        },
+        "north": {
+          "texture": "#inside",
+          "uv": [
+            0,
+            1,
+            16,
+            14
+          ]
+        },
+        "up": {
+          "texture": "#rim",
+          "uv": [
+            0,
+            14,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#side",
+          "uv": [
+            14,
+            1,
+            16,
+            14
+          ],
+          "cullface": "west"
+        },
+        "east": {
+          "texture": "#side",
+          "uv": [
+            0,
+            1,
+            2,
+            14
+          ],
+          "cullface": "east"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        2,
+        2
+      ],
+      "to": [
+        2,
+        15,
+        14
+      ],
+      "faces": {
+        "west": {
+          "texture": "#side",
+          "uv": [
+            2,
+            1,
+            14,
+            14
+          ],
+          "cullface": "west"
+        },
+        "east": {
+          "texture": "#inside",
+          "uv": [
+            2,
+            1,
+            14,
+            14
+          ]
+        },
+        "up": {
+          "texture": "#rim",
+          "uv": [
+            0,
+            2,
+            2,
+            14
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        14,
+        2,
+        2
+      ],
+      "to": [
+        16,
+        15,
+        14
+      ],
+      "faces": {
+        "east": {
+          "texture": "#side",
+          "uv": [
+            2,
+            1,
+            14,
+            14
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#inside",
+          "uv": [
+            2,
+            1,
+            14,
+            14
+          ]
+        },
+        "up": {
+          "texture": "#rim",
+          "uv": [
+            14,
+            2,
+            16,
+            14
+          ]
+        }
+      }
+    }
+  ]
+}
