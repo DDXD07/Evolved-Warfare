@@ -56,15 +56,22 @@ public class SiegeGameTests implements FabricGameTest {
 		place(ctx, ModItems.BATTERING_RAM, new BlockPos(4, 0, 4));
 	}
 
-	/** Clic en el bloque donde está el propio jugador: tiene que ponerse delante. */
+	/**
+	 * Clic en el bloque donde está el propio jugador: tiene que ponerse delante. El trebuchet mide 5 × 5, así que el
+	 * jugador está en el centro del borde (fuera del suelo de la prueba puede haber cualquier cosa).
+	 */
 	@GameTest(templateName = EMPTY_STRUCTURE)
 	public void placeTrebuchetAtFeet(TestContext ctx) {
-		place(ctx, ModItems.TREBUCHET, new BlockPos(1, 0, 1));
+		floor(ctx);
+		place(ctx, player(ctx, 4.5, 1.5), ModItems.TREBUCHET, new BlockPos(4, 0, 1));
 	}
 
 	private static void place(TestContext ctx, Item item, BlockPos ground) {
 		floor(ctx);
-		ServerPlayerEntity player = player(ctx);
+		place(ctx, player(ctx), item, ground);
+	}
+
+	private static void place(TestContext ctx, ServerPlayerEntity player, Item item, BlockPos ground) {
 		ItemStack stack = new ItemStack(item);
 		player.setStackInHand(Hand.MAIN_HAND, stack);
 		BlockPos abs = ctx.getAbsolutePos(ground);
@@ -189,8 +196,12 @@ public class SiegeGameTests implements FabricGameTest {
 
 	/** Un jugador en creativo, de pie en (1,5; 1; 1,5) mirando hacia +Z (sur) y un poco al suelo. */
 	private static ServerPlayerEntity player(TestContext ctx) {
+		return player(ctx, 1.5, 1.5);
+	}
+
+	private static ServerPlayerEntity player(TestContext ctx, double x, double z) {
 		ServerPlayerEntity player = ctx.createMockCreativeServerPlayerInWorld();
-		Vec3d pos = ctx.getAbsolute(new Vec3d(1.5, 1.0, 1.5));
+		Vec3d pos = ctx.getAbsolute(new Vec3d(x, 1.0, z));
 		player.refreshPositionAndAngles(pos.x, pos.y, pos.z, 0.0F, 30.0F);
 		return player;
 	}
