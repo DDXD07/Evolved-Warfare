@@ -17,8 +17,6 @@ import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 
@@ -204,7 +202,6 @@ public class TraderScreenHandler extends ScreenHandler {
 	}
 
 	private void done(ServerPlayerEntity player, int lots, Deal deal) {
-		player.getWorld().playSound(null, trader.getBlockPos(), SoundEvents.ENTITY_VILLAGER_TRADE, SoundCategory.NEUTRAL, 0.7F, 1.0F);
 		player.addExperience(Math.max(1, lots * (1 + deal.tier().ordinal())));
 		trader.onTrade(player);
 		sendContentUpdates();

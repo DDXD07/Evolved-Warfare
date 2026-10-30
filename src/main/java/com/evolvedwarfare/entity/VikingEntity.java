@@ -3,11 +3,9 @@ package com.evolvedwarfare.entity;
 import com.evolvedwarfare.faction.Faction;
 import java.util.List;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
@@ -95,20 +93,5 @@ public class VikingEntity extends FactionNpcEntity {
 			addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 100, 0));
 			playSound(SoundEvents.ENTITY_RAVAGER_ROAR, 0.8F, 1.4F);
 		}
-	}
-
-	@Override
-	protected SoundEvent getAmbientSound() {
-		return SoundEvents.ENTITY_VINDICATOR_AMBIENT;
-	}
-
-	@Override
-	protected SoundEvent getHurtSound(DamageSource source) {
-		return SoundEvents.ENTITY_VINDICATOR_HURT;
-	}
-
-	@Override
-	protected SoundEvent getDeathSound() {
-		return SoundEvents.ENTITY_VINDICATOR_DEATH;
 	}
 }

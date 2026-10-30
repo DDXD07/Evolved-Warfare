@@ -229,6 +229,21 @@ Un oficio más (puesto con una esmeralda). Hace dos cosas:
 
 Todas las facciones son enemigas entre sí: si se cruzan, pelean.
 
+**Voces**: cada facción tiene la suya, propia del mod (ya no suenan como saqueadores, vindicadores o aldeanos). Cada NPC
+tiene además su tono, un poco más grave o más agudo, que no cambia.
+
+| Quién | Su voz | Al recibir un golpe |
+|---|---|---|
+| **Bandidos** | Voz ronca y con mucho aliento: risitas entre dientes, bufidos, un «eeeh…» desconfiado | «¡Ugh!», «¡agh!» |
+| **Vikingos** | La más grave, de pecho y rota: gritos de guerra cortos («¡huu!», «¡ja-joo!») y gruñidos | «¡Raagh!», «¡ohh!» |
+| **Piratas** | Áspera, con la erre vibrante: «¡arrr!», «¡yo-jo!» y risotadas | «¡Argh!», «¡au!» |
+| **Tu gente** (reclutas, soldados y trabajadores) | Tranquila: «¿mm?», «mm-jm» y resoplidos | «¡Uf!», «¡ah!» |
+| **Comerciantes** | Amable: «hmmm…» pensando un precio, «¡a-já!», «mm-mm» | «¡Oh!», «¡ay!» |
+
+Al morir se quejan más grave. Los reclutas dicen «mm-jm» al contratarlos; los comerciantes, «¡a-já!» al cerrar un trato
+y «mm-mm» cuando no sale. Las facciones hablan cada 8 s o más; tu gente, cada 15; los comerciantes, cada 10. Todas
+tienen subtítulos.
+
 **Asentamiento vikingo** (taigas y nieve): casa larga del jarl con hogar alargado, trono, bancos y cabezas de dragón en
 el tejado; alrededor, cabañas, herrería, círculo de piedras rúnicas, atalaya, leñera y un **drakkar** varado con vela a
 rayas y escudos en la borda.
@@ -714,6 +729,8 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
 - `ew_musket.py` (+ `ew_musket_preview.py`) — el mosquete en 3D: piezas, textura, la clase `MusketModel.java` y vistas
   previas de la recarga y el disparo en primera y tercera persona.
 - `ew_sounds.py` — sonidos sintetizados del mosquete (`.ogg`).
+- `ew_voices.py` — las voces de los NPCs, sintetizadas por formantes (un timbre por facción, sus frases y quejas), sus
+  entradas en `sounds.json` y los subtítulos; con `--preview carpeta` dibuja el espectrograma de cada voz.
 - `ew_pouch.py` — iconos de la Bolsa de Gloria y de la bolsa de munición.
 
 ```
@@ -730,5 +747,5 @@ En un PC: `./gradlew build` (Java 21+). Para probar: `./gradlew runClient`.
 al punto marcado; que el golpe con cada arma dura lo que le toca; y 800 torres de vigilancia (se suben, todos sus bloques
 existen, salen distintas) y una colocada de verdad con su botín y sus reclutas; y que el árbol de habilidades está bien
 hecho, que las habilidades suben al usarlas y dan puntos, que las ventajas desbloquean la fabricación y suman daño, y que
-la investigación de antes pasa al árbol. GitHub las pasa en cada cambio
+la investigación de antes pasa al árbol; y que cada facción habla con su voz y todos sus sonidos existen. GitHub las pasa en cada cambio
 (trabajo `gametest`) y deja el registro en la rama `gametest-logs`. El código está en `src/gametest` y no va en el `.jar`.

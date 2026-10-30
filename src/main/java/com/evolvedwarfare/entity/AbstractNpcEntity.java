@@ -1,12 +1,13 @@
 package com.evolvedwarfare.entity;
 
-import com.evolvedwarfare.config.EwConfig;
 import com.evolvedwarfare.EvolvedWarfare;
+import com.evolvedwarfare.config.EwConfig;
 import com.evolvedwarfare.entity.ai.FollowOwnerNpcGoal;
 import com.evolvedwarfare.entity.ai.ReturnHomeGoal;
 import com.evolvedwarfare.entity.ai.StayGoal;
 import com.evolvedwarfare.entity.ai.WanderNearHomeGoal;
 import com.evolvedwarfare.item.RecruitmentContractItem;
+import com.evolvedwarfare.registry.ModSounds;
 import com.evolvedwarfare.screen.NpcScreenHandler;
 import java.util.UUID;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
@@ -40,7 +41,6 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -414,7 +414,7 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 		upkeepTimer = UPKEEP_INTERVAL;
 		setOrder(NpcOrder.FOLLOW);
 		contract.decrementUnlessCreative(1, player);
-		playSound(SoundEvents.ENTITY_VILLAGER_YES, 1.0F, 1.0F);
+		playSound(ModSounds.RECRUIT_YES, 1.0F, getSoundPitch());
 		if (getWorld() instanceof ServerWorld serverWorld) {
 			serverWorld.spawnParticles(ParticleTypes.HAPPY_VILLAGER, getX(), getBodyY(0.8), getZ(), 10, 0.4, 0.5, 0.4, 0.0);
 		}
@@ -478,13 +478,29 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 	}
 
 	@Override
+	protected SoundEvent getAmbientSound() {
+		return ModSounds.RECRUIT.ambient();
+	}
+
+	@Override
 	protected SoundEvent getHurtSound(DamageSource source) {
-		return SoundEvents.ENTITY_PLAYER_HURT;
+		return ModSounds.RECRUIT.hurt();
 	}
 
 	@Override
 	protected SoundEvent getDeathSound() {
-		return SoundEvents.ENTITY_PLAYER_DEATH;
+		return ModSounds.RECRUIT.death();
+	}
+
+	@Override
+	public float getSoundPitch() {
+		return ModSounds.pitch(this);
+	}
+
+	/** Tu gente habla poco: cada 15 s o más. */
+	@Override
+	public int getMinAmbientSoundDelay() {
+		return 300;
 	}
 
 	// ------------------------------------------------------------------ guardado

@@ -10,6 +10,7 @@ import com.evolvedwarfare.entity.ai.NpcRangedAttackGoal;
 import com.evolvedwarfare.faction.Faction;
 import com.evolvedwarfare.faction.Reputation;
 import com.evolvedwarfare.item.WhiteFlagItem;
+import com.evolvedwarfare.registry.ModSounds;
 import com.evolvedwarfare.world.FactionRaids;
 import com.evolvedwarfare.world.SettlementLevels;
 import java.util.UUID;
@@ -45,7 +46,6 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -465,19 +465,39 @@ public abstract class FactionNpcEntity extends HostileEntity implements CombatNp
 		return Text.translatable("entity.evolvedwarfare." + nameKey() + "." + getRole().id());
 	}
 
+	/** La voz de su facción (tools/ew_voices.py). */
+	public ModSounds.Voice voice() {
+		return switch (getFaction()) {
+			case BANDITS -> ModSounds.BANDIT;
+			case VIKINGS -> ModSounds.VIKING;
+			case PIRATES -> ModSounds.PIRATE;
+		};
+	}
+
 	@Override
 	protected SoundEvent getAmbientSound() {
-		return SoundEvents.ENTITY_PILLAGER_AMBIENT;
+		return voice().ambient();
 	}
 
 	@Override
 	protected SoundEvent getHurtSound(DamageSource source) {
-		return SoundEvents.ENTITY_PILLAGER_HURT;
+		return voice().hurt();
 	}
 
 	@Override
 	protected SoundEvent getDeathSound() {
-		return SoundEvents.ENTITY_PILLAGER_DEATH;
+		return voice().death();
+	}
+
+	@Override
+	public float getSoundPitch() {
+		return ModSounds.pitch(this);
+	}
+
+	/** Hablan cada 8 s o más (no a cada rato, como los saqueadores). */
+	@Override
+	public int getMinAmbientSoundDelay() {
+		return 160;
 	}
 
 	// ------------------------------------------------------------------ guardado

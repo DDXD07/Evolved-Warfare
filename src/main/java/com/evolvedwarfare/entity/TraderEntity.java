@@ -1,5 +1,6 @@
 package com.evolvedwarfare.entity;
 
+import com.evolvedwarfare.registry.ModSounds;
 import com.evolvedwarfare.screen.TraderScreenHandler;
 import com.evolvedwarfare.trade.Deal;
 import com.evolvedwarfare.trade.TraderType;
@@ -317,27 +318,38 @@ public class TraderEntity extends MerchantEntity {
 	// ------------------------------------------------------------------ sonidos
 	@Override
 	protected SoundEvent getAmbientSound() {
-		return hasCustomer() ? SoundEvents.ENTITY_VILLAGER_TRADE : SoundEvents.ENTITY_VILLAGER_AMBIENT;
+		return ModSounds.TRADER.ambient();
 	}
 
 	@Override
 	protected SoundEvent getHurtSound(DamageSource source) {
-		return SoundEvents.ENTITY_VILLAGER_HURT;
+		return ModSounds.TRADER.hurt();
 	}
 
 	@Override
 	protected SoundEvent getDeathSound() {
-		return SoundEvents.ENTITY_VILLAGER_DEATH;
+		return ModSounds.TRADER.death();
 	}
 
 	@Override
 	protected SoundEvent getTradingSound(boolean sold) {
-		return sold ? SoundEvents.ENTITY_VILLAGER_YES : SoundEvents.ENTITY_VILLAGER_NO;
+		return sold ? ModSounds.TRADER_YES : ModSounds.TRADER_NO;
 	}
 
 	@Override
 	public SoundEvent getYesSound() {
-		return SoundEvents.ENTITY_VILLAGER_YES;
+		return ModSounds.TRADER_YES;
+	}
+
+	@Override
+	public float getSoundPitch() {
+		return ModSounds.pitch(this);
+	}
+
+	/** Cada 10 s o más (los aldeanos, cada 4). */
+	@Override
+	public int getMinAmbientSoundDelay() {
+		return 200;
 	}
 
 	// ------------------------------------------------------------------ guardado

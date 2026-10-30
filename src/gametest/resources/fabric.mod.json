@@ -10,7 +10,8 @@
 			"com.evolvedwarfare.gametest.SiegeGameTests",
 			"com.evolvedwarfare.gametest.MeleeGameTests",
 			"com.evolvedwarfare.gametest.TowerGameTests",
-			"com.evolvedwarfare.gametest.SkillGameTests"
+			"com.evolvedwarfare.gametest.SkillGameTests",
+			"com.evolvedwarfare.gametest.NpcVoiceGameTests"
 		]
 	},
 	"depends": {

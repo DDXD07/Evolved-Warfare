@@ -31,5 +31,163 @@
     "sounds": [
       "evolvedwarfare:musket_empty"
     ]
+  },
+  "npc.bandit.ambient": {
+    "subtitle": "subtitles.evolvedwarfare.npc.bandit.ambient",
+    "sounds": [
+      "evolvedwarfare:npc/bandit/ambient1",
+      "evolvedwarfare:npc/bandit/ambient2",
+      "evolvedwarfare:npc/bandit/ambient3"
+    ]
+  },
+  "npc.bandit.hurt": {
+    "subtitle": "subtitles.evolvedwarfare.npc.bandit.hurt",
+    "sounds": [
+      "evolvedwarfare:npc/bandit/hurt1",
+      "evolvedwarfare:npc/bandit/hurt2"
+    ]
+  },
+  "npc.bandit.death": {
+    "subtitle": "subtitles.evolvedwarfare.npc.bandit.death",
+    "sounds": [
+      {
+        "name": "evolvedwarfare:npc/bandit/hurt1",
+        "pitch": 0.78
+      },
+      {
+        "name": "evolvedwarfare:npc/bandit/hurt2",
+        "pitch": 0.78
+      }
+    ]
+  },
+  "npc.viking.ambient": {
+    "subtitle": "subtitles.evolvedwarfare.npc.viking.ambient",
+    "sounds": [
+      "evolvedwarfare:npc/viking/ambient1",
+      "evolvedwarfare:npc/viking/ambient2",
+      "evolvedwarfare:npc/viking/ambient3"
+    ]
+  },
+  "npc.viking.hurt": {
+    "subtitle": "subtitles.evolvedwarfare.npc.viking.hurt",
+    "sounds": [
+      "evolvedwarfare:npc/viking/hurt1",
+      "evolvedwarfare:npc/viking/hurt2"
+    ]
+  },
+  "npc.viking.death": {
+    "subtitle": "subtitles.evolvedwarfare.npc.viking.death",
+    "sounds": [
+      {
+        "name": "evolvedwarfare:npc/viking/hurt1",
+        "pitch": 0.78
+      },
+      {
+        "name": "evolvedwarfare:npc/viking/hurt2",
+        "pitch": 0.78
+      }
+    ]
+  },
+  "npc.pirate.ambient": {
+    "subtitle": "subtitles.evolvedwarfare.npc.pirate.ambient",
+    "sounds": [
+      "evolvedwarfare:npc/pirate/ambient1",
+      "evolvedwarfare:npc/pirate/ambient2",
+      "evolvedwarfare:npc/pirate/ambient3"
+    ]
+  },
+  "npc.pirate.hurt": {
+    "subtitle": "subtitles.evolvedwarfare.npc.pirate.hurt",
+    "sounds": [
+      "evolvedwarfare:npc/pirate/hurt1",
+      "evolvedwarfare:npc/pirate/hurt2"
+    ]
+  },
+  "npc.pirate.death": {
+    "subtitle": "subtitles.evolvedwarfare.npc.pirate.death",
+    "sounds": [
+      {
+        "name": "evolvedwarfare:npc/pirate/hurt1",
+        "pitch": 0.78
+      },
+      {
+        "name": "evolvedwarfare:npc/pirate/hurt2",
+        "pitch": 0.78
+      }
+    ]
+  },
+  "npc.recruit.ambient": {
+    "subtitle": "subtitles.evolvedwarfare.npc.recruit.ambient",
+    "sounds": [
+      "evolvedwarfare:npc/recruit/ambient1",
+      "evolvedwarfare:npc/recruit/ambient2",
+      "evolvedwarfare:npc/recruit/ambient3"
+    ]
+  },
+  "npc.recruit.hurt": {
+    "subtitle": "subtitles.evolvedwarfare.npc.recruit.hurt",
+    "sounds": [
+      "evolvedwarfare:npc/recruit/hurt1",
+      "evolvedwarfare:npc/recruit/hurt2"
+    ]
+  },
+  "npc.recruit.death": {
+    "subtitle": "subtitles.evolvedwarfare.npc.recruit.death",
+    "sounds": [
+      {
+        "name": "evolvedwarfare:npc/recruit/hurt1",
+        "pitch": 0.78
+      },
+      {
+        "name": "evolvedwarfare:npc/recruit/hurt2",
+        "pitch": 0.78
+      }
+    ]
+  },
+  "npc.recruit.yes": {
+    "subtitle": "subtitles.evolvedwarfare.npc.recruit.yes",
+    "sounds": [
+      "evolvedwarfare:npc/recruit/ambient2"
+    ]
+  },
+  "npc.trader.ambient": {
+    "subtitle": "subtitles.evolvedwarfare.npc.trader.ambient",
+    "sounds": [
+      "evolvedwarfare:npc/trader/ambient1",
+      "evolvedwarfare:npc/trader/ambient2",
+      "evolvedwarfare:npc/trader/ambient3"
+    ]
+  },
+  "npc.trader.hurt": {
+    "subtitle": "subtitles.evolvedwarfare.npc.trader.hurt",
+    "sounds": [
+      "evolvedwarfare:npc/trader/hurt1",
+      "evolvedwarfare:npc/trader/hurt2"
+    ]
+  },
+  "npc.trader.death": {
+    "subtitle": "subtitles.evolvedwarfare.npc.trader.death",
+    "sounds": [
+      {
+        "name": "evolvedwarfare:npc/trader/hurt1",
+        "pitch": 0.78
+      },
+      {
+        "name": "evolvedwarfare:npc/trader/hurt2",
+        "pitch": 0.78
+      }
+    ]
+  },
+  "npc.trader.yes": {
+    "subtitle": "subtitles.evolvedwarfare.npc.trader.yes",
+    "sounds": [
+      "evolvedwarfare:npc/trader/ambient2"
+    ]
+  },
+  "npc.trader.no": {
+    "subtitle": "subtitles.evolvedwarfare.npc.trader.no",
+    "sounds": [
+      "evolvedwarfare:npc/trader/no"
+    ]
   }
 }

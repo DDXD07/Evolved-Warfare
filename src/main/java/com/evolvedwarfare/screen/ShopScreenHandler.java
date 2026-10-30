@@ -3,6 +3,7 @@ package com.evolvedwarfare.screen;
 import com.evolvedwarfare.block.WorkSiteBlockEntity;
 import com.evolvedwarfare.logistics.Market;
 import com.evolvedwarfare.registry.ModScreens;
+import com.evolvedwarfare.registry.ModSounds;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -16,7 +17,6 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -216,7 +216,8 @@ public class ShopScreenHandler extends ScreenHandler {
 				Block.dropStack(player.getWorld(), pos.up(), rest);
 			}
 		}
-		player.getWorld().playSound(null, pos, SoundEvents.ENTITY_VILLAGER_TRADE, SoundCategory.NEUTRAL, 0.6F, 1.0F);
+		// el comerciante del puesto da el «sí»
+		player.getWorld().playSound(null, pos, ModSounds.RECRUIT_YES, SoundCategory.NEUTRAL, 0.7F, 1.0F);
 		player.sendMessage(Text.translatable("message.evolvedwarfare.shop.bought", bundle, bought.getName(), price, coin.getName()), true);
 	}
 
