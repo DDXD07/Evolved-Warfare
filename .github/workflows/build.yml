@@ -45,6 +45,8 @@ jobs:
   # pruebas dentro del juego: un servidor sin pantalla coloca las máquinas de asedio, se sube y dispara
   gametest:
     runs-on: ubuntu-24.04
+    permissions:
+      contents: write
     steps:
       - name: checkout repository
         uses: actions/checkout@v6
@@ -62,13 +64,19 @@ jobs:
       - name: show test results
         if: always()
         run: |
-          grep -h "EW-GAMETEST\|GameTest\|tests\|failed\|passed" build/gametest/logs/latest.log | tail -n 120 || true
-          cat build/gametest/junit.xml || true
-      - name: keep test logs
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: gametest-logs
-          path: |
-            build/gametest/logs/
-            build/gametest/junit.xml
+          LOG=build/gametest/logs/latest.log
+          grep -h "EW-GAMETEST" $LOG | head -n 10 | sed 's/^.*\[EW-GAMETEST\]/::notice::/' || true
+          grep -hiE "failed|exception|error" $LOG | grep -v "EW-GAMETEST" | head -n 10 | sed 's/^/::error::/' || true
+      # el registro entero, en la rama "gametest-logs" (para leerlo sin descargar artefactos)
+      - name: publish test logs
+        if: always() && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          mkdir -p /tmp/gt && cp -r build/gametest/logs /tmp/gt/ 2>/dev/null || true
+          cp build/gametest/junit.xml /tmp/gt/ 2>/dev/null || true
+          cd /tmp/gt
+          git init -q -b gametest-logs
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Gametest ${GITHUB_SHA}" || true
+          git push -q -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gametest-logs
