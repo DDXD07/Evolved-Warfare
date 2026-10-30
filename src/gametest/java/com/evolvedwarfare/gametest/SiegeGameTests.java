@@ -102,9 +102,11 @@ public class SiegeGameTests implements FabricGameTest {
 		ServerPlayerEntity player = player(ctx);
 		SiegeEngineEntity engine = ctx.spawnEntity(type, 4.5F, 1.0F, 4.5F);
 		boolean riding = player.startRiding(engine, true);
+		// mirando al frente y un poco hacia arriba, como al apuntar a algo lejos
+		player.setPitch(-15.0F);
 		ctx.waitAndRun(3, () -> {
 			player.setJumping(true);
-			ctx.waitAndRun(3, () -> {
+			ctx.waitAndRun(1, () -> {
 				Box around = new Box(engine.getBlockPos()).expand(48.0);
 				List<SiegeShotEntity> shots = ctx.getWorld().getEntitiesByClass(SiegeShotEntity.class, around, s -> s.getOwner() == player);
 				LOG.info("[EW-GAMETEST] disparar {}: montado={}, pasajero={}, recarga={}, proyectiles={}", type, riding,
