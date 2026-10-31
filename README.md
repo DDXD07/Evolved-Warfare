@@ -698,6 +698,32 @@ dos palos arriba (`S _ S`), dos tablones a los lados (`P _ P`) y tres tablones a
   ahora también el bacalao y el salmón (los peces tropicales y globo, en las ciudades de más nivel).
 - El mercader de tu pueblo sigue vendiendo los excedentes del almacén sueltos.
 
+### Buzón de Ventas
+
+Para vender sin ir a una ciudad. Se fabrica con un lingote de hierro, una **Glory Coin** y otro lingote arriba
+(`I G I`), hierro, un **cofre** y hierro en medio (`I C I`) y una **valla de madera** abajo en el centro (`_ F _`).
+
+- **El modelo**: un buzón de madera sobre un poste de abeto, con el techo redondeado, dos flejes de hierro, la puerta
+  delante (ranura de latón y una moneda pintada) y una **banderita roja** al costado. La puerta mira hacia quien lo pone.
+- **Cómo se usa**: clic derecho. Tiene **16 huecos de venta (4×4)** y, aparte, **el hueco de las monedas**. Mete lo que
+  quieras vender.
+- **Se vende solo cada día nuevo** (al amanecer, cuando cambia el día en el reloj): todo lo que tenga precio de mercado
+  se vende a **la cuarta parte de lo que cuesta nuevo** en una ciudad de nivel 1 (los comerciantes te pagan la mitad: el
+  buzón es más cómodo pero paga peor). Lo gastado vale según la durabilidad que le queda, y una Caja de víveres llena,
+  por lo que lleva dentro.
+- **Lo que no tiene precio** (tierra, por ejemplo) se queda en su hueco con el fondo en **rojo**. Al pasar el ratón por
+  encima de algo ves por cuánto se venderá. La pantalla también dice cuánto falta para la próxima venta, cuánto sacarías
+  ahora y lo que dio la última venta.
+- **Las monedas** van al hueco de las monedas. Si pasan de 64, van en una **Bolsa de Gloria** (también puedes dejar ahí
+  tu bolsa y las monedas irán dentro). Lo que sobra de una moneda (vender poquito de algo barato) se guarda para la
+  próxima venta: no se pierde nada.
+- **Al terminar la venta**: suena la campanilla del buzón, saltan monedas de la ranura con destellos verdes, se
+  **levanta la banderita** (se baja al sacar las monedas) y, si estás conectado, te llega un mensaje con lo que se ha
+  vendido y por cuánto.
+- **Es tuyo**: solo lo abre quien lo puso (y en creativo). Las **tolvas** pueden meter cosas con precio por arriba o los
+  lados y sacar las monedas por abajo.
+- Si el buzón está lejos y su zona sin cargar, vende al volver (una vez). Al romperlo suelta todo lo que tenga.
+
 ### La tienda
 
 Clic derecho a un comerciante abre su **tienda con todo el catálogo a la vez**, en fichas:

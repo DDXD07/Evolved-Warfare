@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,flag=false": {
+      "model": "evolvedwarfare:block/sales_mailbox"
+    },
+    "facing=north,flag=true": {
+      "model": "evolvedwarfare:block/sales_mailbox_flag"
+    },
+    "facing=east,flag=false": {
+      "model": "evolvedwarfare:block/sales_mailbox",
+      "y": 90
+    },
+    "facing=east,flag=true": {
+      "model": "evolvedwarfare:block/sales_mailbox_flag",
+      "y": 90
+    },
+    "facing=south,flag=false": {
+      "model": "evolvedwarfare:block/sales_mailbox",
+      "y": 180
+    },
+    "facing=south,flag=true": {
+      "model": "evolvedwarfare:block/sales_mailbox_flag",
+      "y": 180
+    },
+    "facing=west,flag=false": {
+      "model": "evolvedwarfare:block/sales_mailbox",
+      "y": 270
+    },
+    "facing=west,flag=true": {
+      "model": "evolvedwarfare:block/sales_mailbox_flag",
+      "y": 270
+    }
+  }
+}

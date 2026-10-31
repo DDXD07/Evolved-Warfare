@@ -347,7 +347,7 @@ public enum TraderType {
 	 * Lo que se calcula una vez para todos: cuántas monedas nuevas vale cada moneda de valor en cada rareza, y lo más
 	 * barato (por unidad, en una ciudad de nivel 1) que se vende cada cosa en cualquier tienda.
 	 */
-	private record Pricing(double[] factor, Map<Item, Double> sold) {
+	private record Pricing(double[] factor, Map<Item, Double> sold, Map<Item, Double> bought) {
 	}
 
 	@Nullable
@@ -372,13 +372,35 @@ public enum TraderType {
 			factor[tier.ordinal()] = factor(all, tier);
 		}
 		Map<Item, Double> sold = new HashMap<>();
+		Map<Item, Double> bought = new HashMap<>();
 		for (Entry entry : all) {
 			if (entry.sell()) {
 				int[] lot = sellLot(factor[entry.tier().ordinal()] * entry.value(), entry.count(), maxCount(entry.item()), entry.tier());
 				sold.merge(entry.item(), lot[1] / (double) lot[0], Math::min);
+			} else {
+				bought.merge(entry.item(), factor[entry.tier().ordinal()] * entry.value(), Math::min);
 			}
 		}
-		return new Pricing(factor, sold);
+		return new Pricing(factor, sold, bought);
+	}
+
+	/**
+	 * Lo que cuesta una unidad nueva en el mercado (ciudad de nivel 1, sin la variación de cada comerciante): lo más barato
+	 * que la vende alguna tienda; si ninguna la vende pero alguna la compra, lo que valdría en su rareza; y si no está en
+	 * ningún catálogo pero el mercado del pueblo la compra ({@link Market}), su valor como cosa común. 0 si no tiene
+	 * precio. Los comerciantes te pagan la mitad de esto; el Buzón de Ventas, la cuarta parte.
+	 */
+	public static double marketPrice(Item item) {
+		Pricing p = pricing();
+		Double price = p.sold().get(item);
+		if (price == null) {
+			price = p.bought().get(item);
+		}
+		if (price != null) {
+			return price;
+		}
+		Market.Price old = Market.priceOf(new ItemStack(item));
+		return old == null ? 0.0 : p.factor()[Tier.COMMON.ordinal()] * old.coins() / (double) old.items();
 	}
 
 	/**

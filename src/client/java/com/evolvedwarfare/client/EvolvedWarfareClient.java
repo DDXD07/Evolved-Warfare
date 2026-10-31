@@ -110,6 +110,7 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		HandledScreens.register(ModScreens.TRADER, com.evolvedwarfare.client.screen.TraderScreen::new);
 		// caja de cultivos: su hueco, lo que lleva dentro (en el mundo y en el icono)
 		HandledScreens.register(ModScreens.CROP_CRATE, com.evolvedwarfare.client.screen.CropCrateScreen::new);
+		HandledScreens.register(ModScreens.SALES_MAILBOX, com.evolvedwarfare.client.screen.SalesMailboxScreen::new);
 		net.minecraft.client.render.block.entity.BlockEntityRendererFactories.register(ModBlocks.CROP_CRATE_ENTITY,
 				com.evolvedwarfare.client.render.CropCrateRenderer::new);
 		net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry.INSTANCE.register(ModBlocks.CROP_CRATE_ITEM,
@@ -155,6 +156,7 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 			BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout());
 		}
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.TOWN_HALL, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.SALES_MAILBOX, RenderLayer.getCutout());
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.WAREHOUSE, RenderLayer.getCutout());
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.PORTCULLIS, RenderLayer.getCutout());
 	}

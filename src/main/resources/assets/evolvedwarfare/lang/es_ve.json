@@ -1197,5 +1197,14 @@
   "armor_class.evolvedwarfare.effect.move_speed": "velocidad al moverse",
   "armor_class.evolvedwarfare.effect.backstab": "daño por la espalda",
   "armor_class.evolvedwarfare.effect.reload_speed": "velocidad de recarga de las armas de fuego",
-  "armor_class.evolvedwarfare.effect.bullet_damage": "daño de las balas"
+  "armor_class.evolvedwarfare.effect.bullet_damage": "daño de las balas",
+  "block.evolvedwarfare.sales_mailbox": "Buzón de Ventas",
+  "block.evolvedwarfare.sales_mailbox.tooltip": "Lo que metas se vende solo cada día nuevo, a 1/4 del precio de mercado",
+  "gui.evolvedwarfare.sales_mailbox.next": "Venta en",
+  "gui.evolvedwarfare.sales_mailbox.pending": "≈ %s",
+  "gui.evolvedwarfare.sales_mailbox.last": "Última: %s → %s",
+  "gui.evolvedwarfare.sales_mailbox.worth": "Se vende por ≈ %s Glory Coins",
+  "gui.evolvedwarfare.sales_mailbox.unsellable": "No se vende: no tiene precio en el mercado",
+  "message.evolvedwarfare.sales_mailbox.sold": "Buzón de Ventas: vendidos %s objetos por %s Glory Coins (%s, %s, %s)",
+  "message.evolvedwarfare.sales_mailbox.not_yours": "Este buzón no es tuyo"
 }

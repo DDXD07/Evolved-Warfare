@@ -62,6 +62,11 @@ public final class ModScreens {
 			EvolvedWarfare.id("cart"),
 			new ExtendedScreenHandlerType<>(com.evolvedwarfare.cart.CartScreenHandler::new, PacketCodecs.VAR_INT));
 
+	/** El Buzón de Ventas. Al abrirse se envía su posición. */
+	public static final ScreenHandlerType<com.evolvedwarfare.screen.SalesMailboxScreenHandler> SALES_MAILBOX = Registry.register(
+			Registries.SCREEN_HANDLER, EvolvedWarfare.id("sales_mailbox"),
+			new ExtendedScreenHandlerType<>(com.evolvedwarfare.screen.SalesMailboxScreenHandler::new, BlockPos.PACKET_CODEC));
+
 	private ModScreens() {
 	}
 

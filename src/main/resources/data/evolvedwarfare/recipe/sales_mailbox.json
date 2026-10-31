@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "IGI",
+    "ICI",
+    " F "
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "G": {
+      "item": "evolvedwarfare:glory_coin"
+    },
+    "C": {
+      "item": "minecraft:chest"
+    },
+    "F": {
+      "tag": "minecraft:wooden_fences"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:sales_mailbox",
+    "count": 1
+  }
+}

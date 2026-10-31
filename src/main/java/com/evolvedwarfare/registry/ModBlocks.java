@@ -97,6 +97,15 @@ public final class ModBlocks {
 	public static final Item CROP_CRATE_ITEM = Registry.register(Registries.ITEM, EvolvedWarfare.id("crop_crate"),
 			new com.evolvedwarfare.item.CropCrateItem(CROP_CRATE, new Item.Settings().maxCount(16)));
 
+	/** Buzón de Ventas: vende solo lo que tiene dentro cada día nuevo, a la cuarta parte del precio de mercado. */
+	public static final Block SALES_MAILBOX = register("sales_mailbox", new com.evolvedwarfare.block.SalesMailboxBlock(
+			AbstractBlock.Settings.create()
+					.mapColor(MapColor.SPRUCE_BROWN)
+					.instrument(NoteBlockInstrument.BASS)
+					.strength(2.5F, 6.0F)
+					.sounds(BlockSoundGroup.WOOD)
+					.nonOpaque()));
+
 	public static final BlockEntityType<WorkSiteBlockEntity> WORK_SITE_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
 			EvolvedWarfare.id("work_site"),
 			BlockEntityType.Builder.create(WorkSiteBlockEntity::new, WORK_SITES.values().toArray(new Block[0])).build(null));
@@ -120,6 +129,10 @@ public final class ModBlocks {
 	public static final BlockEntityType<com.evolvedwarfare.block.CropCrateBlockEntity> CROP_CRATE_ENTITY = Registry.register(
 			Registries.BLOCK_ENTITY_TYPE, EvolvedWarfare.id("crop_crate"),
 			BlockEntityType.Builder.create(com.evolvedwarfare.block.CropCrateBlockEntity::new, CROP_CRATE).build(null));
+
+	public static final BlockEntityType<com.evolvedwarfare.block.SalesMailboxBlockEntity> SALES_MAILBOX_ENTITY = Registry.register(
+			Registries.BLOCK_ENTITY_TYPE, EvolvedWarfare.id("sales_mailbox"),
+			BlockEntityType.Builder.create(com.evolvedwarfare.block.SalesMailboxBlockEntity::new, SALES_MAILBOX).build(null));
 
 	private ModBlocks() {
 	}

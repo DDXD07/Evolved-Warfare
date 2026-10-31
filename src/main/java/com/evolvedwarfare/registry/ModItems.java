@@ -259,6 +259,7 @@ public final class ModItems {
 						entries.add(ModBlocks.GATE_WINCH);
 						entries.add(ModBlocks.RESEARCH_DESK);
 						entries.add(ModBlocks.CROP_CRATE_ITEM);
+						entries.add(ModBlocks.SALES_MAILBOX);
 						entries.add(CART_WHEEL);
 						entries.add(CART_BED);
 						entries.add(CART);

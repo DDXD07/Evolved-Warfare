@@ -13,6 +13,7 @@
 			"com.evolvedwarfare.gametest.SkillGameTests",
 			"com.evolvedwarfare.gametest.NpcVoiceGameTests",
 			"com.evolvedwarfare.gametest.CropCrateGameTests",
+			"com.evolvedwarfare.gametest.SalesMailboxGameTests",
 			"com.evolvedwarfare.gametest.GuideGameTests",
 			"com.evolvedwarfare.gametest.CartGameTests",
 			"com.evolvedwarfare.gametest.HeavyAttackGameTests",
