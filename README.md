@@ -479,6 +479,26 @@ piratas golpean igual. Las de dos manos (lanza, mandoble, alabarda y martillo) m
 
 La animación no cambia el daño ni la velocidad de ataque (los de la tabla de arriba).
 
+**Golpe fuerte.** Con cualquiera de estas armas, **mantén pulsado clic derecho** para cargar un golpe fuerte: el
+personaje echa el arma atrás (cada una a su manera) y bajo la cruz de mira sale una barrita que se va llenando. Cuando
+se llena (se pone dorada, late y suena un aviso), **suelta** y el golpe sale contra lo que tengas delante, a tu alcance,
+con el **doble de daño** (también cuentan el crítico, el barrido, los encantamientos y las ventajas del árbol). Si sueltas
+antes de que se llene, no pasa nada: el arma vuelve a su sitio. Mientras cargas vas más despacio, como al tensar un arco.
+
+| Arma | Carga | Postura cargada | El golpe fuerte |
+|---|---|---|---|
+| **Daga** | 0,5 s | La mano atrás, pegada al cuerpo | Puñalada a fondo |
+| **Lanza** | 0,8 s | La lanza atrás, en horizontal | Estocada larguísima |
+| **Mandoble** | 1 s | Alzado sobre el hombro | Tajo de lado a lado |
+| **Alabarda** | 1,2 s | Bien alta por detrás | Hachazo hasta el suelo |
+| **Martillo de guerra** | 1,3 s | Detrás de la cabeza | Mazazo con rebote |
+| **Mangual** | 1 s | El brazo arriba, volteando la bola | Golpe cruzado |
+| **Hacha de batalla** | 1,3 s | Atrás, por encima del hombro | Hachazo en diagonal |
+
+La carga dura al menos lo que tarda en llenarse la barra de ataque de cada arma. Si llevas en la otra mano algo que se
+usa con clic derecho (un escudo, comida, bloques, antorchas, lo que se lanza), el clic derecho sigue siendo para eso; con
+el hacha de batalla sobre un tronco, lo descortezas como siempre. Los demás jugadores te ven cargar y golpear.
+
 - **Arco largo** (palos, cuerdas y un lingote de hierro en el centro): flechas un 25 % más rápidas y rectas, y más daño.
   Se encanta como un arco.
 - **Jabalina** (lingote, palo y pluma en diagonal → 2): mantén pulsado clic derecho y suéltala; hace unos 9 de daño y se
@@ -775,8 +795,9 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
 - `ew_weapons.py` — iconos, recetas (con la mejora a netherita) y etiquetas de las armas medievales, el arco largo y la
   jabalina, y la mesa de investigación.
 - `ew_melee.py` (+ `ew_melee_preview.py`) — las armas cuerpo a cuerpo en 3D: piezas, texturas por material, las clases
-  `MeleeModels.java`, `MeleeAnimations.java` (fotogramas clave del golpe en primera y tercera persona) y `MeleeSwing.java`,
-  los modelos de objeto y vistas previas de cada golpe.
+  `MeleeModels.java`, `MeleeAnimations.java` (fotogramas clave del golpe, de la carga y del golpe fuerte, en primera y
+  tercera persona) y `MeleeSwing.java` (duración de cada golpe y de cada carga), los modelos de objeto y vistas previas
+  de cada golpe y del golpe fuerte.
 - `ew_siege.py` — iconos de las máquinas de asedio y su munición, y texturas, modelos y recetas del rastrillo, el
   puente levadizo y el torno.
 - `ew_siege_models.py` (+ `ew_siege_preview.py`) — los modelos 3D de la catapulta, la balista, el trebuchet y el ariete:
@@ -819,5 +840,7 @@ hecho, que las habilidades suben al usarlas y dan puntos, que las ventajas desbl
 la investigación de antes pasa al árbol; y que cada facción habla con su voz y todos sus sonidos existen; y que la
 Caja de cultivos guarda un solo cultivo hasta 64, se coge y se pone sin perder nada, se lleva con las dos manos, y que
 los comerciantes solo compran los cultivos en cajas llenas; y que la guía se da una sola vez; y la carreta (recetas,
-la cama de dos huecos, lo de dentro al quitar algo, el horno que funde, tirar tú, el caballo, dormir en ella y romperla). GitHub las pasa en cada cambio
+la cama de dos huecos, lo de dentro al quitar algo, el horno que funde, tirar tú, el caballo, dormir en ella y romperla);
+y que el golpe fuerte cargado hace el doble, que soltarlo antes no golpea y que con escudo el clic derecho sigue siendo
+del escudo. GitHub las pasa en cada cambio
 (trabajo `gametest`) y deja el registro en la rama `gametest-logs`. El código está en `src/gametest` y no va en el `.jar`.

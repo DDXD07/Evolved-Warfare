@@ -106,6 +106,7 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry.INSTANCE.register(ModBlocks.CROP_CRATE_ITEM,
 				com.evolvedwarfare.client.render.CropCrateRenderer.ITEM);
 		com.evolvedwarfare.client.render.CrateCarry.register();
+		com.evolvedwarfare.client.render.melee.MeleeHeavy.register();
 		// carreta: su modelo (con lo que lleva encima) y la pantalla de la carga
 		net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(com.evolvedwarfare.registry.ModEntities.CART,
 				com.evolvedwarfare.client.render.CartEntityRenderer::new);

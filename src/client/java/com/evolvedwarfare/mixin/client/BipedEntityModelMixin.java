@@ -15,7 +15,7 @@ public abstract class BipedEntityModelMixin {
 	@Inject(method = "setAngles(Lnet/minecraft/entity/LivingEntity;FFFFF)V", at = @At("TAIL"))
 	private void evolvedwarfare$meleeSwing(LivingEntity entity, float limbAngle, float limbDistance, float animationProgress,
 			float headYaw, float headPitch, CallbackInfo ci) {
-		MeleeArmPoses.apply((BipedEntityModel<?>) (Object) this, entity);
+		MeleeArmPoses.apply((BipedEntityModel<?>) (Object) this, entity, animationProgress);
 		CrateCarry.pose((BipedEntityModel<?>) (Object) this, entity, limbAngle, limbDistance, animationProgress);
 		com.evolvedwarfare.client.render.CartPullPose.apply((BipedEntityModel<?>) (Object) this, entity);
 	}

@@ -13,13 +13,24 @@ import net.minecraft.util.math.MathHelper;
 /**
  * Tercera persona: los brazos al golpear con un arma cuerpo a cuerpo ({@link MeleeAnimations}). Sirve para jugadores,
  * soldados, bandidos y cualquiera con cuerpo de jugador (lo llama {@code BipedEntityModelMixin} al final de setAngles).
- * Las de dos manos meten también el otro brazo si esa mano va vacía.
+ * Las de dos manos meten también el otro brazo si esa mano va vacía. También el golpe fuerte ({@link MeleeHeavy}):
+ * la postura al cargarlo, el golpe al soltarlo y la vuelta atrás si se suelta antes.
  */
 public final class MeleeArmPoses {
 	private MeleeArmPoses() {
 	}
 
-	public static void apply(BipedEntityModel<?> model, LivingEntity entity) {
+	public static void apply(BipedEntityModel<?> model, LivingEntity entity, float animationProgress) {
+		// el golpe fuerte (cargando, soltándolo o volviendo atrás): con la mano principal, a dos manos si el arma lo es
+		WeaponType held = MedievalWeapons.typeOf(entity.getMainHandStack());
+		if (held != null) {
+			MeleeHeavy.Pose heavy = MeleeHeavy.pose(entity, held, animationProgress);
+			if (heavy.active()) {
+				boolean twoHanded = MeleeSwing.twoHanded(held) && entity.getOffHandStack().isEmpty();
+				pose(model, entity, entity.getMainArm(), heavy.tp(held), twoHanded, 0.5F);
+				return;
+			}
+		}
 		float progress = model.handSwingProgress;
 		if (progress <= 0.0F) {
 			return;
@@ -30,10 +41,16 @@ public final class MeleeArmPoses {
 			return;
 		}
 		Arm arm = hand == Hand.MAIN_HAND ? entity.getMainArm() : entity.getMainArm().getOpposite();
+		Hand other = hand == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND;
+		boolean twoHanded = MeleeSwing.twoHanded(type) && entity.getStackInHand(other).isEmpty() && !entity.isUsingItem();
+		pose(model, entity, arm, MeleeAnimations.tp(type, progress), twoHanded, MathHelper.sin(progress * MathHelper.PI) * 0.5F);
+	}
+
+	/** Pone los brazos (y el giro del cuerpo) en una postura de tercera persona. */
+	private static void pose(BipedEntityModel<?> model, LivingEntity entity, Arm arm, float[] tp, boolean twoHanded, float lookWeight) {
 		float side = arm == Arm.RIGHT ? 1.0F : -1.0F;
 		ModelPart main = arm == Arm.RIGHT ? model.rightArm : model.leftArm;
 		ModelPart off = arm == Arm.RIGHT ? model.leftArm : model.rightArm;
-		float[] tp = MeleeAnimations.tp(type, progress);
 
 		float bodyYaw = rad(tp[MeleeAnimations.TP_BODY_YAW]) * side;
 		model.body.yaw = bodyYaw;
@@ -42,14 +59,13 @@ public final class MeleeArmPoses {
 		model.leftArm.pivotZ = -MathHelper.sin(bodyYaw) * 5.0F;
 		model.leftArm.pivotX = MathHelper.cos(bodyYaw) * 5.0F;
 		// el golpe va hacia donde mira (más abajo si mira al suelo)
-		float look = model.head.pitch * MathHelper.sin(progress * MathHelper.PI) * 0.5F;
+		float look = model.head.pitch * lookWeight;
 		float sneak = model.sneaking ? 0.4F : 0.0F;
 
 		main.pitch = rad(tp[MeleeAnimations.TP_ARM_PITCH]) + look + sneak;
 		main.yaw = rad(tp[MeleeAnimations.TP_ARM_YAW]) * side + bodyYaw;
 		main.roll = rad(tp[MeleeAnimations.TP_ARM_ROLL]) * side;
-		Hand other = hand == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND;
-		if (MeleeSwing.twoHanded(type) && entity.getStackInHand(other).isEmpty() && !entity.isUsingItem()) {
+		if (twoHanded) {
 			off.pitch = rad(tp[MeleeAnimations.TP_OFF_PITCH]) + look + sneak;
 			off.yaw = rad(tp[MeleeAnimations.TP_OFF_YAW]) * side + bodyYaw;
 			off.roll = rad(tp[MeleeAnimations.TP_OFF_ROLL]) * side;

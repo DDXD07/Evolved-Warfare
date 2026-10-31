@@ -196,8 +196,28 @@ def attack(name, out):
     img.save(os.path.join(out, "melee_attack_%s.png" % name))
 
 
+def heavy(out):
+    """El golpe fuerte de cada arma: cargado (1ª y 3ª persona) y el golpe al soltar (3ª), con las pistas de carga."""
+    frames = []
+    for name in M.WEAPONS:
+        saved = M.ANIMATIONS[name]
+        M.ANIMATIONS[name] = dict(saved, fp=M.heavy_keys(name, "fp"), tp=M.heavy_keys(name, "tp"))
+        try:
+            hit = M.HEAVY[name]["tp"][0][0]
+            frames.append(fp_frame(name, "iron", 0.0, TITLES[name] + ": cargado (1ª)", 360, 203))
+            frames.append(tp_frame(name, "iron", 0.0, TITLES[name] + ": cargado (3ª)", 300, 260))
+            frames.append(tp_frame(name, "iron", hit, TITLES[name] + ": ¡golpe fuerte!", 300, 260))
+        finally:
+            M.ANIMATIONS[name] = saved
+    w = max(f.width for f in frames)
+    h = max(f.height for f in frames)
+    frames = [f.resize((w, h)) if f.size != (w, h) else f for f in frames]
+    grid(frames, 6).save(os.path.join(out, "melee_heavy.png"))
+
+
 def render_all(out):
     os.makedirs(out, exist_ok=True)
     overview(out)
     for name in M.WEAPONS:
         attack(name, out)
+    heavy(out)

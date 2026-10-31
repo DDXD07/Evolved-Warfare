@@ -14,7 +14,8 @@
 			"com.evolvedwarfare.gametest.NpcVoiceGameTests",
 			"com.evolvedwarfare.gametest.CropCrateGameTests",
 			"com.evolvedwarfare.gametest.GuideGameTests",
-			"com.evolvedwarfare.gametest.CartGameTests"
+			"com.evolvedwarfare.gametest.CartGameTests",
+			"com.evolvedwarfare.gametest.HeavyAttackGameTests"
 		]
 	},
 	"depends": {

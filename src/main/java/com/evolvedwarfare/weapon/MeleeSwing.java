@@ -21,6 +21,32 @@ public final class MeleeSwing {
 		};
 	}
 
+	/** Lo que tarda en cargarse el golpe fuerte (tics, manteniendo clic derecho). */
+	public static int chargeTicks(WeaponType type) {
+		return switch (type) {
+			case DAGGER -> 10;
+			case SPEAR -> 16;
+			case LONGSWORD -> 20;
+			case HALBERD -> 24;
+			case WARHAMMER -> 26;
+			case FLAIL -> 20;
+			case BATTLE_AXE -> 26;
+		};
+	}
+
+	/** Lo que dura la animación del golpe fuerte al soltar (tics). */
+	public static int heavyTicks(WeaponType type) {
+		return switch (type) {
+			case DAGGER -> 7;
+			case SPEAR -> 9;
+			case LONGSWORD -> 12;
+			case HALBERD -> 13;
+			case WARHAMMER -> 14;
+			case FLAIL -> 12;
+			case BATTLE_AXE -> 12;
+		};
+	}
+
 	/** Si se coge con las dos manos al golpear (cuando la otra mano está libre). */
 	public static boolean twoHanded(WeaponType type) {
 		return switch (type) {

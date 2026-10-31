@@ -325,6 +325,70 @@ ANIMATIONS = {
 }
 
 
+# Golpe fuerte (mantener clic derecho): cuánto tarda en cargarse (tics; nunca menos que lo que tarda en recuperarse
+# el golpe normal), la postura con la carga completa (se llega a ella desde el reposo mientras se carga y se vuelve
+# atrás si se suelta antes), el golpe al soltar (empieza en esa postura y acaba en reposo) y lo que dura. El mangual
+# además voltea la bola mientras carga (twirl: grados por tic).
+HEAVY = {
+    # la mano atrás, pegada al cuerpo, y una puñalada a fondo
+    "dagger": dict(charge=10, ticks=7, twirl=0,
+                   windup_fp=(0.10, -0.02, 0.14, -55, 12, 0, 0),
+                   windup_tp=(-30, 25, 0, 0, 0, 0, 22, -70, 0),
+                   fp=[(0.30, -0.22, 0.12, -0.55, -85, 14, 0, 0), (0.55, -0.18, 0.08, -0.40, -78, 10, 0, 0)],
+                   tp=[(0.30, -100, -8, 0, 0, 0, 0, -24, -90, 0), (0.55, -88, -6, 0, 0, 0, 0, -14, -84, 0)]),
+    # la lanza atrás, en horizontal, y una estocada larguísima
+    "spear": dict(charge=16, ticks=9, twirl=0,
+                  windup_fp=(0.04, 0.04, 0.22, -80, 4, 0, 0),
+                  windup_tp=(-40, 25, 0, -50, 40, 0, 25, -85, 0),
+                  fp=[(0.30, -0.30, 0.14, -0.85, -86, 8, 0, 0), (0.55, -0.28, 0.12, -0.60, -85, 7, 0, 0)],
+                  tp=[(0.30, -92, -6, 0, -88, 28, 0, -26, -82, 0), (0.55, -84, -2, 0, -80, 28, 0, -16, -80, 0)]),
+    # el mandoble alzado sobre el hombro derecho y un tajo de lado a lado
+    "longsword": dict(charge=20, ticks=12, twirl=0,
+                      windup_fp=(0.0, 0.12, 0.06, 0, 0, 20, 0),
+                      windup_tp=(-150, 50, 0, -140, 60, 0, 35, 20, 0),
+                      fp=[(0.40, -0.62, 0.0, -0.20, 0, 165, -100, 0), (0.60, -0.66, -0.04, -0.08, 0, 175, -102, 0)],
+                      tp=[(0.40, -78, -60, 0, -76, -45, 0, -35, -82, 0), (0.60, -60, -52, 0, -58, -38, 0, -28, -78, 0)]),
+    # la alabarda bien alta por detrás y un hachazo hasta el suelo
+    "halberd": dict(charge=24, ticks=13, twirl=0,
+                    windup_fp=(0.02, 0.10, 0.06, 0, 0, 30, 0),
+                    windup_tp=(-175, 10, 0, -168, -20, 0, 10, 45, 0),
+                    fp=[(0.35, -0.25, -0.16, -0.40, -125, 0, 5, 0), (0.55, -0.25, -0.18, -0.34, -128, 0, 4, 0)],
+                    tp=[(0.35, -66, -6, 0, -60, 24, 0, -10, -100, 0), (0.55, -58, -6, 0, -52, 24, 0, -8, -92, 0)]),
+    # el martillo detrás de la cabeza y un mazazo con rebote
+    "warhammer": dict(charge=26, ticks=14, twirl=0,
+                      windup_fp=(0.02, 0.12, 0.08, 0, 0, 30, 0),
+                      windup_tp=(-180, 8, 0, -176, -16, 0, 0, 50, 0),
+                      fp=[(0.30, -0.30, -0.16, -0.32, -115, 0, 0, 0), (0.40, -0.30, -0.08, -0.32, -100, 0, 0, 0),
+                          (0.50, -0.30, -0.16, -0.32, -112, 0, 0, 0), (0.70, -0.22, -0.10, -0.20, -80, 0, 0, 0)],
+                      tp=[(0.30, -64, -4, 0, -60, 22, 0, -8, -100, 0), (0.40, -74, -4, 0, -70, 22, 0, -8, -90, 0),
+                          (0.50, -64, -4, 0, -60, 22, 0, -8, -100, 0), (0.70, -46, -2, 0, -42, 16, 0, -4, -70, 0)]),
+    # el brazo arriba, volteando la bola (cadena estirada), y un golpe cruzado
+    "flail": dict(charge=20, ticks=12, twirl=38,
+                  windup_fp=(0.02, 0.10, 0.04, 0, 0, 25, 1.0),
+                  windup_tp=(-160, 20, -25, 0, 0, 0, 16, 10, 1.0),
+                  fp=[(0.35, -0.40, -0.12, -0.30, -95, 0, 40, 1.0), (0.60, -0.32, -0.14, -0.22, -82, 0, 32, 0.6)],
+                  tp=[(0.35, -58, -36, 0, 0, 0, 0, -18, -65, 1.0), (0.60, -48, -30, 0, 0, 0, 0, -12, -55, 0.6)]),
+    # el hacha atrás por encima del hombro y un hachazo en diagonal
+    "battle_axe": dict(charge=26, ticks=12, twirl=0,
+                       windup_fp=(0.0, 0.12, 0.06, 0, 0, 25, 0),
+                       windup_tp=(-170, 32, 0, 0, 0, 0, 20, 35, 0),
+                       fp=[(0.35, -0.36, -0.12, -0.34, -112, 0, 34, 0), (0.55, -0.36, -0.14, -0.30, -116, 0, 36, 0)],
+                       tp=[(0.35, -60, -38, 0, 0, 0, 0, -18, -90, 0), (0.55, -52, -34, 0, 0, 0, 0, -16, -84, 0)]),
+}
+
+
+def charge_keys(name, kind):
+    """Del reposo a la postura cargada."""
+    rest = REST_FP if kind == "fp" else REST_TP
+    return [(0.0, *rest), (1.0, *HEAVY[name]["windup_" + kind])]
+
+
+def heavy_keys(name, kind):
+    """De la postura cargada al golpe y de vuelta al reposo."""
+    rest = REST_FP if kind == "fp" else REST_TP
+    return [(0.0, *HEAVY[name]["windup_" + kind]), *HEAVY[name][kind], (1.0, *rest)]
+
+
 def smooth(t):
     t = max(0.0, min(1.0, t))
     return t * t * (3 - 2 * t)
@@ -479,6 +543,22 @@ def java_swing():
     w("\t\t};")
     w("\t}")
     w("")
+    w("\t/** Lo que tarda en cargarse el golpe fuerte (tics, manteniendo clic derecho). */")
+    w("\tpublic static int chargeTicks(WeaponType type) {")
+    w("\t\treturn switch (type) {")
+    for name in WEAPONS:
+        w("\t\t\tcase %s -> %d;" % (name.upper(), HEAVY[name]["charge"]))
+    w("\t\t};")
+    w("\t}")
+    w("")
+    w("\t/** Lo que dura la animación del golpe fuerte al soltar (tics). */")
+    w("\tpublic static int heavyTicks(WeaponType type) {")
+    w("\t\treturn switch (type) {")
+    for name in WEAPONS:
+        w("\t\t\tcase %s -> %d;" % (name.upper(), HEAVY[name]["ticks"]))
+    w("\t\t};")
+    w("\t}")
+    w("")
     w("\t/** Si se coge con las dos manos al golpear (cuando la otra mano está libre). */")
     w("\tpublic static boolean twoHanded(WeaponType type) {")
     w("\t\treturn switch (type) {")
@@ -527,6 +607,12 @@ def java_animations():
             for key in a[kind]:
                 w("\t\t\t{" + ", ".join(fmt(float(v)) for v in key) + "},")
             w("\t};")
+        for track, keys in (("CHARGE", charge_keys), ("HEAVY", heavy_keys)):
+            for kind in ("fp", "tp"):
+                w("\tprivate static final float[][] %s_%s_%s = {" % (name.upper(), track, kind.upper()))
+                for key in keys(name, kind):
+                    w("\t\t\t{" + ", ".join(fmt(float(v)) for v in key) + "},")
+                w("\t};")
     w("")
     w("\tprivate MeleeAnimations() {")
     w("\t}")
@@ -539,6 +625,25 @@ def java_animations():
         w("\t\t}, progress);")
         w("\t}")
         w("")
+    for track, desc in (("charge", "Cargando el golpe fuerte: 0 = reposo, 1 = cargado del todo."),
+                        ("heavy", "El golpe fuerte al soltar: 0 = cargado, 1 = otra vez en reposo.")):
+        for kind in ("fp", "tp"):
+            w("\t/** %s */" % desc)
+            w("\tpublic static float[] %s%s(WeaponType type, float progress) {" % (track, kind.title()))
+            w("\t\treturn sample(switch (type) {")
+            for name in WEAPONS:
+                w("\t\t\tcase %s -> %s_%s_%s;" % (name.upper(), name.upper(), track.upper(), kind.upper()))
+            w("\t\t}, progress);")
+            w("\t}")
+            w("")
+    w("\t/** Cuánto voltea el arma mientras carga (grados por tic; solo el mangual). */")
+    w("\tpublic static float twirl(WeaponType type) {")
+    w("\t\treturn switch (type) {")
+    for name in WEAPONS:
+        w("\t\t\tcase %s -> %sF;" % (name.upper(), fmt(float(HEAVY[name]["twirl"])).rstrip("F")))
+    w("\t\t};")
+    w("\t}")
+    w("")
     w("\tprivate static float[] sample(float[][] keys, float progress) {")
     w("\t\tfloat p = MathHelper.clamp(progress, 0.0F, 1.0F);")
     w("\t\tint n = keys[0].length - 1;")

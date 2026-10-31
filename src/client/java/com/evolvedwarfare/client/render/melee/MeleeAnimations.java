@@ -46,6 +46,26 @@ public final class MeleeAnimations {
 			{0.62F, -82F, -4F, 0F, 0F, 0F, 0F, -10F, -80F, 0F},
 			{1F, -18F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
 	};
+	private static final float[][] DAGGER_CHARGE_FP = {
+			{0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
+			{1F, 0.1F, -0.02F, 0.14F, -55F, 12F, 0F, 0F},
+	};
+	private static final float[][] DAGGER_CHARGE_TP = {
+			{0F, -18F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
+			{1F, -30F, 25F, 0F, 0F, 0F, 0F, 22F, -70F, 0F},
+	};
+	private static final float[][] DAGGER_HEAVY_FP = {
+			{0F, 0.1F, -0.02F, 0.14F, -55F, 12F, 0F, 0F},
+			{0.3F, -0.22F, 0.12F, -0.55F, -85F, 14F, 0F, 0F},
+			{0.55F, -0.18F, 0.08F, -0.4F, -78F, 10F, 0F, 0F},
+			{1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
+	};
+	private static final float[][] DAGGER_HEAVY_TP = {
+			{0F, -30F, 25F, 0F, 0F, 0F, 0F, 22F, -70F, 0F},
+			{0.3F, -100F, -8F, 0F, 0F, 0F, 0F, -24F, -90F, 0F},
+			{0.55F, -88F, -6F, 0F, 0F, 0F, 0F, -14F, -84F, 0F},
+			{1F, -18F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
+	};
 	private static final float[][] SPEAR_FP = {
 			{0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
 			{0.18F, -0.18F, 0.1F, 0.18F, -80F, 6F, 0F, 0F},
@@ -58,6 +78,26 @@ public final class MeleeAnimations {
 			{0.18F, -48F, 14F, 0F, -58F, 38F, 0F, 18F, -40F, 0F},
 			{0.4F, -88F, -4F, 0F, -84F, 30F, 0F, -22F, -80F, 0F},
 			{0.62F, -80F, 0F, 0F, -76F, 30F, 0F, -12F, -78F, 0F},
+			{1F, -18F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
+	};
+	private static final float[][] SPEAR_CHARGE_FP = {
+			{0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
+			{1F, 0.04F, 0.04F, 0.22F, -80F, 4F, 0F, 0F},
+	};
+	private static final float[][] SPEAR_CHARGE_TP = {
+			{0F, -18F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
+			{1F, -40F, 25F, 0F, -50F, 40F, 0F, 25F, -85F, 0F},
+	};
+	private static final float[][] SPEAR_HEAVY_FP = {
+			{0F, 0.04F, 0.04F, 0.22F, -80F, 4F, 0F, 0F},
+			{0.3F, -0.3F, 0.14F, -0.85F, -86F, 8F, 0F, 0F},
+			{0.55F, -0.28F, 0.12F, -0.6F, -85F, 7F, 0F, 0F},
+			{1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
+	};
+	private static final float[][] SPEAR_HEAVY_TP = {
+			{0F, -40F, 25F, 0F, -50F, 40F, 0F, 25F, -85F, 0F},
+			{0.3F, -92F, -6F, 0F, -88F, 28F, 0F, -26F, -82F, 0F},
+			{0.55F, -84F, -2F, 0F, -80F, 28F, 0F, -16F, -80F, 0F},
 			{1F, -18F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
 	};
 	private static final float[][] LONGSWORD_FP = {
@@ -74,6 +114,26 @@ public final class MeleeAnimations {
 			{0.58F, -62F, -48F, 0F, -60F, -34F, 0F, -24F, -78F, 0F},
 			{1F, -18F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
 	};
+	private static final float[][] LONGSWORD_CHARGE_FP = {
+			{0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
+			{1F, 0F, 0.12F, 0.06F, 0F, 0F, 20F, 0F},
+	};
+	private static final float[][] LONGSWORD_CHARGE_TP = {
+			{0F, -18F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
+			{1F, -150F, 50F, 0F, -140F, 60F, 0F, 35F, 20F, 0F},
+	};
+	private static final float[][] LONGSWORD_HEAVY_FP = {
+			{0F, 0F, 0.12F, 0.06F, 0F, 0F, 20F, 0F},
+			{0.4F, -0.62F, 0F, -0.2F, 0F, 165F, -100F, 0F},
+			{0.6F, -0.66F, -0.04F, -0.08F, 0F, 175F, -102F, 0F},
+			{1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
+	};
+	private static final float[][] LONGSWORD_HEAVY_TP = {
+			{0F, -150F, 50F, 0F, -140F, 60F, 0F, 35F, 20F, 0F},
+			{0.4F, -78F, -60F, 0F, -76F, -45F, 0F, -35F, -82F, 0F},
+			{0.6F, -60F, -52F, 0F, -58F, -38F, 0F, -28F, -78F, 0F},
+			{1F, -18F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
+	};
 	private static final float[][] HALBERD_FP = {
 			{0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
 			{0.16F, 0.04F, 0.3F, 0.04F, 5F, 0F, -15F, 0F},
@@ -86,6 +146,26 @@ public final class MeleeAnimations {
 			{0.16F, -170F, 8F, 0F, -160F, -18F, 0F, 6F, 30F, 0F},
 			{0.4F, -72F, -6F, 0F, -66F, 24F, 0F, -8F, -95F, 0F},
 			{0.56F, -62F, -6F, 0F, -56F, 24F, 0F, -6F, -90F, 0F},
+			{1F, -18F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
+	};
+	private static final float[][] HALBERD_CHARGE_FP = {
+			{0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
+			{1F, 0.02F, 0.1F, 0.06F, 0F, 0F, 30F, 0F},
+	};
+	private static final float[][] HALBERD_CHARGE_TP = {
+			{0F, -18F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
+			{1F, -175F, 10F, 0F, -168F, -20F, 0F, 10F, 45F, 0F},
+	};
+	private static final float[][] HALBERD_HEAVY_FP = {
+			{0F, 0.02F, 0.1F, 0.06F, 0F, 0F, 30F, 0F},
+			{0.35F, -0.25F, -0.16F, -0.4F, -125F, 0F, 5F, 0F},
+			{0.55F, -0.25F, -0.18F, -0.34F, -128F, 0F, 4F, 0F},
+			{1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
+	};
+	private static final float[][] HALBERD_HEAVY_TP = {
+			{0F, -175F, 10F, 0F, -168F, -20F, 0F, 10F, 45F, 0F},
+			{0.35F, -66F, -6F, 0F, -60F, 24F, 0F, -10F, -100F, 0F},
+			{0.55F, -58F, -6F, 0F, -52F, 24F, 0F, -8F, -92F, 0F},
 			{1F, -18F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
 	};
 	private static final float[][] WARHAMMER_FP = {
@@ -106,6 +186,30 @@ public final class MeleeAnimations {
 			{0.72F, -50F, -2F, 0F, -46F, 16F, 0F, -4F, -70F, 0F},
 			{1F, -18F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
 	};
+	private static final float[][] WARHAMMER_CHARGE_FP = {
+			{0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
+			{1F, 0.02F, 0.12F, 0.08F, 0F, 0F, 30F, 0F},
+	};
+	private static final float[][] WARHAMMER_CHARGE_TP = {
+			{0F, -18F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
+			{1F, -180F, 8F, 0F, -176F, -16F, 0F, 0F, 50F, 0F},
+	};
+	private static final float[][] WARHAMMER_HEAVY_FP = {
+			{0F, 0.02F, 0.12F, 0.08F, 0F, 0F, 30F, 0F},
+			{0.3F, -0.3F, -0.16F, -0.32F, -115F, 0F, 0F, 0F},
+			{0.4F, -0.3F, -0.08F, -0.32F, -100F, 0F, 0F, 0F},
+			{0.5F, -0.3F, -0.16F, -0.32F, -112F, 0F, 0F, 0F},
+			{0.7F, -0.22F, -0.1F, -0.2F, -80F, 0F, 0F, 0F},
+			{1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
+	};
+	private static final float[][] WARHAMMER_HEAVY_TP = {
+			{0F, -180F, 8F, 0F, -176F, -16F, 0F, 0F, 50F, 0F},
+			{0.3F, -64F, -4F, 0F, -60F, 22F, 0F, -8F, -100F, 0F},
+			{0.4F, -74F, -4F, 0F, -70F, 22F, 0F, -8F, -90F, 0F},
+			{0.5F, -64F, -4F, 0F, -60F, 22F, 0F, -8F, -100F, 0F},
+			{0.7F, -46F, -2F, 0F, -42F, 16F, 0F, -4F, -70F, 0F},
+			{1F, -18F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
+	};
 	private static final float[][] FLAIL_FP = {
 			{0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
 			{0.15F, 0.06F, 0.25F, 0.06F, 10F, 0F, -25F, 0.7F},
@@ -120,6 +224,26 @@ public final class MeleeAnimations {
 			{0.6F, -50F, -28F, 0F, 0F, 0F, 0F, -12F, -55F, 0.6F},
 			{1F, -18F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
 	};
+	private static final float[][] FLAIL_CHARGE_FP = {
+			{0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
+			{1F, 0.02F, 0.1F, 0.04F, 0F, 0F, 25F, 1F},
+	};
+	private static final float[][] FLAIL_CHARGE_TP = {
+			{0F, -18F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
+			{1F, -160F, 20F, -25F, 0F, 0F, 0F, 16F, 10F, 1F},
+	};
+	private static final float[][] FLAIL_HEAVY_FP = {
+			{0F, 0.02F, 0.1F, 0.04F, 0F, 0F, 25F, 1F},
+			{0.35F, -0.4F, -0.12F, -0.3F, -95F, 0F, 40F, 1F},
+			{0.6F, -0.32F, -0.14F, -0.22F, -82F, 0F, 32F, 0.6F},
+			{1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
+	};
+	private static final float[][] FLAIL_HEAVY_TP = {
+			{0F, -160F, 20F, -25F, 0F, 0F, 0F, 16F, 10F, 1F},
+			{0.35F, -58F, -36F, 0F, 0F, 0F, 0F, -18F, -65F, 1F},
+			{0.6F, -48F, -30F, 0F, 0F, 0F, 0F, -12F, -55F, 0.6F},
+			{1F, -18F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
+	};
 	private static final float[][] BATTLE_AXE_FP = {
 			{0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
 			{0.18F, 0.08F, 0.28F, 0.06F, 10F, 0F, -35F, 0F},
@@ -132,6 +256,26 @@ public final class MeleeAnimations {
 			{0.18F, -165F, 28F, 0F, 0F, 0F, 0F, 16F, 25F, 0F},
 			{0.4F, -62F, -36F, 0F, 0F, 0F, 0F, -16F, -85F, 0F},
 			{0.56F, -55F, -32F, 0F, 0F, 0F, 0F, -14F, -80F, 0F},
+			{1F, -18F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
+	};
+	private static final float[][] BATTLE_AXE_CHARGE_FP = {
+			{0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
+			{1F, 0F, 0.12F, 0.06F, 0F, 0F, 25F, 0F},
+	};
+	private static final float[][] BATTLE_AXE_CHARGE_TP = {
+			{0F, -18F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
+			{1F, -170F, 32F, 0F, 0F, 0F, 0F, 20F, 35F, 0F},
+	};
+	private static final float[][] BATTLE_AXE_HEAVY_FP = {
+			{0F, 0F, 0.12F, 0.06F, 0F, 0F, 25F, 0F},
+			{0.35F, -0.36F, -0.12F, -0.34F, -112F, 0F, 34F, 0F},
+			{0.55F, -0.36F, -0.14F, -0.3F, -116F, 0F, 36F, 0F},
+			{1F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
+	};
+	private static final float[][] BATTLE_AXE_HEAVY_TP = {
+			{0F, -170F, 32F, 0F, 0F, 0F, 0F, 20F, 35F, 0F},
+			{0.35F, -60F, -38F, 0F, 0F, 0F, 0F, -18F, -90F, 0F},
+			{0.55F, -52F, -34F, 0F, 0F, 0F, 0F, -16F, -84F, 0F},
 			{1F, -18F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F},
 	};
 
@@ -160,6 +304,71 @@ public final class MeleeAnimations {
 			case FLAIL -> FLAIL_TP;
 			case BATTLE_AXE -> BATTLE_AXE_TP;
 		}, progress);
+	}
+
+	/** Cargando el golpe fuerte: 0 = reposo, 1 = cargado del todo. */
+	public static float[] chargeFp(WeaponType type, float progress) {
+		return sample(switch (type) {
+			case DAGGER -> DAGGER_CHARGE_FP;
+			case SPEAR -> SPEAR_CHARGE_FP;
+			case LONGSWORD -> LONGSWORD_CHARGE_FP;
+			case HALBERD -> HALBERD_CHARGE_FP;
+			case WARHAMMER -> WARHAMMER_CHARGE_FP;
+			case FLAIL -> FLAIL_CHARGE_FP;
+			case BATTLE_AXE -> BATTLE_AXE_CHARGE_FP;
+		}, progress);
+	}
+
+	/** Cargando el golpe fuerte: 0 = reposo, 1 = cargado del todo. */
+	public static float[] chargeTp(WeaponType type, float progress) {
+		return sample(switch (type) {
+			case DAGGER -> DAGGER_CHARGE_TP;
+			case SPEAR -> SPEAR_CHARGE_TP;
+			case LONGSWORD -> LONGSWORD_CHARGE_TP;
+			case HALBERD -> HALBERD_CHARGE_TP;
+			case WARHAMMER -> WARHAMMER_CHARGE_TP;
+			case FLAIL -> FLAIL_CHARGE_TP;
+			case BATTLE_AXE -> BATTLE_AXE_CHARGE_TP;
+		}, progress);
+	}
+
+	/** El golpe fuerte al soltar: 0 = cargado, 1 = otra vez en reposo. */
+	public static float[] heavyFp(WeaponType type, float progress) {
+		return sample(switch (type) {
+			case DAGGER -> DAGGER_HEAVY_FP;
+			case SPEAR -> SPEAR_HEAVY_FP;
+			case LONGSWORD -> LONGSWORD_HEAVY_FP;
+			case HALBERD -> HALBERD_HEAVY_FP;
+			case WARHAMMER -> WARHAMMER_HEAVY_FP;
+			case FLAIL -> FLAIL_HEAVY_FP;
+			case BATTLE_AXE -> BATTLE_AXE_HEAVY_FP;
+		}, progress);
+	}
+
+	/** El golpe fuerte al soltar: 0 = cargado, 1 = otra vez en reposo. */
+	public static float[] heavyTp(WeaponType type, float progress) {
+		return sample(switch (type) {
+			case DAGGER -> DAGGER_HEAVY_TP;
+			case SPEAR -> SPEAR_HEAVY_TP;
+			case LONGSWORD -> LONGSWORD_HEAVY_TP;
+			case HALBERD -> HALBERD_HEAVY_TP;
+			case WARHAMMER -> WARHAMMER_HEAVY_TP;
+			case FLAIL -> FLAIL_HEAVY_TP;
+			case BATTLE_AXE -> BATTLE_AXE_HEAVY_TP;
+		}, progress);
+	}
+
+	/** Cuánto voltea el arma mientras carga (grados por tic; solo el mangual). */
+	public static float twirl(WeaponType type) {
+		return switch (type) {
+			case DAGGER -> 0F;
+			case SPEAR -> 0F;
+			case LONGSWORD -> 0F;
+			case HALBERD -> 0F;
+			case WARHAMMER -> 0F;
+			case FLAIL -> 38F;
+			case BATTLE_AXE -> 0F;
+		};
 	}
 
 	private static float[] sample(float[][] keys, float progress) {

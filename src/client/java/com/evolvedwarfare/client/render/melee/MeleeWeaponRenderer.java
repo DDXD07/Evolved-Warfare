@@ -91,10 +91,13 @@ public class MeleeWeaponRenderer implements BuiltinItemRendererRegistry.DynamicI
 		float progress = holder != null ? swingProgress(holder, left ? Arm.LEFT : Arm.RIGHT, tickDelta) : 0.0F;
 		float stretch = 0.0F;
 		Vector3f down = new Vector3f(0.0F, -1.0F, 0.0F);
+		// el golpe fuerte (cargando, soltándolo o volviendo atrás) manda sobre el golpe normal, en la mano principal
+		MeleeHeavy.Pose heavy = holder != null && (left ? Arm.LEFT : Arm.RIGHT) == holder.getMainArm()
+				? MeleeHeavy.pose(holder, type, holder.age + tickDelta) : MeleeHeavy.NONE;
 
 		matrices.push();
 		if (firstPerson) {
-			float[] fp = MeleeAnimations.fp(type, progress);
+			float[] fp = heavy.active() ? heavy.fp(type) : MeleeAnimations.fp(type, progress);
 			matrices.translate(0.5F, 0.5F, 0.5F);
 			undoDisplay(matrices, FP_TRANSLATION, FP_ROTATION, FP_SCALE, side);
 			undoVanillaSwing(matrices, progress, side);
@@ -113,8 +116,8 @@ public class MeleeWeaponRenderer implements BuiltinItemRendererRegistry.DynamicI
 				float pitch = holder.getPitch(tickDelta) * MathHelper.RADIANS_PER_DEGREE;
 				down.set(0.0F, -MathHelper.cos(pitch), -MathHelper.sin(pitch));
 			}
-		} else if (thirdPerson && progress > 0.0F) {
-			float[] tp = MeleeAnimations.tp(type, progress);
+		} else if (thirdPerson && (progress > 0.0F || heavy.active())) {
+			float[] tp = heavy.active() ? heavy.tp(type) : MeleeAnimations.tp(type, progress);
 			matrices.translate(0.5F, 0.5F, 0.5F);
 			undoDisplay(matrices, TP_TRANSLATION, TP_ROTATION, TP_SCALE, side);
 			Vector3f grip = gripInHand(TP_TRANSLATION, TP_ROTATION, TP_SCALE, side);
