@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "X X",
+    "XAX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:leather"
+    },
+    "A": {
+      "item": "minecraft:rabbit_hide"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:viking_hunter_chestplate",
+    "count": 1
+  }
+}

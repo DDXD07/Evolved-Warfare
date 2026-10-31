@@ -22,10 +22,11 @@ sección con las cintas, las flechas o las teclas 1-4. Si la pierdes, se fabrica
 | 5 | **Facciones y diplomacia**: vikingos y piratas con sus asentamientos, patrullas y asaltos (también a tu pueblo); reputación con cada facción, bandera blanca, tributos, treguas, alianzas, ayuda de aliados y mercenarios | ✅ Hecha |
 | 6 | **Estructuras**: escáner de estructuras, planos, mesa del arquitecto con biblioteca y constructor que los levanta; ciudades del desierto y del norte; castillos y fortalezas del caudillo bandido | ✅ Hecha |
 | 7 | **Asedio**: catapulta, balista, trebuchet y ariete (para ti, para tus soldados y en los asaltos enemigos); rastrillo y puente levadizo con torno | ✅ Hecha |
-| 8 | **Armas medievales** (daga, lanza, mandoble, alabarda, martillo de guerra, mangual, hacha de batalla, arco largo y jabalina), **árbol de habilidades** al estilo *Skyrim* (11 habilidades que suben usándolas, 76 ventajas), **equilibrio** y **configuración** (archivo, comando y pantalla con Mod Menu) | ✅ Hecha |
+| 8 | **Armas medievales** (daga, lanza, mandoble, alabarda, martillo de guerra, mangual, hacha de batalla, arco largo y jabalina), **árbol de habilidades** al estilo *Skyrim* (11 habilidades que suben usándolas, 79 ventajas), **equilibrio** y **configuración** (archivo, comando y pantalla con Mod Menu) | ✅ Hecha |
 | 9 | **Comerciantes y niveles de las ciudades**: ciudades de nivel 1 a 10 según la distancia; tendero, armero, cantero, joyero, sastre, mercader de especias y peletero con tienda de catálogo completo por Glory Coins (Compra y Venta, al menos 20 de cada cosa al día); más nivel, mejor calidad (de gastado a obra maestra encantada) y más caras | ✅ Hecha |
 | 10 | **Armas de fuego primitivas**: mosquete de chispa (modelo 3D animado, recarga y disparo con humo), balas de mosquete, bolsa de munición (1000 balas) y **daño locacional** (cabeza, torso, brazos y piernas) | 🔨 En curso |
 | 11 | **Hordas semanales**: contador de días y reloj en pantalla; cada 7 días una horda de bandidos, vikingos o piratas ataca tu base, en oleadas y cada semana más dura | ✅ Hecha |
+| 12 | **Armaduras de las facciones**: 4 por facción (por rango), 12 en total, con modelo 3D; las llevan sus guerreros, se fabrican con ventajas de forja, salen en sus cofres y las vende el armero | ✅ Hecha |
 
 ## Fase 1 — El recluta
 
@@ -538,8 +539,8 @@ nivel sale un aviso arriba en pantalla.
 | Arquería | Tensar +10…50 % (0…80) · Jabalinas (0) · Arco largo (20) · Cazador +30 % a animales (20) · Recuperar flechas 33 % (30) · Tiro crítico (40/60/80) · Diana: cabeza +50 % (70) · Explorador +10 % de velocidad (90) |
 | Armas de fuego | Pólvora fina +10…50 % (0…80) · Recarga rápida −15…45 % (20/50/80) · Bolsillo de balas: 25 % sin gastar (30) · Pulso firme +25 % apuntando (40) · Atronador (60) · Tirador de élite: cabeza +50 % (75) |
 | Escudo | Escudo recio: se gasta hasta un 75 % menos (0/30/60) · Inamovible (20) · Guardia rápida 1,5 s (30) · Contraataque 30 % (45) · Golpe de escudo (60) · Muro de escudos: tus soldados cerca, −20 % de daño (80) |
-| Armadura pesada | Coloso +8…40 % de armadura (0…80) · Bien ajustada (30) · Firme como una roca (40) · Acolchado: caídas −50 % (50) · Conquistador +10 % de daño (60) · Devolver golpes 10 % (90) |
-| Armadura ligera | Defensa ágil +8…40 % (0…80) · Paso ligero +10 % de velocidad (20) · A medida (30) · Evasión 5…15 % (40/60/80) · Caída de gato (50) · Segundo aliento (70) |
+| Armadura pesada | Coloso +8…40 % de armadura (0…80) · Armería de facción: armaduras de rango 3 (20) · Bien ajustada (30) · Firme como una roca (40) · Forja de capitanes: armaduras de rango 4 (50) · Acolchado: caídas −50 % (50) · Conquistador +10 % de daño (60) · Devolver golpes 10 % (90) |
+| Armadura ligera | Defensa ágil +8…40 % (0…80) · Sastrería de facción: armaduras de rango 1 y 2 (0) · Paso ligero +10 % de velocidad (20) · A medida (30) · Evasión 5…15 % (40/60/80) · Caída de gato (50) · Segundo aliento (70) |
 | Liderazgo | Instrucción +20 % de vida (0) · Tácticas +15 % de daño (20) · Medicina de campaña (20) · Intendencia: 25 % de días sin paga (30) · Inspirar: fuerza cerca de ti (40) · Veteranos: doble experiencia (50) · Estandarte: resistencia cerca de ti (70) |
 | Asedio | Carpintería de asedio: ariete (0) · Fortificación: rastrillo, puente levadizo y torno (0) · Máquinas de torsión: catapulta, balista y virotes (20) · Artillero: recarga −15…45 % (20/50/80) · Ahorro 25 % (30) · Fuego de asedio: vasijas (40) · Zapador +30 % contra muros (40) · Contrapeso: trebuchet (60) |
 
@@ -826,6 +827,38 @@ No hay hordas en pacífico ni con `doMobSpawning` desactivado. Mientras dura una
 endurece cada semana; 0 = siempre como la primera) y `showDayClock` (el contador y el reloj). Para probarla:
 `/evolvedwarfare horde [bandits|vikings|pirates] [semana]` lanza ya una horda contra tu base (o contra ti).
 
+## Fase 12 — Armaduras de las facciones
+
+Cada facción tiene **4 armaduras**, de menos a más rango, cada una con casco, peto, grebas y botas (48 piezas). Se ven
+**en 3D** (cascos con cuernos, tricornios, capuchas, capas, hombreras, faldones...), sobre el jugador, los NPCs de las
+facciones, tus soldados y en el soporte de armaduras.
+
+| Rango | Bandidos | Vikingos | Piratas | Protección | Cuenta como |
+|---|---|---|---|---|---|
+| 1 | **Ropas de forajido**: capucha con pañuelo rojo, chaleco, calzas remendadas, botas vendadas | **Pieles de cazador**: capucha de lobo, chaleco de pieles, calzas con vendas, botas de pieles | **Ropa de grumete**: pañuelo de lunares, camisa a rayas, calzones de lona, zapatos de hebilla | 7 (como el cuero) | ligera |
+| 2 | **Cuero de salteador**: gorro con orejeras y embozo, jubón tachonado, botas altas | **Cota de guerrero vikingo**: yelmo de nasal, cota de malla, calzas vendadas | **Atuendo de bucanero**: sombrero de ala ancha, casaca de cuero con bandolera, botas de vuelta | 12 (como la malla) | ligera |
+| 3 | **Brigantina de bandolero**: capacete oxidado sobre almófar de malla, brigantina roja tachonada | **Armadura de huscarle**: yelmo de anteojos con malla, coraza de láminas | **Equipo de corsario**: tricornio, coraza de acero sobre casaca azul | 15 (como el hierro) | pesada |
+| 4 | **Armadura del caudillo**: yelmo cerrado negro con calavera y cresta, coraza negra, capa roja | **Armadura del jarl**: yelmo con cuernos y oro, cota escamada, manto y capa de oso | **Galas del capitán pirata**: tricornio con calavera y plumas, casaca roja con galones de oro | 19 (dureza 1,5) | pesada |
+
+- **Cada facción tiene su toque**: las vikingas son más duras (+0,5 de dureza desde el rango 2; el jarl, algo de
+  resistencia al empuje), las piratas se encantan mejor y las de los bandidos duran más.
+- Para el árbol de habilidades, las de rango 1 y 2 son **armadura ligera** y las de 3 y 4, **pesada**.
+- Se encantan, se reparan (cuero las de rango 1, hierro las demás) y valen para Remiendo como las de siempre.
+
+**Cómo se consiguen**
+- **Las llevan sus guerreros** según su clase: el capitán, la de rango 4 entera; los guerreros, la de rango 2 (3 en difícil
+  y en las hordas de élite); arqueros y médicos, la de rango 1, y ballesteros, la de 2; los berserkers van sin peto. A veces sueltan alguna pieza. Los
+  mercenarios que te prestan los aliados vienen con la de su facción.
+- **Fabricarlas** (mesa de crafteo, con forma de casco, peto, grebas o botas): cuero (rango 1), cadenas (2) o lingotes
+  de hierro (3 y 4, con un diamante las de rango 4), más el material de la facción en el centro: **tinte negro** los
+  bandidos, **piel de conejo** los vikingos y **pepitas de oro** los piratas. Hacen falta las ventajas de forja:
+  *Sastrería de facción* (Armadura ligera; rangos 1 y 2), *Armería de facción* (Armadura pesada, nivel 20; rango 3) y
+  *Forja de capitanes* (Armadura pesada, nivel 50; rango 4).
+- **En sus cofres**: campamentos, fuertes y fortalezas de bandidos, cabañas y casas largas vikingas, campamentos, barcos y
+  tesoros piratas (cuanto mejor el sitio, más rango).
+- **El armero** de las ciudades las vende todas: rango 1 común, 2 poco común, 3 rara y 4 épica (según el nivel de la
+  ciudad).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -836,7 +869,12 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
 - `ew_buildings.py` — compila el generador de edificios (Java puro) y dibuja los diseños de cada oficio con varias semillas.
 - `ew_blocks.py` — texturas, modelos, recetas y botín de los puestos de trabajo, el ayuntamiento, el almacén y la hoja de ruta.
 - `ew_factions.py` — aspectos de vikingos y piratas, bandera blanca y sello de embajador.
-- `ew_loot.py` — botín de los cofres de vikingos, piratas, castillos y fortalezas, y de los propios vikingos y piratas.
+- `ew_loot.py` — botín de los cofres de vikingos, piratas, castillos y fortalezas, y de los propios vikingos y piratas
+  (con las armaduras de cada facción).
+- `ew_armor.py` (+ `ew_armor_sets.py`, `ew_armor_paint.py`, `ew_armor_raster.py`) — las armaduras de las facciones: los
+  diseños 3D (cubos sobre cabeza, cuerpo, brazos y piernas), las texturas, los iconos, `FactionArmorModels.java`, los
+  modelos de objeto, las recetas, las etiquetas y los textos; con `--preview` las dibuja puestas (delante, detrás y
+  andando).
 - `ew_architect.py` — texturas, modelos y recetas de la mesa del arquitecto, el escáner y el plano.
 - `ew_weapons.py` — iconos, recetas (con la mejora a netherita) y etiquetas de las armas medievales, el arco largo y la
   jabalina, y la mesa de investigación.
@@ -852,7 +890,7 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
 - `ew_towers.py` (+ `java/TowerDump.java`) — vistas previas de las torres de vigilancia: compila `TowerDesigner.java` (Java
   puro, el mismo que usa el juego) y dibuja las torres de varias semillas y estilos, avisando si alguna no se puede subir.
 - `ew_village.py` — prototipo de las aldeas vanilla mejoradas (mismo algoritmo que `VillageExtras.java`) con vista previa.
-- `ew_skills.py` — los textos del árbol de habilidades (nombres y descripciones de las 11 habilidades y las 76 ventajas
+- `ew_skills.py` — los textos del árbol de habilidades (nombres y descripciones de las 11 habilidades y las 79 ventajas
   en todos los idiomas, comprobando que cuadran con `Perk.java`) y el icono del sangrado.
 - `ew_musket.py` (+ `ew_musket_preview.py`) — el mosquete en 3D: piezas, textura, la clase `MusketModel.java` y vistas
   previas de la recarga y el disparo en primera y tercera persona.
@@ -889,5 +927,6 @@ los comerciantes solo compran los cultivos en cajas llenas; y que la guía se da
 la cama de dos huecos, lo de dentro al quitar algo, el horno que funde, tirar tú, el caballo, dormir en ella y romperla);
 y que el golpe fuerte cargado hace el doble, que soltarlo antes no golpea y que con escudo el clic derecho sigue siendo
 del escudo; y las hordas (cada 7 días, más duras cada semana, van a por ti aunque seas aliado de su facción, la base es
-tu ayuntamiento y derrotarlas da Glory Coins). GitHub las pasa en cada cambio
+tu ayuntamiento y derrotarlas da Glory Coins); y las armaduras de las facciones (cada rango protege más, ligeras y
+pesadas, recetas con su ventaja de forja y los NPCs vestidos según su rango). GitHub las pasa en cada cambio
 (trabajo `gametest`) y deja el registro en la rama `gametest-logs`. El código está en `src/gametest` y no va en el `.jar`.

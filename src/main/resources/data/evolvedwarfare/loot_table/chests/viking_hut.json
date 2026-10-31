@@ -1458,6 +1458,58 @@
           ]
         }
       ]
+    },
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.35
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:viking_hunter_helmet",
+          "weight": 18
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:viking_hunter_chestplate",
+          "weight": 12
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:viking_hunter_leggings",
+          "weight": 12
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:viking_hunter_boots",
+          "weight": 18
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:viking_warrior_helmet",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:viking_warrior_chestplate",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:viking_warrior_leggings",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:viking_warrior_boots",
+          "weight": 6
+        }
+      ]
     }
   ]
 }

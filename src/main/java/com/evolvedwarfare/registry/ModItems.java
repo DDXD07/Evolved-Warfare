@@ -1,6 +1,8 @@
 package com.evolvedwarfare.registry;
 
 import com.evolvedwarfare.EvolvedWarfare;
+import com.evolvedwarfare.armor.FactionArmor;
+import com.evolvedwarfare.armor.FactionArmorItem;
 import com.evolvedwarfare.item.AmbassadorSealItem;
 import com.evolvedwarfare.item.BlueprintItem;
 import com.evolvedwarfare.item.StructureScannerItem;
@@ -23,6 +25,7 @@ import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.ToolMaterials;
 import com.evolvedwarfare.item.WhiteFlagItem;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -111,6 +114,50 @@ public final class ModItems {
 		}
 	}
 
+	/**
+	 * Armaduras de las facciones: 4 por facción (por rango), cada una con casco, peto, grebas y botas
+	 * ({@link FactionArmor}).
+	 */
+	public static final Map<FactionArmor, List<Item>> FACTION_ARMOR = new EnumMap<>(FactionArmor.class);
+
+	static {
+		for (FactionArmor armor : FactionArmor.values()) {
+			List<Item> pieces = new ArrayList<>();
+			for (ArmorItem.Type type : FactionArmor.TYPES) {
+				Item.Settings settings = new Item.Settings().maxDamage(type.getMaxDamage(armor.durability()));
+				if (armor.tier == 4) {
+					settings.rarity(net.minecraft.util.Rarity.UNCOMMON);
+				}
+				pieces.add(register(armor.id() + "_" + FactionArmor.pieceName(type), new FactionArmorItem(armor, type, settings)));
+			}
+			FACTION_ARMOR.put(armor, List.copyOf(pieces));
+		}
+	}
+
+	/** Una pieza de una armadura de facción. */
+	public static Item factionArmor(FactionArmor armor, ArmorItem.Type type) {
+		List<Item> pieces = FACTION_ARMOR.get(armor);
+		for (int i = 0; i < FactionArmor.TYPES.length; i++) {
+			if (FactionArmor.TYPES[i] == type) {
+				return pieces.get(i);
+			}
+		}
+		throw new IllegalArgumentException(type.toString());
+	}
+
+	/** Todas las piezas de las armaduras de esos rangos (de las tres facciones). */
+	public static List<Item> factionArmorOfTiers(int... tiers) {
+		List<Item> out = new ArrayList<>();
+		for (FactionArmor armor : FactionArmor.values()) {
+			for (int tier : tiers) {
+				if (armor.tier == tier) {
+					out.addAll(FACTION_ARMOR.get(armor));
+				}
+			}
+		}
+		return out;
+	}
+
 	public static final Item LONGBOW = register("longbow", new LongbowItem(new Item.Settings().maxDamage(500)));
 	public static final Item JAVELIN = register("javelin", new JavelinItem(new Item.Settings().maxCount(16)));
 
@@ -181,6 +228,9 @@ public final class ModItems {
 						}
 						entries.add(LONGBOW);
 						entries.add(JAVELIN);
+						for (List<Item> pieces : FACTION_ARMOR.values()) {
+							pieces.forEach(entries::add);
+						}
 						entries.add(MUSKET);
 						entries.add(MUSKET_BALL);
 						entries.add(AMMO_POUCH);

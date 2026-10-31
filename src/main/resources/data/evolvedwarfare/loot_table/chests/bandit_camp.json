@@ -1362,6 +1362,58 @@
           ]
         }
       ]
+    },
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.35
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:bandit_outlaw_helmet",
+          "weight": 18
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:bandit_outlaw_chestplate",
+          "weight": 12
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:bandit_outlaw_leggings",
+          "weight": 12
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:bandit_outlaw_boots",
+          "weight": 18
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:bandit_highwayman_helmet",
+          "weight": 9
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:bandit_highwayman_chestplate",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:bandit_highwayman_leggings",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:bandit_highwayman_boots",
+          "weight": 9
+        }
+      ]
     }
   ]
 }

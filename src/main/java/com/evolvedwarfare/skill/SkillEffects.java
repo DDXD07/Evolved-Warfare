@@ -115,6 +115,14 @@ public final class SkillEffects {
 	private static final EquipmentSlot[] ARMOR_SLOTS = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
 
 	/** ¿Es ligera? Cuero, cota de malla, oro y caparazón de tortuga; el resto (hierro, diamante, netherita...) es pesada. */
+	/** ¿Es ligera? Las de las facciones, según su rango (1 y 2 ligeras; 3 y 4 pesadas); las demás, por su material. */
+	public static boolean light(ArmorItem armor) {
+		if (armor instanceof com.evolvedwarfare.armor.FactionArmorItem faction) {
+			return faction.set().light();
+		}
+		return light(armor.getMaterial());
+	}
+
 	private static boolean light(RegistryEntry<ArmorMaterial> material) {
 		return material == ArmorMaterials.LEATHER || material == ArmorMaterials.CHAIN || material == ArmorMaterials.GOLD
 				|| material == ArmorMaterials.TURTLE || material.equals(ArmorMaterials.LEATHER) || material.equals(ArmorMaterials.CHAIN)
@@ -124,7 +132,7 @@ public final class SkillEffects {
 	public static int heavyPieces(LivingEntity entity) {
 		int n = 0;
 		for (EquipmentSlot slot : ARMOR_SLOTS) {
-			if (entity.getEquippedStack(slot).getItem() instanceof ArmorItem armor && !light(armor.getMaterial())) {
+			if (entity.getEquippedStack(slot).getItem() instanceof ArmorItem armor && !light(armor)) {
 				n++;
 			}
 		}
@@ -134,7 +142,7 @@ public final class SkillEffects {
 	public static int lightPieces(LivingEntity entity) {
 		int n = 0;
 		for (EquipmentSlot slot : ARMOR_SLOTS) {
-			if (entity.getEquippedStack(slot).getItem() instanceof ArmorItem armor && light(armor.getMaterial())) {
+			if (entity.getEquippedStack(slot).getItem() instanceof ArmorItem armor && light(armor)) {
 				n++;
 			}
 		}

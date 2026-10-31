@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "evolvedwarfare:bandit_outlaw_leggings",
+    "evolvedwarfare:bandit_highwayman_leggings",
+    "evolvedwarfare:bandit_brigand_leggings",
+    "evolvedwarfare:bandit_warlord_leggings",
+    "evolvedwarfare:viking_hunter_leggings",
+    "evolvedwarfare:viking_warrior_leggings",
+    "evolvedwarfare:viking_huscarl_leggings",
+    "evolvedwarfare:viking_jarl_leggings",
+    "evolvedwarfare:pirate_deckhand_leggings",
+    "evolvedwarfare:pirate_buccaneer_leggings",
+    "evolvedwarfare:pirate_corsair_leggings",
+    "evolvedwarfare:pirate_captain_leggings"
+  ]
+}

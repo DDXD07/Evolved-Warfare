@@ -79,6 +79,10 @@ public enum Perk {
 	CONQUEROR(Skill.HEAVY_ARMOR, 1, 3, levels(60), amounts(10), "WELL_FITTED"),
 	CUSHIONED(Skill.HEAVY_ARMOR, 3, 3, levels(50), amounts(50), "STEADFAST"),
 	REFLECT_BLOWS(Skill.HEAVY_ARMOR, 2, 5, levels(90), amounts(10), "CONQUEROR", "CUSHIONED"),
+	/** Forja de las armaduras de facción de rango 3 (bandolero, huscarle, corsario). */
+	FACTION_ARMORER(Skill.HEAVY_ARMOR, 0, 1, levels(20), amounts()),
+	/** Forja de las armaduras de capitán (caudillo, jarl, capitán pirata). */
+	WARLORD_FORGE(Skill.HEAVY_ARMOR, 0, 3, levels(50), amounts(), "FACTION_ARMORER"),
 	// ------------------------------------------------------------------ armadura ligera
 	AGILE_DEFENSE(Skill.LIGHT_ARMOR, 2, 0, levels(0, 20, 40, 60, 80), amounts(8, 16, 24, 32, 40)),
 	LIGHT_STEP(Skill.LIGHT_ARMOR, 1, 1, levels(20), amounts(10), "AGILE_DEFENSE"),
@@ -86,6 +90,8 @@ public enum Perk {
 	EVASION(Skill.LIGHT_ARMOR, 2, 2, levels(40, 60, 80), amounts(5, 10, 15), "LIGHT_STEP", "CUSTOM_FIT"),
 	SECOND_WIND(Skill.LIGHT_ARMOR, 1, 4, levels(70), amounts(4), "EVASION"),
 	CAT_FALL(Skill.LIGHT_ARMOR, 3, 4, levels(50), amounts(50), "EVASION"),
+	/** Las armaduras de facción de rango 1 y 2 (forajido, salteador, cazador, guerrero vikingo, grumete, bucanero). */
+	FACTION_TAILOR(Skill.LIGHT_ARMOR, 0, 1, levels(0), amounts()),
 	// ------------------------------------------------------------------ liderazgo
 	DRILL(Skill.LEADERSHIP, 2, 0, levels(0), amounts(20)),
 	TACTICS(Skill.LEADERSHIP, 1, 1, levels(20), amounts(15), "DRILL"),
@@ -198,6 +204,9 @@ public enum Perk {
 				out.add(ModItems.BALLISTA_BOLT);
 			}
 			case COUNTERWEIGHT -> out.add(ModItems.TREBUCHET);
+			case FACTION_TAILOR -> out.addAll(ModItems.factionArmorOfTiers(1, 2));
+			case FACTION_ARMORER -> out.addAll(ModItems.factionArmorOfTiers(3));
+			case WARLORD_FORGE -> out.addAll(ModItems.factionArmorOfTiers(4));
 			case INCENDIARIES -> out.add(ModItems.FIRE_POT);
 			case FORTIFICATION -> {
 				out.add(ModBlocks.PORTCULLIS.asItem());

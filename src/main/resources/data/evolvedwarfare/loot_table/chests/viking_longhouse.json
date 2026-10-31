@@ -1628,6 +1628,78 @@
           ]
         }
       ]
+    },
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.6
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:viking_warrior_helmet",
+          "weight": 15
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:viking_warrior_chestplate",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:viking_warrior_leggings",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:viking_warrior_boots",
+          "weight": 15
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:viking_huscarl_helmet",
+          "weight": 9
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:viking_huscarl_chestplate",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:viking_huscarl_leggings",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:viking_huscarl_boots",
+          "weight": 9
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:viking_jarl_helmet",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:viking_jarl_chestplate",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:viking_jarl_leggings",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:viking_jarl_boots",
+          "weight": 3
+        }
+      ]
     }
   ]
 }

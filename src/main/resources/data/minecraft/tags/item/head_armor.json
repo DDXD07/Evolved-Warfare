@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "evolvedwarfare:bandit_outlaw_helmet",
+    "evolvedwarfare:bandit_highwayman_helmet",
+    "evolvedwarfare:bandit_brigand_helmet",
+    "evolvedwarfare:bandit_warlord_helmet",
+    "evolvedwarfare:viking_hunter_helmet",
+    "evolvedwarfare:viking_warrior_helmet",
+    "evolvedwarfare:viking_huscarl_helmet",
+    "evolvedwarfare:viking_jarl_helmet",
+    "evolvedwarfare:pirate_deckhand_helmet",
+    "evolvedwarfare:pirate_buccaneer_helmet",
+    "evolvedwarfare:pirate_corsair_helmet",
+    "evolvedwarfare:pirate_captain_helmet"
+  ]
+}

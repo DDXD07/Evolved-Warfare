@@ -169,6 +169,25 @@ public enum TraderType {
 						.sell(l, ModItems.weapon(WeaponType.LONGSWORD, "netherite"), 1, 75)
 						.sell(l, ModItems.weapon(WeaponType.HALBERD, "netherite"), 1, 80)
 						.sell(l, Items.TRIDENT, 1, 40);
+				// armaduras de las facciones: cuanto más rango, más rara (y más nivel de ciudad hace falta)
+				for (com.evolvedwarfare.armor.FactionArmor armor : com.evolvedwarfare.armor.FactionArmor.values()) {
+					Tier tier = switch (armor.tier) {
+						case 1 -> c;
+						case 2 -> u;
+						case 3 -> r;
+						default -> e;
+					};
+					int[] prices = switch (armor.tier) {
+						case 1 -> new int[] {3, 5, 4, 3};
+						case 2 -> new int[] {5, 8, 7, 5};
+						case 3 -> new int[] {8, 13, 11, 8};
+						default -> new int[] {16, 26, 22, 16};
+					};
+					List<Item> pieces = ModItems.FACTION_ARMOR.get(armor);
+					for (int i = 0; i < pieces.size(); i++) {
+						b.sell(tier, pieces.get(i), 1, prices[i]);
+					}
+				}
 				b.buy(c, Items.COAL, Items.IRON_INGOT, Items.FLINT, Items.LEATHER, Items.STRING, Items.FEATHER)
 						.buy(c, Items.RAW_IRON).buy(u, Items.GOLD_INGOT, Items.CHARCOAL)
 						.buy(r, Items.DIAMOND)

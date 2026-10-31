@@ -83,6 +83,7 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		ClientSkills.register();
 		PlaceNoticeHud.register();
 		DayClockHud.register();
+		com.evolvedwarfare.client.render.armor.FactionArmorRenderer.register();
 		// máquinas de asedio: sus modelos 3D, la cámara aérea (clic izquierdo mantenido) y la vista previa del tiro
 		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(
 				com.evolvedwarfare.client.render.siege.SiegeModels.CATAPULT, com.evolvedwarfare.client.render.siege.SiegeModels::catapult);

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "XAX",
+    "X X",
+    "X X"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:chain"
+    },
+    "A": {
+      "item": "minecraft:rabbit_hide"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:viking_warrior_leggings",
+    "count": 1
+  }
+}

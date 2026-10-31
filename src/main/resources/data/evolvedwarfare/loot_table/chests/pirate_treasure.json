@@ -1401,6 +1401,58 @@
           ]
         }
       ]
+    },
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.7
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:pirate_corsair_helmet",
+          "weight": 9
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:pirate_corsair_chestplate",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:pirate_corsair_leggings",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:pirate_corsair_boots",
+          "weight": 9
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:pirate_captain_helmet",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:pirate_captain_chestplate",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:pirate_captain_leggings",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:pirate_captain_boots",
+          "weight": 6
+        }
+      ]
     }
   ]
 }

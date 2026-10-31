@@ -286,7 +286,7 @@ public abstract class FactionNpcEntity extends HostileEntity implements CombatNp
 		setRole(roleFromNbt ? getRole() : randomRole(random));
 		getDataTracker().set(VARIANT, random.nextInt(variantCount()));
 		boolean elite = getRole() == NpcRole.CAPTAIN || difficulty.getGlobalDifficulty() == Difficulty.HARD;
-		equipFor(getRole(), random, elite);
+		outfit(random, elite);
 		for (EquipmentSlot slot : new EquipmentSlot[] {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET}) {
 			setEquipmentDropChance(slot, 0.06F);
 		}
@@ -342,7 +342,7 @@ public abstract class FactionNpcEntity extends HostileEntity implements CombatNp
 		horde = true;
 		hordeDamage = damage;
 		if (elite) {
-			equipFor(getRole(), random, true);
+			outfit(random, true);
 		}
 		EntityAttributeInstance maxHealth = getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
 		if (maxHealth != null) {
@@ -355,6 +355,12 @@ public abstract class FactionNpcEntity extends HostileEntity implements CombatNp
 					EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
 		}
 		setHealth(getMaxHealth());
+	}
+
+	/** Armas y equipo de su clase, y la armadura de su facción según su rango. */
+	private void outfit(Random random, boolean elite) {
+		equipFor(getRole(), random, elite);
+		com.evolvedwarfare.armor.FactionArmor.dress(this, getFaction(), getRole(), random, elite);
 	}
 
 	public boolean isHorde() {

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "evolvedwarfare:item/bandit_outlaw_boots"
+  }
+}

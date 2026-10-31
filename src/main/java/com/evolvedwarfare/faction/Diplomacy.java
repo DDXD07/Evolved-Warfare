@@ -197,6 +197,7 @@ public final class Diplomacy {
 		soldier.setOwner(player);
 		soldier.presetRole(role);
 		FactionGear.equip(soldier, faction, role, random, false);
+		com.evolvedwarfare.armor.FactionArmor.dress(soldier, faction, role, random, false);
 		soldier.initialize(world, world.getLocalDifficulty(spot), SpawnReason.EVENT, null);
 		soldier.setOrder(NpcOrder.FOLLOW);
 		soldier.getProvisions().addStack(new ItemStack(Items.BREAD, 3));

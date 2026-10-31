@@ -245,6 +245,44 @@ def add_coins(name, table):
     return table
 
 
+# fase 11: armaduras de las facciones (tools/ew_armor.py) en los cofres de cada una; más rango cuanto mejor el sitio
+ARMOR_SETS = {
+    "bandits": ["bandit_outlaw", "bandit_highwayman", "bandit_brigand", "bandit_warlord"],
+    "vikings": ["viking_hunter", "viking_warrior", "viking_huscarl", "viking_jarl"],
+    "pirates": ["pirate_deckhand", "pirate_buccaneer", "pirate_corsair", "pirate_captain"],
+}
+ARMOR_PIECES = (("helmet", 3), ("chestplate", 2), ("leggings", 2), ("boots", 3))
+# cofre -> (facción, probabilidad de que haya una pieza, peso de cada rango)
+ARMOR_CHESTS = {
+    "chests/bandit_camp": ("bandits", 0.35, {1: 6, 2: 3}),
+    "chests/bandit_fort": ("bandits", 0.5, {1: 3, 2: 5, 3: 2}),
+    "chests/bandit_stronghold": ("bandits", 0.7, {2: 4, 3: 4, 4: 1}),
+    "chests/viking_hut": ("vikings", 0.35, {1: 6, 2: 2}),
+    "chests/viking_longhouse": ("vikings", 0.6, {2: 5, 3: 3, 4: 1}),
+    "chests/pirate_camp": ("pirates", 0.35, {1: 6, 2: 2}),
+    "chests/pirate_ship": ("pirates", 0.55, {1: 3, 2: 4, 3: 2}),
+    "chests/pirate_treasure": ("pirates", 0.7, {3: 3, 4: 2}),
+}
+ARMOR_IDS = {EW + set_id + "_" + piece for sets in ARMOR_SETS.values() for set_id in sets for piece, _ in ARMOR_PIECES}
+
+
+def armor_pool(faction, chance, weights):
+    entries = []
+    for tier, weight in weights.items():
+        set_id = ARMOR_SETS[faction][tier - 1]
+        for piece, piece_weight in ARMOR_PIECES:
+            entries.append(item(EW + set_id + "_" + piece, weight * piece_weight))
+    return {"rolls": 1.0, "bonus_rolls": 0.0, "conditions": [{"condition": "minecraft:random_chance", "chance": chance}],
+            "entries": entries}
+
+
+def add_armor(name, table):
+    table["pools"] = [p for p in table["pools"] if not any(e.get("name") in ARMOR_IDS for e in p.get("entries", []))]
+    if name in ARMOR_CHESTS:
+        table["pools"].append(armor_pool(*ARMOR_CHESTS[name]))
+    return table
+
+
 def main():
     for name in HAND_MADE_CHESTS + HAND_MADE_ENTITIES:
         path = os.path.join(OUT, "loot_table", name + ".json")
@@ -255,11 +293,13 @@ def main():
         else:
             table["pools"].extend(entity_level_pools())
         add_coins(name, table)
+        add_armor(name, table)
         with open(path, "w", encoding="utf-8") as f:
             json.dump(table, f, indent=2)
             f.write("\n")
     for name, table in {**TABLES, **CASTLE_TABLES, **ENTITIES}.items():
         add_coins(name, table)
+        add_armor(name, table)
         path = os.path.join(OUT, "loot_table", name + ".json")
         os.makedirs(os.path.dirname(path), exist_ok=True)
         with open(path, "w", encoding="utf-8") as f:

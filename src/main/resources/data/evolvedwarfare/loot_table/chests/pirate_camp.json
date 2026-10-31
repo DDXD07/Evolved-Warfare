@@ -1374,6 +1374,58 @@
           ]
         }
       ]
+    },
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.35
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:pirate_deckhand_helmet",
+          "weight": 18
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:pirate_deckhand_chestplate",
+          "weight": 12
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:pirate_deckhand_leggings",
+          "weight": 12
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:pirate_deckhand_boots",
+          "weight": 18
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:pirate_buccaneer_helmet",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:pirate_buccaneer_chestplate",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:pirate_buccaneer_leggings",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:pirate_buccaneer_boots",
+          "weight": 6
+        }
+      ]
     }
   ]
 }

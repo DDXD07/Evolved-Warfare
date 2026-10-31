@@ -1562,6 +1562,78 @@
           ]
         }
       ]
+    },
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.7
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:bandit_highwayman_helmet",
+          "weight": 12
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:bandit_highwayman_chestplate",
+          "weight": 8
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:bandit_highwayman_leggings",
+          "weight": 8
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:bandit_highwayman_boots",
+          "weight": 12
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:bandit_brigand_helmet",
+          "weight": 12
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:bandit_brigand_chestplate",
+          "weight": 8
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:bandit_brigand_leggings",
+          "weight": 8
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:bandit_brigand_boots",
+          "weight": 12
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:bandit_warlord_helmet",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:bandit_warlord_chestplate",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:bandit_warlord_leggings",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:bandit_warlord_boots",
+          "weight": 3
+        }
+      ]
     }
   ]
 }

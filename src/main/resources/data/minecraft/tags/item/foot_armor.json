@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "evolvedwarfare:bandit_outlaw_boots",
+    "evolvedwarfare:bandit_highwayman_boots",
+    "evolvedwarfare:bandit_brigand_boots",
+    "evolvedwarfare:bandit_warlord_boots",
+    "evolvedwarfare:viking_hunter_boots",
+    "evolvedwarfare:viking_warrior_boots",
+    "evolvedwarfare:viking_huscarl_boots",
+    "evolvedwarfare:viking_jarl_boots",
+    "evolvedwarfare:pirate_deckhand_boots",
+    "evolvedwarfare:pirate_buccaneer_boots",
+    "evolvedwarfare:pirate_corsair_boots",
+    "evolvedwarfare:pirate_captain_boots"
+  ]
+}
