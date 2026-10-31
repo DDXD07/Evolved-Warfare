@@ -1,0 +1,675 @@
+Fetching distribution.
+Downloading https://services.gradle.org/distributions/gradle-9.7.1-bin.zip
+..............10%..............20%...............30%..............40%...............50%..............60%...............70%..............80%..............90%...............100%
+
+Welcome to Gradle 9.7.1!
+
+Here are the highlights of this release:
+ - Isolated Projects graduates to incubating
+ - Broader Configuration Cache compatibility
+ - Resilient Sync helps you fix broken builds
+ - More source locations in problem reports
+
+For more details see https://docs.gradle.org/9.7.1/release-notes.html
+
+Starting a Gradle Daemon (subsequent builds will be faster)
+
+> Configure project :
+Fabric Loom: 1.18.4
+
+duplicate input class net/fabricmc/fabric/mixin/tag/package-info, from /home/runner/.gradle/caches/modules-2/files-2.1/net.fabricmc.fabric-api/fabric-convention-tags-v2/2.12.0+c3656daa19/45cd5f071ec42e13b8b6ce15c8f83db322da2494/fabric-convention-tags-v2-2.12.0+c3656daa19.jar and /home/runner/.gradle/caches/modules-2/files-2.1/net.fabricmc.fabric-api/fabric-tag-api-v1/1.3.0+1eb36c0719/ba08d91572b12cd23a2d7a193ed45c26f8da62b0/fabric-tag-api-v1-1.3.0+1eb36c0719.jar
+
+> Task :compileJava
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :processResources
+> Task :classes
+
+> Task :compileGametestJava
+/home/runner/work/Evolved-Warfare/Evolved-Warfare/src/gametest/java/com/evolvedwarfare/gametest/CropCrateGameTests.java:52: warning: [removal] createMockCreativeServerPlayerInWorld() in TestContext has been deprecated and marked for removal
+		ServerPlayerEntity player = ctx.createMockCreativeServerPlayerInWorld();
+		                               ^
+/home/runner/work/Evolved-Warfare/Evolved-Warfare/src/gametest/java/com/evolvedwarfare/gametest/CropCrateGameTests.java:120: warning: [removal] createMockCreativeServerPlayerInWorld() in TestContext has been deprecated and marked for removal
+		ServerPlayerEntity player = ctx.createMockCreativeServerPlayerInWorld();
+		                               ^
+/home/runner/work/Evolved-Warfare/Evolved-Warfare/src/gametest/java/com/evolvedwarfare/gametest/CropCrateGameTests.java:136: warning: [removal] createMockCreativeServerPlayerInWorld() in TestContext has been deprecated and marked for removal
+		ServerPlayerEntity player = ctx.createMockCreativeServerPlayerInWorld();
+		                               ^
+/home/runner/work/Evolved-Warfare/Evolved-Warfare/src/gametest/java/com/evolvedwarfare/gametest/SkillGameTests.java:83: warning: [removal] createMockCreativeServerPlayerInWorld() in TestContext has been deprecated and marked for removal
+		ServerPlayerEntity player = ctx.createMockCreativeServerPlayerInWorld();
+		                               ^
+/home/runner/work/Evolved-Warfare/Evolved-Warfare/src/gametest/java/com/evolvedwarfare/gametest/SkillGameTests.java:115: warning: [removal] createMockCreativeServerPlayerInWorld() in TestContext has been deprecated and marked for removal
+		ServerPlayerEntity player = ctx.createMockCreativeServerPlayerInWorld();
+		                               ^
+/home/runner/work/Evolved-Warfare/Evolved-Warfare/src/gametest/java/com/evolvedwarfare/gametest/SkillGameTests.java:142: warning: [removal] createMockCreativeServerPlayerInWorld() in TestContext has been deprecated and marked for removal
+		ServerPlayerEntity player = ctx.createMockCreativeServerPlayerInWorld();
+		                               ^
+/home/runner/work/Evolved-Warfare/Evolved-Warfare/src/gametest/java/com/evolvedwarfare/gametest/SkillGameTests.java:168: warning: [removal] createMockCreativeServerPlayerInWorld() in TestContext has been deprecated and marked for removal
+		ServerPlayerEntity player = ctx.createMockCreativeServerPlayerInWorld();
+		                               ^
+/home/runner/work/Evolved-Warfare/Evolved-Warfare/src/gametest/java/com/evolvedwarfare/gametest/SiegeGameTests.java:203: warning: [removal] createMockCreativeServerPlayerInWorld() in TestContext has been deprecated and marked for removal
+		ServerPlayerEntity player = ctx.createMockCreativeServerPlayerInWorld();
+		                               ^
+/home/runner/work/Evolved-Warfare/Evolved-Warfare/src/gametest/java/com/evolvedwarfare/gametest/ClassArmorGameTests.java:75: warning: [removal] createMockCreativeServerPlayerInWorld() in TestContext has been deprecated and marked for removal
+		ServerPlayerEntity player = ctx.createMockCreativeServerPlayerInWorld();
+		                               ^
+/home/runner/work/Evolved-Warfare/Evolved-Warfare/src/gametest/java/com/evolvedwarfare/gametest/CartGameTests.java:112: warning: [removal] createMockCreativeServerPlayerInWorld() in TestContext has been deprecated and marked for removal
+		ServerPlayerEntity player = ctx.createMockCreativeServerPlayerInWorld();
+		                               ^
+/home/runner/work/Evolved-Warfare/Evolved-Warfare/src/gametest/java/com/evolvedwarfare/gametest/CartGameTests.java:148: warning: [removal] createMockCreativeServerPlayerInWorld() in TestContext has been deprecated and marked for removal
+		ServerPlayerEntity player = ctx.createMockCreativeServerPlayerInWorld();
+		                               ^
+/home/runner/work/Evolved-Warfare/Evolved-Warfare/src/gametest/java/com/evolvedwarfare/gametest/CartGameTests.java:176: warning: [removal] createMockCreativeServerPlayerInWorld() in TestContext has been deprecated and marked for removal
+		ServerPlayerEntity player = ctx.createMockCreativeServerPlayerInWorld();
+		                               ^
+/home/runner/work/Evolved-Warfare/Evolved-Warfare/src/gametest/java/com/evolvedwarfare/gametest/CartGameTests.java:205: warning: [removal] createMockCreativeServerPlayerInWorld() in TestContext has been deprecated and marked for removal
+		ServerPlayerEntity player = ctx.createMockCreativeServerPlayerInWorld();
+		                               ^
+/home/runner/work/Evolved-Warfare/Evolved-Warfare/src/gametest/java/com/evolvedwarfare/gametest/HordeGameTests.java:198: warning: [removal] createMockCreativeServerPlayerInWorld() in TestContext has been deprecated and marked for removal
+		ServerPlayerEntity player = ctx.createMockCreativeServerPlayerInWorld();
+		                               ^
+/home/runner/work/Evolved-Warfare/Evolved-Warfare/src/gametest/java/com/evolvedwarfare/gametest/GuideGameTests.java:19: warning: [removal] createMockCreativeServerPlayerInWorld() in TestContext has been deprecated and marked for removal
+		ServerPlayerEntity player = ctx.createMockCreativeServerPlayerInWorld();
+		                               ^
+/home/runner/work/Evolved-Warfare/Evolved-Warfare/src/gametest/java/com/evolvedwarfare/gametest/FactionArmorGameTests.java:79: warning: [removal] createMockCreativeServerPlayerInWorld() in TestContext has been deprecated and marked for removal
+		ServerPlayerEntity player = ctx.createMockCreativeServerPlayerInWorld();
+		                               ^
+/home/runner/work/Evolved-Warfare/Evolved-Warfare/src/gametest/java/com/evolvedwarfare/gametest/HeavyAttackGameTests.java:67: warning: [removal] createMockCreativeServerPlayerInWorld() in TestContext has been deprecated and marked for removal
+		ServerPlayerEntity player = ctx.createMockCreativeServerPlayerInWorld();
+		                               ^
+/home/runner/work/Evolved-Warfare/Evolved-Warfare/src/gametest/java/com/evolvedwarfare/gametest/HeavyAttackGameTests.java:96: warning: [removal] createMockCreativeServerPlayerInWorld() in TestContext has been deprecated and marked for removal
+		ServerPlayerEntity player = ctx.createMockCreativeServerPlayerInWorld();
+		                               ^
+18 warnings
+
+> Task :generateLog4jConfig
+> Task :generateRemapClasspath
+> Task :generateDLIConfig
+> Task :configureLaunch
+> Task :processGametestResources
+> Task :gametestClasses
+
+> Task :runGametest
+[15:35:45] [main/INFO] (FabricLoader/GameProvider) Loading Minecraft 1.21.1 with Fabric Loader 0.19.5
+[15:35:45] [main/INFO] (FabricLoader) Loading 45 mods:
+	- evolvedwarfare 0.31.0
+	- evolvedwarfare-gametest 1.0.0
+	- fabric-api 0.116.17+1.21.1
+	- fabric-api-base 0.4.42+6573ed8c19
+	- fabric-api-lookup-api-v1 1.6.72+7b3d111d19
+	- fabric-biome-api-v1 13.0.31+d527f9fd19
+	- fabric-block-api-v1 1.1.0+0bc3503219
+	- fabric-block-view-api-v2 1.0.11+ebb2264e19
+	- fabric-command-api-v1 1.2.49+f71b366f19
+	- fabric-command-api-v2 2.2.28+6ced4dd919
+	- fabric-commands-v0 0.2.66+df3654b319
+	- fabric-content-registries-v0 8.0.19+b559734419
+	- fabric-convention-tags-v1 2.1.7+7f945d5b19
+	- fabric-convention-tags-v2 2.12.0+c3656daa19
+	- fabric-crash-report-info-v1 0.2.29+0af3f5a719
+	- fabric-data-attachment-api-v1 1.4.7+5b36e0f719
+	- fabric-data-generation-api-v1 20.3.0+1eb36c0719
+	- fabric-dimensions-v1 4.0.1+65213ef819
+	- fabric-entity-events-v1 1.8.0+2b27e0a419
+	- fabric-events-interaction-v0 0.7.14+ba9dae0619
+	- fabric-game-rule-api-v1 1.0.53+6ced4dd919
+	- fabric-gametest-api-v1 2.0.5+6fc22b9919
+	- fabric-item-api-v1 11.3.0+467044f319
+	- fabric-item-group-api-v1 4.1.7+def88e3a19
+	- fabric-lifecycle-events-v1 2.6.0+0865547519
+	- fabric-loot-api-v2 3.0.15+3f89f5a519
+	- fabric-loot-api-v3 1.0.3+3f89f5a519
+	- fabric-message-api-v1 6.0.14+8aaf3aca19
+	- fabric-networking-api-v1 4.3.1+d30f6a7919
+	- fabric-object-builder-api-v1 15.2.1+40875a9319
+	- fabric-particles-v1 4.0.2+6573ed8c19
+	- fabric-recipe-api-v1 5.0.16+2475392c19
+	- fabric-registry-sync-v0 5.3.2+e3eddc2119
+	- fabric-rendering-data-attachment-v1 0.3.49+73761d2e19
+	- fabric-rendering-fluids-v1 3.1.6+1daea21519
+	- fabric-resource-conditions-api-v1 4.3.0+8dc279b119
+	- fabric-resource-loader-v0 1.3.1+5b5275af19
+	- fabric-screen-handler-api-v1 1.3.91+b559734419
+	- fabric-tag-api-v1 1.3.0+1eb36c0719
+	- fabric-transfer-api-v1 5.4.4+7b3d111d19
+	- fabric-transitive-access-wideners-v1 6.2.0+45b9699719
+	- fabricloader 0.19.5
+	- java 25
+	- minecraft 1.21.1
+	- mixinextras 0.5.5
+[15:35:45] [main/INFO] (FabricLoader/Mixin) SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/home/runner/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.17.4+mixin.0.8.7/5f66cc9f59b8efaa942155a3d5a30599bf6640dd/sponge-mixin-0.17.4+mixin.0.8.7.jar Service=Knot/Fabric Env=SERVER
+[15:35:45] [main/INFO] (FabricLoader/Mixin) Loaded Fabric development mappings for mixin remapper!
+[15:35:46] [main/INFO] (FabricLoader/MixinExtras|Service) Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.5).
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by com.sun.jna.Native in an unnamed module (file:/home/runner/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna/5.14.0/67bf3eaea4f0718cb376a181a629e5f88fa1c9dd/jna-5.14.0.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by com.google.common.util.concurrent.AbstractFuture$UnsafeAtomicHelper (file:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/32.1.2-jre/5e64ec7e056456bef3a4bc4c6fdaef71e8ab6318/guava-32.1.2-jre.jar)
+WARNING: Please consider reporting this to the maintainers of class com.google.common.util.concurrent.AbstractFuture$UnsafeAtomicHelper
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
+[15:35:51] [main/ERROR] (Minecraft) No data fixer registered for recruit
+[15:35:51] [main/ERROR] (Minecraft) No data fixer registered for soldier
+[15:35:51] [main/ERROR] (Minecraft) No data fixer registered for worker
+[15:35:51] [main/ERROR] (Minecraft) No data fixer registered for trader
+[15:35:51] [main/ERROR] (Minecraft) No data fixer registered for bandit
+[15:35:51] [main/ERROR] (Minecraft) No data fixer registered for viking
+[15:35:51] [main/ERROR] (Minecraft) No data fixer registered for pirate
+[15:35:51] [main/ERROR] (Minecraft) No data fixer registered for cart
+[15:35:51] [main/ERROR] (Minecraft) No data fixer registered for gate_mover
+[15:35:51] [main/ERROR] (Minecraft) No data fixer registered for catapult
+[15:35:51] [main/ERROR] (Minecraft) No data fixer registered for ballista
+[15:35:51] [main/ERROR] (Minecraft) No data fixer registered for trebuchet
+[15:35:51] [main/ERROR] (Minecraft) No data fixer registered for ram
+[15:35:51] [main/ERROR] (Minecraft) No data fixer registered for siege_shot
+[15:35:51] [main/ERROR] (Minecraft) No data fixer registered for javelin
+[15:35:51] [main/ERROR] (Minecraft) No data fixer registered for musket_ball
+[15:35:51] [main/INFO] (evolvedwarfare) Evolved Warfare cargado
+[15:35:51] [main/ERROR] (Minecraft) Failed to load properties from file: server.properties
+java.nio.file.NoSuchFileException: server.properties
+	at java.base/sun.nio.fs.UnixException.translateToIOException(UnixException.java:92) ~[?:?]
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:106) ~[?:?]
+	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:111) ~[?:?]
+	at java.base/sun.nio.fs.UnixFileSystemProvider.newFileChannel(UnixFileSystemProvider.java:213) ~[?:?]
+	at java.base/sun.nio.fs.UnixFileSystemProvider.newByteChannel(UnixFileSystemProvider.java:244) ~[?:?]
+	at java.base/java.nio.file.Files.newByteChannel(Files.java:357) ~[?:?]
+	at java.base/java.nio.file.Files.newByteChannel(Files.java:399) ~[?:?]
+	at java.base/java.nio.file.spi.FileSystemProvider.newInputStream(FileSystemProvider.java:371) ~[?:?]
+	at java.base/java.nio.file.Files.newInputStream(Files.java:154) ~[?:?]
+	at knot/net.minecraft.server.dedicated.AbstractPropertiesHandler.loadProperties(AbstractPropertiesHandler.java:62) [minecraft-common-9b5ff62f35-1.21.1-net.fabricmc.yarn.1_21_1.1.21.1+build.3-v2.jar:?]
+	at knot/net.minecraft.server.dedicated.ServerPropertiesHandler.load(ServerPropertiesHandler.java:141) [minecraft-common-9b5ff62f35-1.21.1-net.fabricmc.yarn.1_21_1.1.21.1+build.3-v2.jar:?]
+	at knot/net.minecraft.server.dedicated.ServerPropertiesLoader.<init>(ServerPropertiesLoader.java:12) [minecraft-common-9b5ff62f35-1.21.1-net.fabricmc.yarn.1_21_1.1.21.1+build.3-v2.jar:?]
+	at knot/net.minecraft.server.Main.main(Main.java:114) [minecraft-common-9b5ff62f35-1.21.1-net.fabricmc.yarn.1_21_1.1.21.1+build.3-v2.jar:?]
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:517) [fabric-loader-0.19.5.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:72) [fabric-loader-0.19.5.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.KnotServer.main(KnotServer.java:23) [fabric-loader-0.19.5.jar:?]
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) [dev-launch-injector-0.2.1+build.8.jar:?]
+[15:35:51] [main/INFO] (Minecraft) Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[15:35:51] [main/INFO] (FabricGameTestHelper) Starting test server
+[15:35:53] [main/INFO] (Minecraft) Loaded 1488 recipes
+[15:35:53] [main/INFO] (Minecraft) Loaded 1400 advancements
+[15:35:53] [main/INFO] (BiomeModificationImpl) Applied 0 biome modifications to 0 of 64 new biomes in 1.111 ms
+[15:35:54] [Server thread/INFO] (Minecraft) Preparing start region for dimension minecraft:overworld
+[15:35:54] [Worker-Main-2/INFO] (Minecraft) Preparing spawn area: 2%
+[15:35:54] [Server thread/INFO] (Minecraft) Time elapsed: 457 ms
+[15:35:54] [Server thread/INFO] (Minecraft) Started game test server
+[15:35:54] [Server thread/WARN] (TranslationConventionLogWarnings) 
+	Dev warning - Untranslated Item Tags detected. Please translate your item tags so other mods such as recipe viewers can properly display your tag's name.
+	The format desired is tag.item.<namespace>.<path> for the translation key with slashes in path turned into periods.
+	To disable this message, set this system property in your runs: `-Dfabric-tag-conventions-v2.missingTagTranslationWarning=SILENCED`.
+	To see individual untranslated item tags found, set the system property to `-Dfabric-tag-conventions-v2.missingTagTranslationWarning=VERBOSE`.
+	Default is `SHORT`.
+
+[15:35:54] [Server thread/INFO] (Minecraft) 49 tests are now running at position 12627462, -59, 11173788!
+[15:35:55] [Server thread/INFO] (Minecraft) Running test batch 'defaultBatch:0' (48 tests)...
+[15:35:55] [Server thread/INFO] (Minecraft) [                                                 ]
+[15:35:55] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 1 at (10.5, -60.0, -0.5)
+[15:35:55] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:56] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] torres TEMPERATE: 97 distintas de 200
+[15:35:56] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] torres BOREAL: 96 distintas de 200
+[15:35:56] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] torres SAVANNA: 94 distintas de 200
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] torres ROCKY: 96 distintas de 200
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] torres comprobadas: 800
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 5 at (-0.5, -60.0, -0.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] subir: hachas 53, nivel 11, puntos 1 -> 10; daga antes=false, después=true (OK)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 6 at (-7.5, -60.0, 8.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] maestría: sin ventaja 5.9040003 de daño, con ella 8.856
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 8 at (7.5, -60.0, -5.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] voz de evolvedwarfare:bandit: evolvedwarfare:npc.bandit.ambient / evolvedwarfare:npc.bandit.hurt / evolvedwarfare:npc.bandit.death, tonos 1.001542..1.0665362
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] voz de evolvedwarfare:viking: evolvedwarfare:npc.viking.ambient / evolvedwarfare:npc.viking.hurt / evolvedwarfare:npc.viking.death, tonos 0.91967183..0.9938285
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] voz de evolvedwarfare:pirate: evolvedwarfare:npc.pirate.ambient / evolvedwarfare:npc.pirate.hurt / evolvedwarfare:npc.pirate.death, tonos 0.8911781..1.0424329
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] voz de evolvedwarfare:recruit: evolvedwarfare:npc.recruit.ambient / evolvedwarfare:npc.recruit.hurt / evolvedwarfare:npc.recruit.death, tonos 0.8878746..1.0146313
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] voz de evolvedwarfare:soldier: evolvedwarfare:npc.recruit.ambient / evolvedwarfare:npc.recruit.hurt / evolvedwarfare:npc.recruit.death, tonos 0.8724064..1.0936761
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] voz de evolvedwarfare:worker: evolvedwarfare:npc.recruit.ambient / evolvedwarfare:npc.recruit.hurt / evolvedwarfare:npc.recruit.death, tonos 0.9545512..1.1187552
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] voz de evolvedwarfare:trader: evolvedwarfare:npc.trader.ambient / evolvedwarfare:npc.trader.hurt / evolvedwarfare:npc.trader.death, tonos 0.8643166..1.0729451
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] voces: 18 sonidos, 38 archivos
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 52 at (1.5, -60.0, 5.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] caja cogida=true: Crate of Wheat en la mano (Contents[item=minecraft:wheat, count=64]), bloque Block{minecraft:air}
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] caja puesta otra vez (CONSUME): lleva 64 minecraft:wheat
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] caja rota suelta: [Crate of Wheat Contents[item=minecraft:wheat, count=64]]
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 53 at (6.5, -60.0, -8.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] cajas: bacalao 210 monedas (6 al día)
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] cajas: trigo 165 monedas (8 al día), caña 135 monedas (9 al día)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 54 at (1.5, -60.0, 8.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 56 at (5.5, -60.0, 7.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] carreta: cofre en 0 = true, cama en 4 con los pies en 7, pies ocupados = true
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 62 at (10.5, -60.0, 6.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] caballo: SUCCESS -> tira HorseEntity['Horse'/61, l='ServerLevel[Test Level]', x=12627529.00, y=-59.00, z=11173835.10], a 0.0 de su sitio
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player has made the advancement [Suit Up]
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 64 at (5.5, -60.0, 1.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] dos manos: otra mano FAIL / mano principal PASS; caja en la izquierda -> izquierda=0 minecraft:air, cajas en el inventario=1
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] ariete: montado=true, golpe=11, recarga=29
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] cama de la carreta: reaparición BlockPos{x=12627479, y=-59, z=11173834} (carreta en BlockPos{x=12627479, y=-59, z=11173834}), dormido true -> true
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 65 at (5.5, -60.0, -5.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] golpe con DAGGER: 5 tics; a 3 tics golpeando=true, a 7 tics golpeando=false
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] golpe fuerte con LONGSWORD: normal 0.19223022, soltado antes 0.0, cargado 0.38616943 (x2.0088904); clic derecho CONSUME (cargando=true)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 67 at (-0.5, -60.0, 7.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] golpe fuerte con escudo: PASS (cargando=false); sin escudo: CONSUME (cargando=true)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 68 at (2.5, -60.0, 4.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 70 at (4.5, -60.0, -0.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] hordas: semana 1 Strength[perWave=6, waves=1, captains=0, elite=0.0, health=1.0, damage=1.0, engines=0], semana 3 Strength[perWave=9, waves=2, captains=1, elite=0.3, health=1.24, damage=1.1400000000000001, engines=1], semana 6 Strength[perWave=14, waves=3, captains=2, elite=0.75, health=1.6, damage=1.35, engines=2]; con 3 jugadores Strength[perWave=10, waves=1, captains=0, elite=0.0, health=1.0, damage=1.0, engines=0]
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 79 at (-2.5, -60.0, 3.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] horda y alianza: vikingo normal ataca=false aliado=true; de la horda ataca=true aliado=false (6 guerreros)
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] carreta tirada por el jugador: se movió 1.999999999254942, queda a 3.000000000745058 (debe ~3.0), giro -36.869614
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 88 at (6.5, -60.0, -9.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 90 at (7.5, -60.0, 10.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 92 at (0.5, -60.0, -1.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] golpe fuerte con SPEAR: normal 0.19223022, soltado antes 0.0, cargado 0.38616943 (x2.0088904); clic derecho CONSUME (cargando=true)
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] golpe con WARHAMMER: 11 tics; a 9 tics golpeando=true, a 13 tics golpeando=false
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 94 at (1.5, -60.0, 8.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 96 at (6.5, -60.0, 0.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 98 at (6.5, -60.0, 10.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 100 at (0.5, -60.0, 10.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 102 at (-2.5, -60.0, 0.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 104 at (3.5, -60.0, 8.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] migración: dagas 1, lanzas 1, jabalinas 1, instrucción 1, puntos 1 -> 1
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] cámara aérea: esperado yaw=-7.6293945E-6 elev=59.94455 (llega=true), sale yaw=-0.004480670796594478 elev=59.981648951352284
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] disparar entity.evolvedwarfare.ballista: montado=true, pasajero=['test-mock-player'/90, l='ServerLevel[Test Level]', x=12627479.50, y=-59.08, z=11173791.28], recarga=40, proyectiles=1
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] disparar entity.evolvedwarfare.catapult: montado=true, pasajero=['test-mock-player'/92, l='ServerLevel[Test Level]', x=12627490.94, y=-58.89, z=11173791.00], recarga=70, proyectiles=1
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 109 at (5.5, -60.0, 9.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] carreta rota: [11 minecraft:wheat, 9 minecraft:wheat, 1 minecraft:barrel, 1 minecraft:crafting_table, 1 evolvedwarfare:cart]
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] colocar evolvedwarfare:ballista en BlockPos{x=4, y=0, z=4}: resultado=CONSUME, máquinas=1
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST]   entity.evolvedwarfare.ballista en (1.26275185E7, -59.0, 1.11737925E7) (vivo=true)
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] colocar evolvedwarfare:catapult en BlockPos{x=4, y=0, z=4}: resultado=CONSUME, máquinas=1
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST]   entity.evolvedwarfare.catapult en (1.26275315E7, -59.0, 1.11737925E7) (vivo=true)
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] colocar evolvedwarfare:battering_ram en BlockPos{x=4, y=0, z=4}: resultado=CONSUME, máquinas=1
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST]   entity.evolvedwarfare.ram en (1.26275445E7, -59.0, 1.11737925E7) (vivo=true)
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] colocar evolvedwarfare:trebuchet en BlockPos{x=4, y=0, z=1}: resultado=CONSUME, máquinas=1
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST]   entity.evolvedwarfare.trebuchet en (1.26274665E7, -59.0, 1.11738065E7) (vivo=true)
+[15:35:57] [Server thread/INFO] (Minecraft) [+++_+++ +++++++ +_+++++ ++_++++  +++_++          ]
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 115 at (10.5, -60.0, -3.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] árbol: 79 ventajas, 80 objetos con ventaja
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 117 at (-7.5, -60.0, 6.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] guía: primera vez=true, segunda=false, libros=1
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 118 at (10.5, -60.0, -0.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] carga de DAGGER: 10 tics (barra de ataque 8.333333 tics)
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] carga de SPEAR: 16 tics (barra de ataque 14.285713 tics)
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] carga de LONGSWORD: 20 tics (barra de ataque 18.18182 tics)
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] carga de HALBERD: 24 tics (barra de ataque 22.22222 tics)
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] carga de WARHAMMER: 26 tics (barra de ataque 25.000002 tics)
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] carga de FLAIL: 20 tics (barra de ataque 20.0 tics)
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] carga de BATTLE_AXE: 26 tics (barra de ataque 25.000002 tics)
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] disparar entity.evolvedwarfare.trebuchet: montado=true, pasajero=['test-mock-player'/94, l='ServerLevel[Test Level]', x=12627505.50, y=-58.70, z=11173790.22], recarga=140, proyectiles=1
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 121 at (-1.5, -60.0, -8.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] hordas por semana: semana 1 6 guerreros (vida x1.0), semana 6 14 guerreros (vida x1.6)
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] colocar evolvedwarfare:trebuchet en BlockPos{x=4, y=0, z=4}: resultado=CONSUME, máquinas=1
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST]   entity.evolvedwarfare.trebuchet en (1.26275575E7, -59.0, 1.11737925E7) (vivo=true)
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] golpe fuerte con BATTLE_AXE: normal 0.19223022, soltado antes 0.0, cargado 0.38616943 (x2.0088904); clic derecho CONSUME (cargando=true)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 142 at (-5.5, -60.0, 7.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] recetas de armaduras: sin ventajas false, sastrería true, armería true, forja de capitanes true
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] armaduras de facción (protección total): bandit_outlaw=7 bandit_highwayman=12 bandit_brigand=15 bandit_warlord=19 viking_hunter=7 viking_warrior=12 viking_huscarl=15 viking_jarl=19 pirate_deckhand=7 pirate_buccaneer=12 pirate_corsair=15 pirate_captain=19
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] el jarl lleva: viking_jarl_helmet viking_jarl_chestplate viking_jarl_leggings viking_jarl_boots; el bandido, de peto: evolvedwarfare:bandit_highwayman_chestplate
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] armaduras de clase: 80 piezas; hierro: guerrero 15 de armadura, ladrón 11
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player[embedded] logged in with entity id 149 at (-3.5, -60.0, 2.5)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player joined the game
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] mosquetero de diamante: recarga 40 -> 36 (medio) -> 32 (entero) tics
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] armaduras de clase: velocidad 0.23000000417232513 (guerrero 0.2078482186142297, ladrón 0.2588670309959887), empuje guerrero 0.15, golpe del ladrón por detrás 12.4 / de frente 10.0
+[15:35:57] [Server thread/INFO] (Minecraft) [+++++++++++++++++_++++++++_+++++++++_++++++__+++ ]
+[15:35:57] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] horda: base BlockPos{x=12627518, y=-59, z=11173848} (ayuntamiento BlockPos{x=12627518, y=-59, z=11173848}); derrotada=true, Glory Coins 0 -> 8 (recompensa 8)
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player has made the advancement [Bring Home the Beacon]
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player has made the advancement [Bring Home the Beacon]
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player has made the advancement [Bring Home the Beacon]
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player has made the advancement [Bring Home the Beacon]
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player has made the advancement [Bring Home the Beacon]
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player has made the advancement [Bring Home the Beacon]
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player has made the advancement [Bring Home the Beacon]
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player has made the advancement [Bring Home the Beacon]
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player has made the advancement [Bring Home the Beacon]
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player has made the advancement [Bring Home the Beacon]
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player has made the advancement [Bring Home the Beacon]
+[15:35:57] [Server thread/INFO] (Minecraft) test-mock-player has made the advancement [Bring Home the Beacon]
+[15:35:57] [Server thread/INFO] (Minecraft) [+++++++++++++++++_++++++++_++++++++++++++++__+++ ]
+[15:35:58] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] rastrillo: en marcha=true (bloques quitados=true, entidad=true), arriba=true, acabado=true
+[15:35:58] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] habilidades al usar: hojas nivel 2 (+2.1999998), armadura pesada 0 (+1.875), golpe al jugador=true
+[15:35:58] [Server thread/INFO] (Minecraft) [++++++++++++++++++++++++++_++++++++++++++++__+++ ]
+[15:35:58] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] puente: en marcha=true (bloques quitados=true, entidad=true), subido=true
+[15:35:58] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] rastrillo cerrado: abajo=true
+[15:35:58] [Server thread/INFO] (Minecraft) [++++++++++++++++++++++++++_++++++++++++++++_++++ ]
+[15:35:58] [Server thread/INFO] (Minecraft) [++++++++++++++++++++++++++_++++++++++++++++_++++ ]
+[15:35:58] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] puente bajado otra vez: true
+[15:35:58] [Server thread/INFO] (Minecraft) [++++++++++++++++++++++++++_+++++++++++++++++++++ ]
+[15:35:58] [Server thread/INFO] (Minecraft) [++++++++++++++++++++++++++_+++++++++++++++++++++ ]
+[15:35:58] [Server thread/INFO] (Minecraft) [++++++++++++++++++++++++++_+++++++++++++++++++++ ]
+[15:35:58] [Server thread/INFO] (Minecraft) [++++++++++++++++++++++++++_+++++++++++++++++++++ ]
+[15:35:58] [Server thread/INFO] (Minecraft) [++++++++++++++++++++++++++_+++++++++++++++++++++ ]
+[15:35:58] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] horno de la carreta: sale 1 minecraft:iron_ingot, encendido = true
+[15:35:58] [Server thread/INFO] (Minecraft) Running test batch 'watchtower:0' (1 tests)...
+[15:35:58] [Server thread/INFO] (Minecraft) [++++++++++++++++++++++++++++++++++++++++++++++++ ]
+[15:35:58] [Server thread/INFO] (Minecraft) [++++++++++++++++++++++++++++++++++++++++++++++++ ]
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-58, z=11173872}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-58, z=11173880}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-57, z=11173872}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627514, y=-57, z=11173876}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-57, z=11173880}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627512, y=-53, z=11173872}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-53, z=11173872}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627508, y=-53, z=11173872}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627514, y=-53, z=11173874}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627514, y=-53, z=11173876}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627514, y=-53, z=11173878}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627512, y=-53, z=11173880}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-53, z=11173880}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627508, y=-53, z=11173880}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-52, z=11173872}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627514, y=-52, z=11173876}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-52, z=11173880}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-51, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627514, y=-51, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627513, y=-51, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627512, y=-51, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627511, y=-51, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-51, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627509, y=-51, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627508, y=-51, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627507, y=-51, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627506, y=-51, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-51, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-51, z=11173872}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-51, z=11173872}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-51, z=11173873}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-51, z=11173873}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-51, z=11173874}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-51, z=11173874}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-51, z=11173875}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-51, z=11173875}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-51, z=11173876}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-51, z=11173876}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-51, z=11173877}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-51, z=11173877}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-51, z=11173878}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-51, z=11173878}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-51, z=11173879}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-51, z=11173879}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-51, z=11173880}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-51, z=11173880}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-51, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627514, y=-51, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627513, y=-51, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627512, y=-51, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627511, y=-51, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-51, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627509, y=-51, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627508, y=-51, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627507, y=-51, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627506, y=-51, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-51, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-48, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-48, z=11173876}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-48, z=11173876}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-48, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-46, z=11173870}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627514, y=-46, z=11173870}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627513, y=-46, z=11173870}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627512, y=-46, z=11173870}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627511, y=-46, z=11173870}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-46, z=11173870}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627509, y=-46, z=11173870}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627508, y=-46, z=11173870}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627507, y=-46, z=11173870}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627506, y=-46, z=11173870}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-46, z=11173870}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627516, y=-46, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627504, y=-46, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627516, y=-46, z=11173872}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627504, y=-46, z=11173872}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627516, y=-46, z=11173873}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627504, y=-46, z=11173873}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627516, y=-46, z=11173874}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627504, y=-46, z=11173874}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627516, y=-46, z=11173875}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627504, y=-46, z=11173875}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627516, y=-46, z=11173876}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627504, y=-46, z=11173876}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627516, y=-46, z=11173877}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627504, y=-46, z=11173877}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627516, y=-46, z=11173878}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627504, y=-46, z=11173878}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627516, y=-46, z=11173879}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627504, y=-46, z=11173879}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627516, y=-46, z=11173880}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627504, y=-46, z=11173880}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627516, y=-46, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627504, y=-46, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-46, z=11173882}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627514, y=-46, z=11173882}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627513, y=-46, z=11173882}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627512, y=-46, z=11173882}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627511, y=-46, z=11173882}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-46, z=11173882}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627509, y=-46, z=11173882}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627508, y=-46, z=11173882}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627507, y=-46, z=11173882}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627506, y=-46, z=11173882}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-46, z=11173882}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627514, y=-45, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627513, y=-45, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627512, y=-45, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627511, y=-45, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-45, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627509, y=-45, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627508, y=-45, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627507, y=-45, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627506, y=-45, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-45, z=11173872}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-45, z=11173872}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-45, z=11173873}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-45, z=11173873}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-45, z=11173874}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-45, z=11173874}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-45, z=11173875}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-45, z=11173875}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-45, z=11173876}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-45, z=11173876}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-45, z=11173877}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-45, z=11173877}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-45, z=11173878}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-45, z=11173878}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-45, z=11173879}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-45, z=11173879}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-45, z=11173880}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-45, z=11173880}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627514, y=-45, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627513, y=-45, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627512, y=-45, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627511, y=-45, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-45, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627509, y=-45, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627508, y=-45, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627507, y=-45, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627506, y=-45, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627513, y=-44, z=11173872}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627512, y=-44, z=11173872}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627511, y=-44, z=11173872}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-44, z=11173872}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627509, y=-44, z=11173872}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627508, y=-44, z=11173872}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627507, y=-44, z=11173872}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627514, y=-44, z=11173873}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627506, y=-44, z=11173873}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627514, y=-44, z=11173874}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627506, y=-44, z=11173874}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627514, y=-44, z=11173875}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627506, y=-44, z=11173875}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627514, y=-44, z=11173876}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627506, y=-44, z=11173876}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627514, y=-44, z=11173877}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627506, y=-44, z=11173877}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627514, y=-44, z=11173878}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627506, y=-44, z=11173878}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627514, y=-44, z=11173879}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627506, y=-44, z=11173879}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627513, y=-44, z=11173880}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627512, y=-44, z=11173880}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627511, y=-44, z=11173880}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-44, z=11173880}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627509, y=-44, z=11173880}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627508, y=-44, z=11173880}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627507, y=-44, z=11173880}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627512, y=-43, z=11173873}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627511, y=-43, z=11173873}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-43, z=11173873}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627509, y=-43, z=11173873}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627508, y=-43, z=11173873}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627513, y=-43, z=11173874}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627507, y=-43, z=11173874}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627513, y=-43, z=11173875}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627507, y=-43, z=11173875}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627513, y=-43, z=11173876}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627507, y=-43, z=11173876}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627513, y=-43, z=11173877}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627507, y=-43, z=11173877}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627513, y=-43, z=11173878}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627507, y=-43, z=11173878}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627512, y=-43, z=11173879}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627511, y=-43, z=11173879}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-43, z=11173879}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627509, y=-43, z=11173879}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627508, y=-43, z=11173879}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627511, y=-42, z=11173874}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-42, z=11173874}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627509, y=-42, z=11173874}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627512, y=-42, z=11173875}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627508, y=-42, z=11173875}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627512, y=-42, z=11173876}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627508, y=-42, z=11173876}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627512, y=-42, z=11173877}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627508, y=-42, z=11173877}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627511, y=-42, z=11173878}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-42, z=11173878}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627509, y=-42, z=11173878}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-41, z=11173875}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627511, y=-41, z=11173876}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627509, y=-41, z=11173876}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-41, z=11173877}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-39, z=11173876}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-56, z=11173875}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-56, z=11173876}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-56, z=11173877}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-59, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-59, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-54, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627510, y=-54, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627514, y=-53, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-53, z=11173872}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627506, y=-53, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-53, z=11173872}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627514, y=-53, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-53, z=11173880}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627506, y=-53, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-53, z=11173880}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-52, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627513, y=-52, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627511, y=-52, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627509, y=-52, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627507, y=-52, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-52, z=11173871}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-52, z=11173873}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-52, z=11173873}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-52, z=11173875}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-52, z=11173875}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-52, z=11173877}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-52, z=11173877}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-52, z=11173879}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-52, z=11173879}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-52, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627513, y=-52, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627511, y=-52, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627509, y=-52, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627507, y=-52, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-52, z=11173881}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-53, z=11173874}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-54, z=11173874}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627505, y=-55, z=11173874}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-53, z=11173878}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-54, z=11173878}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-55, z=11173878}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-56, z=11173878}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-57, z=11173878}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-58, z=11173878}, but this operation is not supported.
+[15:35:58] [Server thread/WARN] (Minecraft) Trying to mark a block for PostProcessing @ BlockPos{x=12627515, y=-59, z=11173878}, but this operation is not supported.
+[15:35:58] [Server thread/INFO] (ew-gametest) [EW-GAMETEST] torre en el mundo: cuadrada 9x9, 2 pisos, garita de entramado, mampostería y dark oak, con voladizo, contrafuertes; arriba Block{minecraft:dark_oak_trapdoor}[facing=east,half=top,open=false,powered=false,waterlogged=false], cofres con botín 2/2, reclutas 1
+[15:35:58] [Server thread/INFO] (Minecraft) [+++++++++++++++++++++++++++++++++++++++++++++++++]
+[15:35:58] [Server thread/INFO] (Minecraft) [+++++++++++++++++++++++++++++++++++++++++++++++++]
+[15:35:58] [Server thread/INFO] (Minecraft) ========= 49 GAME TESTS COMPLETE IN 4.070 s ======================
+[15:35:58] [Server thread/INFO] (Minecraft) All 49 required tests passed :)
+[15:35:58] [Server thread/INFO] (Minecraft) ====================================================
+[15:35:58] [Server thread/INFO] (Minecraft) Stopping server
+[15:35:58] [Server thread/INFO] (Minecraft) Saving players
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player lost connection: Server closed
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player left the game
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player lost connection: Server closed
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player left the game
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player lost connection: Server closed
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player left the game
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player lost connection: Server closed
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player left the game
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player lost connection: Server closed
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player left the game
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player lost connection: Server closed
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player left the game
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player lost connection: Server closed
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player left the game
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player lost connection: Server closed
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player left the game
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player lost connection: Server closed
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player left the game
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player lost connection: Server closed
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player left the game
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player lost connection: Server closed
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player left the game
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player lost connection: Server closed
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player left the game
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player lost connection: Server closed
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player left the game
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player lost connection: Server closed
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player left the game
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player lost connection: Server closed
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player left the game
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player lost connection: Server closed
+[15:35:58] [Server thread/INFO] (Minecraft) test-mock-player left the game
+[15:35:58] [Server thread/INFO] (Minecraft) Saving worlds
+[15:35:59] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Test Level]'/minecraft:overworld
+[15:36:00] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_nether
+[15:36:00] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Test Level]'/minecraft:the_end
+[15:36:00] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage (world): All chunks are saved
+[15:36:00] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[15:36:00] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[15:36:00] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage: All dimensions are saved
+[15:36:00] [Server thread/INFO] (Minecraft) Game test server shutting down
+
+[Incubating] Problems report is available at: file:///home/runner/work/Evolved-Warfare/Evolved-Warfare/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 1m 4s
+8 actionable tasks: 8 executed
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.7.1/userguide/configuration_cache_enabling.html
