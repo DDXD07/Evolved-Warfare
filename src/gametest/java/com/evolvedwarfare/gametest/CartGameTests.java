@@ -177,6 +177,7 @@ public class CartGameTests implements FabricGameTest {
 		player.changeGameMode(GameMode.SURVIVAL);
 		long time = world.getTimeOfDay();
 		world.setTimeOfDay(18000L);
+		world.calculateAmbientDarkness();
 		cart.use(4, player);
 		BlockPos spawn = player.getSpawnPointPosition();
 		boolean asleep = player.isSleeping();
@@ -184,6 +185,7 @@ public class CartGameTests implements FabricGameTest {
 			LOG.info("[EW-GAMETEST] cama de la carreta: reaparición {} (carreta en {}), dormido {} -> {}", spawn, cart.getBlockPos(), asleep,
 					player.isSleeping());
 			world.setTimeOfDay(time);
+			world.calculateAmbientDarkness();
 			if (spawn == null || !spawn.isWithinDistance(cart.getBlockPos(), 2.0) || !asleep || !player.isSleeping()) {
 				throw new GameTestException("La cama de la carreta no deja dormir o no fija la reaparición");
 			}

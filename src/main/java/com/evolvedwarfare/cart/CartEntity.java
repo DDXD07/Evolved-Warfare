@@ -602,7 +602,7 @@ public class CartEntity extends Entity implements ExtendedScreenHandlerFactory<I
 		}
 		if (pullerUuid != null || puller != null) {
 			ItemStack lead = new ItemStack(Items.LEAD);
-			if (by != null && !by.isCreative()) {
+			if (by != null && !by.getAbilities().creativeMode) {
 				by.getInventory().offerOrDrop(lead);
 			} else if (by == null) {
 				Entity at = puller != null ? puller : this;
