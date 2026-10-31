@@ -119,6 +119,10 @@ public final class ModItems {
 			new Item.Settings().maxDamage(300).rarity(net.minecraft.util.Rarity.RARE)));
 	public static final Item MUSKET_BALL = register("musket_ball", new Item(new Item.Settings()));
 	/** Bolsa de munición: hasta 1000 balas de un tipo; las armas de fuego recargan de ella. */
+	/** La carreta y sus piezas: dos ruedas y la plancha. */
+	public static final Item CART_WHEEL = register("cart_wheel", new Item(new Item.Settings().maxCount(16)));
+	public static final Item CART_BED = register("cart_bed", new Item(new Item.Settings().maxCount(16)));
+	public static final Item CART = register("cart", new com.evolvedwarfare.cart.CartItem(new Item.Settings().maxCount(1)));
 	public static final Item AMMO_POUCH = register("ammo_pouch", new com.evolvedwarfare.item.AmmoPouchItem(new Item.Settings().maxCount(1)));
 
 	/** Un arma concreta: tipo y material ("iron", "diamond" o "netherite"). */
@@ -169,6 +173,9 @@ public final class ModItems {
 						entries.add(ModBlocks.GATE_WINCH);
 						entries.add(ModBlocks.RESEARCH_DESK);
 						entries.add(ModBlocks.CROP_CRATE_ITEM);
+						entries.add(CART_WHEEL);
+						entries.add(CART_BED);
+						entries.add(CART);
 						for (List<Item> items : WEAPONS.values()) {
 							items.forEach(entries::add);
 						}

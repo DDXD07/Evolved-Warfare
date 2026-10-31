@@ -611,6 +611,33 @@ monstruos y asaltantes (que también van a por ellos, así que defiende el merca
 | **Mercader de especias** | ciudades del desierto | azúcar, cacao, tintes...; luego polvo de blaze, lágrimas de ghast, aliento de dragón, cajas de shulker |
 | **Peletero** | ciudades del norte | cuero, ropa de cuero, hielo...; luego armadura de lobo, caparazón de tortuga y tótems |
 
+### Carreta
+
+Una plataforma de **3x3 bloques** sobre dos ruedas, con dos varas delante, para llevar tu taller o tu almacén contigo.
+
+- **Fabricarla**: primero las piezas, luego la carreta.
+  - **Rueda de carreta**: un tablón en el centro y cuatro palos alrededor (`_ S _`, `S P S`, `_ S _`).
+  - **Plancha de carreta**: tres losas de madera encima de tres troncos.
+  - **Carreta**: dos palos arriba (las varas, `S _ S`) y abajo rueda, plancha y rueda.
+- **Ponerla**: clic derecho en el suelo; queda con las varas hacia ti. Necesita sitio libre de 3x3.
+- **Tirar tú**: con una **rienda** en la mano, clic derecho en la carreta: te pones entre las varas y te sigue a donde
+  vayas (algo más despacio, y sube escalones de un bloque). **Agáchate** para soltarla y recuperar la rienda. Si se
+  atasca y te alejas mucho, se suelta sola.
+- **Con caballo** (o burro o mula, domado): con la rienda en la mano, clic derecho en el caballo cerca de la carreta (o
+  clic en la carreta con el caballo atado a ti). El caballo se coloca entre las varas; **súbete** y llévala. Para
+  soltarlo: bájate y agachado + clic derecho en la carreta.
+- **La carga** (clic derecho con la mano vacía): una pantalla con la carreta **vista desde arriba** y **9 huecos** (3x3,
+  delante arriba). Puedes poner **cofres, barriles, hornos** (también ahumador y alto horno), **mesas de crafteo** y
+  **camas**, en el orden que quieras. Cada cosa ocupa los mismos bloques que en el mundo: la **cama ocupa dos huecos**
+  seguidos (se ve de su color en la pantalla).
+- **Lo de encima se ve en 3D y se usa como siempre** (clic derecho en ello):
+  - **Cofre y barril**: 27 huecos cada uno.
+  - **Horno**: funde también en marcha (se ve encendido).
+  - **Mesa de crafteo**: la de siempre.
+  - **Cama**: fija tu reaparición junto a la carreta, aunque luego la muevas, y de noche puedes dormir en ella.
+- **Quitar algo** de su hueco: lo que tenga dentro cae al suelo. **Romper la carreta** (a golpes; con hacha va más rápido)
+  suelta la carreta, todo lo de encima y lo de dentro.
+
 ### Caja de cultivos
 
 Los comerciantes **ya no compran los cultivos sueltos: solo en cajas llenas**. La **Caja de cultivos** se fabrica con
@@ -766,6 +793,9 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
 - `ew_voices.py` — las voces de los NPCs, sintetizadas por formantes (un timbre por facción, sus frases y quejas), sus
   entradas en `sounds.json` y los subtítulos; con `--preview carpeta` dibuja el espectrograma de cada voz.
 - `ew_pouch.py` — iconos de la Bolsa de Gloria y de la bolsa de munición.
+- `ew_cart.py` — la carreta: iconos de la rueda, la plancha y la carreta, la pantalla de la carga vista desde arriba, las
+  recetas y los textos; con `--preview carpeta`, vistas en 3D (vacía, cargada, tirando tú y con caballo) con las mismas
+  medidas que `CartEntityRenderer.java`.
 - `ew_guide.py` — la Guía: icono, el libro abierto de la pantalla, la receta y los textos de las cuatro secciones;
   comprueba con los anchos de la letra del juego que cada página cabe, y con `--preview carpeta` dibuja cómo quedan.
 - `ew_crate.py` (+ `ew_crate_preview.py`) — la Caja de cultivos: texturas, modelo con asas, pantalla, receta, botín
@@ -788,5 +818,6 @@ existen, salen distintas) y una colocada de verdad con su botín y sus reclutas;
 hecho, que las habilidades suben al usarlas y dan puntos, que las ventajas desbloquean la fabricación y suman daño, y que
 la investigación de antes pasa al árbol; y que cada facción habla con su voz y todos sus sonidos existen; y que la
 Caja de cultivos guarda un solo cultivo hasta 64, se coge y se pone sin perder nada, se lleva con las dos manos, y que
-los comerciantes solo compran los cultivos en cajas llenas; y que la guía se da una sola vez. GitHub las pasa en cada cambio
+los comerciantes solo compran los cultivos en cajas llenas; y que la guía se da una sola vez; y la carreta (recetas,
+la cama de dos huecos, lo de dentro al quitar algo, el horno que funde, tirar tú, el caballo, dormir en ella y romperla). GitHub las pasa en cada cambio
 (trabajo `gametest`) y deja el registro en la rama `gametest-logs`. El código está en `src/gametest` y no va en el `.jar`.

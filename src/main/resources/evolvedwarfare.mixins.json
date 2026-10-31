@@ -5,6 +5,7 @@
 	"mixins": [
 		"CraftingScreenHandlerMixin",
 		"LivingEntityAccessor",
+		"LivingEntityCartSleepMixin",
 		"LivingEntityDamageMixin",
 		"LivingEntitySkillMixin",
 		"LivingEntitySwingMixin",

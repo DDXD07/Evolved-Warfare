@@ -985,5 +985,16 @@
   "guide.evolvedwarfare.skills.right.2": "Las ventajas de forja te dejan fabricar las armas y máquinas del mod.",
   "guide.evolvedwarfare.skills.right.3": "¿Perdiste esta guía? Libro + papel.",
   "item.evolvedwarfare.guide_book": "Guía de Evolved Warfare",
-  "message.evolvedwarfare.guide.given": "Tienes la Guía de Evolved Warfare en el inventario: clic derecho para leerla."
+  "message.evolvedwarfare.guide.given": "Tienes la Guía de Evolved Warfare en el inventario: clic derecho para leerla.",
+  "item.evolvedwarfare.cart_wheel": "Rueda de carreta",
+  "item.evolvedwarfare.cart_bed": "Plancha de carreta",
+  "item.evolvedwarfare.cart": "Carreta",
+  "entity.evolvedwarfare.cart": "Carreta",
+  "item.evolvedwarfare.cart.tooltip": "Rienda: tirar de ella (o engancha un caballo). Mano vacía: su carga.",
+  "message.evolvedwarfare.cart.pulling": "Tiras de la carreta. Agáchate para soltarla.",
+  "message.evolvedwarfare.cart.horse": "Caballo enganchado: súbete para llevar la carreta. Para soltarlo, agachado + clic derecho en ella.",
+  "message.evolvedwarfare.cart.released": "Has soltado la carreta.",
+  "message.evolvedwarfare.cart.snapped": "¡La carreta se ha quedado atrás y se ha soltado!",
+  "message.evolvedwarfare.cart.busy": "Ya hay alguien tirando de esta carreta.",
+  "message.evolvedwarfare.cart.no_room": "No cabe aquí: la carreta necesita 3x3 bloques libres."
 }

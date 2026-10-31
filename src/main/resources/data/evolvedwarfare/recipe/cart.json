@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "S S",
+    "WBW"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "W": {
+      "item": "evolvedwarfare:cart_wheel"
+    },
+    "B": {
+      "item": "evolvedwarfare:cart_bed"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:cart",
+    "count": 1
+  }
+}

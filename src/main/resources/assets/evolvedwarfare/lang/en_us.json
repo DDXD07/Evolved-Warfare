@@ -985,5 +985,16 @@
   "guide.evolvedwarfare.skills.right.2": "Forge perks let you craft the mod's weapons and machines.",
   "guide.evolvedwarfare.skills.right.3": "Lost this guide? Book + paper.",
   "item.evolvedwarfare.guide_book": "Evolved Warfare Guide",
-  "message.evolvedwarfare.guide.given": "You have the Evolved Warfare Guide in your inventory: right-click to read it."
+  "message.evolvedwarfare.guide.given": "You have the Evolved Warfare Guide in your inventory: right-click to read it.",
+  "item.evolvedwarfare.cart_wheel": "Cart Wheel",
+  "item.evolvedwarfare.cart_bed": "Cart Bed",
+  "item.evolvedwarfare.cart": "Cart",
+  "entity.evolvedwarfare.cart": "Cart",
+  "item.evolvedwarfare.cart.tooltip": "Lead: pull it (or hitch a horse). Empty hand: its load.",
+  "message.evolvedwarfare.cart.pulling": "You're pulling the cart. Sneak to let go.",
+  "message.evolvedwarfare.cart.horse": "Horse hitched: ride it to move the cart. To unhitch, sneak + right-click the cart.",
+  "message.evolvedwarfare.cart.released": "You let go of the cart.",
+  "message.evolvedwarfare.cart.snapped": "The cart got stuck behind and came loose!",
+  "message.evolvedwarfare.cart.busy": "Someone is already pulling this cart.",
+  "message.evolvedwarfare.cart.no_room": "No room here: the cart needs 3x3 free blocks."
 }

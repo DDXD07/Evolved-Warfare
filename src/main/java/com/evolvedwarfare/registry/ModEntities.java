@@ -84,6 +84,15 @@ public final class ModEntities {
 					.maxTrackingRange(10)
 					.build("pirate"));
 
+	/** Carreta de 3x3 con su carga (la llevas tú o un caballo). */
+	public static final EntityType<com.evolvedwarfare.cart.CartEntity> CART = Registry.register(Registries.ENTITY_TYPE,
+			EvolvedWarfare.id("cart"),
+			EntityType.Builder.<com.evolvedwarfare.cart.CartEntity>create(com.evolvedwarfare.cart.CartEntity::new, SpawnGroup.MISC)
+					.dimensions(3.0F, 1.75F)
+					.maxTrackingRange(10)
+					.trackingTickInterval(2)
+					.build("cart"));
+
 	/** Máquinas de asedio (fase 7). */
 	public static final EntityType<SiegeEngineEntity> CATAPULT = engine(SiegeKind.CATAPULT, 3.0F, 2.0F);
 	public static final EntityType<SiegeEngineEntity> BALLISTA = engine(SiegeKind.BALLISTA, 1.6F, 1.7F);
