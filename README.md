@@ -709,9 +709,10 @@ Para vender sin ir a una ciudad. Se fabrica con un lingote de hierro, una **Glor
   quieras vender.
 - **Se vende solo cada día nuevo** (al amanecer, cuando cambia el día en el reloj): todo lo que tenga precio de mercado
   se vende a **la cuarta parte de lo que cuesta nuevo** en una ciudad de nivel 1 (los comerciantes te pagan la mitad: el
-  buzón es más cómodo pero paga peor). Lo gastado vale según la durabilidad que le queda, y una Caja de víveres llena,
-  por lo que lleva dentro.
-- **Lo que no tiene precio** (tierra, por ejemplo) se queda en su hueco con el fondo en **rojo**. Al pasar el ratón por
+  buzón es más cómodo pero paga peor). **Lo que ninguna tienda vende ni compra vale lo que sus materiales** según su
+  receta más barata (de mesa, de horno o de cortapiedras): una espada de hierro vale sus dos lingotes y su palo. Lo
+  gastado vale según la durabilidad que le queda, y una Caja de víveres llena, por lo que lleva dentro.
+- **Lo que no tiene precio** (ni se fabrica con cosas que lo tengan: tierra, por ejemplo) se queda en su hueco con el fondo en **rojo**. Al pasar el ratón por
   encima de algo ves por cuánto se venderá. La pantalla también dice cuánto falta para la próxima venta, cuánto sacarías
   ahora y lo que dio la última venta.
 - **Las monedas** van al hueco de las monedas. Si pasan de 64, van en una **Bolsa de Gloria** (también puedes dejar ahí

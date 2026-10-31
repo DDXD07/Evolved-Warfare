@@ -2,12 +2,12 @@ package com.evolvedwarfare.block;
 
 import com.evolvedwarfare.item.CropCrateItem;
 import com.evolvedwarfare.item.GloryPouchItem;
+import com.evolvedwarfare.logistics.ItemValues;
 import com.evolvedwarfare.logistics.Market;
 import com.evolvedwarfare.registry.ModBlocks;
 import com.evolvedwarfare.registry.ModComponents;
 import com.evolvedwarfare.registry.ModItems;
 import com.evolvedwarfare.screen.SalesMailboxScreenHandler;
-import com.evolvedwarfare.trade.TraderType;
 import com.evolvedwarfare.world.Hordes;
 import java.util.UUID;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
@@ -45,7 +45,8 @@ import org.jetbrains.annotations.Nullable;
  * Lo de dentro de un Buzón de Ventas: 16 huecos para vender (4x4) y uno aparte para las monedas.
  *
  * <p>Cada vez que empieza un día nuevo (al amanecer, el mismo día que cuenta el reloj), vende todo lo que tenga precio
- * en el mercado a la cuarta parte de lo que cuesta nuevo ({@link TraderType#marketPrice}); lo gastado, según lo que le
+ * en el mercado a la cuarta parte de lo que cuesta nuevo ({@link ItemValues}: el de las tiendas o, si no, el de sus
+ * materiales); lo gastado, según lo que le
  * quede de durabilidad, y las Cajas de víveres, por lo que llevan. Lo que no tiene precio se queda donde estaba. Las
  * monedas van a su hueco (si pasan de un montón, en una Bolsa de Gloria) y lo que sobra de una moneda se guarda para la
  * próxima venta. Si el buzón estaba sin cargar, vende al volver a cargarse (una vez).</p>
@@ -126,14 +127,14 @@ public class SalesMailboxBlockEntity extends BlockEntity implements SidedInvento
 	 * Lo que paga el buzón por ese montón (en monedas, con decimales), o 0 si no lo compra: las monedas y las bolsas no
 	 * se venden, ni nada que lleve cosas dentro (cofres de shulker, saquitos...), que se perderían.
 	 */
-	public static double saleValue(ItemStack stack) {
+	public static double saleValue(ItemStack stack, @Nullable World world) {
 		if (stack.isEmpty() || Market.isCurrency(stack) || GloryPouchItem.isPouch(stack)) {
 			return 0.0;
 		}
 		if (stack.getItem() instanceof CropCrateItem) {
 			CropCrateItem.Contents contents = stack.get(ModComponents.CROP_CRATE);
-			double crate = TraderType.marketPrice(stack.getItem());
-			double inside = contents == null ? 0.0 : contents.count() * TraderType.marketPrice(contents.item());
+			double crate = ItemValues.value(stack.getItem(), world);
+			double inside = contents == null ? 0.0 : contents.count() * ItemValues.value(contents.item(), world);
 			return SHARE * (crate + inside) * stack.getCount();
 		}
 		if (stack.getOrDefault(DataComponentTypes.CONTAINER, ContainerComponent.DEFAULT).streamNonEmpty().findAny().isPresent()) {
@@ -143,7 +144,7 @@ public class SalesMailboxBlockEntity extends BlockEntity implements SidedInvento
 		if (bundle != null && !bundle.isEmpty()) {
 			return 0.0;
 		}
-		double unit = TraderType.marketPrice(stack.getItem());
+		double unit = ItemValues.value(stack.getItem(), world);
 		if (unit <= 0.0) {
 			return 0.0;
 		}
@@ -153,8 +154,8 @@ public class SalesMailboxBlockEntity extends BlockEntity implements SidedInvento
 		return SHARE * unit * stack.getCount();
 	}
 
-	public static boolean sellable(ItemStack stack) {
-		return saleValue(stack) > 0.0;
+	public static boolean sellable(ItemStack stack, @Nullable World world) {
+		return saleValue(stack, world) > 0.0;
 	}
 
 	// ------------------------------------------------------------------ venta
@@ -188,7 +189,7 @@ public class SalesMailboxBlockEntity extends BlockEntity implements SidedInvento
 		int sold = 0;
 		for (int i = 0; i < SALE_SLOTS; i++) {
 			ItemStack stack = items.get(i);
-			double value = saleValue(stack);
+			double value = saleValue(stack, world);
 			if (value > 0.0) {
 				total += value;
 				sold += stack.getCount();
@@ -331,7 +332,7 @@ public class SalesMailboxBlockEntity extends BlockEntity implements SidedInvento
 	/** Las tolvas solo meten lo que se puede vender (para no atascarlo). */
 	@Override
 	public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
-		return slot < SALE_SLOTS && dir != Direction.DOWN && sellable(stack);
+		return slot < SALE_SLOTS && dir != Direction.DOWN && sellable(stack, world);
 	}
 
 	@Override

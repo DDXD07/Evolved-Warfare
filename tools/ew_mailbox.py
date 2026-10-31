@@ -362,8 +362,8 @@ TEXTS = {
     "gui.evolvedwarfare.sales_mailbox.pending": ("≈ %s", "≈ %s"),
     "gui.evolvedwarfare.sales_mailbox.last": ("Última: %s → %s", "Last: %s → %s"),
     "gui.evolvedwarfare.sales_mailbox.worth": ("Se vende por ≈ %s Glory Coins", "Sells for ≈ %s Glory Coins"),
-    "gui.evolvedwarfare.sales_mailbox.unsellable": ("No se vende: no tiene precio en el mercado",
-                                                    "Won't sell: it has no market price"),
+    "gui.evolvedwarfare.sales_mailbox.unsellable": ("No se vende: no tiene precio en el mercado (ni sus materiales)",
+                                                    "Won't sell: neither it nor its materials have a market price"),
     "message.evolvedwarfare.sales_mailbox.sold": (
         "Buzón de Ventas: vendidos %s objetos por %s Glory Coins (%s, %s, %s)",
         "Sales Mailbox: sold %s items for %s Glory Coins (%s, %s, %s)"),

@@ -24,6 +24,7 @@ public class SalesMailboxScreenHandler extends ScreenHandler {
 	public static final int INVENTORY_Y = 104;
 
 	private final Inventory mailbox;
+	private final PlayerEntity player;
 	private final PropertyDelegate properties;
 
 	/** Cliente. */
@@ -43,6 +44,7 @@ public class SalesMailboxScreenHandler extends ScreenHandler {
 		checkSize(mailbox, SalesMailboxBlockEntity.SIZE);
 		this.mailbox = mailbox;
 		this.properties = properties;
+		this.player = playerInventory.player;
 		mailbox.onOpen(playerInventory.player);
 		for (int row = 0; row < 4; row++) {
 			for (int col = 0; col < 4; col++) {
@@ -85,7 +87,7 @@ public class SalesMailboxScreenHandler extends ScreenHandler {
 	public double pendingValue() {
 		double total = 0.0;
 		for (int i = 0; i < SalesMailboxBlockEntity.SALE_SLOTS; i++) {
-			total += SalesMailboxBlockEntity.saleValue(slots.get(i).getStack());
+			total += SalesMailboxBlockEntity.saleValue(slots.get(i).getStack(), player.getWorld());
 		}
 		return total;
 	}

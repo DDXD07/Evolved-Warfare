@@ -1204,7 +1204,7 @@
   "gui.evolvedwarfare.sales_mailbox.pending": "≈ %s",
   "gui.evolvedwarfare.sales_mailbox.last": "Última: %s → %s",
   "gui.evolvedwarfare.sales_mailbox.worth": "Se vende por ≈ %s Glory Coins",
-  "gui.evolvedwarfare.sales_mailbox.unsellable": "No se vende: no tiene precio en el mercado",
+  "gui.evolvedwarfare.sales_mailbox.unsellable": "No se vende: no tiene precio en el mercado (ni sus materiales)",
   "message.evolvedwarfare.sales_mailbox.sold": "Buzón de Ventas: vendidos %s objetos por %s Glory Coins (%s, %s, %s)",
   "message.evolvedwarfare.sales_mailbox.not_yours": "Este buzón no es tuyo"
 }

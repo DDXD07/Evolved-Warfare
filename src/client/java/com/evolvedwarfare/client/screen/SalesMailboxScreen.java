@@ -48,7 +48,7 @@ public class SalesMailboxScreen extends HandledScreen<SalesMailboxScreenHandler>
 		context.drawTexture(TEXTURE, x, y, 0, 0, backgroundWidth, backgroundHeight);
 		// lo que no se vende: fondo rojo en su hueco
 		for (Slot slot : handler.slots) {
-			if (handler.isSaleSlot(slot) && slot.hasStack() && !SalesMailboxBlockEntity.sellable(slot.getStack())) {
+			if (handler.isSaleSlot(slot) && slot.hasStack() && !SalesMailboxBlockEntity.sellable(slot.getStack(), client != null ? client.world : null)) {
 				context.fill(x + slot.x, y + slot.y, x + slot.x + 16, y + slot.y + 16, 0x90C03030);
 			}
 		}
@@ -81,7 +81,7 @@ public class SalesMailboxScreen extends HandledScreen<SalesMailboxScreenHandler>
 	protected List<Text> getTooltipFromItem(ItemStack stack) {
 		List<Text> tooltip = new ArrayList<>(super.getTooltipFromItem(stack));
 		if (focusedSlot != null && handler.isSaleSlot(focusedSlot) && focusedSlot.getStack() == stack) {
-			double value = SalesMailboxBlockEntity.saleValue(stack);
+			double value = SalesMailboxBlockEntity.saleValue(stack, client != null ? client.world : null);
 			if (value > 0.0) {
 				tooltip.add(Text.translatable("gui.evolvedwarfare.sales_mailbox.worth", format(value)).formatted(Formatting.GOLD));
 			} else {

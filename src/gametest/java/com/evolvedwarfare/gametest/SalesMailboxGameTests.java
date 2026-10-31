@@ -6,6 +6,7 @@ import com.evolvedwarfare.item.CropCrateItem;
 import com.evolvedwarfare.item.GloryPouchItem;
 import com.evolvedwarfare.logistics.Market;
 import com.evolvedwarfare.registry.ModBlocks;
+import com.evolvedwarfare.logistics.ItemValues;
 import com.evolvedwarfare.trade.TraderType;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.item.ItemStack;
@@ -45,11 +46,11 @@ public class SalesMailboxGameTests implements FabricGameTest {
 		mailbox.setStack(3, new ItemStack(Items.DIRT, 10));
 		mailbox.setStack(4, CropCrateItem.filled(ModBlocks.CROP_CRATE_ITEM, Items.CARROT));
 
-		double wheat = TraderType.marketPrice(Items.WHEAT);
-		double diamond = TraderType.marketPrice(Items.DIAMOND);
-		double swordPrice = TraderType.marketPrice(Items.IRON_SWORD);
-		double carrot = TraderType.marketPrice(Items.CARROT);
-		double crate = TraderType.marketPrice(ModBlocks.CROP_CRATE_ITEM);
+		double wheat = ItemValues.value(Items.WHEAT, ctx.getWorld());
+		double diamond = ItemValues.value(Items.DIAMOND, ctx.getWorld());
+		double swordPrice = ItemValues.value(Items.IRON_SWORD, ctx.getWorld());
+		double carrot = ItemValues.value(Items.CARROT, ctx.getWorld());
+		double crate = ItemValues.value(ModBlocks.CROP_CRATE_ITEM, ctx.getWorld());
 		double expected = 0.25 * (64 * wheat + 3 * diamond
 				+ swordPrice * (sword.getMaxDamage() - sword.getDamage()) / (double) sword.getMaxDamage()
 				+ crate + CropCrateItem.capacity(Items.CARROT) * carrot);
@@ -57,7 +58,11 @@ public class SalesMailboxGameTests implements FabricGameTest {
 		if (wheat <= 0 || diamond <= 0 || swordPrice <= 0 || carrot <= 0) {
 			throw new GameTestException("Algo de la prueba no tiene precio de mercado");
 		}
-		if (TraderType.marketPrice(Items.DIRT) != 0.0) {
+		double fromRecipe = 2 * ItemValues.value(Items.IRON_INGOT, ctx.getWorld()) + ItemValues.value(Items.STICK, ctx.getWorld());
+		if (TraderType.marketPrice(Items.IRON_SWORD) == 0.0 && Math.abs(swordPrice - fromRecipe) > 1.0E-6) {
+			throw new GameTestException("La espada de hierro tiene que valer sus materiales (" + fromRecipe + "), no " + swordPrice);
+		}
+		if (ItemValues.value(Items.DIRT, ctx.getWorld()) != 0.0) {
 			throw new GameTestException("La tierra no debería tener precio");
 		}
 
@@ -102,7 +107,7 @@ public class SalesMailboxGameTests implements FabricGameTest {
 	@GameTest(templateName = EMPTY_STRUCTURE)
 	public void keepsFractionsForNextSale(TestContext ctx) {
 		SalesMailboxBlockEntity mailbox = place(ctx);
-		double unit = 0.25 * TraderType.marketPrice(Items.COBBLESTONE);
+		double unit = 0.25 * ItemValues.value(Items.COBBLESTONE, ctx.getWorld());
 		if (unit <= 0.0) {
 			throw new GameTestException("El empedrado no tiene precio");
 		}
@@ -131,7 +136,7 @@ public class SalesMailboxGameTests implements FabricGameTest {
 	@GameTest(templateName = EMPTY_STRUCTURE)
 	public void coinsAreNotForSale(TestContext ctx) {
 		SalesMailboxBlockEntity mailbox = place(ctx);
-		if (mailbox.isValid(0, new ItemStack(Market.currency())) || SalesMailboxBlockEntity.sellable(new ItemStack(Market.currency()))) {
+		if (mailbox.isValid(0, new ItemStack(Market.currency())) || SalesMailboxBlockEntity.sellable(new ItemStack(Market.currency()), ctx.getWorld())) {
 			throw new GameTestException("Las Glory Coins se pueden vender en el buzón");
 		}
 		if (!mailbox.isValid(SalesMailboxBlockEntity.COIN_SLOT, new ItemStack(com.evolvedwarfare.registry.ModItems.GLORY_POUCH))) {
