@@ -107,6 +107,9 @@ public class HeavyAttackGameTests implements FabricGameTest {
 		ctx.waitAndRun(2, () -> {
 			ServerWorld world = ctx.getWorld();
 			player.refreshPositionAndAngles(pos.x, pos.y, pos.z, 0.0F, 10.0F);
+			// por si le ha alcanzado el barrido de la prueba de al lado: vida llena y sin invulnerabilidad
+			zombie.setHealth(zombie.getMaxHealth());
+			reset(zombie, zombie.getMaxHealth());
 			float start = zombie.getHealth();
 
 			// 1) un golpe normal
