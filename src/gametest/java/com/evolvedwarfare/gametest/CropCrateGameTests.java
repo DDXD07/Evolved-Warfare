@@ -90,6 +90,13 @@ public class CropCrateGameTests implements FabricGameTest {
 		List<Deal> spices = TraderType.SPICE_MERCHANT.catalog(1, 99L, 0L, world.getRegistryManager());
 		Deal wheat = crateDeal(grocer, Items.WHEAT);
 		Deal cane = crateDeal(spices, Items.SUGAR_CANE);
+		// carnes y pescados: también solo en cajas llenas
+		Deal cod = crateDeal(grocer, Items.COD);
+		LOG.info("[EW-GAMETEST] cajas: bacalao {} monedas ({} al día)", cod.price(), cod.stock());
+		if (!cod.accepts(CropCrateItem.filled(ModBlocks.CROP_CRATE_ITEM, Items.COD)) || cod.accepts(new ItemStack(Items.COD, 64))
+				|| !CropCrateItem.isCrop(Items.BEEF) || !CropCrateItem.isCrop(Items.COOKED_SALMON)) {
+			throw new GameTestException("Las carnes y pescados no van en cajas");
+		}
 		LOG.info("[EW-GAMETEST] cajas: trigo {} monedas ({} al día), caña {} monedas ({} al día)", wheat.price(), wheat.stock(), cane.price(),
 				cane.stock());
 		for (Deal deal : grocer) {

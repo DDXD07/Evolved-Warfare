@@ -28,6 +28,12 @@ CROPS = [
     "minecraft:wheat", "minecraft:carrot", "minecraft:potato", "minecraft:beetroot", "minecraft:melon_slice",
     "minecraft:melon", "minecraft:pumpkin", "minecraft:sweet_berries", "minecraft:glow_berries", "minecraft:cocoa_beans",
     "minecraft:sugar_cane", "minecraft:cactus", "minecraft:bamboo", "minecraft:nether_wart", "minecraft:apple",
+    # carnes y pescados (crudos y hechos)
+    "minecraft:beef", "minecraft:porkchop", "minecraft:chicken", "minecraft:mutton", "minecraft:rabbit",
+    "minecraft:cooked_beef", "minecraft:cooked_porkchop", "minecraft:cooked_chicken", "minecraft:cooked_mutton",
+    "minecraft:cooked_rabbit",
+    "minecraft:cod", "minecraft:salmon", "minecraft:tropical_fish", "minecraft:pufferfish", "minecraft:cooked_cod",
+    "minecraft:cooked_salmon",
 ]
 
 
@@ -293,10 +299,10 @@ LOOT = {
 
 # (español, inglés)
 TEXTS = {
-    "block.evolvedwarfare.crop_crate": ("Caja de cultivos", "Crop Crate"),
+    "block.evolvedwarfare.crop_crate": ("Caja de víveres", "Produce Crate"),
     "item.evolvedwarfare.crop_crate.filled": ("Caja de %s", "Crate of %s"),
-    "tooltip.evolvedwarfare.crop_crate.empty": ("Vacía: ponla y clic derecho para meterle un cultivo (hasta 64)",
-                                                "Empty: place it and right-click to fill it with a crop (up to 64)"),
+    "tooltip.evolvedwarfare.crop_crate.empty": ("Vacía: ponla y clic derecho para meterle un cultivo, una carne o un pescado (hasta 64)",
+                                                "Empty: place it and right-click to fill it with a crop, meat or fish (up to 64)"),
     "tooltip.evolvedwarfare.crop_crate.count": ("%s/%s de %s", "%s/%s %s"),
     "tooltip.evolvedwarfare.crop_crate.full": ("Llena: los comerciantes te la compran", "Full: traders will buy it"),
     "tooltip.evolvedwarfare.crop_crate.not_full": ("Faltan %s para llenarla (solo compran cajas llenas)",
@@ -307,8 +313,8 @@ TEXTS = {
     "gui.evolvedwarfare.crop_crate.full": ("¡Llena!", "Full!"),
     "gui.evolvedwarfare.crop_crate.missing": ("Faltan %s", "%s to go"),
     "message.evolvedwarfare.crop_crate.two_hands": ("Las cajas se llevan con las dos manos", "Crates are carried with both hands"),
-    "gui.evolvedwarfare.trader.crates_only": ("Los cultivos solo los compra en cajas llenas (Caja de cultivos)",
-                                              "Crops are only bought in full crates (Crop Crate)"),
+    "gui.evolvedwarfare.trader.crates_only": ("Cultivos, carnes y pescados: solo los compra en cajas llenas (Caja de víveres)",
+                                              "Crops, meat and fish are only bought in full crates (Produce Crate)"),
 }
 
 

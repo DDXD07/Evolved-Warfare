@@ -665,9 +665,10 @@ Una plataforma de **3x3 bloques** sobre dos ruedas, con dos varas delante, para 
 - **Quitar algo** de su hueco: lo que tenga dentro cae al suelo. **Romper la carreta** (a golpes; con hacha va más rápido)
   suelta la carreta, todo lo de encima y lo de dentro.
 
-### Caja de cultivos
+### Caja de víveres (antes, de cultivos)
 
-Los comerciantes **ya no compran los cultivos sueltos: solo en cajas llenas**. La **Caja de cultivos** se fabrica con
+Los comerciantes **ya no compran cultivos, carnes ni pescados sueltos: solo en cajas llenas**. La **Caja de víveres** se
+fabrica con
 dos palos arriba (`S _ S`), dos tablones a los lados (`P _ P`) y tres tablones abajo (`P P P`).
 
 - **Llenarla**: ponla en el suelo y haz clic derecho. Tiene **un hueco** donde cabe un solo cultivo, **hasta 64**. La
@@ -690,8 +691,11 @@ dos palos arriba (`S _ S`), dos tablones a los lados (`P _ P`) y tres tablones a
   un 10 % más por venir en caja. Compran tantas cajas al día como cultivos sueltos movían antes (2 como mínimo). Una caja
   a medio llenar no la compran.
 - **Qué cabe**: trigo, zanahorias, patatas, remolachas, rodajas de melón, melones, calabazas, bayas dulces, bayas
-  luminosas, cacao, caña de azúcar, cactus, bambú, verrugas del Nether y manzanas. Se pueden añadir más con la etiqueta
-  `evolvedwarfare:crate_crops`.
+  luminosas, cacao, caña de azúcar, cactus, bambú, verrugas del Nether y manzanas; **carnes** (ternera, cerdo, pollo,
+  cordero y conejo, crudos o hechos) y **pescados** (bacalao, salmón, pez tropical y pez globo, y el bacalao y el salmón
+  hechos). Se pueden añadir más con la etiqueta `evolvedwarfare:crate_crops`.
+- **Carnes y pescados**: el tendero compra en cajas la ternera, el cerdo, el pollo, el cordero y el conejo crudos, y
+  ahora también el bacalao y el salmón (los peces tropicales y globo, en las ciudades de más nivel).
 - El mercader de tu pueblo sigue vendiendo los excedentes del almacén sueltos.
 
 ### La tienda

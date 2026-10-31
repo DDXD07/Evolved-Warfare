@@ -141,7 +141,9 @@ public enum TraderType {
 					.buy(c, Items.WHEAT, Items.CARROT, Items.POTATO, Items.BEETROOT, Items.MELON_SLICE, Items.PUMPKIN,
 							Items.SWEET_BERRIES, Items.EGG)
 					.buy(u, Items.BEEF, Items.CHICKEN, Items.PORKCHOP, Items.MUTTON, Items.HONEY_BOTTLE, Items.COCOA_BEANS)
-					.buy(r, Items.GLOW_BERRIES, Items.RABBIT);
+					.buy(r, Items.GLOW_BERRIES, Items.RABBIT)
+					.buy(c, Items.COD, Items.SALMON)
+					.buy(r, Items.TROPICAL_FISH, Items.PUFFERFISH);
 			case ARMORER -> {
 				b.sell(c, Items.ARROW, 16, 1).sell(c, Items.SHIELD, 1, 3).sell(c, Items.IRON_HELMET, 1, 5)
 						.sell(c, Items.IRON_BOOTS, 1, 4).sell(c, Items.CHAINMAIL_CHESTPLATE, 1, 5)
