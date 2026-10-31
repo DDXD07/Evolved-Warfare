@@ -1016,6 +1016,7 @@
   "item.evolvedwarfare.cart_bed": "Plancha de carreta",
   "item.evolvedwarfare.cart": "Carreta",
   "entity.evolvedwarfare.cart": "Carreta",
+  "entity.evolvedwarfare.gate_mover": "Puerta en movimiento",
   "item.evolvedwarfare.cart.tooltip": "Rienda: tirar de ella (o engancha un caballo). Mano vacía: su carga.",
   "message.evolvedwarfare.cart.pulling": "Tiras de la carreta. Agáchate para soltarla.",
   "message.evolvedwarfare.cart.horse": "Caballo enganchado: súbete para llevar la carreta. Para soltarlo, agachado + clic derecho en ella.",

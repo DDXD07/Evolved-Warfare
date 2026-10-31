@@ -1016,6 +1016,7 @@
   "item.evolvedwarfare.cart_bed": "Cart Bed",
   "item.evolvedwarfare.cart": "Cart",
   "entity.evolvedwarfare.cart": "Cart",
+  "entity.evolvedwarfare.gate_mover": "Moving Gate",
   "item.evolvedwarfare.cart.tooltip": "Lead: pull it (or hitch a horse). Empty hand: its load.",
   "message.evolvedwarfare.cart.pulling": "You're pulling the cart. Sneak to let go.",
   "message.evolvedwarfare.cart.horse": "Horse hitched: ride it to move the cart. To unhitch, sneak + right-click the cart.",

@@ -17,7 +17,8 @@
 			"com.evolvedwarfare.gametest.CartGameTests",
 			"com.evolvedwarfare.gametest.HeavyAttackGameTests",
 			"com.evolvedwarfare.gametest.HordeGameTests",
-			"com.evolvedwarfare.gametest.FactionArmorGameTests"
+			"com.evolvedwarfare.gametest.FactionArmorGameTests",
+			"com.evolvedwarfare.gametest.GateGameTests"
 		]
 	},
 	"depends": {

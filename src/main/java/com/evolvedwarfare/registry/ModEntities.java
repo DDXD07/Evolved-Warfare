@@ -93,6 +93,17 @@ public final class ModEntities {
 					.trackingTickInterval(2)
 					.build("cart"));
 
+	/** Un rastrillo o un puente levadizo mientras se mueve (lo crea el torno; se dibuja con los bloques de la puerta). */
+	public static final EntityType<com.evolvedwarfare.block.GateMoverEntity> GATE_MOVER = Registry.register(Registries.ENTITY_TYPE,
+			EvolvedWarfare.id("gate_mover"),
+			EntityType.Builder.<com.evolvedwarfare.block.GateMoverEntity>create(com.evolvedwarfare.block.GateMoverEntity::new, SpawnGroup.MISC)
+					.dimensions(1.0F, 1.0F)
+					.maxTrackingRange(10)
+					.trackingTickInterval(20)
+					.disableSummon()
+					.makeFireImmune()
+					.build("gate_mover"));
+
 	/** Máquinas de asedio (fase 7). */
 	public static final EntityType<SiegeEngineEntity> CATAPULT = engine(SiegeKind.CATAPULT, 3.0F, 2.0F);
 	public static final EntityType<SiegeEngineEntity> BALLISTA = engine(SiegeKind.BALLISTA, 1.6F, 1.7F);

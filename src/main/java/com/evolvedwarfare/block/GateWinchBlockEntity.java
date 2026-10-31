@@ -5,7 +5,6 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,7 +13,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
@@ -25,7 +23,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -40,13 +38,19 @@ import org.jetbrains.annotations.Nullable;
  * bisagra: al subirlo, las filas de la punta pasan a apilarse encima de la bisagra, y al bajarlo vuelven a salir hacia
  * donde mira el torno.</li>
  * </ul>
- * Se mueve un bloque (o una fila) cada pocos tics. Si alguien rompe una pieza, se desengancha: otro clic lo vuelve a
- * enganchar.
+ * El movimiento se ve entero y suave: el torno quita los bloques y los lleva una {@link GateMoverEntity}, que los dibuja
+ * subiendo, bajando o girando y al acabar los pone en su sitio nuevo. Si alguien rompe una pieza, se desengancha: otro
+ * clic lo vuelve a enganchar.
  */
 public class GateWinchBlockEntity extends BlockEntity {
 	private static final int MAX_PARTS = 256;
-	private static final int PORTCULLIS_STEP = 4;
 	private static final int DRAWBRIDGE_STEP = 5;
+	/** Lo que tarda el rastrillo por bloque al subir y al bajar (tics). */
+	private static final int RAISE_TICKS = 8;
+	private static final int LOWER_TICKS = 5;
+	/** Lo que tarda el puente en girar: un poco y algo más por cada bloque de largo (tics). */
+	private static final int SWING_BASE = 12;
+	private static final int SWING_PER_BLOCK = 6;
 
 	private enum Mode {
 		NONE,
@@ -67,6 +71,11 @@ public class GateWinchBlockEntity extends BlockEntity {
 	private boolean targetOpen;
 	private boolean moving;
 	private int cooldown;
+	/** Hay una {@link GateMoverEntity} moviéndolo ahora (sus bloques no están en el mundo). */
+	private boolean animating;
+	@Nullable
+	private UUID mover;
+	private int lostTicks;
 	@Nullable
 	private UUID owner;
 
@@ -87,6 +96,12 @@ public class GateWinchBlockEntity extends BlockEntity {
 	// ------------------------------------------------------------------ uso
 
 	public void use(PlayerEntity player) {
+		if (animating) {
+			// en marcha: se apunta el cambio y se hace al acabar este movimiento
+			setTarget(!targetOpen);
+			player.sendMessage(Text.translatable(targetOpen ? "message.evolvedwarfare.winch.opening" : "message.evolvedwarfare.winch.closing"), true);
+			return;
+		}
 		if (owner != null && !owner.equals(player.getUuid()) && !player.getAbilities().creativeMode) {
 			player.sendMessage(Text.translatable("message.evolvedwarfare.winch.not_yours"), true);
 			return;
@@ -107,6 +122,10 @@ public class GateWinchBlockEntity extends BlockEntity {
 	}
 
 	public void onRedstone(boolean powered) {
+		if (animating) {
+			setTarget(powered);
+			return;
+		}
 		if (mode == Mode.NONE || !intact()) {
 			if (!link()) {
 				return;
@@ -259,6 +278,21 @@ public class GateWinchBlockEntity extends BlockEntity {
 	// ------------------------------------------------------------------ mover
 
 	public static void tick(World world, BlockPos pos, BlockState state, GateWinchBlockEntity winch) {
+		if (winch.animating) {
+			// lo mueve la entidad; si se ha perdido (más de 10 s sin encontrarla), se da por acabado y se desengancha
+			if (world instanceof ServerWorld serverWorld && winch.mover != null && serverWorld.getEntity(winch.mover) == null) {
+				if (++winch.lostTicks > 200) {
+					winch.animating = false;
+					winch.mover = null;
+					winch.mode = Mode.NONE;
+					winch.moving = false;
+					winch.markDirty();
+				}
+			} else {
+				winch.lostTicks = 0;
+			}
+			return;
+		}
 		if (!winch.moving || winch.mode == Mode.NONE) {
 			return;
 		}
@@ -272,12 +306,126 @@ public class GateWinchBlockEntity extends BlockEntity {
 			winch.markDirty();
 			return;
 		}
-		boolean moved = winch.mode == Mode.PORTCULLIS ? winch.stepPortcullis(world) : winch.stepDrawbridge(world);
+		boolean moved;
+		if (winch.mode == Mode.PORTCULLIS) {
+			moved = winch.startPortcullis(world);
+		} else if (winch.upright == 0 || winch.upright == winch.length - 1) {
+			moved = winch.startDrawbridge(world);
+		} else {
+			// a medio subir (de antes de la animación): se acaba fila a fila como antes
+			moved = winch.stepDrawbridge(world);
+			winch.cooldown = DRAWBRIDGE_STEP;
+		}
 		if (!moved) {
 			winch.moving = false;
 		}
-		winch.cooldown = winch.mode == Mode.PORTCULLIS ? PORTCULLIS_STEP : DRAWBRIDGE_STEP;
 		winch.markDirty();
+	}
+
+	/** Lo llama la entidad al acabar el movimiento (con los bloques ya en su sitio nuevo). */
+	public void finishMove(UUID id) {
+		if (animating && id.equals(mover)) {
+			animating = false;
+			mover = null;
+			cooldown = 2;
+			markDirty();
+		}
+	}
+
+	/** ¿Se está moviendo (con animación) ahora? */
+	public boolean isAnimating() {
+		return animating;
+	}
+
+	/** Quita los bloques de esas posiciones (los lleva la entidad) y apunta sus estados. */
+	private static List<BlockState> lift(World world, List<BlockPos> at) {
+		List<BlockState> states = new ArrayList<>();
+		for (BlockPos p : at) {
+			states.add(world.getBlockState(p));
+		}
+		for (BlockPos p : at) {
+			world.setBlockState(p, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+		}
+		return states;
+	}
+
+	private void launch(World world, GateMoverEntity entity) {
+		world.spawnEntity(entity);
+		animating = true;
+		mover = entity.getUuid();
+		lostTicks = 0;
+	}
+
+	/** El rastrillo: sube del todo (o lo que deje el hueco de encima) o baja hasta el suelo, de una vez y suave. */
+	private boolean startPortcullis(World world) {
+		int dir = targetOpen ? 1 : -1;
+		int max = targetOpen ? height - raised : 64;
+		int steps = 0;
+		while (steps < max && canShiftBy(world, dir * (steps + 1))) {
+			steps++;
+		}
+		if (steps == 0) {
+			if (!targetOpen) {
+				raised = 0;
+			}
+			return false;
+		}
+		List<BlockPos> current = currentBlocks();
+		BlockPos origin = current.get(0);
+		List<BlockPos> rel = new ArrayList<>();
+		for (BlockPos p : current) {
+			rel.add(p.subtract(origin));
+		}
+		List<BlockState> states = lift(world, current);
+		int dy = dir * steps;
+		launch(world, GateMoverEntity.slide(world, origin, rel, states, dy, steps * (targetOpen ? RAISE_TICKS : LOWER_TICKS), pos));
+		parts.replaceAll(part -> part.up(dy));
+		raised = targetOpen ? Math.min(height, raised + steps) : 0;
+		return true;
+	}
+
+	/** ¿Cabe el rastrillo desplazado dy bloques (todo el recorrido ya comprobado hasta dy - 1)? */
+	private boolean canShiftBy(World world, int dy) {
+		Set<BlockPos> current = new HashSet<>(currentBlocks());
+		for (BlockPos at : current) {
+			BlockPos next = at.up(dy);
+			if (!current.contains(next) && !free(world, next)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/** El puente: un cuarto de vuelta sobre la bisagra, si está despejado por donde tiene que quedar. */
+	private boolean startDrawbridge(World world) {
+		Direction dir = out();
+		boolean raise = !targetOpen;
+		if (raise ? upright >= length - 1 : upright <= 0) {
+			return false;
+		}
+		for (BlockPos part : parts) {
+			BlockPos hinge = pos.add(part);
+			for (int k = 1; k < length; k++) {
+				if (!free(world, raise ? hinge.up(k) : hinge.offset(dir, k))) {
+					return false;
+				}
+			}
+		}
+		BlockPos origin = pos.add(parts.get(0));
+		List<BlockPos> at = new ArrayList<>();
+		List<BlockPos> rel = new ArrayList<>();
+		for (BlockPos part : parts) {
+			BlockPos hinge = pos.add(part);
+			for (int k = 0; k < length; k++) {
+				at.add(raise ? hinge.offset(dir, k) : hinge.up(k));
+				// como si estuviera bajado: la punta hacia fuera
+				rel.add(hinge.subtract(origin).offset(dir, k));
+			}
+		}
+		List<BlockState> states = lift(world, at);
+		launch(world, GateMoverEntity.swing(world, origin, rel, states, dir, raise, SWING_BASE + SWING_PER_BLOCK * length, pos));
+		upright = raise ? length - 1 : 0;
+		return true;
 	}
 
 	/** ¿Siguen las piezas donde deben? */
@@ -333,49 +481,6 @@ public class GateWinchBlockEntity extends BlockEntity {
 		return true;
 	}
 
-	private boolean stepPortcullis(World world) {
-		int dy;
-		if (targetOpen) {
-			if (raised >= height) {
-				return false;
-			}
-			dy = 1;
-		} else {
-			dy = -1;
-		}
-		if (!canShift(world, dy)) {
-			if (!targetOpen) {
-				raised = 0;
-			}
-			return false;
-		}
-		Map<BlockPos, BlockState> current = new LinkedHashMap<>();
-		for (BlockPos at : currentBlocks()) {
-			current.put(at, world.getBlockState(at));
-		}
-		Map<BlockPos, BlockState> next = new LinkedHashMap<>();
-		for (Map.Entry<BlockPos, BlockState> entry : current.entrySet()) {
-			next.put(entry.getKey().up(dy), entry.getValue());
-		}
-		for (Map.Entry<BlockPos, BlockState> entry : next.entrySet()) {
-			if (!current.containsKey(entry.getKey())) {
-				if (dy < 0) {
-					crush(world, entry.getKey());
-				}
-				world.setBlockState(entry.getKey(), entry.getValue(), Block.NOTIFY_ALL);
-			}
-		}
-		for (BlockPos at : current.keySet()) {
-			if (!next.containsKey(at)) {
-				world.setBlockState(at, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
-			}
-		}
-		parts.replaceAll(part -> part.up(dy));
-		raised = Math.max(0, raised + dy);
-		world.playSound(null, pos, SoundEvents.BLOCK_CHAIN_PLACE, SoundCategory.BLOCKS, 0.8F, dy > 0 ? 0.7F : 0.5F);
-		return true;
-	}
-
 	private boolean stepDrawbridge(World world) {
 		Direction dir = out();
 		List<BlockPos> from = new ArrayList<>();
@@ -416,13 +521,6 @@ public class GateWinchBlockEntity extends BlockEntity {
 		return true;
 	}
 
-	/** Lo que esté debajo del rastrillo cuando baja se lleva un buen golpe. */
-	private static void crush(World world, BlockPos at) {
-		for (LivingEntity entity : world.getEntitiesByClass(LivingEntity.class, new Box(at), LivingEntity::isAlive)) {
-			entity.damage(world.getDamageSources().fallingBlock(null), 6.0F);
-		}
-	}
-
 	// ------------------------------------------------------------------ guardar
 
 	@Override
@@ -441,6 +539,10 @@ public class GateWinchBlockEntity extends BlockEntity {
 		nbt.putInt("Upright", upright);
 		nbt.putBoolean("TargetOpen", targetOpen);
 		nbt.putBoolean("Moving", moving);
+		nbt.putBoolean("Animating", animating);
+		if (mover != null) {
+			nbt.putUuid("Mover", mover);
+		}
 		if (owner != null) {
 			nbt.putUuid("Owner", owner);
 		}
@@ -465,6 +567,8 @@ public class GateWinchBlockEntity extends BlockEntity {
 		upright = nbt.getInt("Upright");
 		targetOpen = nbt.getBoolean("TargetOpen");
 		moving = nbt.getBoolean("Moving");
+		animating = nbt.getBoolean("Animating");
+		mover = nbt.containsUuid("Mover") ? nbt.getUuid("Mover") : null;
 		owner = nbt.containsUuid("Owner") ? nbt.getUuid("Owner") : null;
 	}
 }

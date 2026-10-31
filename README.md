@@ -430,9 +430,12 @@ Las dos se pueden asaltar (como las aldeas y la ciudad medieval).
   puente. La primera vez que lo usas se lo aprende entero. Clic derecho para abrir o cerrar; con **redstone**,
   encendido = abierto (rastrillo arriba, puente bajado).
   - El **rastrillo** sube tantos bloques como alto es (necesita hueco encima) y al cerrar baja hasta el suelo,
-    aplastando a quien pille.
+    aplastando a quien pille. Se ve **deslizarse** entero y suave (arranca y frena), con ruido de cadenas y un golpe
+    metálico al tocar el suelo; mientras se mueve sigue cerrando el paso.
   - El **puente** es un rectángulo de tablones, tumbado (bajado) o de pie (subido). Pon el torno **mirando hacia donde
-    tiene que bajar**: gira sobre la fila de dentro, que hace de bisagra.
+    tiene que bajar**: **gira** sobre la fila de dentro, que hace de bisagra, en un cuarto de vuelta (al bajar cae cada
+    vez más rápido y acaba con un golpe de madera). Necesita despejado el sitio donde va a quedar.
+  - Si le das al torno mientras se mueve, se apunta la orden y la hace al acabar.
   - Solo lo maneja quien lo puso (con redstone, cualquiera que llegue a la palanca).
 - Los **castillos** ya traen un rastrillo subido en la puerta (su torno está en la cara del patio, sobre la puerta), una
   balista sobre la puerta y una catapulta en el patio, para quien las coja. Las **fortalezas del caudillo bandido**
@@ -928,5 +931,6 @@ la cama de dos huecos, lo de dentro al quitar algo, el horno que funde, tirar t�
 y que el golpe fuerte cargado hace el doble, que soltarlo antes no golpea y que con escudo el clic derecho sigue siendo
 del escudo; y las hordas (cada 7 días, más duras cada semana, van a por ti aunque seas aliado de su facción, la base es
 tu ayuntamiento y derrotarlas da Glory Coins); y las armaduras de las facciones (cada rango protege más, ligeras y
-pesadas, recetas con su ventaja de forja y los NPCs vestidos según su rango). GitHub las pasa en cada cambio
+pesadas, recetas con su ventaja de forja y los NPCs vestidos según su rango); y que el rastrillo y el puente levadizo
+se mueven con animación y quedan en su sitio (rastrillo arriba y abajo, puente de pie y tumbado). GitHub las pasa en cada cambio
 (trabajo `gametest`) y deja el registro en la rama `gametest-logs`. El código está en `src/gametest` y no va en el `.jar`.
