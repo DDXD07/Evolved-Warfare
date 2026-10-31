@@ -574,7 +574,7 @@ public class CartEntity extends Entity implements ExtendedScreenHandlerFactory<I
 			serverPlayer.networkHandler.requestTeleport(spot.x, getY(), spot.z, getYaw(), serverPlayer.getPitch());
 		}
 		player.sendMessage(Text.translatable("message.evolvedwarfare.cart.pulling").formatted(Formatting.GOLD), true);
-		getWorld().playSound(null, getX(), getY(), getZ(), SoundEvents.ITEM_LEAD_TIED, SoundCategory.NEUTRAL, 1.0F, 1.0F);
+		getWorld().playSound(null, getX(), getY(), getZ(), SoundEvents.ENTITY_LEASH_KNOT_PLACE, SoundCategory.NEUTRAL, 1.0F, 1.0F);
 	}
 
 	public void hitchHorse(AbstractHorseEntity horse, @Nullable PlayerEntity by) {
@@ -588,7 +588,7 @@ public class CartEntity extends Entity implements ExtendedScreenHandlerFactory<I
 		if (by != null) {
 			by.sendMessage(Text.translatable("message.evolvedwarfare.cart.horse").formatted(Formatting.GOLD), true);
 		}
-		getWorld().playSound(null, getX(), getY(), getZ(), SoundEvents.ITEM_LEAD_TIED, SoundCategory.NEUTRAL, 1.0F, 1.0F);
+		getWorld().playSound(null, getX(), getY(), getZ(), SoundEvents.ENTITY_LEASH_KNOT_PLACE, SoundCategory.NEUTRAL, 1.0F, 1.0F);
 	}
 
 	/** Se suelta: la rienda vuelve a quien la suelta (o cae al suelo). */
@@ -608,7 +608,7 @@ public class CartEntity extends Entity implements ExtendedScreenHandlerFactory<I
 				Entity at = puller != null ? puller : this;
 				at.dropStack(lead);
 			}
-			getWorld().playSound(null, getX(), getY(), getZ(), SoundEvents.ITEM_LEAD_UNTIED, SoundCategory.NEUTRAL, 1.0F, 1.0F);
+			getWorld().playSound(null, getX(), getY(), getZ(), SoundEvents.ENTITY_LEASH_KNOT_BREAK, SoundCategory.NEUTRAL, 1.0F, 1.0F);
 		}
 		setPuller(null);
 	}
