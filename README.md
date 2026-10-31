@@ -25,6 +25,7 @@ sección con las cintas, las flechas o las teclas 1-4. Si la pierdes, se fabrica
 | 8 | **Armas medievales** (daga, lanza, mandoble, alabarda, martillo de guerra, mangual, hacha de batalla, arco largo y jabalina), **árbol de habilidades** al estilo *Skyrim* (11 habilidades que suben usándolas, 76 ventajas), **equilibrio** y **configuración** (archivo, comando y pantalla con Mod Menu) | ✅ Hecha |
 | 9 | **Comerciantes y niveles de las ciudades**: ciudades de nivel 1 a 10 según la distancia; tendero, armero, cantero, joyero, sastre, mercader de especias y peletero con tienda de catálogo completo por Glory Coins (Compra y Venta, al menos 20 de cada cosa al día); más nivel, mejor calidad (de gastado a obra maestra encantada) y más caras | ✅ Hecha |
 | 10 | **Armas de fuego primitivas**: mosquete de chispa (modelo 3D animado, recarga y disparo con humo), balas de mosquete, bolsa de munición (1000 balas) y **daño locacional** (cabeza, torso, brazos y piernas) | 🔨 En curso |
+| 11 | **Hordas semanales**: contador de días y reloj en pantalla; cada 7 días una horda de bandidos, vikingos o piratas ataca tu base, en oleadas y cada semana más dura | ✅ Hecha |
 
 ## Fase 1 — El recluta
 
@@ -327,6 +328,7 @@ piratas):
 /evolvedwarfare reputation <jugadores>                          ver la reputación
 /evolvedwarfare reputation <jugadores> <facción> set|add <n>    cambiarla
 /evolvedwarfare raid <bandits|vikings|pirates> [siege]          lanzar un asalto (con máquinas de asedio)
+/evolvedwarfare horde [bandits|vikings|pirates] [semana]        lanzar ya una horda contra tu base (o contra ti)
 ```
 
 ## Fase 6 — Estructuras
@@ -780,6 +782,50 @@ piratas) se les divide el cuerpo en cuatro partes, y cada una recibe distinto da
   con forma de persona de Minecraft (zombis, esqueletos, aldeanos, illagers, brujas y piglins). A quién se aplica
   está en las etiquetas `evolvedwarfare:locational_damage` y `evolvedwarfare:locational_damage_vanilla`.
 
+## Fase 11 — Hordas semanales
+
+### Contador de días y reloj
+Arriba a la izquierda, en pequeño: el reloj de Minecraft (con el sol y la luna), **Día N** y la hora en formato 24 h
+(el día empieza al amanecer, a las 6:00). Se esconde con F1 y con la pantalla de depuración (F3), y se puede quitar en
+la configuración (pestaña *Hordas*). En el Nether y el End la hora sale como `--:--`.
+
+### Hordas
+**Cada 7 días de juego** (días 7, 14, 21...) el contador de días se pone **rojo**: ese día viene una horda de
+**bandidos, vikingos o piratas**, al azar.
+
+- **Avisos**: la víspera, al anochecer ("mañana viene una horda") y al amanecer del día rojo.
+- **Llegada**: a media mañana (las 9:00), con cuerno de guerra, por un lado al azar a unos 44 bloques.
+- **A dónde va**: a tu **base**, que es tu **ayuntamiento** (el más cercano, a menos de 96 bloques); si no tienes, tu
+  **cama**; y si estás lejos de los dos, **va a por ti** allá donde estés y te sigue. Los jugadores que estén juntos (o en
+  la misma base) se enfrentan a una sola horda, más numerosa.
+- **Oleadas**: la siguiente llega cuando la de ahora está casi derrotada (o a los 3 minutos). Arriba sale una barra con
+  la oleada y los que quedan.
+- **No mira la reputación**: ataca aunque seas aliado de su facción, no respeta la bandera blanca y matarlos no baja tu
+  reputación. Tus soldados (y tus máquinas de asedio) van a por ellos.
+- **Final**: si la derrotas entera, **Glory Coins** para los que estabais allí (2 + 3 por semana, hasta 64) y las
+  máquinas de asedio que traía se quedan para ti. Al anochecer (18:00) la que quede se retira.
+
+**Cada semana es más dura** (en normal, con un jugador; en fácil empiezan 4 por oleada y en difícil 8, con un capitán más;
+cada jugador de más suma 2 por oleada):
+
+| Semana | Por oleada | Oleadas | Capitanes por oleada | Vida | Daño | Equipo de élite | Máquinas de asedio |
+|---|---|---|---|---|---|---|---|
+| 1 (día 7) | 6 | 1 | — | x1 | x1 | — | — |
+| 2 (día 14) | 8 | 1 | 1 en la última | x1,12 | x1,07 | 15 % | — |
+| 3 (día 21) | 9 | 2 | 1 | x1,24 | x1,14 | 30 % | ariete |
+| 4 (día 28) | 11 | 2 | 1 | x1,36 | x1,21 | 45 % | ariete |
+| 5 (día 35) | 12 | 3 | 1 | x1,48 | x1,28 | 60 % | ariete y catapulta |
+| 6 (día 42) | 14 | 3 | 2 | x1,6 | x1,35 | 75 % | ariete y catapulta |
+| 8 (día 56) | 17 | 4 | 2 | x1,84 | x1,49 | 100 % | 2 arietes y catapulta |
+
+Desde ahí sigue subiendo hasta un máximo de 24 por oleada, 3 capitanes, vida x3 y daño x2.
+
+No hay hordas en pacífico ni con `doMobSpawning` desactivado. Mientras dura una horda no hay otros asaltos.
+
+**Configuración** (pestaña *Hordas*): `hordeEveryDays` (cada cuántos días; 0 = nunca), `hordeGrowth` (lo que se
+endurece cada semana; 0 = siempre como la primera) y `showDayClock` (el contador y el reloj). Para probarla:
+`/evolvedwarfare horde [bandits|vikings|pirates] [semana]` lanza ya una horda contra tu base (o contra ti).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -842,5 +888,6 @@ Caja de cultivos guarda un solo cultivo hasta 64, se coge y se pone sin perder n
 los comerciantes solo compran los cultivos en cajas llenas; y que la guía se da una sola vez; y la carreta (recetas,
 la cama de dos huecos, lo de dentro al quitar algo, el horno que funde, tirar tú, el caballo, dormir en ella y romperla);
 y que el golpe fuerte cargado hace el doble, que soltarlo antes no golpea y que con escudo el clic derecho sigue siendo
-del escudo. GitHub las pasa en cada cambio
+del escudo; y las hordas (cada 7 días, más duras cada semana, van a por ti aunque seas aliado de su facción, la base es
+tu ayuntamiento y derrotarlas da Glory Coins). GitHub las pasa en cada cambio
 (trabajo `gametest`) y deja el registro en la rama `gametest-logs`. El código está en `src/gametest` y no va en el `.jar`.

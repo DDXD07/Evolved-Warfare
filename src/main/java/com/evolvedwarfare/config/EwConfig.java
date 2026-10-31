@@ -53,6 +53,14 @@ public final class EwConfig {
 	public double factionHealth = 1.0;
 	public double factionDamage = 1.0;
 
+	// ------------------------------------------------------------------ hordas
+	/** Cada cuántos días de juego llega una horda a la base de los jugadores (0 = nunca). */
+	public int hordeEveryDays = 7;
+	/** Lo que se endurece la horda cada semana (1 = normal; 0 = siempre como la primera; 2 = el doble de rápido). */
+	public double hordeGrowth = 1.0;
+	/** El contador de días y el reloj de arriba a la izquierda (cada jugador, en su juego). */
+	public boolean showDayClock = true;
+
 	// ------------------------------------------------------------------ asentamientos
 	/** Vida y daño extra por cada nivel del asentamiento por encima del 1. */
 	public double settlementBonusPerLevel = 0.10;
@@ -146,6 +154,9 @@ public final class EwConfig {
 			new Option("siegeChanceHard", "factions", 0.0, 1.0, 0.05),
 			new Option("factionHealth", "factions", 0.1, 10.0, 0.1),
 			new Option("factionDamage", "factions", 0.1, 10.0, 0.1),
+			new Option("hordeEveryDays", "hordes", 0, 100, 1),
+			new Option("hordeGrowth", "hordes", 0.0, 5.0, 0.1),
+			new Option("showDayClock", "hordes", 0, 1, 1),
 			new Option("settlementBonusPerLevel", "settlements", 0.0, 1.0, 0.01),
 			new Option("settlementBlocksPerLevel", "settlements", 100, 100000, 50),
 			new Option("settlementMaxLevel", "settlements", 1, 10, 1),

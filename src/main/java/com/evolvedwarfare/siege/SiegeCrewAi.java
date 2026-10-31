@@ -153,7 +153,7 @@ final class SiegeCrewAi {
 		UUID owner = engine.owner != null ? engine.owner : (crew instanceof AbstractNpcEntity npc ? npc.getOwnerUuid() : null);
 		if (target instanceof FactionNpcEntity enemy) {
 			LivingEntity enemyTarget = enemy.getTarget();
-			return owner != null && (Reputation.hostile(engine.getWorld(), owner, enemy.getFaction())
+			return owner != null && (enemy.isHordeRaider() || Reputation.hostile(engine.getWorld(), owner, enemy.getFaction())
 					|| (enemyTarget != null && NpcSides.allies(crew, enemyTarget)));
 		}
 		return target instanceof Monster && !(target instanceof Angerable);

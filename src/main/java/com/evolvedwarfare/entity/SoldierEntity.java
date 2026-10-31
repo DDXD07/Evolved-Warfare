@@ -250,7 +250,7 @@ public class SoldierEntity extends AbstractNpcEntity implements CombatNpc {
 		}
 		if (target instanceof FactionNpcEntity enemy) {
 			LivingEntity enemyTarget = enemy.getTarget();
-			return Reputation.hostile(getWorld(), getOwnerUuid(), enemy.getFaction()) || enemyTarget == this
+			return enemy.isHordeRaider() || Reputation.hostile(getWorld(), getOwnerUuid(), enemy.getFaction()) || enemyTarget == this
 					|| (enemyTarget != null && NpcSides.allies(this, enemyTarget));
 		}
 		if (!(target instanceof Monster) || target instanceof Angerable) {

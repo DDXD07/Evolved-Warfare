@@ -72,6 +72,8 @@ public abstract class FactionNpcEntity extends HostileEntity implements CombatNp
 	private static final double ESCORT_RADIUS = 20.0;
 	private static final net.minecraft.util.Identifier LEVEL_HEALTH = com.evolvedwarfare.EvolvedWarfare.id("settlement_level_health");
 	private static final net.minecraft.util.Identifier LEVEL_DAMAGE = com.evolvedwarfare.EvolvedWarfare.id("settlement_level_damage");
+	private static final net.minecraft.util.Identifier HORDE_HEALTH = com.evolvedwarfare.EvolvedWarfare.id("horde_health");
+	private static final net.minecraft.util.Identifier HORDE_DAMAGE = com.evolvedwarfare.EvolvedWarfare.id("horde_damage");
 
 	private static final TrackedData<Integer> ROLE = DataTracker.registerData(FactionNpcEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	private static final TrackedData<Integer> VARIANT = DataTracker.registerData(FactionNpcEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -88,6 +90,10 @@ public abstract class FactionNpcEntity extends HostileEntity implements CombatNp
 	private long escortUntil;
 	/** Nivel del asentamiento que defiende (0: aún sin mirar; los que no son guarnición se quedan en 1). */
 	private int settlementLevel;
+	/** De una horda (los días de horda): mientras dura, va a por todos y no cuenta para la reputación. */
+	private boolean horde;
+	/** Lo que se multiplica el daño de sus flechas en la horda (el de cuerpo a cuerpo va con el atributo). */
+	private double hordeDamage = 1.0;
 
 	protected FactionNpcEntity(EntityType<? extends FactionNpcEntity> type, World world) {
 		super(type, world);
@@ -176,6 +182,9 @@ public abstract class FactionNpcEntity extends HostileEntity implements CombatNp
 			if (player.isCreative() || player.isSpectator() || isEscortOf(player.getUuid())) {
 				return false;
 			}
+			if (isHordeRaider()) {
+				return true; // la horda no mira la reputación ni respeta la bandera blanca
+			}
 			if (!Reputation.hostile(getWorld(), player.getUuid(), faction)) {
 				return false;
 			}
@@ -192,6 +201,9 @@ public abstract class FactionNpcEntity extends HostileEntity implements CombatNp
 		}
 		if (target instanceof AbstractNpcEntity npc) {
 			UUID owner = npc.getOwnerUuid();
+			if (isHordeRaider()) {
+				return owner != null;
+			}
 			return owner != null && !isEscortOf(owner) && Reputation.hostile(getWorld(), owner, faction);
 		}
 		return true;
@@ -257,7 +269,7 @@ public abstract class FactionNpcEntity extends HostileEntity implements CombatNp
 
 	@Override
 	public void prepareShot(PersistentProjectileEntity arrow, boolean crossbow) {
-		arrow.setDamage(arrow.getDamage() * SettlementLevels.multiplier(getSettlementLevel()) * EwConfig.get().factionDamage);
+		arrow.setDamage(arrow.getDamage() * SettlementLevels.multiplier(getSettlementLevel()) * EwConfig.get().factionDamage * hordeDamage);
 	}
 
 	@Override
@@ -320,6 +332,46 @@ public abstract class FactionNpcEntity extends HostileEntity implements CombatNp
 		marchTarget = null;
 	}
 
+	// ------------------------------------------------------------------ hordas
+
+	/**
+	 * Entra en una horda ({@link com.evolvedwarfare.world.Hordes}): más vida y daño según la semana y, a veces, el equipo
+	 * de élite.
+	 */
+	public void joinHorde(double health, double damage, boolean elite, Random random) {
+		horde = true;
+		hordeDamage = damage;
+		if (elite) {
+			equipFor(getRole(), random, true);
+		}
+		EntityAttributeInstance maxHealth = getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
+		if (maxHealth != null) {
+			maxHealth.overwritePersistentModifier(new EntityAttributeModifier(HORDE_HEALTH, health - 1.0,
+					EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+		}
+		EntityAttributeInstance attack = getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+		if (attack != null) {
+			attack.overwritePersistentModifier(new EntityAttributeModifier(HORDE_DAMAGE, damage - 1.0,
+					EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+		}
+		setHealth(getMaxHealth());
+	}
+
+	public boolean isHorde() {
+		return horde;
+	}
+
+	/** De una horda que sigue atacando (no se ha retirado). */
+	public boolean isHordeRaider() {
+		return horde && isRaiding();
+	}
+
+	/** La horda cambia de destino (va a por un jugador que se mueve): deja la zona donde estaba y marcha hacia allí. */
+	public void hordeMarch(BlockPos center) {
+		setPositionTarget(BlockPos.ORIGIN, -1);
+		marchTarget = center.toImmutable();
+	}
+
 	/** Ha llegado a su destino: los asaltantes se quedan rondando el centro; las patrullas siguen su camino. */
 	public void arrived() {
 		if (isRaiding() && marchTarget != null) {
@@ -374,9 +426,22 @@ public abstract class FactionNpcEntity extends HostileEntity implements CombatNp
 			if (raidUntil != 0L) {
 				FactionRaids.onRaiderDeath(this);
 			}
-			Reputation.onMemberKilled(this, source.getAttacker());
+			if (horde && getWorld() instanceof ServerWorld serverWorld) {
+				com.evolvedwarfare.world.Hordes.onGone(serverWorld, this);
+			} else {
+				Reputation.onMemberKilled(this, source.getAttacker());
+			}
 		}
 		super.onDeath(source);
+	}
+
+	/** Si se va del todo (muerto o quitado, no al descargarse su chunk), la horda deja de contarlo. */
+	@Override
+	public void remove(Entity.RemovalReason reason) {
+		if (horde && reason.shouldDestroy() && getWorld() instanceof ServerWorld serverWorld) {
+			com.evolvedwarfare.world.Hordes.onGone(serverWorld, this);
+		}
+		super.remove(reason);
 	}
 
 	@Override
@@ -453,7 +518,7 @@ public abstract class FactionNpcEntity extends HostileEntity implements CombatNp
 		boolean damaged = super.damage(source, amount);
 		if (damaged && !getWorld().isClient) {
 			Entity attacker = source.getAttacker();
-			if (attacker != null && !(attacker instanceof FactionNpcEntity)) {
+			if (attacker != null && !(attacker instanceof FactionNpcEntity) && !horde) {
 				Reputation.onMemberAttacked(this, attacker);
 			}
 		}
@@ -525,6 +590,10 @@ public abstract class FactionNpcEntity extends HostileEntity implements CombatNp
 		putPos(nbt, "March", marchTarget);
 		nbt.putLong("RaidUntil", raidUntil);
 		nbt.putInt("SettlementLevel", settlementLevel);
+		if (horde) {
+			nbt.putBoolean("Horde", true);
+			nbt.putDouble("HordeDamage", hordeDamage);
+		}
 		if (escortOf != null) {
 			nbt.putUuid("EscortOf", escortOf);
 			nbt.putLong("EscortUntil", escortUntil);
@@ -544,6 +613,8 @@ public abstract class FactionNpcEntity extends HostileEntity implements CombatNp
 		marchTarget = readPos(nbt, "March");
 		raidUntil = nbt.getLong("RaidUntil");
 		settlementLevel = nbt.getInt("SettlementLevel");
+		horde = nbt.getBoolean("Horde");
+		hordeDamage = nbt.contains("HordeDamage") ? nbt.getDouble("HordeDamage") : 1.0;
 		escortOf = nbt.containsUuid("EscortOf") ? nbt.getUuid("EscortOf") : null;
 		escortUntil = nbt.getLong("EscortUntil");
 		if (garrison) {

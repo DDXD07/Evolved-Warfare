@@ -51,8 +51,8 @@ public final class NpcSides {
 
 	/** ¿Es 'npc' de una facción aliada del bando de 'other' (o le está escoltando)? */
 	private static boolean friendlyFaction(Entity npc, Entity other) {
-		if (!(npc instanceof FactionNpcEntity member) || other instanceof FactionNpcEntity) {
-			return false;
+		if (!(npc instanceof FactionNpcEntity member) || other instanceof FactionNpcEntity || member.isHordeRaider()) {
+			return false; // la horda no es aliada de nadie
 		}
 		UUID player = sideOf(other);
 		if (player == null) {

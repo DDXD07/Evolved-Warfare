@@ -91,7 +91,7 @@ public final class FactionSpawner {
 				spawnPatrol(world, random);
 			}
 		}
-		if (time >= state.nextRaid && !FactionRaids.hasActive(world) && FactionRaids.tryStart(world, random, null)) {
+		if (time >= state.nextRaid && !FactionRaids.hasActive(world) && !Hordes.hasActive(world) && FactionRaids.tryStart(world, random, null)) {
 			EwConfig config = EwConfig.get();
 			state.nextRaid = time + between(random, config.raidMinMinutes * MINUTE, config.raidMaxMinutes * MINUTE);
 			state.markDirty();

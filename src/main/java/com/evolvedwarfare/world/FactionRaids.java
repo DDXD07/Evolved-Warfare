@@ -310,7 +310,7 @@ public final class FactionRaids {
 	}
 
 	/** Una máquina de asedio con su dotación (que cuenta como asaltante). */
-	private static void spawnEngine(ServerWorld world, Random random, SiegeKind kind, Faction faction, BlockPos center, BlockPos at,
+	static void spawnEngine(ServerWorld world, Random random, SiegeKind kind, Faction faction, BlockPos center, BlockPos at,
 			long until, Set<UUID> raiders, List<UUID> engines) {
 		SiegeEngineEntity engine = ModEntities.engineType(kind).create(world);
 		if (engine == null) {
@@ -335,7 +335,7 @@ public final class FactionRaids {
 
 	/** Dónde poner la catapulta: a tiro del centro (unos 38 bloques), del lado por el que llegan. */
 	@Nullable
-	private static BlockPos batterySpot(ServerWorld world, BlockPos center, BlockPos edge) {
+	static BlockPos batterySpot(ServerWorld world, BlockPos center, BlockPos edge) {
 		double dx = edge.getX() - center.getX();
 		double dz = edge.getZ() - center.getZ();
 		double length = Math.sqrt(dx * dx + dz * dz);

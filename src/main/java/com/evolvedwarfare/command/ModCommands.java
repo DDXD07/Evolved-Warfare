@@ -3,6 +3,7 @@ package com.evolvedwarfare.command;
 import com.evolvedwarfare.faction.Faction;
 import com.evolvedwarfare.faction.Reputation;
 import com.evolvedwarfare.world.FactionRaids;
+import com.evolvedwarfare.world.Hordes;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -28,6 +29,7 @@ import net.minecraft.util.math.BlockPos;
  * /evolvedwarfare reputation &lt;jugadores&gt;                          ver la reputación
  * /evolvedwarfare reputation &lt;jugadores&gt; &lt;facción&gt; set|add &lt;n&gt;  cambiarla
  * /evolvedwarfare raid &lt;facción&gt; [siege]                           lanzar un asalto aquí (con máquinas de asedio)
+ * /evolvedwarfare horde [&lt;facción&gt; [&lt;semana&gt;]]                      lanzar ya una horda contra tu base (o contra ti)
  * /evolvedwarfare config [&lt;opción&gt; [&lt;valor&gt;] | reload | reset]       ver o cambiar la configuración
  * </pre>
  */
@@ -36,6 +38,8 @@ public final class ModCommands {
 			new SimpleCommandExceptionType(Text.translatable("commands.evolvedwarfare.unknown_faction"));
 	private static final SimpleCommandExceptionType RAID_FAILED =
 			new SimpleCommandExceptionType(Text.translatable("commands.evolvedwarfare.raid.failed"));
+	private static final SimpleCommandExceptionType HORDE_FAILED =
+			new SimpleCommandExceptionType(Text.translatable("commands.evolvedwarfare.horde.failed"));
 
 	private ModCommands() {
 	}
@@ -66,6 +70,14 @@ public final class ModCommands {
 								.executes(context -> raid(context, false))
 								.then(CommandManager.literal("siege")
 										.executes(context -> raid(context, true)))))
+				.then(CommandManager.literal("horde")
+						.executes(context -> horde(context, null, -1))
+						.then(CommandManager.argument("faction", StringArgumentType.word())
+								.suggests((context, builder) -> CommandSource.suggestMatching(
+										java.util.Arrays.stream(Faction.values()).map(Faction::id), builder))
+								.executes(context -> horde(context, faction(context), -1))
+								.then(CommandManager.argument("week", IntegerArgumentType.integer(1, 100))
+										.executes(context -> horde(context, faction(context), IntegerArgumentType.getInteger(context, "week"))))))
 				.then(CommandManager.literal("config")
 						.executes(ModCommands::configList)
 						.then(CommandManager.literal("reload").executes(context -> {
@@ -178,6 +190,34 @@ public final class ModCommands {
 		int count = players.size();
 		source.sendFeedback(() -> Text.translatable("commands.evolvedwarfare.reputation.changed", faction.displayName(), count), true);
 		return count;
+	}
+
+	/** Una horda ya: contra la base de quien lo manda (o contra él, si no está en ella), de la semana de hoy o la que se diga. */
+	private static int horde(CommandContext<ServerCommandSource> context, @org.jetbrains.annotations.Nullable Faction faction, int week)
+			throws CommandSyntaxException {
+		ServerCommandSource source = context.getSource();
+		ServerWorld world = source.getWorld();
+		if (world.getRegistryKey() != net.minecraft.world.World.OVERWORLD) {
+			throw HORDE_FAILED.create();
+		}
+		net.minecraft.util.math.random.Random random = world.getRandom();
+		Faction chosen = faction != null ? faction : Faction.values()[random.nextInt(Faction.values().length)];
+		int every = Math.max(1, EwConfig.get().hordeEveryDays);
+		int chosenWeek = week > 0 ? week : Hordes.week(Hordes.day(world.getTimeOfDay()), every);
+		ServerPlayerEntity player = source.getPlayer();
+		BlockPos home = player != null ? Hordes.home(world, player) : null;
+		BlockPos center = home != null ? home : BlockPos.ofFloored(source.getPosition());
+		java.util.UUID hunted = home == null && player != null ? player.getUuid() : null;
+		java.util.List<java.util.UUID> defenders = player != null ? java.util.List.of(player.getUuid()) : java.util.List.of();
+		Hordes.Horde horde = Hordes.start(world, random, chosen, center, hunted, chosenWeek, defenders, Hordes.EDGE);
+		if (horde == null) {
+			horde = Hordes.start(world, random, chosen, center, hunted, chosenWeek, defenders, Hordes.EDGE / 2);
+		}
+		if (horde == null) {
+			throw HORDE_FAILED.create();
+		}
+		source.sendFeedback(() -> Text.translatable("commands.evolvedwarfare.horde.started", chosen.displayName(), chosenWeek), true);
+		return 1;
 	}
 
 	private static int raid(CommandContext<ServerCommandSource> context, boolean siege) throws CommandSyntaxException {
