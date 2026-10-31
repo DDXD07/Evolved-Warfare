@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "X X",
+    "XAX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:diamond"
+    },
+    "A": {
+      "item": "minecraft:red_dye"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:warrior_diamond_chestplate",
+    "count": 1
+  }
+}

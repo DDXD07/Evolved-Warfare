@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "XAX",
+    "X X",
+    "X X"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:copper_ingot"
+    },
+    "A": {
+      "item": "minecraft:feather"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:archer_copper_leggings",
+    "count": 1
+  }
+}

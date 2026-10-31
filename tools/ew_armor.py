@@ -461,8 +461,10 @@ def main():
             write_json(os.path.join(DATA, "recipe", item + ".json"), recipe(a, piece))
     # etiquetas: así se encantan como las armaduras de siempre
     for piece, tag in (("helmet", "head_armor"), ("chestplate", "chest_armor"), ("leggings", "leg_armor"), ("boots", "foot_armor")):
-        write_json(os.path.join(ROOT, "src/main/resources/data/minecraft/tags/item", tag + ".json"),
-                   {"replace": False, "values": ["%s:%s_%s" % (NS, a["id"], piece) for a in armors]})
+        path = os.path.join(ROOT, "src/main/resources/data/minecraft/tags/item", tag + ".json")
+        mine = ["%s:%s_%s" % (NS, a["id"], piece) for a in armors]
+        old = json.load(open(path, encoding="utf-8")).get("values", []) if os.path.exists(path) else []
+        write_json(path, {"replace": False, "values": mine + [v for v in old if v not in mine]})
     folder = os.path.join(ROOT, "src/client/java/com/evolvedwarfare/client/render/armor")
     os.makedirs(folder, exist_ok=True)
     with open(os.path.join(folder, "FactionArmorModels.java"), "w", encoding="utf-8") as f:

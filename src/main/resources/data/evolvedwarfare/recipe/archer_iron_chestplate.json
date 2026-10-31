@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "X X",
+    "XAX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:iron_ingot"
+    },
+    "A": {
+      "item": "minecraft:feather"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:archer_iron_chestplate",
+    "count": 1
+  }
+}

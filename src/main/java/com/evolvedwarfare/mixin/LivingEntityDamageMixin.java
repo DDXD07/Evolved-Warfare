@@ -32,6 +32,7 @@ public abstract class LivingEntityDamageMixin {
 		float out = zone == null ? amount : amount * zone.multiplier();
 		out = SkillEffects.modifyDamage(self, source, out, zone);
 		out = com.evolvedwarfare.weapon.HeavyAttack.modify(source, out);
+		out = com.evolvedwarfare.armor.ClassArmorItem.modifyDamage(self, source, out);
 		evolvedwarfare$amount = out;
 		return out;
 	}

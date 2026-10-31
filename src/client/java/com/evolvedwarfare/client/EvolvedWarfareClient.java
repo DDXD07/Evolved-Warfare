@@ -53,6 +53,13 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry.INSTANCE.register(com.evolvedwarfare.registry.ModItems.MUSKET,
 				new com.evolvedwarfare.client.render.musket.MusketItemRenderer());
 		MusketControls.register();
+		// armaduras de clase: sus estadísticas solo se ven manteniendo la tecla de recargar (R)
+		com.evolvedwarfare.armor.ClassArmorItem.statsKey = () -> {
+			net.minecraft.client.util.InputUtil.Key key = net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper.getBoundKeyOf(MusketControls.reload);
+			return key.getCategory() == net.minecraft.client.util.InputUtil.Type.KEYSYM && key.getCode() >= 0
+					&& net.minecraft.client.util.InputUtil.isKeyPressed(net.minecraft.client.MinecraftClient.getInstance().getWindow().getHandle(), key.getCode());
+		};
+		com.evolvedwarfare.armor.ClassArmorItem.statsKeyName = () -> MusketControls.reload.getBoundKeyLocalizedText();
 		// armas cuerpo a cuerpo: modelos 3D en la mano (el icono plano en el inventario) y su golpe animado
 		java.util.List<net.minecraft.util.Identifier> meleeIcons = new java.util.ArrayList<>();
 		for (com.evolvedwarfare.weapon.WeaponType type : com.evolvedwarfare.weapon.WeaponType.values()) {

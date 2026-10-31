@@ -50,7 +50,8 @@ public class MusketItem extends Item {
 		if (player == null) {
 			return RELOAD_TICKS;
 		}
-		float faster = com.evolvedwarfare.skill.Skills.value(player, com.evolvedwarfare.skill.Perk.QUICK_RELOAD) / 100.0F;
+		float faster = com.evolvedwarfare.skill.Skills.value(player, com.evolvedwarfare.skill.Perk.QUICK_RELOAD) / 100.0F
+				+ com.evolvedwarfare.armor.ClassArmorItem.bonus(player, com.evolvedwarfare.armor.ArmorClass.Effect.RELOAD_SPEED);
 		return Math.max(10, Math.round(RELOAD_TICKS * (1.0F - faster)));
 	}
 	/** Daño de la bala: 5 corazones (al torso). */

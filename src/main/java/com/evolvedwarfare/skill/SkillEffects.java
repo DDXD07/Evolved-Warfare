@@ -120,6 +120,9 @@ public final class SkillEffects {
 		if (armor instanceof com.evolvedwarfare.armor.FactionArmorItem faction) {
 			return faction.set().light();
 		}
+		if (armor instanceof com.evolvedwarfare.armor.ClassArmorItem classArmor) {
+			return classArmor.tier().light();
+		}
 		return light(armor.getMaterial());
 	}
 

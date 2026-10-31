@@ -27,6 +27,7 @@ sección con las cintas, las flechas o las teclas 1-4. Si la pierdes, se fabrica
 | 10 | **Armas de fuego primitivas**: mosquete de chispa (modelo 3D animado, recarga y disparo con humo), balas de mosquete, bolsa de munición (1000 balas) y **daño locacional** (cabeza, torso, brazos y piernas) | 🔨 En curso |
 | 11 | **Hordas semanales**: contador de días y reloj en pantalla; cada 7 días una horda de bandidos, vikingos o piratas ataca tu base, en oleadas y cada semana más dura | ✅ Hecha |
 | 12 | **Armaduras de las facciones**: 4 por facción (por rango), 12 en total, con modelo 3D; las llevan sus guerreros, se fabrican con ventajas de forja, salen en sus cofres y las vende el armero | ✅ Hecha |
+| 13 | **Armaduras de clase** (arquero, guerrero, ladrón y mosquetero) con aspecto de vanilla, en cuero, cobre, hierro, diamante y netherita; ventajas que suben con el material y desventajas; estadísticas manteniendo R | ✅ Hecha |
 
 ## Fase 1 — El recluta
 
@@ -862,6 +863,32 @@ facciones, tus soldados y en el soporte de armaduras.
 - **El armero** de las ciudades las vende todas: rango 1 común, 2 poco común, 3 rara y 4 épica (según el nivel de la
   ciudad).
 
+## Fase 13 — Armaduras de clase
+
+Cuatro armaduras **con el aspecto de las de vanilla** (mismo modelo, dos capas de textura), cada una en **cuero, cobre,
+hierro, diamante y netherita** (80 piezas). Protegen como las de vanilla de su material (el cobre, entre el cuero y el
+hierro: 2/4/3/1) y cada material sube un escalón las **ventajas** de la clase; las **desventajas** son fijas. Cada pieza
+da una cuarta parte: el conjunto entero, todo.
+
+| Clase | Ventajas (por escalón: cuero ×1 … netherita ×5) | Desventajas |
+|---|---|---|
+| **Arquero** | +5 % al tensar arcos y cargar ballestas · +3 % de daño de las flechas | −15 % de daño cuerpo a cuerpo |
+| **Guerrero** | +4 % de daño cuerpo a cuerpo · +5 % de resistencia al empuje | −10 % de velocidad |
+| **Ladrón** | +3 % de velocidad · +6 % de daño por la espalda | −4 de armadura (1 por pieza) |
+| **Mosquetero** | +5 % de recarga con armas de fuego · +3 % de daño de bala | −4 de armadura (1 por pieza) |
+
+Así, el arquero de cuero tensa un 5 % más rápido y el de netherita un 25 %; el mosquetero de diamante recarga un 20 %
+antes.
+
+- **Las estadísticas no salen en la descripción** para no llenarla de texto: pasa el ratón por encima y **mantén R** (la
+  tecla de recargar; si la cambias, la que hayas puesto) para ver la armadura, la dureza y las ventajas y desventajas.
+- **Recetas**: con la forma de casco, peto, grebas o botas de vanilla, con cuero, lingotes de cobre, de hierro o
+  diamantes, más el distintivo de la clase en el centro: **pluma** (arquero), **tinte rojo** (guerrero), **saco de
+  tinta** (ladrón) y **pólvora** (mosquetero). La de netherita se mejora desde la de diamante en la **mesa de
+  herrería** (plantilla y lingote de netherita), como siempre.
+- Se encantan, se reparan con su material, aceptan **adornos** de armadura y la de netherita no se quema. Cuero y cobre
+  cuentan como armadura ligera para el árbol de habilidades; el resto, como pesada.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -874,6 +901,8 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
 - `ew_factions.py` — aspectos de vikingos y piratas, bandera blanca y sello de embajador.
 - `ew_loot.py` — botín de los cofres de vikingos, piratas, castillos y fortalezas, y de los propios vikingos y piratas
   (con las armaduras de cada facción).
+- `ew_class_armor.py` — las armaduras de clase: las dos capas de textura de cada clase y material (reparto de vanilla),
+  los iconos, los modelos de objeto, las recetas (también las de la mesa de herrería), las etiquetas y los textos.
 - `ew_armor.py` (+ `ew_armor_sets.py`, `ew_armor_paint.py`, `ew_armor_raster.py`) — las armaduras de las facciones: los
   diseños 3D (cubos sobre cabeza, cuerpo, brazos y piernas), las texturas, los iconos, `FactionArmorModels.java`, los
   modelos de objeto, las recetas, las etiquetas y los textos; con `--preview` las dibuja puestas (delante, detrás y
@@ -932,5 +961,7 @@ y que el golpe fuerte cargado hace el doble, que soltarlo antes no golpea y que 
 del escudo; y las hordas (cada 7 días, más duras cada semana, van a por ti aunque seas aliado de su facción, la base es
 tu ayuntamiento y derrotarlas da Glory Coins); y las armaduras de las facciones (cada rango protege más, ligeras y
 pesadas, recetas con su ventaja de forja y los NPCs vestidos según su rango); y que el rastrillo y el puente levadizo
-se mueven con animación y quedan en su sitio (rastrillo arriba y abajo, puente de pie y tumbado). GitHub las pasa en cada cambio
+se mueven con animación y quedan en su sitio (rastrillo arriba y abajo, puente de pie y tumbado); y las armaduras de
+clase (80 piezas con receta, números ocultos, ventajas que suben con el material: recarga, velocidad, daño por la
+espalda). GitHub las pasa en cada cambio
 (trabajo `gametest`) y deja el registro en la rama `gametest-logs`. El código está en `src/gametest` y no va en el `.jar`.

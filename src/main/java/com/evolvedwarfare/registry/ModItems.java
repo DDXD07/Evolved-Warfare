@@ -1,6 +1,9 @@
 package com.evolvedwarfare.registry;
 
 import com.evolvedwarfare.EvolvedWarfare;
+import com.evolvedwarfare.armor.ArmorClass;
+import com.evolvedwarfare.armor.ArmorTier;
+import com.evolvedwarfare.armor.ClassArmorItem;
 import com.evolvedwarfare.armor.FactionArmor;
 import com.evolvedwarfare.armor.FactionArmorItem;
 import com.evolvedwarfare.item.AmbassadorSealItem;
@@ -134,6 +137,42 @@ public final class ModItems {
 		}
 	}
 
+	/**
+	 * Armaduras de clase (arquero, guerrero, ladrón y mosquetero), con aspecto de vanilla, en cuero, cobre, hierro,
+	 * diamante y netherita ({@link ClassArmorItem}).
+	 */
+	public static final Map<ArmorClass, Map<ArmorTier, List<Item>>> CLASS_ARMOR = new EnumMap<>(ArmorClass.class);
+
+	static {
+		for (ArmorClass armorClass : ArmorClass.values()) {
+			Map<ArmorTier, List<Item>> tiers = new EnumMap<>(ArmorTier.class);
+			for (ArmorTier tier : ArmorTier.values()) {
+				List<Item> pieces = new ArrayList<>();
+				for (ArmorItem.Type type : FactionArmor.TYPES) {
+					Item.Settings settings = new Item.Settings().maxDamage(type.getMaxDamage(tier.durability));
+					if (tier == ArmorTier.NETHERITE) {
+						settings.fireproof();
+					}
+					pieces.add(register(armorClass.id() + "_" + tier.id() + "_" + FactionArmor.pieceName(type),
+							new ClassArmorItem(armorClass, tier, type, settings)));
+				}
+				tiers.put(tier, List.copyOf(pieces));
+			}
+			CLASS_ARMOR.put(armorClass, tiers);
+		}
+	}
+
+	/** Una pieza de armadura de clase. */
+	public static Item classArmor(ArmorClass armorClass, ArmorTier tier, ArmorItem.Type type) {
+		List<Item> pieces = CLASS_ARMOR.get(armorClass).get(tier);
+		for (int i = 0; i < FactionArmor.TYPES.length; i++) {
+			if (FactionArmor.TYPES[i] == type) {
+				return pieces.get(i);
+			}
+		}
+		throw new IllegalArgumentException(type.toString());
+	}
+
 	/** Una pieza de una armadura de facción. */
 	public static Item factionArmor(FactionArmor armor, ArmorItem.Type type) {
 		List<Item> pieces = FACTION_ARMOR.get(armor);
@@ -230,6 +269,9 @@ public final class ModItems {
 						entries.add(JAVELIN);
 						for (List<Item> pieces : FACTION_ARMOR.values()) {
 							pieces.forEach(entries::add);
+						}
+						for (Map<ArmorTier, List<Item>> tiers : CLASS_ARMOR.values()) {
+							tiers.values().forEach(pieces -> pieces.forEach(entries::add));
 						}
 						entries.add(MUSKET);
 						entries.add(MUSKET_BALL);
