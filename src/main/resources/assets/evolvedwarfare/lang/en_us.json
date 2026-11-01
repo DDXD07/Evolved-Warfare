@@ -1211,5 +1211,6 @@
   "config.evolvedwarfare.netherAmbienceSeconds": "Nether: sounds every (s)",
   "config.evolvedwarfare.netherAmbienceSeconds.tip": "About how many seconds between ambient sounds in the Nether (random, between half and one and a half times this; 0 = never).",
   "config.evolvedwarfare.netherAmbienceVolume": "Nether: sound volume",
-  "config.evolvedwarfare.netherAmbienceVolume.tip": "Volume of the Nether ambient sounds (on top of the game's Ambient volume)."
+  "config.evolvedwarfare.netherAmbienceVolume.tip": "Volume of the Nether ambient sounds (on top of the game's Ambient volume).",
+  "tooltip.evolvedwarfare.hold_control": "Hold Control for more info"
 }

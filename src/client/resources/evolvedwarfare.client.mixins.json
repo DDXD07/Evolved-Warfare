@@ -10,6 +10,7 @@
 		"HeldItemFeatureRendererMixin",
 		"HeldItemRendererMixin",
 		"InGameHudMixin",
+		"ItemStackTooltipMixin",
 		"PlayerEntityRendererMixin"
 	],
 	"injectors": {

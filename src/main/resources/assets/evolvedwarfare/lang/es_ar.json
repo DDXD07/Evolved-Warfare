@@ -1211,5 +1211,6 @@
   "config.evolvedwarfare.netherAmbienceSeconds": "Nether: sonidos cada (s)",
   "config.evolvedwarfare.netherAmbienceSeconds.tip": "Cada cuántos segundos, más o menos, suena un ruido de ambiente en el Nether (al azar entre la mitad y vez y media; 0 = nunca).",
   "config.evolvedwarfare.netherAmbienceVolume": "Nether: volumen de los sonidos",
-  "config.evolvedwarfare.netherAmbienceVolume.tip": "Volumen de los ruidos de ambiente del Nether (además del volumen de Ambiente del juego)."
+  "config.evolvedwarfare.netherAmbienceVolume.tip": "Volumen de los ruidos de ambiente del Nether (además del volumen de Ambiente del juego).",
+  "tooltip.evolvedwarfare.hold_control": "Mantén Control para más info"
 }
