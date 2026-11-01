@@ -9,9 +9,9 @@ un libro con cuatro secciones cortas, con una cinta de color para cada una: **Ci
 **Facciones y guerra** y **Habilidades**. Cada página tiene tres cosas en una o dos frases, con su icono. Se cambia de
 sección con las cintas, las flechas o las teclas 1-4. Si la pierdes, se fabrica otra con un libro y un papel.
 
-**Descripciones**: la descripción de los objetos y bloques del mod está plegada: debajo del nombre solo sale *Mantén
-Control para más info*, y al mantener **Control** se despliega entera. El nombre, el daño, la armadura y los
-encantamientos se ven siempre (y en las armaduras de clase, la tecla de recargar enseña directamente sus números).
+**Descripciones**: la descripción y las estadísticas (daño, velocidad de ataque, armadura, dureza…) de los objetos y
+bloques del mod están plegadas juntas: debajo del nombre solo sale *Mantén Control para más info*, y al mantener
+**Control** se despliega todo. El nombre y los encantamientos se ven siempre.
 
 **Moneda: la Glory Coin.** El mod tiene su propia moneda. No se fabrica: se gana vendiendo a los comerciantes de las ciudades y al mercado, y sale en los cofres de campamentos, fuertes, asentamientos y castillos y en el botín de bandidos, vikingos y piratas. Con ella se paga a los NPCs, se compra en las tiendas, se pagan tributos y treguas y se hace el contrato de reclutamiento. Como un montón de monedas solo llega a 64, la **Bolsa de Gloria** (cordel arriba, cuero, Glory Coin y cuero en medio, 3 de cuero abajo) guarda todas las que quieras en un hueco: clic derecho mete las monedas sueltas, Mayús + clic derecho saca 64, y en el inventario se meten y se sacan con clic derecho como en un saco. Las tiendas cobran de la bolsa y pagan en ella (si no llevas ninguna y te pagan más de 64, te dan una). (Ya no usa la Golden Coin del mod *Golden Coin Merchants* ni esmeraldas como moneda: si tenías ese mod, los dos pueden convivir, pero no se mezclan.)
 
@@ -923,8 +923,8 @@ da una cuarta parte: el conjunto entero, todo.
 Así, el arquero de cuero tensa un 5 % más rápido y el de netherita un 25 %; el mosquetero de diamante recarga un 20 %
 antes.
 
-- **Las estadísticas no salen en la descripción** para no llenarla de texto: pasa el ratón por encima y **mantén R** (la
-  tecla de recargar; si la cambias, la que hayas puesto) para ver la armadura, la dureza y las ventajas y desventajas.
+- **Las estadísticas van plegadas** con la descripción, como en todo el mod: pasa el ratón por encima y **mantén
+  Control** para ver la armadura, la dureza y las ventajas y desventajas.
 - **Recetas**: con la forma de casco, peto, grebas o botas de vanilla, con cuero, lingotes de cobre, de hierro o
   diamantes, más el distintivo de la clase en el centro: **pluma** (arquero), **tinte rojo** (guerrero), **saco de
   tinta** (ladrón) y **pólvora** (mosquetero). La de netherita se mejora desde la de diamante en la **mesa de

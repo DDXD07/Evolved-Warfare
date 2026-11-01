@@ -4,8 +4,6 @@ import com.evolvedwarfare.EvolvedWarfare;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.Entity;
@@ -32,15 +30,10 @@ import net.minecraft.util.math.Vec3d;
 
 /**
  * Una pieza de armadura de clase ({@link ArmorClass}) de un material ({@link ArmorTier}). Se ve como las de vanilla (con
- * su textura en dos capas) y sus números (armadura, dureza, ventajas y desventajas) no salen en la descripción hasta
- * que se mantiene pulsada la tecla de recargar (R), para no llenarla de texto.
+ * su textura en dos capas) y sus números (armadura, dureza, ventajas y desventajas) van en su descripción, que como la
+ * de todo el mod se despliega manteniendo Control.
  */
 public class ClassArmorItem extends ArmorItem {
-	/** El cliente lo cambia: ¿está pulsada la tecla para ver las estadísticas? */
-	public static BooleanSupplier statsKey = () -> false;
-	/** El nombre de esa tecla (R, si no se ha cambiado). */
-	public static Supplier<Text> statsKeyName = () -> Text.literal("R");
-
 	private static final Map<ArmorClass, Map<ArmorTier, RegistryEntry<ArmorMaterial>>> MATERIALS = new EnumMap<>(ArmorClass.class);
 	private static final EquipmentSlot[] ARMOR_SLOTS = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
 
@@ -165,10 +158,6 @@ public class ClassArmorItem extends ArmorItem {
 		super.appendTooltip(stack, context, tooltip, options);
 		tooltip.add(Text.translatable("armor_class.evolvedwarfare." + armorClass.id()).append(" · ")
 				.append(Text.translatable("armor_tier.evolvedwarfare." + tier.id())).withColor(armorClass.color));
-		if (!statsKey.getAsBoolean()) {
-			tooltip.add(Text.translatable("armor_class.evolvedwarfare.hold", statsKeyName.get()).formatted(Formatting.DARK_GRAY));
-			return;
-		}
 		tooltip.add(Text.translatable("armor_class.evolvedwarfare.armor", protection(armorClass, tier, getType())).formatted(Formatting.BLUE));
 		if (tier.toughness > 0.0F) {
 			tooltip.add(Text.translatable("armor_class.evolvedwarfare.toughness", number(tier.toughness)).formatted(Formatting.BLUE));
