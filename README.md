@@ -863,7 +863,8 @@ endurece cada semana; 0 = siempre como la primera) y `showDayClock` (el contador
 `/evolvedwarfare horde [bandits|vikings|pirates] [semana]` lanza ya una horda contra tu base (o contra ti).
 
 ### Ruidos del Nether
-Mientras estás en el Nether, **cada cierto tiempo suena uno de tres ruidos de ambiente** (retumbos graves), al azar.
+Mientras estás en el Nether, **cada cierto tiempo suena uno de cinco ruidos de ambiente**, al azar: tres retumbos graves y dos de fuego que
+chisporrotea sobre un fondo grave (estos duran 30 segundos y entran y salen despacio).
 De normal, uno cada 2 minutos más o menos (entre 1 y 3 minutos); al entrar, el primero tarda entre medio minuto y un
 minuto y medio. Nunca suenan dos a la vez, cada vez con un tono un poco distinto, y van con el volumen de **Ambiente**
 del juego (con subtítulo: *El Nether retumba*). Se ajustan en la pestaña *Hordas* de la configuración:

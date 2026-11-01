@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 
 /**
  * Ruidos de ambiente del Nether: mientras estás allí, cada cierto tiempo (al azar entre la mitad y vez y media de lo
- * que diga la configuración, 2 minutos de normal) suena uno de los tres, en la categoría Ambiente y sin posición (se oye
+ * que diga la configuración, 2 minutos de normal) suena uno de los cinco, en la categoría Ambiente y sin posición (se oye
  * igual por los dos lados). Nunca dos a la vez. Al entrar en el Nether, el primero tarda un poco.
  */
 public final class NetherAmbience {

@@ -204,6 +204,14 @@
       {
         "name": "evolvedwarfare:ambient/nether_3",
         "volume": 1.0
+      },
+      {
+        "name": "evolvedwarfare:ambient/nether_4",
+        "volume": 1.0
+      },
+      {
+        "name": "evolvedwarfare:ambient/nether_5",
+        "volume": 1.0
       }
     ]
   }
