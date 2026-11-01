@@ -2692,7 +2692,9 @@ def jigsaw_structure(start_pool, size, max_distance, biomes, expansion_hack, ada
 
 
 STRUCTURES = {
-    "city": jigsaw_structure(L("city/town_centers"), 5, 72, f"#{NS}:has_structure/city", True),
+    # ciudades amuralladas: tipo propio (WalledCityStructure), cada una sale de su semilla (CityDesigner.java)
+    "city": {"type": f"{NS}:walled_city", "style": "medieval", "biomes": f"#{NS}:has_structure/city",
+             "spawn_overrides": {}, "step": "surface_structures", "terrain_adaptation": "beard_thin"},
     "mercenary_camp": jigsaw_structure(L("camp/centers"), 2, 32, f"#{NS}:has_structure/mercenary_camp", False),
     # torre de vigilancia: tipo propio (WatchtowerStructure), cada una sale de su semilla
     "watchtower": {"type": f"{NS}:watchtower", "biomes": f"#{NS}:has_structure/watchtower", "spawn_overrides": {},
@@ -2701,8 +2703,10 @@ STRUCTURES = {
     "bandit_fort": jigsaw_structure(L("bandit_fort/base"), 1, 24, f"#{NS}:has_structure/bandit_fort", False),
     "viking_settlement": jigsaw_structure(L("viking/centers"), 2, 40, f"#{NS}:has_structure/viking_settlement", False),
     "pirate_cove": jigsaw_structure(L("pirate/centers"), 2, 40, f"#{NS}:has_structure/pirate_cove", False),
-    "desert_city": jigsaw_structure(L("desert_city/town_centers"), 5, 72, f"#{NS}:has_structure/desert_city", True),
-    "snow_city": jigsaw_structure(L("snow_city/town_centers"), 5, 72, f"#{NS}:has_structure/snow_city", True),
+    "desert_city": {"type": f"{NS}:walled_city", "style": "desert", "biomes": f"#{NS}:has_structure/desert_city",
+                    "spawn_overrides": {}, "step": "surface_structures", "terrain_adaptation": "beard_thin"},
+    "snow_city": {"type": f"{NS}:walled_city", "style": "snow", "biomes": f"#{NS}:has_structure/snow_city",
+                  "spawn_overrides": {}, "step": "surface_structures", "terrain_adaptation": "beard_thin"},
     "castle": jigsaw_structure(L("castle/base"), 1, 24, f"#{NS}:has_structure/castle", False, "beard_box"),
     "bandit_stronghold": jigsaw_structure(L("bandit_stronghold/base"), 1, 24, f"#{NS}:has_structure/bandit_stronghold",
                                           False, "beard_box"),
@@ -2710,7 +2714,7 @@ STRUCTURES = {
 
 STRUCTURE_SETS = {
     "cities": {
-        "placement": {"type": "minecraft:random_spread", "salt": 1593274681, "spacing": 44, "separation": 16,
+        "placement": {"type": "minecraft:random_spread", "salt": 1593274681, "spacing": 80, "separation": 32,
                       "exclusion_zone": {"other_set": "minecraft:villages", "chunk_count": 6}},
         # una sola rejilla para las tres ciudades: en cada sitio se prueba la que encaja con el bioma
         "structures": [{"structure": L("city"), "weight": 1}, {"structure": L("desert_city"), "weight": 1},

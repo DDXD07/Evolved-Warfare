@@ -77,6 +77,13 @@ public class TraderEntity extends MerchantEntity {
 	/** Lotes que le quedan hoy de cada línea del catálogo (null = todo lleno). */
 	@Nullable
 	private int[] stock;
+	/** En las ciudades amuralladas: dónde se pone detrás del mostrador y su cama (de noche se va a dormir). */
+	@Nullable
+	private BlockPos counter;
+	@Nullable
+	private BlockPos bed;
+	/** La ciudad a la que pertenece (0 = ninguna conocida). */
+	private long cityKey;
 
 	public TraderEntity(EntityType<? extends TraderEntity> type, World world) {
 		super(type, world);
@@ -161,6 +168,85 @@ public class TraderEntity extends MerchantEntity {
 	}
 
 	// ------------------------------------------------------------------ vida diaria
+
+	/** Su sitio en una ciudad amurallada: el mostrador (de día), la cama (de noche) y la ciudad. */
+	public void setCityHome(BlockPos counter, BlockPos bed, long cityKey) {
+		this.counter = counter.toImmutable();
+		this.bed = bed.toImmutable();
+		this.cityKey = cityKey;
+		this.home = this.counter;
+	}
+
+	public long getCityKey() {
+		return cityKey;
+	}
+
+	@Nullable
+	public BlockPos getCounter() {
+		return counter;
+	}
+
+	@Nullable
+	public BlockPos getBed() {
+		return bed;
+	}
+
+	/** Para las pruebas: fuerza la noche (true) o el día (false); null = la hora del mundo. */
+	@Nullable
+	public static Boolean forceBedtime;
+
+	/** ¿Es de noche (hora de dormir)? */
+	public static boolean bedtime(World world) {
+		if (forceBedtime != null) {
+			return forceBedtime;
+		}
+		long t = Math.floorMod(world.getTimeOfDay(), 24000L);
+		return t >= 12500L && t < 23400L;
+	}
+
+	/** Dormido no se mueve. */
+	@Override
+	protected boolean isImmobile() {
+		return super.isImmobile() || isSleeping();
+	}
+
+	/**
+	 * Horario de los mercaderes de las ciudades: de día, detrás de su mostrador; al caer la noche sube a su cuarto (o va
+	 * al de atrás) y se acuesta; al amanecer se levanta y vuelve al mostrador.
+	 */
+	private void schedule(ServerWorld world) {
+		if (counter == null || bed == null) {
+			return;
+		}
+		boolean night = bedtime(world);
+		BlockPos target = night ? bed : counter;
+		if (!night && isSleeping()) {
+			wakeUp();
+		}
+		if (getPositionTarget() == null || !getPositionTarget().equals(target) || getPositionTargetRange() != 1) {
+			setPositionTarget(target, 1);
+		}
+		if (isSleeping() || getCustomer() != null) {
+			return;
+		}
+		double dx = getX() - (target.getX() + 0.5);
+		double dz = getZ() - (target.getZ() + 0.5);
+		double flat = dx * dx + dz * dz;
+		if (night) {
+			if (flat <= 3.2 && Math.abs(getY() - target.getY()) <= 1.5 && world.getBlockState(bed).getBlock() instanceof net.minecraft.block.BedBlock
+					&& !world.getBlockState(bed).get(net.minecraft.block.BedBlock.OCCUPIED)) {
+				getNavigation().stop();
+				sleep(bed);
+				return;
+			}
+		} else if (flat <= 0.36 && Math.abs(getY() - target.getY()) < 1.0) {
+			return;
+		}
+		if (age % 20 == 0 && getNavigation().isIdle()) {
+			getNavigation().startMovingTo(target.getX() + 0.5, target.getY(), target.getZ() + 0.5, 0.5);
+		}
+	}
+
 	@Override
 	public void tick() {
 		super.tick();
@@ -177,7 +263,9 @@ public class TraderEntity extends MerchantEntity {
 		if (priceSeed == 0L) {
 			priceSeed = random.nextLong() | 1L;
 		}
-		if (getPositionTarget() == null || !getPositionTarget().equals(home) || getPositionTargetRange() != HOME_RANGE) {
+		if (counter != null) {
+			schedule(world);
+		} else if (getPositionTarget() == null || !getPositionTarget().equals(home) || getPositionTargetRange() != HOME_RANGE) {
 			setPositionTarget(home, HOME_RANGE);
 		}
 		if (age % 100 == 0) {
@@ -250,6 +338,12 @@ public class TraderEntity extends MerchantEntity {
 		ItemStack stack = player.getStackInHand(hand);
 		if (stack.getItem() instanceof net.minecraft.item.SpawnEggItem || stack.isOf(Items.NAME_TAG) || !isAlive()) {
 			return super.interactMob(player, hand);
+		}
+		if (isSleeping()) {
+			if (!getWorld().isClient) {
+				player.sendMessage(Text.translatable("message.evolvedwarfare.trader.sleeping", getDisplayName()), true);
+			}
+			return ActionResult.success(getWorld().isClient);
 		}
 		if (hand == Hand.MAIN_HAND) {
 			player.incrementStat(Stats.TALKED_TO_VILLAGER);
@@ -369,6 +463,11 @@ public class TraderEntity extends MerchantEntity {
 			nbt.putInt("HomeY", home.getY());
 			nbt.putInt("HomeZ", home.getZ());
 		}
+		if (counter != null && bed != null) {
+			nbt.putLong("Counter", counter.asLong());
+			nbt.putLong("Bed", bed.asLong());
+		}
+		nbt.putLong("CityKey", cityKey);
 	}
 
 	@Override
@@ -397,5 +496,10 @@ public class TraderEntity extends MerchantEntity {
 		if (nbt.contains("HomeX")) {
 			home = new BlockPos(nbt.getInt("HomeX"), nbt.getInt("HomeY"), nbt.getInt("HomeZ"));
 		}
+		if (nbt.contains("Counter") && nbt.contains("Bed")) {
+			counter = BlockPos.fromLong(nbt.getLong("Counter"));
+			bed = BlockPos.fromLong(nbt.getLong("Bed"));
+		}
+		cityKey = nbt.getLong("CityKey");
 	}
 }

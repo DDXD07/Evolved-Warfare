@@ -57,6 +57,15 @@ public final class ModEntities {
 					.maxTrackingRange(10)
 					.build("trader"));
 
+	/** Guardia de una ciudad amurallada: no se contrata; va a por quien haga daño a su gente. */
+	public static final EntityType<com.evolvedwarfare.entity.CityGuardEntity> CITY_GUARD = Registry.register(Registries.ENTITY_TYPE,
+			EvolvedWarfare.id("city_guard"),
+			EntityType.Builder.create(com.evolvedwarfare.entity.CityGuardEntity::new, SpawnGroup.MISC)
+					.dimensions(0.6F, 1.8F)
+					.eyeHeight(1.62F)
+					.maxTrackingRange(10)
+					.build("city_guard"));
+
 	/** Bandido: enemigo de los jugadores. */
 	public static final EntityType<BanditEntity> BANDIT = Registry.register(Registries.ENTITY_TYPE,
 			EvolvedWarfare.id("bandit"),
@@ -163,6 +172,7 @@ public final class ModEntities {
 	public static void init() {
 		FabricDefaultAttributeRegistry.register(RECRUIT, AbstractNpcEntity.createNpcAttributes());
 		FabricDefaultAttributeRegistry.register(SOLDIER, AbstractNpcEntity.createNpcAttributes());
+		FabricDefaultAttributeRegistry.register(CITY_GUARD, AbstractNpcEntity.createNpcAttributes());
 		FabricDefaultAttributeRegistry.register(WORKER, WorkerEntity.createWorkerAttributes());
 		FabricDefaultAttributeRegistry.register(BANDIT, BanditEntity.createBanditAttributes());
 		FabricDefaultAttributeRegistry.register(VIKING, FactionNpcEntity.createFactionAttributes());

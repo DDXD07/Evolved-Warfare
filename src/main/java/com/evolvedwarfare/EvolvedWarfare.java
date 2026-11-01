@@ -67,6 +67,7 @@ public class EvolvedWarfare implements ModInitializer {
 		ExplorationMaps.register();
 		SettlementLevels.register();
 		com.evolvedwarfare.world.CityLevels.register();
+		com.evolvedwarfare.world.city.CityLaw.register();
 		RouteSlipItem.registerEvents();
 		com.evolvedwarfare.item.StructureScannerItem.registerEvents();
 		com.evolvedwarfare.block.CropCrateBlock.registerEvents();

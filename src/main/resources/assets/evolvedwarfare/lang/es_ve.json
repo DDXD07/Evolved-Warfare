@@ -1212,5 +1212,12 @@
   "config.evolvedwarfare.netherAmbienceSeconds.tip": "Cada cuántos segundos, más o menos, suena un ruido de ambiente en el Nether (al azar entre la mitad y vez y media; 0 = nunca).",
   "config.evolvedwarfare.netherAmbienceVolume": "Nether: volumen de los sonidos",
   "config.evolvedwarfare.netherAmbienceVolume.tip": "Volumen de los ruidos de ambiente del Nether (además del volumen de Ambiente del juego).",
-  "tooltip.evolvedwarfare.hold_control": "Mantén Control para más info"
+  "tooltip.evolvedwarfare.hold_control": "Mantén Control para más info",
+  "entity.evolvedwarfare.city_guard": "Guardia de la ciudad",
+  "message.evolvedwarfare.city_guard.hello": "«Paz y orden en la ciudad, forastero.»",
+  "message.evolvedwarfare.city_guard.angry": "«¡Alto ahí, criminal!»",
+  "message.evolvedwarfare.city_law.wanted": "¡Has atacado a alguien de %s! Sus guardias te perseguirán durante un día.",
+  "message.evolvedwarfare.city_law.forgiven": "Los guardias de %s ya no te persiguen.",
+  "message.evolvedwarfare.city_law.the_city": "la ciudad",
+  "message.evolvedwarfare.trader.sleeping": "%s está durmiendo. Vuelve cuando amanezca."
 }

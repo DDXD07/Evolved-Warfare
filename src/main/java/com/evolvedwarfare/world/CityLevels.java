@@ -149,8 +149,9 @@ public final class CityLevels {
 	private static void announce(ServerWorld world, ServerPlayerEntity player, StructureStart start) {
 		Identifier id = world.getRegistryManager().get(RegistryKeys.STRUCTURE).getId(start.getStructure());
 		int level = levelOf(world, start);
-		Text title = Text.translatable("structure.evolvedwarfare." + (id != null ? id.getPath() : "city"))
-				.formatted(Formatting.GOLD, Formatting.BOLD);
+		java.util.Optional<com.evolvedwarfare.world.city.CityPiece> city = com.evolvedwarfare.world.city.CityPiece.of(start);
+		Text kind = Text.translatable("structure.evolvedwarfare." + (id != null ? id.getPath() : "city"));
+		Text title = (city.isPresent() ? Text.literal(city.get().cityName()) : kind.copy()).formatted(Formatting.GOLD, Formatting.BOLD);
 		int percent = (int) Math.round((priceMultiplier(level) - 1.0) * 100.0);
 		Text goods = Text.translatable(com.evolvedwarfare.trade.Quality.forLevel(level).cityKey());
 		Text subtitle = (level > 1 ? Text.translatable("gui.evolvedwarfare.city.level", level, goods, percent)

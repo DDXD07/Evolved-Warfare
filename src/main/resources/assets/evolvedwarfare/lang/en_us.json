@@ -1212,5 +1212,12 @@
   "config.evolvedwarfare.netherAmbienceSeconds.tip": "About how many seconds between ambient sounds in the Nether (random, between half and one and a half times this; 0 = never).",
   "config.evolvedwarfare.netherAmbienceVolume": "Nether: sound volume",
   "config.evolvedwarfare.netherAmbienceVolume.tip": "Volume of the Nether ambient sounds (on top of the game's Ambient volume).",
-  "tooltip.evolvedwarfare.hold_control": "Hold Control for more info"
+  "tooltip.evolvedwarfare.hold_control": "Hold Control for more info",
+  "entity.evolvedwarfare.city_guard": "City Guard",
+  "message.evolvedwarfare.city_guard.hello": "\"Keep the peace in our city, stranger.\"",
+  "message.evolvedwarfare.city_guard.angry": "\"Halt, criminal!\"",
+  "message.evolvedwarfare.city_law.wanted": "You attacked someone from %s! Its guards will hunt you for a day.",
+  "message.evolvedwarfare.city_law.forgiven": "The guards of %s no longer hunt you.",
+  "message.evolvedwarfare.city_law.the_city": "the city",
+  "message.evolvedwarfare.trader.sleeping": "%s is asleep. Come back at dawn."
 }

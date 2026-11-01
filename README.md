@@ -41,7 +41,7 @@ Cada uno tiene nombre y aspecto al azar (6 aspectos) y pasea cerca de su sitio e
 
 | Estructura | Dónde | Qué tiene |
 |---|---|---|
-| **Ciudad medieval** | Llanuras, praderas, sabanas, bosques, taiga y llanuras nevadas | Plaza (fuente o patio de armas), calles empedradas con farolas y puertas de entrada, casas de entramado, casas de dos plantas, cuartel, taberna, herrería, torres de guardia, puestos de mercado y huertos. Se genera por piezas, así que cada ciudad es distinta: unos 40 edificios y una docena de reclutas de media. |
+| **Ciudad amurallada** (medieval, del desierto o del norte) | Llanuras, praderas, sabanas y bosques; desiertos; llanuras y taigas nevadas | **Cada una distinta** (sale de la semilla del mundo), con su propio nombre. Muralla con torres, puertas, plaza con fuente, tiendas, cuartel, casas de una o dos plantas, huertos y pozos. Guardias que la defienden. Ver *Las ciudades amuralladas* más abajo. |
 | **Campamento de mercenarios** | Bosques, taigas, llanuras, praderas y sabanas | Hoguera, tiendas de lona, armero y suministros. 2-6 reclutas. |
 | **Torre de vigilancia** | Llanuras, bosques, sabanas, taigas, colinas y costas rocosas | **Cada una distinta** (sale de la semilla del mundo): cuadrada, octogonal o redonda, de 7 a 11 de ancho y de 2 a 4 pisos; arriba almenas con bandera, hoguera de señales, mirador con campana o garita de entramado; a veces voladizo con matacanes, pináculos, contrafuertes, balcón, cuadra adosada, cerca con portón, farolas, pozo, leñera o dianas. Dentro: cuerpo de guardia, literas y armería o sala de mapas, con cofres. Piedra, mampostería, adobe, arenisca, pizarra o toba según el bioma (con nieve en las taigas nevadas). 1-2 reclutas (uno arriba vigilando). |
 
@@ -372,17 +372,39 @@ pon un **plano en sus suministros**:
 - Al terminar te avisa. Para otra obra, cambia el plano.
 - En **creativo**, clic derecho con un plano en el suelo lo coloca al instante.
 
-### Ciudades del desierto y del norte
-Comparten la rejilla de las ciudades: en cada sitio sale la que encaja con el bioma (unas 40 casas y 15 reclutas, como
-la ciudad medieval).
-- **Ciudad del desierto** (desiertos): calles de arenisca lisa, plaza del **oasis** con estanque, palmeras y bancos;
-  casas de adobe con azotea y toldo, casas con terraza, **bazares** de toldos de colores, **posada de caravanas** con
-  patio y pozo, cuartel almenado y torres con farol.
-- **Ciudad del norte** (llanuras y taigas nevadas): calles empedradas con nieve, plaza de la **hoguera** con un abeto;
-  cabañas de troncos con chimenea humeante, casas grandes de dos plantas, **taberna** con gran hogar, herrería con fragua,
-  cuartel de piedra y troncos y torres de piedra con tejado puntiagudo.
+### Las ciudades amuralladas
+Las ciudades (medievales, del desierto y del norte) ya no se montan con piezas sueltas: **cada una sale entera de la
+semilla del mundo**, así que no hay dos iguales, y tiene **su propio nombre** (sale al entrar). Son **mucho menos
+comunes** que antes: la rejilla es de unos 1.300 bloques y en cada sitio solo sale si el bioma encaja, así que de media
+hay una cada ~1.500 bloques o más. Buscan un sitio seco y no muy empinado, y dentro de la muralla allanan el terreno.
+En cada sitio sale la que encaja con el bioma: **medieval** (piedra, entramado y tejados de madera, ladrillo o pizarra),
+**del desierto** (arenisca, azoteas planas) o **del norte** (troncos de abeto, piedra y nieve).
 
-Las dos se pueden asaltar (como las aldeas y la ciudad medieval).
+- **Muralla**: de 3 de grueso y 7 de alto, con almenas y **camino de ronda**. **Torres** en las cuatro esquinas (con una
+  sala, troneras y una escala a la azotea, donde vigila un arquero) y torreones a lo largo de los lienzos largos. Entre
+  73 y 97 bloques de lado.
+- **Puertas**: de 2 a 4, cada una con su par de torreones, el rastrillo subido y **dos guardias**. Junto a cada puerta,
+  por dentro, una **escalera** sube a la muralla. Fuera, un camino.
+- **Calles**: una ronda por dentro de la muralla, dos **avenidas en cruz** con farolas, de puerta a puerta, y calles
+  que parten las manzanas grandes. En el centro, la **plaza** con su fuente.
+- **Tiendas**: una por oficio (5 por ciudad), las más cercanas a la plaza, con el **estandarte del oficio** junto a la
+  puerta. El **mostrador** corta la planta baja de pared a pared: tú entras por la calle y el mercader está detrás, con
+  las cosas de su oficio. Su **cama** está arriba (sube por una escalera) o en un **cuarto de atrás**.
+- **Casas** de **una o dos plantas**, de materiales y tejados distintos, con camas, cofre, mesa y horno; en muchas vive
+  un vecino (un recluta que se puede contratar). También hay un **cuartel** junto a una puerta, **huertos** y **pozos**.
+
+**El horario de los mercaderes**: de día están **siempre detrás de su mostrador**. Al caer la noche suben a su cuarto
+(o se van al de atrás) y **se acuestan**; al amanecer se levantan y vuelven al mostrador. Dormidos no venden: *vuelve
+cuando amanezca*.
+
+**Los guardias** (unos 12-16 por ciudad): en las puertas, en lo alto de las torres de las esquinas, en la plaza y en el
+cuartel. Llevan casco de hierro y tabardo del color de su ciudad, luchan contra los monstruos y los asaltantes y **no se
+pueden contratar**. **Si haces daño a alguien de la ciudad** (un mercader, un guardia o un vecino libre), **la ciudad
+te guarda rencor un día de juego**: te avisa, los guardias de cerca van a por ti en ese momento y los demás te atacan
+en cuanto te vean, por toda la ciudad. Pasado el día te perdonan (también te avisa). En creativo no te persiguen.
+
+Se pueden asaltar (como las aldeas). Las ciudades que ya se habían generado en tu mundo se quedan como estaban; las
+nuevas salen amuralladas.
 
 ### Fortalezas
 - **Castillo** (llanuras, praderas, bosques, taigas y sabanas; más o menos uno cada 770×770 bloques, nunca pegado a una
@@ -629,7 +651,7 @@ lo gastado.
 
 ### Los comerciantes
 
-En los puestos de las ciudades viven **comerciantes** que comercian **siempre con Glory Coins**, la moneda del mod. No se van, no desaparecen y no se alejan más de 8 bloques de su puesto; huyen de
+En las tiendas de las ciudades viven **comerciantes** que comercian **siempre con Glory Coins**, la moneda del mod. No se van ni desaparecen; de día están detrás de su mostrador y de noche duermen en su cama (ver *Las ciudades amuralladas*); huyen de
 monstruos y asaltantes (que también van a por ellos, así que defiende el mercado).
 
 | Comerciante | Dónde | Vende |
@@ -751,9 +773,9 @@ Clic derecho a un comerciante abre su **tienda con todo el catálogo a la vez**,
 - En las fichas los precios largos salen cortos (12,5k = 12.500; 1,2M = 1.200.000); el número entero, en la descripción.
 - Las armas que vende el armero **no necesitan la ventaja de forja**: comprarlas es la alternativa (cara) a fabricarlas.
 
-Dónde aparecen: en el **mercado**, la **fragua**, la **taberna** y la **plaza** de las ciudades medievales; en el
-**bazar**, el **caravasar** y el **oasis** del desierto; en la **taberna**, la **herrería** y la **hoguera** del norte.
-Solo en ciudades nuevas (chunks sin generar). Hay **huevo generador** en la pestaña del mod, y con comandos:
+Dónde aparecen: cada ciudad tiene **una tienda de cada oficio de su estilo**: medieval, tendero, sastre, armero, cantero
+y joyero; del desierto, mercader de especias en lugar de sastre; del norte, peletero en lugar de sastre. Solo en
+ciudades nuevas (chunks sin generar). Hay **huevo generador** en la pestaña del mod, y con comandos:
 `/summon evolvedwarfare:trader ~ ~ ~ {TraderType:"jeweler"}` (`grocer`, `armorer`, `mason`, `jeweler`, `tailor`,
 `spice_merchant`, `furrier`). Fuera de una ciudad, el comerciante toma el nivel que le tocaría por la distancia.
 

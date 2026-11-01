@@ -19,6 +19,12 @@ public final class ModStructures {
 	public static final StructureType<WatchtowerStructure> WATCHTOWER = Registry.register(Registries.STRUCTURE_TYPE,
 			EvolvedWarfare.id("watchtower"), () -> WatchtowerStructure.CODEC);
 
+	/** Ciudad amurallada generada por semilla (cada una distinta). */
+	public static final StructurePieceType CITY_PIECE = Registry.register(Registries.STRUCTURE_PIECE,
+			EvolvedWarfare.id("walled_city"), (StructurePieceType) com.evolvedwarfare.world.city.CityPiece::new);
+	public static final StructureType<com.evolvedwarfare.world.city.WalledCityStructure> WALLED_CITY = Registry.register(
+			Registries.STRUCTURE_TYPE, EvolvedWarfare.id("walled_city"), () -> com.evolvedwarfare.world.city.WalledCityStructure.CODEC);
+
 	private ModStructures() {
 	}
 
