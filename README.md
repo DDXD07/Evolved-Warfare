@@ -862,6 +862,13 @@ No hay hordas en pacífico ni con `doMobSpawning` desactivado. Mientras dura una
 endurece cada semana; 0 = siempre como la primera) y `showDayClock` (el contador y el reloj). Para probarla:
 `/evolvedwarfare horde [bandits|vikings|pirates] [semana]` lanza ya una horda contra tu base (o contra ti).
 
+### Ruidos del Nether
+Mientras estás en el Nether, **cada cierto tiempo suena uno de tres ruidos de ambiente** (retumbos graves), al azar.
+De normal, uno cada 2 minutos más o menos (entre 1 y 3 minutos); al entrar, el primero tarda entre medio minuto y un
+minuto y medio. Nunca suenan dos a la vez, cada vez con un tono un poco distinto, y van con el volumen de **Ambiente**
+del juego (con subtítulo: *El Nether retumba*). Se ajustan en la pestaña *Hordas* de la configuración:
+`netherAmbienceSeconds` (cada cuántos segundos, más o menos; 0 = nunca) y `netherAmbienceVolume` (su volumen).
+
 ## Fase 12 — Armaduras de las facciones
 
 Cada facción tiene **4 armaduras**, de menos a más rango, cada una con casco, peto, grebas y botas (48 piezas). Se ven

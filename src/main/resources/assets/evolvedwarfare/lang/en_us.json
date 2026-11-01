@@ -1206,5 +1206,10 @@
   "gui.evolvedwarfare.sales_mailbox.worth": "Sells for ≈ %s Glory Coins",
   "gui.evolvedwarfare.sales_mailbox.unsellable": "Won't sell: neither it nor its materials have a market price",
   "message.evolvedwarfare.sales_mailbox.sold": "Sales Mailbox: sold %s items for %s Glory Coins (%s, %s, %s)",
-  "message.evolvedwarfare.sales_mailbox.not_yours": "This mailbox isn't yours"
+  "message.evolvedwarfare.sales_mailbox.not_yours": "This mailbox isn't yours",
+  "subtitles.evolvedwarfare.ambient.nether": "The Nether rumbles",
+  "config.evolvedwarfare.netherAmbienceSeconds": "Nether: sounds every (s)",
+  "config.evolvedwarfare.netherAmbienceSeconds.tip": "About how many seconds between ambient sounds in the Nether (random, between half and one and a half times this; 0 = never).",
+  "config.evolvedwarfare.netherAmbienceVolume": "Nether: sound volume",
+  "config.evolvedwarfare.netherAmbienceVolume.tip": "Volume of the Nether ambient sounds (on top of the game's Ambient volume)."
 }

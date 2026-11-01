@@ -32,6 +32,9 @@ public final class ModSounds {
 	public static final SoundEvent TRADER_YES = register("npc.trader.yes");
 	public static final SoundEvent TRADER_NO = register("npc.trader.no");
 
+	/** Ruidos de ambiente del Nether (tres, al azar): suenan cada cierto tiempo mientras estás allí. */
+	public static final SoundEvent NETHER_AMBIENCE = register("ambient.nether");
+
 	/** Lo que dice un NPC: su voz de siempre, su queja al recibir un golpe y al morir. */
 	public record Voice(SoundEvent ambient, SoundEvent hurt, SoundEvent death) {
 	}

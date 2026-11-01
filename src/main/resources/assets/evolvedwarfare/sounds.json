@@ -189,5 +189,22 @@
     "sounds": [
       "evolvedwarfare:npc/trader/no"
     ]
+  },
+  "ambient.nether": {
+    "subtitle": "subtitles.evolvedwarfare.ambient.nether",
+    "sounds": [
+      {
+        "name": "evolvedwarfare:ambient/nether_1",
+        "volume": 1.0
+      },
+      {
+        "name": "evolvedwarfare:ambient/nether_2",
+        "volume": 1.0
+      },
+      {
+        "name": "evolvedwarfare:ambient/nether_3",
+        "volume": 1.0
+      }
+    ]
   }
 }

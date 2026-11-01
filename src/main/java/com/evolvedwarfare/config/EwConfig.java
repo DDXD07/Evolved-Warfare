@@ -60,6 +60,10 @@ public final class EwConfig {
 	public double hordeGrowth = 1.0;
 	/** El contador de días y el reloj de arriba a la izquierda (cada jugador, en su juego). */
 	public boolean showDayClock = true;
+	/** Cada cuántos segundos, más o menos, suena un ruido de ambiente en el Nether (0 = nunca; cada jugador, en su juego). */
+	public int netherAmbienceSeconds = 120;
+	/** Volumen de esos ruidos (0..1). */
+	public double netherAmbienceVolume = 0.8;
 
 	// ------------------------------------------------------------------ asentamientos
 	/** Vida y daño extra por cada nivel del asentamiento por encima del 1. */
@@ -157,6 +161,8 @@ public final class EwConfig {
 			new Option("hordeEveryDays", "hordes", 0, 100, 1),
 			new Option("hordeGrowth", "hordes", 0.0, 5.0, 0.1),
 			new Option("showDayClock", "hordes", 0, 1, 1),
+			new Option("netherAmbienceSeconds", "hordes", 0, 1800, 10),
+			new Option("netherAmbienceVolume", "hordes", 0.0, 1.0, 0.05),
 			new Option("settlementBonusPerLevel", "settlements", 0.0, 1.0, 0.01),
 			new Option("settlementBlocksPerLevel", "settlements", 100, 100000, 50),
 			new Option("settlementMaxLevel", "settlements", 1, 10, 1),

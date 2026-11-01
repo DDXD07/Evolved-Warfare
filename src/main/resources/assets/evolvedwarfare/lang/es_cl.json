@@ -1206,5 +1206,10 @@
   "gui.evolvedwarfare.sales_mailbox.worth": "Se vende por ≈ %s Glory Coins",
   "gui.evolvedwarfare.sales_mailbox.unsellable": "No se vende: no tiene precio en el mercado (ni sus materiales)",
   "message.evolvedwarfare.sales_mailbox.sold": "Buzón de Ventas: vendidos %s objetos por %s Glory Coins (%s, %s, %s)",
-  "message.evolvedwarfare.sales_mailbox.not_yours": "Este buzón no es tuyo"
+  "message.evolvedwarfare.sales_mailbox.not_yours": "Este buzón no es tuyo",
+  "subtitles.evolvedwarfare.ambient.nether": "El Nether retumba",
+  "config.evolvedwarfare.netherAmbienceSeconds": "Nether: sonidos cada (s)",
+  "config.evolvedwarfare.netherAmbienceSeconds.tip": "Cada cuántos segundos, más o menos, suena un ruido de ambiente en el Nether (al azar entre la mitad y vez y media; 0 = nunca).",
+  "config.evolvedwarfare.netherAmbienceVolume": "Nether: volumen de los sonidos",
+  "config.evolvedwarfare.netherAmbienceVolume.tip": "Volumen de los ruidos de ambiente del Nether (además del volumen de Ambiente del juego)."
 }
