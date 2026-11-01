@@ -99,13 +99,22 @@ public final class CityLaw {
 		}
 	}
 
+	/** ¿Juega en creativo o espectador? (por su modo de juego en el servidor) */
+	private static boolean exempt(PlayerEntity player) {
+		if (player instanceof ServerPlayerEntity server) {
+			net.minecraft.world.GameMode mode = server.interactionManager.getGameMode();
+			return mode == net.minecraft.world.GameMode.CREATIVE || mode == net.minecraft.world.GameMode.SPECTATOR;
+		}
+		return player.isCreative() || player.isSpectator();
+	}
+
 	private static long now(MinecraftServer server) {
 		return server.getOverworld().getTimeOfDay();
 	}
 
 	/** ¿Le guarda rencor esa ciudad a ese jugador? (los de creativo y espectador, nunca) */
 	public static boolean wanted(World world, long city, PlayerEntity player) {
-		if (city == 0L || player.isCreative() || player.isSpectator() || !(world instanceof ServerWorld server)) {
+		if (city == 0L || exempt(player) || !(world instanceof ServerWorld server)) {
 			return false;
 		}
 		Map<UUID, Grudge> players = State.get(server.getServer()).grudges.get(city);
@@ -138,7 +147,7 @@ public final class CityLaw {
 
 	/** El jugador ha hecho daño a alguien de la ciudad: un día de rencor y los guardias de cerca, a por él. */
 	public static void offend(ServerWorld world, long city, ServerPlayerEntity player, Entity victim) {
-		if (player.isCreative() || player.isSpectator()) {
+		if (exempt(player)) {
 			return;
 		}
 		State state = State.get(world.getServer());
