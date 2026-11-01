@@ -48,6 +48,7 @@ public abstract class LivingEntityDamageMixin {
 		}
 		if (cir.getReturnValueZ()) {
 			SkillEffects.afterDamage((LivingEntity) (Object) this, source, dealt, zone);
+			com.evolvedwarfare.world.city.CityLaw.onDamaged((LivingEntity) (Object) this, source);
 		}
 	}
 }

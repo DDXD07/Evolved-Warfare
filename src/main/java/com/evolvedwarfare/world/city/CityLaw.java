@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
-import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -83,20 +82,21 @@ public final class CityLaw {
 	}
 
 	public static void register() {
-		ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity, source, amount) -> {
-			if (source.getAttacker() instanceof ServerPlayerEntity player && entity.getWorld() instanceof ServerWorld world) {
-				long city = cityOf(world, entity);
-				if (city != 0L) {
-					offend(world, city, player, entity);
-				}
-			}
-			return true;
-		});
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
 			if (server.getTicks() % 100 == 0) {
 				forgive(server);
 			}
 		});
+	}
+
+	/** Lo llama el mixin del daño cuando un golpe entra: si es un jugador contra alguien de una ciudad, delito. */
+	public static void onDamaged(LivingEntity entity, net.minecraft.entity.damage.DamageSource source) {
+		if (source.getAttacker() instanceof ServerPlayerEntity player && entity.getWorld() instanceof ServerWorld world) {
+			long city = cityOf(world, entity);
+			if (city != 0L) {
+				offend(world, city, player, entity);
+			}
+		}
 	}
 
 	private static long now(MinecraftServer server) {

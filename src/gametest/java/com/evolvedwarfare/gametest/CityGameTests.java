@@ -166,7 +166,8 @@ public class CityGameTests implements FabricGameTest {
 		boolean before = CityLaw.wanted(world, key, player);
 		boolean forHire = guard.isForHire();
 		ctx.waitAndRun(2, () -> {
-			trader.damage(world.getDamageSources().playerAttack(player), 1.0F);
+			boolean hit = trader.damage(world.getDamageSources().playerAttack(player), 1.0F);
+			LOG.info("[EW-GAMETEST] ley de la ciudad: el golpe entra={} vida={}", hit, trader.getHealth());
 			boolean after = CityLaw.wanted(world, key, player);
 			boolean other = CityLaw.wanted(world, key + 1, player);
 			LOG.info("[EW-GAMETEST] ley de la ciudad: antes {} después {} (otra ciudad {}); guardia persigue a {}; se contrata={}", before, after,
