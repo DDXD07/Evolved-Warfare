@@ -127,6 +127,37 @@ public class CityPiece extends StructurePiece {
 		return Math.max(plan.halfX, plan.halfZ);
 	}
 
+	/**
+	 * Arregla la escalera de una tienda ya generada con una versión anterior (el hueco del techo no llegaba al primer
+	 * escalón): pone aire donde el plano dice hueco en el suelo de arriba y la barandilla que falte, a menos de 12
+	 * bloques del mostrador. Devuelve true si ha encontrado la ciudad.
+	 */
+	public boolean repairStairs(StructureWorldAccess world, BlockPos counter) {
+		CityPlan plan = layout(seed, style).plan();
+		int ox = origin.getX();
+		int oy = origin.getY();
+		int oz = origin.getZ();
+		BlockPos.Mutable pos = new BlockPos.Mutable();
+		for (int lx = counter.getX() - ox - 12; lx <= counter.getX() - ox + 12; lx++) {
+			for (int lz = counter.getZ() - oz - 12; lz <= counter.getZ() - oz + 12; lz++) {
+				for (int ly = 4; ly <= 5; ly++) {
+					String want = plan.get(lx, ly, lz);
+					if (want == null) {
+						continue;
+					}
+					pos.set(ox + lx, oy + ly, oz + lz);
+					BlockState have = world.getBlockState(pos);
+					if (ly == 4 && want.equals("minecraft:air") && !have.isAir() && have.isIn(BlockTags.PLANKS)) {
+						world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
+					} else if (ly == 5 && want.endsWith("_fence") && have.isAir()) {
+						world.setBlockState(pos, state(want), Block.NOTIFY_ALL);
+					}
+				}
+			}
+		}
+		return true;
+	}
+
 	/** La ciudad de una estructura, si es una de estas. */
 	public static Optional<CityPiece> of(@Nullable StructureStart start) {
 		if (start == null || !start.hasChildren()) {

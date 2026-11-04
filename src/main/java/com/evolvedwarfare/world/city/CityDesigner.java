@@ -1146,13 +1146,15 @@ public final class CityDesigner {
 						set(f.x(u, sv), y, f.z(u, sv), floor);
 					}
 					set(f.x(u, sv), i + 1, f.z(u, sv), stairs(p.stairsMat, f.left(), false));
-					// sitio para la cabeza (en y = 4 es el hueco en el suelo de arriba)
-					for (int y = i + 2; y <= i + 3; y++) {
+					// sitio para la cabeza: dos libres encima de cada escalón y el hueco en el suelo de arriba (y = 4) sobre
+					// todos los escalones de debajo, también el primero (al pasar de uno al siguiente, el cuerpo aún está
+					// medio encima del anterior y la cabeza chocaría con el techo)
+					for (int y = i + 2; y <= Math.max(i + 3, 4); y++) {
 						air(f.x(u, sv), y, f.z(u, sv));
 					}
 				}
 				// barandilla junto al hueco de la escalera, arriba
-				for (int i = 1; i <= 2; i++) {
+				for (int i = 0; i <= 2; i++) {
 					int u = bw - 2 - i;
 					set(f.x(u, sv - 1), 5, f.z(u, sv - 1), p.rail);
 				}

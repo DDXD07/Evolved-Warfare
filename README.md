@@ -390,6 +390,8 @@ En cada sitio sale la que encaja con el bioma: **medieval** (piedra, entramado y
 - **Tiendas**: una por oficio (5 por ciudad), las más cercanas a la plaza, con el **estandarte del oficio** junto a la
   puerta. El **mostrador** corta la planta baja de pared a pared: tú entras por la calle y el mercader está detrás, con
   las cosas de su oficio. Su **cama** está arriba (sube por una escalera) o en un **cuarto de atrás**.
+  (En la 0.36.1 se arregló la escalera de las tiendas de dos pisos: el hueco del techo no llegaba al primer escalón y
+  no se podía subir. Las tiendas ya generadas se arreglan solas en cuanto su mercader se carga.)
 - **Casas** de **una o dos plantas**, de materiales y tejados distintos, con camas, cofre, mesa y horno; en muchas vive
   un vecino (un recluta que se puede contratar). También hay un **cuartel** junto a una puerta, **huertos** y **pozos**.
 

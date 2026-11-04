@@ -54,9 +54,9 @@ public final class CityChecks {
 				}
 				for (int dy = -1; dy <= 1; dy++) {
 					int ny = c[1] + dy;
-					// subir a un bloque entero es un salto (hace falta sitio encima); a una escalera se sube andando
-					String step = plan.get(nx, c[1], nz);
-					if (dy == 1 && !(step != null && step.contains("_stairs")) && !passable(plan.get(c[0], c[1] + 2, c[2]))) {
+					// para subir uno (saltando o por una escalera) hace falta sitio para la cabeza también encima de donde se
+					// está: al pasar, el cuerpo aún está medio encima del sitio de antes
+					if (dy == 1 && !passable(plan.get(c[0], c[1] + 2, c[2]))) {
 						continue;
 					}
 					if (standable(plan, nx, ny, nz) && seen.add(CityPlan.key(nx, ny, nz))) {

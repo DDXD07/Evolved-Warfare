@@ -84,6 +84,8 @@ public class TraderEntity extends MerchantEntity {
 	private BlockPos bed;
 	/** La ciudad a la que pertenece (0 = ninguna conocida). */
 	private long cityKey;
+	/** Ya se ha revisado la escalera de su tienda (las de la 0.36.0 tenían el techo demasiado bajo). */
+	private boolean stairsChecked;
 
 	public TraderEntity(EntityType<? extends TraderEntity> type, World world) {
 		super(type, world);
@@ -262,6 +264,10 @@ public class TraderEntity extends MerchantEntity {
 		}
 		if (priceSeed == 0L) {
 			priceSeed = random.nextLong() | 1L;
+		}
+		if (counter != null && !stairsChecked && age % 100 == 50) {
+			net.minecraft.structure.StructureStart start = world.getStructureAccessor().getStructureContaining(counter, CityLevels.CITIES);
+			stairsChecked = com.evolvedwarfare.world.city.CityPiece.of(start).map(city -> city.repairStairs(world, counter)).orElse(true);
 		}
 		if (counter != null) {
 			schedule(world);
@@ -468,6 +474,7 @@ public class TraderEntity extends MerchantEntity {
 			nbt.putLong("Bed", bed.asLong());
 		}
 		nbt.putLong("CityKey", cityKey);
+		nbt.putBoolean("StairsChecked", stairsChecked);
 	}
 
 	@Override
@@ -501,5 +508,6 @@ public class TraderEntity extends MerchantEntity {
 			bed = BlockPos.fromLong(nbt.getLong("Bed"));
 		}
 		cityKey = nbt.getLong("CityKey");
+		stairsChecked = nbt.getBoolean("StairsChecked");
 	}
 }
