@@ -162,6 +162,23 @@ public final class ModItems {
 		}
 	}
 
+	/** Ropa para el clima: piel (abriga) y lino (refresca), cuatro piezas cada una ({@link com.evolvedwarfare.climate.ClimateWearItem}). */
+	public static final Map<com.evolvedwarfare.climate.ClimateWearItem.Kind, List<Item>> CLIMATE_WEAR =
+			new EnumMap<>(com.evolvedwarfare.climate.ClimateWearItem.Kind.class);
+
+	static {
+		String[][] names = {{"fur_hood", "fur_coat", "fur_trousers", "fur_boots"}, {"straw_hat", "linen_tunic", "linen_trousers", "sandals"}};
+		for (com.evolvedwarfare.climate.ClimateWearItem.Kind kind : com.evolvedwarfare.climate.ClimateWearItem.Kind.values()) {
+			List<Item> pieces = new ArrayList<>();
+			for (int i = 0; i < FactionArmor.TYPES.length; i++) {
+				ArmorItem.Type type = FactionArmor.TYPES[i];
+				pieces.add(register(names[kind.ordinal()][i], new com.evolvedwarfare.climate.ClimateWearItem(kind, type,
+						new Item.Settings().maxDamage(type.getMaxDamage(kind == com.evolvedwarfare.climate.ClimateWearItem.Kind.FUR ? 8 : 5)))));
+			}
+			CLIMATE_WEAR.put(kind, List.copyOf(pieces));
+		}
+	}
+
 	/** Una pieza de armadura de clase. */
 	public static Item classArmor(ArmorClass armorClass, ArmorTier tier, ArmorItem.Type type) {
 		List<Item> pieces = CLASS_ARMOR.get(armorClass).get(tier);
@@ -274,6 +291,7 @@ public final class ModItems {
 						for (Map<ArmorTier, List<Item>> tiers : CLASS_ARMOR.values()) {
 							tiers.values().forEach(pieces -> pieces.forEach(entries::add));
 						}
+						CLIMATE_WEAR.values().forEach(pieces -> pieces.forEach(entries::add));
 						entries.add(MUSKET);
 						entries.add(MUSKET_BALL);
 						entries.add(AMMO_POUCH);

@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
-    "evolvedwarfare:musket_ball"
+    "evolvedwarfare:musket_ball",
+    "evolvedwarfare:hypothermia",
+    "evolvedwarfare:heatstroke"
   ]
 }

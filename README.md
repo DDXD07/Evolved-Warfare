@@ -30,6 +30,7 @@ bloques del mod están plegadas juntas: debajo del nombre solo sale *Mantén Con
 | 9 | **Comerciantes y niveles de las ciudades**: ciudades de nivel 1 a 10 según la distancia; tendero, armero, cantero, joyero, sastre, mercader de especias y peletero con tienda de catálogo completo por Glory Coins (Compra y Venta, al menos 20 de cada cosa al día); más nivel, mejor calidad (de gastado a obra maestra encantada) y más caras | ✅ Hecha |
 | 10 | **Armas de fuego primitivas**: mosquete de chispa (modelo 3D animado, recarga y disparo con humo), balas de mosquete, bolsa de munición (1000 balas) y **daño locacional** (cabeza, torso, brazos y piernas) | 🔨 En curso |
 | 11 | **Hordas semanales**: contador de días y reloj en pantalla; cada 7 días una horda de bandidos, vikingos o piratas ataca tu base, en oleadas y cada semana más dura | ✅ Hecha |
+| 14 | **Clima**: estaciones de 91 días que cambian el tiempo, la nieve, el hielo, los cultivos y los colores; temperatura del aire y del cuerpo, hipotermia e hipertermia, ropa de piel y de lino | ✅ Hecha |
 | 12 | **Armaduras de las facciones**: 4 por facción (por rango), 12 en total, con modelo 3D; las llevan sus guerreros, se fabrican con ventajas de forja, salen en sus cofres y las vende el armero | ✅ Hecha |
 | 13 | **Armaduras de clase** (arquero, guerrero, ladrón y mosquetero) con aspecto de vanilla, en cuero, cobre, hierro, diamante y netherita; ventajas que suben con el material y desventajas; estadísticas manteniendo R | ✅ Hecha |
 
@@ -955,6 +956,69 @@ antes.
   herrería** (plantilla y lingote de netherita), como siempre.
 - Se encantan, se reparan con su material, aceptan **adornos** de armadura y la de netherita no se quema. Cuero y cobre
   cuentan como armadura ligera para el árbol de habilidades; el resto, como pesada.
+
+## Fase 14 — Clima: estaciones y temperatura
+
+### Las estaciones
+El año tiene **cuatro estaciones de 91 días** (configurable): **primavera** (días 1-91), **verano** (92-182), **otoño**
+(183-273) e **invierno** (274-364); el día 365 vuelve a ser primavera. Al empezar cada una sale un aviso. Debajo del reloj
+de arriba a la izquierda se ve la estación y qué día de ella es (*Otoño · día 12/91*).
+
+| Estación | Aire | El mundo |
+|---|---|---|
+| **Primavera** | normal | llueve a menudo; la nieve y el hielo de los biomas templados se **derriten** |
+| **Verano** | +7 °C | días de calor, pocas lluvias, tormentas; la hierba amarillea; deshielo rápido |
+| **Otoño** | −4 °C | **hojas naranjas**, hierba seca, llueve |
+| **Invierno** | −13 °C | **nieva en las llanuras y los bosques** (no en desiertos ni sabanas), **el agua se hiela**, hierba y hojas pardas y los **cultivos al raso casi no crecen** (bajo techo o en un invernadero, sí) |
+
+Cada mañana se decide el tiempo del día según la estación (si `doWeatherCycle` está activado).
+
+### La temperatura del aire
+Debajo del reloj sale la temperatura del aire donde estás. Sale de:
+- **El bioma**: llanuras ~14 °C, desierto ~34 °C, taiga ~−1 °C, llanura nevada ~−8 °C.
+- **La estación** (tabla de arriba) y **la hora**: +4 °C a mediodía y −6 °C de madrugada (en el desierto, −14 °C: las
+  noches del desierto son frías).
+- **La altura**: por encima de y = 90 hace más frío. **Bajo tierra** se está fresco todo el año (~12 °C) y **dentro de
+  una casa** se está más templado.
+- **La lluvia** (−3 °C) y **la nieve** (−5 °C).
+- **Lo que tengas cerca** (a 5 bloques): **hogueras** (+9), lava, fuego, magma, **hornos encendidos** y antorchas dan
+  calor; el hielo y la nieve, frío. **Llevar una antorcha o un farol en la mano** da +2 °C.
+- En el **Nether**, siempre ~44 °C. En el **End**, −12 °C.
+
+### La temperatura del cuerpo
+Encima de los corazones sale **la temperatura de tu cuerpo** (37 °C normal), con un termómetro: azul con frío, naranja y
+rojo con calor. Se puede ver en **Fahrenheit** (configuración, pestaña *Clima*, `temperatureFahrenheit`).
+- Lo que **notas** es el aire más la ropa: con frío abriga, con calor refresca. **Mojado** (en el agua, bajo la lluvia y
+  un rato después) notas 5 °C menos con frío.
+- Si lo que notas baja de **10 °C**, el cuerpo se va enfriando; si pasa de **30 °C**, se va calentando; entre medias,
+  vuelve poco a poco a 37 °C.
+- **Hipotermia** (por debajo de 35 °C): lentitud, escarcha en la pantalla y **pierdes medio corazón cada 3 segundos**.
+  Por debajo de 33 °C, cada segundo y con fatiga.
+- **Hipertermia** (por encima de 39 °C): debilidad, hambre, la pantalla se pone roja y **pierdes vida**. Por encima de
+  40,5 °C, más deprisa.
+- **Correr** calienta, **arder** calienta mucho y la **nieve polvo** enfría.
+- En creativo y espectador no pasa nada.
+
+### La ropa
+| Conjunto | Piezas | Receta | Efecto |
+|---|---|---|---|
+| **De piel** | Gorro, Abrigo, Pantalones y Botas de piel | como las de vanilla con **cuero**, y **lana** en el hueco del centro | **abriga +15 °C** con frío (3/6/4/2); con calor, da calor de más |
+| **De lino** | Sombrero de paja, Túnica, Calzones de lino y Sandalias | sombrero: **trigo** con **cordel** en el centro; túnica y calzones: **cordel** con **lana** en el centro; sandalias: **cuero** abajo y **cordel** arriba | **refresca −14 °C** con calor (4/5/3/2); con frío, abriga un poco menos |
+
+Protegen poco de los golpes (como el cuero). Las armaduras de **cuero** de vanilla abrigan +1 °C por pieza; las de
+**metal** (hierro, oro, malla, diamante, netherita) **queman al sol** con calor (+1 °C por pieza).
+
+### Cómo sobrevivir
+- **Invierno**: ropa de piel, una **hoguera** o un **horno encendido** cerca, refugiarse en casa o bajo tierra, no
+  mojarse, llevar una antorcha o un farol en la mano y comer **sopas y estofados** (de champiñones, de conejo, de
+  remolacha: +2 °C de golpe). Cultiva bajo techo.
+- **Verano y desierto**: ropa de lino, sombra o bajo tierra, **bañarse**, beber **botellas de agua** (−1,5 °C) y comer
+  **melón** o **bayas**, quitarse la armadura de metal al sol. La **poción de resistencia al fuego** evita el golpe de
+  calor (y es casi imprescindible en el **Nether**).
+
+**Configuración** (pestaña *Clima*): `temperatureEnabled`, `seasonsEnabled`, `seasonLength` (días por estación, 91),
+`temperatureFahrenheit` y `showBodyTemperature`. Comandos: `/evolvedwarfare season <spring|summer|autumn|winter>` salta
+al primer día de esa estación y `/evolvedwarfare temperature` dice la temperatura del aire y la de tu cuerpo.
 
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):

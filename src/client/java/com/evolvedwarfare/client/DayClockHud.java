@@ -63,6 +63,21 @@ public final class DayClockHud {
 		int timeWidth = font.getWidth(time);
 		int width = 3 + icon + 3 + dayWidth + 6 + timeWidth + 4;
 		int height = icon + 4;
+		// segunda fila: la estación (y qué día de ella) y la temperatura del aire donde estás
+		com.evolvedwarfare.network.ClimatePayload climate = ClientClimate.last();
+		Text seasonText = null;
+		String airText = null;
+		if (climate != null) {
+			if (climate.seasons()) {
+				com.evolvedwarfare.climate.Season season = com.evolvedwarfare.climate.Season.values()[Math.floorMod(climate.season(), 4)];
+				seasonText = Text.translatable("hud.evolvedwarfare.season_day", Text.translatable(season.translationKey()), climate.day(),
+						climate.length()).withColor(season.color);
+			}
+			airText = ClientClimate.format(climate.air(), 0);
+			int second = (seasonText != null ? font.getWidth(seasonText) + 6 : 0) + font.getWidth(airText);
+			width = Math.max(width, 3 + icon + 3 + second + 4);
+			height += font.fontHeight + 2;
+		}
 		int x = MARGIN;
 		int y = MARGIN;
 		context.fill(x, y, x + width, y + height, horde ? 0x70300000 : 0x60000000);
@@ -74,11 +89,20 @@ public final class DayClockHud {
 		context.getMatrices().scale(ICON_SCALE, ICON_SCALE, 1.0F);
 		context.drawItem(CLOCK, 0, 0);
 		context.getMatrices().pop();
-		int textY = y + (height - font.fontHeight) / 2 + 1;
+		int textY = y + (icon + 4 - font.fontHeight) / 2 + 1;
 		int textX = x + 3 + icon + 3;
 		context.drawTextWithShadow(font, dayText, textX, textY, horde ? RED : 0xFFFFFF);
 		textX += dayWidth + 3;
 		context.drawTextWithShadow(font, Text.literal("·").formatted(Formatting.DARK_GRAY), textX - 1, textY, 0x808080);
 		context.drawTextWithShadow(font, time, textX + 3, textY, 0xC8C8C8);
+		if (airText != null) {
+			int rowY = textY + font.fontHeight + 2;
+			int rowX = x + 3 + icon + 3;
+			if (seasonText != null) {
+				context.drawTextWithShadow(font, seasonText, rowX, rowY, 0xFFFFFF);
+				rowX += font.getWidth(seasonText) + 6;
+			}
+			context.drawTextWithShadow(font, airText, rowX, rowY, ClientClimate.airColor(climate.air()));
+		}
 	}
 }

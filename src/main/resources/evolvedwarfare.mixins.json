@@ -3,8 +3,11 @@
 	"package": "com.evolvedwarfare.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
+		"BiomeSeasonMixin",
 		"CraftingScreenHandlerMixin",
+		"CropBlockSeasonMixin",
 		"LivingEntityAccessor",
+		"LivingEntityConsumeMixin",
 		"LivingEntityCartSleepMixin",
 		"LivingEntityDamageMixin",
 		"LivingEntityDrawSpeedMixin",

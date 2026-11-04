@@ -70,6 +70,13 @@ public final class ModCommands {
 								.executes(context -> raid(context, false))
 								.then(CommandManager.literal("siege")
 										.executes(context -> raid(context, true)))))
+				.then(CommandManager.literal("season")
+						.then(CommandManager.argument("season", StringArgumentType.word())
+								.suggests((context, builder) -> CommandSource.suggestMatching(
+										java.util.Arrays.stream(com.evolvedwarfare.climate.Season.values()).map(com.evolvedwarfare.climate.Season::id), builder))
+								.executes(ModCommands::season)))
+				.then(CommandManager.literal("temperature")
+						.executes(ModCommands::temperature))
 				.then(CommandManager.literal("horde")
 						.executes(context -> horde(context, null, -1))
 						.then(CommandManager.argument("faction", StringArgumentType.word())
@@ -193,6 +200,39 @@ public final class ModCommands {
 	}
 
 	/** Una horda ya: contra la base de quien lo manda (o contra él, si no está en ella), de la semana de hoy o la que se diga. */
+	/** Salta al primer día de esa estación (del año en curso), a la misma hora. */
+	private static int season(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+		com.evolvedwarfare.climate.Season season = com.evolvedwarfare.climate.Season.byId(StringArgumentType.getString(context, "season"));
+		if (season == null) {
+			throw new SimpleCommandExceptionType(Text.literal("?")).create();
+		}
+		ServerWorld world = context.getSource().getServer().getOverworld();
+		int length = com.evolvedwarfare.climate.Season.length();
+		long time = world.getTimeOfDay();
+		long day = Hordes.day(time);
+		long year = (day - 1) / (4L * length);
+		long target = year * 4L * length + (long) season.ordinal() * length + 1;
+		world.setTimeOfDay((target - 1) * Hordes.DAY + Math.floorMod(time, Hordes.DAY));
+		context.getSource().sendFeedback(() -> Text.translatable("commands.evolvedwarfare.season.set",
+				Text.translatable(season.translationKey()), target), true);
+		return 1;
+	}
+
+	/** La temperatura del aire donde estás y la de tu cuerpo. */
+	private static int temperature(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+		ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
+		ServerWorld world = (ServerWorld) player.getWorld();
+		float air = com.evolvedwarfare.climate.Climate.air(world, player.getBlockPos(), player);
+		float body = com.evolvedwarfare.climate.Climate.body(player);
+		com.evolvedwarfare.climate.Season season = com.evolvedwarfare.climate.Climate.season(world);
+		int length = com.evolvedwarfare.climate.Season.length();
+		long day = Hordes.day(world.getTimeOfDay());
+		context.getSource().sendFeedback(() -> Text.translatable("commands.evolvedwarfare.temperature",
+				String.format(java.util.Locale.ROOT, "%.1f °C", air), String.format(java.util.Locale.ROOT, "%.1f °C", body),
+				Text.translatable(season.translationKey()), com.evolvedwarfare.climate.Season.dayOf(day, length), length), false);
+		return 1;
+	}
+
 	private static int horde(CommandContext<ServerCommandSource> context, @org.jetbrains.annotations.Nullable Faction faction, int week)
 			throws CommandSyntaxException {
 		ServerCommandSource source = context.getSource();

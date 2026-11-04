@@ -65,6 +65,18 @@ public final class EwConfig {
 	/** Volumen de esos ruidos (0..1). */
 	public double netherAmbienceVolume = 0.8;
 
+	// ------------------------------------------------------------------ clima
+	/** Temperatura del cuerpo (hipotermia e hipertermia). */
+	public boolean temperatureEnabled = true;
+	/** Las estaciones (primavera, verano, otoño e invierno). */
+	public boolean seasonsEnabled = true;
+	/** Días que dura cada estación. */
+	public int seasonLength = 91;
+	/** Ver las temperaturas en Fahrenheit en vez de Celsius (cada jugador, en su juego). */
+	public boolean temperatureFahrenheit = false;
+	/** La temperatura del cuerpo encima de los corazones (cada jugador, en su juego). */
+	public boolean showBodyTemperature = true;
+
 	// ------------------------------------------------------------------ asentamientos
 	/** Vida y daño extra por cada nivel del asentamiento por encima del 1. */
 	public double settlementBonusPerLevel = 0.10;
@@ -163,6 +175,11 @@ public final class EwConfig {
 			new Option("showDayClock", "hordes", 0, 1, 1),
 			new Option("netherAmbienceSeconds", "hordes", 0, 1800, 10),
 			new Option("netherAmbienceVolume", "hordes", 0.0, 1.0, 0.05),
+			new Option("temperatureEnabled", "climate", 0, 1, 1),
+			new Option("seasonsEnabled", "climate", 0, 1, 1),
+			new Option("seasonLength", "climate", 1, 365, 1),
+			new Option("temperatureFahrenheit", "climate", 0, 1, 1),
+			new Option("showBodyTemperature", "climate", 0, 1, 1),
 			new Option("settlementBonusPerLevel", "settlements", 0.0, 1.0, 0.01),
 			new Option("settlementBlocksPerLevel", "settlements", 100, 100000, 50),
 			new Option("settlementMaxLevel", "settlements", 1, 10, 1),
