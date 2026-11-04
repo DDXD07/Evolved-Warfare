@@ -1250,6 +1250,38 @@ líquido cae, se reparte por los lados hasta quedar casi plano y se va por los b
 
 **Configuración** (pestaña *Clima*): `realisticFluids` (desactívalo para volver al agua de siempre).
 
+## Fase 20 — Noches más duras y noches de zombis
+
+### De noche
+- **Los monstruos ven a los jugadores el doble de lejos** (zombis, esqueletos, arañas, creepers, endermans...).
+- **Los endermans atacan en cuanto te ven**, aunque no les mires.
+
+### Los zombis se abren camino
+Si un zombi no puede llegar hasta ti, **lo crea**: busca el camino más directo y, si no hay, **rompe y excava**.
+
+- **Rompe lo que tenga delante** (a la altura de los pies y de la cabeza), con su tiempo según lo duro que sea: la tierra
+  en menos de un segundo, la piedra en unos 2 s, la madera en 3 s, una puerta de hierro en 7 s y **la obsidiana en 75 s**.
+  Se ven las grietas y se oyen los golpes. Nada más duro que la obsidiana (ni la roca madre). **Rompe tu base**: paredes,
+  puertas, cristales...
+- **Excava hacia abajo** en escalera si estás más abajo (o en vertical si estás justo debajo), y **despeja hacia arriba**
+  si estás más alto.
+- **Salta huecos de 1 o 2 bloques** de largo si al otro lado hay suelo.
+- Hace falta la regla `mobGriefing` (activada de serie).
+
+### Infección
+Cada golpe de un zombi tiene un **10 %** de **infectarte** (15 minutos): da hambre, quita medio corazón cada pocos
+segundos y debilita; otro mordisco la empeora (más a menudo, y en el peor grado lentitud y náuseas). No mata sola (se para
+con medio corazón), pero te deja muy débil. **La leche la cura**.
+
+### Noches de zombis
+**Cada 2 días** (días 2, 4, 6...) el contador de días se pone **verde** (el día de una horda de facciones sigue en rojo).
+Al amanecer avisa, y **al anochecer (19:00)** una **horda de al menos 15 zombis** sale a 20-30 bloques de cada jugador
+(o grupo de jugadores) y **sabe dónde estás**: no necesitan verte, y se abren camino hasta ti. Una más cada noche de zombis
+(hasta 30) y 5 más por cada jugador de más. En los desiertos y las badlands son momias, y alguno es un aldeano zombi.
+
+**Configuración** (pestaña *Hordas*): `nightHostility`, `zombieHordeEveryDays` (0 = nunca), `zombieHordeSize`
+(mínimo 15), `zombieBreakBlocks` y `zombieInfectionChance` (%).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -1268,6 +1300,7 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
   diseños 3D (cubos sobre cabeza, cuerpo, brazos y piernas), las texturas, los iconos, `FactionArmorModels.java`, los
   modelos de objeto, las recetas, las etiquetas y los textos; con `--preview` las dibuja puestas (delante, detrás y
   andando).
+- `ew_night.py` — la noche más dura: el icono de la infección, su tipo de daño y los textos.
 - `ew_plumbing.py` — las tuberías, el grifo de palanca y la bomba de mano: texturas, modelos 3D, estados, recetas, botín y textos.
 - `ew_dismember.py` — el desmembramiento: la textura de los muñones, el tipo de daño de la decapitación y los textos.
 - `ew_wildlife.py` — los animales salvajes: el modelo de cada especie (partes, pivotes y cubos, en JSON que el juego

@@ -12,10 +12,11 @@ import net.minecraft.server.network.ServerPlayerEntity;
  * Servidor → cliente: cada cuántos días llega una horda (0 = no hay hordas: desactivadas, pacífico o sin criaturas), para
  * que el contador de días se ponga rojo el día que toca.
  */
-public record HordeInfoPayload(int every) implements CustomPayload {
+public record HordeInfoPayload(int every, int zombieEvery) implements CustomPayload {
 	public static final CustomPayload.Id<HordeInfoPayload> ID = new CustomPayload.Id<>(EvolvedWarfare.id("horde_info"));
 	public static final PacketCodec<RegistryByteBuf, HordeInfoPayload> CODEC = PacketCodec.tuple(
 			PacketCodecs.VAR_INT, HordeInfoPayload::every,
+			PacketCodecs.VAR_INT, HordeInfoPayload::zombieEvery,
 			HordeInfoPayload::new);
 
 	@Override
@@ -25,7 +26,7 @@ public record HordeInfoPayload(int every) implements CustomPayload {
 
 	public static void send(ServerPlayerEntity player, int every) {
 		if (ServerPlayNetworking.canSend(player, ID)) {
-			ServerPlayNetworking.send(player, new HordeInfoPayload(every));
+			ServerPlayNetworking.send(player, new HordeInfoPayload(every, com.evolvedwarfare.night.NightThreat.every(player.getServerWorld())));
 		}
 	}
 }

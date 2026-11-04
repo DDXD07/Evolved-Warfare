@@ -29,7 +29,8 @@
 			"com.evolvedwarfare.gametest.CropGameTests",
 			"com.evolvedwarfare.gametest.WildlifeGameTests",
 			"com.evolvedwarfare.gametest.DismembermentGameTests",
-			"com.evolvedwarfare.gametest.FluidGameTests"
+			"com.evolvedwarfare.gametest.FluidGameTests",
+			"com.evolvedwarfare.gametest.NightGameTests"
 		]
 	},
 	"depends": {

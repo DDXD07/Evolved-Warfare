@@ -1438,5 +1438,22 @@
   "message.evolvedwarfare.faucet.dry": "No llega agua (¿falta la toma, o hay que bombear?)",
   "message.evolvedwarfare.pump.charge": "Bombeado: %s/%s capas",
   "config.evolvedwarfare.realisticFluids": "Agua y lava realistas",
-  "config.evolvedwarfare.realisticFluids.tip": "El agua y la lava no se crean ni se destruyen: un bloque tiene 25 capas y un cubo lleva 4, que se extienden, sacar agua baja el nivel del lago. El mar, los ríos y los pantanos son infinitos."
+  "config.evolvedwarfare.realisticFluids.tip": "El agua y la lava no se crean ni se destruyen: un bloque tiene 25 capas y un cubo lleva 4, que se extienden, sacar agua baja el nivel del lago. El mar, los ríos y los pantanos son infinitos.",
+  "effect.evolvedwarfare.infection": "Infección",
+  "message.evolvedwarfare.infection": "Te ha mordido un zombi: estás infectado (la leche te cura)",
+  "message.evolvedwarfare.infection.worse": "Otro mordisco: la infección empeora (la leche te cura)",
+  "death.attack.evolvedwarfare.infection": "%1$s murió por la infección",
+  "death.attack.evolvedwarfare.infection.player": "%1$s murió por la infección huyendo de %2$s",
+  "message.evolvedwarfare.zombies.today": "Día %s: esta noche viene una horda de zombis. Prepárate.",
+  "message.evolvedwarfare.zombies.come": "¡Ya vienen! Una horda de %s zombis sabe dónde estás.",
+  "config.evolvedwarfare.nightHostility": "Noches hostiles",
+  "config.evolvedwarfare.nightHostility.tip": "De noche los monstruos ven el doble de lejos y los endermans atacan en cuanto te ven.",
+  "config.evolvedwarfare.zombieHordeEveryDays": "Noche de zombis cada (días)",
+  "config.evolvedwarfare.zombieHordeEveryDays.tip": "Ese día el contador se pone verde y al anochecer llega una horda de zombis (0 = nunca).",
+  "config.evolvedwarfare.zombieHordeSize": "Zombis por horda (mínimo)",
+  "config.evolvedwarfare.zombieHordeSize.tip": "Sube uno cada noche de zombis (hasta el doble) y 5 más por cada jugador de más.",
+  "config.evolvedwarfare.zombieBreakBlocks": "Los zombis rompen bloques",
+  "config.evolvedwarfare.zombieBreakBlocks.tip": "Rompen, excavan y se abren camino hasta ti (hasta la obsidiana, con su tiempo). También hace falta mobGriefing.",
+  "config.evolvedwarfare.zombieInfectionChance": "Probabilidad de infección (%)",
+  "config.evolvedwarfare.zombieInfectionChance.tip": "Probabilidad de que el golpe de un zombi te infecte."
 }

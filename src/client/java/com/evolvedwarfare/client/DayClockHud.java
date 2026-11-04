@@ -18,7 +18,7 @@ import net.minecraft.util.math.MathHelper;
 
 /**
  * El contador de días y el reloj, en pequeño, arriba a la izquierda: el reloj de Minecraft (con el sol y la luna), "Día N"
- * y la hora (24 h). El día que viene una horda ({@link Hordes}), el día sale en rojo.
+ * y la hora (24 h). El día que viene una horda ({@link Hordes}), el día sale en rojo; el de noche de zombis, en verde.
  */
 public final class DayClockHud {
 	private static final int MARGIN = 4;
@@ -27,13 +27,22 @@ public final class DayClockHud {
 	private static final ItemStack CLOCK = new ItemStack(Items.CLOCK);
 	/** Cada cuántos días hay horda en este servidor (0: ninguna). */
 	private static int every;
+	/** Cada cuántos días hay noche de zombis (0: ninguna). */
+	private static int zombieEvery;
+	private static final int GREEN = 0x55FF55;
 
 	private DayClockHud() {
 	}
 
 	public static void register() {
-		ClientPlayNetworking.registerGlobalReceiver(HordeInfoPayload.ID, (payload, context) -> every = payload.every());
-		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> every = 0);
+		ClientPlayNetworking.registerGlobalReceiver(HordeInfoPayload.ID, (payload, context) -> {
+			every = payload.every();
+			zombieEvery = payload.zombieEvery();
+		});
+		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+			every = 0;
+			zombieEvery = 0;
+		});
 		HudRenderCallback.EVENT.register((context, tickCounter) -> render(context));
 	}
 
@@ -56,6 +65,7 @@ public final class DayClockHud {
 		long timeOfDay = world.getTimeOfDay();
 		long day = Hordes.day(timeOfDay);
 		boolean horde = Hordes.isHordeDay(day, every);
+		boolean zombies = !horde && Hordes.isHordeDay(day, zombieEvery);
 		Text dayText = Text.translatable("hud.evolvedwarfare.day", day);
 		String time = world.getDimension().hasFixedTime() ? "--:--" : clock(timeOfDay);
 		int icon = MathHelper.ceil(16 * ICON_SCALE);
@@ -80,9 +90,11 @@ public final class DayClockHud {
 		}
 		int x = MARGIN;
 		int y = MARGIN;
-		context.fill(x, y, x + width, y + height, horde ? 0x70300000 : 0x60000000);
+		context.fill(x, y, x + width, y + height, horde ? 0x70300000 : zombies ? 0x70003000 : 0x60000000);
 		if (horde) {
 			context.fill(x, y, x + 1, y + height, 0xC0FF3030);
+		} else if (zombies) {
+			context.fill(x, y, x + 1, y + height, 0xC030FF30);
 		}
 		context.getMatrices().push();
 		context.getMatrices().translate(x + 3, y + 2, 0.0F);
@@ -91,7 +103,7 @@ public final class DayClockHud {
 		context.getMatrices().pop();
 		int textY = y + (icon + 4 - font.fontHeight) / 2 + 1;
 		int textX = x + 3 + icon + 3;
-		context.drawTextWithShadow(font, dayText, textX, textY, horde ? RED : 0xFFFFFF);
+		context.drawTextWithShadow(font, dayText, textX, textY, horde ? RED : zombies ? GREEN : 0xFFFFFF);
 		textX += dayWidth + 3;
 		context.drawTextWithShadow(font, Text.literal("·").formatted(Formatting.DARK_GRAY), textX - 1, textY, 0x808080);
 		context.drawTextWithShadow(font, time, textX + 3, textY, 0xC8C8C8);

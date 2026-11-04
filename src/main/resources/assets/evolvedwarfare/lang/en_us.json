@@ -1438,5 +1438,22 @@
   "message.evolvedwarfare.faucet.dry": "No water comes out (no intake, or it needs pumping?)",
   "message.evolvedwarfare.pump.charge": "Pumped: %s/%s layers",
   "config.evolvedwarfare.realisticFluids": "Realistic water and lava",
-  "config.evolvedwarfare.realisticFluids.tip": "Water and lava are neither created nor destroyed: a block holds 25 layers and a bucket carries 4, which spread out, taking water lowers the lake. Oceans, rivers and swamps are infinite."
+  "config.evolvedwarfare.realisticFluids.tip": "Water and lava are neither created nor destroyed: a block holds 25 layers and a bucket carries 4, which spread out, taking water lowers the lake. Oceans, rivers and swamps are infinite.",
+  "effect.evolvedwarfare.infection": "Infection",
+  "message.evolvedwarfare.infection": "A zombie bit you: you are infected (milk cures it)",
+  "message.evolvedwarfare.infection.worse": "Another bite: the infection gets worse (milk cures it)",
+  "death.attack.evolvedwarfare.infection": "%1$s died of an infection",
+  "death.attack.evolvedwarfare.infection.player": "%1$s died of an infection whilst fighting %2$s",
+  "message.evolvedwarfare.zombies.today": "Day %s: a zombie horde comes tonight. Get ready.",
+  "message.evolvedwarfare.zombies.come": "Here they come! A horde of %s zombies knows where you are.",
+  "config.evolvedwarfare.nightHostility": "Hostile nights",
+  "config.evolvedwarfare.nightHostility.tip": "At night monsters see twice as far and endermen attack as soon as they see you.",
+  "config.evolvedwarfare.zombieHordeEveryDays": "Zombie night every (days)",
+  "config.evolvedwarfare.zombieHordeEveryDays.tip": "That day the counter turns green and a zombie horde comes at nightfall (0 = never).",
+  "config.evolvedwarfare.zombieHordeSize": "Zombies per horde (minimum)",
+  "config.evolvedwarfare.zombieHordeSize.tip": "Grows by one each zombie night (up to double) and 5 more per extra player.",
+  "config.evolvedwarfare.zombieBreakBlocks": "Zombies break blocks",
+  "config.evolvedwarfare.zombieBreakBlocks.tip": "They break, dig and make their way to you (up to obsidian, given time). mobGriefing must be on too.",
+  "config.evolvedwarfare.zombieInfectionChance": "Infection chance (%)",
+  "config.evolvedwarfare.zombieInfectionChance.tip": "Chance that a zombie's hit infects you."
 }

@@ -60,6 +60,16 @@ public final class EwConfig {
 	public double hordeGrowth = 1.0;
 	/** El contador de días y el reloj de arriba a la izquierda (cada jugador, en su juego). */
 	public boolean showDayClock = true;
+	/** La noche más dura: los monstruos ven el doble de lejos y los endermans atacan al verte. */
+	public boolean nightHostility = true;
+	/** Cada cuántos días hay noche de zombis (0 = nunca). */
+	public int zombieHordeEveryDays = 2;
+	/** Zombis que trae, como mínimo, la horda de una noche de zombis. */
+	public int zombieHordeSize = 15;
+	/** Los zombis rompen bloques y excavan para llegar hasta ti (también hace falta mobGriefing). */
+	public boolean zombieBreakBlocks = true;
+	/** Probabilidad (%) de que el golpe de un zombi te infecte. */
+	public int zombieInfectionChance = 10;
 	/** Cada cuántos segundos, más o menos, suena un ruido de ambiente en el Nether (0 = nunca; cada jugador, en su juego). */
 	public int netherAmbienceSeconds = 120;
 	/** Volumen de esos ruidos (0..1). */
@@ -183,6 +193,11 @@ public final class EwConfig {
 			new Option("hordeEveryDays", "hordes", 0, 100, 1),
 			new Option("hordeGrowth", "hordes", 0.0, 5.0, 0.1),
 			new Option("showDayClock", "hordes", 0, 1, 1),
+			new Option("nightHostility", "hordes", 0, 1, 1),
+			new Option("zombieHordeEveryDays", "hordes", 0, 100, 1),
+			new Option("zombieHordeSize", "hordes", 15, 100, 1),
+			new Option("zombieBreakBlocks", "hordes", 0, 1, 1),
+			new Option("zombieInfectionChance", "hordes", 0, 100, 5),
 			new Option("netherAmbienceSeconds", "hordes", 0, 1800, 10),
 			new Option("netherAmbienceVolume", "hordes", 0.0, 1.0, 0.05),
 			new Option("temperatureEnabled", "climate", 0, 1, 1),

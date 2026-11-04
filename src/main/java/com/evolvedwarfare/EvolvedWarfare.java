@@ -63,6 +63,7 @@ public class EvolvedWarfare implements ModInitializer {
 		NpcSides.register();
 		FactionSpawner.register();
 		com.evolvedwarfare.world.Hordes.register();
+		com.evolvedwarfare.night.NightThreat.register();
 		ModCommands.register();
 		ExplorationMaps.register();
 		SettlementLevels.register();

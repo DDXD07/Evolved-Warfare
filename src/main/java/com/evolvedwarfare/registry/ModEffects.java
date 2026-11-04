@@ -17,6 +17,10 @@ public final class ModEffects {
 	public static final RegistryEntry<StatusEffect> PARASITES = Registry.registerReference(Registries.STATUS_EFFECT,
 			EvolvedWarfare.id("parasites"), new com.evolvedwarfare.climate.ParasitesEffect());
 
+	/** Infección: la da el mordisco de un zombi ({@link com.evolvedwarfare.night.NightThreat}). */
+	public static final RegistryEntry<StatusEffect> INFECTION = Registry.registerReference(Registries.STATUS_EFFECT,
+			EvolvedWarfare.id("infection"), new com.evolvedwarfare.night.InfectionEffect());
+
 	private ModEffects() {
 	}
 
