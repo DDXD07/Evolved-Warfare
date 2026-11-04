@@ -86,10 +86,13 @@ public final class CropSeasons {
 
 	/** En cada tic al azar: ¿puede crecer? (fuera de temporada, solo bajo techo y a un tercio) */
 	public static boolean canGrow(World world, BlockPos pos, Block block, Random random) {
-		if (!outOfSeason(world, block)) {
-			return true;
-		}
-		return roofed(world, pos) && random.nextInt(3) == 0;
+		boolean out = outOfSeason(world, block);
+		return canGrow(out, out && roofed(world, pos), random);
+	}
+
+	/** La regla: en su estación siempre; fuera, solo con techo y una de cada tres veces. */
+	public static boolean canGrow(boolean outOfSeason, boolean roofed, Random random) {
+		return !outOfSeason || (roofed && random.nextInt(3) == 0);
 	}
 
 	/** ¿Tiene techo encima (cualquier bloque sólido, también de cristal: un invernadero)? */
