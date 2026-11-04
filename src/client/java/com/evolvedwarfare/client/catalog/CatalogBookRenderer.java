@@ -11,7 +11,9 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 import org.joml.Matrix4f;
 
@@ -54,13 +56,31 @@ public class CatalogBookRenderer implements BlockEntityRenderer<CatalogBlockEnti
 		if (!(state.getBlock() instanceof CatalogBlock)) {
 			return;
 		}
-		Identifier texture = TEXTURES[Math.floorMod(state.get(CatalogBlock.TRADE), TEXTURES.length)];
-		VertexConsumer vc = consumers.getBuffer(RenderLayer.getEntityCutoutNoCull(texture));
-		float open = CatalogSession.cover(entity.getPos());
+		BlockPos pos = entity.getPos();
+		boolean mine = CatalogSession.active() && pos.equals(CatalogSession.book());
+		if (!mine && CatalogRemote.holds(pos)) {
+			// otro jugador lo tiene en las manos
+			return;
+		}
 		matrices.push();
 		matrices.translate(0.5, 0.0, 0.5);
 		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(angle(state.get(CatalogBlock.FACING))));
 		matrices.scale(1.0F / 16.0F, 1.0F / 16.0F, 1.0F / 16.0F);
+		drawBook(matrices, consumers, state.get(CatalogBlock.TRADE), light, overlay, CatalogSession.cover(pos), -1.0F, 0);
+		matrices.pop();
+	}
+
+	/**
+	 * El libro, en píxeles: el lomo a la izquierda (x = -6), la tapa arriba y el lado del lector hacia +z.
+	 *
+	 * @param open cuánto está abierta la tapa (0 a 1)
+	 * @param turn por dónde va la hoja que se está pasando (0 a 1), o menos de 0 si no se pasa ninguna
+	 * @param turnDir 1: hacia delante (de la derecha a la izquierda), -1: hacia atrás
+	 */
+	public static void drawBook(MatrixStack matrices, VertexConsumerProvider consumers, int trade, int light, int overlay, float open, float turn,
+			int turnDir) {
+		Identifier texture = TEXTURES[Math.floorMod(trade, TEXTURES.length)];
+		VertexConsumer vc = consumers.getBuffer(RenderLayer.getEntityCutoutNoCull(texture));
 		// contratapa
 		box(vc, matrices, light, overlay, X0, 0, Z0, X1, BACK, Z1, LEATHER, BACK_COVER, LEATHER);
 		// hojas (un poco metidas) y lomo
@@ -73,7 +93,21 @@ public class CatalogBookRenderer implements BlockEntityRenderer<CatalogBlockEnti
 		matrices.translate(-X0, -PAGES, 0.0F);
 		box(vc, matrices, light, overlay, X0, PAGES, Z0, X1, TOP, Z1, OUTER, INNER, LEATHER);
 		matrices.pop();
-		matrices.pop();
+		// la hoja que se pasa: una sola cara de papel que gira sobre el lomo
+		if (turn >= 0.0F && open > 0.9F) {
+			float t = CatalogSession.smooth(turn);
+			float angle = (turnDir >= 0 ? t : 1.0F - t) * 176.0F;
+			// se arquea un poco en medio del giro
+			float lift = MathHelper.sin(t * MathHelper.PI) * 0.6F;
+			matrices.push();
+			matrices.translate(X0 + 0.3F, PAGES + 0.04F + lift, 0.0F);
+			matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(angle));
+			MatrixStack.Entry e = matrices.peek();
+			float w = X1 - X0 - 0.7F;
+			quad(vc, e, e.getPositionMatrix(), light, overlay, 0, 1, 0, 0, 0, Z0 + 0.4F, w, 0, Z0 + 0.4F, w, 0, Z1 - 0.4F, 0, 0, Z1 - 0.4F,
+					PAGE, false);
+			matrices.pop();
+		}
 	}
 
 	/** Giro para que el lado de los clientes (+z del libro) mire hacia FACING. */

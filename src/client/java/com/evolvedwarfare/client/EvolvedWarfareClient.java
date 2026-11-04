@@ -112,6 +112,8 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		net.minecraft.client.render.block.entity.BlockEntityRendererFactories.register(ModBlocks.TRADER_CATALOG_ENTITY,
 				context -> new com.evolvedwarfare.client.catalog.CatalogBookRenderer());
 		com.evolvedwarfare.client.catalog.Engraving.register();
+		// los demás jugadores leyendo un catálogo (el libro en las manos)
+		com.evolvedwarfare.client.catalog.CatalogRemote.register();
 		net.minecraft.client.render.block.entity.BlockEntityRendererFactories.register(ModBlocks.CROP_CRATE_ENTITY,
 				com.evolvedwarfare.client.render.CropCrateRenderer::new);
 		net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry.INSTANCE.register(ModBlocks.CROP_CRATE_ITEM,

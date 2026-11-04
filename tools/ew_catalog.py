@@ -264,52 +264,6 @@ def paper(seed=5, w=256, h=256):
     return im
 
 
-def hand(right):
-    """Una mano con guante de cuero sin dedos sujetando el borde de abajo del libro (pulgar encima de la página)."""
-    w, h = 64, 64
-    im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
-    glove = (96, 62, 40, 255)
-    glove_d = (66, 42, 28, 255)
-    stitch = (150, 110, 70, 255)
-    skin = (214, 160, 124, 255)
-    skin_d = (176, 124, 92, 255)
-    cuff = (168, 150, 120, 255)
-    # palma y dorso (por debajo del libro: se ve el canto de la mano)
-    for y in range(20, 64):
-        for x in range(10, 54):
-            dx = (x - 32) / 22.0
-            dy = (y - 46) / 22.0
-            if dx * dx + dy * dy <= 1.0:
-                im.putpixel((x, y), glove if (x + y) % 7 else glove_d)
-    # puño de la camisa abajo
-    for y in range(54, 64):
-        for x in range(12, 52):
-            im.putpixel((x, y), cuff if (x // 3) % 2 else shade(cuff, 0.9))
-    # costura
-    for x in range(16, 48, 2):
-        im.putpixel((x, 30), stitch)
-    # pulgar: sale hacia el centro de la página y se apoya encima
-    for t in range(0, 22):
-        cx = 30 - t * 0.9
-        cy = 22 - t * 0.55
-        for oy in range(-4, 5):
-            for ox in range(-4, 5):
-                if ox * ox + oy * oy <= 16:
-                    x, y = int(cx + ox), int(cy + oy)
-                    if 0 <= x < w and 0 <= y < h:
-                        c = glove if t < 10 else (skin if (ox + oy) < 3 else skin_d)
-                        im.putpixel((x, y), c)
-    # uña
-    for oy in range(-2, 1):
-        for ox in range(-2, 1):
-            x, y = int(30 - 21 * 0.9 + ox), int(22 - 21 * 0.55 + oy)
-            if 0 <= x < w and 0 <= y < h:
-                im.putpixel((x, y), (236, 204, 184, 255))
-    if right:
-        im = im.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
-    return im
-
-
 def icon():
     im = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
     base = (110, 72, 40, 255)
@@ -404,8 +358,6 @@ def main():
     gui = os.path.join(ASSETS, "textures/gui/catalog")
     os.makedirs(gui, exist_ok=True)
     paper().save(os.path.join(gui, "paper.png"))
-    hand(False).save(os.path.join(gui, "hand_left.png"))
-    hand(True).save(os.path.join(gui, "hand_right.png"))
     icon().save(os.path.join(ASSETS, "textures/item/trader_catalog.png"))
     write_json(os.path.join(ASSETS, "models/item/trader_catalog.json"),
                {"parent": "minecraft:item/generated", "textures": {"layer0": "evolvedwarfare:item/trader_catalog"}})
@@ -439,11 +391,7 @@ def main():
         for i, im in enumerate(covers):
             sheet.alpha_composite(im, ((i % 4) * 256, (i // 4) * 256))
         sheet.save(os.path.join(PREVIEW, "catalog_covers.png"))
-        hands = Image.new("RGBA", (64 * 2 + 8, 64), (200, 200, 200, 255))
-        hands.alpha_composite(hand(False), (0, 0))
-        hands.alpha_composite(hand(True), (72, 0))
-        hands.resize((hands.width * 4, hands.height * 4), Image.NEAREST).save(os.path.join(PREVIEW, "catalog_hands.png"))
-    print("catálogo: %d tapas, papel, manos, icono, modelos, receta y textos" % len(covers))
+    print("catálogo: %d tapas, papel, icono, modelos, receta y textos" % len(covers))
 
 
 if __name__ == "__main__":

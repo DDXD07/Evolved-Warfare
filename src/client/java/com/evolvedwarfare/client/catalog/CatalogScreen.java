@@ -2,6 +2,7 @@ package com.evolvedwarfare.client.catalog;
 
 import com.evolvedwarfare.EvolvedWarfare;
 import com.evolvedwarfare.logistics.Market;
+import com.evolvedwarfare.network.CatalogTurnPayload;
 import com.evolvedwarfare.screen.CatalogScreenHandler;
 import com.evolvedwarfare.screen.TraderScreenHandler;
 import com.evolvedwarfare.trade.Deal;
@@ -10,9 +11,16 @@ import com.evolvedwarfare.trade.TraderType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.render.DiffuseLighting;
+import net.minecraft.client.render.LightmapTextureManager;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.entity.PlayerEntityRenderer;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -41,8 +49,6 @@ import org.lwjgl.glfw.GLFW;
  */
 public class CatalogScreen extends HandledScreen<CatalogScreenHandler> {
 	private static final Identifier PAPER = EvolvedWarfare.id("textures/gui/catalog/paper.png");
-	private static final Identifier HAND_LEFT = EvolvedWarfare.id("textures/gui/catalog/hand_left.png");
-	private static final Identifier HAND_RIGHT = EvolvedWarfare.id("textures/gui/catalog/hand_right.png");
 
 	static final int W = 420;
 	static final int H = 272;
@@ -58,6 +64,18 @@ public class CatalogScreen extends HandledScreen<CatalogScreenHandler> {
 	static final int INK = 0xFF1C1B1A;
 	static final int FADED = 0xFF55514C;
 	static final float TURN_MS = 480.0F;
+	// los brazos (en el lienzo): dónde descansan las manos, su tamaño y cómo acompañan la hoja
+	private static final float REST_X = 26.0F;
+	private static final float REST_Y = 14.0F;
+	private static final float REST_ANGLE = 22.0F;
+	private static final float ARM_SCALE = 190.0F;
+	private static final float ARM_TWIST = 30.0F;
+	private static final float HAND_X = 5.75F;
+	private static final float HAND_Y = 10.5F;
+	/** Hasta dónde lleva la hoja (fracción del pase) antes de soltarla y volver. */
+	private static final float CARRY = 0.6F;
+	private static final float TURN_LIFT = 26.0F;
+	private static final float TURN_ANGLE = 52.0F;
 
 	enum Mode {
 		INDEX, BUY, SELL
@@ -156,6 +174,10 @@ public class CatalogScreen extends HandledScreen<CatalogScreenHandler> {
 		turnDir = dir;
 		turnStart = System.nanoTime() / 1_000_000L;
 		spread = to;
+		// para que los demás lo vean pasar la página
+		if (ClientPlayNetworking.canSend(CatalogTurnPayload.ID)) {
+			ClientPlayNetworking.send(new CatalogTurnPayload(dir > 0));
+		}
 		if (client != null) {
 			client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.ITEM_BOOK_PAGE_TURN, 0.9F + client.world.random.nextFloat() * 0.2F));
 		}
@@ -238,8 +260,8 @@ public class CatalogScreen extends HandledScreen<CatalogScreenHandler> {
 			page(context, spread, true, hover);
 			page(context, spread, false, hover);
 		}
-		hands(context);
 		context.getMatrices().pop();
+		arms(context);
 
 		// la ayuda abajo y la descripción de lo que señala
 		if (g >= 1.0F) {
@@ -251,28 +273,61 @@ public class CatalogScreen extends HandledScreen<CatalogScreenHandler> {
 		}
 	}
 
-	/** Las manos sujetando el libro por abajo; la que pasa la hoja la acompaña. */
-	private void hands(DrawContext context) {
-		float lx = -30;
-		float rx = W - 34;
-		float ly = H - 40;
-		float ry = H - 40;
+	/**
+	 * Los brazos del personaje, en 3D y con su piel (los mismos que en primera persona): sujetan el libro por las esquinas
+	 * de abajo y salen hacia las esquinas de la pantalla. Al pasar una página, la mano de ese lado coge la esquina de la
+	 * hoja, la lleva levantándola hasta pasado el lomo, la suelta y vuelve a su sitio.
+	 */
+	private void arms(DrawContext context) {
+		if (client == null || client.player == null || client.player.isInvisible()
+				|| !(client.getEntityRenderDispatcher().getRenderer(client.player) instanceof PlayerEntityRenderer renderer)) {
+			return;
+		}
+		// en el lienzo: la mano (x, y) y cuánto sale el brazo hacia fuera (grados desde abajo)
+		float[] right = {W - REST_X, H - REST_Y, REST_ANGLE};
+		float[] left = {REST_X, H - REST_Y, REST_ANGLE};
 		if (turning()) {
 			float t = (System.nanoTime() / 1_000_000L - turnStart) / TURN_MS;
-			float arc = MathHelper.sin((float) Math.PI * t);
-			if (turnDir > 0) {
-				rx = MathHelper.lerp(arc, rx, SPINE - 20);
-				ry = ry - arc * 60.0F;
+			int side = turnDir > 0 ? 1 : -1;
+			float[] hand = side > 0 ? right : left;
+			float reach = Math.abs(hand[0] - SPINE);
+			float x;
+			if (t < CARRY) {
+				// con la esquina de la hoja, que gira sobre el lomo
+				x = SPINE + side * reach * MathHelper.cos((float) Math.PI * t);
 			} else {
-				lx = MathHelper.lerp(arc, lx, SPINE - 44);
-				ly = ly - arc * 60.0F;
+				float back = CatalogSession.smooth((t - CARRY) / (1.0F - CARRY));
+				x = MathHelper.lerp(back, SPINE + side * reach * MathHelper.cos((float) Math.PI * CARRY), hand[0]);
 			}
+			hand[0] = x;
+			hand[1] -= TURN_LIFT * MathHelper.sin((float) Math.PI * t);
+			hand[2] += TURN_ANGLE * (1.0F - side * (x - SPINE) / reach) / 2.0F;
 		}
-		context.getMatrices().push();
-		context.getMatrices().translate(0.0F, 0.0F, 120.0F);
-		context.drawTexture(HAND_LEFT, (int) lx, (int) ly, 64, 64, 0.0F, 0.0F, 64, 64, 64, 64);
-		context.drawTexture(HAND_RIGHT, (int) rx, (int) ry, 64, 64, 0.0F, 0.0F, 64, 64, 64, 64);
-		context.getMatrices().pop();
+		AbstractClientPlayerEntity player = client.player;
+		MatrixStack matrices = context.getMatrices();
+		VertexConsumerProvider.Immediate consumers = context.getVertexConsumers();
+		float size = ARM_SCALE * scale;
+		context.draw();
+		DiffuseLighting.method_34742();
+		for (int side : new int[] {1, -1}) {
+			float[] hand = side > 0 ? right : left;
+			matrices.push();
+			matrices.translate(originX + hand[0] * scale, originY + hand[1] * scale, 200.0F);
+			// de la mano hacia abajo y hacia fuera, con la cara de delante del brazo hacia ti y un poco del lado de fuera
+			matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180.0F - side * hand[2]));
+			matrices.scale(size, size, -size);
+			matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-side * ARM_TWIST));
+			// el punto de la mano en el espacio en que vanilla dibuja el brazo (el hombro arriba, la mano 12 píxeles abajo)
+			matrices.translate(side * HAND_X / 16.0F, -HAND_Y / 16.0F, 0.0F);
+			if (side > 0) {
+				renderer.renderRightArm(matrices, consumers, LightmapTextureManager.MAX_LIGHT_COORDINATE, player);
+			} else {
+				renderer.renderLeftArm(matrices, consumers, LightmapTextureManager.MAX_LIGHT_COORDINATE, player);
+			}
+			matrices.pop();
+		}
+		context.draw();
+		DiffuseLighting.enableGuiDepthLighting();
 	}
 
 	/** Una página: el papel, la sombra del lomo y lo que lleva. */

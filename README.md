@@ -762,7 +762,8 @@ escoplo, gema, tijeras, tarro de especias o zarpa). **Clic derecho en el libro**
 
 1. Si estás en tercera persona **pasas a primera persona** y **te acercas al libro**: la cámara baja hasta mirarlo desde
    arriba. **La tapa se abre** sobre el lomo (en 3D, con su sonido) y entonces **coges el catálogo**: sube a la pantalla,
-   abierto, sujeto con tus dos manos enguantadas.
+   abierto, **sujeto con los brazos de tu personaje en 3D** (con tu piel y tus mangas, los mismos que ves en primera
+   persona).
 2. **Todo en blanco y negro, de imprenta**, como los catálogos de venta por correo de principios del siglo XX: papel
    viejo, filetes, titulares en mayúsculas y cada artículo con su **grabado** (la cosa en tinta, con tramado en las
    sombras y contorno).
@@ -774,8 +775,14 @@ escoplo, gema, tijeras, tarro de especias o zarpa). **Clic derecho en el libro**
    pagan y cuántos tienes. **Clic** compra o vende un lote; **Mayús + clic**, un montón. Pasando el ratón por el grabado
    ves la descripción de la cosa.
 5. **Pasar página**: flechas (o A/D), la rueda del ratón o *SIGUIENTE »* / *« ANTERIOR*. **La hoja gira sobre el lomo**
-   y la mano la acompaña, con el sonido del papel. *Retroceso* (o *« ÍNDICE*) vuelve a la portada. **Esc** lo cierra: el
+   y **tu brazo la acompaña**: la mano de ese lado coge la esquina de la hoja, la lleva levantándola hasta pasado el lomo,
+   la suelta y vuelve a su sitio, con el sonido del papel. *Retroceso* (o *« ÍNDICE*) vuelve a la portada. **Esc** lo cierra: el
    catálogo baja, la tapa se cierra y la cámara vuelve a donde estaba (y a tercera persona si estabas en ella).
+
+**Los demás jugadores te ven leer en tiempo real**, en 3D: coges el libro del mostrador (deja de verse allí), lo sujetas
+abierto con las dos manos delante del pecho, con la tapa de su oficio, la cabeza baja mirándolo, y **cada vez que pasas
+una página la hoja gira sobre el lomo y tu mano la acompaña** (y lo oyen). Al cerrarlo, lo cierras, bajas los brazos y el
+libro vuelve al mostrador. Quien llega cuando ya estás leyendo te ve con el libro abierto.
 
 Si el mercader **duerme**, la tienda está **cerrada**. Hablar con el mercader también abre el catálogo. Las tiendas que
 ya estaban generadas reciben su libro solas (aparece encima del mostrador en cuanto se carga su mercader). También se

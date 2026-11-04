@@ -38,6 +38,14 @@ public class CatalogScreenHandler extends TraderScreenHandler {
 		this.opening = opening;
 	}
 
+	@Override
+	public void onClosed(net.minecraft.entity.player.PlayerEntity player) {
+		super.onClosed(player);
+		if (player instanceof net.minecraft.server.network.ServerPlayerEntity serverPlayer) {
+			com.evolvedwarfare.trade.CatalogReaders.close(serverPlayer);
+		}
+	}
+
 	/** El libro del mostrador, o null si se abrió hablando con el mercader en otro sitio. */
 	@Nullable
 	public BlockPos book() {

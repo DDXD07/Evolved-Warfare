@@ -5,6 +5,7 @@ import com.evolvedwarfare.entity.TraderEntity;
 import com.evolvedwarfare.registry.ModBlocks;
 import com.evolvedwarfare.registry.ModEntities;
 import com.evolvedwarfare.screen.CatalogScreenHandler;
+import com.evolvedwarfare.trade.CatalogReaders;
 import com.evolvedwarfare.trade.TraderType;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.block.Blocks;
@@ -102,6 +103,39 @@ public class CatalogGameTests implements FabricGameTest {
 			check(state.isOf(ModBlocks.TRADER_CATALOG), "No ha aparecido el libro encima del mostrador: " + state);
 			check(state.get(CatalogBlock.FACING) == Direction.SOUTH, "El libro no mira a los clientes: " + state.get(CatalogBlock.FACING));
 			check(CatalogBlock.trade(state) == TraderType.JEWELER, "El libro no es del joyero");
+			trader.discard();
+			ctx.complete();
+		});
+	}
+
+	/** Los demás ven al que lee: el servidor sabe quién tiene un catálogo abierto, con qué libro, y deja de saberlo al cerrarlo. */
+	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 120)
+	public void othersSeeTheReader(TestContext ctx) {
+		TraderEntity trader = shop(ctx);
+		BlockPos book = new BlockPos(2, 2, 3);
+		ctx.setBlockState(book, ModBlocks.TRADER_CATALOG.getDefaultState().with(CatalogBlock.FACING, Direction.SOUTH)
+				.with(CatalogBlock.TRADE, TraderType.TAILOR.ordinal()));
+		ServerPlayerEntity player = customer(ctx);
+		ctx.useBlock(book, player);
+		CatalogReaders.Reader reader = CatalogReaders.of(player);
+		boolean reading = reader != null && ctx.getAbsolutePos(book).equals(reader.book());
+		boolean cover = reader != null && reader.trade() == TraderType.TAILOR.ordinal();
+		CatalogReaders.turn(player, true);
+		CatalogReaders.turn(player, false);
+		player.closeHandledScreen();
+		boolean closed = !CatalogReaders.reading(player);
+		// si el menú desaparece sin cerrarse (muerte, cambio de dimensión…), también se entera
+		ctx.useBlock(book, player);
+		boolean again = CatalogReaders.reading(player);
+		player.currentScreenHandler = player.playerScreenHandler;
+		ctx.waitAndRun(25, () -> {
+			boolean forgotten = !CatalogReaders.reading(player);
+			LOG.info("[EW-GAMETEST] lectores: leyendo {}, portada {}, cerrado {}, otra vez {}, olvidado {}", reading, cover, closed, again, forgotten);
+			check(reading, "El servidor no sabe que está leyendo el libro del mostrador");
+			check(cover, "La portada no es la del libro (sastre)");
+			check(closed, "Al cerrar el catálogo sigue leyendo");
+			check(again, "Al volver a abrirlo no lee");
+			check(forgotten, "Sin el menú del catálogo sigue leyendo");
 			trader.discard();
 			ctx.complete();
 		});

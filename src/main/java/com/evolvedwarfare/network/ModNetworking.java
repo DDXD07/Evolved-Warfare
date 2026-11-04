@@ -19,6 +19,9 @@ public final class ModNetworking {
 		PayloadTypeRegistry.playS2C().register(CratePickupPayload.ID, CratePickupPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(HordeInfoPayload.ID, HordeInfoPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(ClimatePayload.ID, ClimatePayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(CatalogPosePayload.ID, CatalogPosePayload.CODEC);
+		PayloadTypeRegistry.playC2S().register(CatalogTurnPayload.ID, CatalogTurnPayload.CODEC);
+		com.evolvedwarfare.trade.CatalogReaders.register();
 		ServerPlayNetworking.registerGlobalReceiver(FirearmPayload.ID, (payload, context) -> {
 			if (payload.action() == FirearmPayload.FIRE) {
 				com.evolvedwarfare.weapon.MusketItem.tryFire(context.player());

@@ -405,6 +405,14 @@ public class TraderEntity extends MerchantEntity {
 				return new com.evolvedwarfare.screen.CatalogScreenHandler(syncId, playerInventory, trader, opening);
 			}
 		});
+		if (player.currentScreenHandler instanceof com.evolvedwarfare.screen.CatalogScreenHandler) {
+			// para que los demás lo vean leyendo, con la portada de su libro
+			int trade = getTraderType().ordinal();
+			if (book != null && getWorld().getBlockState(book).getBlock() instanceof com.evolvedwarfare.block.CatalogBlock) {
+				trade = getWorld().getBlockState(book).get(com.evolvedwarfare.block.CatalogBlock.TRADE);
+			}
+			com.evolvedwarfare.trade.CatalogReaders.open(player, trade, book);
+		}
 	}
 
 	/** Lo que hace falta antes de abrir la tienda (reponer, nivel, precios, cliente) y lo que se le manda. */
