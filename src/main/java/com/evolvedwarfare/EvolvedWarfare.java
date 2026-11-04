@@ -71,6 +71,7 @@ public class EvolvedWarfare implements ModInitializer {
 		com.evolvedwarfare.climate.Climate.register();
 		com.evolvedwarfare.climate.Thirst.register();
 		com.evolvedwarfare.climate.Crops.register();
+		com.evolvedwarfare.wildlife.Wildlife.registerSpawns();
 		RouteSlipItem.registerEvents();
 		com.evolvedwarfare.item.StructureScannerItem.registerEvents();
 		com.evolvedwarfare.block.CropCrateBlock.registerEvents();

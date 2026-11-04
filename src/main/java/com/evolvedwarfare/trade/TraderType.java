@@ -270,6 +270,7 @@ public enum TraderType {
 			case FURRIER -> b
 					.sell(c, Items.LEATHER, 3, 1).sell(c, Items.RABBIT_HIDE, 4, 1).sell(c, Items.WHITE_WOOL, 4, 1)
 					.sell(c, Items.CAMPFIRE, 1, 1).sell(c, Items.COOKED_SALMON, 6, 1).sell(c, Items.COOKED_COD, 6, 1)
+					.sell(c, ModItems.FUR_PELT, 2, 2).sell(c, ModItems.COOKED_VENISON, 4, 1)
 					.sell(u, Items.LEATHER_HELMET, 1, 2).sell(u, Items.LEATHER_CHESTPLATE, 1, 3)
 					.sell(u, Items.LEATHER_LEGGINGS, 1, 3).sell(u, Items.LEATHER_BOOTS, 1, 2).sell(u, Items.PACKED_ICE, 4, 1)
 					.sell(u, Items.LEAD, 1, 2)
@@ -280,6 +281,8 @@ public enum TraderType {
 					.buy(c, Items.LEATHER, Items.COD, Items.SALMON, Items.WHITE_WOOL)
 					.buy(u, Items.RABBIT_HIDE, Items.MUTTON, Items.FEATHER)
 					.buy(r, Items.RABBIT_FOOT).buy(r, Items.ARMADILLO_SCUTE, 1, 1)
+					// la caza: pieles y trofeos
+					.buy(c, ModItems.FUR_PELT).buy(u, ModItems.ANTLER, ModItems.HORN, ModItems.TUSK).buy(r, ModItems.BEAR_CLAW)
 					.buy(e, Items.TURTLE_SCUTE, 1, 3);
 		}
 		return b.entries;

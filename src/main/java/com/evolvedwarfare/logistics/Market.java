@@ -49,6 +49,18 @@ public final class Market {
 		price(com.evolvedwarfare.registry.ModItems.CABBAGE, 12, 1);
 		price(com.evolvedwarfare.registry.ModItems.ONION, 20, 1);
 		price(com.evolvedwarfare.registry.ModItems.GARLIC, 20, 1);
+		// la caza
+		price(com.evolvedwarfare.registry.ModItems.VENISON, 9, 1);
+		price(com.evolvedwarfare.registry.ModItems.COOKED_VENISON, 5, 1);
+		price(com.evolvedwarfare.registry.ModItems.GAME_MEAT, 9, 1);
+		price(com.evolvedwarfare.registry.ModItems.COOKED_GAME_MEAT, 5, 1);
+		price(com.evolvedwarfare.registry.ModItems.FOWL, 12, 1);
+		price(com.evolvedwarfare.registry.ModItems.COOKED_FOWL, 7, 1);
+		price(com.evolvedwarfare.registry.ModItems.FUR_PELT, 2, 1);
+		price(com.evolvedwarfare.registry.ModItems.ANTLER, 1, 1);
+		price(com.evolvedwarfare.registry.ModItems.HORN, 1, 1);
+		price(com.evolvedwarfare.registry.ModItems.TUSK, 1, 1);
+		price(com.evolvedwarfare.registry.ModItems.BEAR_CLAW, 1, 3);
 		price(Items.APPLE, 16, 1);
 		price(Items.BREAD, 6, 1);
 		price(Items.HONEY_BOTTLE, 4, 1);

@@ -178,5 +178,7 @@ public final class ModEntities {
 		FabricDefaultAttributeRegistry.register(VIKING, FactionNpcEntity.createFactionAttributes());
 		FabricDefaultAttributeRegistry.register(PIRATE, FactionNpcEntity.createFactionAttributes());
 		FabricDefaultAttributeRegistry.register(TRADER, TraderEntity.createTraderAttributes());
+		// los animales salvajes
+		com.evolvedwarfare.wildlife.Wildlife.registerTypes();
 	}
 }

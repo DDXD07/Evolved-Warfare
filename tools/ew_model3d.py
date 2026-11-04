@@ -196,3 +196,121 @@ def render(models, texture_images, size=160, scale=7.0, yaw=45.0, pitch=30.0, bg
                 region[ok] = col[..., :3][ok] * f
                 sub[ok] = depth[ok]
     return Image.fromarray(np.clip(img, 0, 255).astype(np.uint8))
+
+
+# ------------------------------------------------------------------ modelos de entidad (cubos con UV de caja, como ModelPart)
+
+def _rzyx(rx, ry, rz):
+    """La rotación de ModelPart: primero Z, luego Y, luego X (en radianes)."""
+    return _rot("z", math.degrees(rz)) @ _rot("y", math.degrees(ry)) @ _rot("x", math.degrees(rx))
+
+
+def box_faces(u, v, dx, dy, dz, x0, y0, z0):
+    """Las seis caras de un cubo de entidad (espacio del modelo: y hacia abajo, -z delante) con su rectángulo de textura
+    en píxeles (u0, v0, u1, v1) y sus esquinas arriba-izquierda, arriba-derecha, abajo-derecha, abajo-izquierda."""
+    x1, y1, z1 = x0 + dx, y0 + dy, z0 + dz
+    return [
+        ("top", (u + dz, v, u + dz + dx, v + dz), [(x0, y0, z1), (x1, y0, z1), (x1, y0, z0), (x0, y0, z0)]),
+        ("bottom", (u + dz + dx, v, u + dz + 2 * dx, v + dz), [(x0, y1, z0), (x1, y1, z0), (x1, y1, z1), (x0, y1, z1)]),
+        ("right", (u, v + dz, u + dz, v + dz + dy), [(x0, y0, z1), (x0, y0, z0), (x0, y1, z0), (x0, y1, z1)]),
+        ("front", (u + dz, v + dz, u + dz + dx, v + dz + dy), [(x0, y0, z0), (x1, y0, z0), (x1, y1, z0), (x0, y1, z0)]),
+        ("left", (u + dz + dx, v + dz, u + 2 * dz + dx, v + dz + dy), [(x1, y0, z0), (x1, y0, z1), (x1, y1, z1), (x1, y1, z0)]),
+        ("back", (u + 2 * dz + dx, v + dz, u + 2 * dz + 2 * dx, v + dz + dy), [(x1, y0, z1), (x0, y0, z1), (x0, y1, z1), (x1, y1, z1)]),
+    ]
+
+
+ENTITY_SHADE = {"top": 1.0, "bottom": 0.55, "front": 0.85, "back": 0.75, "right": 0.7, "left": 0.9}
+
+
+def render_entity(parts, texture, size=220, scale=4.0, yaw=35.0, pitch=18.0, bg=(70, 74, 80), center=(0.0, 14.0, 0.0), poses=None):
+    """Dibuja un modelo de entidad: parts = [{name, parent, pivot, rotation(grados), cubes:[{uv, origin, size}]}]."""
+    img = np.zeros((size, size, 3), dtype=np.float32)
+    img[:, :] = bg
+    zbuf = np.full((size, size), -1e9, dtype=np.float32)
+    tex = np.array(texture.convert("RGBA"), dtype=np.float32)
+    th, tw = tex.shape[0], tex.shape[1]
+    # de modelo (y abajo) a mundo (y arriba, mirando de lado): girar 180 sobre z deja el frente en -z y arriba en +y
+    flip = np.diag([-1.0, -1.0, 1.0])
+    view = _rot("x", pitch) @ _rot("y", yaw)
+    by_name = {p["name"]: p for p in parts}
+    mats = {}
+
+    def matrix(p):
+        if p["name"] in mats:
+            return mats[p["name"]]
+        rot = [math.radians(a) for a in p.get("rotation", [0, 0, 0])]
+        if poses and p["name"] in poses:
+            rot = [r + math.radians(a) for r, a in zip(rot, poses[p["name"]])]
+        r = _rzyx(*rot)
+        t = np.array(p["pivot"], dtype=float)
+        if p.get("parent"):
+            pr, pt = matrix(by_name[p["parent"]])
+            out = (pr @ r, pr @ t + pt)
+        else:
+            out = (r, t)
+        mats[p["name"]] = out
+        return out
+
+    cx = cy = size / 2.0
+    if center == "auto":
+        pts = []
+        for p in parts:
+            r, t = matrix(p)
+            for c in p["cubes"]:
+                for _, _, corners in box_faces(*c["uv"], *c["size"], *c["origin"]):
+                    pts.extend(view @ (flip @ (r @ np.array(q, dtype=float) + t)) for q in corners)
+        pts = np.array(pts)
+        lo, hi = pts.min(axis=0), pts.max(axis=0)
+        mid = (lo + hi) / 2.0
+        scale = 0.82 * size / max(hi[0] - lo[0], hi[1] - lo[1])
+        c0 = np.linalg.inv(view) @ mid
+        c0 = flip @ c0
+    else:
+        c0 = np.array(center, dtype=float)
+    for p in parts:
+        r, t = matrix(p)
+        for c in p["cubes"]:
+            u, v = c["uv"]
+            dx, dy, dz = c["size"]
+            ox, oy, oz = c["origin"]
+            for face, (u0, v0, u1, v1), corners in box_faces(u, v, dx, dy, dz, ox, oy, oz):
+                pts = [view @ (flip @ (r @ np.array(q, dtype=float) + t) - flip @ c0) for q in corners]
+                p0, p1, _, p3 = pts
+                e1, e2 = p1 - p0, p3 - p0
+                n = np.cross(e1, e2)
+                if abs(n[2]) <= 1e-6:
+                    continue
+                if n[2] < 0:
+                    continue
+                sx = lambda q: cx + q[0] * scale
+                sy = lambda q: cy - q[1] * scale
+                xs = [sx(q) for q in pts]
+                ys = [sy(q) for q in pts]
+                bx0, bx1 = max(0, int(min(xs))), min(size - 1, int(max(xs)) + 1)
+                by0, by1 = max(0, int(min(ys))), min(size - 1, int(max(ys)) + 1)
+                if bx1 < bx0 or by1 < by0:
+                    continue
+                gx, gy = np.meshgrid(np.arange(bx0, bx1 + 1) + 0.5, np.arange(by0, by1 + 1) + 0.5)
+                a11, a12 = e1[0] * scale, e2[0] * scale
+                a21, a22 = -e1[1] * scale, -e2[1] * scale
+                det = a11 * a22 - a12 * a21
+                if abs(det) < 1e-9:
+                    continue
+                ddx = gx - sx(p0)
+                ddy = gy - sy(p0)
+                a = (ddx * a22 - a12 * ddy) / det
+                b = (a11 * ddy - a21 * ddx) / det
+                inside = (a >= 0) & (a <= 1) & (b >= 0) & (b <= 1)
+                if not inside.any():
+                    continue
+                depth = p0[2] + a * e1[2] + b * e2[2]
+                uu = np.clip((u0 + a * (u1 - u0)).astype(int), 0, tw - 1)
+                vv = np.clip((v0 + b * (v1 - v0)).astype(int), 0, th - 1)
+                col = tex[vv, uu]
+                ok = inside & (col[..., 3] > 127)
+                sub = zbuf[by0:by1 + 1, bx0:bx1 + 1]
+                ok &= depth > sub
+                region = img[by0:by1 + 1, bx0:bx1 + 1]
+                region[ok] = col[..., :3][ok] * ENTITY_SHADE[face]
+                sub[ok] = depth[ok]
+    return Image.fromarray(np.clip(img, 0, 255).astype(np.uint8))

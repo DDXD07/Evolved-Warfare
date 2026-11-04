@@ -1,0 +1,21 @@
+{
+ "type": "minecraft:crafting_shaped",
+ "category": "equipment",
+ "pattern": [
+  "XAX",
+  "X X",
+  "X X"
+ ],
+ "key": {
+  "X": {
+   "item": "minecraft:leather"
+  },
+  "A": {
+   "item": "evolvedwarfare:fur_pelt"
+  }
+ },
+ "result": {
+  "id": "evolvedwarfare:fur_trousers",
+  "count": 1
+ }
+}

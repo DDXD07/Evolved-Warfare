@@ -33,6 +33,7 @@ bloques del mod están plegadas juntas: debajo del nombre solo sale *Mantén Con
 | 14 | **Clima**: estaciones de 91 días que cambian el tiempo, la nieve, el hielo, los cultivos y los colores; temperatura del aire y del cuerpo, hipotermia e hipertermia, ropa de piel y de lino | ✅ Hecha |
 | 15 | **Sed**: medidor de gotas encima del hambre; beber del agua del mundo con las manos (agachado + clic derecho, con animación) con riesgo de **parásitos**; agua **hervida** en el horno, la fogata o un caldero al fuego; cantimplora, zumos, lluvia y comidas con agua | ✅ Hecha |
 | 16 | **Cultivos de temporada**: cada cultivo crece solo en su estación (fuera, bajo techo y despacio); cultivos nuevos (tomate, maíz, col, cebolla y ajo) con sus semillas, y **todos los cultivos y lo cosechado en 3D** | ✅ Hecha |
+| 17 | **Animales salvajes**: 20 especies (ciervo, corzo, alce, reno, gacela, muflón, bisonte, jabalí, oso pardo, coyote, lince, puma, liebre, ardilla, mapache, tejón, castor, pato, faisán y pavo salvaje) con modelo 3D animado, comportamiento (presas, neutrales y cazadores), cría, y su carne, pieles y trofeos | ✅ Hecha |
 | 12 | **Armaduras de las facciones**: 4 por facción (por rango), 12 en total, con modelo 3D; las llevan sus guerreros, se fabrican con ventajas de forja, salen en sus cofres y las vende el armero | ✅ Hecha |
 | 13 | **Armaduras de clase** (arquero, guerrero, ladrón y mosquetero) con aspecto de vanilla, en cuero, cobre, hierro, diamante y netherita; ventajas que suben con el material y desventajas; estadísticas manteniendo R | ✅ Hecha |
 
@@ -1135,6 +1136,54 @@ cerrando su cabeza; la cebolla y el ajo con su bulbo asomando. **Lo cosechado ta
 en el inventario y en los marcos): trigo en gavilla, zanahoria, patata (cruda, asada y venenosa), remolacha, verruga,
 bayas, tomate, mazorca (y asada), col, cebolla y ajo.
 
+## Fase 17 — Animales salvajes
+
+**20 especies** viven por el mundo, cada una en sus biomas, con su **modelo 3D** de cubos (como los de vanilla) y su
+**animación**: las patas andan por parejas en diagonal (las aves, alternas; la liebre y la ardilla, a saltos), la cabeza
+mira a su alrededor y **baja a pastar**, la cola se mece (más al correr), las orejas se sacuden de vez en cuando, las aves
+**baten las alas** en el aire y los cazadores **embisten con la cabeza** al morder. Las crías son más pequeñas y siguen a
+sus padres.
+
+| Animal | Dónde | Cómo es | Suelta |
+|---|---|---|---|
+| **Ciervo** | bosques, praderas, llanuras | presa, en manada; cornamenta | venado, cuero, **asta** |
+| **Corzo** | bosques, praderas | presa, pequeño y rápido | venado, cuero, asta |
+| **Alce** | taiga, pantano | **neutral**: si le pegas, embiste fuerte (40 de vida) | mucho venado, cuero, asta |
+| **Reno** | llanuras nevadas, taiga nevada, colinas | presa, en manada | venado, **piel con pelo**, asta |
+| **Gacela** | sabana, desierto, badlands | presa, la más rápida (huye de lejos) | venado, cuero, **cuerno** |
+| **Muflón** | montañas, colinas, praderas | neutral, en manada; cuernos en espiral | cordero, lana marrón, cuerno |
+| **Bisonte** | llanuras, sabana, praderas | **neutral en manada**: si pegas a uno, cargan todos | **carne de caza**, cuero, cuerno |
+| **Jabalí** | bosques, taiga | neutral, en piara; colmillos | carne de caza, cuero, **colmillo** |
+| **Oso pardo** | taiga, bosques, colinas | **cazador**: pesca salmones, caza corzos y liebres; ataca si te acercas sin agacharte | carne de caza, piel, **garra de oso** |
+| **Coyote** | llanuras, desierto, badlands, sabana | cazador de noche (liebres, ardillas, aves, conejos, gallinas); **aúlla** | piel, hueso |
+| **Lince** | taiga, nieve | cazador de liebres, ardillas y aves | piel, hueso |
+| **Puma** | montañas, sabana alta, badlands | cazador de ciervos, gacelas, muflones, ovejas...; **de noche acecha a los jugadores** | piel, hueso |
+| **Liebre** | llanuras, nieve, praderas, sabana | presa, a saltos | conejo, piel de conejo, pata de conejo |
+| **Ardilla** | bosques, taiga | presa, diminuta, cola enorme | conejo, piel de conejo |
+| **Mapache** | bosques, pantanos | neutral, de noche; **se come la comida que encuentre tirada** | piel con pelo |
+| **Tejón** | llanuras, bosques | neutral, de noche, carroñero | piel con pelo |
+| **Castor** | ríos, pantanos, taiga | presa, nada muy bien | piel con pelo, palos |
+| **Pato** | ríos, pantanos | presa, en bandada, **nada** | **ave**, plumas |
+| **Faisán** | llanuras, bosques, praderas | presa; baja planeando | ave, plumas |
+| **Pavo salvaje** | bosques, taiga | presa, en bandada; cola en abanico | ave, plumas |
+
+**Cómo se comportan:** las **presas huyen** de ti de lejos si vas de pie (de muy cerca si vas **agachado**: así se caza)
+y de sus cazadores. Los **neutrales** se defienden si les pegas (en manada, todos). Los **cazadores**, cuando tienen
+hambre, persiguen a sus presas (también conejos, gallinas, ovejas, cabras o peces de vanilla) y al cazar se curan y
+quedan saciados un rato. Las aves no se hacen daño al caer. Los trofeos (asta, cuerno, colmillo, garra) solo salen si
+los mata un jugador (más con Saqueo).
+
+**Cría:** cada uno con su comida (que también los atrae): los ciervos, trigo o manzanas; los jabalíes, zanahorias,
+patatas, remolachas o maíz; el oso, bayas, salmón o miel; los cazadores, carne cruda; la liebre, zanahoria, diente de
+león o col; la ardilla, bayas o semillas; el mapache y el tejón, bayas o maíz; el castor, palos o caña; las aves,
+semillas.
+
+**Lo que se saca:** **venado**, **carne de caza** y **ave** (crudos y asados en el horno, el ahumador o la fogata; el ave
+cruda puede dar hambre), **piel con pelo** (sirve para la ropa de piel en lugar de la lana, o da cuero), **asta**,
+**cuerno** y **colmillo** (molidos dan harina de hueso) y la **garra de oso**. El **peletero** compra las pieles y los
+trofeos (la garra, cara) y vende pieles; las carnes se venden en la Caja de víveres. Cada especie tiene su **huevo de
+aparición** (creativo).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -1153,6 +1202,9 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
   diseños 3D (cubos sobre cabeza, cuerpo, brazos y piernas), las texturas, los iconos, `FactionArmorModels.java`, los
   modelos de objeto, las recetas, las etiquetas y los textos; con `--preview` las dibuja puestas (delante, detrás y
   andando).
+- `ew_wildlife.py` — los animales salvajes: el modelo de cada especie (partes, pivotes y cubos, en JSON que el juego
+  lee y anima), su textura pintada con las cuentas de UV de caja, el botín, los objetos de caza, las recetas y los
+  textos; con `--preview` los dibuja en 3D.
 - `ew_crops.py` (+ `ew_model3d.py`) — los cultivos en 3D: los modelos de cubos de cada etapa (los de vanilla los
   sustituyen) y de lo cosechado, las texturas de materiales, los estados de bloque, el botín, las recetas y los textos; con
   `--preview` dibuja cada etapa y cada cosecha (con su propio dibujante isométrico con profundidad).

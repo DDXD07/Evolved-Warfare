@@ -165,6 +165,8 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ModBlocks.TOMATOES, ModBlocks.CORN, ModBlocks.CABBAGES, ModBlocks.ONIONS,
 				ModBlocks.GARLIC);
 		CropTooltips.register();
+		// los animales salvajes: modelos (de sus JSON), animaciones y texturas
+		com.evolvedwarfare.client.wildlife.WildModels.register();
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.SALES_MAILBOX, RenderLayer.getCutout());
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.WAREHOUSE, RenderLayer.getCutout());
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.PORTCULLIS, RenderLayer.getCutout());

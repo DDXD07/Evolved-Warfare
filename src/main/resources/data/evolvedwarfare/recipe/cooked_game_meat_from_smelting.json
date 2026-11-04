@@ -1,0 +1,13 @@
+{
+ "type": "minecraft:smelting",
+ "category": "food",
+ "ingredient": {
+  "item": "evolvedwarfare:game_meat"
+ },
+ "result": {
+  "id": "evolvedwarfare:cooked_game_meat",
+  "count": 1
+ },
+ "experience": 0.35,
+ "cookingtime": 200
+}

@@ -37,6 +37,12 @@
     "evolvedwarfare:cabbage",
     "evolvedwarfare:onion",
     "evolvedwarfare:garlic",
-    "evolvedwarfare:roasted_corn"
+    "evolvedwarfare:roasted_corn",
+    "evolvedwarfare:venison",
+    "evolvedwarfare:cooked_venison",
+    "evolvedwarfare:game_meat",
+    "evolvedwarfare:cooked_game_meat",
+    "evolvedwarfare:fowl",
+    "evolvedwarfare:cooked_fowl"
   ]
 }

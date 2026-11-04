@@ -1,0 +1,13 @@
+{
+ "type": "minecraft:campfire_cooking",
+ "category": "food",
+ "ingredient": {
+  "item": "evolvedwarfare:venison"
+ },
+ "result": {
+  "id": "evolvedwarfare:cooked_venison",
+  "count": 1
+ },
+ "experience": 0.35,
+ "cookingtime": 600
+}

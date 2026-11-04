@@ -198,6 +198,32 @@ public final class ModItems {
 		return new net.minecraft.component.type.FoodComponent.Builder().nutrition(nutrition).saturationModifier(saturation).build();
 	}
 
+	// los animales salvajes: carnes, pieles y trofeos (y sus huevos de aparición, abajo)
+	public static final Item VENISON = register("venison", new Item(new Item.Settings().food(food(3, 0.3F))));
+	public static final Item COOKED_VENISON = register("cooked_venison", new Item(new Item.Settings().food(food(8, 0.8F))));
+	public static final Item GAME_MEAT = register("game_meat", new Item(new Item.Settings().food(food(3, 0.3F))));
+	public static final Item COOKED_GAME_MEAT = register("cooked_game_meat", new Item(new Item.Settings().food(food(8, 0.8F))));
+	public static final Item FOWL = register("fowl", new Item(new Item.Settings().food(new net.minecraft.component.type.FoodComponent.Builder()
+			.nutrition(2).saturationModifier(0.3F)
+			.statusEffect(new net.minecraft.entity.effect.StatusEffectInstance(net.minecraft.entity.effect.StatusEffects.HUNGER, 600, 0), 0.3F)
+			.build())));
+	public static final Item COOKED_FOWL = register("cooked_fowl", new Item(new Item.Settings().food(food(6, 0.6F))));
+	public static final Item FUR_PELT = register("fur_pelt", new com.evolvedwarfare.item.DescribedItem(new Item.Settings()));
+	public static final Item ANTLER = register("antler", new com.evolvedwarfare.item.DescribedItem(new Item.Settings()));
+	public static final Item HORN = register("horn", new com.evolvedwarfare.item.DescribedItem(new Item.Settings()));
+	public static final Item TUSK = register("tusk", new com.evolvedwarfare.item.DescribedItem(new Item.Settings()));
+	public static final Item BEAR_CLAW = register("bear_claw", new com.evolvedwarfare.item.DescribedItem(new Item.Settings()
+			.rarity(net.minecraft.util.Rarity.UNCOMMON)));
+	public static final Map<com.evolvedwarfare.wildlife.WildSpecies, Item> WILD_EGGS =
+			new EnumMap<>(com.evolvedwarfare.wildlife.WildSpecies.class);
+
+	static {
+		for (com.evolvedwarfare.wildlife.WildSpecies s : com.evolvedwarfare.wildlife.WildSpecies.values()) {
+			WILD_EGGS.put(s, register(s.id() + "_spawn_egg", new SpawnEggItem(com.evolvedwarfare.wildlife.Wildlife.type(s), s.eggPrimary,
+					s.eggSecondary, new Item.Settings())));
+		}
+	}
+
 	/** Ropa para el clima: piel (abriga) y lino (refresca), cuatro piezas cada una ({@link com.evolvedwarfare.climate.ClimateWearItem}). */
 	public static final Map<com.evolvedwarfare.climate.ClimateWearItem.Kind, List<Item>> CLIMATE_WEAR =
 			new EnumMap<>(com.evolvedwarfare.climate.ClimateWearItem.Kind.class);
@@ -329,6 +355,18 @@ public final class ModItems {
 							tiers.values().forEach(pieces -> pieces.forEach(entries::add));
 						}
 						CLIMATE_WEAR.values().forEach(pieces -> pieces.forEach(entries::add));
+						entries.add(VENISON);
+						entries.add(COOKED_VENISON);
+						entries.add(GAME_MEAT);
+						entries.add(COOKED_GAME_MEAT);
+						entries.add(FOWL);
+						entries.add(COOKED_FOWL);
+						entries.add(FUR_PELT);
+						entries.add(ANTLER);
+						entries.add(HORN);
+						entries.add(TUSK);
+						entries.add(BEAR_CLAW);
+						WILD_EGGS.values().forEach(entries::add);
 						entries.add(TOMATO_SEEDS);
 						entries.add(TOMATO);
 						entries.add(CORN_SEEDS);
