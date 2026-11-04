@@ -210,10 +210,8 @@ public class ThirstGameTests implements FabricGameTest {
 		Thirst.set(player, 0.0F);
 		ItemStack canteen = new ItemStack(ModItems.BOILED_CANTEEN);
 		int sips = 0;
-		// (el jugador de prueba cuenta como creativo: los tragos se cuentan aparte)
 		while (canteen.isOf(ModItems.BOILED_CANTEEN) && sips < 10) {
-			canteen.finishUsing(ctx.getWorld(), player);
-			canteen = com.evolvedwarfare.climate.CanteenItem.afterSip(canteen);
+			canteen = canteen.finishUsing(ctx.getWorld(), player);
 			sips++;
 		}
 		float thirst = Thirst.get(player);
@@ -225,13 +223,15 @@ public class ThirstGameTests implements FabricGameTest {
 		ctx.complete();
 	}
 
-	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 260)
+	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 200)
 	public void parasitesHurt(TestContext ctx) {
 		floor(ctx);
 		ServerPlayerEntity player = player(ctx);
 		Thirst.infect(player);
-		float start = player.getHealth();
-		ctx.waitAndRun(190, () -> {
+		// (el jugador de prueba no avanza sus efectos solo: se le aplica el de cada cinco segundos a mano, pasada la invulnerabilidad)
+		ctx.waitAndRun(80, () -> {
+			float start = player.getHealth();
+			ModEffects.PARASITES.value().applyUpdateEffect(player, 0);
 			LOG.info("[EW-GAMETEST] parásitos: vida {} -> {}", start, player.getHealth());
 			check(player.hasStatusEffect(ModEffects.PARASITES), "Los parásitos se van enseguida");
 			check(player.getHealth() < start, "Los parásitos no quitan vida");

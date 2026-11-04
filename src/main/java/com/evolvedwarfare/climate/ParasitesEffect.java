@@ -17,15 +17,15 @@ public class ParasitesEffect extends StatusEffect {
 
 	@Override
 	public boolean canApplyUpdateEffect(int duration, int amplifier) {
-		return duration % 20 == 0;
+		return duration % 100 == 0;
 	}
 
 	@Override
 	public boolean applyUpdateEffect(LivingEntity entity, int amplifier) {
 		if (entity instanceof PlayerEntity player) {
-			player.addExhaustion(0.35F * (amplifier + 1));
+			player.addExhaustion(1.75F * (amplifier + 1));
 		}
-		if (entity.getWorld() instanceof ServerWorld world && entity.age % 100 < 20 && entity.getHealth() > 1.0F) {
+		if (entity.getWorld() instanceof ServerWorld world && entity.getHealth() > 1.0F) {
 			entity.damage(Thirst.source(world, Thirst.PARASITES), 1.0F);
 		}
 		return true;
