@@ -178,6 +178,11 @@ public final class Thirst {
 		FOODS.put(Items.PUFFERFISH, -3.0F);
 	}
 
+	/** Lo que quita de sed una comida del mod (lo llaman los cultivos). */
+	public static void food(Item item, float thirst) {
+		FOODS.put(item, thirst);
+	}
+
 	/** La sed que quita un frasco de agua sin hervir (el de vanilla) y cualquier otra poción. */
 	public static final float RAW_BOTTLE = 5.0F;
 	public static final float OTHER_POTION = 3.0F;

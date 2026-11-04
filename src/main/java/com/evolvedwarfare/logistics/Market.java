@@ -43,6 +43,12 @@ public final class Market {
 		price(Items.CACTUS, 32, 1);
 		price(Items.BAMBOO, 64, 1);
 		price(Items.NETHER_WART, 22, 1);
+		// los cultivos del mod
+		price(com.evolvedwarfare.registry.ModItems.TOMATO, 18, 1);
+		price(com.evolvedwarfare.registry.ModItems.CORN, 16, 1);
+		price(com.evolvedwarfare.registry.ModItems.CABBAGE, 12, 1);
+		price(com.evolvedwarfare.registry.ModItems.ONION, 20, 1);
+		price(com.evolvedwarfare.registry.ModItems.GARLIC, 20, 1);
 		price(Items.APPLE, 16, 1);
 		price(Items.BREAD, 6, 1);
 		price(Items.HONEY_BOTTLE, 4, 1);

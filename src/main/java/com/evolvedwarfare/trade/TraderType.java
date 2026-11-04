@@ -133,6 +133,11 @@ public enum TraderType {
 					.sell(c, Items.BREAD, 4, 1).sell(c, Items.BAKED_POTATO, 8, 1).sell(c, Items.COOKED_BEEF, 3, 1)
 					.sell(c, Items.COOKED_PORKCHOP, 3, 1).sell(c, Items.COOKED_CHICKEN, 4, 1).sell(c, Items.APPLE, 8, 1)
 					.sell(c, Items.COOKIE, 12, 1).sell(c, Items.CARROT, 16, 1)
+					// semillas para cada estación
+					.sell(c, Items.WHEAT_SEEDS, 16, 1).sell(c, Items.BEETROOT_SEEDS, 16, 1).sell(c, ModItems.TOMATO_SEEDS, 8, 1)
+					.sell(c, ModItems.CORN_SEEDS, 8, 1).sell(c, ModItems.CABBAGE_SEEDS, 8, 1).sell(c, ModItems.ONION, 6, 1)
+					.sell(c, ModItems.GARLIC, 6, 1).sell(u, Items.MELON_SEEDS, 8, 2).sell(u, Items.PUMPKIN_SEEDS, 8, 2)
+					.sell(u, ModItems.VEGETABLE_STEW, 1, 2).sell(c, ModItems.ROASTED_CORN, 4, 1)
 					.sell(u, Items.PUMPKIN_PIE, 3, 1).sell(u, Items.CAKE, 1, 3).sell(u, Items.HONEY_BOTTLE, 2, 1)
 					.sell(c, Items.COOKED_SALMON, 4, 1).sell(u, Items.MUSHROOM_STEW, 1, 1)
 					.sell(r, Items.GOLDEN_CARROT, 3, 2).sell(u, Items.RABBIT_STEW, 1, 2).sell(r, Items.GOLDEN_APPLE, 1, 8)
@@ -143,6 +148,7 @@ public enum TraderType {
 					.buy(u, Items.BEEF, Items.CHICKEN, Items.PORKCHOP, Items.MUTTON, Items.HONEY_BOTTLE, Items.COCOA_BEANS)
 					.buy(r, Items.GLOW_BERRIES, Items.RABBIT)
 					.buy(c, Items.COD, Items.SALMON)
+					.buy(c, ModItems.TOMATO, ModItems.CORN, ModItems.CABBAGE, ModItems.ONION, ModItems.GARLIC)
 					.buy(r, Items.TROPICAL_FISH, Items.PUFFERFISH);
 			case ARMORER -> {
 				b.sell(c, Items.ARROW, 16, 1).sell(c, Items.SHIELD, 1, 3).sell(c, Items.IRON_HELMET, 1, 5)

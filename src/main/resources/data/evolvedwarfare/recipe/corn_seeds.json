@@ -1,0 +1,13 @@
+{
+ "type": "minecraft:crafting_shapeless",
+ "category": "misc",
+ "ingredients": [
+  {
+   "item": "evolvedwarfare:corn"
+  }
+ ],
+ "result": {
+  "id": "evolvedwarfare:corn_seeds",
+  "count": 3
+ }
+}

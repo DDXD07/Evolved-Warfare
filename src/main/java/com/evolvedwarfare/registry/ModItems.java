@@ -178,6 +178,26 @@ public final class ModItems {
 	public static final Item BOILED_CANTEEN = register("boiled_canteen", new com.evolvedwarfare.climate.CanteenItem(
 			com.evolvedwarfare.climate.CanteenItem.Kind.BOILED, new Item.Settings().maxDamage(com.evolvedwarfare.climate.CanteenItem.SIPS)));
 
+	// los cultivos nuevos: semillas, lo cosechado (en 3D), la mazorca asada y el guiso de verduras
+	public static final Item TOMATO_SEEDS = register("tomato_seeds", new net.minecraft.item.AliasedBlockItem(ModBlocks.TOMATOES, new Item.Settings()));
+	public static final Item CORN_SEEDS = register("corn_seeds", new net.minecraft.item.AliasedBlockItem(ModBlocks.CORN, new Item.Settings()));
+	public static final Item CABBAGE_SEEDS = register("cabbage_seeds", new net.minecraft.item.AliasedBlockItem(ModBlocks.CABBAGES, new Item.Settings()));
+	public static final Item TOMATO = register("tomato", new com.evolvedwarfare.item.DescribedItem(new Item.Settings().food(food(3, 0.4F))));
+	public static final Item CORN = register("corn", new com.evolvedwarfare.item.DescribedItem(new Item.Settings().food(food(2, 0.3F))));
+	public static final Item ROASTED_CORN = register("roasted_corn", new Item(new Item.Settings().food(food(6, 0.6F))));
+	public static final Item CABBAGE = register("cabbage", new com.evolvedwarfare.item.DescribedItem(new Item.Settings().food(food(2, 0.4F))));
+	public static final Item ONION = register("onion", new com.evolvedwarfare.item.DescribedAliasedItem(ModBlocks.ONIONS,
+			new Item.Settings().food(food(1, 0.2F)), false));
+	public static final Item GARLIC = register("garlic", new com.evolvedwarfare.item.DescribedAliasedItem(ModBlocks.GARLIC,
+			new Item.Settings().food(food(1, 0.1F)), true));
+	public static final Item VEGETABLE_STEW = register("vegetable_stew", new com.evolvedwarfare.item.DescribedItem(new Item.Settings().maxCount(1)
+			.food(new net.minecraft.component.type.FoodComponent.Builder().nutrition(9).saturationModifier(0.8F)
+					.usingConvertsTo(net.minecraft.item.Items.BOWL).build())));
+
+	private static net.minecraft.component.type.FoodComponent food(int nutrition, float saturation) {
+		return new net.minecraft.component.type.FoodComponent.Builder().nutrition(nutrition).saturationModifier(saturation).build();
+	}
+
 	/** Ropa para el clima: piel (abriga) y lino (refresca), cuatro piezas cada una ({@link com.evolvedwarfare.climate.ClimateWearItem}). */
 	public static final Map<com.evolvedwarfare.climate.ClimateWearItem.Kind, List<Item>> CLIMATE_WEAR =
 			new EnumMap<>(com.evolvedwarfare.climate.ClimateWearItem.Kind.class);
@@ -309,6 +329,16 @@ public final class ModItems {
 							tiers.values().forEach(pieces -> pieces.forEach(entries::add));
 						}
 						CLIMATE_WEAR.values().forEach(pieces -> pieces.forEach(entries::add));
+						entries.add(TOMATO_SEEDS);
+						entries.add(TOMATO);
+						entries.add(CORN_SEEDS);
+						entries.add(CORN);
+						entries.add(ROASTED_CORN);
+						entries.add(CABBAGE_SEEDS);
+						entries.add(CABBAGE);
+						entries.add(ONION);
+						entries.add(GARLIC);
+						entries.add(VEGETABLE_STEW);
 						entries.add(BOILED_WATER);
 						entries.add(MELON_JUICE);
 						entries.add(APPLE_JUICE);

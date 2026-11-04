@@ -31,6 +31,12 @@
     "minecraft:tropical_fish",
     "minecraft:pufferfish",
     "minecraft:cooked_cod",
-    "minecraft:cooked_salmon"
+    "minecraft:cooked_salmon",
+    "evolvedwarfare:tomato",
+    "evolvedwarfare:corn",
+    "evolvedwarfare:cabbage",
+    "evolvedwarfare:onion",
+    "evolvedwarfare:garlic",
+    "evolvedwarfare:roasted_corn"
   ]
 }

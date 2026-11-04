@@ -173,6 +173,18 @@ public final class ModBlocks {
 				.sounds(BlockSoundGroup.WOOD);
 	}
 
+	// los cultivos nuevos (sin objeto propio: se plantan con su semilla, o con la propia cebolla y el ajo)
+	public static final Block TOMATOES = crop("tomatoes", () -> ModItems.TOMATO_SEEDS);
+	public static final Block CORN = crop("corn", () -> ModItems.CORN_SEEDS);
+	public static final Block CABBAGES = crop("cabbages", () -> ModItems.CABBAGE_SEEDS);
+	public static final Block ONIONS = crop("onions", () -> ModItems.ONION);
+	public static final Block GARLIC = crop("garlic", () -> ModItems.GARLIC);
+
+	private static Block crop(String name, java.util.function.Supplier<net.minecraft.item.ItemConvertible> seeds) {
+		return Registry.register(Registries.BLOCK, EvolvedWarfare.id(name), new com.evolvedwarfare.climate.SeasonalCropBlock(
+				AbstractBlock.Settings.copy(net.minecraft.block.Blocks.WHEAT), seeds));
+	}
+
 	private static <B extends Block> B register(String name, B block) {
 		Registry.register(Registries.BLOCK, EvolvedWarfare.id(name), block);
 		Registry.register(Registries.ITEM, EvolvedWarfare.id(name), new BlockItem(block, new Item.Settings()));

@@ -405,7 +405,8 @@ public final class Climate {
 			return;
 		}
 		float body = body(player);
-		if (stack.isOf(Items.MUSHROOM_STEW) || stack.isOf(Items.RABBIT_STEW) || stack.isOf(Items.BEETROOT_SOUP) || stack.isOf(Items.SUSPICIOUS_STEW)) {
+		if (stack.isOf(Items.MUSHROOM_STEW) || stack.isOf(Items.RABBIT_STEW) || stack.isOf(Items.BEETROOT_SOUP) || stack.isOf(Items.SUSPICIOUS_STEW)
+				|| stack.isOf(com.evolvedwarfare.registry.ModItems.VEGETABLE_STEW)) {
 			setBody(player, Math.max(body, Math.min(38.0F, body + 2.0F)));
 		} else if (stack.isOf(Items.HONEY_BOTTLE) || stack.isOf(Items.BAKED_POTATO)) {
 			setBody(player, Math.max(body, Math.min(37.8F, body + 0.6F)));
@@ -484,11 +485,6 @@ public final class Climate {
 		}
 	}
 
-	/** En invierno, los cultivos al raso casi no crecen (los de dentro de un invernadero o bajo techo, sí). */
-	public static boolean frozenCrop(ServerWorld world, BlockPos pos, Random random) {
-		return seasonsEnabled() && world.getRegistryKey() == World.OVERWORLD && season(world) == Season.WINTER && world.isSkyVisible(pos)
-				&& random.nextFloat() < 0.8F;
-	}
 
 	// ------------------------------------------------------------------ colores (cliente)
 

@@ -161,6 +161,10 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 			BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout());
 		}
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.TOWN_HALL, RenderLayer.getCutout());
+		// los cultivos nuevos (y en qué estación crece cada cosa que se planta)
+		BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ModBlocks.TOMATOES, ModBlocks.CORN, ModBlocks.CABBAGES, ModBlocks.ONIONS,
+				ModBlocks.GARLIC);
+		CropTooltips.register();
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.SALES_MAILBOX, RenderLayer.getCutout());
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.WAREHOUSE, RenderLayer.getCutout());
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.PORTCULLIS, RenderLayer.getCutout());

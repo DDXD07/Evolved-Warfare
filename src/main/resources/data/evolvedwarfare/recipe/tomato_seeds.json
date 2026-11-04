@@ -1,0 +1,13 @@
+{
+ "type": "minecraft:crafting_shapeless",
+ "category": "misc",
+ "ingredients": [
+  {
+   "item": "evolvedwarfare:tomato"
+  }
+ ],
+ "result": {
+  "id": "evolvedwarfare:tomato_seeds",
+  "count": 2
+ }
+}

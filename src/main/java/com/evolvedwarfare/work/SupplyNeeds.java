@@ -18,8 +18,8 @@ public final class SupplyNeeds {
 
 	private static final Predicate<ItemStack> BONE_MEAL = s -> s.isOf(Items.BONE_MEAL);
 	private static final Predicate<ItemStack> FUEL = s -> s.isOf(Items.COAL) || s.isOf(Items.CHARCOAL) || s.isOf(Items.COAL_BLOCK);
-	private static final Predicate<ItemStack> SEEDS = s -> s.isOf(Items.WHEAT_SEEDS) || s.isOf(Items.BEETROOT_SEEDS)
-			|| s.isOf(Items.CARROT) || s.isOf(Items.POTATO);
+	/** Todo lo que se planta en tierra de cultivo (también los cultivos del mod). */
+	private static final Predicate<ItemStack> SEEDS = FarmerJob.SEEDS;
 	private static final Predicate<ItemStack> ORES = s -> s.isOf(Items.RAW_IRON) || s.isOf(Items.RAW_GOLD) || s.isOf(Items.RAW_COPPER)
 			|| s.isIn(ItemTags.IRON_ORES) || s.isIn(ItemTags.GOLD_ORES) || s.isIn(ItemTags.COPPER_ORES);
 	private static final Predicate<ItemStack> RAW_FOOD = s -> s.isOf(Items.BEEF) || s.isOf(Items.PORKCHOP) || s.isOf(Items.CHICKEN)

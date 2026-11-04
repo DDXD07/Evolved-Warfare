@@ -1,0 +1,13 @@
+{
+ "type": "minecraft:smoking",
+ "category": "food",
+ "ingredient": {
+  "item": "evolvedwarfare:corn"
+ },
+ "result": {
+  "id": "evolvedwarfare:roasted_corn",
+  "count": 1
+ },
+ "experience": 0.35,
+ "cookingtime": 100
+}

@@ -25,7 +25,8 @@
 			"com.evolvedwarfare.gametest.FactionArmorGameTests",
 			"com.evolvedwarfare.gametest.GateGameTests",
 			"com.evolvedwarfare.gametest.ClassArmorGameTests",
-			"com.evolvedwarfare.gametest.ThirstGameTests"
+			"com.evolvedwarfare.gametest.ThirstGameTests",
+			"com.evolvedwarfare.gametest.CropGameTests"
 		]
 	},
 	"depends": {

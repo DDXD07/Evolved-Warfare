@@ -1,0 +1,30 @@
+{
+ "type": "minecraft:crafting_shapeless",
+ "category": "misc",
+ "ingredients": [
+  {
+   "item": "minecraft:bowl"
+  },
+  {
+   "item": "evolvedwarfare:tomato"
+  },
+  {
+   "item": "evolvedwarfare:cabbage"
+  },
+  {
+   "item": "evolvedwarfare:onion"
+  },
+  [
+   {
+    "item": "minecraft:carrot"
+   },
+   {
+    "item": "minecraft:potato"
+   }
+  ]
+ ],
+ "result": {
+  "id": "evolvedwarfare:vegetable_stew",
+  "count": 1
+ }
+}

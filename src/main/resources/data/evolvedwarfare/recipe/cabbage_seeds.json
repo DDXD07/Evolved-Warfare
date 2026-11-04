@@ -1,0 +1,13 @@
+{
+ "type": "minecraft:crafting_shapeless",
+ "category": "misc",
+ "ingredients": [
+  {
+   "item": "evolvedwarfare:cabbage"
+  }
+ ],
+ "result": {
+  "id": "evolvedwarfare:cabbage_seeds",
+  "count": 2
+ }
+}

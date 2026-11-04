@@ -32,6 +32,7 @@ bloques del mod están plegadas juntas: debajo del nombre solo sale *Mantén Con
 | 11 | **Hordas semanales**: contador de días y reloj en pantalla; cada 7 días una horda de bandidos, vikingos o piratas ataca tu base, en oleadas y cada semana más dura | ✅ Hecha |
 | 14 | **Clima**: estaciones de 91 días que cambian el tiempo, la nieve, el hielo, los cultivos y los colores; temperatura del aire y del cuerpo, hipotermia e hipertermia, ropa de piel y de lino | ✅ Hecha |
 | 15 | **Sed**: medidor de gotas encima del hambre; beber del agua del mundo con las manos (agachado + clic derecho, con animación) con riesgo de **parásitos**; agua **hervida** en el horno, la fogata o un caldero al fuego; cantimplora, zumos, lluvia y comidas con agua | ✅ Hecha |
+| 16 | **Cultivos de temporada**: cada cultivo crece solo en su estación (fuera, bajo techo y despacio); cultivos nuevos (tomate, maíz, col, cebolla y ajo) con sus semillas, y **todos los cultivos y lo cosechado en 3D** | ✅ Hecha |
 | 12 | **Armaduras de las facciones**: 4 por facción (por rango), 12 en total, con modelo 3D; las llevan sus guerreros, se fabrican con ventajas de forja, salen en sus cofres y las vende el armero | ✅ Hecha |
 | 13 | **Armaduras de clase** (arquero, guerrero, ladrón y mosquetero) con aspecto de vanilla, en cuero, cobre, hierro, diamante y netherita; ventajas que suben con el material y desventajas; estadísticas manteniendo R | ✅ Hecha |
 
@@ -1004,7 +1005,7 @@ de arriba a la izquierda se ve la estación y qué día de ella es (*Otoño · d
 | **Primavera** | normal | llueve a menudo; la nieve y el hielo de los biomas templados se **derriten** |
 | **Verano** | +7 °C | días de calor, pocas lluvias, tormentas; la hierba amarillea; deshielo rápido |
 | **Otoño** | −4 °C | **hojas naranjas**, hierba seca, llueve |
-| **Invierno** | −13 °C | **nieva en las llanuras y los bosques** (no en desiertos ni sabanas), **el agua se hiela**, hierba y hojas pardas y los **cultivos al raso casi no crecen** (bajo techo o en un invernadero, sí) |
+| **Invierno** | −13 °C | **nieva en las llanuras y los bosques** (no en desiertos ni sabanas), **el agua se hiela**, hierba y hojas pardas y solo crecen **la col y el ajo** (los demás, bajo techo y despacio: ver *Fase 16*) |
 
 Cada mañana se decide el tiempo del día según la estación (si `doWeatherCycle` está activado).
 
@@ -1046,7 +1047,7 @@ Protegen poco de los golpes (como el cuero). Las armaduras de **cuero** de vanil
 ### Cómo sobrevivir
 - **Invierno**: ropa de piel, una **hoguera** o un **horno encendido** cerca, refugiarse en casa o bajo tierra, no
   mojarse, llevar una antorcha o un farol en la mano y comer **sopas y estofados** (de champiñones, de conejo, de
-  remolacha: +2 °C de golpe). Cultiva bajo techo.
+  remolacha: +2 °C de golpe). En invierno al raso solo crecen la col y el ajo; lo demás, bajo techo.
 - **Verano y desierto**: ropa de lino, sombra o bajo tierra, **bañarse**, beber **botellas de agua** (−1,5 °C) y comer
   **melón** o **bayas**, quitarse la armadura de metal al sol. La **poción de resistencia al fuego** evita el golpe de
   calor (y es casi imprescindible en el **Nether**).
@@ -1093,6 +1094,47 @@ segundos (más si vuelves a beber agua mala). Se curan solos o **bebiendo leche*
 
 **Configuración** (pestaña *Clima*): `thirstEnabled` y `parasiteChance` (probabilidad de parásitos en %, 25).
 
+## Fase 16 — Cultivos de temporada (y en 3D)
+
+**Cada cultivo crece solo en su estación.** Fuera de ella, **al raso no crece** (ni con harina de hueso); **bajo techo**
+(sin cielo encima: un invernadero, un granero, un sótano con luz) crece, pero **a un tercio** de lo normal. Solo en el
+mundo normal y con las estaciones activadas (`seasonsEnabled`); la verruga del Nether crece siempre. En la descripción
+de cada semilla sale en qué estaciones crece.
+
+| Estación | Crece |
+|---|---|
+| **Primavera** | trigo, zanahoria, remolacha, patata, maíz, cebolla, caña de azúcar, cacao, flor de antorcha |
+| **Verano** | patata, maíz, **tomate**, sandía, calabaza, bayas dulces, caña de azúcar, cacao |
+| **Otoño** | trigo, zanahoria, remolacha, cebolla, calabaza, bayas dulces, **col**, **ajo** |
+| **Invierno** | **col** y **ajo** (lo demás, bajo techo) |
+
+**Cultivos nuevos** (se plantan en tierra de cultivo, crecen en ocho edades como el trigo):
+
+| Cultivo | Estación | Cosecha | Semillas |
+|---|---|---|---|
+| **Tomate** (con su caña de apoyo) | verano | tomates (+3 de comida, +3 de sed) | un tomate en la mesa = 2 semillas |
+| **Maíz** (alto, con espiga y mazorca) | primavera y verano | mazorcas; **asada** en el horno, el ahumador o la fogata (+6) | una mazorca = 3 granos |
+| **Col** | otoño e invierno | coles (+2 de sed) | una col = 2 semillas |
+| **Cebolla** | primavera y otoño | cebollas | se planta la cebolla |
+| **Ajo** | otoño e invierno | ajos; **comerlo quita los parásitos** | se planta el ajo |
+
+**Cómo se consiguen las primeras semillas:** **arrancando hierba o helechos** (una de cada 20 veces, sin tijeras),
+según el clima del bioma: tomate y maíz donde hace calor (desierto, sabana, jungla); cebolla, maíz, col y tomate en
+tierras templadas (llanuras, bosques); col y ajo donde hace frío (taiga, nieve, montaña). Y **el tendero** las vende
+todas (y también semillas de trigo, remolacha, sandía y calabaza), y compra lo cosechado (en la Caja de víveres).
+
+**Guiso de verduras**: cuenco, tomate, col, cebolla y una zanahoria o una patata. Alimenta mucho (+9), calienta como
+las sopas y quita la sed (+6). Los cultivos nuevos se compostan y los granjeros los siembran y cosechan como los demás.
+
+**Todo en 3D:** los cultivos de vanilla (trigo, zanahorias, patatas, remolachas, verruga del Nether y arbusto de bayas
+dulces) y los nuevos tienen **modelos de cubos en cada etapa**: el trigo con sus tallos, hojas y espigas que amarillean
+al madurar; las zanahorias con sus matas y la raíz naranja asomando; las patatas en mata con flores y alguna patata en
+la tierra; las remolachas con hojas de nervio rojo y la raíz; la verruga con sus cabezas; el arbusto de bayas en cúpula
+con las bayas verdes y luego rojas; el tomate atado a su caña; el maíz alto con hojas, espiga y mazorca; la col que va
+cerrando su cabeza; la cebolla y el ajo con su bulbo asomando. **Lo cosechado también es 3D** (en la mano, en el suelo,
+en el inventario y en los marcos): trigo en gavilla, zanahoria, patata (cruda, asada y venenosa), remolacha, verruga,
+bayas, tomate, mazorca (y asada), col, cebolla y ajo.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -1111,6 +1153,9 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
   diseños 3D (cubos sobre cabeza, cuerpo, brazos y piernas), las texturas, los iconos, `FactionArmorModels.java`, los
   modelos de objeto, las recetas, las etiquetas y los textos; con `--preview` las dibuja puestas (delante, detrás y
   andando).
+- `ew_crops.py` (+ `ew_model3d.py`) — los cultivos en 3D: los modelos de cubos de cada etapa (los de vanilla los
+  sustituyen) y de lo cosechado, las texturas de materiales, los estados de bloque, el botín, las recetas y los textos; con
+  `--preview` dibuja cada etapa y cada cosecha (con su propio dibujante isométrico con profundidad).
 - `ew_thirst.py` — la sed: el medidor de gotas, el agua en las manos, el icono de los parásitos, la cantimplora, el
   vapor del agua hervida, los modelos (los zumos usan el frasco de vanilla teñido), las recetas, los tipos de daño y los textos.
 - `ew_architect.py` — texturas, modelos y recetas de la mesa del arquitecto, el escáner y el plano.

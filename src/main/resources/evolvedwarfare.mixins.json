@@ -5,7 +5,8 @@
 	"mixins": [
 		"BiomeSeasonMixin",
 		"CraftingScreenHandlerMixin",
-		"CropBlockSeasonMixin",
+		"CropFertilizeSeasonMixin",
+		"CropGrowthSeasonMixin",
 		"HungerManagerThirstMixin",
 		"LivingEntityAccessor",
 		"LivingEntityConsumeMixin",
