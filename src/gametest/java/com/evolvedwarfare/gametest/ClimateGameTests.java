@@ -103,7 +103,7 @@ public class ClimateGameTests implements FabricGameTest {
 		ctx.complete();
 	}
 
-	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 200)
+	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 260)
 	public void hypothermiaHurts(TestContext ctx) {
 		for (int x = 0; x < 5; x++) {
 			for (int z = 0; z < 5; z++) {
@@ -114,7 +114,8 @@ public class ClimateGameTests implements FabricGameTest {
 		player.changeGameMode(GameMode.SURVIVAL);
 		Climate.setBody(player, 32.0F);
 		float start = player.getHealth();
-		ctx.waitAndRun(70, () -> {
+		// (un jugador recién llegado es invulnerable 3 segundos)
+		ctx.waitAndRun(140, () -> {
 			float body = Climate.body(player);
 			LOG.info("[EW-GAMETEST] hipotermia: vida {} -> {}, cuerpo {}", start, player.getHealth(), body);
 			check(player.getHealth() < start, "Con el cuerpo a 32 °C no pierde vida");
