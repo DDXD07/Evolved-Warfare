@@ -1418,5 +1418,18 @@
   "item.evolvedwarfare.antler.desc": "Trophy from deer, moose and reindeer. Ground into bone meal; the furrier buys it.",
   "item.evolvedwarfare.horn.desc": "From bison, mouflon and gazelles. Ground into bone meal; the furrier buys it.",
   "item.evolvedwarfare.tusk.desc": "From wild boars. Ground into bone meal; the furrier buys it.",
-  "item.evolvedwarfare.bear_claw.desc": "Brown bear trophy. The furrier pays a lot for it."
+  "item.evolvedwarfare.bear_claw.desc": "Brown bear trophy. The furrier pays a lot for it.",
+  "message.evolvedwarfare.dismember.right_arm": "You cut off their right arm!",
+  "message.evolvedwarfare.dismember.left_arm": "You cut off their left arm!",
+  "message.evolvedwarfare.dismember.right_leg": "You cut off their right leg!",
+  "message.evolvedwarfare.dismember.left_leg": "You cut off their left leg!",
+  "message.evolvedwarfare.dismember.head": "DECAPITATED!",
+  "death.attack.evolvedwarfare.decapitation": "%1$s was decapitated",
+  "death.attack.evolvedwarfare.decapitation.player": "%1$s was decapitated by %2$s",
+  "death.attack.evolvedwarfare.decapitation.item": "%1$s was decapitated by %2$s using %3$s",
+  "entity.evolvedwarfare.severed_limb": "Severed Limb",
+  "config.evolvedwarfare.dismemberment": "Dismemberment",
+  "config.evolvedwarfare.dismemberment.tip": "Edged weapons can cut off NPCs' arms and legs and, with luck, behead them.",
+  "config.evolvedwarfare.dismembermentChance": "Dismemberment chance",
+  "config.evolvedwarfare.dismembermentChance.tip": "Multiplies the chance of cutting (1 = normal, 0 = never)."
 }

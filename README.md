@@ -34,6 +34,7 @@ bloques del mod están plegadas juntas: debajo del nombre solo sale *Mantén Con
 | 15 | **Sed**: medidor de gotas encima del hambre; beber del agua del mundo con las manos (agachado + clic derecho, con animación) con riesgo de **parásitos**; agua **hervida** en el horno, la fogata o un caldero al fuego; cantimplora, zumos, lluvia y comidas con agua | ✅ Hecha |
 | 16 | **Cultivos de temporada**: cada cultivo crece solo en su estación (fuera, bajo techo y despacio); cultivos nuevos (tomate, maíz, col, cebolla y ajo) con sus semillas, y **todos los cultivos y lo cosechado en 3D** | ✅ Hecha |
 | 17 | **Animales salvajes**: 20 especies (ciervo, corzo, alce, reno, gacela, muflón, bisonte, jabalí, oso pardo, coyote, lince, puma, liebre, ardilla, mapache, tejón, castor, pato, faisán y pavo salvaje) con modelo 3D animado, comportamiento (presas, neutrales y cazadores), cría, y su carne, pieles y trofeos | ✅ Hecha |
+| 18 | **Desmembramiento**: a los NPCs se les pueden cortar brazos y piernas con armas de filo según dónde des, y con suerte decapitarlos; lo cortado sale volando y sin esa parte no pueden hacer lo que la necesita | ✅ Hecha |
 | 12 | **Armaduras de las facciones**: 4 por facción (por rango), 12 en total, con modelo 3D; las llevan sus guerreros, se fabrican con ventajas de forja, salen en sus cofres y las vende el armero | ✅ Hecha |
 | 13 | **Armaduras de clase** (arquero, guerrero, ladrón y mosquetero) con aspecto de vanilla, en cuero, cobre, hierro, diamante y netherita; ventajas que suben con el material y desventajas; estadísticas manteniendo R | ✅ Hecha |
 
@@ -1184,6 +1185,38 @@ cruda puede dar hambre), **piel con pelo** (sirve para la ropa de piel en lugar 
 trofeos (la garra, cara) y vende pieles; las carnes se venden en la Caja de víveres. Cada especie tiene su **huevo de
 aparición** (creativo).
 
+## Fase 18 — Desmembramiento
+
+Con el **daño locacional** se sabe dónde da cada golpe, y a los **NPCs del mod** (reclutas, soldados, guardias,
+trabajadores, comerciantes, bandidos, vikingos y piratas) se les puede **cortar** la parte donde le das:
+
+- **Un brazo o una pierna** (el lado según donde apuntes): la probabilidad sube con lo **cortante del arma** (hacha de
+  batalla y alabarda las que más; mandoble, hachas y espadas; dagas y lanzas menos; martillo y mangual casi nada; los
+  puños, nada), con la **fuerza del golpe** y con lo **herido que esté**. Con una espada de hierro a un NPC sano es algo
+  menos de un 10 % por golpe en un brazo o una pierna; con un hacha de batalla a uno malherido, mucho más. Las balas de
+  mosquete pueden arrancarlo, las jabalinas a veces y las flechas rara vez.
+- **La cabeza**: con un **buen golpe de suerte**, **decapitado** (muere en el acto). Solo con armas de filo y cuerpo a
+  cuerpo; mucho más fácil con un **golpe crítico** (cayendo) y si ya está herido.
+
+Lo cortado **sale volando** (con el aspecto de ese NPC: su ropa y su piel), rueda y queda en el suelo medio minuto; sale
+sangre, suena el tajo, al NPC le queda un **muñón** (carne y hueso) y **sangra** unos segundos. Te avisa: *«¡Le has
+cortado el brazo derecho!»*, *«¡DECAPITADO!»*. Y ya **no puede hacer lo que necesita esa parte**:
+
+| Le falta | Qué le pasa |
+|---|---|
+| **Brazo derecho** | suelta el arma (y no puede coger otra con esa mano); pelea a puñetazos con el otro |
+| **Brazo izquierdo** | suelta el escudo (o lo que lleve en esa mano) |
+| **Un brazo cualquiera** | no puede usar **arco, ballesta ni mosquete** (hacen falta las dos manos) |
+| **Los dos brazos** | no puede **pelear, curar ni trabajar**; **huye** de quien le ataca |
+| **Una pierna** | va al **40 %** de velocidad y **no puede saltar** |
+| **Las dos piernas** | se arrastra (**12 %**) |
+| **La cabeza** | muere |
+
+Es para siempre (se guarda con el NPC y lo ven todos los jugadores). La armadura de lo cortado tampoco se ve.
+
+**Configuración** (pestaña *Combate*): `dismemberment` (activarlo o no) y `dismembermentChance` (multiplica la
+probabilidad: 1 normal, 0 nunca, hasta 5).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -1202,6 +1235,7 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
   diseños 3D (cubos sobre cabeza, cuerpo, brazos y piernas), las texturas, los iconos, `FactionArmorModels.java`, los
   modelos de objeto, las recetas, las etiquetas y los textos; con `--preview` las dibuja puestas (delante, detrás y
   andando).
+- `ew_dismember.py` — el desmembramiento: la textura de los muñones, el tipo de daño de la decapitación y los textos.
 - `ew_wildlife.py` — los animales salvajes: el modelo de cada especie (partes, pivotes y cubos, en JSON que el juego
   lee y anima), su textura pintada con las cuentas de UV de caja, el botín, los objetos de caza, las recetas y los
   textos; con `--preview` los dibuja en 3D.

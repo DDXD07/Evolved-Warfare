@@ -166,6 +166,14 @@ public final class ModEntities {
 		};
 	}
 
+	/** Lo que se corta con el desmembramiento (brazos, piernas, cabezas). */
+	public static final EntityType<com.evolvedwarfare.combat.SeveredLimbEntity> SEVERED_LIMB = Registry.register(Registries.ENTITY_TYPE,
+			EvolvedWarfare.id("severed_limb"),
+			EntityType.Builder.<com.evolvedwarfare.combat.SeveredLimbEntity>create(com.evolvedwarfare.combat.SeveredLimbEntity::new, SpawnGroup.MISC)
+					.dimensions(0.35F, 0.35F)
+					.maxTrackingRange(8)
+					.build("severed_limb"));
+
 	private ModEntities() {
 	}
 

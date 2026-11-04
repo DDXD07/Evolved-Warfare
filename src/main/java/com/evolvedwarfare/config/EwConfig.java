@@ -136,6 +136,10 @@ public final class EwConfig {
 	public double legsDamage = 0.7;
 	/** También a las criaturas con forma de persona de Minecraft (zombis, esqueletos, aldeanos, illagers, piglins...). */
 	public boolean locationalVanillaMobs = false;
+	/** Desmembramiento de los NPCs del mod (cortar brazos y piernas, decapitar). */
+	public boolean dismemberment = true;
+	/** Multiplica la probabilidad de cortar (1 = normal). */
+	public double dismembermentChance = 1.0;
 
 	/** Una opción: nombre del campo, categoría y límites (para el comando y la pantalla). */
 	public record Option(String key, String category, double min, double max, double step) {
@@ -210,7 +214,9 @@ public final class EwConfig {
 			new Option("torsoDamage", "combat", 0.0, 10.0, 0.1),
 			new Option("armsDamage", "combat", 0.0, 10.0, 0.1),
 			new Option("legsDamage", "combat", 0.0, 10.0, 0.1),
-			new Option("locationalVanillaMobs", "combat", 0, 1, 1));
+			new Option("locationalVanillaMobs", "combat", 0, 1, 1),
+			new Option("dismemberment", "combat", 0, 1, 1),
+			new Option("dismembermentChance", "combat", 0.0, 5.0, 0.1));
 
 	public static EwConfig get() {
 		return instance;

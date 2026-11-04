@@ -121,6 +121,10 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 	@Override
 	protected void initGoals() {
 		goalSelector.add(0, new SwimGoal(this));
+		// sin brazos no puede defenderse: huye de quien le ataca
+		goalSelector.add(1, new net.minecraft.entity.ai.goal.FleeEntityGoal<>(this, net.minecraft.entity.LivingEntity.class, 12.0F, 1.0, 1.35,
+				e -> !com.evolvedwarfare.combat.Dismemberment.hasAnArm(this)
+						&& (e == getAttacker() || e == getTarget())));
 		goalSelector.add(1, new LongDoorInteractGoal(this, true));
 		goalSelector.add(2, new FollowOwnerNpcGoal(this, 1.0));
 		goalSelector.add(2, new StayGoal(this));

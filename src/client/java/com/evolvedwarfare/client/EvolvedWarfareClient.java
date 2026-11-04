@@ -167,6 +167,9 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		CropTooltips.register();
 		// los animales salvajes: modelos (de sus JSON), animaciones y texturas
 		com.evolvedwarfare.client.wildlife.WildModels.register();
+		// el desmembramiento: lo que les falta a los NPCs y lo que sale volando
+		com.evolvedwarfare.client.dismember.ClientDismember.register();
+		EntityRendererRegistry.register(ModEntities.SEVERED_LIMB, com.evolvedwarfare.client.dismember.SeveredLimbRenderer::new);
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.SALES_MAILBOX, RenderLayer.getCutout());
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.WAREHOUSE, RenderLayer.getCutout());
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.PORTCULLIS, RenderLayer.getCutout());

@@ -27,7 +27,8 @@
 			"com.evolvedwarfare.gametest.ClassArmorGameTests",
 			"com.evolvedwarfare.gametest.ThirstGameTests",
 			"com.evolvedwarfare.gametest.CropGameTests",
-			"com.evolvedwarfare.gametest.WildlifeGameTests"
+			"com.evolvedwarfare.gametest.WildlifeGameTests",
+			"com.evolvedwarfare.gametest.DismembermentGameTests"
 		]
 	},
 	"depends": {

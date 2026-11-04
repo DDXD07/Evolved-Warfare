@@ -52,6 +52,10 @@ public final class LocationalDamage {
 	private static final double HEAD_BOTTOM = 0.75;
 	private static final double ARMS_FROM = 0.7;
 
+	/** Dónde dio el último golpe que se ha mirado (null: al azar), para saber de qué lado (el desmembramiento). */
+	@Nullable
+	public static Vec3d lastPoint;
+
 	private LocationalDamage() {
 	}
 
@@ -76,8 +80,10 @@ public final class LocationalDamage {
 		if (direct instanceof SiegeShotEntity) {
 			return null;
 		}
+		lastPoint = null;
 		if (direct instanceof ProjectileEntity projectile) {
 			Vec3d point = projectileHit(target, projectile);
+			lastPoint = point;
 			return point == null ? HitZone.TORSO : zoneAt(target, point);
 		}
 		boolean melee = source.isOf(DamageTypes.PLAYER_ATTACK) || source.isOf(DamageTypes.MOB_ATTACK)
@@ -87,6 +93,7 @@ public final class LocationalDamage {
 		}
 		if (attacker instanceof PlayerEntity player) {
 			Vec3d point = aimHit(target, player);
+			lastPoint = point;
 			return point == null ? HitZone.TORSO : zoneAt(target, point);
 		}
 		float roll = target.getRandom().nextFloat();

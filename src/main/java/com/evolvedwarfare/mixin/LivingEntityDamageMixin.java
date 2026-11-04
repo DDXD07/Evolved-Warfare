@@ -23,12 +23,16 @@ public abstract class LivingEntityDamageMixin {
 	private HitZone evolvedwarfare$zone;
 	@Unique
 	private float evolvedwarfare$amount;
+	@Unique
+	private net.minecraft.util.math.Vec3d evolvedwarfare$point;
 
 	@ModifyVariable(method = "damage", at = @At("HEAD"), argsOnly = true)
 	private float evolvedwarfare$locational(float amount, DamageSource source) {
 		LivingEntity self = (LivingEntity) (Object) this;
+		LocationalDamage.lastPoint = null;
 		HitZone zone = LocationalDamage.zoneOf(self, source);
 		evolvedwarfare$zone = zone;
+		evolvedwarfare$point = LocationalDamage.lastPoint;
 		float out = zone == null ? amount : amount * zone.multiplier();
 		out = SkillEffects.modifyDamage(self, source, out, zone);
 		out = com.evolvedwarfare.weapon.HeavyAttack.modify(source, out);
@@ -41,6 +45,8 @@ public abstract class LivingEntityDamageMixin {
 	private void evolvedwarfare$afterDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
 		HitZone zone = evolvedwarfare$zone;
 		float dealt = evolvedwarfare$amount;
+		net.minecraft.util.math.Vec3d point = evolvedwarfare$point;
+		evolvedwarfare$point = null;
 		evolvedwarfare$zone = null;
 		evolvedwarfare$amount = 0.0F;
 		if (zone == HitZone.HEAD && cir.getReturnValueZ()) {
@@ -49,6 +55,7 @@ public abstract class LivingEntityDamageMixin {
 		if (cir.getReturnValueZ()) {
 			SkillEffects.afterDamage((LivingEntity) (Object) this, source, dealt, zone);
 			com.evolvedwarfare.world.city.CityLaw.onDamaged((LivingEntity) (Object) this, source);
+			com.evolvedwarfare.combat.Dismemberment.afterHit((LivingEntity) (Object) this, source, zone, dealt, point);
 		}
 	}
 }

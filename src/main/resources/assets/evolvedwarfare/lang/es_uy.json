@@ -1418,5 +1418,18 @@
   "item.evolvedwarfare.antler.desc": "Trofeo de ciervos, alces y renos. Molido da harina de hueso; el peletero lo compra.",
   "item.evolvedwarfare.horn.desc": "De bisontes, muflones y gacelas. Molido da harina de hueso; el peletero lo compra.",
   "item.evolvedwarfare.tusk.desc": "Del jabalí. Molido da harina de hueso; el peletero lo compra.",
-  "item.evolvedwarfare.bear_claw.desc": "Trofeo del oso pardo. El peletero paga mucho por ella."
+  "item.evolvedwarfare.bear_claw.desc": "Trofeo del oso pardo. El peletero paga mucho por ella.",
+  "message.evolvedwarfare.dismember.right_arm": "¡Le has cortado el brazo derecho!",
+  "message.evolvedwarfare.dismember.left_arm": "¡Le has cortado el brazo izquierdo!",
+  "message.evolvedwarfare.dismember.right_leg": "¡Le has cortado la pierna derecha!",
+  "message.evolvedwarfare.dismember.left_leg": "¡Le has cortado la pierna izquierda!",
+  "message.evolvedwarfare.dismember.head": "¡DECAPITADO!",
+  "death.attack.evolvedwarfare.decapitation": "%1$s fue decapitado",
+  "death.attack.evolvedwarfare.decapitation.player": "%1$s fue decapitado por %2$s",
+  "death.attack.evolvedwarfare.decapitation.item": "%1$s fue decapitado por %2$s con %3$s",
+  "entity.evolvedwarfare.severed_limb": "Miembro cortado",
+  "config.evolvedwarfare.dismemberment": "Desmembramiento",
+  "config.evolvedwarfare.dismemberment.tip": "Con armas de filo se pueden cortar brazos y piernas a los NPCs y, con suerte, decapitarlos.",
+  "config.evolvedwarfare.dismembermentChance": "Probabilidad de desmembrar",
+  "config.evolvedwarfare.dismembermentChance.tip": "Multiplica la probabilidad de cortar (1 = normal, 0 = nunca)."
 }

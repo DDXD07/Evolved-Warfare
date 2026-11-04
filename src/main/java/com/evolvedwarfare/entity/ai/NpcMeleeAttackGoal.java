@@ -22,6 +22,9 @@ public class NpcMeleeAttackGoal extends MeleeAttackGoal {
 	}
 
 	private boolean usable() {
+		if (!com.evolvedwarfare.combat.Dismemberment.hasAnArm(fighter)) {
+			return false; // sin brazos no puede pelear
+		}
 		NpcRole.Kind kind = npc.getRole().kind();
 		return switch (kind) {
 			case MELEE -> true;

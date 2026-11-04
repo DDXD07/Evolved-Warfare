@@ -57,7 +57,7 @@ public class HealAlliesGoal extends Goal {
 
 	@Override
 	public boolean canStart() {
-		if (npc.getRole().kind() != NpcRole.Kind.HEALER || --scanTimer > 0) {
+		if (npc.getRole().kind() != NpcRole.Kind.HEALER || !com.evolvedwarfare.combat.Dismemberment.hasAnArm(medic) || --scanTimer > 0) {
 			return false;
 		}
 		scanTimer = 20;

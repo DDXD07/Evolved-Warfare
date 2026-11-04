@@ -81,6 +81,9 @@ public final class FactionArmorRenderer implements ArmorRenderer {
 				stack.hasGlint());
 		for (String name : parts(slot)) {
 			ModelPart part = root.getChild(name);
+			if (!follow(contextModel, name).visible) {
+				continue; // esa parte del cuerpo se la han cortado
+			}
 			part.copyTransform(follow(contextModel, name));
 			part.render(matrices, vertices, light, OverlayTexture.DEFAULT_UV);
 		}

@@ -25,6 +25,8 @@ public abstract class NpcBipedRenderer<T extends MobEntity> extends BipedEntityR
 				new ArmorEntityModel<>(context.getPart(ModModelLayers.NPC_INNER_ARMOR)),
 				new ArmorEntityModel<>(context.getPart(ModModelLayers.NPC_OUTER_ARMOR)),
 				context.getModelManager()));
+		// los muñones de lo que le hayan cortado
+		addFeature(new com.evolvedwarfare.client.dismember.StumpFeatureRenderer<>(this));
 	}
 
 	@Override
@@ -46,6 +48,12 @@ public abstract class NpcBipedRenderer<T extends MobEntity> extends BipedEntityR
 		}
 		model.rightArmPose = right;
 		model.leftArmPose = left;
+		// lo que le hayan cortado no se dibuja
+		int severed = com.evolvedwarfare.client.dismember.ClientDismember.mask(entity);
+		com.evolvedwarfare.client.dismember.ClientDismember.apply(model, severed);
 		super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
+		if (severed != 0) {
+			com.evolvedwarfare.client.dismember.ClientDismember.apply(model, 0);
+		}
 	}
 }

@@ -54,7 +54,8 @@ public class NpcRangedAttackGoal extends Goal {
 	@Override
 	public boolean canStart() {
 		LivingEntity target = shooter.getTarget();
-		if (!(bow() || crossbow()) || target == null || !target.isAlive()) {
+		// el arco y la ballesta necesitan las dos manos
+		if (!(bow() || crossbow()) || target == null || !target.isAlive() || !com.evolvedwarfare.combat.Dismemberment.hasBothArms(shooter)) {
 			return false;
 		}
 		if (!npc.withinLeash(target.getPos())) {

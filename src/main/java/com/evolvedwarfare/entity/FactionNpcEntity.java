@@ -151,6 +151,10 @@ public abstract class FactionNpcEntity extends HostileEntity implements CombatNp
 	@Override
 	protected void initGoals() {
 		goalSelector.add(0, new SwimGoal(this));
+		// sin brazos no puede defenderse: huye de quien le ataca
+		goalSelector.add(1, new net.minecraft.entity.ai.goal.FleeEntityGoal<>(this, net.minecraft.entity.LivingEntity.class, 12.0F, 1.0, 1.35,
+				e -> !com.evolvedwarfare.combat.Dismemberment.hasAnArm(this)
+						&& (e == getAttacker() || e == getTarget())));
 		goalSelector.add(2, new NpcRangedAttackGoal(this));
 		goalSelector.add(2, new NpcMeleeAttackGoal(this, 1.15));
 		goalSelector.add(2, new HealAlliesGoal(this));

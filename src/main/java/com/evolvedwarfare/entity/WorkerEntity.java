@@ -135,7 +135,7 @@ public class WorkerEntity extends AbstractNpcEntity {
 
 	/** ¿Puede trabajar ahora? Si no, deja el motivo en su estado. */
 	public boolean mayWork() {
-		if (sitePos == null) {
+		if (sitePos == null || !com.evolvedwarfare.combat.Dismemberment.hasAnArm(this)) {
 			return false;
 		}
 		if (getOrder() != NpcOrder.HOME) {
