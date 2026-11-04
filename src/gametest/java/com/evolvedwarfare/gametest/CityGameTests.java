@@ -111,11 +111,11 @@ public class CityGameTests implements FabricGameTest {
 	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 600)
 	public void tradersSleepAtNightAndWorkByDay(TestContext ctx) {
 		TraderEntity trader = shopkeeper(ctx, new BlockPos(1, 1, 1), new BlockPos(5, 1, 5));
-		TraderEntity.forceBedtime = true;
+		trader.forceBedtime = true;
 		final int[] slept = {-1};
 		watchSleep(ctx, trader, slept, 0);
 		ctx.waitAndRun(400, () -> {
-			TraderEntity.forceBedtime = null;
+			trader.forceBedtime = null;
 			BlockPos counter = trader.getCounter();
 			double dist = Math.sqrt(trader.squaredDistanceTo(counter.getX() + 0.5, counter.getY(), counter.getZ() + 0.5));
 			LOG.info("[EW-GAMETEST] mercader: se durmió en el tic {}; luego, despierto={} a {} del mostrador", slept[0], !trader.isSleeping(), dist);
@@ -131,7 +131,7 @@ public class CityGameTests implements FabricGameTest {
 	private static void watchSleep(TestContext ctx, TraderEntity trader, int[] slept, int tick) {
 		if (slept[0] < 0 && trader.isSleeping()) {
 			slept[0] = tick;
-			TraderEntity.forceBedtime = false;
+			trader.forceBedtime = false;
 			return;
 		}
 		if (tick < 380) {

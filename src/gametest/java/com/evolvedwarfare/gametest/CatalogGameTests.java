@@ -79,11 +79,11 @@ public class CatalogGameTests implements FabricGameTest {
 		trader.interact(player, Hand.MAIN_HAND);
 		boolean viaTrader = player.currentScreenHandler instanceof CatalogScreenHandler h2 && ctx.getAbsolutePos(book).equals(h2.book());
 		player.closeHandledScreen();
-		TraderEntity.forceBedtime = true;
+		trader.forceBedtime = true;
 		trader.sleep(ctx.getAbsolutePos(new BlockPos(0, 1, 2)));
 		ctx.useBlock(book, player);
 		boolean closedAtNight = !(player.currentScreenHandler instanceof CatalogScreenHandler);
-		TraderEntity.forceBedtime = null;
+		trader.forceBedtime = null;
 		trader.wakeUp();
 		LOG.info("[EW-GAMETEST] catálogo: por el libro {}, hablando {}, de noche cerrado {}", viaBook, viaTrader, closedAtNight);
 		check(viaBook, "El libro no abre el catálogo del joyero (con el sitio del libro)");

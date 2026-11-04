@@ -195,16 +195,24 @@ public class TraderEntity extends MerchantEntity {
 		return bed;
 	}
 
-	/** Para las pruebas: fuerza la noche (true) o el día (false); null = la hora del mundo. */
+	/**
+	 * Para las pruebas: a este mercader le fuerza la noche (true) o el día (false); null = la hora del mundo. Es de cada
+	 * uno (no de todos) para que las pruebas que corren a la vez no se pisen.
+	 */
 	@Nullable
-	public static Boolean forceBedtime;
+	public Boolean forceBedtime;
 
-	/** ¿Es de noche (hora de dormir)? */
-	public static boolean bedtime(World world) {
+	/** ¿Es de noche (hora de dormir) para él? */
+	private boolean bedtime(World world) {
 		if (forceBedtime != null) {
 			return forceBedtime;
 		}
-		long t = Math.floorMod(world.getTimeOfDay(), 24000L);
+		return bedtime(world.getTimeOfDay());
+	}
+
+	/** ¿Es hora de dormir a esa hora del día? */
+	public static boolean bedtime(long timeOfDay) {
+		long t = Math.floorMod(timeOfDay, 24000L);
 		return t >= 12500L && t < 23400L;
 	}
 
