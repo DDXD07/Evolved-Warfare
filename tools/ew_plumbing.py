@@ -129,8 +129,8 @@ TEXTS = {
     "message.evolvedwarfare.faucet.dry": ("No llega agua (¿falta la toma, o hay que bombear?)", "No water comes out (no intake, or it needs pumping?)"),
     "message.evolvedwarfare.pump.charge": ("Bombeado: %s/%s capas", "Pumped: %s/%s layers"),
     "config.evolvedwarfare.realisticFluids": ("Agua y lava realistas", "Realistic water and lava"),
-    "config.evolvedwarfare.realisticFluids.tip": ("El agua y la lava no se crean ni se destruyen: un cubo son 8 capas que se extienden, sacar agua baja el nivel del lago. El mar, los ríos y los pantanos son infinitos.",
-                                                  "Water and lava are neither created nor destroyed: a bucket is 8 layers that spread out, taking water lowers the lake. Oceans, rivers and swamps are infinite."),
+    "config.evolvedwarfare.realisticFluids.tip": ("El agua y la lava no se crean ni se destruyen: un bloque tiene 25 capas y un cubo lleva 4, que se extienden, sacar agua baja el nivel del lago. El mar, los ríos y los pantanos son infinitos.",
+                                                  "Water and lava are neither created nor destroyed: a block holds 25 layers and a bucket carries 4, which spread out, taking water lowers the lake. Oceans, rivers and swamps are infinite."),
 }
 
 

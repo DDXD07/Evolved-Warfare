@@ -16,7 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-/** El grifo abierto: cada medio segundo pasa una capa de agua de la toma a lo que tenga debajo (3 capas = un nivel del caldero). */
+/** El grifo abierto: cada medio segundo pasa una capa de agua de la toma a lo que tenga debajo (cada capa, un nivel del caldero: un cubo, 4 capas, lo llena). */
 public class FaucetBlockEntity extends BlockEntity {
 	public static final int PERIOD = 10;
 	private int cauldronUnits;
@@ -42,7 +42,7 @@ public class FaucetBlockEntity extends BlockEntity {
 		}
 		BlockState below = world.getBlockState(out);
 		if (below.isOf(Blocks.CAULDRON) || below.isOf(Blocks.WATER_CAULDRON)) {
-			if (++cauldronUnits >= 3) {
+			if (++cauldronUnits >= 1) {
 				cauldronUnits = 0;
 				int level = below.isOf(Blocks.WATER_CAULDRON) ? below.get(LeveledCauldronBlock.LEVEL) + 1 : 1;
 				world.setBlockState(out, Blocks.WATER_CAULDRON.getDefaultState().with(LeveledCauldronBlock.LEVEL, Math.min(3, level)));

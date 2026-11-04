@@ -28,7 +28,7 @@ public abstract class GlassBottleFiniteMixin {
 		HitResult hit = world.raycast(new RaycastContext(user.getEyePos(), user.getEyePos().add(user.getRotationVec(1.0F).multiply(user.getBlockInteractionRange())),
 				RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.SOURCE_ONLY, user));
 		if (hit instanceof BlockHitResult b && hit.getType() == HitResult.Type.BLOCK && world.getFluidState(b.getBlockPos()).isIn(FluidTags.WATER)
-				&& world.canPlayerModifyAt(user, b.getBlockPos()) && !FiniteFluids.drain(world, b.getBlockPos(), Fluids.WATER, 2)) {
+				&& world.canPlayerModifyAt(user, b.getBlockPos()) && !FiniteFluids.drain(world, b.getBlockPos(), Fluids.WATER, FiniteFluids.BOTTLE)) {
 			cir.setReturnValue(TypedActionResult.fail(user.getStackInHand(hand)));
 		}
 	}

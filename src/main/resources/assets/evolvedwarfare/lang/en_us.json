@@ -1438,5 +1438,5 @@
   "message.evolvedwarfare.faucet.dry": "No water comes out (no intake, or it needs pumping?)",
   "message.evolvedwarfare.pump.charge": "Pumped: %s/%s layers",
   "config.evolvedwarfare.realisticFluids": "Realistic water and lava",
-  "config.evolvedwarfare.realisticFluids.tip": "Water and lava are neither created nor destroyed: a bucket is 8 layers that spread out, taking water lowers the lake. Oceans, rivers and swamps are infinite."
+  "config.evolvedwarfare.realisticFluids.tip": "Water and lava are neither created nor destroyed: a block holds 25 layers and a bucket carries 4, which spread out, taking water lowers the lake. Oceans, rivers and swamps are infinite."
 }

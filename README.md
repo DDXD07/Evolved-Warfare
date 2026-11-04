@@ -1222,15 +1222,15 @@ probabilidad: 1 normal, 0 nunca, hasta 5).
 
 ## Fase 19 — Agua y lava realistas, tuberías y grifo
 
-El agua y la lava ya **no se crean ni se destruyen**: cada bloque tiene de **1 a 8 capas** (8 = bloque lleno), y el
+El agua y la lava ya **no se crean ni se destruyen**: cada bloque tiene de **1 a 25 capas** (25 = bloque lleno), y el
 líquido cae, se reparte por los lados hasta quedar casi plano y se va por los bordes.
 
-- **Un cubo de agua o de lava = 8 capas** (un bloque). Echado en un sitio cerrado se **extiende en una capa fina** por
+- **Un cubo de agua o de lava = 4 capas** (de las 25 de un bloque). Echado en un sitio cerrado se **extiende en una capa fina** por
   toda la superficie; en un llano se escurre y se queda en charcos. Ya **no se pueden hacer ríos** ni cascadas infinitas.
-- **Sacar un cubo de un lago** no deja un agujero: se lleva **8 capas de la superficie** de todo el cuerpo de agua (un
-  poco de cada bloque de arriba) y el nivel baja. Un estanque de 6x6 de dos de hondo se vacía con **72 cubos**; un lago
-  grande dura muchísimo. Un frasco de cristal se lleva 2 capas, la cantimplora 4 y beber del mundo 1.
-- **Dos fuentes no crean una tercera.** Un charco de menos de 8 capas no llena un cubo.
+- **Sacar un cubo de un lago** no deja un agujero: se lleva **4 capas de la superficie** de todo el cuerpo de agua (un
+  poco de cada bloque de arriba) y el nivel baja. Un estanque de 6x6 de dos de hondo se vacía con unos **450 cubos**; un lago
+  grande dura muchísimo. Un frasco de cristal se lleva 1 capa, la cantimplora 2 y beber del mundo 1.
+- **Dos fuentes no crean una tercera.** Un charco de menos de 4 capas no llena un cubo.
 - **Infinitos**: el **mar** (océanos), los **ríos** y los **pantanos** por debajo del nivel del mar siempre se
   rellenan; y la lava del mar de lava del **Nether**. Los bloques anegados (escalones, vallas... con agua) no sueltan su
   agua.
@@ -1245,8 +1245,8 @@ líquido cae, se reparte por los lados hasta quedar casi plano y se va por los b
   el cubo.
 - **Cuesta abajo, gratis**: si la toma está más alta que el grifo, el agua baja sola por gravedad.
 - **Cuesta arriba, con bomba**: si el grifo está **más alto** que el agua, pon una **bomba de mano** en la tubería y dale
-  a la palanca (clic derecho, varias veces): cada golpe sube un poco de agua (lo que cabe en medio cubo), hasta 8 cubos
-  guardados.
+  a la palanca (clic derecho, varias veces): cada golpe sube un poco de agua (medio cubo, 2 capas), hasta 8 cubos (32
+  capas) guardados.
 
 **Configuración** (pestaña *Clima*): `realisticFluids` (desactívalo para volver al agua de siempre).
 

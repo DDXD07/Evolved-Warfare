@@ -9,8 +9,8 @@ import net.minecraft.util.math.BlockPos;
 
 /** Lo bombeado que queda (capas de agua que se pueden subir). */
 public class HandPumpBlockEntity extends BlockEntity {
-	public static final int MAX = 64;
-	public static final int PER_STROKE = 4;
+	public static final int MAX = 32;
+	public static final int PER_STROKE = 2;
 	private int charge;
 	private long lastStroke = -100L;
 

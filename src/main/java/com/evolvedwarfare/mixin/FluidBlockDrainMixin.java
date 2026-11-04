@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
- * Agua y lava realistas: el cubo no se lleva el bloque que miras, sino 8 capas de la superficie de todo el cuerpo de
+ * Agua y lava realistas: el cubo no se lleva el bloque que miras, sino 4 capas (de 25 que tiene un bloque) de la superficie de todo el cuerpo de
  * líquido (que baja un poco); si no hay bastante, no se llena. En el mar y los ríos, como siempre.
  */
 @Mixin(FluidBlock.class)
@@ -27,6 +27,6 @@ public abstract class FluidBlockDrainMixin {
 				|| !state.getFluidState().isStill() || FiniteFluids.isInfinite(world, pos, fluid)) {
 			return;
 		}
-		cir.setReturnValue(FiniteFluids.drain(world, pos, fluid, FiniteFluids.FULL) ? new ItemStack(fluid.getBucketItem()) : ItemStack.EMPTY);
+		cir.setReturnValue(FiniteFluids.drain(world, pos, fluid, FiniteFluids.BUCKET) ? new ItemStack(fluid.getBucketItem()) : ItemStack.EMPTY);
 	}
 }

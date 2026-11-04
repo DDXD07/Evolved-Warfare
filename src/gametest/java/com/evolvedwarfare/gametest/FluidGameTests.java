@@ -68,12 +68,12 @@ public class FluidGameTests implements FabricGameTest {
 		ServerWorld world = ctx.getWorld();
 		BlockPos center = ctx.getAbsolutePos(new BlockPos(3, 1, 3));
 		check(!FiniteFluids.isInfinite(world, center, Fluids.WATER), "La zona de pruebas cuenta como mar");
-		FiniteFluids.setAmount(world, center, Fluids.WATER, FiniteFluids.FULL);
+		FiniteFluids.setAmount(world, center, Fluids.WATER, FiniteFluids.BUCKET);
 		ctx.waitAndRun(200, () -> {
 			int total = total(ctx, 6, 2);
 			int top = max(ctx, 6);
 			LOG.info("[EW-GAMETEST] un cubo en el suelo: {} capas en total, el bloque más alto {}", total, top);
-			check(total == 8, "El agua se ha creado o perdido: " + total);
+			check(total == FiniteFluids.BUCKET, "El agua se ha creado o perdido: " + total);
 			check(top <= 2, "El agua no se ha extendido: " + top);
 			ctx.complete();
 		});
@@ -92,11 +92,11 @@ public class FluidGameTests implements FabricGameTest {
 		}
 		BlockPos at = ctx.getAbsolutePos(new BlockPos(3, 2, 3));
 		int before = total(ctx, 6, 2);
-		boolean first = FiniteFluids.drain(world, at, Fluids.WATER, 8);
+		boolean first = FiniteFluids.drain(world, at, Fluids.WATER, FiniteFluids.BUCKET);
 		int after = total(ctx, 6, 2);
-		boolean clicked = FiniteFluids.amountAt(world, at, Fluids.WATER) >= 7;
+		boolean clicked = FiniteFluids.amountAt(world, at, Fluids.WATER) >= FiniteFluids.FULL - 1;
 		int buckets = 1;
-		while (buckets < 200) {
+		while (buckets < 1000) {
 			BlockPos wet = null;
 			for (int x = 1; x <= 6 && wet == null; x++) {
 				for (int z = 1; z <= 6 && wet == null; z++) {
@@ -108,7 +108,7 @@ public class FluidGameTests implements FabricGameTest {
 					}
 				}
 			}
-			if (wet == null || !FiniteFluids.drain(world, wet, Fluids.WATER, 8)) {
+			if (wet == null || !FiniteFluids.drain(world, wet, Fluids.WATER, FiniteFluids.BUCKET)) {
 				break;
 			}
 			buckets++;
@@ -116,9 +116,9 @@ public class FluidGameTests implements FabricGameTest {
 		int left = total(ctx, 6, 2);
 		LOG.info("[EW-GAMETEST] estanque de 6x6x2: {} capas -> un cubo {} -> {} (el bloque mirado sigue {}); {} cubos en total, quedan {}", before, first,
 				after, clicked, buckets, left);
-		check(before == 576 && first && after == 568, "Un cubo no se lleva 8 capas: " + before + " -> " + after);
+		check(before == 1800 && first && after == 1796, "Un cubo no se lleva 8 capas: " + before + " -> " + after);
 		check(clicked, "El cubo ha hecho un agujero en vez de bajar el nivel");
-		check(buckets * 8 + left == 576 && buckets >= 66, "No se vacía en unos 72 cubos: " + buckets + ", quedan " + left);
+		check(buckets * 4 + left == 1800 && buckets >= 420, "No se vacía en unos 450 cubos: " + buckets + ", quedan " + left);
 		ctx.complete();
 	}
 
@@ -126,12 +126,12 @@ public class FluidGameTests implements FabricGameTest {
 	public void noInfiniteSources(TestContext ctx) {
 		basin(ctx, 3, 1);
 		ServerWorld world = ctx.getWorld();
-		FiniteFluids.setAmount(world, ctx.getAbsolutePos(new BlockPos(1, 1, 2)), Fluids.WATER, 8);
-		FiniteFluids.setAmount(world, ctx.getAbsolutePos(new BlockPos(3, 1, 2)), Fluids.WATER, 8);
+		FiniteFluids.setAmount(world, ctx.getAbsolutePos(new BlockPos(1, 1, 2)), Fluids.WATER, FiniteFluids.FULL);
+		FiniteFluids.setAmount(world, ctx.getAbsolutePos(new BlockPos(3, 1, 2)), Fluids.WATER, FiniteFluids.FULL);
 		ctx.waitAndRun(120, () -> {
 			int total = total(ctx, 3, 1);
 			LOG.info("[EW-GAMETEST] dos fuentes con un hueco: {} capas", total);
-			check(total == 16, "Dos fuentes han creado agua (o se ha perdido): " + total);
+			check(total == 2 * FiniteFluids.FULL, "Dos fuentes han creado agua (o se ha perdido): " + total);
 			ctx.complete();
 		});
 	}
@@ -165,9 +165,9 @@ public class FluidGameTests implements FabricGameTest {
 			var state = ctx.getBlockState(cauldron);
 			int level = state.isOf(Blocks.WATER_CAULDRON) ? state.get(LeveledCauldronBlock.LEVEL) : 0;
 			int pool = total(ctx, 3, 2);
-			LOG.info("[EW-GAMETEST] grifo: caldero a nivel {}, al pilón le quedan {} de 144 capas", level, pool);
+			LOG.info("[EW-GAMETEST] grifo: caldero a nivel {}, al pilón le quedan {} de 450 capas", level, pool);
 			check(level >= 2, "El grifo no llena el caldero: " + state);
-			check(pool < 144 && pool > 100, "El agua del grifo no sale del pilón: " + pool);
+			check(pool < 450 && pool > 400, "El agua del grifo no sale del pilón: " + pool);
 			ctx.complete();
 		});
 	}

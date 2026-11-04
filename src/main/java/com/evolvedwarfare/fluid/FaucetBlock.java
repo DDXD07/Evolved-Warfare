@@ -120,7 +120,7 @@ public class FaucetBlock extends BlockWithEntity {
 		return ActionResult.success(world.isClient);
 	}
 
-	/** Un cubo, un frasco o una cantimplora vacíos se llenan en el grifo (8, 2 y 4 capas). */
+	/** Un cubo, un frasco o una cantimplora vacíos se llenan en el grifo (4, 1 y 2 capas). */
 	@Override
 	protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
 			BlockHitResult hit) {
@@ -128,13 +128,13 @@ public class FaucetBlock extends BlockWithEntity {
 		int units;
 		if (stack.isOf(Items.BUCKET)) {
 			filled = new ItemStack(Items.WATER_BUCKET);
-			units = 8;
+			units = FiniteFluids.BUCKET;
 		} else if (stack.isOf(Items.GLASS_BOTTLE)) {
 			filled = PotionContentsComponent.createStack(Items.POTION, Potions.WATER);
-			units = 2;
+			units = FiniteFluids.BOTTLE;
 		} else if (stack.isOf(ModItems.CANTEEN) || stack.isOf(ModItems.WATER_CANTEEN) && stack.getDamage() > 0) {
 			filled = new ItemStack(ModItems.WATER_CANTEEN);
-			units = 4;
+			units = FiniteFluids.CANTEEN;
 		} else {
 			return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
 		}

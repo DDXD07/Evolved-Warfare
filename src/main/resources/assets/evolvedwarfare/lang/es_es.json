@@ -1438,5 +1438,5 @@
   "message.evolvedwarfare.faucet.dry": "No llega agua (¿falta la toma, o hay que bombear?)",
   "message.evolvedwarfare.pump.charge": "Bombeado: %s/%s capas",
   "config.evolvedwarfare.realisticFluids": "Agua y lava realistas",
-  "config.evolvedwarfare.realisticFluids.tip": "El agua y la lava no se crean ni se destruyen: un cubo son 8 capas que se extienden, sacar agua baja el nivel del lago. El mar, los ríos y los pantanos son infinitos."
+  "config.evolvedwarfare.realisticFluids.tip": "El agua y la lava no se crean ni se destruyen: un bloque tiene 25 capas y un cubo lleva 4, que se extienden, sacar agua baja el nivel del lago. El mar, los ríos y los pantanos son infinitos."
 }

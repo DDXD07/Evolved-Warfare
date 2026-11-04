@@ -26,13 +26,13 @@ import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 
 /**
- * Agua y lava realistas: cada bloque de líquido tiene una cantidad, de 1 a 8 capas (8 = bloque lleno), y el líquido
+ * Agua y lava realistas: cada bloque de líquido tiene una cantidad, de 1 a 25 capas (25 = bloque lleno), y el líquido
  * <b>no se crea ni se destruye</b>: cae, se reparte por los lados hasta quedar casi plano y, si hay un borde, se va por
  * él. Así:
  * <ul>
- * <li>Un cubo de agua o de lava son <b>8 capas</b>: echado en el suelo se extiende en una capa fina por toda la
+ * <li>Un cubo de agua o de lava son <b>4 capas</b>: echado en el suelo se extiende en una capa fina por toda la
  * superficie cercana (si está cerrada), y no hace ríos infinitos.</li>
- * <li>Sacar un cubo de un lago no deja un agujero: se lleva <b>8 capas de la superficie</b> de todo el lago (un poco de
+ * <li>Sacar un cubo de un lago no deja un agujero: se lleva <b>4 capas de la superficie</b> de todo el lago (un poco de
  * cada bloque de arriba), y el nivel baja. Un estanque de 6x6 se vacía con unos cuantos cubos; un lago grande, con
  * muchísimos.</li>
  * <li>Ya no hay fuentes infinitas (dos fuentes no crean una tercera).</li>
@@ -42,7 +42,11 @@ import net.minecraft.registry.entry.RegistryEntry;
  * Los bloques anegados (escalones, vallas... con agua) no sueltan su agua.
  */
 public final class FiniteFluids {
-	public static final int FULL = 8;
+	public static final int FULL = 25;
+	/** Lo que lleva un cubo. */
+	public static final int BUCKET = 4;
+	public static final int BOTTLE = 1;
+	public static final int CANTEEN = 2;
 	/** Lo más lejos que se busca por un cuerpo de líquido al sacar de él (bloques). */
 	private static final int SEARCH = 4096;
 
@@ -67,7 +71,17 @@ public final class FiniteFluids {
 			if (!fs.getFluid().matchesType(fluid) || !(state.getBlock() instanceof FluidBlock)) {
 				return -1;
 			}
-			return fs.isStill() ? FULL : Math.max(1, Math.min(7, fs.getLevel()));
+			if (fs.isStill()) {
+				return FULL;
+			}
+			int level = Math.max(1, Math.min(7, fs.getLevel()));
+			if (world instanceof net.minecraft.server.world.ServerWorld sw) {
+				int stored = FluidUnits.get(sw).get(pos);
+				if (stored > 0 && levelOf(stored) == level) {
+					return stored;
+				}
+			}
+			return Math.max(1, Math.min(FULL - 1, Math.round(level * FULL / 8.0F)));
 		}
 		if (state.isAir()) {
 			return 0;
@@ -76,6 +90,11 @@ public final class FiniteFluids {
 			return 0;
 		}
 		return -1;
+	}
+
+	/** La altura que enseña el bloque (1 a 7) con esas capas (1 a 24). */
+	public static int levelOf(int units) {
+		return Math.max(1, Math.min(7, (units * 8 + FULL - 1) / FULL));
 	}
 
 	/** Lo que cabe todavía en ese sitio (0 si nada). */
@@ -110,7 +129,10 @@ public final class FiniteFluids {
 		} else if (amount >= FULL) {
 			next = flowable.getStill(false).getBlockState();
 		} else {
-			next = flowable.getFlowing(amount, false).getBlockState();
+			next = flowable.getFlowing(levelOf(amount), false).getBlockState();
+		}
+		if (world instanceof net.minecraft.server.world.ServerWorld sw) {
+			FluidUnits.get(sw).set(pos, amount);
 		}
 		if (old == next) {
 			return;
@@ -182,11 +204,18 @@ public final class FiniteFluids {
 					continue;
 				}
 				boolean edge = na == 0 && room(world, n.down(), fluid) > 0;
-				boolean give = a - na >= 2 || edge || (a - na == 1 && lower(world, n, na, pos, fluid));
-				if (give) {
-					add(world, n, fluid, 1);
+				int give = 0;
+				if (edge) {
+					give = Math.max(1, a / 2);
+				} else if (a - na >= 2) {
+					give = Math.max(1, (a - na) / 3);
+				} else if (a - na == 1 && lower(world, n, na, pos, fluid)) {
+					give = 1;
+				}
+				if (give > 0) {
+					give = add(world, n, fluid, Math.min(give, a));
 					if (!infinite) {
-						a--;
+						a -= give;
 					}
 					moved = true;
 				}
