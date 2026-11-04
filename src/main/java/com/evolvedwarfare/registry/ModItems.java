@@ -340,6 +340,9 @@ public final class ModItems {
 						entries.add(ModBlocks.CROP_CRATE_ITEM);
 						entries.add(ModBlocks.SALES_MAILBOX);
 						entries.add(ModBlocks.TRADER_CATALOG);
+						entries.add(ModBlocks.PIPE);
+						entries.add(ModBlocks.FAUCET);
+						entries.add(ModBlocks.HAND_PUMP);
 						entries.add(CART_WHEEL);
 						entries.add(CART_BED);
 						entries.add(CART);

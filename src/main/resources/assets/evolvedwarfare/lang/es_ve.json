@@ -1431,5 +1431,12 @@
   "config.evolvedwarfare.dismemberment": "Desmembramiento",
   "config.evolvedwarfare.dismemberment.tip": "Con armas de filo se pueden cortar brazos y piernas a los NPCs y, con suerte, decapitarlos.",
   "config.evolvedwarfare.dismembermentChance": "Probabilidad de desmembrar",
-  "config.evolvedwarfare.dismembermentChance.tip": "Multiplica la probabilidad de cortar (1 = normal, 0 = nunca)."
+  "config.evolvedwarfare.dismembermentChance.tip": "Multiplica la probabilidad de cortar (1 = normal, 0 = nunca).",
+  "block.evolvedwarfare.pipe": "Tubería de cobre",
+  "block.evolvedwarfare.faucet": "Grifo de palanca",
+  "block.evolvedwarfare.hand_pump": "Bomba de mano",
+  "message.evolvedwarfare.faucet.dry": "No llega agua (¿falta la toma, o hay que bombear?)",
+  "message.evolvedwarfare.pump.charge": "Bombeado: %s/%s capas",
+  "config.evolvedwarfare.realisticFluids": "Agua y lava realistas",
+  "config.evolvedwarfare.realisticFluids.tip": "El agua y la lava no se crean ni se destruyen: un cubo son 8 capas que se extienden, sacar agua baja el nivel del lago. El mar, los ríos y los pantanos son infinitos."
 }

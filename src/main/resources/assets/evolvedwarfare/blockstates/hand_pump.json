@@ -1,0 +1,34 @@
+{
+ "variants": {
+  "facing=north,stroke=true": {
+   "model": "evolvedwarfare:block/hand_pump_stroke"
+  },
+  "facing=north,stroke=false": {
+   "model": "evolvedwarfare:block/hand_pump"
+  },
+  "facing=east,stroke=true": {
+   "model": "evolvedwarfare:block/hand_pump_stroke",
+   "y": 90
+  },
+  "facing=east,stroke=false": {
+   "model": "evolvedwarfare:block/hand_pump",
+   "y": 90
+  },
+  "facing=south,stroke=true": {
+   "model": "evolvedwarfare:block/hand_pump_stroke",
+   "y": 180
+  },
+  "facing=south,stroke=false": {
+   "model": "evolvedwarfare:block/hand_pump",
+   "y": 180
+  },
+  "facing=west,stroke=true": {
+   "model": "evolvedwarfare:block/hand_pump_stroke",
+   "y": 270
+  },
+  "facing=west,stroke=false": {
+   "model": "evolvedwarfare:block/hand_pump",
+   "y": 270
+  }
+ }
+}

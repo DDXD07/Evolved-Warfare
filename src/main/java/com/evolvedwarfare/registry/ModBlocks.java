@@ -173,6 +173,20 @@ public final class ModBlocks {
 				.sounds(BlockSoundGroup.WOOD);
 	}
 
+	// el agua por tuberías: tubería de cobre, grifo de palanca y bomba de mano
+	public static final Block PIPE = register("pipe", new com.evolvedwarfare.fluid.PipeBlock(AbstractBlock.Settings.create()
+			.mapColor(MapColor.ORANGE).strength(2.0F, 6.0F).sounds(BlockSoundGroup.COPPER).nonOpaque().requiresTool()));
+	public static final Block FAUCET = register("faucet", new com.evolvedwarfare.fluid.FaucetBlock(AbstractBlock.Settings.create()
+			.mapColor(MapColor.GOLD).strength(1.5F, 6.0F).sounds(BlockSoundGroup.COPPER).nonOpaque()));
+	public static final Block HAND_PUMP = register("hand_pump", new com.evolvedwarfare.fluid.HandPumpBlock(AbstractBlock.Settings.create()
+			.mapColor(MapColor.IRON_GRAY).strength(2.5F, 6.0F).sounds(BlockSoundGroup.METAL).nonOpaque().requiresTool()));
+	public static final BlockEntityType<com.evolvedwarfare.fluid.FaucetBlockEntity> FAUCET_ENTITY = Registry.register(
+			Registries.BLOCK_ENTITY_TYPE, EvolvedWarfare.id("faucet"),
+			BlockEntityType.Builder.create(com.evolvedwarfare.fluid.FaucetBlockEntity::new, FAUCET).build(null));
+	public static final BlockEntityType<com.evolvedwarfare.fluid.HandPumpBlockEntity> HAND_PUMP_ENTITY = Registry.register(
+			Registries.BLOCK_ENTITY_TYPE, EvolvedWarfare.id("hand_pump"),
+			BlockEntityType.Builder.create(com.evolvedwarfare.fluid.HandPumpBlockEntity::new, HAND_PUMP).build(null));
+
 	// los cultivos nuevos (sin objeto propio: se plantan con su semilla, o con la propia cebolla y el ajo)
 	public static final Block TOMATOES = crop("tomatoes", () -> ModItems.TOMATO_SEEDS);
 	public static final Block CORN = crop("corn", () -> ModItems.CORN_SEEDS);

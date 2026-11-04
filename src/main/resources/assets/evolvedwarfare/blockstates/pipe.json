@@ -1,0 +1,62 @@
+{
+ "multipart": [
+  {
+   "apply": {
+    "model": "evolvedwarfare:block/pipe_core"
+   }
+  },
+  {
+   "when": {
+    "north": "true"
+   },
+   "apply": {
+    "model": "evolvedwarfare:block/pipe_side"
+   }
+  },
+  {
+   "when": {
+    "east": "true"
+   },
+   "apply": {
+    "model": "evolvedwarfare:block/pipe_side",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "south": "true"
+   },
+   "apply": {
+    "model": "evolvedwarfare:block/pipe_side",
+    "y": 180
+   }
+  },
+  {
+   "when": {
+    "west": "true"
+   },
+   "apply": {
+    "model": "evolvedwarfare:block/pipe_side",
+    "y": 270
+   }
+  },
+  {
+   "when": {
+    "up": "true"
+   },
+   "apply": {
+    "model": "evolvedwarfare:block/pipe_side",
+    "x": 270
+   }
+  },
+  {
+   "when": {
+    "down": "true"
+   },
+   "apply": {
+    "model": "evolvedwarfare:block/pipe_side",
+    "x": 90
+   }
+  }
+ ]
+}

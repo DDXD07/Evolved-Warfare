@@ -1,0 +1,23 @@
+{
+ "type": "minecraft:crafting_shaped",
+ "category": "building",
+ "pattern": [
+  " L ",
+  "CPC"
+ ],
+ "key": {
+  "L": {
+   "item": "minecraft:lever"
+  },
+  "C": {
+   "item": "minecraft:copper_ingot"
+  },
+  "P": {
+   "item": "evolvedwarfare:pipe"
+  }
+ },
+ "result": {
+  "id": "evolvedwarfare:faucet",
+  "count": 1
+ }
+}

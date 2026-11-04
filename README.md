@@ -1220,6 +1220,36 @@ Es para siempre (se guarda con el NPC y lo ven todos los jugadores). La armadura
 **Configuración** (pestaña *Combate*): `dismemberment` (activarlo o no) y `dismembermentChance` (multiplica la
 probabilidad: 1 normal, 0 nunca, hasta 5).
 
+## Fase 19 — Agua y lava realistas, tuberías y grifo
+
+El agua y la lava ya **no se crean ni se destruyen**: cada bloque tiene de **1 a 8 capas** (8 = bloque lleno), y el
+líquido cae, se reparte por los lados hasta quedar casi plano y se va por los bordes.
+
+- **Un cubo de agua o de lava = 8 capas** (un bloque). Echado en un sitio cerrado se **extiende en una capa fina** por
+  toda la superficie; en un llano se escurre y se queda en charcos. Ya **no se pueden hacer ríos** ni cascadas infinitas.
+- **Sacar un cubo de un lago** no deja un agujero: se lleva **8 capas de la superficie** de todo el cuerpo de agua (un
+  poco de cada bloque de arriba) y el nivel baja. Un estanque de 6x6 de dos de hondo se vacía con **72 cubos**; un lago
+  grande dura muchísimo. Un frasco de cristal se lleva 2 capas, la cantimplora 4 y beber del mundo 1.
+- **Dos fuentes no crean una tercera.** Un charco de menos de 8 capas no llena un cubo.
+- **Infinitos**: el **mar** (océanos), los **ríos** y los **pantanos** por debajo del nivel del mar siempre se
+  rellenan; y la lava del mar de lava del **Nether**. Los bloques anegados (escalones, vallas... con agua) no sueltan su
+  agua.
+
+### Tuberías, grifo y bomba
+
+- **Tubería** (cobre): se une sola a otras tuberías, a bombas, al grifo y al agua. Pon un extremo **tocando el agua** de
+  un lago o un pozo (esa es la **toma**) y llévala hasta donde quieras.
+- **Grifo de palanca** (latón): ponlo en el extremo de la tubería. **Clic derecho** a la palanca: se abre o se cierra.
+  Abierto, **echa agua debajo** (en un caldero lo va llenando; en el suelo hace un charco). Con un **cubo, un frasco o
+  la cantimplora** en la mano, los **llenas** directamente. El agua **sale del lago** de la toma: se gasta igual que con
+  el cubo.
+- **Cuesta abajo, gratis**: si la toma está más alta que el grifo, el agua baja sola por gravedad.
+- **Cuesta arriba, con bomba**: si el grifo está **más alto** que el agua, pon una **bomba de mano** en la tubería y dale
+  a la palanca (clic derecho, varias veces): cada golpe sube un poco de agua (lo que cabe en medio cubo), hasta 8 cubos
+  guardados.
+
+**Configuración** (pestaña *Clima*): `realisticFluids` (desactívalo para volver al agua de siempre).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -1238,6 +1268,7 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
   diseños 3D (cubos sobre cabeza, cuerpo, brazos y piernas), las texturas, los iconos, `FactionArmorModels.java`, los
   modelos de objeto, las recetas, las etiquetas y los textos; con `--preview` las dibuja puestas (delante, detrás y
   andando).
+- `ew_plumbing.py` — las tuberías, el grifo de palanca y la bomba de mano: texturas, modelos 3D, estados, recetas, botín y textos.
 - `ew_dismember.py` — el desmembramiento: la textura de los muñones, el tipo de daño de la decapitación y los textos.
 - `ew_wildlife.py` — los animales salvajes: el modelo de cada especie (partes, pivotes y cubos, en JSON que el juego
   lee y anima), su textura pintada con las cuentas de UV de caja, el botín, los objetos de caza, las recetas y los

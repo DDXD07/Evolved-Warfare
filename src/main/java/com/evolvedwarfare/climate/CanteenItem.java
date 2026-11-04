@@ -70,6 +70,10 @@ public class CanteenItem extends Item {
 			BlockHitResult hit = raycast(world, user, RaycastContext.FluidHandling.SOURCE_ONLY);
 			if (hit.getType() == HitResult.Type.BLOCK && world.getFluidState(hit.getBlockPos()).isIn(FluidTags.WATER)) {
 				BlockPos pos = hit.getBlockPos();
+				// agua realista: se lleva 4 capas (fuera del mar y los ríos)
+				if (!world.isClient && !com.evolvedwarfare.fluid.FiniteFluids.drain(world, pos, net.minecraft.fluid.Fluids.WATER, 4)) {
+					return TypedActionResult.fail(stack);
+				}
 				world.playSound(user, user.getX(), user.getY(), user.getZ(), SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.NEUTRAL, 1.0F, 0.9F);
 				world.emitGameEvent(user, GameEvent.FLUID_PICKUP, pos);
 				user.incrementStat(Stats.USED.getOrCreateStat(this));

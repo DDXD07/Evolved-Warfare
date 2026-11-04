@@ -76,6 +76,8 @@ public final class EwConfig {
 	public boolean temperatureFahrenheit = false;
 	/** La temperatura del cuerpo encima de los corazones (cada jugador, en su juego). */
 	public boolean showBodyTemperature = true;
+	/** Agua y lava realistas: no se crean ni se destruyen (solo el mar, los ríos y los pantanos son infinitos). */
+	public boolean realisticFluids = true;
 	/** La sed (y su medidor encima del hambre). */
 	public boolean thirstEnabled = true;
 	/** Probabilidad (%) de coger parásitos al beber agua sin hervir. */
@@ -189,6 +191,7 @@ public final class EwConfig {
 			new Option("temperatureFahrenheit", "climate", 0, 1, 1),
 			new Option("showBodyTemperature", "climate", 0, 1, 1),
 			new Option("thirstEnabled", "climate", 0, 1, 1),
+			new Option("realisticFluids", "climate", 0, 1, 1),
 			new Option("parasiteChance", "climate", 0, 100, 5),
 			new Option("settlementBonusPerLevel", "settlements", 0.0, 1.0, 0.01),
 			new Option("settlementBlocksPerLevel", "settlements", 100, 100000, 50),

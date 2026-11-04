@@ -416,6 +416,10 @@ public final class Thirst {
 			player.sendMessage(Text.translatable("message.evolvedwarfare.thirst.full"), true);
 			return false;
 		}
+		if (source == Source.WORLD && at != null) {
+			// agua realista: un trago con las manos se lleva una capa
+			com.evolvedwarfare.fluid.FiniteFluids.drain(player.getWorld(), at, net.minecraft.fluid.Fluids.WATER, 1);
+		}
 		DRINKING.put(player.getUuid(), new Drinking(source, player.getPos(), at));
 		DrinkPosePayload pose = new DrinkPosePayload(player.getId(), source.pose);
 		send(player, pose);

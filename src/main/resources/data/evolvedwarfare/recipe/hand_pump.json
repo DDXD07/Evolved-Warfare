@@ -1,0 +1,24 @@
+{
+ "type": "minecraft:crafting_shaped",
+ "category": "building",
+ "pattern": [
+  " L ",
+  " I ",
+  "IPI"
+ ],
+ "key": {
+  "L": {
+   "item": "minecraft:lever"
+  },
+  "I": {
+   "item": "minecraft:iron_ingot"
+  },
+  "P": {
+   "item": "evolvedwarfare:pipe"
+  }
+ },
+ "result": {
+  "id": "evolvedwarfare:hand_pump",
+  "count": 1
+ }
+}

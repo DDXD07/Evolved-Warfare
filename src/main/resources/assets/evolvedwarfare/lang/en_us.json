@@ -1431,5 +1431,12 @@
   "config.evolvedwarfare.dismemberment": "Dismemberment",
   "config.evolvedwarfare.dismemberment.tip": "Edged weapons can cut off NPCs' arms and legs and, with luck, behead them.",
   "config.evolvedwarfare.dismembermentChance": "Dismemberment chance",
-  "config.evolvedwarfare.dismembermentChance.tip": "Multiplies the chance of cutting (1 = normal, 0 = never)."
+  "config.evolvedwarfare.dismembermentChance.tip": "Multiplies the chance of cutting (1 = normal, 0 = never).",
+  "block.evolvedwarfare.pipe": "Copper Pipe",
+  "block.evolvedwarfare.faucet": "Lever Faucet",
+  "block.evolvedwarfare.hand_pump": "Hand Pump",
+  "message.evolvedwarfare.faucet.dry": "No water comes out (no intake, or it needs pumping?)",
+  "message.evolvedwarfare.pump.charge": "Pumped: %s/%s layers",
+  "config.evolvedwarfare.realisticFluids": "Realistic water and lava",
+  "config.evolvedwarfare.realisticFluids.tip": "Water and lava are neither created nor destroyed: a bucket is 8 layers that spread out, taking water lowers the lake. Oceans, rivers and swamps are infinite."
 }
