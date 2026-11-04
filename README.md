@@ -246,20 +246,23 @@ Un oficio más (puesto con una esmeralda). Hace dos cosas:
 
 Todas las facciones son enemigas entre sí: si se cruzan, pelean.
 
-**Voces**: cada facción tiene la suya, propia del mod (ya no suenan como saqueadores, vindicadores o aldeanos). Cada NPC
-tiene además su tono, un poco más grave o más agudo, que no cambia.
+**Voces**: cada facción tiene la suya, propia del mod, hecha para sonar a **persona** y no a máquina: cada vibración de
+la voz es un pulso de aire distinto (el tono y el volumen tiemblan como en una voz de verdad), se oye el **aliento**, el
+tono deriva y cae al final, la voz **cruje** al apagarse y la boca pasa de un sonido a otro sin saltos. Casi todo son
+ruidos sin palabras, cortos y variados (cinco de cada para hablar, tres quejas y dos muertes por facción), con un poco
+de sala. Cada NPC tiene además su tono, un poco más grave o más agudo, que no cambia. Suenan a un **75 %** del volumen
+de antes.
 
-| Quién | Su voz | Al recibir un golpe |
-|---|---|---|
-| **Bandidos** | Voz ronca y con mucho aliento: risitas entre dientes, bufidos, un «eeeh…» desconfiado | «¡Ugh!», «¡agh!» |
-| **Vikingos** | La más grave, de pecho y rota: gritos de guerra cortos («¡huu!», «¡ja-joo!») y gruñidos | «¡Raagh!», «¡ohh!» |
-| **Piratas** | Áspera, con la erre vibrante: «¡arrr!», «¡yo-jo!» y risotadas | «¡Argh!», «¡au!» |
-| **Tu gente** (reclutas, soldados y trabajadores) | Tranquila: «¿mm?», «mm-jm» y resoplidos | «¡Uf!», «¡ah!» |
-| **Comerciantes** | Amable: «hmmm…» pensando un precio, «¡a-já!», «mm-mm» | «¡Oh!», «¡ay!» |
+| Quién | Su voz | Al recibir un golpe | Al morir |
+|---|---|---|---|
+| **Bandidos** | Ronca y con mucho aire: risitas entre dientes, bufidos por la nariz, resoplidos, una tos, un «¿eh?» seco | «¡ugh!», «¡agh!», «¡uf!» | un «¡aagh…!» que se quiebra y se apaga |
+| **Vikingos** | La más grave, de pecho: carcajadas, gruñidos, carraspeos, un «¡hoo!» de llamada, suspiros | «¡aah!», «¡ohh!», «¡uf!» | igual, más grave |
+| **Piratas** | Áspera: «¡arrr!» con la erre, risotadas, risitas, tos de ron, bufidos | «¡argh!», «¡agh!», «¡uf!» | un «¡aagh…!» roto |
+| **Tu gente** (reclutas, soldados y trabajadores) | Tranquila: «¿mm?», «mm-hm», suspiros de cansancio, carraspeos, «mmm» pensando | «¡uf!», «¡ah!», «¡ugh!» | un «¡ah…!» que se apaga |
+| **Comerciantes** | Amable: «hmmm…» pensando un precio, «¡a-já!», «mm-hm», una risita, «¿eh?» | «¡oh!», «¡ay!», «¡uf!» | un «¡oh…!» que se apaga |
 
-Al morir se quejan más grave. Los reclutas dicen «mm-jm» al contratarlos; los comerciantes, «¡a-já!» al cerrar un trato
-y «mm-mm» cuando no sale. Las facciones hablan cada 8 s o más; tu gente, cada 15; los comerciantes, cada 10. Todas
-tienen subtítulos.
+Los reclutas dicen «mm-hm» al contratarlos; los comerciantes, «¡a-já!» al cerrar un trato y «mm-mm» cuando no sale.
+Las facciones hablan cada 8 s o más; tu gente, cada 15; los comerciantes, cada 10. Todas tienen subtítulos.
 
 **Asentamiento vikingo** (taigas y nieve): casa larga del jarl con hogar alargado, trono, bancos y cabezas de dragón en
 el tejado; alrededor, cabañas, herrería, círculo de piedras rúnicas, atalaya, leñera y un **drakkar** varado con vela a
@@ -1264,7 +1267,7 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
 - `ew_musket.py` (+ `ew_musket_preview.py`) — el mosquete en 3D: piezas, textura, la clase `MusketModel.java` y vistas
   previas de la recarga y el disparo en primera y tercera persona.
 - `ew_sounds.py` — sonidos sintetizados del mosquete (`.ogg`).
-- `ew_voices.py` — las voces de los NPCs, sintetizadas por formantes (un timbre por facción, sus frases y quejas), sus
+- `ew_voices.py` — las voces de los NPCs, sintetizadas como una voz humana (pulsos de glotis con temblor, aliento, fritura vocal y la boca que se mueve; un timbre por facción, sus ruidos, quejas y muertes), sus
   entradas en `sounds.json` y los subtítulos; con `--preview carpeta` dibuja el espectrograma de cada voz.
 - `ew_pouch.py` — iconos de la Bolsa de Gloria y de la bolsa de munición.
 - `ew_cart.py` — la carreta: iconos de la rueda, la plancha y la carreta, la pantalla de la carga vista desde arriba, las
