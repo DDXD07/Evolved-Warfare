@@ -69,6 +69,8 @@ public final class ClientThirst {
 		color(ModItems.BOILED_WATER, 0xA6DDF5);
 		color(ModItems.MELON_JUICE, 0xE8454E);
 		color(ModItems.APPLE_JUICE, 0xE6AE3C);
+		color(ModItems.LEMONADE, 0xF4EC9A);
+		color(ModItems.ORANGE_JUICE, 0xF59A1E);
 		color(ModItems.BERRY_JUICE, 0x8E1838);
 		DrinkAnimation.register();
 	}

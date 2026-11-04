@@ -167,6 +167,14 @@ public final class ModEntities {
 	}
 
 	/** Lo que se corta con el desmembramiento (brazos, piernas, cabezas). */
+	public static final EntityType<com.evolvedwarfare.wood.FallingTreeEntity> FALLING_TREE = Registry.register(Registries.ENTITY_TYPE,
+			EvolvedWarfare.id("falling_tree"),
+			EntityType.Builder.<com.evolvedwarfare.wood.FallingTreeEntity>create(com.evolvedwarfare.wood.FallingTreeEntity::new, SpawnGroup.MISC)
+					.dimensions(0.5F, 0.5F)
+					.maxTrackingRange(10)
+					.trackingTickInterval(20)
+					.build("falling_tree"));
+
 	public static final EntityType<com.evolvedwarfare.combat.SeveredLimbEntity> SEVERED_LIMB = Registry.register(Registries.ENTITY_TYPE,
 			EvolvedWarfare.id("severed_limb"),
 			EntityType.Builder.<com.evolvedwarfare.combat.SeveredLimbEntity>create(com.evolvedwarfare.combat.SeveredLimbEntity::new, SpawnGroup.MISC)

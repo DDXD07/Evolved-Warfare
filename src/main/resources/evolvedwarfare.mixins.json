@@ -22,6 +22,7 @@
 		"LivingEntitySwingMixin",
 		"MobEntityGoalsAccessor",
 		"MobEntityDismemberMixin",
+		"PlayerEntityLogAxeMixin",
 		"PlayerEntitySkillMixin",
 		"PlayerEntityThirstMixin",
 		"PoolStructurePieceAccessor",

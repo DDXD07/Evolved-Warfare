@@ -88,6 +88,10 @@ public final class EwConfig {
 	public boolean showBodyTemperature = true;
 	/** Agua y lava realistas: no se crean ni se destruyen (solo el mar, los ríos y los pantanos son infinitos). */
 	public boolean realisticFluids = true;
+	/** Los troncos solo se talan con hacha (no con la mano). */
+	public boolean axeForLogs = true;
+	/** Al talar uno de los dos primeros troncos de un árbol, cae entero (agachado, solo ese tronco). */
+	public boolean treeFelling = true;
 	/** La sed (y su medidor encima del hambre). */
 	public boolean thirstEnabled = true;
 	/** Probabilidad (%) de coger parásitos al beber agua sin hervir. */
@@ -207,6 +211,8 @@ public final class EwConfig {
 			new Option("showBodyTemperature", "climate", 0, 1, 1),
 			new Option("thirstEnabled", "climate", 0, 1, 1),
 			new Option("realisticFluids", "climate", 0, 1, 1),
+			new Option("axeForLogs", "climate", 0, 1, 1),
+			new Option("treeFelling", "climate", 0, 1, 1),
 			new Option("parasiteChance", "climate", 0, 100, 5),
 			new Option("settlementBonusPerLevel", "settlements", 0.0, 1.0, 0.01),
 			new Option("settlementBlocksPerLevel", "settlements", 100, 100000, 50),

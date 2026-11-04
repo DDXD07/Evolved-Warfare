@@ -173,5 +173,17 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.SALES_MAILBOX, RenderLayer.getCutout());
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.WAREHOUSE, RenderLayer.getCutout());
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.PORTCULLIS, RenderLayer.getCutout());
+		// la tala (el árbol que cae) y los frutales (hojas con el color del bioma, fruta en 3D)
+		EntityRendererRegistry.register(ModEntities.FALLING_TREE, com.evolvedwarfare.client.wood.FallingTreeRenderer::new);
+		for (com.evolvedwarfare.orchard.FruitKind kind : com.evolvedwarfare.orchard.FruitKind.values()) {
+			Block leaves = ModBlocks.FRUIT_LEAVES.get(kind);
+			BlockRenderLayerMap.INSTANCE.putBlock(leaves, RenderLayer.getCutoutMipped());
+			BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.FRUIT_SAPLINGS.get(kind), RenderLayer.getCutout());
+			net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry.BLOCK.register((state, world, pos, tint) -> tint != 0 ? -1
+					: world != null && pos != null ? net.minecraft.client.color.world.BiomeColors.getFoliageColor(world, pos)
+					: net.minecraft.world.biome.FoliageColors.getDefaultColor(), leaves);
+			net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry.ITEM.register((stack, tint) -> tint != 0 ? -1
+					: 0xFF000000 | net.minecraft.world.biome.FoliageColors.getDefaultColor(), leaves);
+		}
 	}
 }

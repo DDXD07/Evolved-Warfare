@@ -1,0 +1,6 @@
+{
+ "parent": "minecraft:block/cross",
+ "textures": {
+  "cross": "evolvedwarfare:block/apple_sapling"
+ }
+}

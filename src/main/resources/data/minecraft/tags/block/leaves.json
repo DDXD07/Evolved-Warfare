@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "evolvedwarfare:apple_leaves",
+    "evolvedwarfare:pear_leaves",
+    "evolvedwarfare:plum_leaves",
+    "evolvedwarfare:peach_leaves",
+    "evolvedwarfare:lemon_leaves",
+    "evolvedwarfare:orange_leaves"
+  ]
+}

@@ -30,7 +30,8 @@
 			"com.evolvedwarfare.gametest.WildlifeGameTests",
 			"com.evolvedwarfare.gametest.DismembermentGameTests",
 			"com.evolvedwarfare.gametest.FluidGameTests",
-			"com.evolvedwarfare.gametest.NightGameTests"
+			"com.evolvedwarfare.gametest.NightGameTests",
+			"com.evolvedwarfare.gametest.WoodGameTests"
 		]
 	},
 	"depends": {

@@ -1282,6 +1282,49 @@ Al amanecer avisa, y **al anochecer (19:00)** una **horda de al menos 15 zombis*
 **Configuración** (pestaña *Hordas*): `nightHostility`, `zombieHordeEveryDays` (0 = nunca), `zombieHordeSize`
 (mínimo 15), `zombieBreakBlocks` y `zombieInfectionChance` (%).
 
+## Fase 21 — Tala con hacha, árboles que caen y frutales
+
+### Solo con hacha
+- Los **troncos solo se talan con un hacha**: con la mano (o con un pico, una pala...) no se rompen. Te lo recuerda al
+  intentarlo. En creativo, como siempre.
+- **La primera hacha**: rompe hojas con la mano (sueltan **palos** a menudo, uno de cada cuatro) y:
+  - **4 palos** (en cuadro de 2x2) = **1 losa de roble**.
+  - **2 losas de roble**, una encima de otra = **1 bloque de tablones de roble** (la madera refinada).
+  - O, más rápido: **sílex + 2 palos** (en columna) = **hacha de sílex** (como la de madera, dura 48 usos). El sílex sale
+    de la grava.
+
+### Los árboles caen enteros
+Al talar **uno de los dos primeros troncos** de un árbol, el árbol **cae entero** hacia donde miras, con su copa,
+**girando sobre la base, cada vez más deprisa**. Al tocar el suelo suena, salen astillas y hojas, suelta **toda su
+madera** (y lo que den sus hojas: brotes, palos, manzanas, fruta madura) donde ha caído cada bloque, y **hace daño a quien
+pille debajo**. El hacha se gasta un poco más (un uso por cada 3 troncos).
+
+- **Agachado**, se tala solo ese tronco.
+- Solo caen los árboles de verdad (con hojas naturales): una casa o un poste de troncos no se cae.
+- Si talas el segundo tronco, el primero queda como **tocón**.
+
+### Frutales
+Seis árboles frutales, con su **fruta en 3D colgando de las hojas**:
+
+| Árbol | Fruta | Dónde sale | Madura en |
+|---|---|---|---|
+| **Manzano** | manzana | bosques, llanuras, praderas | primavera a otoño |
+| **Peral** | pera | bosques, abedulares, llanuras | primavera a otoño |
+| **Ciruelo** | ciruela | bosques, bosque oscuro, bosque de flores | primavera a otoño |
+| **Melocotonero** | melocotón | llanuras, sabana | primavera a otoño |
+| **Limonero** | limón | sabana, selva dispersa, playas | otoño a primavera |
+| **Naranjo** | naranja | sabana, selva, llanuras de girasoles | otoño a primavera |
+
+- Las hojas pasan por 4 fases: **hojas**, **en flor** (blancas; el melocotonero, rosas), **fruta verde** y **fruta
+  madura**. Unos 3 minutos por fase, solo en su temporada (fuera de ella la fruta se cae). Con harina de hueso, una fase
+  más.
+- **Clic derecho a las hojas con fruta madura** para cogerla (1 a 3) y vuelven a empezar. Al romperlas también la sueltan.
+- **Brotes**: los dan sus hojas (algo más que los de un roble); plántalos como cualquier árbol.
+- **Comida**: la pera, la ciruela, el melocotón y la naranja quitan algo de sed; el limón es muy ácido. **Limonada** (agua
+  hervida + limón + azúcar) y **zumo de naranja** (frasco + 2 naranjas) quitan mucha sed.
+
+**Configuración** (pestaña *Clima*): `axeForLogs` (talar solo con hacha) y `treeFelling` (los árboles caen enteros).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -1300,6 +1343,7 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
   diseños 3D (cubos sobre cabeza, cuerpo, brazos y piernas), las texturas, los iconos, `FactionArmorModels.java`, los
   modelos de objeto, las recetas, las etiquetas y los textos; con `--preview` las dibuja puestas (delante, detrás y
   andando).
+- `ew_orchard.py` — los frutales (hojas en 4 fases con la fruta en 3D, brotes, fruta, zumos, botín y generación del mundo) y la tala (hacha de sílex y recetas de palos, losas y tablones).
 - `ew_night.py` — la noche más dura: el icono de la infección, su tipo de daño y los textos.
 - `ew_plumbing.py` — las tuberías, el grifo de palanca y la bomba de mano: texturas, modelos 3D, estados, recetas, botín y textos.
 - `ew_dismember.py` — el desmembramiento: la textura de los muñones, el tipo de daño de la decapitación y los textos.

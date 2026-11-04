@@ -1,0 +1,19 @@
+{
+ "type": "minecraft:crafting_shapeless",
+ "category": "misc",
+ "ingredients": [
+  {
+   "item": "evolvedwarfare:boiled_water"
+  },
+  {
+   "item": "evolvedwarfare:lemon"
+  },
+  {
+   "item": "minecraft:sugar"
+  }
+ ],
+ "result": {
+  "id": "evolvedwarfare:lemonade",
+  "count": 1
+ }
+}

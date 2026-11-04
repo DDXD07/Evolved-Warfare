@@ -194,6 +194,19 @@ public final class ModItems {
 			.food(new net.minecraft.component.type.FoodComponent.Builder().nutrition(9).saturationModifier(0.8F)
 					.usingConvertsTo(net.minecraft.item.Items.BOWL).build())));
 
+	// la fruta de los frutales, sus zumos y el hacha de sílex
+	public static final Item PEAR = register("pear", new com.evolvedwarfare.item.DescribedItem(new Item.Settings().food(food(4, 0.3F))));
+	public static final Item PLUM = register("plum", new com.evolvedwarfare.item.DescribedItem(new Item.Settings().food(food(3, 0.3F))));
+	public static final Item PEACH = register("peach", new com.evolvedwarfare.item.DescribedItem(new Item.Settings().food(food(4, 0.4F))));
+	public static final Item LEMON = register("lemon", new com.evolvedwarfare.item.DescribedItem(new Item.Settings().food(food(1, 0.1F))));
+	public static final Item ORANGE = register("orange", new com.evolvedwarfare.item.DescribedItem(new Item.Settings().food(food(4, 0.3F))));
+	public static final Item LEMONADE = register("lemonade",
+			new com.evolvedwarfare.climate.DrinkItem(9.0F, 1, 0.2F, 1.5F, new Item.Settings().maxCount(16)));
+	public static final Item ORANGE_JUICE = register("orange_juice",
+			new com.evolvedwarfare.climate.DrinkItem(7.0F, 3, 0.4F, 0.5F, new Item.Settings().maxCount(16)));
+	public static final Item FLINT_HATCHET = register("flint_hatchet", new net.minecraft.item.AxeItem(com.evolvedwarfare.wood.Woodcutting.FLINT,
+			new Item.Settings().attributeModifiers(net.minecraft.item.AxeItem.createAttributeModifiers(com.evolvedwarfare.wood.Woodcutting.FLINT, 5.0F, -3.2F))));
+
 	private static net.minecraft.component.type.FoodComponent food(int nutrition, float saturation) {
 		return new net.minecraft.component.type.FoodComponent.Builder().nutrition(nutrition).saturationModifier(saturation).build();
 	}
@@ -340,6 +353,18 @@ public final class ModItems {
 						entries.add(ModBlocks.CROP_CRATE_ITEM);
 						entries.add(ModBlocks.SALES_MAILBOX);
 						entries.add(ModBlocks.TRADER_CATALOG);
+						entries.add(FLINT_HATCHET);
+						for (com.evolvedwarfare.orchard.FruitKind kind : com.evolvedwarfare.orchard.FruitKind.values()) {
+							entries.add(ModBlocks.FRUIT_SAPLINGS.get(kind));
+							entries.add(ModBlocks.FRUIT_LEAVES.get(kind));
+						}
+						entries.add(PEAR);
+						entries.add(PLUM);
+						entries.add(PEACH);
+						entries.add(LEMON);
+						entries.add(ORANGE);
+						entries.add(LEMONADE);
+						entries.add(ORANGE_JUICE);
 						entries.add(ModBlocks.PIPE);
 						entries.add(ModBlocks.FAUCET);
 						entries.add(ModBlocks.HAND_PUMP);

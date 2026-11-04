@@ -1,0 +1,10 @@
+{
+ "variants": {
+  "stage=0": {
+   "model": "evolvedwarfare:block/orange_sapling"
+  },
+  "stage=1": {
+   "model": "evolvedwarfare:block/orange_sapling"
+  }
+ }
+}

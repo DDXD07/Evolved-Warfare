@@ -1,0 +1,17 @@
+{
+ "type": "minecraft:crafting_shaped",
+ "category": "building",
+ "pattern": [
+  "SS",
+  "SS"
+ ],
+ "key": {
+  "S": {
+   "item": "minecraft:stick"
+  }
+ },
+ "result": {
+  "id": "minecraft:oak_slab",
+  "count": 1
+ }
+}

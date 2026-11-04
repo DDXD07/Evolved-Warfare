@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "evolvedwarfare:apple_sapling",
+    "evolvedwarfare:pear_sapling",
+    "evolvedwarfare:plum_sapling",
+    "evolvedwarfare:peach_sapling",
+    "evolvedwarfare:lemon_sapling",
+    "evolvedwarfare:orange_sapling"
+  ]
+}

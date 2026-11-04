@@ -187,6 +187,25 @@ public final class ModBlocks {
 			Registries.BLOCK_ENTITY_TYPE, EvolvedWarfare.id("hand_pump"),
 			BlockEntityType.Builder.create(com.evolvedwarfare.fluid.HandPumpBlockEntity::new, HAND_PUMP).build(null));
 
+	// los frutales: hojas con fruta (en 3D) y su brote
+	public static final java.util.Map<com.evolvedwarfare.orchard.FruitKind, com.evolvedwarfare.orchard.FruitLeavesBlock> FRUIT_LEAVES =
+			new java.util.EnumMap<>(com.evolvedwarfare.orchard.FruitKind.class);
+	public static final java.util.Map<com.evolvedwarfare.orchard.FruitKind, net.minecraft.block.SaplingBlock> FRUIT_SAPLINGS =
+			new java.util.EnumMap<>(com.evolvedwarfare.orchard.FruitKind.class);
+
+	static {
+		for (com.evolvedwarfare.orchard.FruitKind kind : com.evolvedwarfare.orchard.FruitKind.values()) {
+			FRUIT_LEAVES.put(kind, register(kind.id + "_leaves", new com.evolvedwarfare.orchard.FruitLeavesBlock(kind,
+					AbstractBlock.Settings.copy(net.minecraft.block.Blocks.OAK_LEAVES))));
+			net.minecraft.registry.RegistryKey<net.minecraft.world.gen.feature.ConfiguredFeature<?, ?>> tree = net.minecraft.registry.RegistryKey.of(
+					net.minecraft.registry.RegistryKeys.CONFIGURED_FEATURE, EvolvedWarfare.id(kind.id + "_tree"));
+			net.minecraft.block.SaplingGenerator generator = new net.minecraft.block.SaplingGenerator("evolvedwarfare_" + kind.id,
+					java.util.Optional.empty(), java.util.Optional.of(tree), java.util.Optional.empty());
+			FRUIT_SAPLINGS.put(kind, register(kind.id + "_sapling", new net.minecraft.block.SaplingBlock(generator,
+					AbstractBlock.Settings.copy(net.minecraft.block.Blocks.OAK_SAPLING))));
+		}
+	}
+
 	// los cultivos nuevos (sin objeto propio: se plantan con su semilla, o con la propia cebolla y el ajo)
 	public static final Block TOMATOES = crop("tomatoes", () -> ModItems.TOMATO_SEEDS);
 	public static final Block CORN = crop("corn", () -> ModItems.CORN_SEEDS);

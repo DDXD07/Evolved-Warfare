@@ -51,6 +51,11 @@ public final class CropSeasons {
 		put(ModBlocks.GARLIC, Season.AUTUMN, Season.WINTER);
 	}
 
+	/** Para otros bloques que crecen por estaciones (los frutales). */
+	public static void register(Block block, Set<Season> seasons) {
+		SEASONS.put(block, EnumSet.copyOf(seasons));
+	}
+
 	private static void put(Block block, Season first, Season... rest) {
 		SEASONS.put(block, EnumSet.of(first, rest));
 	}
