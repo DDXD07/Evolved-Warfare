@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:book"
+    },
+    {
+      "item": "minecraft:ink_sac"
+    },
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "item": "evolvedwarfare:glory_coin"
+    }
+  ],
+  "result": {
+    "id": "evolvedwarfare:trader_catalog",
+    "count": 1
+  }
+}

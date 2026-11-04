@@ -754,9 +754,36 @@ Para vender sin ir a una ciudad. Se fabrica con un lingote de hierro, una **Glor
   lados y sacar las monedas por abajo.
 - Si el buzón está lejos y su zona sin cargar, vende al volver (una vez). Al romperlo suelta todo lo que tenga.
 
-### La tienda
+### El Catálogo del mercader
 
-Clic derecho a un comerciante abre su **tienda con todo el catálogo a la vez**, en fichas:
+Ya no hace falta hablar con el mercader: **encima del mostrador de cada tienda hay un libro, el Catálogo**, con la tapa
+de su oficio (cuero de su color, marco y letras doradas y su emblema: gavilla de trigo, espadas cruzadas, martillo y
+escoplo, gema, tijeras, tarro de especias o zarpa). **Clic derecho en el libro**:
+
+1. Si estás en tercera persona **pasas a primera persona** y **te acercas al libro**: la cámara baja hasta mirarlo desde
+   arriba. **La tapa se abre** sobre el lomo (en 3D, con su sonido) y entonces **coges el catálogo**: sube a la pantalla,
+   abierto, sujeto con tus dos manos enguantadas.
+2. **Todo en blanco y negro, de imprenta**, como los catálogos de venta por correo de principios del siglo XX: papel
+   viejo, filetes, titulares en mayúsculas y cada artículo con su **grabado** (la cosa en tinta, con tramado en las
+   sombras y contorno).
+3. La primera página es la **portada de la casa** (cada oficio tiene su casa: *Ultramarinos Del Valle e Hijos*,
+   *Armería Hierro Viejo*...), con el nivel de la ciudad, los precios y tus monedas, y enfrente **«¿Qué desea el
+   cliente?»: COMPRA o VENTA**.
+4. Luego las páginas, **cuatro artículos en cada una**: grabado, nombre, rareza y calidad, una frase de reclamo, el
+   **precio grande** y el lote, y lo que queda hoy (lo agotado lleva un sello de **AGOTADO**). En la venta, lo que te
+   pagan y cuántos tienes. **Clic** compra o vende un lote; **Mayús + clic**, un montón. Pasando el ratón por el grabado
+   ves la descripción de la cosa.
+5. **Pasar página**: flechas (o A/D), la rueda del ratón o *SIGUIENTE »* / *« ANTERIOR*. **La hoja gira sobre el lomo**
+   y la mano la acompaña, con el sonido del papel. *Retroceso* (o *« ÍNDICE*) vuelve a la portada. **Esc** lo cierra: el
+   catálogo baja, la tapa se cierra y la cámara vuelve a donde estaba (y a tercera persona si estabas en ella).
+
+Si el mercader **duerme**, la tienda está **cerrada**. Hablar con el mercader también abre el catálogo. Las tiendas que
+ya estaban generadas reciben su libro solas (aparece encima del mostrador en cuanto se carga su mercader). También se
+fabrica (libro, saco de tinta, papel y una Glory Coin) y, al ponerlo, toma el oficio del mercader más cercano.
+
+### La tienda (la de antes)
+
+La tienda de fichas de antes sigue en el código, pero ahora los mercaderes abren el catálogo:
 
 - **Cada oficio tiene su propio diseño**: el tendero, tablones de roble con toldo de rayas; el armero, acero oscuro con
   remaches; el cantero, ladrillo de piedra con esquinas cinceladas; el joyero, terciopelo morado con ribete de oro y

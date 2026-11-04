@@ -25,6 +25,11 @@ public abstract class HeldItemRendererMixin {
 	@Inject(method = "renderFirstPersonItem", at = @At("HEAD"), cancellable = true)
 	private void evolvedwarfare$carryCrate(AbstractClientPlayerEntity player, float tickDelta, float pitch, Hand hand, float swingProgress,
 			ItemStack item, float equipProgress, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
+		if (com.evolvedwarfare.client.catalog.CatalogSession.active()) {
+			// con el catálogo abierto, las manos están en el libro
+			ci.cancel();
+			return;
+		}
 		if (hand == Hand.MAIN_HAND ? CropCrateItem.isCrate(item) : CrateCarry.carrying(player)) {
 			if (hand == Hand.MAIN_HAND) {
 				CrateCarry.renderFirstPerson(player, tickDelta, equipProgress, swingProgress, item, matrices, vertexConsumers, light);

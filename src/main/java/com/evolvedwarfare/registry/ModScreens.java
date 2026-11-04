@@ -52,6 +52,12 @@ public final class ModScreens {
 			EvolvedWarfare.id("trader"),
 			new ExtendedScreenHandlerType<>(TraderScreenHandler::new, TraderScreenHandler.Data.PACKET_CODEC));
 
+	/** El catálogo de un mercader (el libro del mostrador). Al abrirse se envía la tienda y dónde está el libro. */
+	public static final ScreenHandlerType<com.evolvedwarfare.screen.CatalogScreenHandler> CATALOG = Registry.register(
+			Registries.SCREEN_HANDLER, EvolvedWarfare.id("catalog"),
+			new ExtendedScreenHandlerType<>(com.evolvedwarfare.screen.CatalogScreenHandler::new,
+					com.evolvedwarfare.screen.CatalogScreenHandler.Opening.PACKET_CODEC));
+
 	/** El hueco de una Caja de cultivos. Al abrirse se envía la posición de la caja. */
 	public static final ScreenHandlerType<com.evolvedwarfare.screen.CropCrateScreenHandler> CROP_CRATE = Registry.register(
 			Registries.SCREEN_HANDLER, EvolvedWarfare.id("crop_crate"),

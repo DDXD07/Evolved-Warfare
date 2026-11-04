@@ -36,6 +36,14 @@ public abstract class InGameHudMixin {
 	@Final
 	private DebugHud debugHud;
 
+	/** Con el catálogo abierto no se dibuja nada del HUD (ni la barra, ni los corazones): solo el libro. */
+	@Inject(method = "render", at = @At("HEAD"), cancellable = true)
+	private void evolvedwarfare$catalog(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
+		if (com.evolvedwarfare.client.catalog.CatalogSession.active()) {
+			ci.cancel();
+		}
+	}
+
 	@Inject(method = "renderCrosshair", at = @At("HEAD"), cancellable = true)
 	private void evolvedwarfare$musketDot(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
 		ClientPlayerEntity player = client.player;

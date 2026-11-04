@@ -1,0 +1,88 @@
+{
+  "variants": {
+    "facing=north,trade=0": {
+      "model": "evolvedwarfare:block/trader_catalog"
+    },
+    "facing=north,trade=1": {
+      "model": "evolvedwarfare:block/trader_catalog"
+    },
+    "facing=north,trade=2": {
+      "model": "evolvedwarfare:block/trader_catalog"
+    },
+    "facing=north,trade=3": {
+      "model": "evolvedwarfare:block/trader_catalog"
+    },
+    "facing=north,trade=4": {
+      "model": "evolvedwarfare:block/trader_catalog"
+    },
+    "facing=north,trade=5": {
+      "model": "evolvedwarfare:block/trader_catalog"
+    },
+    "facing=north,trade=6": {
+      "model": "evolvedwarfare:block/trader_catalog"
+    },
+    "facing=south,trade=0": {
+      "model": "evolvedwarfare:block/trader_catalog"
+    },
+    "facing=south,trade=1": {
+      "model": "evolvedwarfare:block/trader_catalog"
+    },
+    "facing=south,trade=2": {
+      "model": "evolvedwarfare:block/trader_catalog"
+    },
+    "facing=south,trade=3": {
+      "model": "evolvedwarfare:block/trader_catalog"
+    },
+    "facing=south,trade=4": {
+      "model": "evolvedwarfare:block/trader_catalog"
+    },
+    "facing=south,trade=5": {
+      "model": "evolvedwarfare:block/trader_catalog"
+    },
+    "facing=south,trade=6": {
+      "model": "evolvedwarfare:block/trader_catalog"
+    },
+    "facing=east,trade=0": {
+      "model": "evolvedwarfare:block/trader_catalog"
+    },
+    "facing=east,trade=1": {
+      "model": "evolvedwarfare:block/trader_catalog"
+    },
+    "facing=east,trade=2": {
+      "model": "evolvedwarfare:block/trader_catalog"
+    },
+    "facing=east,trade=3": {
+      "model": "evolvedwarfare:block/trader_catalog"
+    },
+    "facing=east,trade=4": {
+      "model": "evolvedwarfare:block/trader_catalog"
+    },
+    "facing=east,trade=5": {
+      "model": "evolvedwarfare:block/trader_catalog"
+    },
+    "facing=east,trade=6": {
+      "model": "evolvedwarfare:block/trader_catalog"
+    },
+    "facing=west,trade=0": {
+      "model": "evolvedwarfare:block/trader_catalog"
+    },
+    "facing=west,trade=1": {
+      "model": "evolvedwarfare:block/trader_catalog"
+    },
+    "facing=west,trade=2": {
+      "model": "evolvedwarfare:block/trader_catalog"
+    },
+    "facing=west,trade=3": {
+      "model": "evolvedwarfare:block/trader_catalog"
+    },
+    "facing=west,trade=4": {
+      "model": "evolvedwarfare:block/trader_catalog"
+    },
+    "facing=west,trade=5": {
+      "model": "evolvedwarfare:block/trader_catalog"
+    },
+    "facing=west,trade=6": {
+      "model": "evolvedwarfare:block/trader_catalog"
+    }
+  }
+}

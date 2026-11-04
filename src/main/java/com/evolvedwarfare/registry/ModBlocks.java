@@ -106,6 +106,15 @@ public final class ModBlocks {
 					.sounds(BlockSoundGroup.WOOD)
 					.nonOpaque()));
 
+	/** El Catálogo del mercader (libro en el mostrador): abre la tienda del mercader. */
+	public static final Block TRADER_CATALOG = register("trader_catalog", new com.evolvedwarfare.block.CatalogBlock(
+			AbstractBlock.Settings.create()
+					.mapColor(MapColor.BROWN)
+					.strength(0.8F)
+					.sounds(BlockSoundGroup.WOOD)
+					.nonOpaque()
+					.burnable()));
+
 	public static final BlockEntityType<WorkSiteBlockEntity> WORK_SITE_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
 			EvolvedWarfare.id("work_site"),
 			BlockEntityType.Builder.create(WorkSiteBlockEntity::new, WORK_SITES.values().toArray(new Block[0])).build(null));
@@ -133,6 +142,10 @@ public final class ModBlocks {
 	public static final BlockEntityType<com.evolvedwarfare.block.SalesMailboxBlockEntity> SALES_MAILBOX_ENTITY = Registry.register(
 			Registries.BLOCK_ENTITY_TYPE, EvolvedWarfare.id("sales_mailbox"),
 			BlockEntityType.Builder.create(com.evolvedwarfare.block.SalesMailboxBlockEntity::new, SALES_MAILBOX).build(null));
+
+	public static final BlockEntityType<com.evolvedwarfare.block.CatalogBlockEntity> TRADER_CATALOG_ENTITY = Registry.register(
+			Registries.BLOCK_ENTITY_TYPE, EvolvedWarfare.id("trader_catalog"),
+			BlockEntityType.Builder.create(com.evolvedwarfare.block.CatalogBlockEntity::new, TRADER_CATALOG).build(null));
 
 	private ModBlocks() {
 	}

@@ -63,7 +63,12 @@ public class TraderScreenHandler extends ScreenHandler {
 
 	/** Servidor. */
 	public TraderScreenHandler(int syncId, PlayerInventory playerInventory, TraderEntity trader, Data data) {
-		this(syncId, playerInventory, trader, data, new PropertyDelegate() {
+		this(syncId, playerInventory, trader, data, stockOf(trader, data));
+	}
+
+	/** Lo que le queda hoy de cada línea (se manda al cliente). */
+	protected static PropertyDelegate stockOf(TraderEntity trader, Data data) {
+		return new PropertyDelegate() {
 			@Override
 			public int get(int index) {
 				return trader.stockLeft(index, data.deals().get(index));
@@ -77,12 +82,18 @@ public class TraderScreenHandler extends ScreenHandler {
 			public int size() {
 				return data.deals().size();
 			}
-		});
+		};
 	}
 
 	private TraderScreenHandler(int syncId, PlayerInventory playerInventory, @Nullable TraderEntity trader, Data data,
 			PropertyDelegate stock) {
-		super(ModScreens.TRADER, syncId);
+		this(ModScreens.TRADER, syncId, playerInventory, trader, data, stock);
+	}
+
+	/** Para el catálogo (otro tipo de menú con la misma compraventa). */
+	protected TraderScreenHandler(net.minecraft.screen.ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory,
+			@Nullable TraderEntity trader, Data data, PropertyDelegate stock) {
+		super(type, syncId);
 		this.trader = trader;
 		this.data = data;
 		this.stock = stock;

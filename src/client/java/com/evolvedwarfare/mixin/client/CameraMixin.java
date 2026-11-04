@@ -26,6 +26,13 @@ public abstract class CameraMixin {
 		if (view != null) {
 			setRotation(view.yaw(), view.pitch());
 			setPos(view.x(), view.y(), view.z());
+			return;
+		}
+		// el catálogo: la cámara se acerca al libro del mostrador y lo mira desde arriba
+		com.evolvedwarfare.client.catalog.CatalogSession.View book = com.evolvedwarfare.client.catalog.CatalogSession.view(tickDelta);
+		if (book != null) {
+			setRotation(book.yaw(), book.pitch());
+			setPos(book.x(), book.y(), book.z());
 		}
 	}
 }

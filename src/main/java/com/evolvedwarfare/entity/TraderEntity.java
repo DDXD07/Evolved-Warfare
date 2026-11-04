@@ -86,6 +86,8 @@ public class TraderEntity extends MerchantEntity {
 	private long cityKey;
 	/** Ya se ha revisado la escalera de su tienda (las de la 0.36.0 tenían el techo demasiado bajo). */
 	private boolean stairsChecked;
+	/** Ya se ha puesto (o había) el catálogo en su mostrador. */
+	private boolean catalogChecked;
 
 	public TraderEntity(EntityType<? extends TraderEntity> type, World world) {
 		super(type, world);
@@ -269,6 +271,9 @@ public class TraderEntity extends MerchantEntity {
 			net.minecraft.structure.StructureStart start = world.getStructureAccessor().getStructureContaining(counter, CityLevels.CITIES);
 			stairsChecked = com.evolvedwarfare.world.city.CityPiece.of(start).map(city -> city.repairStairs(world, counter)).orElse(true);
 		}
+		if (counter != null && !catalogChecked && age % 100 == 70) {
+			catalogChecked = placeCatalog(world);
+		}
 		if (counter != null) {
 			schedule(world);
 		} else if (getPositionTarget() == null || !getPositionTarget().equals(home) || getPositionTargetRange() != HOME_RANGE) {
@@ -355,9 +360,92 @@ public class TraderEntity extends MerchantEntity {
 			player.incrementStat(Stats.TALKED_TO_VILLAGER);
 		}
 		if (player instanceof ServerPlayerEntity serverPlayer) {
-			openShop(serverPlayer);
+			openCatalog(serverPlayer, catalogNearby());
 		}
 		return ActionResult.success(getWorld().isClient);
+	}
+
+	/** El libro de su mostrador (a menos de 4 bloques de su sitio), o null. */
+	@Nullable
+	public BlockPos catalogNearby() {
+		BlockPos center = counter != null ? counter : getBlockPos();
+		BlockPos best = null;
+		double bestDistance = Double.MAX_VALUE;
+		for (BlockPos p : BlockPos.iterate(center.add(-4, -1, -4), center.add(4, 2, 4))) {
+			if (getWorld().getBlockState(p).isOf(com.evolvedwarfare.registry.ModBlocks.TRADER_CATALOG)) {
+				double d = p.getSquaredDistance(center);
+				if (d < bestDistance) {
+					bestDistance = d;
+					best = p.toImmutable();
+				}
+			}
+		}
+		return best;
+	}
+
+	/** Abre su catálogo (el libro del mostrador, si se da: así el jugador se acerca a él y lo abre). */
+	public void openCatalog(ServerPlayerEntity player, @Nullable BlockPos book) {
+		TraderScreenHandler.Data data = prepareShop(player);
+		TraderEntity trader = this;
+		com.evolvedwarfare.screen.CatalogScreenHandler.Opening opening = new com.evolvedwarfare.screen.CatalogScreenHandler.Opening(data,
+				book != null ? book : BlockPos.ORIGIN, book != null);
+		player.openHandledScreen(new ExtendedScreenHandlerFactory<com.evolvedwarfare.screen.CatalogScreenHandler.Opening>() {
+			@Override
+			public com.evolvedwarfare.screen.CatalogScreenHandler.Opening getScreenOpeningData(ServerPlayerEntity serverPlayer) {
+				return opening;
+			}
+
+			@Override
+			public Text getDisplayName() {
+				return trader.getDisplayName();
+			}
+
+			@Override
+			public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+				return new com.evolvedwarfare.screen.CatalogScreenHandler(syncId, playerInventory, trader, opening);
+			}
+		});
+	}
+
+	/** Lo que hace falta antes de abrir la tienda (reponer, nivel, precios, cliente) y lo que se le manda. */
+	private TraderScreenHandler.Data prepareShop(ServerPlayerEntity player) {
+		if (getWorld() instanceof ServerWorld world) {
+			restockIfNewDay(world);
+		}
+		if (cityLevel <= 0 && getWorld() instanceof ServerWorld world) {
+			cityLevel = CityLevels.levelAt(world, home != null ? home : getBlockPos());
+		}
+		if (priceSeed == 0L) {
+			priceSeed = random.nextLong() | 1L;
+		}
+		if (getCustomer() == null) {
+			setCustomer(player);
+		}
+		int percent = (int) Math.round((CityLevels.priceMultiplier(getCityLevel()) - 1.0) * 100.0);
+		return new TraderScreenHandler.Data(getId(), getTraderType().ordinal(), getCityLevel(), percent, catalog());
+	}
+
+	/**
+	 * Las tiendas generadas antes de que existiera el catálogo: pone el libro encima del mostrador, delante de donde se
+	 * pone el mercader (si hay sitio). Devuelve true si ya no hace falta mirar más.
+	 */
+	private boolean placeCatalog(ServerWorld world) {
+		if (counter == null || catalogNearby() != null) {
+			return true;
+		}
+		for (net.minecraft.util.math.Direction dir : net.minecraft.util.math.Direction.Type.HORIZONTAL) {
+			BlockPos desk = counter.offset(dir);
+			BlockPos top = desk.up();
+			BlockPos customer = desk.offset(dir);
+			if (world.getBlockState(desk).isSolidBlock(world, desk) && world.getBlockState(top).isAir()
+					&& !world.getBlockState(customer).isSolidBlock(world, customer)) {
+				world.setBlockState(top, com.evolvedwarfare.registry.ModBlocks.TRADER_CATALOG.getDefaultState()
+						.with(com.evolvedwarfare.block.CatalogBlock.FACING, dir)
+						.with(com.evolvedwarfare.block.CatalogBlock.TRADE, getTraderType().ordinal()));
+				return true;
+			}
+		}
+		return true;
 	}
 
 	private void openShop(ServerPlayerEntity player) {
@@ -475,6 +563,7 @@ public class TraderEntity extends MerchantEntity {
 		}
 		nbt.putLong("CityKey", cityKey);
 		nbt.putBoolean("StairsChecked", stairsChecked);
+		nbt.putBoolean("CatalogChecked", catalogChecked);
 	}
 
 	@Override
@@ -509,5 +598,6 @@ public class TraderEntity extends MerchantEntity {
 		}
 		cityKey = nbt.getLong("CityKey");
 		stairsChecked = nbt.getBoolean("StairsChecked");
+		catalogChecked = nbt.getBoolean("CatalogChecked");
 	}
 }

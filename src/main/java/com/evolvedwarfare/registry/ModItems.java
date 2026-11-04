@@ -277,6 +277,7 @@ public final class ModItems {
 						entries.add(ModBlocks.RESEARCH_DESK);
 						entries.add(ModBlocks.CROP_CRATE_ITEM);
 						entries.add(ModBlocks.SALES_MAILBOX);
+						entries.add(ModBlocks.TRADER_CATALOG);
 						entries.add(CART_WHEEL);
 						entries.add(CART_BED);
 						entries.add(CART);

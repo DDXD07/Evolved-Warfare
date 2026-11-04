@@ -107,6 +107,11 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		// caja de cultivos: su hueco, lo que lleva dentro (en el mundo y en el icono)
 		HandledScreens.register(ModScreens.CROP_CRATE, com.evolvedwarfare.client.screen.CropCrateScreen::new);
 		HandledScreens.register(ModScreens.SALES_MAILBOX, com.evolvedwarfare.client.screen.SalesMailboxScreen::new);
+		// el catálogo de los mercaderes: el libro del mostrador (3D, se abre), la pantalla y los grabados
+		HandledScreens.register(ModScreens.CATALOG, com.evolvedwarfare.client.catalog.CatalogScreen::new);
+		net.minecraft.client.render.block.entity.BlockEntityRendererFactories.register(ModBlocks.TRADER_CATALOG_ENTITY,
+				context -> new com.evolvedwarfare.client.catalog.CatalogBookRenderer());
+		com.evolvedwarfare.client.catalog.Engraving.register();
 		net.minecraft.client.render.block.entity.BlockEntityRendererFactories.register(ModBlocks.CROP_CRATE_ENTITY,
 				com.evolvedwarfare.client.render.CropCrateRenderer::new);
 		net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry.INSTANCE.register(ModBlocks.CROP_CRATE_ITEM,

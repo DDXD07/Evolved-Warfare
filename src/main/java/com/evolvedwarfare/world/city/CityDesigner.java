@@ -1169,6 +1169,10 @@ public final class CityDesigner {
 				decor(f, trade, spots);
 				roof(f, bw, bd, 9);
 			}
+			// el catálogo, encima del mostrador delante del mercader, mirando a los clientes
+			int tradeIndex = List.of("grocer", "armorer", "mason", "jeweler", "tailor", "spice_merchant", "furrier").indexOf(trade);
+			set(f.x(standU, cv), 2, f.z(standU, cv), "evolvedwarfare:trader_catalog[facing=" + f.outward() + ",trade=" + Math.max(0, tradeIndex)
+					+ "]");
 			int sx = f.x(standU, standV);
 			int sz = f.z(standU, standV);
 			plan.trader(new CityPlan.Trader(trade, sx, 1, sz, f.out.yaw, f.x(bedU, bedV), bedY, f.z(bedU, bedV)));

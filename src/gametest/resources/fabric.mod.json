@@ -17,6 +17,7 @@
 			"com.evolvedwarfare.gametest.NetherAmbienceGameTests",
 			"com.evolvedwarfare.gametest.CityGameTests",
 			"com.evolvedwarfare.gametest.ClimateGameTests",
+			"com.evolvedwarfare.gametest.CatalogGameTests",
 			"com.evolvedwarfare.gametest.GuideGameTests",
 			"com.evolvedwarfare.gametest.CartGameTests",
 			"com.evolvedwarfare.gametest.HeavyAttackGameTests",
