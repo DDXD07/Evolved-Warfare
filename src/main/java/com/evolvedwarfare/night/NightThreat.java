@@ -66,6 +66,8 @@ public final class NightThreat {
 	public static final int NIGHTFALL = 13000;
 	private static final int LAST_START = 21000;
 	private static final int GROUP = 48;
+	/** Frases que avisan de que llega la horda (una al azar cada noche de zombis). */
+	public static final int PHRASES = 36;
 
 	private NightThreat() {
 	}
@@ -208,14 +210,15 @@ public final class NightThreat {
 			state.lastNight = day;
 			state.markDirty();
 			List<ServerPlayerEntity> served = new ArrayList<>();
+			int phrase = world.getRandom().nextInt(PHRASES);
 			for (ServerPlayerEntity p : players) {
 				if (served.stream().anyMatch(s -> s.squaredDistanceTo(p) < GROUP * GROUP)) {
 					continue;
 				}
 				int near = (int) players.stream().filter(o -> o.squaredDistanceTo(p) < GROUP * GROUP).count();
 				served.add(p);
-				int n = spawnHorde(world, p.getBlockPos(), hordeSize(day, every, near), world.getRandom()).size();
-				p.sendMessage(Text.translatable("message.evolvedwarfare.zombies.come", n).formatted(Formatting.DARK_GREEN), false);
+				spawnHorde(world, p.getBlockPos(), hordeSize(day, every, near), world.getRandom());
+				p.sendMessage(Text.translatable("message.evolvedwarfare.zombies.phrase." + phrase).formatted(Formatting.DARK_GREEN, Formatting.ITALIC), false);
 				world.playSound(null, p.getBlockPos(), SoundEvents.ENTITY_ZOMBIE_AMBIENT, SoundCategory.HOSTILE, 2.0F, 0.6F);
 			}
 		}

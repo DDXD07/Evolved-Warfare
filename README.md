@@ -1276,7 +1276,7 @@ con medio corazón), pero te deja muy débil. **La leche la cura**.
 ### Noches de zombis
 **Cada 2 días** (días 2, 4, 6...) el contador de días se pone **verde** (el día de una horda de facciones sigue en rojo).
 Al amanecer avisa, y **al anochecer (19:00)** una **horda de al menos 15 zombis** sale a 20-30 bloques de cada jugador
-(o grupo de jugadores) y **sabe dónde estás**: no necesitan verte, y se abren camino hasta ti. Una más cada noche de zombis
+(o grupo de jugadores), con un aviso al azar entre 36 frases (*«Se escuchan los muertos levantarse de su tumba...»*), y **sabe dónde estás**: no necesitan verte, y se abren camino hasta ti. Una más cada noche de zombis
 (hasta 30) y 5 más por cada jugador de más. En los desiertos y las badlands son momias, y alguno es un aldeano zombi.
 
 **Configuración** (pestaña *Hordas*): `nightHostility`, `zombieHordeEveryDays` (0 = nunca), `zombieHordeSize`
