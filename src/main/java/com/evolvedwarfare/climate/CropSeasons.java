@@ -15,7 +15,8 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Cada cultivo crece en su estación (o estaciones). Fuera de ella, al raso no crece (ni con harina de hueso); bajo techo
- * (sin cielo encima: un invernadero, un sótano con luz) crece, pero a un tercio de lo normal. Solo en el mundo normal y
+ * (cualquier bloque sólido encima, también el cristal: un invernadero, un granero, un sótano con luz) crece, pero a un
+ * tercio de lo normal. Solo en el mundo normal y
  * con las estaciones activadas.
  *
  * <ul>
@@ -88,11 +89,16 @@ public final class CropSeasons {
 		if (!outOfSeason(world, block)) {
 			return true;
 		}
-		return !world.isSkyVisible(pos) && random.nextInt(3) == 0;
+		return roofed(world, pos) && random.nextInt(3) == 0;
+	}
+
+	/** ¿Tiene techo encima (cualquier bloque sólido, también de cristal: un invernadero)? */
+	public static boolean roofed(WorldView world, BlockPos pos) {
+		return world.getTopY(net.minecraft.world.Heightmap.Type.MOTION_BLOCKING, pos.getX(), pos.getZ()) > pos.getY() + 1;
 	}
 
 	/** ¿Se le puede echar harina de hueso? (fuera de temporada y al raso, no) */
 	public static boolean canFertilize(WorldView view, BlockPos pos, Block block) {
-		return !(view instanceof World world) || !outOfSeason(world, block) || !world.isSkyVisible(pos);
+		return !(view instanceof World world) || !outOfSeason(world, block) || roofed(world, pos);
 	}
 }

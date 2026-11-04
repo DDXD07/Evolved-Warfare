@@ -60,25 +60,30 @@ public class CropGameTests implements FabricGameTest {
 		check(inSeason != null && outOfSeason != null, "No hay un cultivo de cada en " + now);
 		BlockPos open = ctx.getAbsolutePos(new BlockPos(1, 1, 1));
 		BlockPos covered = ctx.getAbsolutePos(new BlockPos(3, 1, 1));
-		ctx.setBlockState(3, 3, 1, Blocks.STONE);
-		Random random = Random.create(42L);
-		int inOpen = 0;
-		int outOpen = 0;
-		int outCovered = 0;
-		for (int i = 0; i < 90; i++) {
-			inOpen += CropSeasons.canGrow(world, open, inSeason, random) ? 1 : 0;
-			outOpen += CropSeasons.canGrow(world, open, outOfSeason, random) ? 1 : 0;
-			outCovered += CropSeasons.canGrow(world, covered, outOfSeason, random) ? 1 : 0;
-		}
-		boolean bonemealOpen = CropSeasons.canFertilize(world, open, outOfSeason);
-		boolean bonemealCovered = CropSeasons.canFertilize(world, covered, outOfSeason);
-		LOG.info("[EW-GAMETEST] estaciones ({}): {} en temporada {}/90; {} fuera al raso {}/90, bajo techo {}/90; hueso al raso {}, bajo techo {}",
-				now, inSeason, inOpen, outOfSeason, outOpen, outCovered, bonemealOpen, bonemealCovered);
-		check(inOpen == 90, "En su estación no siempre puede crecer");
-		check(outOpen == 0, "Fuera de su estación y al raso crece");
-		check(outCovered > 10 && outCovered < 60, "Fuera de su estación bajo techo no crece a un tercio: " + outCovered);
-		check(!bonemealOpen && bonemealCovered, "La harina de hueso no respeta la estación");
-		ctx.complete();
+		ctx.setBlockState(3, 3, 1, Blocks.GLASS);
+		final Block in = inSeason;
+		final Block out = outOfSeason;
+		// (un techo de cristal: un invernadero)
+		ctx.waitAndRun(10, () -> {
+			Random random = Random.create(42L);
+			int inOpen = 0;
+			int outOpen = 0;
+			int outCovered = 0;
+			for (int i = 0; i < 90; i++) {
+				inOpen += CropSeasons.canGrow(world, open, in, random) ? 1 : 0;
+				outOpen += CropSeasons.canGrow(world, open, out, random) ? 1 : 0;
+				outCovered += CropSeasons.canGrow(world, covered, out, random) ? 1 : 0;
+			}
+			boolean bonemealOpen = CropSeasons.canFertilize(world, open, out);
+			boolean bonemealCovered = CropSeasons.canFertilize(world, covered, out);
+			LOG.info("[EW-GAMETEST] estaciones ({}): {} en temporada {}/90; {} fuera al raso {}/90, bajo techo {}/90; hueso al raso {}, bajo techo {}",
+					now, in, inOpen, out, outOpen, outCovered, bonemealOpen, bonemealCovered);
+			check(inOpen == 90, "En su estación no siempre puede crecer");
+			check(outOpen == 0, "Fuera de su estación y al raso crece");
+			check(outCovered > 10 && outCovered < 60, "Fuera de su estación bajo techo no crece a un tercio: " + outCovered);
+			check(!bonemealOpen && bonemealCovered, "La harina de hueso no respeta la estación");
+			ctx.complete();
+		});
 	}
 
 	@GameTest(templateName = EMPTY_STRUCTURE)

@@ -1097,7 +1097,7 @@ segundos (más si vuelves a beber agua mala). Se curan solos o **bebiendo leche*
 ## Fase 16 — Cultivos de temporada (y en 3D)
 
 **Cada cultivo crece solo en su estación.** Fuera de ella, **al raso no crece** (ni con harina de hueso); **bajo techo**
-(sin cielo encima: un invernadero, un granero, un sótano con luz) crece, pero **a un tercio** de lo normal. Solo en el
+(cualquier bloque encima, también de cristal: un invernadero, un granero, un sótano con luz) crece, pero **a un tercio** de lo normal. Solo en el
 mundo normal y con las estaciones activadas (`seasonsEnabled`); la verruga del Nether crece siempre. En la descripción
 de cada semilla sale en qué estaciones crece.
 
