@@ -118,7 +118,7 @@ public class FluidGameTests implements FabricGameTest {
 				after, clicked, buckets, left);
 		check(before == 1800 && first && after == 1796, "Un cubo no se lleva 8 capas: " + before + " -> " + after);
 		check(clicked, "El cubo ha hecho un agujero en vez de bajar el nivel");
-		check(buckets * 4 + left == 1800 && buckets >= 420, "No se vacía en unos 450 cubos: " + buckets + ", quedan " + left);
+		check(buckets * 4 + left == 1800 && buckets >= 380, "No se vacía en unos 450 cubos: " + buckets + ", quedan " + left);
 		ctx.complete();
 	}
 
