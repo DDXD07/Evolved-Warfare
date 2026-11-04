@@ -146,10 +146,11 @@ public final class Woodcutting {
 				for (int dy = -1; dy <= 1; dy++) {
 					for (int dz = -1; dz <= 1; dz++) {
 						BlockPos q = p.add(dx, dy, dz);
-						if (q.getY() < cut.getY() || !seen.add(q)) {
+						if (q.getY() < cut.getY() || seen.contains(q) || !isLog(world, q)) {
 							continue;
 						}
-						if (isLog(world, q)) {
+						{
+							seen.add(q);
 							logs.add(q);
 							queue.add(q);
 						}
