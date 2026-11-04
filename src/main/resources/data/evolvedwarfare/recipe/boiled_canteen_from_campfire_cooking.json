@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:campfire_cooking",
+  "category": "misc",
+  "ingredient": {
+    "item": "evolvedwarfare:water_canteen"
+  },
+  "result": {
+    "id": "evolvedwarfare:boiled_canteen",
+    "count": 1
+  },
+  "experience": 0.05,
+  "cookingtime": 300
+}

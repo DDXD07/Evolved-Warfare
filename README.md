@@ -31,6 +31,7 @@ bloques del mod están plegadas juntas: debajo del nombre solo sale *Mantén Con
 | 10 | **Armas de fuego primitivas**: mosquete de chispa (modelo 3D animado, recarga y disparo con humo), balas de mosquete, bolsa de munición (1000 balas) y **daño locacional** (cabeza, torso, brazos y piernas) | 🔨 En curso |
 | 11 | **Hordas semanales**: contador de días y reloj en pantalla; cada 7 días una horda de bandidos, vikingos o piratas ataca tu base, en oleadas y cada semana más dura | ✅ Hecha |
 | 14 | **Clima**: estaciones de 91 días que cambian el tiempo, la nieve, el hielo, los cultivos y los colores; temperatura del aire y del cuerpo, hipotermia e hipertermia, ropa de piel y de lino | ✅ Hecha |
+| 15 | **Sed**: medidor de gotas encima del hambre; beber del agua del mundo con las manos (agachado + clic derecho, con animación) con riesgo de **parásitos**; agua **hervida** en el horno, la fogata o un caldero al fuego; cantimplora, zumos, lluvia y comidas con agua | ✅ Hecha |
 | 12 | **Armaduras de las facciones**: 4 por facción (por rango), 12 en total, con modelo 3D; las llevan sus guerreros, se fabrican con ventajas de forja, salen en sus cofres y las vende el armero | ✅ Hecha |
 | 13 | **Armaduras de clase** (arquero, guerrero, ladrón y mosquetero) con aspecto de vanilla, en cuero, cobre, hierro, diamante y netherita; ventajas que suben con el material y desventajas; estadísticas manteniendo R | ✅ Hecha |
 
@@ -1054,6 +1055,44 @@ Protegen poco de los golpes (como el cuero). Las armaduras de **cuero** de vanil
 `temperatureFahrenheit` y `showBodyTemperature`. Comandos: `/evolvedwarfare season <spring|summer|autumn|winter>` salta
 al primer día de esa estación y `/evolvedwarfare temperature` dice la temperatura del aire y la de tu cuerpo.
 
+## Fase 15 — La sed
+
+Encima del hambre hay un **medidor de sed**: diez gotas (20 puntos). Se gasta con el tiempo (unos 37 minutos de juego
+sin hacer nada con el aire templado), **más con calor** (desierto, verano, el Nether casi el triple), con fiebre y con lo
+que cansa (correr, saltar, pelear, picar: el mismo cansancio que el hambre). Con **3 gotas o menos no puedes correr ni
+recuperas vida**; vacío, la **deshidratación** quita vida como el hambre (según la dificultad) y debilita. En pacífico
+la sed se recupera sola. Las gotas tiemblan cuando queda poca y se ponen **verdosas si tienes parásitos**.
+
+**Cómo beber:**
+
+- **Agua del mundo** (ríos, lagos, el mar...): **agáchate y haz clic derecho al agua con la mano vacía**. Bebes con
+  las manos (+3), con una **animación de un segundo**: la vista baja al agua, tus dos brazos (en 3D, con tu piel) cogen
+  agua en el hueco de las manos, se la llevan a la boca, echas la cabeza atrás y vuelven abajo, con el chapoteo, el
+  sonido de beber y las gotas que se escurren. Los demás jugadores te ven agacharte, meter las manos y beber. **Sin
+  hervir puede traer parásitos** (un 25 %; en los pantanos, más).
+- **Frascos de agua** (los de siempre): llénalos en el agua como en vanilla; sin hervir quitan +5, pero también pueden
+  traer parásitos. **Hiérvelos en el horno** (5 segundos) **o en la fogata** y tendrás un **Frasco de agua hervida**
+  (+7, refresca y sin peligro).
+- **Caldero puesto al fuego**: un caldero con agua encima de una **fogata encendida** (también fuego, lava, magma o un
+  horno encendido) **hierve** (burbujas y vapor). Agachado y con la mano vacía bebes de él (+4, hervida); con un frasco
+  vacío sacas **agua hervida**; con la cantimplora, la llenas hervida. Cada vez baja un nivel. Un caldero sin fuego da
+  agua sin hervir.
+- **Cantimplora** (cuerda, hierro y cuero): **cuatro tragos** (se ven en su barra azul). Se llena con clic derecho en el
+  agua (sin hervir, +5 por trago) y se hierve en el horno o en la fogata (+6, sin peligro).
+- **Lluvia**: mientras te llueve encima, **agachado, con la mano vacía, mira al cielo y haz clic derecho**: recoges
+  agua de lluvia con las manos (+2, limpia).
+- **Zumos** (en la mesa, con un frasco vacío): de **sandía** (3 rodajas, +8 y refresca), de **manzana** (2 manzanas, +6)
+  y de **bayas** (4 bayas dulces, +6); alimentan un poco.
+- **Comida con agua de verdad**: melón (+4), manzana (+2), manzana dorada, zanahoria, remolacha, patata cruda, bayas,
+  fruta coral, pastel de calabaza, pescado crudo, **sopas y estofados** (+5/+6), **leche** (+6), miel y cualquier poción
+  (+3). Lo **seco o salado da sed**: algas secas y galletas (−1), ojo de araña, carne podrida (−2) y pez globo (−3). En
+  la descripción de cada cosa sale cuánta sed quita.
+
+**Parásitos**: medio corazón cada 5 segundos (no matan: se paran en medio corazón), más hambre y más sed, durante 90
+segundos (más si vuelves a beber agua mala). Se curan solos o **bebiendo leche**.
+
+**Configuración** (pestaña *Clima*): `thirstEnabled` y `parasiteChance` (probabilidad de parásitos en %, 25).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -1072,6 +1111,8 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
   diseños 3D (cubos sobre cabeza, cuerpo, brazos y piernas), las texturas, los iconos, `FactionArmorModels.java`, los
   modelos de objeto, las recetas, las etiquetas y los textos; con `--preview` las dibuja puestas (delante, detrás y
   andando).
+- `ew_thirst.py` — la sed: el medidor de gotas, el agua en las manos, el icono de los parásitos, la cantimplora, el
+  vapor del agua hervida, los modelos (los zumos usan el frasco de vanilla teñido), las recetas, los tipos de daño y los textos.
 - `ew_architect.py` — texturas, modelos y recetas de la mesa del arquitecto, el escáner y el plano.
 - `ew_weapons.py` — iconos, recetas (con la mejora a netherita) y etiquetas de las armas medievales, el arco largo y la
   jabalina, y la mesa de investigación.

@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/** Los brazos al golpear con un arma cuerpo a cuerpo del mod (cada arma tiene su movimiento), al llevar una caja y al leer un catálogo. */
+/** Los brazos al golpear con un arma cuerpo a cuerpo del mod (cada arma tiene su movimiento), al llevar una caja y al leer un catálogo y al beber con las manos. */
 @Mixin(BipedEntityModel.class)
 public abstract class BipedEntityModelMixin {
 	@Inject(method = "setAngles(Lnet/minecraft/entity/LivingEntity;FFFFF)V", at = @At("TAIL"))
@@ -19,5 +19,6 @@ public abstract class BipedEntityModelMixin {
 		CrateCarry.pose((BipedEntityModel<?>) (Object) this, entity, limbAngle, limbDistance, animationProgress);
 		com.evolvedwarfare.client.render.CartPullPose.apply((BipedEntityModel<?>) (Object) this, entity);
 		com.evolvedwarfare.client.catalog.CatalogRemote.pose((BipedEntityModel<?>) (Object) this, entity);
+		com.evolvedwarfare.client.thirst.DrinkAnimation.pose((BipedEntityModel<?>) (Object) this, entity);
 	}
 }

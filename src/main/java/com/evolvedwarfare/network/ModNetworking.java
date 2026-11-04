@@ -22,6 +22,9 @@ public final class ModNetworking {
 		PayloadTypeRegistry.playS2C().register(CatalogPosePayload.ID, CatalogPosePayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(CatalogTurnPayload.ID, CatalogTurnPayload.CODEC);
 		com.evolvedwarfare.trade.CatalogReaders.register();
+		PayloadTypeRegistry.playS2C().register(ThirstPayload.ID, ThirstPayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(DrinkPosePayload.ID, DrinkPosePayload.CODEC);
+		PayloadTypeRegistry.playC2S().register(DrinkRequestPayload.ID, DrinkRequestPayload.CODEC);
 		ServerPlayNetworking.registerGlobalReceiver(FirearmPayload.ID, (payload, context) -> {
 			if (payload.action() == FirearmPayload.FIRE) {
 				com.evolvedwarfare.weapon.MusketItem.tryFire(context.player());

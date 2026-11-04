@@ -7,11 +7,14 @@
 		"BiomeColorMixin",
 		"BipedEntityModelMixin",
 		"CameraMixin",
+		"CampfireBoilMixin",
+		"ClientPlayerSprintMixin",
 		"EntityLookMixin",
 		"HeldItemFeatureRendererMixin",
 		"HeldItemRendererMixin",
 		"InGameHudMixin",
 		"ItemStackTooltipMixin",
+		"MinecraftClientDrinkMixin",
 		"PlayerEntityRendererMixin"
 	],
 	"injectors": {

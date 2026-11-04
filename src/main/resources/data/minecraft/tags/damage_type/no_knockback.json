@@ -3,6 +3,8 @@
   "values": [
     "evolvedwarfare:musket_ball",
     "evolvedwarfare:hypothermia",
-    "evolvedwarfare:heatstroke"
+    "evolvedwarfare:heatstroke",
+    "evolvedwarfare:dehydration",
+    "evolvedwarfare:parasites"
   ]
 }

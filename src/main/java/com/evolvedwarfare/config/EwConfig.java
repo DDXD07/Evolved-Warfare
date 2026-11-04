@@ -76,6 +76,10 @@ public final class EwConfig {
 	public boolean temperatureFahrenheit = false;
 	/** La temperatura del cuerpo encima de los corazones (cada jugador, en su juego). */
 	public boolean showBodyTemperature = true;
+	/** La sed (y su medidor encima del hambre). */
+	public boolean thirstEnabled = true;
+	/** Probabilidad (%) de coger parásitos al beber agua sin hervir. */
+	public int parasiteChance = 25;
 
 	// ------------------------------------------------------------------ asentamientos
 	/** Vida y daño extra por cada nivel del asentamiento por encima del 1. */
@@ -180,6 +184,8 @@ public final class EwConfig {
 			new Option("seasonLength", "climate", 1, 365, 1),
 			new Option("temperatureFahrenheit", "climate", 0, 1, 1),
 			new Option("showBodyTemperature", "climate", 0, 1, 1),
+			new Option("thirstEnabled", "climate", 0, 1, 1),
+			new Option("parasiteChance", "climate", 0, 100, 5),
 			new Option("settlementBonusPerLevel", "settlements", 0.0, 1.0, 0.01),
 			new Option("settlementBlocksPerLevel", "settlements", 100, 100000, 50),
 			new Option("settlementMaxLevel", "settlements", 1, 10, 1),

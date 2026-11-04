@@ -30,6 +30,14 @@ public abstract class HeldItemRendererMixin {
 			ci.cancel();
 			return;
 		}
+		if (com.evolvedwarfare.client.thirst.DrinkAnimation.active(player)) {
+			// bebiendo con las manos: los dos brazos, juntos
+			if (hand == Hand.MAIN_HAND) {
+				com.evolvedwarfare.client.thirst.DrinkAnimation.renderFirstPerson(player, matrices, vertexConsumers, light);
+			}
+			ci.cancel();
+			return;
+		}
 		if (hand == Hand.MAIN_HAND ? CropCrateItem.isCrate(item) : CrateCarry.carrying(player)) {
 			if (hand == Hand.MAIN_HAND) {
 				CrateCarry.renderFirstPerson(player, tickDelta, equipProgress, swingProgress, item, matrices, vertexConsumers, light);

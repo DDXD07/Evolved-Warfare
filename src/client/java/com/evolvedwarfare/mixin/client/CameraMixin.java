@@ -33,6 +33,15 @@ public abstract class CameraMixin {
 		if (book != null) {
 			setRotation(book.yaw(), book.pitch());
 			setPos(book.x(), book.y(), book.z());
+			return;
+		}
+		// bebiendo con las manos: la vista baja hacia el agua y luego se echa atrás
+		if (!thirdPerson && focusedEntity != null) {
+			float dp = com.evolvedwarfare.client.thirst.DrinkAnimation.cameraPitch(focusedEntity);
+			if (dp != 0.0F) {
+				Camera self = (Camera) (Object) this;
+				setRotation(self.getYaw(), net.minecraft.util.math.MathHelper.clamp(self.getPitch() + dp, -90.0F, 90.0F));
+			}
 		}
 	}
 }

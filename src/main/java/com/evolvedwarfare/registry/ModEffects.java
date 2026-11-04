@@ -13,6 +13,10 @@ public final class ModEffects {
 	public static final RegistryEntry<StatusEffect> BLEEDING = Registry.registerReference(Registries.STATUS_EFFECT,
 			EvolvedWarfare.id("bleeding"), new BleedingEffect());
 
+	/** Parásitos: los da el agua sin hervir ({@link com.evolvedwarfare.climate.Thirst}). */
+	public static final RegistryEntry<StatusEffect> PARASITES = Registry.registerReference(Registries.STATUS_EFFECT,
+			EvolvedWarfare.id("parasites"), new com.evolvedwarfare.climate.ParasitesEffect());
+
 	private ModEffects() {
 	}
 

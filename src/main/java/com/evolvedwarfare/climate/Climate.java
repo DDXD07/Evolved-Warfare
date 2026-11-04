@@ -294,7 +294,7 @@ public final class Climate {
 		player.setAttached(BODY, MathHelper.clamp(value, 30.0F, 44.0F));
 	}
 
-	private static boolean exempt(ServerPlayerEntity player) {
+	public static boolean exempt(ServerPlayerEntity player) {
 		GameMode mode = player.interactionManager.getGameMode();
 		return mode == GameMode.CREATIVE || mode == GameMode.SPECTATOR;
 	}
@@ -327,6 +327,7 @@ public final class Climate {
 				body = living(world, player, air, body, second);
 			}
 			setBody(player, body);
+			Thirst.second(world, player, air, second);
 			ClimatePayload.send(player, new ClimatePayload(body, air, season.ordinal(), Season.dayOf(day, length), length, enabled(),
 					seasonsEnabled()));
 		}
@@ -387,6 +388,15 @@ public final class Climate {
 
 	private static DamageSource source(ServerWorld world, RegistryKey<DamageType> key) {
 		return new DamageSource(world.getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(key));
+	}
+
+	/** Refresca el cuerpo (al beber agua), sin bajar de 36 °C. */
+	public static void cool(PlayerEntity player, float amount) {
+		if (!enabled()) {
+			return;
+		}
+		float body = body(player);
+		setBody(player, Math.min(body, Math.max(36.0F, body - amount)));
 	}
 
 	/** Al comer o beber: las sopas y estofados calientan; el agua, el melón y las bayas refrescan. */

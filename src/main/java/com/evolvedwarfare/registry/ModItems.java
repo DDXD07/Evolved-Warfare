@@ -162,6 +162,22 @@ public final class ModItems {
 		}
 	}
 
+	// la sed: agua hervida, zumos y la cantimplora (vacía, con agua sin hervir y con agua hervida)
+	public static final Item BOILED_WATER = register("boiled_water",
+			new com.evolvedwarfare.climate.DrinkItem(7.0F, 0, 0.0F, 1.5F, new Item.Settings().maxCount(16)));
+	public static final Item MELON_JUICE = register("melon_juice",
+			new com.evolvedwarfare.climate.DrinkItem(8.0F, 2, 0.2F, 1.0F, new Item.Settings().maxCount(16)));
+	public static final Item APPLE_JUICE = register("apple_juice",
+			new com.evolvedwarfare.climate.DrinkItem(6.0F, 2, 0.3F, 0.5F, new Item.Settings().maxCount(16)));
+	public static final Item BERRY_JUICE = register("berry_juice",
+			new com.evolvedwarfare.climate.DrinkItem(6.0F, 1, 0.2F, 0.5F, new Item.Settings().maxCount(16)));
+	public static final Item CANTEEN = register("canteen", new com.evolvedwarfare.climate.CanteenItem(
+			com.evolvedwarfare.climate.CanteenItem.Kind.EMPTY, new Item.Settings().maxCount(1)));
+	public static final Item WATER_CANTEEN = register("water_canteen", new com.evolvedwarfare.climate.CanteenItem(
+			com.evolvedwarfare.climate.CanteenItem.Kind.RAW, new Item.Settings().maxDamage(com.evolvedwarfare.climate.CanteenItem.SIPS)));
+	public static final Item BOILED_CANTEEN = register("boiled_canteen", new com.evolvedwarfare.climate.CanteenItem(
+			com.evolvedwarfare.climate.CanteenItem.Kind.BOILED, new Item.Settings().maxDamage(com.evolvedwarfare.climate.CanteenItem.SIPS)));
+
 	/** Ropa para el clima: piel (abriga) y lino (refresca), cuatro piezas cada una ({@link com.evolvedwarfare.climate.ClimateWearItem}). */
 	public static final Map<com.evolvedwarfare.climate.ClimateWearItem.Kind, List<Item>> CLIMATE_WEAR =
 			new EnumMap<>(com.evolvedwarfare.climate.ClimateWearItem.Kind.class);
@@ -293,6 +309,13 @@ public final class ModItems {
 							tiers.values().forEach(pieces -> pieces.forEach(entries::add));
 						}
 						CLIMATE_WEAR.values().forEach(pieces -> pieces.forEach(entries::add));
+						entries.add(BOILED_WATER);
+						entries.add(MELON_JUICE);
+						entries.add(APPLE_JUICE);
+						entries.add(BERRY_JUICE);
+						entries.add(CANTEEN);
+						entries.add(WATER_CANTEEN);
+						entries.add(BOILED_CANTEEN);
 						entries.add(MUSKET);
 						entries.add(MUSKET_BALL);
 						entries.add(AMMO_POUCH);
