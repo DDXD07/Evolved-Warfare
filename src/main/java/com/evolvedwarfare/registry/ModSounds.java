@@ -35,6 +35,18 @@ public final class ModSounds {
 	/** Ruidos de ambiente del Nether (cinco, al azar): suenan cada cierto tiempo mientras estás allí. */
 	public static final SoundEvent NETHER_AMBIENCE = register("ambient.nether");
 
+	/** El Nether bíblico: demonios, diablillos, almas en pena y la lluvia de fuego (sonidos de vanilla, más graves o agudos). */
+	public static final SoundEvent DEMON_AMBIENT = register("entity.demon.ambient");
+	public static final SoundEvent DEMON_HURT = register("entity.demon.hurt");
+	public static final SoundEvent DEMON_DEATH = register("entity.demon.death");
+	public static final SoundEvent IMP_AMBIENT = register("entity.imp.ambient");
+	public static final SoundEvent IMP_HURT = register("entity.imp.hurt");
+	public static final SoundEvent IMP_DEATH = register("entity.imp.death");
+	public static final SoundEvent LOST_SOUL_AMBIENT = register("entity.lost_soul.ambient");
+	public static final SoundEvent LOST_SOUL_HURT = register("entity.lost_soul.hurt");
+	public static final SoundEvent LOST_SOUL_DEATH = register("entity.lost_soul.death");
+	public static final SoundEvent FIRE_RAIN = register("weather.fire_rain");
+
 	/** Lo que dice un NPC: su voz de siempre, su queja al recibir un golpe y al morir. */
 	public record Voice(SoundEvent ambient, SoundEvent hurt, SoundEvent death) {
 	}

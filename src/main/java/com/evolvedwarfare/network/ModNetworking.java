@@ -18,6 +18,7 @@ public final class ModNetworking {
 		PayloadTypeRegistry.playS2C().register(PlaceNoticePayload.ID, PlaceNoticePayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(CratePickupPayload.ID, CratePickupPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(HordeInfoPayload.ID, HordeInfoPayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(FireRainPayload.ID, FireRainPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(ClimatePayload.ID, ClimatePayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(CatalogPosePayload.ID, CatalogPosePayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(CatalogTurnPayload.ID, CatalogTurnPayload.CODEC);

@@ -92,6 +92,10 @@ public final class EwConfig {
 	public boolean axeForLogs = true;
 	/** Al talar uno de los dos primeros troncos de un árbol, cae entero (agachado, solo ese tronco). */
 	public boolean treeFelling = true;
+	/** La lluvia de fuego y azufre del Nether. */
+	public boolean fireRain = true;
+	/** Cada cuántos minutos, más o menos, llueve fuego en el Nether. */
+	public int fireRainEveryMinutes = 15;
 	/** La sed (y su medidor encima del hambre). */
 	public boolean thirstEnabled = true;
 	/** Probabilidad (%) de coger parásitos al beber agua sin hervir. */
@@ -213,6 +217,8 @@ public final class EwConfig {
 			new Option("realisticFluids", "climate", 0, 1, 1),
 			new Option("axeForLogs", "climate", 0, 1, 1),
 			new Option("treeFelling", "climate", 0, 1, 1),
+			new Option("fireRain", "climate", 0, 1, 1),
+			new Option("fireRainEveryMinutes", "climate", 1, 240, 1),
 			new Option("parasiteChance", "climate", 0, 100, 5),
 			new Option("settlementBonusPerLevel", "settlements", 0.0, 1.0, 0.01),
 			new Option("settlementBlocksPerLevel", "settlements", 100, 100000, 50),

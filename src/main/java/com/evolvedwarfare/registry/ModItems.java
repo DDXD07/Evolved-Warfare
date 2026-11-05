@@ -194,6 +194,15 @@ public final class ModItems {
 			.food(new net.minecraft.component.type.FoodComponent.Builder().nutrition(9).saturationModifier(0.8F)
 					.usingConvertsTo(net.minecraft.item.Items.BOWL).build())));
 
+	// el Nether bíblico: el azufre y los huevos de sus criaturas
+	public static final Item BRIMSTONE = register("brimstone", new com.evolvedwarfare.item.DescribedItem(new Item.Settings()));
+	public static final Item DEMON_SPAWN_EGG = register("demon_spawn_egg",
+			new net.minecraft.item.SpawnEggItem(ModEntities.DEMON, 0x5A0C08, 0x1E1A18, new Item.Settings()));
+	public static final Item IMP_SPAWN_EGG = register("imp_spawn_egg",
+			new net.minecraft.item.SpawnEggItem(ModEntities.IMP, 0xC4461E, 0x3C2A1E, new Item.Settings()));
+	public static final Item LOST_SOUL_SPAWN_EGG = register("lost_soul_spawn_egg",
+			new net.minecraft.item.SpawnEggItem(ModEntities.LOST_SOUL, 0xC4E4EC, 0x4A8CA0, new Item.Settings()));
+
 	// la fruta de los frutales, sus zumos y el hacha de sílex
 	public static final Item PEAR = register("pear", new com.evolvedwarfare.item.DescribedItem(new Item.Settings().food(food(4, 0.3F))));
 	public static final Item PLUM = register("plum", new com.evolvedwarfare.item.DescribedItem(new Item.Settings().food(food(3, 0.3F))));
@@ -353,6 +362,12 @@ public final class ModItems {
 						entries.add(ModBlocks.CROP_CRATE_ITEM);
 						entries.add(ModBlocks.SALES_MAILBOX);
 						entries.add(ModBlocks.TRADER_CATALOG);
+						entries.add(ModBlocks.ASH_BLOCK);
+						entries.add(ModBlocks.BRIMSTONE_BLOCK);
+						entries.add(BRIMSTONE);
+						entries.add(DEMON_SPAWN_EGG);
+						entries.add(IMP_SPAWN_EGG);
+						entries.add(LOST_SOUL_SPAWN_EGG);
 						entries.add(FLINT_HATCHET);
 						for (com.evolvedwarfare.orchard.FruitKind kind : com.evolvedwarfare.orchard.FruitKind.values()) {
 							entries.add(ModBlocks.FRUIT_SAPLINGS.get(kind));

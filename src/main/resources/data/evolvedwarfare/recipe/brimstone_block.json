@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "BB",
+    "BB"
+  ],
+  "key": {
+    "B": {
+      "item": "evolvedwarfare:brimstone"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:brimstone_block",
+    "count": 1
+  }
+}

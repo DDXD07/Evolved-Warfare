@@ -167,6 +167,18 @@ public final class ModEntities {
 	}
 
 	/** Lo que se corta con el desmembramiento (brazos, piernas, cabezas). */
+	// el Nether bíblico
+	public static final EntityType<com.evolvedwarfare.hell.DemonEntity> DEMON = Registry.register(Registries.ENTITY_TYPE, EvolvedWarfare.id("demon"),
+			EntityType.Builder.<com.evolvedwarfare.hell.DemonEntity>create(com.evolvedwarfare.hell.DemonEntity::new, SpawnGroup.MONSTER)
+					.dimensions(0.9F, 2.6F).eyeHeight(2.3F).makeFireImmune().maxTrackingRange(10).build("demon"));
+	public static final EntityType<com.evolvedwarfare.hell.ImpEntity> IMP = Registry.register(Registries.ENTITY_TYPE, EvolvedWarfare.id("imp"),
+			EntityType.Builder.<com.evolvedwarfare.hell.ImpEntity>create(com.evolvedwarfare.hell.ImpEntity::new, SpawnGroup.MONSTER)
+					.dimensions(0.5F, 1.2F).eyeHeight(1.05F).makeFireImmune().maxTrackingRange(8).build("imp"));
+	public static final EntityType<com.evolvedwarfare.hell.LostSoulEntity> LOST_SOUL = Registry.register(Registries.ENTITY_TYPE,
+			EvolvedWarfare.id("lost_soul"),
+			EntityType.Builder.<com.evolvedwarfare.hell.LostSoulEntity>create(com.evolvedwarfare.hell.LostSoulEntity::new, SpawnGroup.MONSTER)
+					.dimensions(0.7F, 1.9F).eyeHeight(1.6F).makeFireImmune().maxTrackingRange(8).build("lost_soul"));
+
 	public static final EntityType<com.evolvedwarfare.wood.FallingTreeEntity> FALLING_TREE = Registry.register(Registries.ENTITY_TYPE,
 			EvolvedWarfare.id("falling_tree"),
 			EntityType.Builder.<com.evolvedwarfare.wood.FallingTreeEntity>create(com.evolvedwarfare.wood.FallingTreeEntity::new, SpawnGroup.MISC)
@@ -186,6 +198,9 @@ public final class ModEntities {
 	}
 
 	public static void init() {
+		FabricDefaultAttributeRegistry.register(DEMON, com.evolvedwarfare.hell.DemonEntity.createDemonAttributes());
+		FabricDefaultAttributeRegistry.register(IMP, com.evolvedwarfare.hell.ImpEntity.createImpAttributes());
+		FabricDefaultAttributeRegistry.register(LOST_SOUL, com.evolvedwarfare.hell.LostSoulEntity.createSoulAttributes());
 		FabricDefaultAttributeRegistry.register(RECRUIT, AbstractNpcEntity.createNpcAttributes());
 		FabricDefaultAttributeRegistry.register(SOLDIER, AbstractNpcEntity.createNpcAttributes());
 		FabricDefaultAttributeRegistry.register(CITY_GUARD, AbstractNpcEntity.createNpcAttributes());

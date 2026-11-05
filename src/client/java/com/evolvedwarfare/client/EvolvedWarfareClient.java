@@ -86,6 +86,19 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		DayClockHud.register();
 		ClientClimate.register();
 		NetherAmbience.register();
+		// el Nether bíblico: el cielo, la ceniza, y sus criaturas
+		com.evolvedwarfare.client.hell.HellSky.register();
+		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(com.evolvedwarfare.client.hell.DemonRenderer.DEMON,
+				() -> com.evolvedwarfare.client.hell.DemonModel.getTexturedModelData(false));
+		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(com.evolvedwarfare.client.hell.DemonRenderer.IMP,
+				() -> com.evolvedwarfare.client.hell.DemonModel.getTexturedModelData(true));
+		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(com.evolvedwarfare.client.hell.LostSoulRenderer.LAYER,
+				com.evolvedwarfare.client.hell.LostSoulModel::getTexturedModelData);
+		EntityRendererRegistry.register(ModEntities.DEMON,
+				ctx -> new com.evolvedwarfare.client.hell.DemonRenderer<>(ctx, "demon", com.evolvedwarfare.client.hell.DemonRenderer.DEMON, 1.3F));
+		EntityRendererRegistry.register(ModEntities.IMP,
+				ctx -> new com.evolvedwarfare.client.hell.DemonRenderer<>(ctx, "imp", com.evolvedwarfare.client.hell.DemonRenderer.IMP, 0.62F));
+		EntityRendererRegistry.register(ModEntities.LOST_SOUL, com.evolvedwarfare.client.hell.LostSoulRenderer::new);
 		com.evolvedwarfare.client.render.armor.FactionArmorRenderer.register();
 		// máquinas de asedio: sus modelos 3D, la cámara aérea (clic izquierdo mantenido) y la vista previa del tiro
 		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(

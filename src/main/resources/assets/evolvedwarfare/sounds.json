@@ -358,5 +358,175 @@
         "volume": 0.75
       }
     ]
+  },
+  "entity.demon.ambient": {
+    "subtitle": "subtitles.evolvedwarfare.entity.demon.ambient",
+    "sounds": [
+      {
+        "name": "minecraft:mob/hoglin/angry1",
+        "pitch": 0.6,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:mob/hoglin/angry2",
+        "pitch": 0.6,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:mob/ravager/ambient1",
+        "pitch": 0.7,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.demon.hurt": {
+    "subtitle": "subtitles.evolvedwarfare.entity.demon.hurt",
+    "sounds": [
+      {
+        "name": "minecraft:mob/ravager/hurt1",
+        "pitch": 0.7,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:mob/ravager/hurt2",
+        "pitch": 0.7,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.demon.death": {
+    "subtitle": "subtitles.evolvedwarfare.entity.demon.death",
+    "sounds": [
+      {
+        "name": "minecraft:mob/ravager/death1",
+        "pitch": 0.6,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:mob/ravager/death2",
+        "pitch": 0.6,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.imp.ambient": {
+    "subtitle": "subtitles.evolvedwarfare.entity.imp.ambient",
+    "sounds": [
+      {
+        "name": "minecraft:mob/piglin/angry1",
+        "pitch": 1.4,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:mob/piglin/angry2",
+        "pitch": 1.4,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:mob/vex/idle1",
+        "pitch": 0.8,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.imp.hurt": {
+    "subtitle": "subtitles.evolvedwarfare.entity.imp.hurt",
+    "sounds": [
+      {
+        "name": "minecraft:mob/piglin/hurt1",
+        "pitch": 1.4,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:mob/piglin/hurt2",
+        "pitch": 1.4,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.imp.death": {
+    "subtitle": "subtitles.evolvedwarfare.entity.imp.death",
+    "sounds": [
+      {
+        "name": "minecraft:mob/piglin/death1",
+        "pitch": 1.3,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:mob/piglin/death2",
+        "pitch": 1.3,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.lost_soul.ambient": {
+    "subtitle": "subtitles.evolvedwarfare.entity.lost_soul.ambient",
+    "sounds": [
+      {
+        "name": "minecraft:mob/ghast/moan1",
+        "pitch": 0.5,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:mob/ghast/moan2",
+        "pitch": 0.45,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:mob/ghast/moan4",
+        "pitch": 0.5,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:mob/ghast/moan6",
+        "pitch": 0.55,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.lost_soul.hurt": {
+    "subtitle": "subtitles.evolvedwarfare.entity.lost_soul.hurt",
+    "sounds": [
+      {
+        "name": "minecraft:mob/vex/hurt1",
+        "pitch": 0.6,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:mob/vex/hurt2",
+        "pitch": 0.6,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.lost_soul.death": {
+    "subtitle": "subtitles.evolvedwarfare.entity.lost_soul.death",
+    "sounds": [
+      {
+        "name": "minecraft:mob/ghast/death",
+        "pitch": 0.5,
+        "volume": 1.0
+      }
+    ]
+  },
+  "weather.fire_rain": {
+    "subtitle": "subtitles.evolvedwarfare.weather.fire_rain",
+    "sounds": [
+      {
+        "name": "minecraft:random/explode1",
+        "pitch": 0.4,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:ambient/weather/thunder1",
+        "pitch": 0.5,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:ambient/weather/thunder2",
+        "pitch": 0.45,
+        "volume": 1.0
+      }
+    ]
   }
 }

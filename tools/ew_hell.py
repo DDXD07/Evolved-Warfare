@@ -1,0 +1,530 @@
+"""El Nether bíblico (fase 23): sin techo, montañas, colinas y lagos de fuego.
+
+Sobrescribe el Nether de vanilla (tipo de dimensión, dimensión, ruido del terreno y reglas de superficie), crea los biomas
+nuevos (llanuras de ceniza, campos de azufre y lagos de fuego), los bloques (bloque de ceniza y de azufre) y el azufre,
+las texturas de los demonios, los diablillos y las almas en pena, sus sonidos (de vanilla, más graves), botín, recetas,
+etiquetas y textos.
+
+Uso: python3 tools/ew_hell.py [raíz del proyecto] [--preview carpeta]
+"""
+import collections
+import copy
+import glob
+import json
+import os
+import random
+import sys
+
+from PIL import Image
+
+args = sys.argv[1:]
+PREVIEW = None
+if "--preview" in args:
+    i = args.index("--preview")
+    PREVIEW = args[i + 1]
+    del args[i:i + 2]
+ROOT = args[0] if args else os.path.join(os.path.dirname(__file__), "..")
+HERE = os.path.dirname(os.path.abspath(__file__))
+NS = "evolvedwarfare"
+ASSETS = os.path.join(ROOT, "src/main/resources/assets", NS)
+DATA = os.path.join(ROOT, "src/main/resources/data", NS)
+MC_DATA = os.path.join(ROOT, "src/main/resources/data/minecraft")
+
+
+def write_json(path, obj, indent=2):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(obj, f, ensure_ascii=False, indent=indent)
+        f.write("\n")
+
+
+def add_tag(path, values):
+    t = {"replace": False, "values": []}
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as f:
+            t = json.load(f)
+    for v in values:
+        if v not in t["values"]:
+            t["values"].append(v)
+    write_json(path, t)
+
+
+# ------------------------------------------------------------------ el terreno
+
+def noise(name, scale=1.0):
+    return {"type": "minecraft:noise", "noise": "%s:%s" % (NS, name), "xz_scale": scale, "y_scale": 0.0}
+
+
+def add(a, b):
+    return {"type": "minecraft:add", "argument1": a, "argument2": b}
+
+
+def mul(a, b):
+    return {"type": "minecraft:mul", "argument1": a, "argument2": b}
+
+
+def clamp(x, lo, hi):
+    return {"type": "minecraft:clamp", "input": x, "min": lo, "max": hi}
+
+
+def flat(x):
+    return {"type": "minecraft:flat_cache", "argument": {"type": "minecraft:cache_2d", "argument": x}}
+
+
+NOISES = {
+    "hell_hills": {"firstOctave": -7, "amplitudes": [1.0, 1.0, 0.5]},
+    "hell_mountains": {"firstOctave": -8, "amplitudes": [1.0, 0.6, 0.3, 0.15]},
+    "hell_mountain_mask": {"firstOctave": -9, "amplitudes": [1.0, 1.0]},
+    "hell_basins": {"firstOctave": -8, "amplitudes": [1.0, 0.5]},
+    "hell_detail": {"firstOctave": -5, "amplitudes": [1.0, 0.5, 0.25]},
+}
+
+# la altura del suelo (en "densidad": 1 = 64 bloques): llano a ~52, colinas de ±16, montañas de hasta +110 y hoyas de
+# -30 (debajo de 32 se llenan de lava: lagos de fuego)
+HILLS = mul(0.25, noise("hell_hills"))
+RIDGE = add(1.0, mul(-2.0, {"type": "minecraft:abs", "argument": noise("hell_mountains")}))
+MASK = clamp(mul(2.2, add(noise("hell_mountain_mask"), -0.05)), 0.0, 1.0)
+MOUNTAINS = mul(MASK, mul(1.45, clamp(add(0.35, RIDGE), 0.0, 1.3)))
+BASINS = mul(-0.5, clamp(mul(3.0, add(noise("hell_basins"), -0.3)), 0.0, 1.0))
+TERRAIN = flat(add(add(-1.1875, HILLS), add(MOUNTAINS, BASINS)))
+DETAIL = mul(0.12, {"type": "minecraft:noise", "noise": "%s:hell_detail" % NS, "xz_scale": 1.0, "y_scale": 1.5})
+# sobre la superficie: 2 en y = 0 y -2 en y = 256
+SURFACE = add(add({"type": "minecraft:y_clamped_gradient", "from_y": 0, "to_y": 256, "from_value": 2.0, "to_value": -2.0}, TERRAIN), DETAIL)
+# las cavernas de siempre, solo en lo hondo (a más de ~20 bloques bajo la superficie) y con el suelo de abajo macizo
+CAVES = add(add(0.3, "minecraft:nether/base_3d_noise"),
+            {"type": "minecraft:y_clamped_gradient", "from_y": 0, "to_y": 16, "from_value": 2.5, "to_value": 0.0})
+NEAR_SURFACE = mul(4.0, add(0.3, mul(-1.0, SURFACE)))
+DENSITY = {"type": "minecraft:min", "argument1": SURFACE, "argument2": {"type": "minecraft:max", "argument1": CAVES, "argument2": NEAR_SURFACE}}
+FINAL_DENSITY = {"type": "minecraft:squeeze", "argument": mul(0.64, {"type": "minecraft:interpolated",
+                                                                      "argument": {"type": "minecraft:blend_density", "argument": DENSITY}})}
+
+BIOMES = ["ash_plains", "brimstone_fields", "lake_of_fire"]
+
+
+def block(name, props=None):
+    out = {"Name": name}
+    if props:
+        out["Properties"] = props
+    return {"type": "minecraft:block", "result_state": out}
+
+
+def cond(test, then):
+    return {"type": "minecraft:condition", "if_true": test, "then_run": then}
+
+
+def floor(depth=False):
+    return {"type": "minecraft:stone_depth", "add_surface_depth": depth, "offset": 0, "secondary_depth_range": 0, "surface_type": "floor"}
+
+
+def ceiling():
+    return {"type": "minecraft:stone_depth", "add_surface_depth": True, "offset": 0, "secondary_depth_range": 0, "surface_type": "ceiling"}
+
+
+def selector(minimum, name="minecraft:nether_state_selector"):
+    return {"type": "minecraft:noise_threshold", "noise": name, "min_threshold": minimum, "max_threshold": 1.7976931348623157e308}
+
+
+def biome_is(*names):
+    return {"type": "minecraft:biome", "biome_is": ["%s:%s" % (NS, n) for n in names]}
+
+
+def above(y):
+    return {"type": "minecraft:y_above", "anchor": {"absolute": y}, "surface_depth_multiplier": 0, "add_stone_depth": False}
+
+
+def seq(*rules):
+    return {"type": "minecraft:sequence", "sequence": list(rules)}
+
+
+ASH = "%s:ash_block" % NS
+BRIMSTONE = "%s:brimstone_block" % NS
+HELL_RULES = [
+    # las cumbres: piedra negra, basalto y obsidiana
+    cond(above(118), cond(floor(True), seq(
+        cond(selector(0.55), block("minecraft:obsidian")),
+        cond(selector(0.15), block("minecraft:basalt", {"axis": "y"})),
+        block("minecraft:blackstone")))),
+    cond(biome_is("ash_plains"), seq(
+        cond(ceiling(), block("minecraft:basalt", {"axis": "y"})),
+        cond(floor(), seq(cond(selector(0.5), block("minecraft:soul_soil")), block(ASH))),
+        cond(floor(True), block("minecraft:basalt", {"axis": "y"})))),
+    cond(biome_is("brimstone_fields"), seq(
+        cond(floor(), seq(cond(selector(-0.3, "minecraft:patch"), block(BRIMSTONE)), block("minecraft:netherrack"))),
+        cond(floor(True), seq(cond(selector(0.2), block(BRIMSTONE)), block("minecraft:netherrack"))))),
+    cond(biome_is("lake_of_fire"), seq(
+        cond(floor(), seq(cond(selector(0.3), block("minecraft:magma_block")), block("minecraft:blackstone"))),
+        cond(floor(True), block("minecraft:blackstone")))),
+]
+
+
+def noise_settings():
+    with open(os.path.join(HERE, "vanilla", "nether_noise_settings.json"), encoding="utf-8") as f:
+        s = json.load(f)
+    s["noise"]["height"] = 256
+    s["noise_router"]["final_density"] = FINAL_DENSITY
+    rules = s["surface_rule"]["sequence"]
+    # fuera el techo de roca madre (y el relleno de debajo del techo)
+    kept = [r for r in rules if "bedrock_roof" not in json.dumps(r) and "below_top" not in json.dumps(r)]
+    s["surface_rule"]["sequence"] = kept[:1] + HELL_RULES + kept[1:]
+    return s
+
+
+DIMENSION_TYPE = {
+    "ambient_light": 0.1, "bed_works": False, "coordinate_scale": 8.0, "effects": "%s:hell" % NS, "fixed_time": 18000,
+    "has_ceiling": False, "has_raids": False, "has_skylight": False, "height": 256, "infiniburn": "#minecraft:infiniburn_nether",
+    "logical_height": 256, "min_y": 0, "monster_spawn_block_light_limit": 15, "monster_spawn_light_level": 7, "natural": False,
+    "piglin_safe": True, "respawn_anchor_works": True, "ultrawarm": True,
+}
+
+
+def point(biome, temperature, humidity, offset):
+    return {"biome": biome, "parameters": {"continentalness": 0.0, "depth": 0.0, "erosion": 0.0, "humidity": humidity,
+                                           "offset": offset, "temperature": temperature, "weirdness": 0.0}}
+
+
+DIMENSION = {"type": "minecraft:the_nether", "generator": {"type": "minecraft:noise", "settings": "minecraft:nether", "biome_source": {
+    "type": "minecraft:multi_noise", "biomes": [
+        point("minecraft:nether_wastes", 0.0, 0.0, 0.0),
+        point("minecraft:soul_sand_valley", 0.0, -0.5, 0.0),
+        point("minecraft:crimson_forest", 0.4, 0.0, 0.0),
+        point("minecraft:warped_forest", 0.0, 0.5, 0.375),
+        point("minecraft:basalt_deltas", -0.5, 0.0, 0.175),
+        point("%s:ash_plains" % NS, -0.4, -0.5, 0.1),
+        point("%s:brimstone_fields" % NS, 0.5, -0.5, 0.1),
+        point("%s:lake_of_fire" % NS, 0.55, 0.45, 0.15),
+    ]}}}
+
+ORES = ["minecraft:ore_magma", "minecraft:spring_closed", "minecraft:ore_gravel_nether", "minecraft:ore_blackstone", "minecraft:ore_gold_nether",
+        "minecraft:ore_quartz_nether", "minecraft:ore_ancient_debris_large", "minecraft:ore_debris_small"]
+
+
+def biome(fog, particle, sounds, features7, step2=(), step4=(), step9=("minecraft:spring_lava",), monsters=(), creature=True):
+    effects = {"fog_color": fog, "sky_color": fog, "water_color": 4159204, "water_fog_color": 329011,
+               "ambient_sound": "minecraft:ambient.%s.loop" % sounds,
+               "additions_sound": {"sound": "minecraft:ambient.%s.additions" % sounds, "tick_chance": 0.0111},
+               "mood_sound": {"block_search_extent": 8, "offset": 2.0, "sound": "minecraft:ambient.%s.mood" % sounds, "tick_delay": 6000},
+               "music": {"max_delay": 24000, "min_delay": 12000, "replace_current_music": False, "sound": "minecraft:music.nether.%s" % sounds},
+               "particle": particle}
+    features = [[] for _ in range(11)]
+    features[2] = list(step2)
+    features[4] = list(step4)
+    features[7] = list(features7)
+    features[9] = list(step9)
+    return {"has_precipitation": False, "temperature": 2.0, "downfall": 0.0, "effects": effects,
+            "carvers": {"air": "minecraft:nether_cave"}, "features": features, "spawn_costs": {},
+            "spawners": {"ambient": [], "axolotls": [], "misc": [], "underground_water_creature": [], "water_ambient": [], "water_creature": [],
+                         "creature": [{"type": "minecraft:strider", "weight": 60, "minCount": 1, "maxCount": 2}] if creature else [],
+                         "monster": [{"type": t, "weight": w, "minCount": a, "maxCount": b} for (t, w, a, b) in monsters]}}
+
+
+def biomes():
+    return {
+        "ash_plains": biome(0x3A3030, {"options": {"type": "minecraft:white_ash"}, "probability": 0.09}, "soul_sand_valley",
+                            ["minecraft:spring_open", "minecraft:patch_fire", "minecraft:patch_soul_fire"] + ORES,
+                            step2=["minecraft:basalt_pillar"],
+                            monsters=[("%s:lost_soul" % NS, 60, 1, 3), ("minecraft:ghast", 40, 1, 2), ("minecraft:skeleton", 15, 2, 4),
+                                      ("%s:imp" % NS, 15, 1, 2)]),
+        "brimstone_fields": biome(0x5A3A08, {"options": {"type": "minecraft:ash"}, "probability": 0.02}, "nether_wastes",
+                                  ["minecraft:spring_open", "minecraft:patch_fire", "minecraft:glowstone_extra", "minecraft:glowstone"] + ORES
+                                  + ["%s:ore_brimstone" % NS],
+                                  monsters=[("%s:imp" % NS, 40, 1, 3), ("%s:demon" % NS, 12, 1, 1), ("minecraft:magma_cube", 20, 2, 3),
+                                            ("minecraft:zombified_piglin", 40, 2, 4)]),
+        "lake_of_fire": biome(0x6A1606, {"options": {"type": "minecraft:lava"}, "probability": 0.004}, "basalt_deltas",
+                              ["minecraft:spring_open", "minecraft:patch_fire"] + ORES, step4=["minecraft:delta"],
+                              monsters=[("%s:demon" % NS, 25, 1, 2), ("%s:imp" % NS, 30, 1, 3), ("minecraft:magma_cube", 60, 2, 4),
+                                        ("minecraft:ghast", 30, 1, 2)]),
+    }
+
+
+ORE_BRIMSTONE_CONFIGURED = {"type": "minecraft:ore", "config": {"size": 16, "discard_chance_on_air_exposure": 0.0, "targets": [
+    {"target": {"predicate_type": "minecraft:block_match", "block": "minecraft:netherrack"}, "state": {"Name": BRIMSTONE}}]}}
+ORE_BRIMSTONE_PLACED = {"feature": "%s:ore_brimstone" % NS, "placement": [
+    {"type": "minecraft:count", "count": 14}, {"type": "minecraft:in_square"},
+    {"type": "minecraft:height_range", "height": {"type": "minecraft:uniform", "min_inclusive": {"absolute": 10}, "max_inclusive": {"absolute": 140}}},
+    {"type": "minecraft:biome"}]}
+
+
+# ------------------------------------------------------------------ texturas
+
+def noisy(im, box, base, var, seed, alpha=255):
+    r = random.Random(seed)
+    x0, y0, x1, y1 = box
+    for y in range(y0, y1):
+        for x in range(x0, x1):
+            k = r.uniform(-var, var)
+            im.putpixel((x, y), tuple(max(0, min(255, int(c * (1 + k)))) for c in base) + (alpha,))
+
+
+def block_textures():
+    out = {}
+    # ceniza: gris claro con motas
+    im = Image.new("RGBA", (16, 16))
+    noisy(im, (0, 0, 16, 16), (122, 116, 112), 0.12, 1)
+    r = random.Random(2)
+    for _ in range(18):
+        x, y = r.randrange(16), r.randrange(16)
+        im.putpixel((x, y), (r.choice([64, 70, 160, 172]),) * 3 + (255,))
+    out["block/ash_block"] = im
+    # azufre: amarillo cristalino con vetas naranjas
+    im = Image.new("RGBA", (16, 16))
+    noisy(im, (0, 0, 16, 16), (214, 190, 44), 0.12, 3)
+    r = random.Random(4)
+    for _ in range(5):
+        x, y = r.randrange(16), r.randrange(16)
+        for k in range(r.randint(2, 5)):
+            xx, yy = (x + k) % 16, (y + k // 2) % 16
+            im.putpixel((xx, yy), (238, 150, 30, 255))
+    for _ in range(10):
+        x, y = r.randrange(16), r.randrange(16)
+        im.putpixel((x, y), (252, 240, 140, 255))
+    out["block/brimstone_block"] = im
+    # el azufre en trozos (objeto)
+    im = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    r = random.Random(5)
+    for (cx, cy, rad) in ((6, 9, 3.6), (10, 7, 3.0), (9, 11, 2.4)):
+        for y in range(16):
+            for x in range(16):
+                d = ((x - cx) ** 2 + (y - cy) ** 2) ** 0.5
+                if d <= rad:
+                    light = 1.0 - (x - cx + y - cy) / (rad * 4)
+                    c = (int(214 * light), int(186 * light), int(40 * light))
+                    if d > rad - 0.9:
+                        c = (150, 118, 20)
+                    im.putpixel((x, y), tuple(max(0, min(255, v)) for v in c) + (255,))
+    for (x, y) in ((5, 7), (9, 5), (8, 10)):
+        im.putpixel((x, y), (254, 246, 170, 255))
+    out["item/brimstone"] = im
+    return out
+
+
+def box_faces(u, v, w, h, d):
+    """Las caras de un cubo de UV en caja: (x0, y0, x1, y1) de cada una."""
+    return {"top": (u + d, v, u + d + w, v + d), "bottom": (u + d + w, v, u + d + 2 * w, v + d),
+            "right": (u, v + d, u + d, v + d + h), "front": (u + d, v + d, u + d + w, v + d + h),
+            "left": (u + d + w, v + d, u + 2 * d + w, v + d + h), "back": (u + 2 * d + w, v + d, u + 2 * d + 2 * w, v + d + h)}
+
+
+def paint_box(im, u, v, w, h, d, base, var, seed, alpha=255):
+    for k, (x0, y0, x1, y1) in enumerate(box_faces(u, v, w, h, d).values()):
+        noisy(im, (int(x0), int(y0), int(x1), int(y1)), base, var, seed + k, alpha)
+
+
+def demon_texture(imp):
+    im = Image.new("RGBA", (64, 64), (0, 0, 0, 0))
+    eyes = Image.new("RGBA", (64, 64), (0, 0, 0, 0))
+    skin = (196, 70, 34) if imp else (118, 22, 16)
+    dark = (130, 40, 18) if imp else (70, 12, 10)
+    paint_box(im, 0, 0, 8, 8, 8, skin, 0.1, 10)                 # cabeza
+    paint_box(im, 16, 16, 8, 12, 4, skin, 0.1, 20)              # cuerpo
+    paint_box(im, 40, 16, 4, 12, 4, skin, 0.1, 30)              # brazo
+    paint_box(im, 0, 16, 4, 12, 4, skin, 0.1, 40)               # pierna
+    # piernas de macho cabrío: pelo oscuro y pezuñas
+    for (x0, y0, x1, y1) in box_faces(0, 16, 4, 12, 4).values():
+        noisy(im, (int(x0), int(y0) + (0 if y0 == 16 else 4), int(x1), int(y1)), (54, 30, 22), 0.15, 41)
+    for (x0, y0, x1, y1) in list(box_faces(0, 16, 4, 12, 4).values())[2:]:
+        noisy(im, (int(x0), int(y1) - 2, int(x1), int(y1)), (24, 20, 20), 0.1, 42)
+    # cara: cejas, ojos amarillos que brillan, boca con colmillos
+    fx, fy = 8, 8
+    for x in range(fx, fx + 8):
+        im.putpixel((x, fy + 2), dark + (255,))
+    for (ex, ey) in ((fx + 1, fy + 3), (fx + 2, fy + 3), (fx + 5, fy + 3), (fx + 6, fy + 3)):
+        im.putpixel((ex, ey), (255, 214, 40, 255))
+        eyes.putpixel((ex, ey), (255, 220, 60, 255))
+    for x in range(fx + 2, fx + 6):
+        im.putpixel((x, fy + 6), (30, 8, 6, 255))
+    im.putpixel((fx + 2, fy + 7), (236, 228, 200, 255))
+    im.putpixel((fx + 5, fy + 7), (236, 228, 200, 255))
+    # pecho y costillas
+    for y in (22, 25):
+        for x in range(21, 27):
+            im.putpixel((x, y), dark + (255,))
+    # cuernos (arriba: hueso; la punta, negra), rabo, alas de murciélago
+    paint_box(im, 0, 32, 1, 4, 1, (200, 186, 150) if not imp else (60, 40, 30), 0.1, 50)
+    paint_box(im, 0, 40, 1, 2, 1, (30, 24, 22), 0.1, 51)
+    paint_box(im, 24, 32, 1, 1, 8, dark, 0.1, 52)
+    w = 9 if imp else 12
+    wh = 7 if imp else 10
+    for (x0, y0, x1, y1) in box_faces(0, 48, w, wh, 0).values():
+        if x1 > x0 and y1 > y0:
+            noisy(im, (int(x0), int(y0), int(x1), int(y1)), (60, 14, 14) if not imp else (120, 40, 20), 0.12, 53)
+            # los dedos del ala
+            for k in range(int(x0), int(x1), 3):
+                for y in range(int(y0), int(y1)):
+                    im.putpixel((k, y), (30, 8, 8, 255))
+    return im, eyes
+
+
+def soul_texture():
+    im = Image.new("RGBA", (64, 64), (0, 0, 0, 0))
+    pale = (196, 228, 236)
+    paint_box(im, 0, 0, 8, 8, 8, pale, 0.08, 60, 230)
+    paint_box(im, 0, 16, 8, 10, 4, pale, 0.08, 61, 210)
+    paint_box(im, 0, 32, 6, 6, 3, pale, 0.08, 62, 160)
+    paint_box(im, 0, 44, 3, 6, 2, pale, 0.08, 63, 110)
+    paint_box(im, 32, 16, 3, 11, 3, pale, 0.08, 64, 200)
+    paint_box(im, 48, 16, 3, 11, 3, pale, 0.08, 65, 200)
+    # la cara: cuencas vacías y la boca abierta en un lamento
+    fx, fy = 8, 8
+    for (x, y) in ((fx + 1, fy + 2), (fx + 2, fy + 2), (fx + 1, fy + 3), (fx + 2, fy + 3),
+                   (fx + 5, fy + 2), (fx + 6, fy + 2), (fx + 5, fy + 3), (fx + 6, fy + 3)):
+        im.putpixel((x, y), (16, 24, 40, 255))
+    for (x, y) in ((fx + 3, fy + 5), (fx + 4, fy + 5), (fx + 3, fy + 6), (fx + 4, fy + 6), (fx + 3, fy + 7), (fx + 4, fy + 7),
+                   (fx + 2, fy + 6), (fx + 5, fy + 6)):
+        im.putpixel((x, y), (16, 24, 40, 255))
+    return im
+
+
+# ------------------------------------------------------------------ sonidos, botín y textos
+
+SOUNDS = {
+    "entity.demon.ambient": [("minecraft:mob/hoglin/angry1", 0.6), ("minecraft:mob/hoglin/angry2", 0.6), ("minecraft:mob/ravager/ambient1", 0.7)],
+    "entity.demon.hurt": [("minecraft:mob/ravager/hurt1", 0.7), ("minecraft:mob/ravager/hurt2", 0.7)],
+    "entity.demon.death": [("minecraft:mob/ravager/death1", 0.6), ("minecraft:mob/ravager/death2", 0.6)],
+    "entity.imp.ambient": [("minecraft:mob/piglin/angry1", 1.4), ("minecraft:mob/piglin/angry2", 1.4), ("minecraft:mob/vex/idle1", 0.8)],
+    "entity.imp.hurt": [("minecraft:mob/piglin/hurt1", 1.4), ("minecraft:mob/piglin/hurt2", 1.4)],
+    "entity.imp.death": [("minecraft:mob/piglin/death1", 1.3), ("minecraft:mob/piglin/death2", 1.3)],
+    "entity.lost_soul.ambient": [("minecraft:mob/ghast/moan1", 0.5), ("minecraft:mob/ghast/moan2", 0.45), ("minecraft:mob/ghast/moan4", 0.5),
+                                 ("minecraft:mob/ghast/moan6", 0.55)],
+    "entity.lost_soul.hurt": [("minecraft:mob/vex/hurt1", 0.6), ("minecraft:mob/vex/hurt2", 0.6)],
+    "entity.lost_soul.death": [("minecraft:mob/ghast/death", 0.5)],
+    "weather.fire_rain": [("minecraft:random/explode1", 0.4), ("minecraft:ambient/weather/thunder1", 0.5), ("minecraft:ambient/weather/thunder2", 0.45)],
+}
+
+LOOT = {
+    "demon": [("minecraft:blaze_rod", 0, 2), ("minecraft:gold_ingot", 0, 1), ("%s:brimstone" % NS, 1, 3)],
+    "imp": [("minecraft:blaze_powder", 0, 2), ("minecraft:magma_cream", 0, 1)],
+    "lost_soul": [("minecraft:ghast_tear", 0, 1), ("minecraft:soul_sand", 0, 1)],
+}
+
+
+def entity_loot(name):
+    pools = []
+    for item, lo, hi in LOOT[name]:
+        pools.append({"rolls": 1, "bonus_rolls": 0, "entries": [{"type": "minecraft:item", "name": item, "functions": [
+            {"function": "minecraft:set_count", "count": {"type": "minecraft:uniform", "min": lo, "max": hi}, "add": False},
+            {"function": "minecraft:enchanted_count_increase", "count": {"type": "minecraft:uniform", "min": 0, "max": 1}, "enchantment": "minecraft:looting"}]}]})
+    return {"type": "minecraft:entity", "pools": pools, "random_sequence": "%s:entities/%s" % (NS, name)}
+
+
+TEXTS = {
+    "biome.evolvedwarfare.ash_plains": ("Llanuras de ceniza", "Ash Plains"),
+    "biome.evolvedwarfare.brimstone_fields": ("Campos de azufre", "Brimstone Fields"),
+    "biome.evolvedwarfare.lake_of_fire": ("Lago de fuego", "Lake of Fire"),
+    "block.evolvedwarfare.ash_block": ("Bloque de ceniza", "Ash Block"),
+    "block.evolvedwarfare.brimstone_block": ("Bloque de azufre", "Brimstone Block"),
+    "item.evolvedwarfare.brimstone": ("Azufre", "Brimstone"),
+    "item.evolvedwarfare.brimstone.desc": ("Arde mucho tiempo en el horno. Con carbón, pólvora.", "Burns a long time in a furnace. With coal, gunpowder."),
+    "entity.evolvedwarfare.demon": ("Demonio", "Demon"),
+    "entity.evolvedwarfare.imp": ("Diablillo", "Imp"),
+    "entity.evolvedwarfare.lost_soul": ("Alma en pena", "Lost Soul"),
+    "item.evolvedwarfare.demon_spawn_egg": ("Huevo de demonio", "Demon Spawn Egg"),
+    "item.evolvedwarfare.imp_spawn_egg": ("Huevo de diablillo", "Imp Spawn Egg"),
+    "item.evolvedwarfare.lost_soul_spawn_egg": ("Huevo de alma en pena", "Lost Soul Spawn Egg"),
+    "subtitles.evolvedwarfare.entity.demon.ambient": ("Un demonio gruñe", "Demon growls"),
+    "subtitles.evolvedwarfare.entity.demon.hurt": ("Un demonio se duele", "Demon hurts"),
+    "subtitles.evolvedwarfare.entity.demon.death": ("Un demonio muere", "Demon dies"),
+    "subtitles.evolvedwarfare.entity.imp.ambient": ("Un diablillo chilla", "Imp shrieks"),
+    "subtitles.evolvedwarfare.entity.imp.hurt": ("Un diablillo se duele", "Imp hurts"),
+    "subtitles.evolvedwarfare.entity.imp.death": ("Un diablillo muere", "Imp dies"),
+    "subtitles.evolvedwarfare.entity.lost_soul.ambient": ("Un alma en pena gime", "Lost soul moans"),
+    "subtitles.evolvedwarfare.entity.lost_soul.hurt": ("Un alma en pena se queja", "Lost soul wails"),
+    "subtitles.evolvedwarfare.entity.lost_soul.death": ("Un alma en pena se desvanece", "Lost soul fades away"),
+    "subtitles.evolvedwarfare.weather.fire_rain": ("Retumba el cielo", "The sky rumbles"),
+    "message.evolvedwarfare.fire_rain.start": ("¡Llueve fuego y azufre del cielo! Ponte a cubierto.", "Fire and brimstone rain from the sky! Take cover."),
+    "message.evolvedwarfare.fire_rain.end": ("El cielo se calma.", "The sky calms down."),
+    "config.evolvedwarfare.fireRain": ("Lluvia de fuego en el Nether", "Fire rain in the Nether"),
+    "config.evolvedwarfare.fireRain.tip": ("De vez en cuando cae fuego del cielo del Nether: quema lo que pilla al raso.",
+                                          "Now and then fire falls from the Nether sky: it burns whatever is out in the open."),
+    "config.evolvedwarfare.fireRainEveryMinutes": ("Lluvia de fuego cada (min)", "Fire rain every (min)"),
+    "config.evolvedwarfare.fireRainEveryMinutes.tip": ("Minutos, más o menos, entre una lluvia de fuego y la siguiente.",
+                                                      "Minutes, roughly, between one fire rain and the next."),
+    "death.attack.evolvedwarfare.soul_touch": ("A %1$s le arrancó el alma un alma en pena", "%1$s had their soul torn out by a lost soul"),
+}
+
+
+def main():
+    # el Nether de vanilla, sobrescrito
+    write_json(os.path.join(MC_DATA, "dimension_type/the_nether.json"), DIMENSION_TYPE)
+    write_json(os.path.join(MC_DATA, "dimension/the_nether.json"), DIMENSION)
+    write_json(os.path.join(MC_DATA, "worldgen/noise_settings/nether.json"), noise_settings())
+    for name, n in NOISES.items():
+        write_json(os.path.join(DATA, "worldgen/noise/%s.json" % name), n)
+    for name, b in biomes().items():
+        write_json(os.path.join(DATA, "worldgen/biome/%s.json" % name), b)
+    write_json(os.path.join(DATA, "worldgen/configured_feature/ore_brimstone.json"), ORE_BRIMSTONE_CONFIGURED)
+    write_json(os.path.join(DATA, "worldgen/placed_feature/ore_brimstone.json"), ORE_BRIMSTONE_PLACED)
+    add_tag(os.path.join(MC_DATA, "tags/worldgen/biome/is_nether.json"), ["%s:%s" % (NS, b) for b in BIOMES])
+    for tag in ("nether_fortress/has_structure", "bastion_remnant/has_structure", "nether_fossil/has_structure", "ruined_portal_nether/has_structure"):
+        values = ["%s:%s" % (NS, b) for b in BIOMES]
+        if tag.startswith("nether_fossil"):
+            values = ["%s:ash_plains" % NS]
+        if tag.startswith("bastion"):
+            values = ["%s:brimstone_fields" % NS, "%s:lake_of_fire" % NS]
+        add_tag(os.path.join(MC_DATA, "tags/worldgen/biome/has_structure/" + tag.split("/")[0] + ".json"), values)
+    # bloques y azufre
+    for name, im in block_textures().items():
+        path = os.path.join(ASSETS, "textures", name + ".png")
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        im.save(path)
+    for b in ("ash_block", "brimstone_block"):
+        write_json(os.path.join(ASSETS, "models/block/%s.json" % b), {"parent": "minecraft:block/cube_all", "textures": {"all": "%s:block/%s" % (NS, b)}})
+        write_json(os.path.join(ASSETS, "blockstates/%s.json" % b), {"variants": {"": {"model": "%s:block/%s" % (NS, b)}}})
+        write_json(os.path.join(ASSETS, "models/item/%s.json" % b), {"parent": "%s:block/%s" % (NS, b)})
+    write_json(os.path.join(ASSETS, "models/item/brimstone.json"), {"parent": "minecraft:item/generated", "textures": {"layer0": "%s:item/brimstone" % NS}})
+    write_json(os.path.join(DATA, "loot_table/blocks/ash_block.json"), {"type": "minecraft:block", "pools": [{"rolls": 1, "bonus_rolls": 0,
+        "conditions": [{"condition": "minecraft:survives_explosion"}], "entries": [{"type": "minecraft:item", "name": ASH}]}]})
+    write_json(os.path.join(DATA, "loot_table/blocks/brimstone_block.json"), {"type": "minecraft:block", "pools": [{"rolls": 1, "bonus_rolls": 0,
+        "entries": [{"type": "minecraft:alternatives", "children": [
+            {"type": "minecraft:item", "name": BRIMSTONE, "conditions": [{"condition": "minecraft:match_tool", "predicate": {"predicates": {
+                "minecraft:enchantments": [{"enchantments": "minecraft:silk_touch", "levels": {"min": 1}}]}}}]},
+            {"type": "minecraft:item", "name": "%s:brimstone" % NS, "functions": [
+                {"function": "minecraft:set_count", "count": {"type": "minecraft:uniform", "min": 2, "max": 4}, "add": False},
+                {"function": "minecraft:apply_bonus", "enchantment": "minecraft:fortune", "formula": "minecraft:uniform_bonus_count", "parameters": {"bonusMultiplier": 1}},
+                {"function": "minecraft:explosion_decay"}]}]}]}]})
+    add_tag(os.path.join(MC_DATA, "tags/block/mineable/shovel.json"), [ASH])
+    add_tag(os.path.join(MC_DATA, "tags/block/mineable/pickaxe.json"), [BRIMSTONE])
+    rec = os.path.join(DATA, "recipe")
+    write_json(os.path.join(rec, "gunpowder_from_brimstone.json"), {"type": "minecraft:crafting_shapeless", "category": "misc",
+        "ingredients": [{"item": "%s:brimstone" % NS}, {"item": "%s:brimstone" % NS}, [{"item": "minecraft:coal"}, {"item": "minecraft:charcoal"}]],
+        "result": {"id": "minecraft:gunpowder", "count": 3}})
+    write_json(os.path.join(rec, "brimstone_block.json"), {"type": "minecraft:crafting_shaped", "category": "building", "pattern": ["BB", "BB"],
+        "key": {"B": {"item": "%s:brimstone" % NS}}, "result": {"id": BRIMSTONE, "count": 1}})
+    # criaturas
+    tex_dir = os.path.join(ASSETS, "textures/entity/hell")
+    os.makedirs(tex_dir, exist_ok=True)
+    for name, imp in (("demon", False), ("imp", True)):
+        im, eyes = demon_texture(imp)
+        im.save(os.path.join(tex_dir, name + ".png"))
+        eyes.save(os.path.join(tex_dir, name + "_eyes.png"))
+    soul_texture().save(os.path.join(tex_dir, "lost_soul.png"))
+    for name in LOOT:
+        write_json(os.path.join(DATA, "loot_table/entities/%s.json" % name), entity_loot(name))
+        write_json(os.path.join(ASSETS, "models/item/%s_spawn_egg.json" % name), {"parent": "minecraft:item/template_spawn_egg"})
+    # sonidos (de vanilla, más graves o agudos)
+    path = os.path.join(ASSETS, "sounds.json")
+    with open(path, encoding="utf-8") as f:
+        sounds = json.load(f, object_pairs_hook=collections.OrderedDict)
+    for key, files in SOUNDS.items():
+        sounds[key] = {"subtitle": "subtitles.%s.%s" % (NS, key),
+                       "sounds": [{"name": name, "pitch": pitch, "volume": 1.0} for name, pitch in files]}
+    write_json(path, sounds)
+    write_json(os.path.join(DATA, "damage_type/soul_touch.json"), {"exhaustion": 0.1, "message_id": NS + ".soul_touch", "scaling": "when_caused_by_living_non_player"})
+    for path in sorted(glob.glob(os.path.join(ASSETS, "lang", "*.json"))):
+        english = path.endswith("en_us.json")
+        with open(path, encoding="utf-8") as f:
+            lang = json.load(f, object_pairs_hook=collections.OrderedDict)
+        for key, (es, en) in TEXTS.items():
+            lang[key] = en if english else es
+        write_json(path, lang)
+    if PREVIEW:
+        os.makedirs(PREVIEW, exist_ok=True)
+        sheet = Image.new("RGBA", (64 * 3 * 4, 64 * 4), (70, 74, 80, 255))
+        for k, name in enumerate(("demon", "imp", "lost_soul")):
+            im = Image.open(os.path.join(tex_dir, name + ".png")).resize((256, 256), Image.NEAREST)
+            sheet.alpha_composite(im, (k * 256, 0))
+        sheet.save(os.path.join(PREVIEW, "hell_textures.png"))
+    print("Nether bíblico: dimensión, terreno, biomas, bloques, criaturas, sonidos y textos")
+
+
+if __name__ == "__main__":
+    main()

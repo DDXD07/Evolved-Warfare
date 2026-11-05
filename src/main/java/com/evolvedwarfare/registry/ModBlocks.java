@@ -187,6 +187,12 @@ public final class ModBlocks {
 			Registries.BLOCK_ENTITY_TYPE, EvolvedWarfare.id("hand_pump"),
 			BlockEntityType.Builder.create(com.evolvedwarfare.fluid.HandPumpBlockEntity::new, HAND_PUMP).build(null));
 
+	// el Nether bíblico: ceniza y azufre
+	public static final Block ASH_BLOCK = register("ash_block", new Block(AbstractBlock.Settings.create().mapColor(MapColor.GRAY)
+			.strength(0.6F).sounds(BlockSoundGroup.SAND)));
+	public static final Block BRIMSTONE_BLOCK = register("brimstone_block", new com.evolvedwarfare.hell.BrimstoneBlock(AbstractBlock.Settings.create()
+			.mapColor(MapColor.YELLOW).strength(1.2F).sounds(BlockSoundGroup.NETHERRACK).requiresTool()));
+
 	// los frutales: hojas con fruta (en 3D) y su brote
 	public static final java.util.Map<com.evolvedwarfare.orchard.FruitKind, com.evolvedwarfare.orchard.FruitLeavesBlock> FRUIT_LEAVES =
 			new java.util.EnumMap<>(com.evolvedwarfare.orchard.FruitKind.class);
