@@ -1340,6 +1340,46 @@ Seis árboles frutales, con su **fruta en 3D colgando de las hojas**:
 - **Agua**: las capas guardadas de bloques que cambiaron por otra cosa se olvidan (el mundo no las va acumulando).
 - **Comando** `/evolvedwarfare zombies [número]`: una horda de zombis ya, a por ti (para probar).
 
+## Fase 23 — El Nether bíblico
+
+El Nether ya **no tiene techo**: es un infierno a cielo abierto, con **montañas** de hasta ~170 bloques, **colinas**,
+llanuras y **lagos de fuego** (las hoyas por debajo de 32 se llenan de lava). Las cumbres son de piedra negra, basalto y
+obsidiana. Bajo la superficie siguen las cavernas de siempre (y la lava por debajo de 32), las fortalezas, los bastiones,
+el cuarzo, el oro y la netherita. **Hace falta un mundo nuevo** (o ir a zonas del Nether sin explorar).
+
+### El cielo
+**Rojo sangre y brumoso**, sin sol ni estrellas, oscuro arriba y con un **resplandor de fuego en el horizonte**; sin la
+niebla espesa de antes, se ven las montañas a lo lejos. Siempre **cae ceniza** y alguna **brasa**.
+
+### Biomas
+Los de siempre (yermos, bosques carmesí y distorsionado, valle de almas y deltas de basalto) y tres nuevos:
+
+| Bioma | Cómo es | Qué sale |
+|---|---|---|
+| **Llanuras de ceniza** | suelo de **ceniza** y tierra de almas, pilares de basalto, fuego de almas; nieva ceniza | almas en pena, ghasts, esqueletos |
+| **Campos de azufre** | suelo de **azufre** que humea, vetas de azufre, piedra luminosa | diablillos, demonios, cubos de magma |
+| **Lago de fuego** | lava con orillas de magma y piedra negra (deltas), brasas que saltan | demonios, diablillos, cubos de magma |
+
+**Azufre**: el bloque suelta 2-4 trozos. Un trozo arde 60 s en el horno (6 objetos); **2 de azufre + carbón = 3 de
+pólvora**; 4 trozos = un bloque.
+
+### Criaturas
+- **Demonio** (60 de vida, 9 de daño, armadura): grande, con **cuernos, alas y rabo**, ojos que brillan; sus golpes
+  **queman**. Suelta varas de blaze, oro y azufre.
+- **Diablillo** (16 de vida): pequeño y rápido; de lejos **tira bolas de fuego**, de cerca araña. Suelta polvo de blaze y
+  crema de magma.
+- **Alma en pena** (14 de vida): un fantasma **translúcido** que flota y **gime**; si te acercas, va a por ti con los
+  brazos por delante: su roce te quita vida y te deja **débil y lento**. Suelta lágrimas de ghast y arena de almas.
+
+Ninguna se quema. También salen (menos) en los biomas de siempre. Hay huevos para las tres.
+
+### Lluvia de fuego y azufre
+Cada ~15 minutos (más o menos), durante 1-2 minutos, **llueve fuego del cielo** alrededor de cada jugador del Nether:
+bolas de fuego que queman y prenden lo que pillan **al raso** (bajo techo estás a salvo). El cielo se enciende, retumba y
+caen muchas más brasas. Te avisa al empezar y al acabar.
+
+**Configuración** (pestaña *Clima*): `fireRain` (activarla o no) y `fireRainEveryMinutes` (cada cuántos minutos).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -1358,6 +1398,7 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
   diseños 3D (cubos sobre cabeza, cuerpo, brazos y piernas), las texturas, los iconos, `FactionArmorModels.java`, los
   modelos de objeto, las recetas, las etiquetas y los textos; con `--preview` las dibuja puestas (delante, detrás y
   andando).
+- `ew_hell.py` — el Nether bíblico: dimensión sin techo, terreno (montañas, colinas y lagos de fuego), biomas nuevos, ceniza y azufre, texturas de demonios, diablillos y almas en pena, sonidos, botín y textos.
 - `ew_orchard.py` — los frutales (hojas en 4 fases con la fruta en 3D, brotes, fruta, zumos, botín y generación del mundo) y la tala (hacha de sílex y recetas de palos, losas y tablones).
 - `ew_night.py` — la noche más dura: el icono de la infección, su tipo de daño y los textos.
 - `ew_plumbing.py` — las tuberías, el grifo de palanca y la bomba de mano: texturas, modelos 3D, estados, recetas, botín y textos.
