@@ -1331,6 +1331,15 @@ Seis árboles frutales, con su **fruta en 3D colgando de las hojas**:
 
 **Configuración** (pestaña *Clima*): `axeForLogs` (talar solo con hacha) y `treeFelling` (los árboles caen enteros).
 
+## Fase 22 — Mejoras y arreglos
+
+- **Cubos y frascos en charcos**: un cubo vacío ya recoge agua (o lava) de un charco o de agua que corre, no solo de un
+  bloque lleno, si entre todo el charco hay al menos un cubo (4 capas). El frasco, igual (1 capa).
+- **Zombis más ligeros**: el zombi que va bien por su camino ya no vuelve a buscar otro cada medio segundo; solo cuando se
+  queda sin camino o atascado. Con hordas grandes se nota mucho menos en el servidor.
+- **Agua**: las capas guardadas de bloques que cambiaron por otra cosa se olvidan (el mundo no las va acumulando).
+- **Comando** `/evolvedwarfare zombies [número]`: una horda de zombis ya, a por ti (para probar).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

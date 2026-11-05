@@ -1523,5 +1523,6 @@
   "item.evolvedwarfare.lemon": "Lemon",
   "block.evolvedwarfare.orange_leaves": "Orange Tree Leaves",
   "block.evolvedwarfare.orange_sapling": "Orange Tree Sapling",
-  "item.evolvedwarfare.orange": "Orange"
+  "item.evolvedwarfare.orange": "Orange",
+  "commands.evolvedwarfare.zombies.started": "A horde of %s zombies is coming for you"
 }

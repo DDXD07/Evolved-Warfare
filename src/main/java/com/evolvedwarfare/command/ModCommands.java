@@ -77,6 +77,10 @@ public final class ModCommands {
 								.executes(ModCommands::season)))
 				.then(CommandManager.literal("temperature")
 						.executes(ModCommands::temperature))
+				.then(CommandManager.literal("zombies")
+						.executes(context -> zombies(context, -1))
+						.then(CommandManager.argument("count", IntegerArgumentType.integer(1, 100))
+								.executes(context -> zombies(context, IntegerArgumentType.getInteger(context, "count")))))
 				.then(CommandManager.literal("horde")
 						.executes(context -> horde(context, null, -1))
 						.then(CommandManager.argument("faction", StringArgumentType.word())
@@ -231,6 +235,20 @@ public final class ModCommands {
 				String.format(java.util.Locale.ROOT, "%.1f °C", air), String.format(java.util.Locale.ROOT, "%.1f °C", body),
 				Text.translatable(season.translationKey()), com.evolvedwarfare.climate.Season.dayOf(day, length), length), false);
 		return 1;
+	}
+
+	/** Una horda de zombis ya, a por ti (como la de una noche de zombis). */
+	private static int zombies(CommandContext<ServerCommandSource> context, int count) throws CommandSyntaxException {
+		ServerCommandSource source = context.getSource();
+		ServerWorld world = source.getWorld();
+		int every = Math.max(1, EwConfig.get().zombieHordeEveryDays);
+		int n = count > 0 ? count : com.evolvedwarfare.night.NightThreat.hordeSize(Hordes.day(world.getTimeOfDay()), every, 1);
+		int spawned = com.evolvedwarfare.night.NightThreat.spawnHorde(world, BlockPos.ofFloored(source.getPosition()), n, world.getRandom()).size();
+		if (spawned == 0) {
+			throw HORDE_FAILED.create();
+		}
+		source.sendFeedback(() -> Text.translatable("commands.evolvedwarfare.zombies.started", spawned), true);
+		return spawned;
 	}
 
 	private static int horde(CommandContext<ServerCommandSource> context, @org.jetbrains.annotations.Nullable Faction faction, int week)

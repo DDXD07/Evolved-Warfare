@@ -96,6 +96,11 @@ public class ZombieSiegeGoal extends Goal {
 		}
 		boolean still = mob.getPos().squaredDistanceTo(lastPos) < 0.04;
 		lastPos = mob.getPos();
+		Path current = mob.getNavigation().getCurrentPath();
+		if (!still && current != null && !current.isFinished() && current.reachesTarget()) {
+			stuck = 0; // va bien por su camino: no hace falta buscar otro (ahorra mucho con las hordas)
+			return false;
+		}
 		if (!reachable(prey) || still && dist > 2.5 * 2.5) {
 			stuck++;
 		} else {

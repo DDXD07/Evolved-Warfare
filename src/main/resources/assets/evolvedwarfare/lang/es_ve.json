@@ -1523,5 +1523,6 @@
   "item.evolvedwarfare.lemon": "Limón",
   "block.evolvedwarfare.orange_leaves": "Hojas de naranjo",
   "block.evolvedwarfare.orange_sapling": "Brote de naranjo",
-  "item.evolvedwarfare.orange": "Naranja"
+  "item.evolvedwarfare.orange": "Naranja",
+  "commands.evolvedwarfare.zombies.started": "Una horda de %s zombis va a por ti"
 }

@@ -62,6 +62,7 @@ TEXTS = {
                                              "Day %s: a zombie horde comes tonight. Get ready."),
     "message.evolvedwarfare.zombies.come": ("¡Ya vienen! Una horda de %s zombis sabe dónde estás.",
                                             "Here they come! A horde of %s zombies knows where you are."),
+    "commands.evolvedwarfare.zombies.started": ("Una horda de %s zombis va a por ti", "A horde of %s zombies is coming for you"),
     "config.evolvedwarfare.nightHostility": ("Noches hostiles", "Hostile nights"),
     "config.evolvedwarfare.nightHostility.tip": ("De noche los monstruos ven el doble de lejos y los endermans atacan en cuanto te ven.",
                                                  "At night monsters see twice as far and endermen attack as soon as they see you."),

@@ -76,9 +76,13 @@ public final class FiniteFluids {
 			}
 			int level = Math.max(1, Math.min(7, fs.getLevel()));
 			if (world instanceof net.minecraft.server.world.ServerWorld sw) {
-				int stored = FluidUnits.get(sw).get(pos);
+				FluidUnits units = FluidUnits.get(sw);
+				int stored = units.get(pos);
 				if (stored > 0 && levelOf(stored) == level) {
 					return stored;
+				}
+				if (stored > 0) {
+					units.set(pos, 0); // el bloque cambió por otra cosa: se olvida
 				}
 			}
 			return Math.max(1, Math.min(FULL - 1, Math.round(level * FULL / 8.0F)));
