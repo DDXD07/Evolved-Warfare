@@ -1265,6 +1265,9 @@ Si un zombi no puede llegar hasta ti, **lo crea**: busca el camino más directo 
   puertas, cristales...
 - **Excava hacia abajo** en escalera si estás más abajo (o en vertical si estás justo debajo), y **despeja hacia arriba**
   si estás más alto.
+- **No te pierden de vista dentro de casa**: de noche, un zombi a menos de 40 bloques te encuentra aunque no te vea (te oye
+  y te huele), y la horda de la noche de zombis, a cualquier distancia. Si no hay camino hasta ti, va derecho hacia ti y
+  rompe lo que se encuentre (los escalones los sube, no los rompe).
 - **Salta huecos de 1 o 2 bloques** de largo si al otro lado hay suelo.
 - Hace falta la regla `mobGriefing` (activada de serie).
 

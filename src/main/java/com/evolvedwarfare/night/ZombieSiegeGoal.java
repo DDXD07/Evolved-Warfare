@@ -35,6 +35,7 @@ public class ZombieSiegeGoal extends Goal {
 	private int progress;
 	private int needed;
 	private int lastStage = -1;
+	private int active;
 
 	public ZombieSiegeGoal(MobEntity mob) {
 		this.mob = mob;
@@ -58,6 +59,12 @@ public class ZombieSiegeGoal extends Goal {
 				&& NightThreat.breakBlocks();
 	}
 
+	/** ¿Hay un camino entero hasta la presa? */
+	private boolean reachable(LivingEntity prey) {
+		Path path = mob.getNavigation().findPathTo(prey, 0);
+		return path != null && path.reachesTarget();
+	}
+
 	@Override
 	public boolean canStart() {
 		LivingEntity prey = mob.getTarget();
@@ -70,24 +77,22 @@ public class ZombieSiegeGoal extends Goal {
 		}
 		checkTimer = 0;
 		double dist = mob.squaredDistanceTo(prey);
-		if (dist < 2.5 * 2.5 || dist > 64 * 64) {
+		if (dist < 1.5 * 1.5 || dist > 64 * 64) {
 			stuck = 0;
 			return false;
 		}
-		Path path = mob.getNavigation().getCurrentPath();
-		boolean noWay = path == null || path.isFinished() || !path.reachesTarget();
-		boolean still = mob.getPos().squaredDistanceTo(lastPos) < 0.25;
+		boolean still = mob.getPos().squaredDistanceTo(lastPos) < 0.04;
 		lastPos = mob.getPos();
-		if (noWay || still) {
+		if (!reachable(prey) || still && dist > 2.5 * 2.5) {
 			stuck++;
 		} else {
 			stuck = 0;
 		}
-		if (stuck < 3) {
-			return false;
-		}
-		target = obstacle(prey);
-		return target != null;
+		return stuck >= 2;
+	}
+
+	private static boolean free(World world, BlockPos pos) {
+		return world.getBlockState(pos).getCollisionShape(world, pos).isEmpty();
 	}
 
 	/** El bloque que estorba de camino a la presa (o null). */
@@ -119,7 +124,10 @@ public class ZombieSiegeGoal extends Goal {
 				order.add(front.up(2));
 			} else {
 				order.add(front.up());
-				order.add(front);
+				// un escalón (con hueco encima) se sube: no se rompe
+				if (!(free(world, front.up()) && free(world, feet.up(2)))) {
+					order.add(front);
+				}
 			}
 		}
 		for (BlockPos p : order) {
@@ -133,21 +141,23 @@ public class ZombieSiegeGoal extends Goal {
 	@Override
 	public void start() {
 		mob.getNavigation().stop();
+		target = null;
 		progress = 0;
+		active = 0;
 		lastStage = -1;
-		needed = target == null ? 1 : breakTicks(mob.getWorld(), target, mob.getWorld().getBlockState(target));
 	}
 
 	@Override
 	public boolean shouldContinue() {
 		LivingEntity prey = mob.getTarget();
-		if (target == null || prey == null || !prey.isAlive() || !allowed()) {
+		if (prey == null || !prey.isAlive() || !allowed() || ++active > 1200) {
 			return false;
 		}
-		if (mob.getBlockPos().getSquaredDistance(target) > 3.2 * 3.2) {
-			return false;
+		if (target != null) {
+			return true;
 		}
-		return breakTicks(mob.getWorld(), target, mob.getWorld().getBlockState(target)) > 0;
+		// abriéndose camino: hasta que haya uno entero
+		return active % 20 != 0 || !reachable(prey);
 	}
 
 	@Override
@@ -157,7 +167,28 @@ public class ZombieSiegeGoal extends Goal {
 
 	@Override
 	public void tick() {
+		LivingEntity prey = mob.getTarget();
+		if (target != null && breakTicks(mob.getWorld(), target, mob.getWorld().getBlockState(target)) <= 0) {
+			mob.getWorld().setBlockBreakingInfo(mob.getId(), target, -1);
+			target = null; // ya no está (lo ha roto otro)
+		}
 		if (target == null) {
+			if (prey == null) {
+				return;
+			}
+			if (active % 5 == 0) {
+				target = obstacle(prey);
+				if (target != null) {
+					mob.getNavigation().stop();
+					progress = 0;
+					lastStage = -1;
+					needed = breakTicks(mob.getWorld(), target, mob.getWorld().getBlockState(target));
+					return;
+				}
+			}
+			// sin camino: derecho hacia la presa, hasta toparse con lo que haya que romper
+			mob.getMoveControl().moveTo(prey.getX(), prey.getY(), prey.getZ(), 1.0);
+			mob.getLookControl().lookAt(prey, 30.0F, 30.0F);
 			return;
 		}
 		World world = mob.getWorld();
