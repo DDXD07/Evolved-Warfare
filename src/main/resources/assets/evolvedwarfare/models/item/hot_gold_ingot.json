@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "evolvedwarfare:item/hot_gold_ingot"
+  }
+}

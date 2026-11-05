@@ -24,6 +24,7 @@
 		"MobEntityGoalsAccessor",
 		"MobEntityDismemberMixin",
 		"PlayerEntityLogAxeMixin",
+		"SmithingQualityMixin",
 		"PlayerEntitySkillMixin",
 		"PlayerEntityThirstMixin",
 		"PoolStructurePieceAccessor",

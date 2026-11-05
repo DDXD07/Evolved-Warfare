@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "evolvedwarfare:item/part/battle_axe_head"
+  }
+}

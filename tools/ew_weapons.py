@@ -350,6 +350,8 @@ def write_json(path, obj):
 
 
 def shaped(name, pattern, key, count=1, category="equipment"):
+    if name.split("_", 1)[0] in ("iron", "diamond") and name.split("_", 1)[1] in PATTERNS:
+        return  # las armas de metal se forjan (tools/ew_smithing.py): no tienen receta de mesa
     keys = {k: ({"tag": v[1:]} if v.startswith("#") else {"item": v}) for k, v in key.items()}
     write_json(f"{DATA}/recipe/{name}.json", {"type": "minecraft:crafting_shaped", "category": category, "pattern": pattern,
                                               "key": keys, "result": {"id": f"{NS}:{name}", "count": count}})

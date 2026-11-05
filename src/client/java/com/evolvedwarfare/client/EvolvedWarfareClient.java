@@ -90,6 +90,8 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		com.evolvedwarfare.client.hell.HellSky.register();
 		// la pesca: el minijuego, y el peso y la calidad de los peces
 		com.evolvedwarfare.client.fishing.ClientFishing.register();
+		// la herrería: la forja en el yunque, las piezas y la calidad
+		com.evolvedwarfare.client.smithing.ClientSmithing.register();
 		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(com.evolvedwarfare.client.hell.DemonRenderer.DEMON,
 				() -> com.evolvedwarfare.client.hell.DemonModel.getTexturedModelData(false));
 		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(com.evolvedwarfare.client.hell.DemonRenderer.IMP,

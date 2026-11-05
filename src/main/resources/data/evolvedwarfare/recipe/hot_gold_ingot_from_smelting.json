@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "ingredient": {
+    "item": "minecraft:gold_ingot"
+  },
+  "result": {
+    "id": "evolvedwarfare:hot_gold_ingot",
+    "count": 1
+  },
+  "experience": 0.0,
+  "cookingtime": 200
+}

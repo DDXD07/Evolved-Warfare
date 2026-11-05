@@ -1,22 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "category": "equipment",
-  "pattern": [
-    "SCM"
-  ],
-  "key": {
-    "M": {
-      "item": "minecraft:diamond"
-    },
-    "S": {
-      "item": "minecraft:stick"
-    },
-    "C": {
-      "item": "minecraft:chain"
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:not",
+      "value": {
+        "condition": "fabric:true"
+      }
     }
-  },
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:barrier"
+    }
+  ],
   "result": {
-    "id": "evolvedwarfare:diamond_flail",
+    "id": "minecraft:barrier",
     "count": 1
   }
 }

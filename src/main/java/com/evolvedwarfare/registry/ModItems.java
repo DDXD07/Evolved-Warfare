@@ -194,6 +194,14 @@ public final class ModItems {
 			.food(new net.minecraft.component.type.FoodComponent.Builder().nutrition(9).saturationModifier(0.8F)
 					.usingConvertsTo(net.minecraft.item.Items.BOWL).build())));
 
+	// la herrería: piezas forjadas, lingotes al rojo y el martillo
+	public static final Item FORGED_PART = register("forged_part", new com.evolvedwarfare.smithing.ForgedPartItem(new Item.Settings().maxCount(1)));
+	public static final Item HOT_IRON_INGOT = register("hot_iron_ingot", new com.evolvedwarfare.smithing.HotIngotItem(
+			com.evolvedwarfare.smithing.ForgeMaterial.IRON, () -> net.minecraft.item.Items.IRON_INGOT, new Item.Settings()));
+	public static final Item HOT_GOLD_INGOT = register("hot_gold_ingot", new com.evolvedwarfare.smithing.HotIngotItem(
+			com.evolvedwarfare.smithing.ForgeMaterial.GOLD, () -> net.minecraft.item.Items.GOLD_INGOT, new Item.Settings()));
+	public static final Item SMITHING_HAMMER = register("smithing_hammer", new com.evolvedwarfare.item.DescribedItem(new Item.Settings().maxDamage(250)));
+
 	// la pesca: peces nuevos y cebos
 	public static final Item PERCH = register("perch", new com.evolvedwarfare.item.DescribedItem(new Item.Settings().food(food(2, 0.1F))));
 	public static final Item CARP = register("carp", new com.evolvedwarfare.item.DescribedItem(new Item.Settings().food(food(2, 0.1F))));
@@ -383,6 +391,9 @@ public final class ModItems {
 						entries.add(ModBlocks.CROP_CRATE_ITEM);
 						entries.add(ModBlocks.SALES_MAILBOX);
 						entries.add(ModBlocks.TRADER_CATALOG);
+						entries.add(SMITHING_HAMMER);
+						entries.add(HOT_IRON_INGOT);
+						entries.add(HOT_GOLD_INGOT);
 						for (Item fish : new Item[] {PERCH, CARP, TROUT, PIKE, EEL, TUNA, SWORDFISH, STURGEON, BAIT, MAGIC_BAIT}) {
 							entries.add(fish);
 						}

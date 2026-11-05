@@ -36,6 +36,15 @@ public final class ModComponents {
 			EvolvedWarfare.id("fish"), ComponentType.<com.evolvedwarfare.fishing.FishData>builder().codec(com.evolvedwarfare.fishing.FishData.CODEC)
 					.packetCodec(com.evolvedwarfare.fishing.FishData.PACKET_CODEC).build());
 
+	/** Herrería: la pieza forjada, la calidad de la forja y lo que le queda de calor a un lingote al rojo (s). */
+	public static final ComponentType<com.evolvedwarfare.smithing.PartData> FORGED_PART = Registry.register(Registries.DATA_COMPONENT_TYPE,
+			EvolvedWarfare.id("forged_part"), ComponentType.<com.evolvedwarfare.smithing.PartData>builder()
+					.codec(com.evolvedwarfare.smithing.PartData.CODEC).packetCodec(com.evolvedwarfare.smithing.PartData.PACKET_CODEC).build());
+	public static final ComponentType<Integer> FORGE_QUALITY = Registry.register(Registries.DATA_COMPONENT_TYPE, EvolvedWarfare.id("forge_quality"),
+			ComponentType.<Integer>builder().codec(com.mojang.serialization.Codec.INT).packetCodec(net.minecraft.network.codec.PacketCodecs.VAR_INT).build());
+	public static final ComponentType<Integer> HEAT = Registry.register(Registries.DATA_COMPONENT_TYPE, EvolvedWarfare.id("heat"),
+			ComponentType.<Integer>builder().codec(com.mojang.serialization.Codec.INT).packetCodec(net.minecraft.network.codec.PacketCodecs.VAR_INT).build());
+
 	public static final ComponentType<Boolean> MUSKET_LOADED = Registry.register(Registries.DATA_COMPONENT_TYPE,
 			EvolvedWarfare.id("musket_loaded"),
 			ComponentType.<Boolean>builder().codec(com.mojang.serialization.Codec.BOOL)
