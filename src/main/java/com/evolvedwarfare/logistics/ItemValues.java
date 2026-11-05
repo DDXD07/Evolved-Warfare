@@ -50,7 +50,8 @@ public final class ItemValues {
 			index(recipes);
 			VALUES.clear();
 		}
-		return fromRecipes(item, new HashSet<>(), 0);
+		double forged = forged(item, new HashSet<>(), 0);
+		return forged > 0.0 ? forged : fromRecipes(item, new HashSet<>(), 0);
 	}
 
 	private static void index(RecipeManager recipes) {
