@@ -1426,6 +1426,49 @@ Es una ciudadela de **88x88** bloques, de piedra negra y ladrillo del Nether, a 
 Por dentro y alrededor salen **blazes, esqueletos wither** (sus cráneos, para el Wither), esqueletos, cubos de magma,
 piglins zombi, **diablillos y demonios**.
 
+## Fase 26 — Pesca con minijuego
+
+Al **picar un pez** y recoger la caña, en vez de salir el pez empieza un **minijuego** (como el de Stardew Valley): una
+**barra vertical** con el agua, el **pez** (su icono) que se mueve, y tu **zona verde**, que **sube mientras mantienes
+pulsado** (clic o espacio) y **baja al soltar**. Con el pez dentro de la zona se llena la **barra de captura** (a la
+derecha); fuera, se vacía, y si llega a cero **se escapa**. La basura y los tesoros de siempre salen sin minijuego.
+
+- **Cada pez nada a su manera**: a sacudidas, suave y predecible, a saltos (de golpe, de punta a punta), hacia el fondo o
+  hacia arriba; y cuanto más difícil, más rápido y errático.
+- **Al principio cuesta** (la zona verde es pequeña). La agrandan tu **nivel de pesca** (0 a 10, sube pescando), la
+  **Atracción** de la caña y el **cebo** en la otra mano (se gasta uno por pez; el **cebo mágico** más, y atrae a los peces
+  grandes).
+- **Cofres**: a veces aparece un **cofre** en la barra; si lo mantienes en la zona verde un rato, es tuyo (oro, esmeraldas,
+  diamantes, cebo mágico, monedas, tesoros de pesca...), pero mientras tanto el pez se puede escapar. Salen más con Suerte
+  marina, más nivel y cebo mágico.
+- **Captura perfecta** (el pez no sale ni una vez de la zona): una calidad más.
+- **Peso y calidad**: cada pez sale con su **peso** al azar (los grandes, más raros) y su **calidad** en estrellas:
+  **bronce, plata, oro o platino** (según lo que pese, tu nivel y la suerte; la estrella se ve en el icono). El **Buzón de
+  ventas** paga según el peso y la calidad (un pez de platino pesado vale muchas veces uno de bronce pequeño). **Los peces
+  con calidad solo se venden en el buzón** (los comerciantes no los compran).
+
+### Los peces
+
+| Pez | Dónde | Dificultad | Cómo nada | Peso |
+|---|---|---|---|---|
+| Carpa | agua dulce | muy fácil | suave | 1-12 kg |
+| Perca | agua dulce | fácil | suave | 0,2-1,8 kg |
+| Bacalao | mar | fácil | a sacudidas | 0,6-4 kg |
+| Pez tropical | mares cálidos | fácil | suave | 0,1-0,8 kg |
+| Salmón | aguas frías | media | a saltos | 1,5-8 kg |
+| Trucha | agua dulce fría, ríos | media | a saltos | 0,5-5 kg |
+| Pez globo | mares cálidos | media | hacia arriba | 0,3-1,5 kg |
+| Lucio | agua dulce | difícil | a saltos | 1,5-14 kg |
+| Anguila | pantanos (y de noche) | difícil | hacia el fondo | 0,5-4 kg |
+| Atún | mar profundo | muy difícil | a sacudidas | 20-180 kg |
+| Esturión | agua dulce (raro) | muy difícil | hacia el fondo | 10-120 kg |
+| Pez espada | mares cálidos (rarísimo) | dificilísimo | a saltos | 30-250 kg |
+
+Los nuevos se comen y se cocinan (al horno, ahumador o fogata). **Cebo**: carne podrida, ojo de araña o bacalao + semillas o
+pan = 4. **Cebo mágico**: 2 cebos + polvo de piedra luminosa + cristales de prismarina = 2.
+
+**Configuración** (pestaña *Clima*): `fishingMinigame` (desactívalo para pescar como siempre).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -1444,6 +1487,7 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
   diseños 3D (cubos sobre cabeza, cuerpo, brazos y piernas), las texturas, los iconos, `FactionArmorModels.java`, los
   modelos de objeto, las recetas, las etiquetas y los textos; con `--preview` las dibuja puestas (delante, detrás y
   andando).
+- `ew_fishing.py` — la pesca: los peces nuevos (texturas y recetas), los cebos, las estrellas de calidad, el botín de los cofres del minijuego y los textos.
 - `ew_citadel.py` — la ciudadela infernal (plantilla de 88x88, piezas del mini jefe, estructura con sus criaturas, el conjunto de estructuras del Nether sin la fortaleza de vanilla y el botín).
 - `ew_demons.py` — los mini jefes demoníacos (modelos animados por partes, texturas y lo que brilla, sonidos, botín, huevos) y el encantamiento Bendición Divina con sus etiquetas.
 - `ew_hell.py` — el Nether bíblico: dimensión sin techo, terreno (montañas, colinas y lagos de fuego), biomas nuevos, ceniza y azufre, texturas de demonios, diablillos y almas en pena, sonidos, botín y textos.

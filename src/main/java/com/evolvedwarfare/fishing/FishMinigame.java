@@ -109,7 +109,7 @@ public class FishMinigame {
 		// la captura
 		boolean in = inside();
 		if (in) {
-			progress += 0.0125F;
+			progress += 0.0095F;
 		} else {
 			progress -= 0.0065F + d * 0.004F;
 			if (ticks > 20) {
