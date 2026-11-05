@@ -74,9 +74,4 @@ public class DemonEntity extends HostileEntity {
 	protected SoundEvent getDeathSound() {
 		return ModSounds.DEMON_DEATH;
 	}
-
-	@Override
-	protected float getSoundPitch() {
-		return 0.8F + random.nextFloat() * 0.15F;
-	}
 }
