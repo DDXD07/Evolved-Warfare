@@ -140,4 +140,58 @@ public class NightGameTests implements FabricGameTest {
 		}
 		ctx.complete();
 	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 400)
+	public void hordeFindsYouIndoors(TestContext ctx) {
+		for (int x = 0; x <= 12; x++) {
+			for (int z = 0; z <= 6; z++) {
+				ctx.setBlockState(x, 0, z, Blocks.STONE);
+				for (int y = 1; y <= 4; y++) {
+					ctx.setBlockState(x, y, z, Blocks.AIR);
+				}
+			}
+		}
+		// una caseta cerrada de tablones (3x3 por dentro, con techo): el jugador dentro
+		for (int x = 8; x <= 12; x++) {
+			for (int z = 1; z <= 5; z++) {
+				for (int y = 1; y <= 4; y++) {
+					boolean inside = x > 8 && x < 12 && z > 1 && z < 5 && y < 4;
+					ctx.setBlockState(x, y, z, inside ? Blocks.AIR : Blocks.OAK_PLANKS);
+				}
+			}
+		}
+		ServerWorld world = ctx.getWorld();
+		ServerPlayerEntity player = (ServerPlayerEntity) ctx.createMockCreativeServerPlayerInWorld();
+		player.changeGameMode(net.minecraft.world.GameMode.SURVIVAL);
+		BlockPos in = ctx.getAbsolutePos(new BlockPos(10, 1, 3));
+		player.refreshPositionAndAngles(in.getX() + 0.5, in.getY(), in.getZ() + 0.5, 0.0F, 0.0F);
+		ZombieEntity zombie = EntityType.ZOMBIE.create(world);
+		BlockPos out = ctx.getAbsolutePos(new BlockPos(2, 1, 3));
+		zombie.refreshPositionAndAngles(out.getX() + 0.5, out.getY(), out.getZ() + 0.5, 0.0F, 0.0F);
+		zombie.equipStack(EquipmentSlot.HEAD, new ItemStack(Items.LEATHER_HELMET));
+		zombie.addCommandTag(NightThreat.HORDE_TAG);
+		world.spawnEntity(zombie);
+		ctx.waitAndRun(300, () -> {
+			boolean sees = zombie.canSee(player);
+			boolean hunting = zombie.getTarget() == player;
+			int broken = 0;
+			for (int x = 8; x <= 12; x++) {
+				for (int z = 1; z <= 5; z++) {
+					for (int y = 1; y <= 3; y++) {
+						boolean wall = x == 8 || x == 12 || z == 1 || z == 5;
+						if (wall && ctx.getBlockState(new BlockPos(x, y, z)).isAir()) {
+							broken++;
+						}
+					}
+				}
+			}
+			LOG.info("[EW-GAMETEST] jugador dentro de una caseta: el zombi le ve {}, le persigue {}, bloques de pared rotos {}, el zombi en {}", sees,
+					hunting, broken, ctx.getRelativePos(zombie.getBlockPos()));
+			zombie.discard();
+			player.discard();
+			check(hunting, "El zombi pierde al jugador dentro de la caseta");
+			check(broken > 0, "El zombi no rompe la caseta para entrar");
+			ctx.complete();
+		});
+	}
 }

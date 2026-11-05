@@ -66,6 +66,8 @@ public final class NightThreat {
 	public static final int NIGHTFALL = 13000;
 	private static final int LAST_START = 21000;
 	private static final int GROUP = 48;
+	/** De noche, a cuántos bloques te encuentra un zombi sin verte (te oye y te huele). */
+	public static final int SCENT = 40;
 	/** Frases que avisan de que llega la horda (una al azar cada noche de zombis). */
 	public static final int PHRASES = 36;
 
@@ -110,6 +112,9 @@ public final class NightThreat {
 		if (mob instanceof ZombieEntity && !(mob instanceof ZombifiedPiglinEntity)) {
 			ai.evolvedwarfare$goals().add(1, new ZombieSiegeGoal(mob));
 			ai.evolvedwarfare$goals().add(1, new GapJumpGoal(mob));
+			// de noche te oyen y te huelen: aunque estés dentro de casa (sin verte), van a por ti si estás cerca
+			ai.evolvedwarfare$targets().add(1, new ActiveTargetGoal<>(mob, PlayerEntity.class, 4, false, false,
+					target -> hostileNights() && isNight(target.getWorld()) && target.squaredDistanceTo(mob) < SCENT * SCENT));
 			if (mob.getCommandTags().contains(HORDE_TAG)) {
 				// la horda sabe dónde estás: no le hace falta verte
 				ai.evolvedwarfare$targets().add(1, new ActiveTargetGoal<>(mob, PlayerEntity.class, 1, false, false, null));
