@@ -46,6 +46,11 @@ public final class ModSounds {
 	public static final SoundEvent LOST_SOUL_HURT = register("entity.lost_soul.hurt");
 	public static final SoundEvent LOST_SOUL_DEATH = register("entity.lost_soul.death");
 	public static final SoundEvent FIRE_RAIN = register("weather.fire_rain");
+	/** Los mini jefes demoníacos. */
+	public static final Voice LEGION = boss("legion");
+	public static final Voice BEELZEBUB = boss("beelzebub");
+	public static final Voice MOLOCH = boss("moloch");
+	public static final Voice ABADDON = boss("abaddon");
 
 	/** Lo que dice un NPC: su voz de siempre, su queja al recibir un golpe y al morir. */
 	public record Voice(SoundEvent ambient, SoundEvent hurt, SoundEvent death) {
@@ -60,6 +65,10 @@ public final class ModSounds {
 		float own = 0.88F + (Math.floorMod(bits, 1000L) / 1000.0F) * 0.24F;
 		Random random = entity.getRandom();
 		return own * (1.0F + (random.nextFloat() - random.nextFloat()) * 0.05F);
+	}
+
+	private static Voice boss(String name) {
+		return new Voice(register("entity." + name + ".ambient"), register("entity." + name + ".hurt"), register("entity." + name + ".death"));
 	}
 
 	private static Voice voice(String name) {

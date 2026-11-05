@@ -99,6 +99,10 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		EntityRendererRegistry.register(ModEntities.IMP,
 				ctx -> new com.evolvedwarfare.client.hell.DemonRenderer<>(ctx, "imp", com.evolvedwarfare.client.hell.DemonRenderer.IMP, 0.62F));
 		EntityRendererRegistry.register(ModEntities.LOST_SOUL, com.evolvedwarfare.client.hell.LostSoulRenderer::new);
+		registerBoss(ModEntities.LEGION, "legion", 0.9F);
+		registerBoss(ModEntities.BEELZEBUB, "beelzebub", 0.0F);
+		registerBoss(ModEntities.MOLOCH, "moloch", 1.3F);
+		registerBoss(ModEntities.ABADDON, "abaddon", 1.5F);
 		com.evolvedwarfare.client.render.armor.FactionArmorRenderer.register();
 		// máquinas de asedio: sus modelos 3D, la cámara aérea (clic izquierdo mantenido) y la vista previa del tiro
 		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(
@@ -198,5 +202,13 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 			net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry.ITEM.register((stack, tint) -> tint != 0 ? -1
 					: 0xFF000000 | net.minecraft.world.biome.FoliageColors.getDefaultColor(), leaves);
 		}
+	}
+
+	private static <T extends net.minecraft.entity.mob.HostileEntity> void registerBoss(net.minecraft.entity.EntityType<T> type, String id, float shadow) {
+		net.minecraft.client.render.entity.model.EntityModelLayer layer = new net.minecraft.client.render.entity.model.EntityModelLayer(
+				com.evolvedwarfare.EvolvedWarfare.id(id), "main");
+		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(layer,
+				() -> com.evolvedwarfare.client.hell.BossModel.texturedModelData(id));
+		EntityRendererRegistry.register(type, ctx -> new com.evolvedwarfare.client.hell.BossRenderer<>(ctx, id, layer, shadow));
 	}
 }

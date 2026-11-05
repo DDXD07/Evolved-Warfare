@@ -179,6 +179,19 @@ public final class ModEntities {
 			EntityType.Builder.<com.evolvedwarfare.hell.LostSoulEntity>create(com.evolvedwarfare.hell.LostSoulEntity::new, SpawnGroup.MONSTER)
 					.dimensions(0.7F, 1.9F).eyeHeight(1.6F).makeFireImmune().maxTrackingRange(8).build("lost_soul"));
 
+	public static final EntityType<com.evolvedwarfare.hell.LegionEntity> LEGION = Registry.register(Registries.ENTITY_TYPE, EvolvedWarfare.id("legion"),
+			EntityType.Builder.<com.evolvedwarfare.hell.LegionEntity>create(com.evolvedwarfare.hell.LegionEntity::new, SpawnGroup.MONSTER)
+					.dimensions(1.3F, 2.4F).eyeHeight(2.0F).makeFireImmune().maxTrackingRange(10).build("legion"));
+	public static final EntityType<com.evolvedwarfare.hell.BeelzebubEntity> BEELZEBUB = Registry.register(Registries.ENTITY_TYPE, EvolvedWarfare.id("beelzebub"),
+			EntityType.Builder.<com.evolvedwarfare.hell.BeelzebubEntity>create(com.evolvedwarfare.hell.BeelzebubEntity::new, SpawnGroup.MONSTER)
+					.dimensions(1.4F, 2.7F).eyeHeight(2.3F).makeFireImmune().maxTrackingRange(10).build("beelzebub"));
+	public static final EntityType<com.evolvedwarfare.hell.MolochEntity> MOLOCH = Registry.register(Registries.ENTITY_TYPE, EvolvedWarfare.id("moloch"),
+			EntityType.Builder.<com.evolvedwarfare.hell.MolochEntity>create(com.evolvedwarfare.hell.MolochEntity::new, SpawnGroup.MONSTER)
+					.dimensions(1.8F, 3.9F).eyeHeight(3.4F).makeFireImmune().maxTrackingRange(12).build("moloch"));
+	public static final EntityType<com.evolvedwarfare.hell.AbaddonEntity> ABADDON = Registry.register(Registries.ENTITY_TYPE, EvolvedWarfare.id("abaddon"),
+			EntityType.Builder.<com.evolvedwarfare.hell.AbaddonEntity>create(com.evolvedwarfare.hell.AbaddonEntity::new, SpawnGroup.MONSTER)
+					.dimensions(2.0F, 4.6F).eyeHeight(4.1F).makeFireImmune().maxTrackingRange(12).build("abaddon"));
+
 	public static final EntityType<com.evolvedwarfare.wood.FallingTreeEntity> FALLING_TREE = Registry.register(Registries.ENTITY_TYPE,
 			EvolvedWarfare.id("falling_tree"),
 			EntityType.Builder.<com.evolvedwarfare.wood.FallingTreeEntity>create(com.evolvedwarfare.wood.FallingTreeEntity::new, SpawnGroup.MISC)
@@ -198,6 +211,10 @@ public final class ModEntities {
 	}
 
 	public static void init() {
+		FabricDefaultAttributeRegistry.register(LEGION, com.evolvedwarfare.hell.LegionEntity.createAttributes());
+		FabricDefaultAttributeRegistry.register(BEELZEBUB, com.evolvedwarfare.hell.BeelzebubEntity.createAttributes());
+		FabricDefaultAttributeRegistry.register(MOLOCH, com.evolvedwarfare.hell.MolochEntity.createAttributes());
+		FabricDefaultAttributeRegistry.register(ABADDON, com.evolvedwarfare.hell.AbaddonEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(DEMON, com.evolvedwarfare.hell.DemonEntity.createDemonAttributes());
 		FabricDefaultAttributeRegistry.register(IMP, com.evolvedwarfare.hell.ImpEntity.createImpAttributes());
 		FabricDefaultAttributeRegistry.register(LOST_SOUL, com.evolvedwarfare.hell.LostSoulEntity.createSoulAttributes());

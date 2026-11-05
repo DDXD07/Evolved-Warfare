@@ -203,6 +203,15 @@ public final class ModItems {
 	public static final Item LOST_SOUL_SPAWN_EGG = register("lost_soul_spawn_egg",
 			new net.minecraft.item.SpawnEggItem(ModEntities.LOST_SOUL, 0xC4E4EC, 0x4A8CA0, new Item.Settings()));
 
+	public static final Item LEGION_SPAWN_EGG = register("legion_spawn_egg",
+			new net.minecraft.item.SpawnEggItem(ModEntities.LEGION, 0x965C56, 0xCEB0A0, new Item.Settings()));
+	public static final Item BEELZEBUB_SPAWN_EGG = register("beelzebub_spawn_egg",
+			new net.minecraft.item.SpawnEggItem(ModEntities.BEELZEBUB, 0x2A3620, 0x961010, new Item.Settings()));
+	public static final Item MOLOCH_SPAWN_EGG = register("moloch_spawn_egg",
+			new net.minecraft.item.SpawnEggItem(ModEntities.MOLOCH, 0x683A28, 0xFF8C1E, new Item.Settings()));
+	public static final Item ABADDON_SPAWN_EGG = register("abaddon_spawn_egg",
+			new net.minecraft.item.SpawnEggItem(ModEntities.ABADDON, 0xDED4B6, 0xD2AA32, new Item.Settings()));
+
 	// la fruta de los frutales, sus zumos y el hacha de sílex
 	public static final Item PEAR = register("pear", new com.evolvedwarfare.item.DescribedItem(new Item.Settings().food(food(4, 0.3F))));
 	public static final Item PLUM = register("plum", new com.evolvedwarfare.item.DescribedItem(new Item.Settings().food(food(3, 0.3F))));
@@ -368,6 +377,10 @@ public final class ModItems {
 						entries.add(DEMON_SPAWN_EGG);
 						entries.add(IMP_SPAWN_EGG);
 						entries.add(LOST_SOUL_SPAWN_EGG);
+						entries.add(LEGION_SPAWN_EGG);
+						entries.add(BEELZEBUB_SPAWN_EGG);
+						entries.add(MOLOCH_SPAWN_EGG);
+						entries.add(ABADDON_SPAWN_EGG);
 						entries.add(FLINT_HATCHET);
 						for (com.evolvedwarfare.orchard.FruitKind kind : com.evolvedwarfare.orchard.FruitKind.values()) {
 							entries.add(ModBlocks.FRUIT_SAPLINGS.get(kind));

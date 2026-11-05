@@ -1,0 +1,37 @@
+{
+  "description": {
+    "translate": "enchantment.evolvedwarfare.divine_blessing"
+  },
+  "supported_items": "#evolvedwarfare:enchantable/blessable",
+  "weight": 3,
+  "max_level": 1,
+  "min_cost": {
+    "base": 14,
+    "per_level_above_first": 0
+  },
+  "max_cost": {
+    "base": 60,
+    "per_level_above_first": 0
+  },
+  "anvil_cost": 4,
+  "slots": [
+    "mainhand"
+  ],
+  "effects": {
+    "minecraft:damage": [
+      {
+        "effect": {
+          "type": "minecraft:add",
+          "value": 4.0
+        },
+        "requirements": {
+          "condition": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "type": "#evolvedwarfare:demons"
+          }
+        }
+      }
+    ]
+  }
+}

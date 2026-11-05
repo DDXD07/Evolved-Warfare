@@ -223,16 +223,16 @@ def biomes():
                             ["minecraft:spring_open", "minecraft:patch_fire", "minecraft:patch_soul_fire"] + ORES,
                             step2=["minecraft:basalt_pillar"],
                             monsters=[("%s:lost_soul" % NS, 60, 1, 3), ("minecraft:ghast", 40, 1, 2), ("minecraft:skeleton", 15, 2, 4),
-                                      ("%s:imp" % NS, 15, 1, 2)]),
+                                      ("%s:imp" % NS, 15, 1, 2), ("%s:legion" % NS, 3, 1, 1)]),
         "brimstone_fields": biome(0x5A3A08, {"options": {"type": "minecraft:ash"}, "probability": 0.02}, "nether_wastes",
                                   ["minecraft:spring_open", "minecraft:patch_fire", "minecraft:glowstone_extra", "minecraft:glowstone"] + ORES
                                   + ["%s:ore_brimstone" % NS],
                                   monsters=[("%s:imp" % NS, 40, 1, 3), ("%s:demon" % NS, 12, 1, 1), ("minecraft:magma_cube", 20, 2, 3),
-                                            ("minecraft:zombified_piglin", 40, 2, 4)]),
+                                            ("minecraft:zombified_piglin", 40, 2, 4), ("%s:beelzebub" % NS, 2, 1, 1)]),
         "lake_of_fire": biome(0x6A1606, {"options": {"type": "minecraft:lava"}, "probability": 0.004}, "basalt_deltas",
                               ["minecraft:spring_open", "minecraft:patch_fire"] + ORES, step4=["minecraft:delta"],
                               monsters=[("%s:demon" % NS, 25, 1, 2), ("%s:imp" % NS, 30, 1, 3), ("minecraft:magma_cube", 60, 2, 4),
-                                        ("minecraft:ghast", 30, 1, 2)]),
+                                        ("minecraft:ghast", 30, 1, 2), ("%s:moloch" % NS, 2, 1, 1), ("%s:abaddon" % NS, 1, 1, 1)]),
     }
 
 

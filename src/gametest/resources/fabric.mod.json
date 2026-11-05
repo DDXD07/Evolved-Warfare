@@ -32,7 +32,8 @@
 			"com.evolvedwarfare.gametest.FluidGameTests",
 			"com.evolvedwarfare.gametest.NightGameTests",
 			"com.evolvedwarfare.gametest.WoodGameTests",
-			"com.evolvedwarfare.gametest.HellGameTests"
+			"com.evolvedwarfare.gametest.HellGameTests",
+			"com.evolvedwarfare.gametest.DemonBossGameTests"
 		]
 	},
 	"depends": {

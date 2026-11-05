@@ -528,5 +528,185 @@
         "volume": 1.0
       }
     ]
+  },
+  "entity.legion.ambient": {
+    "subtitle": "subtitles.evolvedwarfare.entity.legion.ambient",
+    "sounds": [
+      {
+        "name": "minecraft:mob/zombie/say1",
+        "pitch": 0.5,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:mob/zombie/say2",
+        "pitch": 0.45,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:mob/ghast/moan3",
+        "pitch": 0.5,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.legion.hurt": {
+    "subtitle": "subtitles.evolvedwarfare.entity.legion.hurt",
+    "sounds": [
+      {
+        "name": "minecraft:mob/zombie/hurt1",
+        "pitch": 0.5,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:mob/zombie/hurt2",
+        "pitch": 0.5,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.legion.death": {
+    "subtitle": "subtitles.evolvedwarfare.entity.legion.death",
+    "sounds": [
+      {
+        "name": "minecraft:mob/ghast/death",
+        "pitch": 0.45,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.beelzebub.ambient": {
+    "subtitle": "subtitles.evolvedwarfare.entity.beelzebub.ambient",
+    "sounds": [
+      {
+        "name": "minecraft:mob/bee/aggressive1",
+        "pitch": 0.5,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:mob/bee/aggressive2",
+        "pitch": 0.45,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:mob/silverfish/say1",
+        "pitch": 0.4,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.beelzebub.hurt": {
+    "subtitle": "subtitles.evolvedwarfare.entity.beelzebub.hurt",
+    "sounds": [
+      {
+        "name": "minecraft:mob/silverfish/hit1",
+        "pitch": 0.45,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:mob/silverfish/hit2",
+        "pitch": 0.45,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.beelzebub.death": {
+    "subtitle": "subtitles.evolvedwarfare.entity.beelzebub.death",
+    "sounds": [
+      {
+        "name": "minecraft:mob/silverfish/kill",
+        "pitch": 0.4,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.moloch.ambient": {
+    "subtitle": "subtitles.evolvedwarfare.entity.moloch.ambient",
+    "sounds": [
+      {
+        "name": "minecraft:mob/ravager/roar1",
+        "pitch": 0.55,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:mob/ravager/roar2",
+        "pitch": 0.5,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:mob/hoglin/angry1",
+        "pitch": 0.45,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.moloch.hurt": {
+    "subtitle": "subtitles.evolvedwarfare.entity.moloch.hurt",
+    "sounds": [
+      {
+        "name": "minecraft:mob/ravager/hurt1",
+        "pitch": 0.5,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:mob/ravager/hurt2",
+        "pitch": 0.5,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.moloch.death": {
+    "subtitle": "subtitles.evolvedwarfare.entity.moloch.death",
+    "sounds": [
+      {
+        "name": "minecraft:mob/ravager/death1",
+        "pitch": 0.45,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.abaddon.ambient": {
+    "subtitle": "subtitles.evolvedwarfare.entity.abaddon.ambient",
+    "sounds": [
+      {
+        "name": "minecraft:mob/wither/idle1",
+        "pitch": 0.45,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:mob/wither/idle2",
+        "pitch": 0.45,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:mob/ghast/scream1",
+        "pitch": 0.4,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.abaddon.hurt": {
+    "subtitle": "subtitles.evolvedwarfare.entity.abaddon.hurt",
+    "sounds": [
+      {
+        "name": "minecraft:mob/wither/hurt1",
+        "pitch": 0.45,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:mob/wither/hurt2",
+        "pitch": 0.45,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.abaddon.death": {
+    "subtitle": "subtitles.evolvedwarfare.entity.abaddon.death",
+    "sounds": [
+      {
+        "name": "minecraft:mob/wither/death",
+        "pitch": 0.4,
+        "volume": 1.0
+      }
+    ]
   }
 }

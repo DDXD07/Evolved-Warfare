@@ -53,6 +53,16 @@ public final class Hell {
 				HostileEntity::canSpawnIgnoreLightLevel);
 		SpawnRestriction.register(ModEntities.LOST_SOUL, SpawnLocationTypes.UNRESTRICTED, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
 				HostileEntity::canSpawnIgnoreLightLevel);
+		SpawnRestriction.register(ModEntities.LEGION, SpawnLocationTypes.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
+				HostileEntity::canSpawnIgnoreLightLevel);
+		SpawnRestriction.register(ModEntities.BEELZEBUB, SpawnLocationTypes.UNRESTRICTED, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
+				HostileEntity::canSpawnIgnoreLightLevel);
+		SpawnRestriction.register(ModEntities.MOLOCH, SpawnLocationTypes.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
+				HostileEntity::canSpawnIgnoreLightLevel);
+		SpawnRestriction.register(ModEntities.ABADDON, SpawnLocationTypes.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
+				HostileEntity::canSpawnIgnoreLightLevel);
+		DivineBlessing.register();
+		BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeys.SOUL_SAND_VALLEY), SpawnGroup.MONSTER, ModEntities.LEGION, 2, 1, 1);
 		// también en los biomas de siempre del Nether
 		BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeys.NETHER_WASTES, BiomeKeys.CRIMSON_FOREST), SpawnGroup.MONSTER,
 				ModEntities.IMP, 10, 1, 2);

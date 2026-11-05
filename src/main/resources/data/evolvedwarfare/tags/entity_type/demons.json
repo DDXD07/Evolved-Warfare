@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "evolvedwarfare:demon",
+    "evolvedwarfare:imp",
+    "evolvedwarfare:legion",
+    "evolvedwarfare:beelzebub",
+    "evolvedwarfare:moloch",
+    "evolvedwarfare:abaddon"
+  ]
+}
