@@ -1502,7 +1502,7 @@
   "item.evolvedwarfare.peach.desc": "Juicy and filling. From the peach tree.",
   "item.evolvedwarfare.lemon.desc": "Too sour to eat alone: better as lemonade. From the lemon tree.",
   "item.evolvedwarfare.orange.desc": "Sweet and thirst-quenching. From the orange tree.",
-  "message.evolvedwarfare.wood.need_axe": "You need an axe to chop wood (4 sticks = slab, 2 slabs = planks; or flint and 2 sticks = flint hatchet)",
+  "message.evolvedwarfare.wood.need_axe": "You need an axe",
   "config.evolvedwarfare.axeForLogs": "Chop only with an axe",
   "config.evolvedwarfare.axeForLogs.tip": "Logs can't be broken by hand or with other tools.",
   "config.evolvedwarfare.treeFelling": "Trees fall whole",

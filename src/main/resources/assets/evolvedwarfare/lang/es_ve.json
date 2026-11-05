@@ -1502,7 +1502,7 @@
   "item.evolvedwarfare.peach.desc": "Jugoso y alimenta bien. Del melocotonero.",
   "item.evolvedwarfare.lemon.desc": "Muy ácido para comerlo solo: mejor en limonada. Del limonero.",
   "item.evolvedwarfare.orange.desc": "Dulce, quita la sed. Del naranjo.",
-  "message.evolvedwarfare.wood.need_axe": "Necesitas un hacha para talar (4 palos = losa, 2 losas = tablones; o sílex y 2 palos = hacha de sílex)",
+  "message.evolvedwarfare.wood.need_axe": "Necesitas un hacha",
   "config.evolvedwarfare.axeForLogs": "Talar solo con hacha",
   "config.evolvedwarfare.axeForLogs.tip": "Los troncos no se rompen con la mano ni con otras herramientas.",
   "config.evolvedwarfare.treeFelling": "Los árboles caen enteros",
