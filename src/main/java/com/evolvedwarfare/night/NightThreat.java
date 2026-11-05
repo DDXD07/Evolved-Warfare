@@ -113,11 +113,10 @@ public final class NightThreat {
 			ai.evolvedwarfare$goals().add(1, new ZombieSiegeGoal(mob));
 			ai.evolvedwarfare$goals().add(1, new GapJumpGoal(mob));
 			// de noche te oyen y te huelen: aunque estés dentro de casa (sin verte), van a por ti si estás cerca
-			ai.evolvedwarfare$targets().add(1, new ActiveTargetGoal<>(mob, PlayerEntity.class, 4, false, false,
-					target -> hostileNights() && isNight(target.getWorld()) && target.squaredDistanceTo(mob) < SCENT * SCENT));
+			ai.evolvedwarfare$targets().add(1, new ScentTargetGoal(mob, SCENT, m -> hostileNights() && isNight(m.getWorld())));
 			if (mob.getCommandTags().contains(HORDE_TAG)) {
 				// la horda sabe dónde estás: no le hace falta verte
-				ai.evolvedwarfare$targets().add(1, new ActiveTargetGoal<>(mob, PlayerEntity.class, 1, false, false, null));
+				ai.evolvedwarfare$targets().add(0, new ScentTargetGoal(mob, 96, m -> true));
 				modifier(mob, HORDE_SIGHT, 64.0, EntityAttributeModifier.Operation.ADD_VALUE, true);
 			}
 		}

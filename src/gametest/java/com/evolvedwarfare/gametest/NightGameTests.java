@@ -185,7 +185,7 @@ public class NightGameTests implements FabricGameTest {
 					}
 				}
 			}
-			LOG.info("[EW-GAMETEST] jugador dentro de una caseta: el zombi le ve {}, le persigue {}, bloques de pared rotos {}, el zombi en {}", sees,
+			LOG.info("[EW-GAMETEST] jugador dentro de una caseta (creativo {}, en el mundo {}): el zombi le ve {}, le persigue {}, bloques de pared rotos {}, el zombi en {}", player.isCreative(), world.getPlayers().contains(player), sees,
 					hunting, broken, ctx.getRelativePos(zombie.getBlockPos()));
 			zombie.discard();
 			player.discard();
