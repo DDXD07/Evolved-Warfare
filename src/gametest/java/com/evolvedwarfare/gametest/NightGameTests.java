@@ -196,4 +196,38 @@ public class NightGameTests implements FabricGameTest {
 			ctx.complete();
 		});
 	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 400)
+	public void zombiesBuildUp(TestContext ctx) {
+		for (int x = 0; x <= 6; x++) {
+			for (int z = 0; z <= 6; z++) {
+				ctx.setBlockState(x, 0, z, Blocks.STONE);
+				for (int y = 1; y <= 7; y++) {
+					ctx.setBlockState(x, y, z, Blocks.AIR);
+				}
+			}
+		}
+		// el muñeco en lo alto de una columna de piedra de 3; el zombi al pie
+		for (int y = 1; y <= 3; y++) {
+			ctx.setBlockState(3, y, 3, Blocks.BEDROCK);
+		}
+		ArmorStandEntity dummy = ctx.spawnEntity(EntityType.ARMOR_STAND, 3, 4, 3);
+		ZombieEntity zombie = ctx.spawnEntity(EntityType.ZOMBIE, 3, 1, 2);
+		zombie.equipStack(EquipmentSlot.HEAD, new ItemStack(Items.LEATHER_HELMET));
+		zombie.setTarget(dummy);
+		ctx.waitAndRun(300, () -> {
+			int dirt = 0;
+			for (BlockPos p : BlockPos.iterate(ctx.getAbsolutePos(new BlockPos(0, 1, 0)), ctx.getAbsolutePos(new BlockPos(6, 7, 6)))) {
+				if (ctx.getWorld().getBlockState(p).isOf(Blocks.DIRT)) {
+					dirt++;
+				}
+			}
+			double up = zombie.getY() - ctx.getAbsolutePos(BlockPos.ORIGIN).getY();
+			LOG.info("[EW-GAMETEST] zombi bajo una columna: tierra puesta {}, el zombi a altura {}", dirt, up);
+			zombie.discard();
+			dummy.discard();
+			check(dirt >= 2 && up >= 3.0, "El zombi no se sube con tierra");
+			ctx.complete();
+		});
+	}
 }

@@ -106,6 +106,8 @@ public final class NightThreat {
 		}
 		MobEntityGoalsAccessor ai = (MobEntityGoalsAccessor) mob;
 		if (mob instanceof EndermanEntity) {
+			// también rompen lo que haya entre ellos y tú (de noche, persiguiéndote)
+			ai.evolvedwarfare$goals().add(1, new ZombieSiegeGoal(mob, false));
 			ai.evolvedwarfare$targets().add(1, new ActiveTargetGoal<>(mob, PlayerEntity.class, 2, true, false,
 					target -> hostileNights() && target.getWorld().isNight() && target.getWorld().getDimension().hasSkyLight()));
 		}

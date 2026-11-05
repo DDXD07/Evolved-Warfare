@@ -1268,6 +1268,9 @@ Si un zombi no puede llegar hasta ti, **lo crea**: busca el camino más directo 
 - **No te pierden de vista dentro de casa**: de noche, un zombi a menos de 40 bloques te encuentra aunque no te vea (te oye
   y te huele), y la horda de la noche de zombis, a cualquier distancia. Si no hay camino hasta ti, va derecho hacia ti y
   rompe lo que se encuentre (los escalones los sube, no los rompe).
+- **Pone tierra para llegar a ti** (hasta 24 bloques cada vez): se sube en una columna si estás justo encima, hace
+  escalones si estás más alto y tiende puentes sobre los huecos que no puede saltar.
+- **Los endermans también rompen** lo que haya entre ellos y tú cuando te persiguen.
 - **Salta huecos de 1 o 2 bloques** de largo si al otro lado hay suelo.
 - Hace falta la regla `mobGriefing` (activada de serie).
 

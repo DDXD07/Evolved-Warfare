@@ -36,8 +36,21 @@ public class ZombieSiegeGoal extends Goal {
 	private int needed;
 	private int lastStage = -1;
 	private int active;
+	private final boolean builds;
+	/** Donde estaba al saltar para subirse en una columna de tierra. */
+	@Nullable
+	private BlockPos pillar;
+	/** Tierra que puede poner cada vez que se abre camino. */
+	private int dirt;
+	public static final int MAX_DIRT = 24;
 
 	public ZombieSiegeGoal(MobEntity mob) {
+		this(mob, true);
+	}
+
+	/** {@code builds}: si pone tierra para subir o cruzar (los zombis sí; los endermans, no). */
+	public ZombieSiegeGoal(MobEntity mob, boolean builds) {
+		this.builds = builds;
 		this.mob = mob;
 		setControls(EnumSet.of(Control.MOVE, Control.LOOK, Control.JUMP));
 	}
@@ -123,6 +136,9 @@ public class ZombieSiegeGoal extends Goal {
 				order.add(front.up());
 				order.add(front.up(2));
 			} else {
+				if (mob.getHeight() > 2.0F) {
+					order.add(front.up(2));
+				}
 				order.add(front.up());
 				// un escalón (con hueco encima) se sube: no se rompe
 				if (!(free(world, front.up()) && free(world, feet.up(2)))) {
@@ -145,6 +161,8 @@ public class ZombieSiegeGoal extends Goal {
 		progress = 0;
 		active = 0;
 		lastStage = -1;
+		pillar = null;
+		dirt = MAX_DIRT;
 	}
 
 	@Override
@@ -186,6 +204,9 @@ public class ZombieSiegeGoal extends Goal {
 					return;
 				}
 			}
+			if (builds && build(prey)) {
+				return;
+			}
 			// sin camino: derecho hacia la presa, hasta toparse con lo que haya que romper
 			mob.getMoveControl().moveTo(prey.getX(), prey.getY(), prey.getZ(), 1.0);
 			mob.getLookControl().lookAt(prey, 30.0F, 30.0F);
@@ -210,6 +231,64 @@ public class ZombieSiegeGoal extends Goal {
 			target = null;
 			stuck = 0;
 		}
+	}
+
+	private boolean canPlace(World world, BlockPos pos) {
+		return world.getBlockState(pos).isReplaceable() && world.getFluidState(pos).isEmpty()
+				&& world.getOtherEntities(mob, new net.minecraft.util.math.Box(pos)).isEmpty() && world.isInBuildLimit(pos);
+	}
+
+	private void place(World world, BlockPos pos) {
+		world.setBlockState(pos, net.minecraft.block.Blocks.DIRT.getDefaultState());
+		world.playSound(null, pos, net.minecraft.sound.SoundEvents.BLOCK_GRAVEL_PLACE, SoundCategory.BLOCKS, 1.0F, 0.8F);
+		mob.swingHand(Hand.MAIN_HAND);
+		dirt--;
+	}
+
+	/**
+	 * Pone tierra para llegar: una columna bajo sus pies si la presa está justo encima, un escalón delante si está más
+	 * alta, o un puente si delante hay un hueco. Devuelve si está en ello (y no hay que andar).
+	 */
+	private boolean build(LivingEntity prey) {
+		World world = mob.getWorld();
+		BlockPos feet = mob.getBlockPos();
+		// subiéndose en la columna: al estar ya en el aire, la tierra debajo
+		if (pillar != null) {
+			if (mob.getY() >= pillar.getY() + 1.0 && canPlace(world, pillar)) {
+				place(world, pillar);
+				pillar = null;
+				return true;
+			}
+			if (mob.isOnGround() && mob.getBlockPos().getY() <= pillar.getY() && active % 20 == 0) {
+				pillar = null; // no ha podido saltar
+			}
+			return mob.getVelocity().y > -0.1 && pillar != null;
+		}
+		if (dirt <= 0 || active % 10 != 0 || !mob.isOnGround()) {
+			return false;
+		}
+		double dx = prey.getX() - mob.getX();
+		double dz = prey.getZ() - mob.getZ();
+		double flat = Math.sqrt(dx * dx + dz * dz);
+		int dy = prey.getBlockY() - feet.getY();
+		Direction d = Direction.getFacing(dx, 0, dz);
+		BlockPos front = feet.offset(d);
+		if (dy > 1 && flat < 1.8 && free(world, feet.up(2))) {
+			mob.getJumpControl().setActive();
+			pillar = feet.toImmutable();
+			return true;
+		}
+		if (dy >= 1 && free(world, front) && free(world, front.up()) && free(world, front.up(2)) && free(world, feet.up(2))
+				&& !free(world, front.down()) && canPlace(world, front)) {
+			place(world, front); // un escalón
+			return false;
+		}
+		if (dy >= -1 && free(world, front.down()) && free(world, front.down(2)) && free(world, front) && canPlace(world, front.down())
+				&& GapJumpGoal.gap(world, feet, d) == 0) {
+			place(world, front.down()); // un puente
+			return false;
+		}
+		return false;
 	}
 
 	@Override
