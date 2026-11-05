@@ -1380,6 +1380,29 @@ caen muchas más brasas. Te avisa al empezar y al acabar.
 
 **Configuración** (pestaña *Clima*): `fireRain` (activarla o no) y `fireRainEveryMinutes` (cada cuántos minutos).
 
+## Fase 24 — Mini jefes demoníacos y la Bendición Divina
+
+### Bendición Divina
+Un encantamiento nuevo (espadas, hachas, arcos, ballestas, tridentes y mazas) y **la única manera de herir a un
+demonio**: sin él, ni las armas, ni las flechas, ni el fuego, ni las explosiones les hacen nada (suena un golpe seco y te
+avisa). Con él, además, hace **4 de daño más** a los demonios. Sale en la **mesa de encantamientos** (es poco común), en los
+**bibliotecarios** y en los **cofres**; y los mini jefes sueltan libros con ella. Cuentan como demonios: el demonio, el
+diablillo y los cuatro mini jefes (las almas en pena no: esas se hieren con cualquier arma).
+
+### Los mini jefes
+Cuatro demonios bíblicos, cada uno **más grande, más feo y más difícil**, con su **barra de vida** arriba:
+
+| Grado | Mini jefe | Tamaño | Vida | Golpe | Dónde | Poderes |
+|---|---|---|---|---|---|---|
+| **I** | **Legión** | 2,4 bloques | 120 | 8 | llanuras de ceniza, valle de almas | una masa de carne llena de caras y con dos cabezas; al herirlo **se le desprenden diablillos** («Mi nombre es Legión, porque somos muchos») |
+| **II** | **Belcebú, Señor de las Moscas** | 2,7 | 200 | 10 | campos de azufre | una mosca gigante con ojos rojos y trompa que **vuela**; suelta **enjambres** que dan veneno, hambre y náuseas |
+| **III** | **Moloc** | 3,9 | 320 | 14 | lagos de fuego | cabeza de toro, cuernos enormes y un **horno encendido en el pecho**; **escupe fuego** en abanico y **embiste** lanzándote por los aires |
+| **IV** | **Abadón, el Destructor** | 4,6 | 500 | 18 | lagos de fuego (muy raro) | un esqueleto gigante coronado, con alas y cola de escorpión; **golpea el suelo** (onda que hiere y lanza a todo en 7 bloques), hace **llover fuego** sobre ti y, a media vida, **llama a sus siervos** |
+
+Les brillan los ojos (y el horno de Moloc) en la oscuridad. Ninguno se quema. Botín: varas de blaze, oro, diamantes,
+chatarra y lingotes de netherita, y un **libro de Bendición Divina** (Legión 15 %, Belcebú 30 %, Moloc 50 %, Abadón siempre;
+Abadón suelta también, a veces, una **estrella del Nether**). Hay huevos para los cuatro.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -1398,6 +1421,7 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
   diseños 3D (cubos sobre cabeza, cuerpo, brazos y piernas), las texturas, los iconos, `FactionArmorModels.java`, los
   modelos de objeto, las recetas, las etiquetas y los textos; con `--preview` las dibuja puestas (delante, detrás y
   andando).
+- `ew_demons.py` — los mini jefes demoníacos (modelos animados por partes, texturas y lo que brilla, sonidos, botín, huevos) y el encantamiento Bendición Divina con sus etiquetas.
 - `ew_hell.py` — el Nether bíblico: dimensión sin techo, terreno (montañas, colinas y lagos de fuego), biomas nuevos, ceniza y azufre, texturas de demonios, diablillos y almas en pena, sonidos, botín y textos.
 - `ew_orchard.py` — los frutales (hojas en 4 fases con la fruta en 3D, brotes, fruta, zumos, botín y generación del mundo) y la tala (hacha de sílex y recetas de palos, losas y tablones).
 - `ew_night.py` — la noche más dura: el icono de la infección, su tipo de daño y los textos.

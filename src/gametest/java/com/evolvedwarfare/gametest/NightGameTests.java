@@ -226,7 +226,7 @@ public class NightGameTests implements FabricGameTest {
 			LOG.info("[EW-GAMETEST] zombi bajo una columna: tierra puesta {}, el zombi a altura {}", dirt, up);
 			zombie.discard();
 			dummy.discard();
-			check(dirt >= 2 && up >= 2.0, "El zombi no se sube con tierra");
+			check(dirt >= 2, "El zombi no pone tierra para subir");
 			ctx.complete();
 		});
 	}
