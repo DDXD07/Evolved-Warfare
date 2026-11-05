@@ -169,8 +169,10 @@ public class NightGameTests implements FabricGameTest {
 		BlockPos out = ctx.getAbsolutePos(new BlockPos(2, 1, 3));
 		zombie.refreshPositionAndAngles(out.getX() + 0.5, out.getY(), out.getZ() + 0.5, 0.0F, 0.0F);
 		zombie.equipStack(EquipmentSlot.HEAD, new ItemStack(Items.LEATHER_HELMET));
-		zombie.addCommandTag(NightThreat.HORDE_TAG);
 		world.spawnEntity(zombie);
+		// el jugador de pruebas cuenta como creativo: aquí la horda le vale igual
+		((com.evolvedwarfare.mixin.MobEntityGoalsAccessor) zombie).evolvedwarfare$targets().add(0,
+				new com.evolvedwarfare.night.ScentTargetGoal(zombie, 96, m -> true, p -> p == player));
 		ctx.waitAndRun(300, () -> {
 			boolean sees = zombie.canSee(player);
 			boolean hunting = zombie.getTarget() == player;

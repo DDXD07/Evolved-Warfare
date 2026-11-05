@@ -15,11 +15,18 @@ public class ScentTargetGoal extends Goal {
 	private final MobEntity mob;
 	private final double range;
 	private final Predicate<MobEntity> when;
+	private final Predicate<PlayerEntity> eligible;
 	@Nullable
 	private PlayerEntity prey;
 	private int cooldown;
 
 	public ScentTargetGoal(MobEntity mob, double range, Predicate<MobEntity> when) {
+		this(mob, range, when, p -> !p.isCreative());
+	}
+
+	/** {@code eligible}: qué jugadores le valen (en el juego, los que no están en creativo). */
+	public ScentTargetGoal(MobEntity mob, double range, Predicate<MobEntity> when, Predicate<PlayerEntity> eligible) {
+		this.eligible = eligible;
 		this.mob = mob;
 		this.range = range;
 		this.when = when;
@@ -27,7 +34,7 @@ public class ScentTargetGoal extends Goal {
 	}
 
 	private boolean valid(PlayerEntity p) {
-		return p.isAlive() && !p.isSpectator() && !p.isCreative() && p.getWorld() == mob.getWorld() && mob.squaredDistanceTo(p) < range * range;
+		return p.isAlive() && !p.isSpectator() && eligible.test(p) && p.getWorld() == mob.getWorld() && mob.squaredDistanceTo(p) < range * range;
 	}
 
 	@Nullable
