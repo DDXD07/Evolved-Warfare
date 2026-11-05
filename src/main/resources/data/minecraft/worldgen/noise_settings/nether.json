@@ -120,12 +120,12 @@
                           },
                           "argument2": {
                             "type": "minecraft:mul",
-                            "argument1": -0.5,
+                            "argument1": -0.75,
                             "argument2": {
                               "type": "minecraft:clamp",
                               "input": {
                                 "type": "minecraft:mul",
-                                "argument1": 3.0,
+                                "argument1": 2.5,
                                 "argument2": {
                                   "type": "minecraft:add",
                                   "argument1": {
@@ -134,7 +134,7 @@
                                     "xz_scale": 1.0,
                                     "y_scale": 0.0
                                   },
-                                  "argument2": -0.3
+                                  "argument2": -0.15
                                 }
                               },
                               "min": 0.0,
@@ -270,12 +270,12 @@
                                   },
                                   "argument2": {
                                     "type": "minecraft:mul",
-                                    "argument1": -0.5,
+                                    "argument1": -0.75,
                                     "argument2": {
                                       "type": "minecraft:clamp",
                                       "input": {
                                         "type": "minecraft:mul",
-                                        "argument1": 3.0,
+                                        "argument1": 2.5,
                                         "argument2": {
                                           "type": "minecraft:add",
                                           "argument1": {
@@ -284,7 +284,7 @@
                                             "xz_scale": 1.0,
                                             "y_scale": 0.0
                                           },
-                                          "argument2": -0.3
+                                          "argument2": -0.15
                                         }
                                       },
                                       "min": 0.0,

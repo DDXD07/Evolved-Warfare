@@ -87,6 +87,30 @@ public class HellGameTests implements FabricGameTest {
 				lowest = Math.min(lowest, surface);
 			}
 		}
+		// un mapa del terreno en el registro: ~ lava, . bajo, - llano, + colinas, ^ alto, A montaña
+		StringBuilder map = new StringBuilder("\n");
+		int lakes = 0;
+		int cells = 0;
+		for (int j = 0; j < 24; j++) {
+			for (int i = 0; i < 64; i++) {
+				VerticalBlockSample column = gen.getColumnSample(i * 40 - 1280, j * 80 - 960, nether, noise);
+				int surface = 0;
+				for (int y = 250; y > 0; y--) {
+					if (!column.getState(y).isAir()) {
+						surface = y;
+						break;
+					}
+				}
+				boolean molten = column.getState(surface).isOf(Blocks.LAVA);
+				cells++;
+				if (molten) {
+					lakes++;
+				}
+				map.append(molten ? '~' : surface < 45 ? '.' : surface < 60 ? '-' : surface < 80 ? '+' : surface < 110 ? '^' : 'A');
+			}
+			map.append('\n');
+		}
+		LOG.info("[EW-GAMETEST] mapa del Nether (lava en {} de {}):{}", lakes, cells, map);
 		LOG.info("[EW-GAMETEST] terreno del Nether: {} columnas, con techo {}, suelo de {} a {}, lagos de fuego al aire {}", columns, roofs, lowest,
 				highest, lava);
 		check(roofs == 0, "Hay techo en el Nether");

@@ -85,7 +85,7 @@ HILLS = mul(0.25, noise("hell_hills"))
 RIDGE = add(1.0, mul(-2.0, {"type": "minecraft:abs", "argument": noise("hell_mountains")}))
 MASK = clamp(mul(2.2, add(noise("hell_mountain_mask"), -0.05)), 0.0, 1.0)
 MOUNTAINS = mul(MASK, mul(1.45, clamp(add(0.35, RIDGE), 0.0, 1.3)))
-BASINS = mul(-0.5, clamp(mul(3.0, add(noise("hell_basins"), -0.3)), 0.0, 1.0))
+BASINS = mul(-0.75, clamp(mul(2.5, add(noise("hell_basins"), -0.15)), 0.0, 1.0))
 TERRAIN = flat(add(add(-1.1875, HILLS), add(MOUNTAINS, BASINS)))
 DETAIL = mul(0.12, {"type": "minecraft:noise", "noise": "%s:hell_detail" % NS, "xz_scale": 1.0, "y_scale": 1.5})
 # sobre la superficie: 2 en y = 0 y -2 en y = 256
