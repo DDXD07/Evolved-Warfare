@@ -26,6 +26,8 @@ public final class ModNetworking {
 		PayloadTypeRegistry.playS2C().register(ThirstPayload.ID, ThirstPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(SeveredPayload.ID, SeveredPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(DrinkPosePayload.ID, DrinkPosePayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(ActivityPayload.ID, ActivityPayload.CODEC);
+		ActivityPayload.register();
 		PayloadTypeRegistry.playC2S().register(DrinkRequestPayload.ID, DrinkRequestPayload.CODEC);
 		ServerPlayNetworking.registerGlobalReceiver(FirearmPayload.ID, (payload, context) -> {
 			if (payload.action() == FirearmPayload.FIRE) {

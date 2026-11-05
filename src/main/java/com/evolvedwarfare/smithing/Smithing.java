@@ -126,6 +126,7 @@ public final class Smithing {
 	public static void open(ServerPlayerEntity player, ForgeMaterial material, BlockPos anvil) {
 		Session s = new Session(nextId++, material, anvil.toImmutable(), player.getWorld().getTime());
 		SESSIONS.put(player.getUuid(), s);
+		com.evolvedwarfare.network.ActivityPayload.set(player, com.evolvedwarfare.network.ActivityPayload.FORGING);
 		net.minecraft.item.Item hot = material == ForgeMaterial.GOLD ? ModItems.HOT_GOLD_INGOT : ModItems.HOT_IRON_INGOT;
 		ServerPlayNetworking.send(player, new SmithingPayloads.Open(s.id(), material.ordinal(), count(player.getInventory(), hot),
 				count(player.getInventory(), Items.DIAMOND), level(player), player.getRandom().nextLong()));
@@ -140,6 +141,7 @@ public final class Smithing {
 
 	private static void finish(ServerPlayerEntity player, SmithingPayloads.Result result) {
 		Session s = SESSIONS.remove(player.getUuid());
+		com.evolvedwarfare.network.ActivityPayload.set(player, com.evolvedwarfare.network.ActivityPayload.NONE);
 		if (s == null || s.id() != result.session() || result.part() < 0 || result.part() >= ForgedPart.values().length
 				|| !(player.getWorld() instanceof ServerWorld world)) {
 			return;

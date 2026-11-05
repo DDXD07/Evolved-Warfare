@@ -92,6 +92,7 @@ public final class Fishing {
 				if (player == null || s.bobber().isRemoved() || player.fishHook != s.bobber()) {
 					SESSIONS.remove(id);
 					if (player != null) {
+						com.evolvedwarfare.network.ActivityPayload.set(player, com.evolvedwarfare.network.ActivityPayload.NONE);
 						ServerPlayNetworking.send(player, new FishingPayloads.End(s.id()));
 					}
 				}
@@ -257,6 +258,7 @@ public final class Fishing {
 		Session s = new Session(nextId++, bobber, species, rod.copy(), treasure, bait, world.getTime());
 		SESSIONS.put(player.getUuid(), s);
 		float zone = FishMinigame.zoneSize(level, lure, bait);
+		com.evolvedwarfare.network.ActivityPayload.set(player, com.evolvedwarfare.network.ActivityPayload.FISHING);
 		ServerPlayNetworking.send(player, new FishingPayloads.Start(s.id(), new ItemStack(species.item()), species.difficulty,
 				species.behavior.ordinal(), zone, treasure, level, random.nextLong()));
 		world.playSound(null, bobber.getBlockPos(), SoundEvents.ENTITY_FISHING_BOBBER_SPLASH, SoundCategory.NEUTRAL, 1.0F, 1.0F);
@@ -269,6 +271,7 @@ public final class Fishing {
 			return;
 		}
 		SESSIONS.remove(player.getUuid());
+		com.evolvedwarfare.network.ActivityPayload.set(player, com.evolvedwarfare.network.ActivityPayload.NONE);
 		boolean plausible = world.getTime() - s.started() >= 20;
 		if (result.caught() && plausible && !s.bobber().isRemoved()) {
 			int luck = enchant(world, s.rod(), Enchantments.LUCK_OF_THE_SEA);

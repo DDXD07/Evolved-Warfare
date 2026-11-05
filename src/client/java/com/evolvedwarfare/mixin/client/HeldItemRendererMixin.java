@@ -38,11 +38,37 @@ public abstract class HeldItemRendererMixin {
 			ci.cancel();
 			return;
 		}
+		// los minijuegos: forjando, el martillo y el lingote; pescando, la caña en alto (se deshace al acabar)
+		if (com.evolvedwarfare.client.anim.ActivityPoses.activity(player) != com.evolvedwarfare.network.ActivityPayload.NONE) {
+			byte activity = com.evolvedwarfare.client.anim.ActivityPoses.activity(player);
+			if (activity == com.evolvedwarfare.network.ActivityPayload.FISHING && !(item.getItem() instanceof net.minecraft.item.FishingRodItem)) {
+				// solo se mueve la mano de la caña
+			} else if (com.evolvedwarfare.client.anim.ActivityPoses.firstPerson((HeldItemRenderer) (Object) this, player, hand, item, matrices,
+					vertexConsumers, light)) {
+				ci.cancel();
+				return;
+			} else {
+				evolvedwarfare$pushed = true;
+				return;
+			}
+		}
 		if (hand == Hand.MAIN_HAND ? CropCrateItem.isCrate(item) : CrateCarry.carrying(player)) {
 			if (hand == Hand.MAIN_HAND) {
 				CrateCarry.renderFirstPerson(player, tickDelta, equipProgress, swingProgress, item, matrices, vertexConsumers, light);
 			}
 			ci.cancel();
+		}
+	}
+
+	@org.spongepowered.asm.mixin.Unique
+	private boolean evolvedwarfare$pushed;
+
+	@Inject(method = "renderFirstPersonItem", at = @At("RETURN"))
+	private void evolvedwarfare$popActivity(AbstractClientPlayerEntity player, float tickDelta, float pitch, Hand hand, float swingProgress,
+			ItemStack item, float equipProgress, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
+		if (evolvedwarfare$pushed) {
+			evolvedwarfare$pushed = false;
+			matrices.pop();
 		}
 	}
 

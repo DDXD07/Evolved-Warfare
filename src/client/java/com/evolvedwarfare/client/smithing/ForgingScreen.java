@@ -113,6 +113,7 @@ public class ForgingScreen extends Screen {
 			return;
 		}
 		float s = game.strike();
+		com.evolvedwarfare.client.anim.ActivityPoses.strike();
 		feedback.add(Text.translatable("screen.evolvedwarfare.forging." + (s >= ForgeMinigame.PERFECT ? "perfect" : s >= ForgeMinigame.GOOD ? "good"
 				: s > 0 ? "poor" : "miss")));
 		flash = 6;
@@ -162,6 +163,14 @@ public class ForgingScreen extends Screen {
 			return true;
 		}
 		return super.keyPressed(keyCode, scanCode, modifiers);
+	}
+
+	@Override
+	public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
+		// forjando, sin oscurecer ni difuminar: se ve el yunque y las manos con el martillo
+		if (game == null) {
+			super.renderBackground(context, mouseX, mouseY, delta);
+		}
 	}
 
 	@Override

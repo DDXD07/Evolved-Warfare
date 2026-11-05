@@ -63,7 +63,9 @@ public class FishingScreen extends Screen {
 		}
 		boolean wasTreasure = game.treasureCaught;
 		boolean wasInside = game.inside();
-		game.tick(holding());
+		boolean hold = holding();
+		game.tick(hold);
+		com.evolvedwarfare.client.anim.ActivityPoses.reeling(hold, Math.min(1.0F, Math.abs(game.fishVel) * 25.0F));
 		if (client.player != null) {
 			if (game.treasureCaught && !wasTreasure) {
 				client.player.playSound(SoundEvents.BLOCK_CHEST_OPEN, 0.6F, 1.4F);

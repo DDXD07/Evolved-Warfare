@@ -1513,6 +1513,21 @@ las armas medievales del mod). Ahora se **forjan**, en tres pasos:
 El **nivel de herrería** (0 a 10) sube forjando y agranda la zona buena. Las herramientas de madera y piedra, el hacha de
 sílex, la netherita (en la mesa de herrería) y las armaduras siguen como siempre.
 
+## Fase 28 — Animaciones de forja y pesca
+
+Ahora se ve lo que haces en los minijuegos, **en primera y en tercera persona** (los demás jugadores también lo ven):
+
+- **Forjando en el yunque**: en primera persona, el **martillo de herrero** en tu mano, que **baja de golpe con cada
+  martillazo** que das (y vuelve arriba), y el **lingote al rojo** en la otra mano. La pantalla del minijuego ya no oscurece
+  el mundo, así que ves el yunque y las manos. En tercera persona, el brazo del martillo sube por encima del hombro y cae
+  sobre el yunque, con la otra mano sujetando el lingote y la cabeza mirando la pieza.
+- **Pescando** (durante el minijuego): la **caña en alto con las dos manos**, tirando hacia atrás y **temblando** con los
+  tirones del pez; al mantener pulsado tira más fuerte. En tercera persona, los dos brazos en la caña, el cuerpo echado
+  atrás y la mirada en el agua.
+
+El servidor avisa a los jugadores cercanos de quién está forjando o pescando (y a los que llegan después), y se olvida al
+terminar, al cerrar el minijuego o al desconectarse.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

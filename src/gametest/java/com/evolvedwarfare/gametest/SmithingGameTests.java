@@ -102,4 +102,21 @@ public class SmithingGameTests implements FabricGameTest {
 		check(swordMax < baseSword && swordMax > 0, "La calidad tosca no baja la durabilidad");
 		ctx.complete();
 	}
+
+	/** La animación de forjar y pescar: el servidor sabe qué hace cada jugador y lo olvida al acabar. */
+	@GameTest(templateName = EMPTY_STRUCTURE)
+	public void activityIsTracked(TestContext ctx) {
+		var player = (net.minecraft.server.network.ServerPlayerEntity) ctx.createMockCreativeServerPlayerInWorld();
+		com.evolvedwarfare.network.ActivityPayload.set(player, com.evolvedwarfare.network.ActivityPayload.FORGING);
+		byte forging = com.evolvedwarfare.network.ActivityPayload.current(player);
+		com.evolvedwarfare.network.ActivityPayload.set(player, com.evolvedwarfare.network.ActivityPayload.FISHING);
+		byte fishing = com.evolvedwarfare.network.ActivityPayload.current(player);
+		com.evolvedwarfare.network.ActivityPayload.set(player, com.evolvedwarfare.network.ActivityPayload.NONE);
+		byte none = com.evolvedwarfare.network.ActivityPayload.current(player);
+		LOG.info("[EW-GAMETEST] animaciones: forjando {}, pescando {}, al acabar {}", forging, fishing, none);
+		check(forging == com.evolvedwarfare.network.ActivityPayload.FORGING && fishing == com.evolvedwarfare.network.ActivityPayload.FISHING
+				&& none == com.evolvedwarfare.network.ActivityPayload.NONE, "No se guarda lo que hace el jugador");
+		player.discard();
+		ctx.complete();
+	}
 }
