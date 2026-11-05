@@ -1,0 +1,49 @@
+{
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 40,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "evolvedwarfare:nether_citadel/boss_legion",
+        "processors": {
+          "processors": []
+        },
+        "projection": "rigid"
+      }
+    },
+    {
+      "weight": 30,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "evolvedwarfare:nether_citadel/boss_beelzebub",
+        "processors": {
+          "processors": []
+        },
+        "projection": "rigid"
+      }
+    },
+    {
+      "weight": 20,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "evolvedwarfare:nether_citadel/boss_moloch",
+        "processors": {
+          "processors": []
+        },
+        "projection": "rigid"
+      }
+    },
+    {
+      "weight": 10,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "evolvedwarfare:nether_citadel/boss_abaddon",
+        "processors": {
+          "processors": []
+        },
+        "projection": "rigid"
+      }
+    }
+  ]
+}

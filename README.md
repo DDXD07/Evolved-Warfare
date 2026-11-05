@@ -1403,6 +1403,29 @@ Les brillan los ojos (y el horno de Moloc) en la oscuridad. Ninguno se quema. Bo
 chatarra y lingotes de netherita, y un **libro de Bendición Divina** (Legión 15 %, Belcebú 30 %, Moloc 50 %, Abadón siempre;
 Abadón suelta también, a veces, una **estrella del Nether**). Hay huevos para los cuatro.
 
+## Fase 25 — La ciudadela infernal
+
+La **fortaleza del Nether de vanilla ya no sale**: en su lugar sale la **ciudadela infernal** (los bastiones siguen igual).
+Es una ciudadela de **88x88** bloques, de piedra negra y ladrillo del Nether, a cielo abierto sobre el terreno nuevo:
+
+- **Foso de lava** alrededor, con un **puente** hasta la **puerta fortificada** (dos torreones con braseros y el rastrillo
+  levantado).
+- **Muralla** de 13 de alto con **adarve**, almenas, aspilleras y faroles de almas; se sube por escaleras desde el patio.
+- **Cuatro torres** redondas con escalera de mano, plantas a la altura del adarve, almenas, braseros y una **aguja**; en dos
+  de ellas hay un **generador de blazes**.
+- **Patio** con el camino a la puerta, **cuatro huertos de verruga del Nether**, dos **altares de los blaze** (con su
+  generador y fuego de almas), **obeliscos** con cráneos de esqueleto wither y **jaulas** con huesos.
+- **Cuartel y armería** (norte): armaduras de oro, cofres, yunque y mesa de herrería.
+- **Calabozos y laboratorio** (sur): celdas con rejas, huesos y telarañas; soporte de pociones, caldero y atril.
+- El **gran salón del trono** (en el centro): columnas, **vidrieras rojas**, **canales de lava tras rejas**, lámparas de
+  almas colgadas, la **alfombra roja** hasta el **trono** de piedra negra dorada y obsidiana llorona sobre su estrado de
+  tres escalones, y detrás el **tesoro** (diamantes, oro, netherita, manzanas de oro, a veces un libro de **Bendición
+  Divina** y una espada encantada).
+- El trono lo guarda **un mini jefe** al azar: Legión (40 %), Belcebú (30 %), Moloc (20 %) o Abadón (10 %).
+
+Por dentro y alrededor salen **blazes, esqueletos wither** (sus cráneos, para el Wither), esqueletos, cubos de magma,
+piglins zombi, **diablillos y demonios**.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -1421,6 +1444,7 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
   diseños 3D (cubos sobre cabeza, cuerpo, brazos y piernas), las texturas, los iconos, `FactionArmorModels.java`, los
   modelos de objeto, las recetas, las etiquetas y los textos; con `--preview` las dibuja puestas (delante, detrás y
   andando).
+- `ew_citadel.py` — la ciudadela infernal (plantilla de 88x88, piezas del mini jefe, estructura con sus criaturas, el conjunto de estructuras del Nether sin la fortaleza de vanilla y el botín).
 - `ew_demons.py` — los mini jefes demoníacos (modelos animados por partes, texturas y lo que brilla, sonidos, botín, huevos) y el encantamiento Bendición Divina con sus etiquetas.
 - `ew_hell.py` — el Nether bíblico: dimensión sin techo, terreno (montañas, colinas y lagos de fuego), biomas nuevos, ceniza y azufre, texturas de demonios, diablillos y almas en pena, sonidos, botín y textos.
 - `ew_orchard.py` — los frutales (hojas en 4 fases con la fruta en 3D, brotes, fruta, zumos, botín y generación del mundo) y la tala (hacha de sílex y recetas de palos, losas y tablones).
