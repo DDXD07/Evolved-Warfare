@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "evolvedwarfare:perch",
+    "evolvedwarfare:carp",
+    "evolvedwarfare:trout",
+    "evolvedwarfare:pike",
+    "evolvedwarfare:eel",
+    "evolvedwarfare:tuna",
+    "evolvedwarfare:swordfish",
+    "evolvedwarfare:sturgeon"
+  ]
+}

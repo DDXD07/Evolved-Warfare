@@ -31,6 +31,11 @@ public final class ModComponents {
 					.packetCodec(net.minecraft.network.codec.PacketCodecs.VAR_INT).build());
 
 	/** Si un mosquete está cargado. */
+	/** El peso y la calidad de un pez pescado con el minijuego. */
+	public static final ComponentType<com.evolvedwarfare.fishing.FishData> FISH = Registry.register(Registries.DATA_COMPONENT_TYPE,
+			EvolvedWarfare.id("fish"), ComponentType.<com.evolvedwarfare.fishing.FishData>builder().codec(com.evolvedwarfare.fishing.FishData.CODEC)
+					.packetCodec(com.evolvedwarfare.fishing.FishData.PACKET_CODEC).build());
+
 	public static final ComponentType<Boolean> MUSKET_LOADED = Registry.register(Registries.DATA_COMPONENT_TYPE,
 			EvolvedWarfare.id("musket_loaded"),
 			ComponentType.<Boolean>builder().codec(com.mojang.serialization.Codec.BOOL)

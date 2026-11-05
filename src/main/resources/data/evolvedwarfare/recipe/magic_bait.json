@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "evolvedwarfare:bait"
+    },
+    {
+      "item": "evolvedwarfare:bait"
+    },
+    {
+      "item": "minecraft:glowstone_dust"
+    },
+    {
+      "item": "minecraft:prismarine_crystals"
+    }
+  ],
+  "result": {
+    "id": "evolvedwarfare:magic_bait",
+    "count": 2
+  }
+}

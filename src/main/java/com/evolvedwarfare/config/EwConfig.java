@@ -94,6 +94,8 @@ public final class EwConfig {
 	public boolean treeFelling = true;
 	/** La lluvia de fuego y azufre del Nether. */
 	public boolean fireRain = true;
+	/** La pesca con minijuego (peces con peso y calidad). */
+	public boolean fishingMinigame = true;
 	/** Cada cuántos minutos, más o menos, llueve fuego en el Nether. */
 	public int fireRainEveryMinutes = 15;
 	/** La sed (y su medidor encima del hambre). */
@@ -218,6 +220,7 @@ public final class EwConfig {
 			new Option("axeForLogs", "climate", 0, 1, 1),
 			new Option("treeFelling", "climate", 0, 1, 1),
 			new Option("fireRain", "climate", 0, 1, 1),
+			new Option("fishingMinigame", "climate", 0, 1, 1),
 			new Option("fireRainEveryMinutes", "climate", 1, 240, 1),
 			new Option("parasiteChance", "climate", 0, 100, 5),
 			new Option("settlementBonusPerLevel", "settlements", 0.0, 1.0, 0.01),

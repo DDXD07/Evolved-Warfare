@@ -5,6 +5,7 @@
 	"mixins": [
 		"BiomeSeasonMixin",
 		"CraftingScreenHandlerMixin",
+		"FishingBobberMinigameMixin",
 		"FlowableFluidMixin",
 		"FluidBlockDrainMixin",
 		"BucketPlaceFiniteMixin",

@@ -131,6 +131,10 @@ public class SalesMailboxBlockEntity extends BlockEntity implements SidedInvento
 		if (stack.isEmpty() || Market.isCurrency(stack) || GloryPouchItem.isPouch(stack)) {
 			return 0.0;
 		}
+		if (stack.contains(ModComponents.FISH)) {
+			// los peces con calidad: según su peso y su calidad (solo aquí se venden)
+			return com.evolvedwarfare.fishing.Fishing.price(stack) * stack.getCount();
+		}
 		if (stack.getItem() instanceof CropCrateItem) {
 			CropCrateItem.Contents contents = stack.get(ModComponents.CROP_CRATE);
 			double crate = ItemValues.value(stack.getItem(), world);

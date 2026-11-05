@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    [
+      {
+        "item": "minecraft:rotten_flesh"
+      },
+      {
+        "item": "minecraft:spider_eye"
+      },
+      {
+        "item": "minecraft:cod"
+      }
+    ],
+    [
+      {
+        "item": "minecraft:wheat_seeds"
+      },
+      {
+        "item": "minecraft:bread"
+      }
+    ]
+  ],
+  "result": {
+    "id": "evolvedwarfare:bait",
+    "count": 4
+  }
+}

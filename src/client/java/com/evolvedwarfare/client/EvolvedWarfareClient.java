@@ -88,6 +88,8 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		NetherAmbience.register();
 		// el Nether bíblico: el cielo, la ceniza, y sus criaturas
 		com.evolvedwarfare.client.hell.HellSky.register();
+		// la pesca: el minijuego, y el peso y la calidad de los peces
+		com.evolvedwarfare.client.fishing.ClientFishing.register();
 		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(com.evolvedwarfare.client.hell.DemonRenderer.DEMON,
 				() -> com.evolvedwarfare.client.hell.DemonModel.getTexturedModelData(false));
 		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(com.evolvedwarfare.client.hell.DemonRenderer.IMP,

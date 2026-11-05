@@ -194,6 +194,18 @@ public final class ModItems {
 			.food(new net.minecraft.component.type.FoodComponent.Builder().nutrition(9).saturationModifier(0.8F)
 					.usingConvertsTo(net.minecraft.item.Items.BOWL).build())));
 
+	// la pesca: peces nuevos y cebos
+	public static final Item PERCH = register("perch", new com.evolvedwarfare.item.DescribedItem(new Item.Settings().food(food(2, 0.1F))));
+	public static final Item CARP = register("carp", new com.evolvedwarfare.item.DescribedItem(new Item.Settings().food(food(2, 0.1F))));
+	public static final Item TROUT = register("trout", new com.evolvedwarfare.item.DescribedItem(new Item.Settings().food(food(2, 0.2F))));
+	public static final Item PIKE = register("pike", new com.evolvedwarfare.item.DescribedItem(new Item.Settings().food(food(3, 0.2F))));
+	public static final Item EEL = register("eel", new com.evolvedwarfare.item.DescribedItem(new Item.Settings().food(food(2, 0.2F))));
+	public static final Item TUNA = register("tuna", new com.evolvedwarfare.item.DescribedItem(new Item.Settings().food(food(4, 0.3F))));
+	public static final Item SWORDFISH = register("swordfish", new com.evolvedwarfare.item.DescribedItem(new Item.Settings().food(food(4, 0.3F))));
+	public static final Item STURGEON = register("sturgeon", new com.evolvedwarfare.item.DescribedItem(new Item.Settings().food(food(4, 0.3F))));
+	public static final Item BAIT = register("bait", new com.evolvedwarfare.item.DescribedItem(new Item.Settings()));
+	public static final Item MAGIC_BAIT = register("magic_bait", new com.evolvedwarfare.item.DescribedItem(new Item.Settings()));
+
 	// el Nether bíblico: el azufre y los huevos de sus criaturas
 	public static final Item BRIMSTONE = register("brimstone", new com.evolvedwarfare.item.DescribedItem(new Item.Settings()));
 	public static final Item DEMON_SPAWN_EGG = register("demon_spawn_egg",
@@ -371,6 +383,9 @@ public final class ModItems {
 						entries.add(ModBlocks.CROP_CRATE_ITEM);
 						entries.add(ModBlocks.SALES_MAILBOX);
 						entries.add(ModBlocks.TRADER_CATALOG);
+						for (Item fish : new Item[] {PERCH, CARP, TROUT, PIKE, EEL, TUNA, SWORDFISH, STURGEON, BAIT, MAGIC_BAIT}) {
+							entries.add(fish);
+						}
 						entries.add(ModBlocks.ASH_BLOCK);
 						entries.add(ModBlocks.BRIMSTONE_BLOCK);
 						entries.add(BRIMSTONE);
