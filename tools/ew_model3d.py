@@ -126,12 +126,15 @@ def _corners(e, face):
     }[face]
 
 
-def render(models, texture_images, size=160, scale=7.0, yaw=45.0, pitch=30.0, bg=(70, 74, 80), offsets=None, ground=None):
+def render(models, texture_images, size=160, scale=7.0, yaw=45.0, pitch=30.0, bg=(70, 74, 80), offsets=None, ground=None, pre=None):
     """Dibuja modelos (dicts json) en isométrico. texture_images: {id de textura: PIL}. offsets: desplazamiento de cada modelo."""
     img = np.zeros((size, size, 3), dtype=np.float32)
     img[:, :] = bg
     zbuf = np.full((size, size), -1e9, dtype=np.float32)
     view = _rot("x", pitch) @ _rot("y", yaw)
+    if pre is not None:
+        # una rotación previa (la de "display" de un objeto: x, luego y, luego z como en el juego)
+        view = view @ pre
     cx = cy = size / 2.0
     offsets = offsets or [(0, 0, 0)] * len(models)
     items = list(zip(models, offsets))
@@ -232,6 +235,9 @@ def render_entity(parts, texture, size=220, scale=4.0, yaw=35.0, pitch=18.0, bg=
     # de modelo (y abajo) a mundo (y arriba, mirando de lado): girar 180 sobre z deja el frente en -z y arriba en +y
     flip = np.diag([-1.0, -1.0, 1.0])
     view = _rot("x", pitch) @ _rot("y", yaw)
+    if pre is not None:
+        # una rotación previa (la de "display" de un objeto: x, luego y, luego z como en el juego)
+        view = view @ pre
     by_name = {p["name"]: p for p in parts}
     mats = {}
 

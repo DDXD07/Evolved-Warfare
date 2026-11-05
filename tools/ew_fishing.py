@@ -281,3 +281,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+    # los modelos 3D (ew_gear3d.py), encima de los planos de aquí
+    import ew_gear3d
+    ew_gear3d.main()

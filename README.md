@@ -1528,6 +1528,23 @@ Ahora se ve lo que haces en los minijuegos, **en primera y en tercera persona** 
 El servidor avisa a los jugadores cercanos de quién está forjando o pescando (y a los que llegan después), y se olvida al
 terminar, al cerrar el minijuego o al desconectarse.
 
+## Fase 29 — Modelos 3D de la forja y la pesca
+
+Todo lo de la herrería y la pesca tiene ahora **modelo 3D** (de cubos, como las frutas), en el inventario, en la mano (en
+primera y tercera persona), en el suelo y en los marcos:
+
+- **Forja**: el **martillo de herrero** (mango de madera con empuñadura de cuero, cabeza de acero con cara y peña), los
+  **lingotes al rojo** de hierro y de oro (con forma de lingote de verdad, biselados, brillando y con cascarilla) y las
+  **12 piezas forjadas** (hojas con su acanaladura, filos más claros, guardas, cabezas de pico, hacha, azada, alabarda,
+  martillo de guerra, la bola con pinchos del mangual...), que se siguen tiñendo del metal (hierro, oro o diamante).
+- **Pesca**: los **8 peces del mod** con su forma y sus aletas (las franjas de la perca, las escamas de la carpa, la banda
+  rosa de la trucha, las manchas del lucio, la anguila larga, el atún con sus aletillas amarillas, el pez espada con su
+  espada y su vela, el esturión con sus placas) y también los **4 de vanilla** que salen pescando (bacalao, salmón, pez
+  tropical y pez globo); la **lata de cebo** con lombrices, el **tarro de cebo mágico** que brilla, y la **caña de pescar**
+  (con mango de corcho, carrete, anillas y el sedal colgando; lanzada, con la punta doblada).
+
+Al comer o romper, las partículas siguen siendo las del dibujo plano.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -1546,6 +1563,7 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
   diseños 3D (cubos sobre cabeza, cuerpo, brazos y piernas), las texturas, los iconos, `FactionArmorModels.java`, los
   modelos de objeto, las recetas, las etiquetas y los textos; con `--preview` las dibuja puestas (delante, detrás y
   andando).
+- `ew_gear3d.py` — los modelos 3D de la forja y la pesca (martillo, lingotes al rojo, piezas, peces, cebos y caña), cada uno con su textura de materiales; se diseñan de pie y se inclinan 45° como los dibujos planos para usar las posiciones en la mano de vanilla. `--preview carpeta` dibuja cómo quedan.
 - `ew_smithing.py` — la herrería: texturas de las piezas (sacadas de cada herramienta, sin el mango), lingotes al rojo, martillo, modelos, recetas (calentar, montar) y las recetas de mesa quitadas.
 - `ew_fishing.py` — la pesca: los peces nuevos (texturas y recetas), los cebos, las estrellas de calidad, el botín de los cofres del minijuego y los textos.
 - `ew_citadel.py` — la ciudadela infernal (plantilla de 88x88, piezas del mini jefe, estructura con sus criaturas, el conjunto de estructuras del Nether sin la fortaleza de vanilla y el botín).
