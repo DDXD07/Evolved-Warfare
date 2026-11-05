@@ -119,4 +119,23 @@ public class SmithingGameTests implements FabricGameTest {
 		player.discard();
 		ctx.complete();
 	}
+
+	/** El Manual del Herrero: lo venden los armeros a 20 Glory Coins justas, en cualquier ciudad. */
+	@GameTest(templateName = EMPTY_STRUCTURE)
+	public void armorerSellsManual(TestContext ctx) {
+		var world = ctx.getWorld();
+		int[] prices = new int[2];
+		int[] levels = {1, 10};
+		for (int k = 0; k < levels.length; k++) {
+			prices[k] = -1;
+			for (com.evolvedwarfare.trade.Deal deal : com.evolvedwarfare.trade.TraderType.ARMORER.catalog(levels[k], 77L + k, 3L, world.getRegistryManager())) {
+				if (deal.sell() && deal.prototype().isOf(ModItems.SMITHING_MANUAL)) {
+					prices[k] = deal.count() == 1 ? deal.price() : -2;
+				}
+			}
+		}
+		LOG.info("[EW-GAMETEST] manual del herrero: ciudad de nivel 1 {} monedas, de nivel 10 {}", prices[0], prices[1]);
+		check(prices[0] == 20 && prices[1] == 20, "El armero no vende el manual a 20 Glory Coins");
+		ctx.complete();
+	}
 }

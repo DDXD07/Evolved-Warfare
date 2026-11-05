@@ -201,6 +201,8 @@ public final class ModItems {
 	public static final Item HOT_GOLD_INGOT = register("hot_gold_ingot", new com.evolvedwarfare.smithing.HotIngotItem(
 			com.evolvedwarfare.smithing.ForgeMaterial.GOLD, () -> net.minecraft.item.Items.GOLD_INGOT, new Item.Settings()));
 	public static final Item SMITHING_HAMMER = register("smithing_hammer", new com.evolvedwarfare.item.DescribedItem(new Item.Settings().maxDamage(250)));
+	/** El Manual del Herrero: cómo se forja, con ilustraciones (lo venden los armeros por 20 Glory Coins). */
+	public static final Item SMITHING_MANUAL = register("smithing_manual", new com.evolvedwarfare.smithing.SmithingManualItem(new Item.Settings().maxCount(1)));
 
 	// la pesca: peces nuevos y cebos
 	public static final Item PERCH = register("perch", new com.evolvedwarfare.item.DescribedItem(new Item.Settings().food(food(2, 0.1F))));
@@ -392,6 +394,7 @@ public final class ModItems {
 						entries.add(ModBlocks.SALES_MAILBOX);
 						entries.add(ModBlocks.TRADER_CATALOG);
 						entries.add(SMITHING_HAMMER);
+						entries.add(SMITHING_MANUAL);
 						entries.add(HOT_IRON_INGOT);
 						entries.add(HOT_GOLD_INGOT);
 						for (Item fish : new Item[] {PERCH, CARP, TROUT, PIKE, EEL, TUNA, SWORDFISH, STURGEON, BAIT, MAGIC_BAIT}) {

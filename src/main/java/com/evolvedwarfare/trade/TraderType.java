@@ -91,7 +91,10 @@ public enum TraderType {
 	// ------------------------------------------------------------------ catálogo
 
 	/** Una línea antes de poner precio: {@code count} por lote y {@code value} monedas viejas por unidad (su valor). */
-	private record Entry(boolean sell, Item item, int count, double value, Tier tier) {
+	private record Entry(boolean sell, Item item, int count, double value, Tier tier, boolean fixed) {
+		Entry(boolean sell, Item item, int count, double value, Tier tier) {
+			this(sell, item, count, value, tier, false);
+		}
 	}
 
 	private static final class Builder {
@@ -100,6 +103,12 @@ public enum TraderType {
 		/** Vende {@code count} por {@code coins} (valor). */
 		Builder sell(Tier tier, ItemConvertible item, int count, int coins) {
 			entries.add(new Entry(true, item.asItem(), count, coins / (double) count, tier));
+			return this;
+		}
+
+		/** Vende {@code count} por {@code price} Glory Coins justas, en cualquier ciudad (sin rareza ni nivel que lo cambien). */
+		Builder fixed(ItemConvertible item, int count, int price) {
+			entries.add(new Entry(true, item.asItem(), count, price, Tier.COMMON, true));
 			return this;
 		}
 
@@ -155,7 +164,9 @@ public enum TraderType {
 						.sell(c, Items.IRON_BOOTS, 1, 4).sell(c, Items.CHAINMAIL_CHESTPLATE, 1, 5)
 						.sell(c, ModItems.weapon(WeaponType.DAGGER, "iron"), 1, 4)
 						.sell(c, ModItems.weapon(WeaponType.SPEAR, "iron"), 1, 5)
-						.sell(c, ModItems.JAVELIN, 4, 2);
+						.sell(c, ModItems.JAVELIN, 4, 2)
+						// el Manual del Herrero: a 20 Glory Coins en todas partes
+						.fixed(ModItems.SMITHING_MANUAL, 1, 20);
 				b.sell(u, Items.IRON_CHESTPLATE, 1, 9).sell(u, Items.IRON_LEGGINGS, 1, 7).sell(u, Items.CROSSBOW, 1, 3)
 						.sell(u, ModItems.LONGBOW, 1, 6).sell(u, ModItems.BALLISTA_BOLT, 4, 2);
 				for (WeaponType weapon : new WeaponType[] {WeaponType.LONGSWORD, WeaponType.HALBERD, WeaponType.WARHAMMER,
@@ -307,7 +318,9 @@ public enum TraderType {
 			int maxCount = maxCount(entry.item());
 			Tier tier = entry.tier();
 			double fair = pricing.factor()[tier.ordinal()] * entry.value();
-			if (entry.sell()) {
+			if (entry.sell() && entry.fixed()) {
+				sells.add(new Deal(true, new ItemStack(entry.item()), entry.count(), (int) entry.value(), dailyLots(tier.sellStock, entry.count()), tier, -1));
+			} else if (entry.sell()) {
 				int[] lot = sellLot(fair * variance, entry.count(), maxCount, tier);
 				int price = markup > 1.0 ? niceCeil(lot[1] * markup) : lot[1];
 				ItemStack prototype = new ItemStack(entry.item());
@@ -383,7 +396,9 @@ public enum TraderType {
 		Map<Item, Double> sold = new HashMap<>();
 		Map<Item, Double> bought = new HashMap<>();
 		for (Entry entry : all) {
-			if (entry.sell()) {
+			if (entry.sell() && entry.fixed()) {
+				sold.merge(entry.item(), entry.value() / entry.count(), Math::min);
+			} else if (entry.sell()) {
 				int[] lot = sellLot(factor[entry.tier().ordinal()] * entry.value(), entry.count(), maxCount(entry.item()), entry.tier());
 				sold.merge(entry.item(), lot[1] / (double) lot[0], Math::min);
 			} else {
@@ -419,13 +434,13 @@ public enum TraderType {
 	private static double factor(List<Entry> all, Tier tier) {
 		List<Double> values = new ArrayList<>();
 		for (Entry entry : all) {
-			if (entry.sell() && entry.tier() == tier && maxCount(entry.item()) == 1) {
+			if (entry.sell() && !entry.fixed() && entry.tier() == tier && maxCount(entry.item()) == 1) {
 				values.add(entry.value());
 			}
 		}
 		if (values.isEmpty()) {
 			for (Entry entry : all) {
-				if (entry.sell() && entry.tier() == tier) {
+				if (entry.sell() && !entry.fixed() && entry.tier() == tier) {
 					values.add(entry.value());
 				}
 			}

@@ -14,6 +14,9 @@ public final class ClientBridge {
 	/** Abre la guía del mod (en el cliente). */
 	public static Runnable openGuide = () -> {
 	};
+	/** Abre el Manual del Herrero (en el cliente). */
+	public static Runnable openSmithingManual = () -> {
+	};
 	/** El rango de una ventaja en el cliente (solo se sabe el del jugador propio; los demás, 0). */
 	public static ToIntBiFunction<PlayerEntity, Perk> clientPerkRank = (player, perk) -> 0;
 

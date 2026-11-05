@@ -1545,6 +1545,23 @@ primera y tercera persona), en el suelo y en los marcos:
 
 Al comer o romper, las partículas siguen siendo las del dibujo plano.
 
+## Fase 30 — El Manual del Herrero
+
+Un libro que explica la forja paso a paso, con ilustraciones. Lo venden los **armeros** de las ciudades por **20 Glory
+Coins** justas (en cualquier ciudad, sin subir con el nivel). Clic derecho para leerlo; se pasa de página con las flechas.
+
+Seis dobles páginas, cada una con su ilustración:
+
+1. **Portada**: los tres pasos y un grabado de la forja (el yunque sobre su tocón con el lingote al rojo) en el que el
+   martillo golpea y saltan chispas.
+2. **Calentar el lingote** (hierro al alto horno, oro al horno, con sus tiempos) y **que no se enfríe** (el lingote humea).
+3. **El martillo** (su receta en la rejilla) y **el yunque** (clic derecho y elegir la pieza; el filo de diamante).
+4. **El minijuego**: la barra en marcha, con el martillo que va y viene, el calor que baja y los golpes; y lo que hace cada
+   golpe, el oro y el diamante.
+5. **Las piezas** (las 12, con lo que cuestan; al pasar el ratón, su mango y sus golpes) y **montarlas** en la mesa.
+6. **La calidad** (la tabla de durabilidad, daño y rapidez, con un pico de cada calidad) y **el nivel de herrería** (la
+   zona buena que crece del 0 al 10).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -1563,6 +1580,7 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
   diseños 3D (cubos sobre cabeza, cuerpo, brazos y piernas), las texturas, los iconos, `FactionArmorModels.java`, los
   modelos de objeto, las recetas, las etiquetas y los textos; con `--preview` las dibuja puestas (delante, detrás y
   andando).
+- `ew_smithbook.py` — el Manual del Herrero: su icono, el grabado de la forja (con los modelos 3D) y los textos del libro.
 - `ew_gear3d.py` — los modelos 3D de la forja y la pesca (martillo, lingotes al rojo, piezas, peces, cebos y caña), cada uno con su textura de materiales; se diseñan de pie y se inclinan 45° como los dibujos planos para usar las posiciones en la mano de vanilla. `--preview carpeta` dibuja cómo quedan.
 - `ew_smithing.py` — la herrería: texturas de las piezas (sacadas de cada herramienta, sin el mango), lingotes al rojo, martillo, modelos, recetas (calentar, montar) y las recetas de mesa quitadas.
 - `ew_fishing.py` — la pesca: los peces nuevos (texturas y recetas), los cebos, las estrellas de calidad, el botín de los cofres del minijuego y los textos.
