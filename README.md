@@ -1469,6 +1469,50 @@ pan = 4. **Cebo mágico**: 2 cebos + polvo de piedra luminosa + cristales de pri
 
 **Configuración** (pestaña *Clima*): `fishingMinigame` (desactívalo para pescar como siempre).
 
+## Fase 27 — Herrería realista (forja con minijuego)
+
+Las **herramientas y armas de hierro, oro y diamante ya no se hacen en la mesa** (espadas, picos, hachas, palas, azadas y
+las armas medievales del mod). Ahora se **forjan**, en tres pasos:
+
+1. **Calentar el lingote**: un lingote de hierro u oro en el **alto horno** (5 s) o el horno (10 s) sale **al rojo**.
+   Humea y **se enfría al minuto** (vuelve a ser un lingote normal): hay que forjarlo antes.
+2. **Forjar la pieza en el yunque**: con el lingote al rojo en la mano y un **martillo de herrero** encima (2 lingotes de
+   hierro y 2 palos, en la mesa), **clic derecho a un yunque**. Eliges la pieza (lo que cuesta cada una en lingotes) y, con
+   hierro, si la quieres **con filo de diamante** (un diamante por lingote). Empieza el **minijuego**: el martillo va y viene
+   por una barra; **golpea** (clic o espacio) cuando pase por lo **naranja** (en el centro, amarillo: **perfecto**). Cada pieza
+   lleva sus golpes (de 4 a 9), cada golpe la zona se mueve y el martillo va más rápido, y el lingote **se va enfriando**: si
+   se enfría, los golpes que faltan son fallos. El oro es blando (más fácil); el diamante, más difícil.
+3. **Montarla en la mesa con su mango**: la pieza y sus palos (las hojas, además, con una **empuñadura de cuero o cuerda**;
+   el mangual, con una **cadena**), en cualquier sitio de la rejilla.
+
+| Pieza | Lingotes | Mango | Sale |
+|---|---|---|---|
+| Hoja de espada | 2 | 1 palo + empuñadura | espada |
+| Cabeza de pico / de hacha | 3 | 2 palos | pico / hacha |
+| Hoja de pala | 1 | 2 palos | pala |
+| Hoja de azada | 2 | 2 palos | azada |
+| Hoja de daga | 1 | 1 palo + empuñadura | daga |
+| Punta de lanza | 1 | 2 palos | lanza |
+| Hoja de espada larga | 3 | 1 palo + empuñadura | espada larga |
+| Cabeza de alabarda | 3 | 2 palos | alabarda |
+| Cabeza de martillo de guerra | 4 | 2 palos | martillo de guerra |
+| Bola de mangual | 3 | 1 palo + cadena | mangual |
+| Cabeza de hacha de batalla | 4 | 2 palos | hacha de batalla |
+
+(Las armas medievales no se hacen de oro.)
+
+**Calidad**: de la puntería sale la calidad de la pieza, y la herramienta la conserva (también al mejorarla a netherita):
+
+| Calidad | Durabilidad | Daño | Rapidez al picar |
+|---|---|---|---|
+| Tosca | x0,7 | -0,5 | -10 % |
+| Común | x1 | = | = |
+| Buena | x1,25 | +0,5 | +10 % |
+| Obra maestra | x1,6 | +1 | +20 % |
+
+El **nivel de herrería** (0 a 10) sube forjando y agranda la zona buena. Las herramientas de madera y piedra, el hacha de
+sílex, la netherita (en la mesa de herrería) y las armaduras siguen como siempre.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -1487,6 +1531,7 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
   diseños 3D (cubos sobre cabeza, cuerpo, brazos y piernas), las texturas, los iconos, `FactionArmorModels.java`, los
   modelos de objeto, las recetas, las etiquetas y los textos; con `--preview` las dibuja puestas (delante, detrás y
   andando).
+- `ew_smithing.py` — la herrería: texturas de las piezas (sacadas de cada herramienta, sin el mango), lingotes al rojo, martillo, modelos, recetas (calentar, montar) y las recetas de mesa quitadas.
 - `ew_fishing.py` — la pesca: los peces nuevos (texturas y recetas), los cebos, las estrellas de calidad, el botín de los cofres del minijuego y los textos.
 - `ew_citadel.py` — la ciudadela infernal (plantilla de 88x88, piezas del mini jefe, estructura con sus criaturas, el conjunto de estructuras del Nether sin la fortaleza de vanilla y el botín).
 - `ew_demons.py` — los mini jefes demoníacos (modelos animados por partes, texturas y lo que brilla, sonidos, botín, huevos) y el encantamiento Bendición Divina con sus etiquetas.

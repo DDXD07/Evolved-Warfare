@@ -58,7 +58,9 @@ public class SalesMailboxGameTests implements FabricGameTest {
 		if (wheat <= 0 || diamond <= 0 || swordPrice <= 0 || carrot <= 0) {
 			throw new GameTestException("Algo de la prueba no tiene precio de mercado");
 		}
-		double fromRecipe = 2 * ItemValues.value(Items.IRON_INGOT, ctx.getWorld()) + ItemValues.value(Items.STICK, ctx.getWorld());
+		// forjada: 2 lingotes, un palo y la empuñadura (cuerda)
+		double fromRecipe = 2 * ItemValues.value(Items.IRON_INGOT, ctx.getWorld()) + ItemValues.value(Items.STICK, ctx.getWorld())
+				+ ItemValues.value(Items.STRING, ctx.getWorld());
 		if (TraderType.marketPrice(Items.IRON_SWORD) == 0.0 && Math.abs(swordPrice - fromRecipe) > 1.0E-6) {
 			throw new GameTestException("La espada de hierro tiene que valer sus materiales (" + fromRecipe + "), no " + swordPrice);
 		}

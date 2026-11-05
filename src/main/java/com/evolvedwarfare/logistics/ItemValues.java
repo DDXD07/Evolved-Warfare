@@ -77,7 +77,35 @@ public final class ItemValues {
 
 	private static double known(Item item, Set<Item> path, int depth) {
 		double market = TraderType.marketPrice(item);
-		return market > 0.0 ? market : fromRecipes(item, path, depth);
+		if (market > 0.0) {
+			return market;
+		}
+		double forged = forged(item, path, depth);
+		return forged > 0.0 ? forged : fromRecipes(item, path, depth);
+	}
+
+	/** Las herramientas y armas forjadas (sin receta de mesa): lo que cuestan sus lingotes (y diamantes), sus palos y su empuñadura. */
+	private static double forged(Item item, Set<Item> path, int depth) {
+		for (com.evolvedwarfare.smithing.ForgedPart part : com.evolvedwarfare.smithing.ForgedPart.values()) {
+			for (com.evolvedwarfare.smithing.ForgeMaterial m : com.evolvedwarfare.smithing.ForgeMaterial.values()) {
+				if (part.result(m) != item || depth > 6) {
+					continue;
+				}
+				double ingot = known(m == com.evolvedwarfare.smithing.ForgeMaterial.GOLD ? net.minecraft.item.Items.GOLD_INGOT
+						: net.minecraft.item.Items.IRON_INGOT, path, depth + 1);
+				double total = part.cost * ingot + part.sticks * known(net.minecraft.item.Items.STICK, path, depth + 1);
+				if (m == com.evolvedwarfare.smithing.ForgeMaterial.DIAMOND) {
+					total += part.cost * known(net.minecraft.item.Items.DIAMOND, path, depth + 1);
+				}
+				if (part.extra == com.evolvedwarfare.smithing.ForgedPart.Extra.GRIP) {
+					total += known(net.minecraft.item.Items.STRING, path, depth + 1);
+				} else if (part.extra == com.evolvedwarfare.smithing.ForgedPart.Extra.CHAIN) {
+					total += known(net.minecraft.item.Items.CHAIN, path, depth + 1);
+				}
+				return total;
+			}
+		}
+		return 0.0;
 	}
 
 	/** La receta más barata con todo de precio conocido, dividida entre lo que sale. */
