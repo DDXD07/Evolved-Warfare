@@ -230,4 +230,38 @@ public class NightGameTests implements FabricGameTest {
 			ctx.complete();
 		});
 	}
+
+	/** Trabajo en equipo: no rompen la tierra que ha puesto la horda ni el bloque en el que está otro, y rompen juntos. */
+	@GameTest(templateName = EMPTY_STRUCTURE)
+	public void hordeTeamwork(TestContext ctx) {
+		ServerWorld world = ctx.getWorld();
+		BlockPos built = ctx.getAbsolutePos(new BlockPos(1, 1, 1));
+		BlockPos wild = ctx.getAbsolutePos(new BlockPos(3, 1, 1));
+		BlockPos under = ctx.getAbsolutePos(new BlockPos(1, 1, 3));
+		world.setBlockState(built, Blocks.DIRT.getDefaultState());
+		world.setBlockState(wild, Blocks.DIRT.getDefaultState());
+		world.setBlockState(under, Blocks.DIRT.getDefaultState());
+		com.evolvedwarfare.night.HordeWork.built(world, built);
+		ZombieEntity a = EntityType.ZOMBIE.create(world);
+		a.refreshPositionAndAngles(ctx.getAbsolutePos(new BlockPos(2, 1, 2)).toCenterPos().add(0, -0.5, 0), 0, 0);
+		world.spawnEntity(a);
+		ZombieEntity b = EntityType.ZOMBIE.create(world);
+		b.refreshPositionAndAngles(under.up().toCenterPos().add(0, -0.5, 0), 0, 0);
+		world.spawnEntity(b);
+		boolean builtSafe = !com.evolvedwarfare.night.HordeWork.mayBreak(world, built, a);
+		boolean wildOk = com.evolvedwarfare.night.HordeWork.mayBreak(world, wild, a);
+		boolean underSafe = !com.evolvedwarfare.night.HordeWork.mayBreak(world, under, a);
+		var j1 = com.evolvedwarfare.night.HordeWork.join(world, wild, 30, a);
+		j1.progress += 10;
+		var j2 = com.evolvedwarfare.night.HordeWork.join(world, wild, 30, b);
+		j2.progress += 10;
+		boolean shared = j1 == j2 && j1.progress == 20;
+		com.evolvedwarfare.night.HordeWork.finish(world, wild);
+		LOG.info("[EW-GAMETEST] horda en equipo: respeta su tierra {}, rompe la otra {}, respeta al compañero de encima {}, rompen juntos {}",
+				builtSafe, wildOk, underSafe, shared);
+		check(builtSafe && wildOk && underSafe && shared, "Los zombis se estorban entre ellos");
+		a.discard();
+		b.discard();
+		ctx.complete();
+	}
 }

@@ -1562,6 +1562,18 @@ Seis dobles páginas, cada una con su ilustración:
 6. **La calidad** (la tabla de durabilidad, daño y rapidez, con un pico de cada calidad) y **el nivel de herrería** (la
    zona buena que crece del 0 al 10).
 
+## Fase 31 — Hordas que trabajan en equipo
+
+Los zombis ya no se deshacen el trabajo unos a otros:
+
+- **Respetan lo que construye la horda**: la tierra de columnas, escalones y puentes no la rompe ningún zombi (ni enderman)
+  mientras sirve (unos 3 minutos).
+- **No rompen el bloque en el que está otro** de pie (no le quitan el suelo a un compañero que sube).
+- **Rompen juntos**: si un compañero ya está rompiendo un bloque, los que llegan le ayudan en el mismo (el avance se suma y
+  cae antes) en vez de ponerse cada uno con uno distinto.
+- **Aprovechan lo que han puesto otros**: si delante hay tierra de un compañero, se suben por ella en vez de hacer otra
+  columna.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

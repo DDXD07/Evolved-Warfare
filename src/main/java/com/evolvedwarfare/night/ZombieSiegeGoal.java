@@ -152,7 +152,7 @@ public class ZombieSiegeGoal extends Goal {
 			}
 		}
 		for (BlockPos p : order) {
-			if (breakTicks(world, p, world.getBlockState(p)) > 0) {
+			if (breakTicks(world, p, world.getBlockState(p)) > 0 && HordeWork.mayBreak(world, p, mob)) {
 				return p.toImmutable();
 			}
 		}
@@ -191,9 +191,10 @@ public class ZombieSiegeGoal extends Goal {
 	@Override
 	public void tick() {
 		LivingEntity prey = mob.getTarget();
-		if (target != null && breakTicks(mob.getWorld(), target, mob.getWorld().getBlockState(target)) <= 0) {
+		if (target != null && (breakTicks(mob.getWorld(), target, mob.getWorld().getBlockState(target)) <= 0
+				|| !HordeWork.mayBreak(mob.getWorld(), target, mob))) {
 			mob.getWorld().setBlockBreakingInfo(mob.getId(), target, -1);
-			target = null; // ya no está (lo ha roto otro)
+			target = null; // ya no está (lo ha roto otro) o ahora sostiene a un compañero
 		}
 		if (target == null) {
 			if (prey == null) {
@@ -201,6 +202,17 @@ public class ZombieSiegeGoal extends Goal {
 			}
 			if (active % 5 == 0) {
 				target = obstacle(prey);
+				if (target == null) {
+					// nada que romper delante: ayuda en lo que rompa un compañero al lado, si le corta el paso a él también
+					BlockPos help = HordeWork.nearbyJob(mob.getWorld(), mob.getBlockPos(), 2.2);
+					if (help != null && HordeWork.mayBreak(mob.getWorld(), help, mob)
+							&& help.getSquaredDistance(prey.getBlockPos()) < mob.getBlockPos().getSquaredDistance(prey.getBlockPos()) + 4) {
+						target = help;
+					}
+				}
+				if (active % 200 == 0) {
+					HordeWork.cleanup(mob.getWorld());
+				}
 				if (target != null) {
 					mob.getNavigation().stop();
 					progress = 0;
@@ -220,19 +232,24 @@ public class ZombieSiegeGoal extends Goal {
 		World world = mob.getWorld();
 		mob.getLookControl().lookAt(target.getX() + 0.5, target.getY() + 0.5, target.getZ() + 0.5);
 		progress++;
+		// la obra es de todos: el avance de cada uno se suma
+		HordeWork.Job job = HordeWork.join(world, target, needed, mob);
+		job.progress += 1.0F;
 		if (progress % 12 == 0) {
 			mob.swingHand(Hand.MAIN_HAND);
 			BlockState state = world.getBlockState(target);
 			world.playSound(null, target, state.getSoundGroup().getHitSound(), SoundCategory.BLOCKS, 0.8F, 0.7F);
 		}
-		int stage = Math.min(9, progress * 10 / Math.max(1, needed));
-		if (stage != lastStage) {
+		int stage = Math.min(9, (int) (job.progress * 10 / Math.max(1, job.needed)));
+		if (stage != lastStage && job.owner == mob.getId()) {
 			lastStage = stage;
 			world.setBlockBreakingInfo(mob.getId(), target, stage);
 		}
-		if (progress >= needed) {
+		if (job.progress >= job.needed) {
 			world.breakBlock(target, true, mob);
+			world.setBlockBreakingInfo(job.owner, target, -1);
 			world.setBlockBreakingInfo(mob.getId(), target, -1);
+			HordeWork.finish(world, target);
 			target = null;
 			stuck = 0;
 		}
@@ -245,6 +262,7 @@ public class ZombieSiegeGoal extends Goal {
 
 	private void place(World world, BlockPos pos) {
 		world.setBlockState(pos, net.minecraft.block.Blocks.DIRT.getDefaultState());
+		HordeWork.built(world, pos); // los demás no lo rompen
 		world.playSound(null, pos, net.minecraft.sound.SoundEvents.BLOCK_GRAVEL_PLACE, SoundCategory.BLOCKS, 1.0F, 0.8F);
 		mob.swingHand(Hand.MAIN_HAND);
 		dirt--;
@@ -278,6 +296,12 @@ public class ZombieSiegeGoal extends Goal {
 		int dy = prey.getBlockY() - feet.getY();
 		Direction d = Direction.getFacing(dx, 0, dz);
 		BlockPos front = feet.offset(d);
+		if (dy > 1 && flat >= 1.8 && flat < 3.5 && HordeWork.isBuilt(world, front) && free(world, front.up()) && free(world, front.up(2))) {
+			// delante hay tierra de un compañero: se sube por ella en vez de hacer otra columna
+			mob.getJumpControl().setActive();
+			mob.getMoveControl().moveTo(front.getX() + 0.5, front.getY() + 1.0, front.getZ() + 0.5, 1.0);
+			return true;
+		}
 		if (dy > 1 && flat < 1.8 && free(world, feet.up(2))) {
 			mob.getJumpControl().setActive();
 			pillar = feet.toImmutable();
