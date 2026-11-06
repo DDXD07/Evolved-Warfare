@@ -330,7 +330,7 @@
                   "type": "minecraft:add",
                   "argument1": {
                     "type": "minecraft:mul",
-                    "argument1": 6.0,
+                    "argument1": 10.0,
                     "argument2": {
                       "type": "minecraft:add",
                       "argument1": 0.5,
@@ -348,7 +348,7 @@
                   },
                   "argument2": {
                     "type": "minecraft:mul",
-                    "argument1": 0.7,
+                    "argument1": 0.3,
                     "argument2": {
                       "type": "minecraft:noise",
                       "noise": "evolvedwarfare:hell_abyss_walls",

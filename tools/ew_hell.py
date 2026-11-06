@@ -102,7 +102,7 @@ DENSITY = {"type": "minecraft:min", "argument1": SURFACE, "argument2": {"type": 
 # (por debajo de y 10) queda macizo y lo de debajo de 32 es lava
 ABYSS = noise("hell_abyss")
 ABYSS_WALLS = {"type": "minecraft:noise", "noise": "%s:hell_abyss_walls" % NS, "xz_scale": 1.0, "y_scale": 0.6}
-CARVE = {"type": "minecraft:max", "argument1": add(mul(6.0, add(0.5, mul(-1.0, ABYSS))), mul(0.7, ABYSS_WALLS)),
+CARVE = {"type": "minecraft:max", "argument1": add(mul(10.0, add(0.5, mul(-1.0, ABYSS))), mul(0.3, ABYSS_WALLS)),
          "argument2": {"type": "minecraft:y_clamped_gradient", "from_y": 0, "to_y": 12, "from_value": 3.0, "to_value": -12.0}}
 DENSITY = {"type": "minecraft:min", "argument1": DENSITY, "argument2": CARVE}
 FINAL_DENSITY = {"type": "minecraft:squeeze", "argument": mul(0.64, {"type": "minecraft:interpolated",
