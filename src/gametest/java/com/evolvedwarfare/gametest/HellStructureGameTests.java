@@ -48,6 +48,8 @@ public class HellStructureGameTests implements FabricGameTest {
 		ServerPlayerEntity player = (ServerPlayerEntity) ctx.createMockCreativeServerPlayerInWorld();
 		player.changeGameMode(GameMode.SURVIVAL);
 		player.getInventory().clear();
+		var at = ctx.getAbsolute(new net.minecraft.util.math.Vec3d(1.5, 2, 1.5));
+		player.refreshPositionAndAngles(at.x, at.y, at.z, 0, 0);
 		return player;
 	}
 
@@ -237,7 +239,7 @@ public class HellStructureGameTests implements FabricGameTest {
 	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 40)
 	public void bladeCurses(TestContext ctx) {
 		ServerPlayerEntity player = survivor(ctx);
-		var target = ctx.spawnEntity(EntityType.HUSK, 3, 2, 3);
+		var target = ctx.spawnEntity(EntityType.PIG, 3, 2, 3);
 		target.setAiDisabled(true);
 		ItemStack plague = FallenBladeItem.of(FallenBladeItem.PLAGUE);
 		plague.getItem().postHit(plague, target, player);

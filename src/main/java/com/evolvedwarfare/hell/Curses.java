@@ -35,9 +35,17 @@ public final class Curses {
 		return player.getWorld().getRegistryKey() == World.NETHER;
 	}
 
+	/** ¿En creativo? (según su modo de juego en el servidor). */
+	public static boolean creative(PlayerEntity player) {
+		if (player instanceof net.minecraft.server.network.ServerPlayerEntity sp) {
+			return sp.interactionManager.getGameMode().isCreative();
+		}
+		return player.isCreative();
+	}
+
 	/** Le echa la maldición (si no la tenía), sin fin. */
 	public static boolean curse(PlayerEntity player, RegistryEntry<StatusEffect> curse) {
-		if (player.hasStatusEffect(curse) || player.isCreative() || player.isSpectator()) {
+		if (player.hasStatusEffect(curse) || creative(player) || player.isSpectator()) {
 			return false;
 		}
 		return player.addStatusEffect(new StatusEffectInstance(curse, StatusEffectInstance.INFINITE, 0, false, true, true));

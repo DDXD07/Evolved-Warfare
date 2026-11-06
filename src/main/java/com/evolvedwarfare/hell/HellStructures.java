@@ -192,7 +192,7 @@ public final class HellStructures {
 		for (MobEntity mob : sleepers) {
 			mob.removeCommandTag(DORMANT);
 			mob.setAiDisabled(false);
-			if (target != null && !target.isCreative()) {
+			if (target != null && !Curses.creative(target)) {
 				mob.setTarget(target);
 			}
 			world.playSound(null, mob.getBlockPos(), SoundEvents.ENTITY_ZOMBIE_VILLAGER_CONVERTED, SoundCategory.HOSTILE, 0.8F, 0.5F);
@@ -247,7 +247,7 @@ public final class HellStructures {
 	/** Usar el trono del Abismo: si te reconoce, abre los muros sellados cercanos. Devuelve cuántos bloques abrió (-1 si no te reconoce). */
 	public static int useThrone(ServerWorld world, ServerPlayerEntity player, BlockPos pos) {
 		int deaths = netherDeaths(player);
-		if (deaths < THRONE_DEATHS && !player.isCreative()) {
+		if (deaths < THRONE_DEATHS && !Curses.creative(player)) {
 			player.sendMessage(Text.translatable("message.evolvedwarfare.throne.deaths", deaths, THRONE_DEATHS).formatted(Formatting.DARK_PURPLE), true);
 			world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE.value(), SoundCategory.BLOCKS, 1.0F, 0.5F);
 			return -1;
@@ -276,7 +276,7 @@ public final class HellStructures {
 
 	/** Leer un libro de condena: te hace daño y, a cambio, debilita a los señores del abismo cercanos o te revela un lugar. */
 	public static int read(ServerWorld world, ServerPlayerEntity player) {
-		if (!player.isCreative()) {
+		if (!Curses.creative(player)) {
 			player.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 600, 0));
 			player.addStatusEffect(new StatusEffectInstance(StatusEffects.HUNGER, 400, 1));
 			player.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 100, 0));
