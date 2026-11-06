@@ -285,4 +285,53 @@ public class HellGameTests implements FabricGameTest {
 		dummy.discard();
 		ctx.complete();
 	}
+
+	/** Las criaturas del Nether bíblico: aparecen, con su vida; la cabra ve el peligro y el nephilim golpea el suelo. */
+	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 100)
+	public void damnedCreatures(TestContext ctx) {
+		ServerWorld world = ctx.getWorld();
+		var locust = ctx.spawnEntity(com.evolvedwarfare.hell.DamnedEntities.ABYSS_LOCUST, 1, 3, 1);
+		var greater = ctx.spawnEntity(com.evolvedwarfare.hell.DamnedEntities.GREATER_LOCUST, 2, 3, 1);
+		var serpent = ctx.spawnEntity(com.evolvedwarfare.hell.DamnedEntities.FIRE_SERPENT, 3, 2, 1);
+		var goat = ctx.spawnEntity(com.evolvedwarfare.hell.DamnedEntities.DESERT_GOAT, 4, 2, 1);
+		var fallen = ctx.spawnEntity(com.evolvedwarfare.hell.DamnedEntities.FALLEN, 5, 2, 1);
+		var spirit = ctx.spawnEntity(com.evolvedwarfare.hell.DamnedEntities.DAMNED_SPIRIT, 6, 3, 1);
+		var statue = ctx.spawnEntity(com.evolvedwarfare.hell.DamnedEntities.SALT_STATUE, 7, 2, 1);
+		var neph = ctx.spawnEntity(com.evolvedwarfare.hell.DamnedEntities.NEPHILIM, 3, 2, 6);
+		ArmorStandEntity dummy = ctx.spawnEntity(EntityType.ARMOR_STAND, 5, 2, 6);
+		int slam = neph.groundSlam();
+		// la cabra: lava al lado del jugador
+		BlockPos at = ctx.getAbsolutePos(new BlockPos(1, 1, 8));
+		world.setBlockState(at.east(2), Blocks.LAVA.getDefaultState());
+		var danger = com.evolvedwarfare.hell.DesertGoatEntity.danger(world, at);
+		LOG.info("[EW-GAMETEST] criaturas bíblicas: langosta {} (mayor {}), serpiente {} (trepa), cabra {}, caído {}, espíritu {}, estatua {}, nephilim {} "
+				+ "(golpe al suelo a {}), la cabra ve el peligro hacia {}", locust.getMaxHealth(), greater.getMaxHealth(), serpent.getMaxHealth(),
+				goat.getMaxHealth(), fallen.getMaxHealth(), spirit.getMaxHealth(), statue.getMaxHealth(), neph.getMaxHealth(), slam, danger);
+		check(locust.hasNoGravity() && greater.greater() && !locust.greater() && neph.getMaxHealth() >= 140, "Las criaturas no van bien");
+		check(slam >= 1, "El golpe al suelo no alcanza");
+		check(danger != null && danger.x > 0.5, "La cabra no ve la lava");
+		for (var e : new net.minecraft.entity.Entity[] {locust, greater, serpent, goat, fallen, spirit, statue, neph, dummy}) {
+			e.discard();
+		}
+		world.setBlockState(at.east(2), Blocks.AIR.getDefaultState());
+		ctx.complete();
+	}
+
+	/** El espíritu de los condenados: roba algo y, purificado con sal bendita, lo devuelve. */
+	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 100)
+	public void spiritStealsAndRests(TestContext ctx) {
+		var player = ctx.createMockCreativeServerPlayerInWorld();
+		player.getInventory().main.set(5, new net.minecraft.item.ItemStack(net.minecraft.item.Items.DIAMOND, 3));
+		var spirit = ctx.spawnEntity(com.evolvedwarfare.hell.DamnedEntities.DAMNED_SPIRIT, 2, 3, 2);
+		var stolen = spirit.steal(player);
+		boolean gone = player.getInventory().main.get(5).isEmpty();
+		spirit.purify(player);
+		var drops = ctx.getWorld().getEntitiesByClass(net.minecraft.entity.ItemEntity.class, new net.minecraft.util.math.Box(ctx.getAbsolutePos(BlockPos.ORIGIN)).expand(12),
+				e -> e.getStack().isOf(net.minecraft.item.Items.DIAMOND));
+		LOG.info("[EW-GAMETEST] espíritu: roba {} (le falta {}), purificado devuelve {}", stolen, gone, drops.size());
+		check(stolen.isOf(net.minecraft.item.Items.DIAMOND) && gone && !drops.isEmpty() && spirit.isRemoved(), "El espíritu no roba o no lo devuelve");
+		drops.forEach(e -> e.discard());
+		player.discard();
+		ctx.complete();
+	}
 }

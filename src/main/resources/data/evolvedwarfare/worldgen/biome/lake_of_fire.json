@@ -117,6 +117,18 @@
         "weight": 1,
         "minCount": 1,
         "maxCount": 1
+      },
+      {
+        "type": "evolvedwarfare:fire_serpent",
+        "weight": 25,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "evolvedwarfare:desert_goat",
+        "weight": 15,
+        "minCount": 1,
+        "maxCount": 3
       }
     ]
   }

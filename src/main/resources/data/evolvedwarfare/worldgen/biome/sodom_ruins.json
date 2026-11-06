@@ -101,6 +101,30 @@
         "weight": 3,
         "minCount": 1,
         "maxCount": 1
+      },
+      {
+        "type": "evolvedwarfare:nephilim",
+        "weight": 5,
+        "minCount": 1,
+        "maxCount": 1
+      },
+      {
+        "type": "evolvedwarfare:salt_statue",
+        "weight": 14,
+        "minCount": 1,
+        "maxCount": 3
+      },
+      {
+        "type": "evolvedwarfare:damned_spirit",
+        "weight": 10,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "evolvedwarfare:fallen",
+        "weight": 6,
+        "minCount": 1,
+        "maxCount": 1
       }
     ]
   }

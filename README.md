@@ -1633,6 +1633,32 @@ al que entra. Esta primera parte rehace los biomas (los de vanilla siguen, más 
 Las criaturas nuevas, las estructuras (Babel, templos, cementerios, la Fortaleza del Abaddon...) y los objetos y rituales
 llegarán en las siguientes partes. Hace falta un mundo nuevo (o ir a zonas del Nether sin explorar).
 
+## Fase 34 — Nether bíblico, parte 2: las criaturas
+
+Las criaturas son la consecuencia de estar ahí demasiado tiempo (o de tocar lo que no se debe):
+
+- **Langostas del Abismo** (en el Abismo): enjambres de 8 a 15 de hierro oscuro que vuelan en corro alrededor de su presa
+  y se lanzan en picado por turnos. Su picadura **nubla la vista** (oscuridad) y **debilita**. Las **langostas mayores**,
+  el doble de grandes y duras, sueltan **metal del Abismo**.
+- **Serpientes de fuego** (lagos y montañas): rápidas, reptan por el suelo y **suben por las paredes**. Su mordisco
+  prende fuego y deja **abrasado**, un veneno leve que hace más daño mientras ardes.
+- **Cabras del desierto** (lagos, montañas y el valle): no muerden. Buscan dónde está el peligro junto a ti (**lava o un
+  barranco**), se ponen al otro lado, rascan el suelo y **embisten para tirarte**. Las de **cuernos de azufre** empujan
+  más y queman.
+- **Caídos** (valle, ruinas y Abismo): ángeles de alas rotas con armadura ligera. No atacan de frente: **te siguen a
+  distancia y te susurran** en el chat; si **los miras demasiado rato te ciegan**, y si les das la espalda de cerca, te
+  hieren. Sueltan **plumas oscuras** y **fragmentos de armadura caída**.
+- **Nephilim** (en las ruinas): gigantes de piedra y carne quemada. Lentos, pero **pegan muy fuerte**, **rompen los
+  bloques** que se les ponen delante y **golpean el suelo** lanzando por los aires a todo lo de alrededor. Algunos llevan
+  **restos de armadura antigua** (más duros).
+- **Espíritus de los condenados** (valle y ruinas): no hacen daño, pero **te roban algo del inventario** y huyen a la lava
+  más cercana para tirarlo. Mátalos antes y lo sueltan; o **purifícalos con sal bendita** (clic derecho): descansan,
+  devuelven lo robado y te quitan corrupción.
+- **Estatuas de sal** (en las ruinas): personas petrificadas. **Mientras las miras no se mueven**; cuando nadie las mira,
+  **se giran hacia ti y se acercan**, y si te alcanzan te arañan y te dan sed de sal.
+- **Sal bendita** (2 de sal fina, polvo de piedra luminosa y una pepita de oro): purifica a los espíritus; echada sobre ti,
+  quita corrupción y una maldición.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -1651,6 +1677,7 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
   diseños 3D (cubos sobre cabeza, cuerpo, brazos y piernas), las texturas, los iconos, `FactionArmorModels.java`, los
   modelos de objeto, las recetas, las etiquetas y los textos; con `--preview` las dibuja puestas (delante, detrás y
   andando).
+- `ew_damned.py` — las criaturas del Nether bíblico (fase 2): sus modelos (con el papel de cada parte para animarlas), texturas, sonidos, botín, objetos que sueltan y la sal bendita.
 - `ew_inferno.py` — el Nether bíblico (fase 1): los bloques nuevos (sal, polvo de hueso, grietas, cristales de azufre...), las decoraciones de los biomas, las maldiciones, las visiones y sus textos. El terreno y los biomas siguen en `ew_hell.py`.
 - `ew_casting.py` — la fundición: modelos y texturas del crisol y del molde, sus recetas, etiquetas y textos.
 - `ew_smithbook.py` — el Manual del Herrero: su icono, el grabado de la forja (con los modelos 3D) y los textos del libro.

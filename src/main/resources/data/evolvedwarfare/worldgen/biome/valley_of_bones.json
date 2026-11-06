@@ -98,6 +98,24 @@
         "weight": 3,
         "minCount": 1,
         "maxCount": 1
+      },
+      {
+        "type": "evolvedwarfare:fallen",
+        "weight": 10,
+        "minCount": 1,
+        "maxCount": 1
+      },
+      {
+        "type": "evolvedwarfare:damned_spirit",
+        "weight": 12,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "evolvedwarfare:desert_goat",
+        "weight": 8,
+        "minCount": 1,
+        "maxCount": 2
       }
     ]
   }

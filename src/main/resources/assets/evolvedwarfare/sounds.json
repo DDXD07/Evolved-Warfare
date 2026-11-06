@@ -708,5 +708,266 @@
         "volume": 1.0
       }
     ]
+  },
+  "entity.abyss_locust.ambient": {
+    "subtitle": "subtitles.evolvedwarfare.entity.abyss_locust.ambient",
+    "sounds": [
+      {
+        "name": "minecraft:entity.silverfish.ambient",
+        "type": "event",
+        "pitch": 0.6,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:block.chain.step",
+        "type": "event",
+        "pitch": 1.4,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.abyss_locust.hurt": {
+    "subtitle": "subtitles.evolvedwarfare.entity.abyss_locust.hurt",
+    "sounds": [
+      {
+        "name": "minecraft:entity.silverfish.hurt",
+        "type": "event",
+        "pitch": 0.7,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.abyss_locust.death": {
+    "subtitle": "subtitles.evolvedwarfare.entity.abyss_locust.death",
+    "sounds": [
+      {
+        "name": "minecraft:block.chain.break",
+        "type": "event",
+        "pitch": 1.2,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.fire_serpent.ambient": {
+    "subtitle": "subtitles.evolvedwarfare.entity.fire_serpent.ambient",
+    "sounds": [
+      {
+        "name": "minecraft:entity.cat.hiss",
+        "type": "event",
+        "pitch": 0.5,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:block.fire.ambient",
+        "type": "event",
+        "pitch": 1.3,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.fire_serpent.hurt": {
+    "subtitle": "subtitles.evolvedwarfare.entity.fire_serpent.hurt",
+    "sounds": [
+      {
+        "name": "minecraft:entity.cat.hiss",
+        "type": "event",
+        "pitch": 0.7,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.fire_serpent.death": {
+    "subtitle": "subtitles.evolvedwarfare.entity.fire_serpent.death",
+    "sounds": [
+      {
+        "name": "minecraft:entity.blaze.death",
+        "type": "event",
+        "pitch": 1.4,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.desert_goat.ambient": {
+    "subtitle": "subtitles.evolvedwarfare.entity.desert_goat.ambient",
+    "sounds": [
+      {
+        "name": "minecraft:entity.goat.screaming.ambient",
+        "type": "event",
+        "pitch": 0.8,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.desert_goat.hurt": {
+    "subtitle": "subtitles.evolvedwarfare.entity.desert_goat.hurt",
+    "sounds": [
+      {
+        "name": "minecraft:entity.goat.screaming.hurt",
+        "type": "event",
+        "pitch": 0.8,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.desert_goat.death": {
+    "subtitle": "subtitles.evolvedwarfare.entity.desert_goat.death",
+    "sounds": [
+      {
+        "name": "minecraft:entity.goat.screaming.death",
+        "type": "event",
+        "pitch": 0.8,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.fallen.ambient": {
+    "subtitle": "subtitles.evolvedwarfare.entity.fallen.ambient",
+    "sounds": [
+      {
+        "name": "minecraft:entity.vex.ambient",
+        "type": "event",
+        "pitch": 0.5,
+        "volume": 0.7
+      },
+      {
+        "name": "minecraft:entity.phantom.flap",
+        "type": "event",
+        "pitch": 0.6,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.fallen.hurt": {
+    "subtitle": "subtitles.evolvedwarfare.entity.fallen.hurt",
+    "sounds": [
+      {
+        "name": "minecraft:entity.vex.hurt",
+        "type": "event",
+        "pitch": 0.6,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.fallen.death": {
+    "subtitle": "subtitles.evolvedwarfare.entity.fallen.death",
+    "sounds": [
+      {
+        "name": "minecraft:entity.vex.death",
+        "type": "event",
+        "pitch": 0.5,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.nephilim.ambient": {
+    "subtitle": "subtitles.evolvedwarfare.entity.nephilim.ambient",
+    "sounds": [
+      {
+        "name": "minecraft:entity.ravager.ambient",
+        "type": "event",
+        "pitch": 0.5,
+        "volume": 1.0
+      },
+      {
+        "name": "minecraft:entity.iron_golem.repair",
+        "type": "event",
+        "pitch": 0.4,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.nephilim.hurt": {
+    "subtitle": "subtitles.evolvedwarfare.entity.nephilim.hurt",
+    "sounds": [
+      {
+        "name": "minecraft:entity.iron_golem.hurt",
+        "type": "event",
+        "pitch": 0.5,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.nephilim.death": {
+    "subtitle": "subtitles.evolvedwarfare.entity.nephilim.death",
+    "sounds": [
+      {
+        "name": "minecraft:entity.ravager.death",
+        "type": "event",
+        "pitch": 0.5,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.damned_spirit.ambient": {
+    "subtitle": "subtitles.evolvedwarfare.entity.damned_spirit.ambient",
+    "sounds": [
+      {
+        "name": "minecraft:entity.allay.ambient_without_item",
+        "type": "event",
+        "pitch": 0.4,
+        "volume": 0.6
+      },
+      {
+        "name": "minecraft:particle.soul_escape",
+        "type": "event",
+        "pitch": 0.8,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.damned_spirit.hurt": {
+    "subtitle": "subtitles.evolvedwarfare.entity.damned_spirit.hurt",
+    "sounds": [
+      {
+        "name": "minecraft:entity.vex.hurt",
+        "type": "event",
+        "pitch": 1.2,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.damned_spirit.death": {
+    "subtitle": "subtitles.evolvedwarfare.entity.damned_spirit.death",
+    "sounds": [
+      {
+        "name": "minecraft:particle.soul_escape",
+        "type": "event",
+        "pitch": 0.6,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.salt_statue.ambient": {
+    "subtitle": "subtitles.evolvedwarfare.entity.salt_statue.ambient",
+    "sounds": [
+      {
+        "name": "minecraft:block.calcite.step",
+        "type": "event",
+        "pitch": 0.6,
+        "volume": 0.4
+      }
+    ]
+  },
+  "entity.salt_statue.hurt": {
+    "subtitle": "subtitles.evolvedwarfare.entity.salt_statue.hurt",
+    "sounds": [
+      {
+        "name": "minecraft:block.calcite.hit",
+        "type": "event",
+        "pitch": 0.8,
+        "volume": 1.0
+      }
+    ]
+  },
+  "entity.salt_statue.death": {
+    "subtitle": "subtitles.evolvedwarfare.entity.salt_statue.death",
+    "sounds": [
+      {
+        "name": "minecraft:block.calcite.break",
+        "type": "event",
+        "pitch": 0.7,
+        "volume": 1.0
+      }
+    ]
   }
 }

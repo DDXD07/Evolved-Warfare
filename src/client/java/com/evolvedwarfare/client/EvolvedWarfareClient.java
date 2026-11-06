@@ -109,6 +109,8 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		registerBoss(ModEntities.BEELZEBUB, "beelzebub", 0.0F);
 		registerBoss(ModEntities.MOLOCH, "moloch", 1.3F);
 		registerBoss(ModEntities.ABADDON, "abaddon", 1.5F);
+		// las criaturas del Nether bíblico (fase 2)
+		com.evolvedwarfare.client.hell.DamnedRenderers.register();
 		com.evolvedwarfare.client.render.armor.FactionArmorRenderer.register();
 		// máquinas de asedio: sus modelos 3D, la cámara aérea (clic izquierdo mantenido) y la vista previa del tiro
 		net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry.registerModelLayer(

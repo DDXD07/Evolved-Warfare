@@ -201,6 +201,11 @@ public final class ModItems {
 	public static final Item HOT_GOLD_INGOT = register("hot_gold_ingot", new com.evolvedwarfare.smithing.HotIngotItem(
 			com.evolvedwarfare.smithing.ForgeMaterial.GOLD, () -> net.minecraft.item.Items.GOLD_INGOT, new Item.Settings()));
 	public static final Item SMITHING_HAMMER = register("smithing_hammer", new com.evolvedwarfare.item.DescribedItem(new Item.Settings().maxDamage(250)));
+	/** Lo que sueltan las criaturas del Nether bíblico, y la sal bendita. */
+	public static final Item ABYSS_METAL = register("abyss_metal", new com.evolvedwarfare.item.DescribedItem(new Item.Settings()));
+	public static final Item DARK_FEATHER = register("dark_feather", new com.evolvedwarfare.item.DescribedItem(new Item.Settings()));
+	public static final Item FALLEN_ARMOR_SHARD = register("fallen_armor_shard", new com.evolvedwarfare.item.DescribedItem(new Item.Settings()));
+	public static final Item BLESSED_SALT = register("blessed_salt", new com.evolvedwarfare.hell.BlessedSaltItem(new Item.Settings().maxCount(16)));
 	/** El Manual del Herrero: cómo se forja, con ilustraciones (lo venden los armeros por 20 Glory Coins). */
 	public static final Item SMITHING_MANUAL = register("smithing_manual", new com.evolvedwarfare.smithing.SmithingManualItem(new Item.Settings().maxCount(1)));
 
@@ -395,6 +400,11 @@ public final class ModItems {
 						entries.add(ModBlocks.TRADER_CATALOG);
 						entries.add(SMITHING_HAMMER);
 						entries.add(SMITHING_MANUAL);
+						entries.add(ABYSS_METAL);
+						entries.add(DARK_FEATHER);
+						entries.add(FALLEN_ARMOR_SHARD);
+						entries.add(BLESSED_SALT);
+						com.evolvedwarfare.hell.DamnedEntities.EGGS.forEach(entries::add);
 						entries.add(com.evolvedwarfare.registry.ModBlocks.CRUCIBLE);
 						entries.add(com.evolvedwarfare.registry.ModBlocks.CLAY_MOLD);
 						entries.add(HOT_IRON_INGOT);

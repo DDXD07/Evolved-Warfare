@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "evolvedwarfare:fine_salt"
+    },
+    {
+      "item": "evolvedwarfare:fine_salt"
+    },
+    {
+      "item": "minecraft:glowstone_dust"
+    },
+    {
+      "item": "minecraft:gold_nugget"
+    }
+  ],
+  "result": {
+    "id": "evolvedwarfare:blessed_salt",
+    "count": 2
+  }
+}

@@ -35,6 +35,12 @@ public class BossModel<T extends HostileEntity> extends SinglePartEntityModel<T>
 	private final List<Part> parts = new ArrayList<>();
 
 	public BossModel(ModelPart root, String id) {
+		this(root, id, false);
+	}
+
+	/** {@code translucent}: para los que son de bruma (los espíritus). */
+	public BossModel(ModelPart root, String id, boolean translucent) {
+		super(translucent ? net.minecraft.client.render.RenderLayer::getEntityTranslucent : net.minecraft.client.render.RenderLayer::getEntityCutoutNoCull);
 		this.root = root;
 		for (JsonElement e : load(id).getAsJsonArray("parts")) {
 			JsonObject p = e.getAsJsonObject();
@@ -146,6 +152,8 @@ public class BossModel<T extends HostileEntity> extends SinglePartEntityModel<T>
 					m.pitch += MathHelper.sin(animationProgress * 0.06F) * 0.08F;
 				}
 				case "body" -> m.pitch += MathHelper.sin(animationProgress * 0.05F) * 0.02F;
+				// un cuerpo de serpiente: cada trozo ondula un poco después del anterior
+				case "segment" -> m.yaw += MathHelper.sin(animationProgress * (0.25F + speed * 0.35F) - p.phase() * 0.9F) * (0.25F + speed * 0.2F);
 				default -> {
 				}
 			}

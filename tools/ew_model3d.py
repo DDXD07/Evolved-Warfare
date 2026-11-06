@@ -235,9 +235,6 @@ def render_entity(parts, texture, size=220, scale=4.0, yaw=35.0, pitch=18.0, bg=
     # de modelo (y abajo) a mundo (y arriba, mirando de lado): girar 180 sobre z deja el frente en -z y arriba en +y
     flip = np.diag([-1.0, -1.0, 1.0])
     view = _rot("x", pitch) @ _rot("y", yaw)
-    if pre is not None:
-        # una rotación previa (la de "display" de un objeto: x, luego y, luego z como en el juego)
-        view = view @ pre
     by_name = {p["name"]: p for p in parts}
     mats = {}
 

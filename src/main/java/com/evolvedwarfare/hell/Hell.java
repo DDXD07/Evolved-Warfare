@@ -64,6 +64,7 @@ public final class Hell {
 		DivineBlessing.register();
 		HellFeatures.init();
 		NetherClimate.register();
+		DamnedEntities.register();
 		BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeys.SOUL_SAND_VALLEY), SpawnGroup.MONSTER, ModEntities.LEGION, 2, 1, 1);
 		// también en los biomas de siempre del Nether
 		BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeys.NETHER_WASTES, BiomeKeys.CRIMSON_FOREST), SpawnGroup.MONSTER,

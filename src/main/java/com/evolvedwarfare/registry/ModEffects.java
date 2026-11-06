@@ -33,6 +33,10 @@ public final class ModEffects {
 	public static final RegistryEntry<StatusEffect> JUDGEMENT_HEAT = Registry.registerReference(Registries.STATUS_EFFECT,
 			EvolvedWarfare.id("judgement_heat"), new com.evolvedwarfare.hell.CurseEffect(com.evolvedwarfare.hell.CurseEffect.Kind.JUDGEMENT_HEAT, 0xFF8C1E));
 
+	/** Abrasado: el veneno de la serpiente de fuego. */
+	public static final RegistryEntry<StatusEffect> SCORCHED = Registry.registerReference(Registries.STATUS_EFFECT, EvolvedWarfare.id("scorched"),
+			new com.evolvedwarfare.hell.ScorchedEffect());
+
 	private ModEffects() {
 	}
 
