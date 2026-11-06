@@ -70,7 +70,7 @@ public class ApocalypseGameTests implements FabricGameTest {
 			LOG.info("[EW-GAMETEST] mini jefes: ángel {} ({}), profeta {}, bestia {} con {} cabezas, ignífuga {}", angel.getHealth(), angel.hasNoGravity(),
 					prophet.getHealth(), beast.getHealth(), beast.heads(), beast.isFireImmune());
 			check(angel.isAlive() && prophet.isAlive() && beast.isAlive() && angel.getMaxHealth() >= 300 && beast.heads() == GreaterBeastEntity.HEADS
-					&& beast.isFireImmune() && angel.hasNoGravity() && !beast.canImmediatelyDespawn(1000), "Los mini jefes no aparecen bien");
+					&& beast.isFireImmune() && angel.hasNoGravity() && beast.isPersistent(), "Los mini jefes no aparecen bien");
 			angel.discard();
 			prophet.discard();
 			beast.discard();
