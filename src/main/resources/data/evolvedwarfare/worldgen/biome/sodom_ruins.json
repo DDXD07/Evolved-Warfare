@@ -3,32 +3,25 @@
   "temperature": 2.0,
   "downfall": 0.0,
   "effects": {
-    "fog_color": 5913096,
-    "sky_color": 5913096,
+    "fog_color": 3024418,
+    "sky_color": 3024418,
     "water_color": 4159204,
     "water_fog_color": 329011,
-    "ambient_sound": "minecraft:ambient.nether_wastes.loop",
-    "additions_sound": {
-      "sound": "minecraft:ambient.nether_wastes.additions",
-      "tick_chance": 0.0111
-    },
-    "mood_sound": {
-      "block_search_extent": 8,
-      "offset": 2.0,
-      "sound": "minecraft:ambient.nether_wastes.mood",
-      "tick_delay": 6000
-    },
-    "music": {
-      "max_delay": 24000,
-      "min_delay": 12000,
-      "replace_current_music": false,
-      "sound": "minecraft:music.nether.nether_wastes"
-    },
     "particle": {
       "options": {
         "type": "minecraft:ash"
       },
-      "probability": 0.02
+      "probability": 0.03
+    },
+    "additions_sound": {
+      "sound": "minecraft:block.deepslate.break",
+      "tick_chance": 0.003
+    },
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
     }
   },
   "carvers": {
@@ -43,10 +36,10 @@
     [],
     [],
     [
-      "minecraft:spring_open",
+      "evolvedwarfare:ruin",
+      "evolvedwarfare:salt_pillar",
+      "evolvedwarfare:salt_tree",
       "minecraft:patch_fire",
-      "minecraft:glowstone_extra",
-      "minecraft:glowstone",
       "minecraft:ore_magma",
       "minecraft:spring_closed",
       "minecraft:ore_gravel_nether",
@@ -54,8 +47,7 @@
       "minecraft:ore_gold_nether",
       "minecraft:ore_quartz_nether",
       "minecraft:ore_ancient_debris_large",
-      "minecraft:ore_debris_small",
-      "evolvedwarfare:ore_brimstone"
+      "minecraft:ore_debris_small"
     ],
     [],
     [
@@ -81,32 +73,32 @@
     ],
     "monster": [
       {
-        "type": "evolvedwarfare:imp",
-        "weight": 40,
-        "minCount": 1,
+        "type": "minecraft:zombified_piglin",
+        "weight": 30,
+        "minCount": 2,
         "maxCount": 3
       },
       {
         "type": "evolvedwarfare:demon",
-        "weight": 12,
+        "weight": 20,
         "minCount": 1,
         "maxCount": 1
       },
       {
-        "type": "minecraft:magma_cube",
+        "type": "evolvedwarfare:imp",
         "weight": 20,
-        "minCount": 2,
-        "maxCount": 3
+        "minCount": 1,
+        "maxCount": 2
       },
       {
-        "type": "minecraft:zombified_piglin",
-        "weight": 40,
-        "minCount": 2,
-        "maxCount": 4
+        "type": "evolvedwarfare:lost_soul",
+        "weight": 20,
+        "minCount": 1,
+        "maxCount": 2
       },
       {
-        "type": "evolvedwarfare:beelzebub",
-        "weight": 2,
+        "type": "evolvedwarfare:legion",
+        "weight": 3,
         "minCount": 1,
         "maxCount": 1
       }

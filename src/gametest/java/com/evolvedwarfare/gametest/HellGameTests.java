@@ -45,7 +45,7 @@ public class HellGameTests implements FabricGameTest {
 		DimensionType type = server.getRegistryManager().get(RegistryKeys.DIMENSION_TYPE).get(DimensionTypes.THE_NETHER);
 		var biomes = server.getRegistryManager().get(RegistryKeys.BIOME);
 		boolean all = true;
-		for (String b : new String[] {"ash_plains", "brimstone_fields", "lake_of_fire"}) {
+		for (String b : new String[] {"lake_of_fire", "valley_of_bones", "sodom_ruins", "abyss", "sulfur_mountains"}) {
 			all &= biomes.contains(RegistryKey.of(RegistryKeys.BIOME, EvolvedWarfare.id(b)));
 		}
 		LOG.info("[EW-GAMETEST] Nether: techo {}, altura lógica {}, biomas nuevos {}", type.hasCeiling(), type.logicalHeight(), all);
@@ -111,6 +111,50 @@ public class HellGameTests implements FabricGameTest {
 			map.append('\n');
 		}
 		LOG.info("[EW-GAMETEST] mapa del Nether (lava en {} de {}):{}", lakes, cells, map);
+		// los biomas: cuántas veces sale cada uno (y dónde cae el Abismo, que debe ser hondo)
+		java.util.Map<String, Integer> found = new java.util.TreeMap<>();
+		StringBuilder bmap = new StringBuilder("\n");
+		int abyssDeep = 0;
+		int abyssCells = 0;
+		var sampler = noise.getMultiNoiseSampler();
+		for (int j = 0; j < 24; j++) {
+			for (int i = 0; i < 64; i++) {
+				int x = i * 40 - 1280;
+				int z = j * 80 - 960;
+				var entry = gen.getBiomeSource().getBiome(x >> 2, 80 >> 2, z >> 2, sampler);
+				String id = entry.getKey().map(k -> k.getValue().getPath()).orElse("?");
+				found.merge(id, 1, Integer::sum);
+				char c = switch (id) {
+					case "lake_of_fire" -> 'L';
+					case "valley_of_bones" -> 'V';
+					case "sodom_ruins" -> 'S';
+					case "abyss" -> 'A';
+					case "sulfur_mountains" -> 'M';
+					default -> '.';
+				};
+				bmap.append(c);
+				if (c == 'A') {
+					abyssCells++;
+					VerticalBlockSample column = gen.getColumnSample(x, z, nether, noise);
+					int surface = 0;
+					for (int y = 250; y > 0; y--) {
+						if (!column.getState(y).isAir()) {
+							surface = y;
+							break;
+						}
+					}
+					if (surface < 40) {
+						abyssDeep++;
+					}
+				}
+			}
+			bmap.append('\n');
+		}
+		LOG.info("[EW-GAMETEST] biomas del Nether {} (Abismo hondo en {} de {}):{}", found, abyssDeep, abyssCells, bmap);
+		for (String b : new String[] {"lake_of_fire", "valley_of_bones", "sodom_ruins", "abyss", "sulfur_mountains"}) {
+			check(found.getOrDefault(b, 0) > 10, "Casi no sale el bioma " + b);
+		}
+		check(abyssCells == 0 || abyssDeep * 2 > abyssCells, "El Abismo no es hondo");
 		LOG.info("[EW-GAMETEST] terreno del Nether: {} columnas, con techo {}, suelo de {} a {}, lagos de fuego al aire {}", columns, roofs, lowest,
 				highest, lava);
 		check(roofs == 0, "Hay techo en el Nether");
@@ -153,6 +197,78 @@ public class HellGameTests implements FabricGameTest {
 		}
 		LOG.info("[EW-GAMETEST] lluvia de fuego: {} de 30 bolas caen del cielo", fell);
 		check(fell > 10, "Casi no cae fuego: " + fell);
+		ctx.complete();
+	}
+
+	/** El Valle de los Huesos: los esqueletos enterrados se levantan del suelo. */
+	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 100)
+	public void bonesRise(TestContext ctx) {
+		ServerWorld world = ctx.getWorld();
+		BlockPos base = ctx.getAbsolutePos(new BlockPos(0, 0, 0));
+		for (int x = -10; x <= 10; x++) {
+			for (int z = -10; z <= 10; z++) {
+				world.setBlockState(base.add(x + 4, 0, z + 4), com.evolvedwarfare.registry.ModBlocks.BONE_DUST.getDefaultState());
+				world.setBlockState(base.add(x + 4, 1, z + 4), Blocks.AIR.getDefaultState());
+				world.setBlockState(base.add(x + 4, 2, z + 4), Blocks.AIR.getDefaultState());
+			}
+		}
+		int raised = com.evolvedwarfare.hell.NetherClimate.raiseSkeletons(world, base.add(4, 1, 4), 3, world.getRandom());
+		LOG.info("[EW-GAMETEST] valle de los huesos: se levantan {} esqueletos", raised);
+		check(raised == 3, "No se levantan los esqueletos: " + raised);
+		world.getEntitiesByType(EntityType.SKELETON, new net.minecraft.util.math.Box(base).expand(16), e -> true).forEach(e -> e.discard());
+		ctx.complete();
+	}
+
+	/** El Abismo: las antorchas se apagan solas; la corrupción vuelve maldita la piedra. */
+	@GameTest(templateName = EMPTY_STRUCTURE)
+	public void lightsDieAndStoneCorrupts(TestContext ctx) {
+		ServerWorld world = ctx.getWorld();
+		BlockPos c = ctx.getAbsolutePos(new BlockPos(4, 1, 4));
+		for (int x = -2; x <= 2; x++) {
+			for (int z = -2; z <= 2; z++) {
+				world.setBlockState(c.add(x, -1, z), Blocks.NETHERRACK.getDefaultState());
+				world.setBlockState(c.add(x, 0, z), Blocks.TORCH.getDefaultState());
+			}
+		}
+		int out = 0;
+		for (int i = 0; i < 40; i++) {
+			out += com.evolvedwarfare.hell.NetherClimate.extinguish(world, c, 60, 1.0F, 1.0F);
+		}
+		int left = 0;
+		for (int x = -2; x <= 2; x++) {
+			for (int z = -2; z <= 2; z++) {
+				if (world.getBlockState(c.add(x, 0, z)).isOf(Blocks.TORCH)) {
+					left++;
+				}
+				world.setBlockState(c.add(x, 0, z), Blocks.AIR.getDefaultState());
+			}
+		}
+		boolean cursed = false;
+		for (int i = 0; i < 30 && !cursed; i++) {
+			cursed = com.evolvedwarfare.hell.NetherClimate.corruptNear(world, c, world.getRandom());
+		}
+		LOG.info("[EW-GAMETEST] abismo: se apagan {} antorchas (quedan {}), la piedra se maldice {}", out, left, cursed);
+		check(out > 10 && left < 10, "Las antorchas no se apagan");
+		check(cursed, "La corrupción no maldice la piedra");
+		ctx.complete();
+	}
+
+	/** Las maldiciones: duran sin fin y se quitan de golpe (al salir del Nether). */
+	@GameTest(templateName = EMPTY_STRUCTURE)
+	public void cursesLift(TestContext ctx) {
+		ArmorStandEntity dummy = ctx.spawnEntity(EntityType.ARMOR_STAND, 2, 2, 2);
+		boolean all = true;
+		for (var c : com.evolvedwarfare.hell.Curses.all()) {
+			all &= dummy.addStatusEffect(new net.minecraft.entity.effect.StatusEffectInstance(c, net.minecraft.entity.effect.StatusEffectInstance.INFINITE));
+		}
+		int had = dummy.getStatusEffects().size();
+		for (var c : com.evolvedwarfare.hell.Curses.all()) {
+			dummy.removeStatusEffect(c);
+		}
+		LOG.info("[EW-GAMETEST] maldiciones: puestas {} ({}), quedan al quitarlas {}", all, had, dummy.getStatusEffects().size());
+		all &= had == 4 && dummy.getStatusEffects().isEmpty();
+		check(all, "No se ponen las maldiciones");
+		dummy.discard();
 		ctx.complete();
 	}
 }

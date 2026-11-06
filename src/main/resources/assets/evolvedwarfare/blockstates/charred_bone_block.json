@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "evolvedwarfare:block/charred_bone_block"
+    },
+    "axis=x": {
+      "model": "evolvedwarfare:block/charred_bone_block",
+      "x": 90,
+      "y": 90
+    },
+    "axis=z": {
+      "model": "evolvedwarfare:block/charred_bone_block",
+      "x": 90
+    }
+  }
+}

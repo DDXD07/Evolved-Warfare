@@ -88,6 +88,7 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		NetherAmbience.register();
 		// el Nether bíblico: el cielo, la ceniza, y sus criaturas
 		com.evolvedwarfare.client.hell.HellSky.register();
+		com.evolvedwarfare.client.hell.HellClient.register();
 		// la pesca: el minijuego, y el peso y la calidad de los peces
 		com.evolvedwarfare.client.fishing.ClientFishing.register();
 		// la herrería: la forja en el yunque, las piezas y la calidad

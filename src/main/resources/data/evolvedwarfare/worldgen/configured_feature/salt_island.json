@@ -1,0 +1,8 @@
+{
+  "type": "evolvedwarfare:boulder",
+  "config": {
+    "state": {
+      "Name": "evolvedwarfare:salt_block"
+    }
+  }
+}

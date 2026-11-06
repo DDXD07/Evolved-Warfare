@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "evolvedwarfare:block/charred_bone_block_top",
+    "side": "evolvedwarfare:block/charred_bone_block_side"
+  }
+}

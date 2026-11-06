@@ -1,0 +1,127 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "evolvedwarfare:block/stone_fruit",
+    "t": "evolvedwarfare:block/stone_fruit"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        3,
+        5
+      ],
+      "to": [
+        11,
+        10,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#t",
+          "uv": [
+            5,
+            5,
+            11,
+            12
+          ]
+        },
+        "south": {
+          "texture": "#t",
+          "uv": [
+            5,
+            5,
+            11,
+            12
+          ]
+        },
+        "east": {
+          "texture": "#t",
+          "uv": [
+            5,
+            5,
+            11,
+            12
+          ]
+        },
+        "west": {
+          "texture": "#t",
+          "uv": [
+            5,
+            5,
+            11,
+            12
+          ]
+        },
+        "up": {
+          "texture": "#t",
+          "uv": [
+            5,
+            5,
+            11,
+            11
+          ]
+        },
+        "down": {
+          "texture": "#t",
+          "uv": [
+            5,
+            5,
+            11,
+            11
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        10,
+        7.5
+      ],
+      "to": [
+        8.5,
+        16,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#t",
+          "uv": [
+            8,
+            0,
+            9,
+            4
+          ]
+        },
+        "south": {
+          "texture": "#t",
+          "uv": [
+            8,
+            0,
+            9,
+            4
+          ]
+        },
+        "east": {
+          "texture": "#t",
+          "uv": [
+            8,
+            0,
+            9,
+            4
+          ]
+        },
+        "west": {
+          "texture": "#t",
+          "uv": [
+            8,
+            0,
+            9,
+            4
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -9,97 +9,271 @@
         {
           "biome": "minecraft:nether_wastes",
           "parameters": {
-            "continentalness": 0.0,
+            "continentalness": [
+              -1.0,
+              0.35
+            ],
             "depth": 0.0,
-            "erosion": 0.0,
+            "erosion": [
+              -1.0,
+              0.32
+            ],
             "humidity": 0.0,
-            "offset": 0.0,
+            "offset": 0.25,
             "temperature": 0.0,
-            "weirdness": 0.0
+            "weirdness": [
+              -1.0,
+              0.4
+            ]
           }
         },
         {
           "biome": "minecraft:soul_sand_valley",
           "parameters": {
-            "continentalness": 0.0,
+            "continentalness": [
+              -1.0,
+              0.35
+            ],
             "depth": 0.0,
-            "erosion": 0.0,
-            "humidity": -0.5,
-            "offset": 0.0,
+            "erosion": [
+              -1.0,
+              0.32
+            ],
+            "humidity": -0.6,
+            "offset": 0.3,
             "temperature": 0.0,
-            "weirdness": 0.0
+            "weirdness": [
+              -1.0,
+              0.4
+            ]
           }
         },
         {
           "biome": "minecraft:crimson_forest",
           "parameters": {
-            "continentalness": 0.0,
+            "continentalness": [
+              -1.0,
+              0.35
+            ],
             "depth": 0.0,
-            "erosion": 0.0,
-            "humidity": 0.0,
-            "offset": 0.0,
-            "temperature": 0.4,
-            "weirdness": 0.0
+            "erosion": [
+              -1.0,
+              0.32
+            ],
+            "humidity": 0.2,
+            "offset": 0.4,
+            "temperature": 0.6,
+            "weirdness": [
+              -1.0,
+              0.4
+            ]
           }
         },
         {
           "biome": "minecraft:warped_forest",
           "parameters": {
-            "continentalness": 0.0,
+            "continentalness": [
+              -1.0,
+              0.35
+            ],
             "depth": 0.0,
-            "erosion": 0.0,
-            "humidity": 0.5,
-            "offset": 0.375,
-            "temperature": 0.0,
-            "weirdness": 0.0
+            "erosion": [
+              -1.0,
+              0.32
+            ],
+            "humidity": 0.6,
+            "offset": 0.45,
+            "temperature": -0.2,
+            "weirdness": [
+              -1.0,
+              0.4
+            ]
           }
         },
         {
           "biome": "minecraft:basalt_deltas",
           "parameters": {
-            "continentalness": 0.0,
+            "continentalness": [
+              -1.0,
+              0.35
+            ],
             "depth": 0.0,
-            "erosion": 0.0,
-            "humidity": 0.0,
-            "offset": 0.175,
-            "temperature": -0.5,
-            "weirdness": 0.0
+            "erosion": [
+              -1.0,
+              0.32
+            ],
+            "humidity": 0.2,
+            "offset": 0.35,
+            "temperature": -0.6,
+            "weirdness": [
+              -1.0,
+              0.4
+            ]
           }
         },
         {
-          "biome": "evolvedwarfare:ash_plains",
+          "biome": "evolvedwarfare:valley_of_bones",
           "parameters": {
-            "continentalness": 0.0,
+            "continentalness": [
+              -1.0,
+              0.35
+            ],
             "depth": 0.0,
-            "erosion": 0.0,
-            "humidity": -0.5,
-            "offset": 0.1,
+            "erosion": [
+              -1.0,
+              0.32
+            ],
+            "humidity": -0.4,
+            "offset": 0.0,
             "temperature": -0.4,
-            "weirdness": 0.0
+            "weirdness": [
+              -1.0,
+              0.4
+            ]
           }
         },
         {
-          "biome": "evolvedwarfare:brimstone_fields",
+          "biome": "evolvedwarfare:sodom_ruins",
           "parameters": {
-            "continentalness": 0.0,
+            "continentalness": [
+              -1.0,
+              0.35
+            ],
             "depth": 0.0,
-            "erosion": 0.0,
-            "humidity": -0.5,
-            "offset": 0.1,
-            "temperature": 0.5,
-            "weirdness": 0.0
+            "erosion": [
+              -1.0,
+              0.32
+            ],
+            "humidity": -0.4,
+            "offset": 0.0,
+            "temperature": 0.4,
+            "weirdness": [
+              -1.0,
+              0.4
+            ]
+          }
+        },
+        {
+          "biome": "evolvedwarfare:valley_of_bones",
+          "parameters": {
+            "continentalness": [
+              -1.0,
+              0.35
+            ],
+            "depth": 0.0,
+            "erosion": [
+              -1.0,
+              0.32
+            ],
+            "humidity": 0.3,
+            "offset": 0.05,
+            "temperature": -0.3,
+            "weirdness": [
+              -1.0,
+              0.4
+            ]
+          }
+        },
+        {
+          "biome": "evolvedwarfare:sodom_ruins",
+          "parameters": {
+            "continentalness": [
+              -1.0,
+              0.35
+            ],
+            "depth": 0.0,
+            "erosion": [
+              -1.0,
+              0.32
+            ],
+            "humidity": 0.35,
+            "offset": 0.05,
+            "temperature": 0.35,
+            "weirdness": [
+              -1.0,
+              0.4
+            ]
+          }
+        },
+        {
+          "biome": "evolvedwarfare:sulfur_mountains",
+          "parameters": {
+            "continentalness": [
+              0.35,
+              1.0
+            ],
+            "depth": 0.0,
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0,
+            "temperature": [
+              -1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              0.4
+            ]
           }
         },
         {
           "biome": "evolvedwarfare:lake_of_fire",
           "parameters": {
-            "continentalness": 0.0,
+            "continentalness": [
+              -1.0,
+              0.35
+            ],
             "depth": 0.0,
-            "erosion": 0.0,
-            "humidity": 0.45,
-            "offset": 0.15,
-            "temperature": 0.55,
-            "weirdness": 0.0
+            "erosion": [
+              0.32,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0,
+            "temperature": [
+              -1.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              0.4
+            ]
+          }
+        },
+        {
+          "biome": "evolvedwarfare:abyss",
+          "parameters": {
+            "continentalness": [
+              -1.0,
+              1.0
+            ],
+            "depth": 0.0,
+            "erosion": [
+              -1.0,
+              1.0
+            ],
+            "humidity": [
+              -1.0,
+              1.0
+            ],
+            "offset": 0.0,
+            "temperature": [
+              -1.0,
+              1.0
+            ],
+            "weirdness": [
+              0.4,
+              1.0
+            ]
           }
         }
       ]

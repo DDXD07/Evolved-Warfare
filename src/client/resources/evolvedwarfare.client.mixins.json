@@ -4,6 +4,8 @@
 	"compatibilityLevel": "JAVA_21",
 	"client": [
 		"AbstractClientPlayerEntityMixin",
+		"BackgroundRendererFogMixin",
+		"GameRendererHeatMixin",
 		"ArmorFeatureDismemberMixin",
 		"BiomeColorMixin",
 		"BipedEntityModelMixin",

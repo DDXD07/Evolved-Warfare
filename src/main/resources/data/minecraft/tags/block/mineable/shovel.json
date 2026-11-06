@@ -2,6 +2,8 @@
   "replace": false,
   "values": [
     "evolvedwarfare:ash_block",
-    "evolvedwarfare:clay_mold"
+    "evolvedwarfare:clay_mold",
+    "evolvedwarfare:fine_salt",
+    "evolvedwarfare:bone_dust"
   ]
 }

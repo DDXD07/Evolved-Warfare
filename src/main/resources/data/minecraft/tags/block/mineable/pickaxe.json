@@ -11,6 +11,11 @@
     "evolvedwarfare:faucet",
     "evolvedwarfare:hand_pump",
     "evolvedwarfare:brimstone_block",
-    "evolvedwarfare:crucible"
+    "evolvedwarfare:crucible",
+    "evolvedwarfare:salt_block",
+    "evolvedwarfare:abyss_vent",
+    "evolvedwarfare:cursed_netherrack",
+    "evolvedwarfare:charred_bone_block",
+    "evolvedwarfare:sulfur_crystal"
   ]
 }

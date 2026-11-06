@@ -137,6 +137,25 @@ public final class ModBlocks {
 	public static final BlockEntityType<com.evolvedwarfare.smithing.MoldBlockEntity> CLAY_MOLD_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
 			EvolvedWarfare.id("clay_mold"), BlockEntityType.Builder.create(com.evolvedwarfare.smithing.MoldBlockEntity::new, CLAY_MOLD).build(null));
 
+	/** El Nether bíblico: sal, polvo de hueso, hueso calcinado, grietas del Abismo, cristales de azufre, frutas de piedra y piedra maldita. */
+	public static final Block SALT_BLOCK = register("salt_block", new Block(AbstractBlock.Settings.create().mapColor(MapColor.OFF_WHITE)
+			.strength(1.2F, 3.0F).requiresTool().sounds(BlockSoundGroup.CALCITE)));
+	public static final Block FINE_SALT = register("fine_salt", new com.evolvedwarfare.hell.InfernoBlocks.FineSalt(AbstractBlock.Settings.create()
+			.mapColor(MapColor.OFF_WHITE).strength(0.5F).velocityMultiplier(0.55F).sounds(BlockSoundGroup.SAND)));
+	public static final Block BONE_DUST = register("bone_dust", new Block(AbstractBlock.Settings.create().mapColor(MapColor.PALE_YELLOW)
+			.strength(0.5F).sounds(BlockSoundGroup.BONE)));
+	public static final Block CHARRED_BONE_BLOCK = register("charred_bone_block", new net.minecraft.block.PillarBlock(AbstractBlock.Settings.create()
+			.mapColor(MapColor.BLACK).strength(2.0F).requiresTool().sounds(BlockSoundGroup.BONE)));
+	public static final Block ABYSS_VENT = register("abyss_vent", new com.evolvedwarfare.hell.InfernoBlocks.Vent(AbstractBlock.Settings.create()
+			.mapColor(MapColor.BLACK).strength(1.5F, 6.0F).requiresTool()));
+	public static final Block SULFUR_CRYSTAL = register("sulfur_crystal", new net.minecraft.block.AmethystClusterBlock(7.0F, 3.0F,
+			AbstractBlock.Settings.create().mapColor(MapColor.YELLOW).strength(1.0F).sounds(BlockSoundGroup.AMETHYST_CLUSTER).nonOpaque()
+					.luminance(state -> 6).solid()));
+	public static final Block STONE_FRUIT = register("stone_fruit", new com.evolvedwarfare.hell.InfernoBlocks.StoneFruit(AbstractBlock.Settings.create()
+			.mapColor(MapColor.STONE_GRAY).strength(0.1F).nonOpaque().noCollision().sounds(BlockSoundGroup.STONE)));
+	public static final Block CURSED_NETHERRACK = register("cursed_netherrack", new com.evolvedwarfare.hell.InfernoBlocks.Cursed(AbstractBlock.Settings.create()
+			.mapColor(MapColor.PURPLE).strength(0.6F).requiresTool().sounds(BlockSoundGroup.NETHERRACK)));
+
 	public static final BlockEntityType<WorkSiteBlockEntity> WORK_SITE_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
 			EvolvedWarfare.id("work_site"),
 			BlockEntityType.Builder.create(WorkSiteBlockEntity::new, WORK_SITES.values().toArray(new Block[0])).build(null));

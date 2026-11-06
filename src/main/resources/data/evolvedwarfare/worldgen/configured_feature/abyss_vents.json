@@ -1,0 +1,45 @@
+{
+  "type": "minecraft:ore",
+  "config": {
+    "size": 6,
+    "discard_chance_on_air_exposure": 0.0,
+    "targets": [
+      {
+        "target": {
+          "predicate_type": "minecraft:block_match",
+          "block": "minecraft:blackstone"
+        },
+        "state": {
+          "Name": "evolvedwarfare:abyss_vent"
+        }
+      },
+      {
+        "target": {
+          "predicate_type": "minecraft:block_match",
+          "block": "minecraft:basalt"
+        },
+        "state": {
+          "Name": "evolvedwarfare:abyss_vent"
+        }
+      },
+      {
+        "target": {
+          "predicate_type": "minecraft:block_match",
+          "block": "minecraft:smooth_basalt"
+        },
+        "state": {
+          "Name": "evolvedwarfare:abyss_vent"
+        }
+      },
+      {
+        "target": {
+          "predicate_type": "minecraft:block_match",
+          "block": "minecraft:netherrack"
+        },
+        "state": {
+          "Name": "evolvedwarfare:abyss_vent"
+        }
+      }
+    ]
+  }
+}

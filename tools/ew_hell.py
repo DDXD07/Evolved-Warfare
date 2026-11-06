@@ -77,6 +77,9 @@ NOISES = {
     "hell_mountain_mask": {"firstOctave": -9, "amplitudes": [1.0, 1.0]},
     "hell_basins": {"firstOctave": -8, "amplitudes": [1.0, 0.5]},
     "hell_detail": {"firstOctave": -5, "amplitudes": [1.0, 0.5, 0.25]},
+    # el Abismo: dónde están los pozos (y sus paredes irregulares)
+    "hell_abyss": {"firstOctave": -7, "amplitudes": [1.0, 0.6]},
+    "hell_abyss_walls": {"firstOctave": -4, "amplitudes": [1.0, 0.5]},
 }
 
 # la altura del suelo (en "densidad": 1 = 64 bloques): llano a ~52, colinas de ±16, montañas de hasta +110 y hoyas de
@@ -95,10 +98,18 @@ CAVES = add(add(0.3, "minecraft:nether/base_3d_noise"),
             {"type": "minecraft:y_clamped_gradient", "from_y": 0, "to_y": 16, "from_value": 2.5, "to_value": 0.0})
 NEAR_SURFACE = mul(4.0, add(0.3, mul(-1.0, SURFACE)))
 DENSITY = {"type": "minecraft:min", "argument1": SURFACE, "argument2": {"type": "minecraft:max", "argument1": CAVES, "argument2": NEAR_SURFACE}}
+# el Abismo: pozos verticales enormes donde el ruido del abismo pasa de ~0,48 (con las paredes irregulares); el fondo
+# (por debajo de y 10) queda macizo y lo de debajo de 32 es lava
+ABYSS = noise("hell_abyss")
+ABYSS_WALLS = {"type": "minecraft:noise", "noise": "%s:hell_abyss_walls" % NS, "xz_scale": 1.0, "y_scale": 0.6}
+CARVE = {"type": "minecraft:max", "argument1": add(mul(6.0, add(0.48, mul(-1.0, ABYSS))), mul(0.7, ABYSS_WALLS)),
+         "argument2": {"type": "minecraft:y_clamped_gradient", "from_y": 0, "to_y": 12, "from_value": 3.0, "to_value": -12.0}}
+DENSITY = {"type": "minecraft:min", "argument1": DENSITY, "argument2": CARVE}
 FINAL_DENSITY = {"type": "minecraft:squeeze", "argument": mul(0.64, {"type": "minecraft:interpolated",
                                                                       "argument": {"type": "minecraft:blend_density", "argument": DENSITY}})}
 
-BIOMES = ["ash_plains", "brimstone_fields", "lake_of_fire"]
+BIOMES = ["lake_of_fire", "valley_of_bones", "sodom_ruins", "abyss", "sulfur_mountains"]
+OLD_BIOMES = ["ash_plains", "brimstone_fields"]
 
 
 def block(name, props=None):
@@ -138,22 +149,53 @@ def seq(*rules):
 
 ASH = "%s:ash_block" % NS
 BRIMSTONE = "%s:brimstone_block" % NS
+SALT = "%s:salt_block" % NS
+FINE_SALT = "%s:fine_salt" % NS
+BONE_DUST = "%s:bone_dust" % NS
+CHARRED_BONE = "%s:charred_bone_block" % NS
+
+
+def below(y):
+    return {"type": "minecraft:not", "invert": above(y)}
+
+
 HELL_RULES = [
     # las cumbres: piedra negra, basalto y obsidiana
     cond(above(118), cond(floor(True), seq(
         cond(selector(0.55), block("minecraft:obsidian")),
         cond(selector(0.15), block("minecraft:basalt", {"axis": "y"})),
         block("minecraft:blackstone")))),
-    cond(biome_is("ash_plains"), seq(
-        cond(ceiling(), block("minecraft:basalt", {"axis": "y"})),
-        cond(floor(), seq(cond(selector(0.5), block("minecraft:soul_soil")), block(ASH))),
-        cond(floor(True), block("minecraft:basalt", {"axis": "y"})))),
-    cond(biome_is("brimstone_fields"), seq(
-        cond(floor(), seq(cond(selector(-0.3, "minecraft:patch"), block(BRIMSTONE)), block("minecraft:netherrack"))),
-        cond(floor(True), seq(cond(selector(0.2), block(BRIMSTONE)), block("minecraft:netherrack"))))),
+    # Lago de Fuego y Azufre: orillas e islas de sal blanca, huesos calcinados y piedra negra
     cond(biome_is("lake_of_fire"), seq(
-        cond(floor(), seq(cond(selector(0.3), block("minecraft:magma_block")), block("minecraft:blackstone"))),
-        cond(floor(True), block("minecraft:blackstone")))),
+        cond(floor(), seq(
+            cond(below(40), seq(cond(selector(0.45), block(CHARRED_BONE, {"axis": "y"})), block(SALT))),
+            cond(selector(0.35), block("minecraft:magma_block")),
+            cond(selector(-0.2), block(SALT)),
+            block("minecraft:blackstone"))),
+        cond(floor(True), block("minecraft:blackstone")),
+        block("minecraft:blackstone"))),
+    # Valle de los Huesos: polvo de hueso, bloques de hueso y suelo de almas
+    cond(biome_is("valley_of_bones"), seq(
+        cond(floor(), seq(cond(selector(0.5), block("minecraft:bone_block", {"axis": "y"})), cond(selector(-0.6), block("minecraft:soul_soil")),
+                          block(BONE_DUST))),
+        cond(floor(True), seq(cond(selector(0.3), block("minecraft:bone_block", {"axis": "y"})), block(BONE_DUST))))),
+    # Ruinas de Sodoma y Gomorra: ceniza en las calles, manchas de azufre y sal
+    cond(biome_is("sodom_ruins"), seq(
+        cond(floor(), seq(cond(selector(0.55), block(BRIMSTONE)), cond(selector(0.25), block(FINE_SALT)), block(ASH))),
+        cond(floor(True), seq(cond(selector(0.2), block("minecraft:basalt", {"axis": "y"})), block("minecraft:blackstone"))),
+        block("minecraft:blackstone"))),
+    # el Abismo: paredes de piedra negra y basalto
+    cond(biome_is("abyss"), seq(
+        cond(selector(0.4), block("minecraft:basalt", {"axis": "y"})),
+        cond(selector(-0.5), block("minecraft:smooth_basalt")),
+        block("minecraft:blackstone"))),
+    # Montañas de Azufre y Oscuridad: azufre, basalto y piedra negra
+    cond(biome_is("sulfur_mountains"), seq(
+        cond(floor(), seq(cond(selector(0.2), block(BRIMSTONE)), cond(selector(-0.3), block("minecraft:basalt", {"axis": "y"})),
+                          block("minecraft:blackstone"))),
+        cond(floor(True), seq(cond(selector(0.1), block(BRIMSTONE)), block("minecraft:blackstone"))),
+        cond(selector(0.5), block(BRIMSTONE)),
+        block("minecraft:blackstone"))),
 ]
 
 
@@ -162,6 +204,10 @@ def noise_settings():
         s = json.load(f)
     s["noise"]["height"] = 256
     s["noise_router"]["final_density"] = FINAL_DENSITY
+    # los biomas siguen al terreno: las montañas (continentalidad), las hoyas de lava (erosión) y el Abismo (rareza)
+    s["noise_router"]["continents"] = noise("hell_mountain_mask")
+    s["noise_router"]["erosion"] = noise("hell_basins")
+    s["noise_router"]["ridges"] = ABYSS
     rules = s["surface_rule"]["sequence"]
     # fuera el techo de roca madre (y el relleno de debajo del techo)
     kept = [r for r in rules if "bedrock_roof" not in json.dumps(r) and "below_top" not in json.dumps(r)]
@@ -177,34 +223,50 @@ DIMENSION_TYPE = {
 }
 
 
-def point(biome, temperature, humidity, offset):
-    return {"biome": biome, "parameters": {"continentalness": 0.0, "depth": 0.0, "erosion": 0.0, "humidity": humidity,
-                                           "offset": offset, "temperature": temperature, "weirdness": 0.0}}
+ANY = [-1.0, 1.0]
+LOW_C = [-1.0, 0.35]
+LOW_E = [-1.0, 0.32]
+LOW_W = [-1.0, 0.4]
+
+
+def point(biome, temperature, humidity, offset, c=LOW_C, e=LOW_E, w=LOW_W):
+    return {"biome": biome, "parameters": {"continentalness": c, "depth": 0.0, "erosion": e, "humidity": humidity,
+                                           "offset": offset, "temperature": temperature, "weirdness": w}}
 
 
 DIMENSION = {"type": "minecraft:the_nether", "generator": {"type": "minecraft:noise", "settings": "minecraft:nether", "biome_source": {
     "type": "minecraft:multi_noise", "biomes": [
-        point("minecraft:nether_wastes", 0.0, 0.0, 0.0),
-        point("minecraft:soul_sand_valley", 0.0, -0.5, 0.0),
-        point("minecraft:crimson_forest", 0.4, 0.0, 0.0),
-        point("minecraft:warped_forest", 0.0, 0.5, 0.375),
-        point("minecraft:basalt_deltas", -0.5, 0.0, 0.175),
-        point("%s:ash_plains" % NS, -0.4, -0.5, 0.1),
-        point("%s:brimstone_fields" % NS, 0.5, -0.5, 0.1),
-        point("%s:lake_of_fire" % NS, 0.55, 0.45, 0.15),
+        # los de siempre, más raros
+        point("minecraft:nether_wastes", 0.0, 0.0, 0.25),
+        point("minecraft:soul_sand_valley", 0.0, -0.6, 0.3),
+        point("minecraft:crimson_forest", 0.6, 0.2, 0.4),
+        point("minecraft:warped_forest", -0.2, 0.6, 0.45),
+        point("minecraft:basalt_deltas", -0.6, 0.2, 0.35),
+        # los bíblicos
+        point("%s:valley_of_bones" % NS, -0.4, -0.4, 0.0),
+        point("%s:sodom_ruins" % NS, 0.4, -0.4, 0.0),
+        point("%s:valley_of_bones" % NS, -0.3, 0.3, 0.05),
+        point("%s:sodom_ruins" % NS, 0.35, 0.35, 0.05),
+        point("%s:sulfur_mountains" % NS, ANY, ANY, 0.0, c=[0.35, 1.0], e=ANY, w=LOW_W),
+        point("%s:lake_of_fire" % NS, ANY, ANY, 0.0, c=LOW_C, e=[0.32, 1.0], w=LOW_W),
+        point("%s:abyss" % NS, ANY, ANY, 0.0, c=ANY, e=ANY, w=[0.4, 1.0]),
     ]}}}
 
 ORES = ["minecraft:ore_magma", "minecraft:spring_closed", "minecraft:ore_gravel_nether", "minecraft:ore_blackstone", "minecraft:ore_gold_nether",
         "minecraft:ore_quartz_nether", "minecraft:ore_ancient_debris_large", "minecraft:ore_debris_small"]
 
 
-def biome(fog, particle, sounds, features7, step2=(), step4=(), step9=("minecraft:spring_lava",), monsters=(), creature=True):
-    effects = {"fog_color": fog, "sky_color": fog, "water_color": 4159204, "water_fog_color": 329011,
-               "ambient_sound": "minecraft:ambient.%s.loop" % sounds,
-               "additions_sound": {"sound": "minecraft:ambient.%s.additions" % sounds, "tick_chance": 0.0111},
-               "mood_sound": {"block_search_extent": 8, "offset": 2.0, "sound": "minecraft:ambient.%s.mood" % sounds, "tick_delay": 6000},
-               "music": {"max_delay": 24000, "min_delay": 12000, "replace_current_music": False, "sound": "minecraft:music.nether.%s" % sounds},
-               "particle": particle}
+def biome(fog, particle, features7, loop=None, additions=None, mood=None, music=None, step2=(), step4=(), step9=("minecraft:spring_lava",),
+          monsters=(), creature=True, chance=0.0111):
+    effects = {"fog_color": fog, "sky_color": fog, "water_color": 4159204, "water_fog_color": 329011, "particle": particle}
+    if loop:
+        effects["ambient_sound"] = loop
+    if additions:
+        effects["additions_sound"] = {"sound": additions, "tick_chance": chance}
+    if mood:
+        effects["mood_sound"] = {"block_search_extent": 8, "offset": 2.0, "sound": mood, "tick_delay": 6000}
+    if music:
+        effects["music"] = {"max_delay": 24000, "min_delay": 12000, "replace_current_music": False, "sound": music}
     features = [[] for _ in range(11)]
     features[2] = list(step2)
     features[4] = list(step4)
@@ -217,22 +279,43 @@ def biome(fog, particle, sounds, features7, step2=(), step4=(), step9=("minecraf
                          "monster": [{"type": t, "weight": w, "minCount": a, "maxCount": b} for (t, w, a, b) in monsters]}}
 
 
+def f(name):
+    return "%s:%s" % (NS, name)
+
+
 def biomes():
     return {
-        "ash_plains": biome(0x3A3030, {"options": {"type": "minecraft:white_ash"}, "probability": 0.09}, "soul_sand_valley",
-                            ["minecraft:spring_open", "minecraft:patch_fire", "minecraft:patch_soul_fire"] + ORES,
-                            step2=["minecraft:basalt_pillar"],
-                            monsters=[("%s:lost_soul" % NS, 60, 1, 3), ("minecraft:ghast", 40, 1, 2), ("minecraft:skeleton", 15, 2, 4),
-                                      ("%s:imp" % NS, 15, 1, 2), ("%s:legion" % NS, 3, 1, 1)]),
-        "brimstone_fields": biome(0x5A3A08, {"options": {"type": "minecraft:ash"}, "probability": 0.02}, "nether_wastes",
-                                  ["minecraft:spring_open", "minecraft:patch_fire", "minecraft:glowstone_extra", "minecraft:glowstone"] + ORES
-                                  + ["%s:ore_brimstone" % NS],
-                                  monsters=[("%s:imp" % NS, 40, 1, 3), ("%s:demon" % NS, 12, 1, 1), ("minecraft:magma_cube", 20, 2, 3),
-                                            ("minecraft:zombified_piglin", 40, 2, 4), ("%s:beelzebub" % NS, 2, 1, 1)]),
-        "lake_of_fire": biome(0x6A1606, {"options": {"type": "minecraft:lava"}, "probability": 0.004}, "basalt_deltas",
-                              ["minecraft:spring_open", "minecraft:patch_fire"] + ORES, step4=["minecraft:delta"],
+        "lake_of_fire": biome(0x6A1606, {"options": {"type": "minecraft:lava"}, "probability": 0.006},
+                              ["minecraft:spring_open", "minecraft:patch_fire", f("salt_island"), f("bone_pile"), f("sunken_ruin")] + ORES,
+                              loop="minecraft:ambient.basalt_deltas.loop", additions="minecraft:ambient.soul_sand_valley.additions",
+                              mood="minecraft:ambient.basalt_deltas.mood", music="minecraft:music.nether.basalt_deltas", step4=["minecraft:delta"],
                               monsters=[("%s:demon" % NS, 25, 1, 2), ("%s:imp" % NS, 30, 1, 3), ("minecraft:magma_cube", 60, 2, 4),
-                                        ("minecraft:ghast", 30, 1, 2), ("%s:moloch" % NS, 2, 1, 1), ("%s:abaddon" % NS, 1, 1, 1)]),
+                                        ("minecraft:ghast", 20, 1, 2), ("%s:moloch" % NS, 2, 1, 1), ("%s:abaddon" % NS, 1, 1, 1)]),
+        "valley_of_bones": biome(0x4A2A26, {"options": {"type": "minecraft:white_ash"}, "probability": 0.05},
+                                 [f("bone_fossil"), f("skull_patch"), f("bone_spikes")] + ORES,
+                                 loop="minecraft:ambient.soul_sand_valley.loop", additions="minecraft:ambient.soul_sand_valley.additions",
+                                 mood="minecraft:ambient.soul_sand_valley.mood", music="minecraft:music.nether.soul_sand_valley",
+                                 creature=False, step9=(),
+                                 monsters=[("minecraft:skeleton", 60, 2, 4), ("minecraft:wither_skeleton", 15, 1, 2), ("%s:lost_soul" % NS, 40, 1, 3),
+                                           ("minecraft:ghast", 20, 1, 1), ("%s:legion" % NS, 3, 1, 1)]),
+        "sodom_ruins": biome(0x2E2622, {"options": {"type": "minecraft:ash"}, "probability": 0.03},
+                             [f("ruin"), f("salt_pillar"), f("salt_tree"), "minecraft:patch_fire"] + ORES,
+                             additions="minecraft:block.deepslate.break", mood="minecraft:ambient.cave", chance=0.003,
+                             monsters=[("minecraft:zombified_piglin", 30, 2, 3), ("%s:demon" % NS, 20, 1, 1), ("%s:imp" % NS, 20, 1, 2),
+                                       ("%s:lost_soul" % NS, 20, 1, 2), ("%s:legion" % NS, 3, 1, 1)]),
+        "abyss": biome(0x0C0606, {"options": {"type": "minecraft:smoke"}, "probability": 0.02},
+                       [f("abyss_vents"), "minecraft:patch_soul_fire"] + ORES,
+                       loop="minecraft:ambient.warped_forest.loop", additions="minecraft:entity.phantom.flap", mood="minecraft:block.chain.place",
+                       chance=0.02, creature=False,
+                       monsters=[("%s:lost_soul" % NS, 40, 1, 3), ("%s:imp" % NS, 30, 1, 3), ("%s:beelzebub" % NS, 3, 1, 1),
+                                 ("minecraft:ghast", 10, 1, 1), ("minecraft:enderman", 5, 1, 2)]),
+        "sulfur_mountains": biome(0x241A10, {"options": {"type": "minecraft:large_smoke"}, "probability": 0.004},
+                                  ["minecraft:patch_fire", f("sulfur_crystals"), f("sulfur_vents"), "%s:ore_brimstone" % NS] + ORES,
+                                  loop="minecraft:ambient.basalt_deltas.loop", additions="minecraft:item.firecharge.use",
+                                  mood="minecraft:ambient.basalt_deltas.mood", music="minecraft:music.nether.nether_wastes", chance=0.004,
+                                  creature=False,
+                                  monsters=[("minecraft:blaze", 30, 1, 2), ("%s:imp" % NS, 30, 1, 3), ("minecraft:magma_cube", 30, 1, 3),
+                                            ("%s:demon" % NS, 10, 1, 1), ("%s:beelzebub" % NS, 1, 1, 1), ("%s:moloch" % NS, 2, 1, 1)]),
     }
 
 
@@ -407,9 +490,11 @@ def entity_loot(name):
 
 
 TEXTS = {
-    "biome.evolvedwarfare.ash_plains": ("Llanuras de ceniza", "Ash Plains"),
-    "biome.evolvedwarfare.brimstone_fields": ("Campos de azufre", "Brimstone Fields"),
-    "biome.evolvedwarfare.lake_of_fire": ("Lago de fuego", "Lake of Fire"),
+    "biome.evolvedwarfare.lake_of_fire": ("Lago de Fuego y Azufre", "Lake of Fire and Brimstone"),
+    "biome.evolvedwarfare.valley_of_bones": ("Valle de los Huesos", "Valley of Bones"),
+    "biome.evolvedwarfare.sodom_ruins": ("Ruinas de Sodoma y Gomorra", "Ruins of Sodom and Gomorrah"),
+    "biome.evolvedwarfare.abyss": ("El Abismo", "The Abyss"),
+    "biome.evolvedwarfare.sulfur_mountains": ("Montañas de Azufre y Oscuridad", "Mountains of Sulfur and Darkness"),
     "block.evolvedwarfare.ash_block": ("Bloque de ceniza", "Ash Block"),
     "block.evolvedwarfare.brimstone_block": ("Bloque de azufre", "Brimstone Block"),
     "item.evolvedwarfare.brimstone": ("Azufre", "Brimstone"),
@@ -457,10 +542,22 @@ def main():
     for tag in ("nether_fortress/has_structure", "bastion_remnant/has_structure", "nether_fossil/has_structure", "ruined_portal_nether/has_structure"):
         values = ["%s:%s" % (NS, b) for b in BIOMES]
         if tag.startswith("nether_fossil"):
-            values = ["%s:ash_plains" % NS]
+            values = ["%s:valley_of_bones" % NS]
         if tag.startswith("bastion"):
-            values = ["%s:brimstone_fields" % NS, "%s:lake_of_fire" % NS]
+            values = ["%s:sulfur_mountains" % NS, "%s:lake_of_fire" % NS]
         add_tag(os.path.join(MC_DATA, "tags/worldgen/biome/has_structure/" + tag.split("/")[0] + ".json"), values)
+    # fuera los biomas viejos de las etiquetas (y sus archivos)
+    for path in glob.glob(os.path.join(MC_DATA, "tags/worldgen/biome/**/*.json"), recursive=True):
+        with open(path, encoding="utf-8") as fh:
+            t = json.load(fh)
+        kept = [v for v in t["values"] if v not in ["%s:%s" % (NS, b) for b in OLD_BIOMES]]
+        if kept != t["values"]:
+            t["values"] = kept
+            write_json(path, t)
+    for b in OLD_BIOMES:
+        old = os.path.join(DATA, "worldgen/biome/%s.json" % b)
+        if os.path.exists(old):
+            os.remove(old)
     # bloques y azufre
     for name, im in block_textures().items():
         path = os.path.join(ASSETS, "textures", name + ".png")

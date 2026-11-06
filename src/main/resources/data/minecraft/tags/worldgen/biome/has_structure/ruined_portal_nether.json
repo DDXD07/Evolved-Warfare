@@ -1,8 +1,10 @@
 {
   "replace": false,
   "values": [
-    "evolvedwarfare:ash_plains",
-    "evolvedwarfare:brimstone_fields",
-    "evolvedwarfare:lake_of_fire"
+    "evolvedwarfare:lake_of_fire",
+    "evolvedwarfare:valley_of_bones",
+    "evolvedwarfare:sodom_ruins",
+    "evolvedwarfare:abyss",
+    "evolvedwarfare:sulfur_mountains"
   ]
 }

@@ -1600,6 +1600,39 @@ La calidad sale del molde y el vertido (45 %) y del afilado (55 %). Ya no se for
 yunque. El Manual del Herrero explica todo el proceso (ahora con 8 dobles páginas e ilustraciones en marcha). Los otros
 jugadores te ven verter con el crisol inclinado.
 
+## Fase 33 — Nether bíblico, parte 1: los biomas
+
+El Nether deja de ser un infierno genérico: es el lugar donde fueron arrojados los que se rebelaron, y sus reglas castigan
+al que entra. Esta primera parte rehace los biomas (los de vanilla siguen, más raros) y añade lo que hacen:
+
+- **Lago de Fuego y Azufre** (en las hoyas de lava): lava oscura con **islas de sal blanca** y **huesos calcinados**,
+  orillas de sal, ruinas hundidas. El aire **tiembla con el calor** (la vista ondula). A los 2 minutos a la intemperie
+  (sin agua ni techo) da **fiebre** (pegas más despacio) y hambre. Crepitar constante y un murmullo lejano.
+- **Valle de los Huesos**: llanuras de **polvo de hueso** y bloques de hueso, **calaveras**, **fósiles** y **costillares
+  de gigantes** medio enterrados; bruma rojiza y nada de vegetación. Si te quedas en el mismo sitio, **los esqueletos
+  enterrados se levantan** en oleadas cada vez mayores (1, 2, 3, 5, 8...). **Rachas de viento seco** que te empujan y dan
+  hambre.
+- **Ruinas de Sodoma y Gomorra**: casas de **piedra negra en ruinas** (a medio hundir), calles de ceniza con manchas de
+  azufre y **sal fina** (frena y da **sed de sal**), **pilares de sal** (algunos con forma de persona) y **huertos
+  petrificados**: árboles de sal con **frutas de piedra** que se deshacen al tocarlas. Silencio, con crujidos de piedra.
+- **El Abismo**: **pozos verticales enormes** con paredes de piedra negra y basalto llenas de **grietas que echan humo
+  negro**. La luz casi no funciona: **las antorchas se apagan solas** y los farolillos duran poco; niebla negra.
+  Aleteos y cadenas.
+- **Montañas de Azufre y Oscuridad** (en las montañas): picos de azufre y basalto con **cristales de azufre** que
+  brillan, cielo tapado por humo. **Rayos de fuego** que dejan **cráteres de azufre** (y el **calor del juicio** a quien
+  pilla cerca), **zonas donde la luz se apaga** y aire espeso que quita la regeneración.
+- **Calor real**: cerca de la lava y en las montañas, hambre y la armadura se va estropeando.
+- **Corrupción** (el ojo morado junto a la barra, 0-100): sube con el tiempo en el Nether y al matar sus criaturas; da
+  hambre, trae más visiones y **corrompe los bloques** de alrededor (**piedra maldita**: pisarla marchita y maldice). Baja
+  fuera del Nether.
+- **Maldiciones** (duran hasta salir del Nether): fiebre, sed de sal, ojos del ídolo (ceguera a ratos) y calor del
+  juicio (te quema de vez en cuando).
+- **Ecos y visiones**: frases bíblicas deformadas en el chat, susurros detrás de ti y **siluetas** que desaparecen si las
+  miras (a veces están en la dirección de la Ciudadela).
+
+Las criaturas nuevas, las estructuras (Babel, templos, cementerios, la Fortaleza del Abaddon...) y los objetos y rituales
+llegarán en las siguientes partes. Hace falta un mundo nuevo (o ir a zonas del Nether sin explorar).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -1618,6 +1651,7 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
   diseños 3D (cubos sobre cabeza, cuerpo, brazos y piernas), las texturas, los iconos, `FactionArmorModels.java`, los
   modelos de objeto, las recetas, las etiquetas y los textos; con `--preview` las dibuja puestas (delante, detrás y
   andando).
+- `ew_inferno.py` — el Nether bíblico (fase 1): los bloques nuevos (sal, polvo de hueso, grietas, cristales de azufre...), las decoraciones de los biomas, las maldiciones, las visiones y sus textos. El terreno y los biomas siguen en `ew_hell.py`.
 - `ew_casting.py` — la fundición: modelos y texturas del crisol y del molde, sus recetas, etiquetas y textos.
 - `ew_smithbook.py` — el Manual del Herrero: su icono, el grabado de la forja (con los modelos 3D) y los textos del libro.
 - `ew_gear3d.py` — los modelos 3D de la forja y la pesca (martillo, lingotes al rojo, piezas, peces, cebos y caña), cada uno con su textura de materiales; se diseñan de pie y se inclinan 45° como los dibujos planos para usar las posiciones en la mano de vanilla. `--preview carpeta` dibuja cómo quedan.

@@ -7,9 +7,15 @@
     "sky_color": 6952454,
     "water_color": 4159204,
     "water_fog_color": 329011,
+    "particle": {
+      "options": {
+        "type": "minecraft:lava"
+      },
+      "probability": 0.006
+    },
     "ambient_sound": "minecraft:ambient.basalt_deltas.loop",
     "additions_sound": {
-      "sound": "minecraft:ambient.basalt_deltas.additions",
+      "sound": "minecraft:ambient.soul_sand_valley.additions",
       "tick_chance": 0.0111
     },
     "mood_sound": {
@@ -23,12 +29,6 @@
       "min_delay": 12000,
       "replace_current_music": false,
       "sound": "minecraft:music.nether.basalt_deltas"
-    },
-    "particle": {
-      "options": {
-        "type": "minecraft:lava"
-      },
-      "probability": 0.004
     }
   },
   "carvers": {
@@ -47,6 +47,9 @@
     [
       "minecraft:spring_open",
       "minecraft:patch_fire",
+      "evolvedwarfare:salt_island",
+      "evolvedwarfare:bone_pile",
+      "evolvedwarfare:sunken_ruin",
       "minecraft:ore_magma",
       "minecraft:spring_closed",
       "minecraft:ore_gravel_nether",
@@ -99,7 +102,7 @@
       },
       {
         "type": "minecraft:ghast",
-        "weight": 30,
+        "weight": 20,
         "minCount": 1,
         "maxCount": 2
       },

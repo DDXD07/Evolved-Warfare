@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:block_pile",
+  "config": {
+    "state_provider": {
+      "type": "minecraft:weighted_state_provider",
+      "entries": [
+        {
+          "weight": 3,
+          "data": {
+            "Name": "minecraft:bone_block",
+            "Properties": {
+              "axis": "y"
+            }
+          }
+        },
+        {
+          "weight": 2,
+          "data": {
+            "Name": "evolvedwarfare:charred_bone_block",
+            "Properties": {
+              "axis": "x"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

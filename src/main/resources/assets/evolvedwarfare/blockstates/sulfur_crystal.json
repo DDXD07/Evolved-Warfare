@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=up": {
+      "model": "evolvedwarfare:block/sulfur_crystal"
+    },
+    "facing=down": {
+      "model": "evolvedwarfare:block/sulfur_crystal",
+      "x": 180
+    },
+    "facing=north": {
+      "model": "evolvedwarfare:block/sulfur_crystal",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "evolvedwarfare:block/sulfur_crystal",
+      "x": 90,
+      "y": 180
+    },
+    "facing=east": {
+      "model": "evolvedwarfare:block/sulfur_crystal",
+      "x": 90,
+      "y": 90
+    },
+    "facing=west": {
+      "model": "evolvedwarfare:block/sulfur_crystal",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

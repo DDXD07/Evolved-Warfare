@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "evolvedwarfare:salt_block"
+    }
+  ],
+  "result": {
+    "id": "evolvedwarfare:fine_salt",
+    "count": 2
+  }
+}
