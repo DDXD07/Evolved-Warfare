@@ -3,7 +3,7 @@ package com.evolvedwarfare.mixin.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.BackgroundRenderer;
 import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.CameraSubmersionType;
+import net.minecraft.block.enums.CameraSubmersionType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

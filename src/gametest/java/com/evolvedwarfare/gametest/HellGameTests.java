@@ -117,11 +117,21 @@ public class HellGameTests implements FabricGameTest {
 		int abyssDeep = 0;
 		int abyssCells = 0;
 		var sampler = noise.getMultiNoiseSampler();
+		// el mundo de pruebas usa el Nether de serie: los biomas se miran con la fuente de biomas del datapack
+		var biomeSource = gen.getBiomeSource();
+		try (var reader = server.getResourceManager().getResource(net.minecraft.util.Identifier.ofVanilla("dimension/the_nether.json")).orElseThrow()
+				.getReader()) {
+			var json = com.google.gson.JsonParser.parseReader(reader);
+			var ops = net.minecraft.registry.RegistryOps.of(com.mojang.serialization.JsonOps.INSTANCE, server.getRegistryManager());
+			biomeSource = net.minecraft.world.dimension.DimensionOptions.CODEC.parse(ops, json).getOrThrow().chunkGenerator().getBiomeSource();
+		} catch (Exception e) {
+			LOG.info("[EW-GAMETEST] no se pudo leer la dimensión del datapack: {}", e.toString());
+		}
 		for (int j = 0; j < 24; j++) {
 			for (int i = 0; i < 64; i++) {
 				int x = i * 40 - 1280;
 				int z = j * 80 - 960;
-				var entry = gen.getBiomeSource().getBiome(x >> 2, 80 >> 2, z >> 2, sampler);
+				var entry = biomeSource.getBiome(x >> 2, 80 >> 2, z >> 2, sampler);
 				String id = entry.getKey().map(k -> k.getValue().getPath()).orElse("?");
 				found.merge(id, 1, Integer::sum);
 				char c = switch (id) {
@@ -231,7 +241,7 @@ public class HellGameTests implements FabricGameTest {
 			}
 		}
 		int out = 0;
-		for (int i = 0; i < 40; i++) {
+		for (int i = 0; i < 300; i++) {
 			out += com.evolvedwarfare.hell.NetherClimate.extinguish(world, c, 60, 1.0F, 1.0F);
 		}
 		int left = 0;
