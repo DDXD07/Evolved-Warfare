@@ -28,7 +28,7 @@ public abstract class HandledScreenLockedCoverMixin<T extends ScreenHandler> {
 	@Shadow
 	protected int y;
 
-	@Inject(method = "renderBackground", at = @At("TAIL"))
+	@Inject(method = "renderBackground", at = @At("TAIL"), require = 0)
 	private void evolvedwarfare$cover(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
 		var player = MinecraftClient.getInstance().player;
 		if (player == null || !Backpacks.limited(player) || (Object) this instanceof InventoryScreen) {
