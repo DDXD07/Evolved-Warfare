@@ -179,7 +179,7 @@ public final class TrainBlocks {
 		};
 
 		public Cell(Kind kind, FlatcarEntity car) {
-			super(size(kind));
+			super(Math.max(1, TrainBlocks.size(kind)));
 			this.kind = kind;
 			this.car = car;
 		}
