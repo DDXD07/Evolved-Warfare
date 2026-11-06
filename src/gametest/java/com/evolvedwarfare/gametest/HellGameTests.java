@@ -321,6 +321,7 @@ public class HellGameTests implements FabricGameTest {
 	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 100)
 	public void spiritStealsAndRests(TestContext ctx) {
 		var player = ctx.createMockCreativeServerPlayerInWorld();
+		player.getInventory().clear();
 		player.getInventory().main.set(5, new net.minecraft.item.ItemStack(net.minecraft.item.Items.DIAMOND, 3));
 		var spirit = ctx.spawnEntity(com.evolvedwarfare.hell.DamnedEntities.DAMNED_SPIRIT, 2, 3, 2);
 		var stolen = spirit.steal(player);
