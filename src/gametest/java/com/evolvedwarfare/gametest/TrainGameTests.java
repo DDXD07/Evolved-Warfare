@@ -63,6 +63,12 @@ public class TrainGameTests implements FabricGameTest {
 	public void steamTrainCarriesItsLoad(TestContext ctx) {
 		ServerWorld world = ctx.getWorld();
 		BlockPos o = ctx.getAbsolutePos(new BlockPos(0, 40, 3));
+		// la vía sale de la zona de la prueba: que sus chunks también se muevan
+		java.util.Set<net.minecraft.util.math.ChunkPos> forced = new java.util.HashSet<>();
+		for (int i = -8; i < 72; i += 4) {
+			forced.add(new net.minecraft.util.math.ChunkPos(o.east(i)));
+		}
+		forced.forEach(c -> world.setChunkForced(c.x, c.z, true));
 		for (int i = 0; i < 64; i++) {
 			rail(world, o.east(i), RailShape.EAST_WEST);
 		}
@@ -108,6 +114,7 @@ public class TrainGameTests implements FabricGameTest {
 			a.discard();
 			b.discard();
 			loco.discard();
+			forced.forEach(c -> world.setChunkForced(c.x, c.z, false));
 			ctx.complete();
 		});
 	}
