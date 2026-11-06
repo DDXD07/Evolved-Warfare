@@ -86,6 +86,8 @@ public class TrainGameTests implements FabricGameTest {
 			// sin carbón no anda
 			loco.setTarget(LocomotiveEntity.MAX_SPEED);
 		});
+		ctx.runAtTick(60, () -> LOG.info("[EW-GAMETEST] el tren a los 60: en el mundo {}, vivo {}, edad {}, objetivo {}, vel {}, vía {}", world.getEntity(loco.getUuid()) == loco,
+				loco.isAlive(), loco.age, loco.target(), loco.speed(), loco.track()));
 		ctx.runAtTick(45, () -> {
 			check(Math.abs(loco.getX() - startX) < 0.01, "Anda sin carbón");
 			loco.addFuel(10 * LocomotiveEntity.COAL_BLOCK);
