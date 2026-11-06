@@ -1574,6 +1574,32 @@ Los zombis ya no se deshacen el trabajo unos a otros:
 - **Aprovechan lo que han puesto otros**: si delante hay tierra de un compañero, se suben por ella en vez de hacer otra
   columna.
 
+## Fase 32 — Fundición: crisol, molde y afilado
+
+La forja ahora es un proceso de verdad, con más juego y menos menús:
+
+1. **Calentar** el lingote (alto horno u horno), como antes.
+2. **Fundirlo en el crisol** (5 ladrillos): se pone sobre una hoguera encendida, fuego, lava o magma y se le echan los
+   lingotes al rojo (hasta 4). Se ve el metal fundido subir y burbujear. Con la mano vacía se coge con el metal dentro;
+   fuera del fuego se enfría en 30 s.
+3. **El molde de arcilla** (frasco de agua + bola de arcilla + palo, sin forma; se queda el frasco). Al ponerlo en el
+   suelo se abre una **rueda de piezas** que gira: al pasar el ratón la pieza crece y se ve su silueta, sus lingotes y su
+   mango. Al elegir, el **minijuego de tallar**: con un palo se rasca la arcilla siguiendo la silueta tenue (clic
+   izquierdo rasca, clic derecho tapa), con migas que saltan; la arcilla se va secando (la gota) y seca cuesta más. Las
+   estrellas de arriba dicen cómo va y al terminar saltan las que salen.
+4. **Verter**: con el crisol en la mano, mantén clic derecho sobre el molde; el chorro va a más cuanto más rato. Junto a
+   la mira, un **medidor**: suelta en la raya (lo verde es perfecto). De menos, la pieza sale incompleta; de más, se
+   derrama. Se ve el metal llenar la forma tallada, al rojo, y apagarse al enfriarse (no lo toques: quema).
+5. **Romper el molde**: tres golpes con la mano; la arcilla se desmorona y sale la **pieza en bruto** (más oscura).
+6. **Afilar en el yunque**: con la pieza en bruto en la mano y el martillo encima, clic derecho a un yunque; si es de
+   hierro y llevas diamantes, eliges entre dos fichas (tal cual o con filo de diamante) y luego el minijuego del martillo.
+   Al final saltan las estrellas de la calidad.
+7. **Montar** en la mesa con su mango, como antes.
+
+La calidad sale del molde y el vertido (45 %) y del afilado (55 %). Ya no se forja el lingote al rojo directamente en el
+yunque. El Manual del Herrero explica todo el proceso (ahora con 8 dobles páginas e ilustraciones en marcha). Los otros
+jugadores te ven verter con el crisol inclinado.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -1592,6 +1618,7 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
   diseños 3D (cubos sobre cabeza, cuerpo, brazos y piernas), las texturas, los iconos, `FactionArmorModels.java`, los
   modelos de objeto, las recetas, las etiquetas y los textos; con `--preview` las dibuja puestas (delante, detrás y
   andando).
+- `ew_casting.py` — la fundición: modelos y texturas del crisol y del molde, sus recetas, etiquetas y textos.
 - `ew_smithbook.py` — el Manual del Herrero: su icono, el grabado de la forja (con los modelos 3D) y los textos del libro.
 - `ew_gear3d.py` — los modelos 3D de la forja y la pesca (martillo, lingotes al rojo, piezas, peces, cebos y caña), cada uno con su textura de materiales; se diseñan de pie y se inclinan 45° como los dibujos planos para usar las posiciones en la mano de vanilla. `--preview carpeta` dibuja cómo quedan.
 - `ew_smithing.py` — la herrería: texturas de las piezas (sacadas de cada herramienta, sin el mango), lingotes al rojo, martillo, modelos, recetas (calentar, montar) y las recetas de mesa quitadas.

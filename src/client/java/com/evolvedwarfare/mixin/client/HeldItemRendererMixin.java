@@ -41,7 +41,8 @@ public abstract class HeldItemRendererMixin {
 		// los minijuegos: forjando, el martillo y el lingote; pescando, la caña en alto (se deshace al acabar)
 		if (com.evolvedwarfare.client.anim.ActivityPoses.activity(player) != com.evolvedwarfare.network.ActivityPayload.NONE) {
 			byte activity = com.evolvedwarfare.client.anim.ActivityPoses.activity(player);
-			if (activity == com.evolvedwarfare.network.ActivityPayload.FISHING && !(item.getItem() instanceof net.minecraft.item.FishingRodItem)) {
+			if (activity == com.evolvedwarfare.network.ActivityPayload.FISHING && !(item.getItem() instanceof net.minecraft.item.FishingRodItem)
+					|| activity == com.evolvedwarfare.network.ActivityPayload.POURING && !(item.getItem() instanceof com.evolvedwarfare.smithing.CrucibleItem)) {
 				// solo se mueve la mano de la caña
 			} else if (com.evolvedwarfare.client.anim.ActivityPoses.firstPerson((HeldItemRenderer) (Object) this, player, hand, item, matrices,
 					vertexConsumers, light)) {

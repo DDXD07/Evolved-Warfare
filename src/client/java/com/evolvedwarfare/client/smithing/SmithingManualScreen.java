@@ -47,12 +47,13 @@ public class SmithingManualScreen extends Screen {
 	private static final int RIGHT_X = 156;
 	private static final int TOP = 16;
 	private static final int BOTTOM = 162;
-	private static final int SPREADS = 6;
+	private static final int SPREADS = 8;
 
 	private static final int INK = 0xFF3B2A1A;
 	private static final int TITLE = 0xFF7A2E12;
 	private static final int FAINT = 0xFF8A7556;
 	private static final String K = "manual.evolvedwarfare.smithing.";
+	private static final Identifier STARS = EvolvedWarfare.id("textures/gui/fish_stars.png");
 
 	private static int lastSpread;
 	private int spread;
@@ -116,17 +117,25 @@ public class SmithingManualScreen extends Screen {
 			}
 			case 1 -> {
 				heating(context, l, y);
-				cooling(context, r, y, t);
+				crucible(context, r, y, t);
 			}
 			case 2 -> {
+				moldRecipe(context, l, y);
+				carvingPage(context, r, y, t);
+			}
+			case 3 -> {
+				pouring(context, l, y, t);
+				cracking(context, r, y, t);
+			}
+			case 4 -> {
 				hammerRecipe(context, l, y);
 				anvil(context, r, y, t);
 			}
-			case 3 -> {
+			case 5 -> {
 				minigame(context, l, y, t);
 				strikes(context, r, y);
 			}
-			case 4 -> {
+			case 6 -> {
 				parts(context, l, y, mouseX, mouseY);
 				assembly(context, r, y);
 			}
@@ -156,7 +165,8 @@ public class SmithingManualScreen extends Screen {
 		centered(ctx, subtitle, x, y + 20, FAINT, Math.min(0.75F, (PAGE_W - 4) / (float) textRenderer.getWidth(subtitle)));
 		rule(ctx, x, y + 29);
 		// los tres pasos, con sus iconos
-		ItemStack[] icons = {new ItemStack(ModItems.HOT_IRON_INGOT), new ItemStack(ModItems.SMITHING_HAMMER), new ItemStack(Items.IRON_PICKAXE)};
+		ItemStack[] icons = {new ItemStack(com.evolvedwarfare.registry.ModBlocks.CRUCIBLE), new ItemStack(com.evolvedwarfare.registry.ModBlocks.CLAY_MOLD),
+				new ItemStack(ModItems.SMITHING_HAMMER)};
 		int cy = y + 36;
 		for (int i = 0; i < 3; i++) {
 			ctx.drawItem(icons[i], x + 2, cy);
@@ -206,25 +216,178 @@ public class SmithingManualScreen extends Screen {
 		paragraphs(ctx, new String[] {"heat.a", "heat.b"}, x, cy + 70, PAGE_W, top + BOTTOM - cy - 70);
 	}
 
-	private void cooling(DrawContext ctx, int x, int y, long t) {
-		int cy = heading(ctx, "cool.title", x, y);
-		row(ctx, x, cy, new ItemStack(ModItems.HOT_IRON_INGOT), new ItemStack(Items.CLOCK), new ItemStack(Items.IRON_INGOT), hotSeconds() + " s");
-		// el humo que sale del lingote al rojo
-		ctx.getMatrices().push();
-		ctx.getMatrices().translate(0, 0, 400.0F);
-		for (int i = 0; i < 6; i++) {
-			float p = ((t + i * 380L) % 2200L) / 2200.0F;
-			int sx = x + 12 + (int) (MathHelper.sin(p * 6.0F + i) * 3) + i % 3 * 3;
-			int sy = cy + 4 - (int) (p * 16);
-			int alpha = (int) ((1.0F - p) * 150);
-			ctx.fill(sx, sy, sx + 2, sy + 2, (alpha << 24) | 0x9A9A9A);
+	/** El crisol: sobre la hoguera, con los lingotes al rojo cayendo dentro. */
+	private void crucible(DrawContext ctx, int x, int y, long t) {
+		int cy = heading(ctx, "crucible.title", x, y);
+		int cx = x + 34;
+		big(ctx, new ItemStack(Items.CAMPFIRE), cx - 20, cy + 30, 2.5F);
+		big(ctx, new ItemStack(com.evolvedwarfare.registry.ModBlocks.CRUCIBLE), cx - 20, cy + 6, 2.5F);
+		// un lingote que cae dentro, cada poco
+		float p = (t % 1800L) / 1800.0F;
+		if (p < 0.6F) {
+			ctx.getMatrices().push();
+			ctx.getMatrices().translate(0, 0, 300.0F);
+			big(ctx, new ItemStack(ModItems.HOT_IRON_INGOT), cx - 8, (int) (cy - 4 + p / 0.6F * 16), 1.5F);
+			ctx.getMatrices().pop();
+		} else {
+			// salpica
+			java.util.Random r = new java.util.Random(t / 1800L);
+			for (int i = 0; i < 8; i++) {
+				float k = (p - 0.6F) / 0.4F;
+				int sx = (int) (cx + 4 + (r.nextFloat() - 0.5F) * 30 * k);
+				int sy = (int) (cy + 12 - r.nextFloat() * 14 * k + 20 * k * k);
+				ctx.fill(sx, sy, sx + 1, sy + 1, 0xFFFFA030);
+			}
 		}
-		ctx.getMatrices().pop();
-		paragraphs(ctx, new String[] {"cool.a", "cool.b"}, x, cy + 36, PAGE_W, top + BOTTOM - cy - 36);
+		// la receta: 5 ladrillos
+		ItemStack b = new ItemStack(Items.BRICK);
+		ItemStack e = ItemStack.EMPTY;
+		int gx = x + 66;
+		smallGrid(ctx, gx, cy + 4, new ItemStack[] {b, e, b, b, b, b});
+		paragraphs(ctx, new String[] {"crucible.a", "crucible.b"}, x, cy + 66, PAGE_W, top + BOTTOM - cy - 66);
 	}
 
-	private static int hotSeconds() {
-		return com.evolvedwarfare.smithing.HotIngotItem.SECONDS;
+	/** Una rejilla de 3x2 pequeña (para recetas cortas). */
+	private void smallGrid(DrawContext ctx, int x, int y, ItemStack[] items) {
+		ctx.fill(x - 1, y - 1, x + 55, y + 37, 0xFF6A4A2A);
+		for (int i = 0; i < 6; i++) {
+			int sx = x + (i % 3) * 18;
+			int sy = y + (i / 3) * 18;
+			ctx.fill(sx, sy, sx + 18, sy + 18, 0xFF8B7B66);
+			ctx.fill(sx + 1, sy + 1, sx + 17, sy + 17, 0xFFC9B993);
+			if (!items[i].isEmpty()) {
+				ctx.drawItem(items[i], sx + 1, sy + 1);
+			}
+		}
+		arrow(ctx, x + 20, y + 41);
+		ctx.drawItem(new ItemStack(com.evolvedwarfare.registry.ModBlocks.CRUCIBLE), x + 36, y + 39);
+	}
+
+	private void moldRecipe(DrawContext ctx, int x, int y) {
+		int cy = heading(ctx, "mold.title", x, y);
+		ItemStack water = net.minecraft.component.type.PotionContentsComponent.createStack(Items.POTION, net.minecraft.potion.Potions.WATER);
+		ItemStack e = ItemStack.EMPTY;
+		int gx = x + 8;
+		grid(ctx, gx, cy, new ItemStack[] {e, water, e, e, new ItemStack(Items.CLAY_BALL), e, e, new ItemStack(Items.STICK), e});
+		arrow(ctx, gx + 58, cy + 22);
+		big(ctx, new ItemStack(com.evolvedwarfare.registry.ModBlocks.CLAY_MOLD), gx + 76, cy + 11, 2.0F);
+		paragraphs(ctx, new String[] {"mold.a"}, x, cy + 60, PAGE_W, top + BOTTOM - cy - 60);
+	}
+
+	/** Tallar: la silueta de una hoja de espada que se va rascando sola, con el palo. */
+	private void carvingPage(DrawContext ctx, int x, int y, long t) {
+		int cy = heading(ctx, "carve.title", x, y);
+		boolean[][] mask = PartMasks.of(ForgedPart.SWORD_BLADE);
+		int c = 3;
+		int x0 = x + 8;
+		int y0 = cy + 2;
+		ctx.fill(x0 - 3, y0 - 3, x0 + c * 16 + 3, y0 + c * 16 + 3, 0xFF6E5A4C);
+		ctx.fill(x0, y0, x0 + c * 16, y0 + c * 16, 0xFFA89482);
+		// se talla en diagonal, de abajo arriba, en bucle
+		float p = (t % 5000L) / 4000.0F;
+		int done = (int) (Math.min(1.0F, p) * 32);
+		int toolX = x0;
+		int toolY = y0 + c * 16;
+		for (int yy = 0; yy < 16; yy++) {
+			for (int xx = 0; xx < 16; xx++) {
+				int d = xx + (15 - yy);
+				if (mask[xx][yy] && d < done) {
+					ctx.fill(x0 + xx * c, y0 + yy * c, x0 + (xx + 1) * c, y0 + (yy + 1) * c, 0xFF4A3A30);
+				} else if (mask[xx][yy]) {
+					ctx.fill(x0 + xx * c + 1, y0 + yy * c + 1, x0 + xx * c + 2, y0 + yy * c + 2, 0x60402010);
+				}
+				if (mask[xx][yy] && d == done) {
+					toolX = x0 + xx * c;
+					toolY = y0 + yy * c;
+				}
+			}
+		}
+		ctx.getMatrices().push();
+		ctx.getMatrices().translate(toolX, toolY, 300.0F);
+		ctx.getMatrices().multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-10.0F + MathHelper.sin(t / 60.0F) * 6.0F));
+		ctx.drawItem(new ItemStack(Items.STICK), -2, -14);
+		ctx.getMatrices().pop();
+		// las estrellas que van saliendo
+		int stars = Math.min(4, 1 + (int) (Math.min(1.0F, p) * 3.99F));
+		for (int i = 0; i < 4; i++) {
+			int sx = x + 70 + (i % 2) * 18;
+			int sy = cy + 6 + (i / 2) * 18;
+			if (i < stars) {
+				ctx.getMatrices().push();
+				ctx.getMatrices().translate(sx, sy, 0);
+				ctx.getMatrices().scale(2.0F, 2.0F, 1.0F);
+				ctx.drawTexture(STARS, 0, 0, i * 7, 0, 7, 7, 28, 7);
+				ctx.getMatrices().pop();
+			} else {
+				ctx.fill(sx + 3, sy + 3, sx + 11, sy + 11, 0x40000000);
+			}
+		}
+		paragraphs(ctx, new String[] {"carve.a", "carve.b"}, x, cy + 60, PAGE_W, top + BOTTOM - cy - 60);
+	}
+
+	/** Verter: el crisol inclinado, el chorro y el medidor que sube hasta la raya. */
+	private void pouring(DrawContext ctx, int x, int y, long t) {
+		int cy = heading(ctx, "pour.title", x, y);
+		float p = (t % 4000L) / 3000.0F;
+		float fill = Math.min(1.05F, p * 1.05F);
+		ctx.getMatrices().push();
+		ctx.getMatrices().translate(x + 28, cy + 14, 100.0F);
+		ctx.getMatrices().multiply(RotationAxis.POSITIVE_Z.rotationDegrees(25.0F + Math.min(1.0F, p) * 25.0F));
+		ctx.getMatrices().scale(2.2F, 2.2F, 2.2F);
+		ctx.drawItem(new ItemStack(com.evolvedwarfare.registry.ModBlocks.CRUCIBLE), -8, -8);
+		ctx.getMatrices().pop();
+		if (p < 1.0F) {
+			ctx.fill(x + 44, cy + 20, x + 46, cy + 44, 0xFFFF9030);
+		}
+		big(ctx, new ItemStack(com.evolvedwarfare.registry.ModBlocks.CLAY_MOLD), x + 30, cy + 34, 2.0F);
+		// el medidor (como el de la mira)
+		int gx = x + 92;
+		int h = 52;
+		int gy = cy;
+		ctx.fill(gx - 1, gy - 1, gx + 11, gy + h + 1, 0xFF201810);
+		ctx.fill(gx, gy, gx + 10, gy + h, 0xFF3A3632);
+		int full = gy + h - (int) (h / 1.15F);
+		ctx.fill(gx, gy, gx + 10, full - 2, 0x60D03020);
+		ctx.fill(gx, full - 2, gx + 10, full + 3, 0xA040D040);
+		int level = (int) (fill / 1.15F * h);
+		boolean perfect = fill >= 0.97F && fill <= 1.03F;
+		ctx.fill(gx + 1, gy + h - level, gx + 9, gy + h, perfect ? 0xFFFFF080 : 0xFFFF9030);
+		ctx.fill(gx - 3, full, gx + 13, full + 1, 0xFFFFFFFF);
+		paragraphs(ctx, new String[] {"pour.a", "pour.b"}, x, cy + 62, PAGE_W, top + BOTTOM - cy - 62);
+	}
+
+	/** Romper el molde: tres golpes y sale la pieza en bruto. */
+	private void cracking(DrawContext ctx, int x, int y, long t) {
+		int cy = heading(ctx, "crack.title", x, y);
+		float p = (t % 3000L) / 3000.0F;
+		int hits = Math.min(3, (int) (p * 4.0F));
+		float shake = (p * 4.0F) % 1.0F < 0.15F && hits < 3 ? MathHelper.sin(t / 20.0F) * 2.0F : 0.0F;
+		if (hits < 3) {
+			ctx.getMatrices().push();
+			ctx.getMatrices().translate(shake, 0, 0);
+			big(ctx, new ItemStack(com.evolvedwarfare.registry.ModBlocks.CLAY_MOLD), x + 14, cy + 10, 2.6F);
+			ctx.getMatrices().pop();
+			// las grietas
+			for (int i = 0; i < hits; i++) {
+				int sx = x + 24 + i * 9;
+				ctx.fill(sx, cy + 22, sx + 1, cy + 34, 0xFF2A1E16);
+				ctx.fill(sx + 1, cy + 28, sx + 4, cy + 29, 0xFF2A1E16);
+			}
+		} else {
+			float k = (p - 0.75F) / 0.25F;
+			ItemStack piece = Smithing.rough(ForgedPart.AXE_HEAD, ForgeMaterial.IRON, 0.8F);
+			big(ctx, piece, x + 22, (int) (cy + 18 - k * 6), 2.4F);
+			java.util.Random r = new java.util.Random(7);
+			for (int i = 0; i < 10; i++) {
+				int sx = (int) (x + 40 + (r.nextFloat() - 0.5F) * 60 * k);
+				int sy = (int) (cy + 30 - r.nextFloat() * 18 * k + 30 * k * k);
+				ctx.fill(sx, sy, sx + 2, sy + 2, 0xFFA89482);
+			}
+		}
+		for (int i = 0; i < 3; i++) {
+			ctx.fill(x + 84 + i * 10, cy + 10, x + 91 + i * 10, cy + 17, i < hits ? 0xFFE07020 : 0xFF505050);
+		}
+		paragraphs(ctx, new String[] {"crack.a", "crack.b"}, x, cy + 56, PAGE_W, top + BOTTOM - cy - 56);
 	}
 
 	private void hammerRecipe(DrawContext ctx, int x, int y) {
@@ -245,7 +408,7 @@ public class SmithingManualScreen extends Screen {
 		float bob = MathHelper.sin(t / 300.0F) * 1.5F;
 		ctx.getMatrices().push();
 		ctx.getMatrices().translate(0, bob, 200.0F);
-		big(ctx, new ItemStack(ModItems.HOT_IRON_INGOT), x + 14, cy - 2, 2.0F);
+		big(ctx, Smithing.rough(ForgedPart.PICKAXE_HEAD, ForgeMaterial.IRON, 0.8F), x + 14, cy - 2, 2.0F);
 		ctx.getMatrices().pop();
 		// "clic derecho" y la elección de la pieza
 		Text click = Text.translatable(K + "anvil.click");
@@ -253,8 +416,8 @@ public class SmithingManualScreen extends Screen {
 		ctx.fill(bx, cy + 8, bx + 58, cy + 20, 0xFF6A4A2A);
 		ctx.fill(bx + 1, cy + 9, bx + 57, cy + 19, 0xFFE8D6A8);
 		small(ctx, click, bx + 29 - (int) (textRenderer.getWidth(click) * 0.7F / 2), cy + 11, INK, 0.7F);
-		ItemStack[] choices = {Smithing.part(ForgedPart.SWORD_BLADE, ForgeMaterial.IRON, 2), Smithing.part(ForgedPart.PICKAXE_HEAD, ForgeMaterial.IRON, 2),
-				Smithing.part(ForgedPart.AXE_HEAD, ForgeMaterial.IRON, 2)};
+		ItemStack[] choices = {Smithing.part(ForgedPart.PICKAXE_HEAD, ForgeMaterial.IRON, 3), new ItemStack(Items.DIAMOND),
+				Smithing.part(ForgedPart.PICKAXE_HEAD, ForgeMaterial.DIAMOND, 3)};
 		for (int k = 0; k < choices.length; k++) {
 			int px = bx + k * 20;
 			ctx.fill(px, cy + 24, px + 18, cy + 42, 0xFF8A7556);

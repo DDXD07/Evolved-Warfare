@@ -115,6 +115,28 @@ public final class ModBlocks {
 					.nonOpaque()
 					.burnable()));
 
+	/** La herrería: el crisol (sobre el fuego) y el molde de arcilla. */
+	public static final Block CRUCIBLE = Registry.register(Registries.BLOCK, EvolvedWarfare.id("crucible"),
+			new com.evolvedwarfare.smithing.CrucibleBlock(AbstractBlock.Settings.create()
+					.mapColor(MapColor.TERRACOTTA_ORANGE)
+					.instrument(NoteBlockInstrument.BASEDRUM)
+					.strength(1.5F, 6.0F)
+					.sounds(BlockSoundGroup.DECORATED_POT)
+					.nonOpaque()
+					.luminance(state -> 0)));
+	static {
+		Registry.register(Registries.ITEM, EvolvedWarfare.id("crucible"), new com.evolvedwarfare.smithing.CrucibleItem(CRUCIBLE, new Item.Settings().maxCount(1)));
+	}
+	public static final Block CLAY_MOLD = register("clay_mold", new com.evolvedwarfare.smithing.MoldBlock(AbstractBlock.Settings.create()
+			.mapColor(MapColor.LIGHT_BLUE_GRAY)
+			.strength(0.4F)
+			.sounds(BlockSoundGroup.MUD)
+			.nonOpaque()));
+	public static final BlockEntityType<com.evolvedwarfare.smithing.CrucibleBlockEntity> CRUCIBLE_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
+			EvolvedWarfare.id("crucible"), BlockEntityType.Builder.create(com.evolvedwarfare.smithing.CrucibleBlockEntity::new, CRUCIBLE).build(null));
+	public static final BlockEntityType<com.evolvedwarfare.smithing.MoldBlockEntity> CLAY_MOLD_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
+			EvolvedWarfare.id("clay_mold"), BlockEntityType.Builder.create(com.evolvedwarfare.smithing.MoldBlockEntity::new, CLAY_MOLD).build(null));
+
 	public static final BlockEntityType<WorkSiteBlockEntity> WORK_SITE_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
 			EvolvedWarfare.id("work_site"),
 			BlockEntityType.Builder.create(WorkSiteBlockEntity::new, WORK_SITES.values().toArray(new Block[0])).build(null));

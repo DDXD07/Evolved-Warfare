@@ -67,7 +67,10 @@ public final class ActivityPoses {
 	private static State state(Entity entity) {
 		State s = STATES.get(entity.getId());
 		MinecraftClient client = MinecraftClient.getInstance();
-		if (s != null && entity == client.player && !(client.currentScreen instanceof com.evolvedwarfare.client.fishing.FishingScreen)
+		if (s != null && s.activity() == ActivityPayload.POURING && entity == client.player && !client.player.isUsingItem()) {
+			return null;
+		}
+		if (s != null && s.activity() != ActivityPayload.POURING && entity == client.player && !(client.currentScreen instanceof com.evolvedwarfare.client.fishing.FishingScreen)
 				&& !(client.currentScreen instanceof com.evolvedwarfare.client.smithing.ForgingScreen)) {
 			return null;
 		}
@@ -136,6 +139,16 @@ public final class ActivityPoses {
 			other.roll = 0.0F;
 			model.body.pitch = -0.08F * pull;
 			model.head.pitch = Math.max(model.head.pitch, 0.25F);
+		} else if (s.activity() == ActivityPayload.POURING) {
+			// el crisol con las dos manos, inclinado hacia el molde
+			float wobble = MathHelper.sin(t * 9.0F) * 0.03F;
+			main.pitch = -1.05F + wobble;
+			main.yaw = -0.35F * side;
+			main.roll = 0.0F;
+			other.pitch = -1.0F - wobble;
+			other.yaw = 0.45F * side;
+			other.roll = 0.0F;
+			model.head.pitch = Math.max(model.head.pitch, 0.6F);
 		} else if (s.activity() == ActivityPayload.FORGING) {
 			float h = hammer(entity, s.start());
 			if (entity.getOffHandStack().isOf(ModItems.SMITHING_HAMMER)) {
@@ -176,6 +189,15 @@ public final class ActivityPoses {
 			matrices.translate(0.0F, 0.12F + pull * 0.05F, 0.05F + pull * 0.08F);
 			matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(18.0F + pull * 12.0F + shake));
 			matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(MathHelper.sin(t * 2.0F) * 2.0F));
+			return false;
+		}
+		if (a == ActivityPayload.POURING) {
+			// el crisol, inclinado: más cuanto más rato
+			float tilt = Math.min(1.0F, (now() - STATES.get(player.getId()).start()) / 1500.0F);
+			matrices.push();
+			matrices.translate(0.0F, 0.1F + tilt * 0.06F, -0.1F);
+			matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-20.0F - tilt * 35.0F));
+			matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(MathHelper.sin(time() * 8.0F) * 1.5F));
 			return false;
 		}
 		if (a == ActivityPayload.FORGING) {

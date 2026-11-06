@@ -20,14 +20,18 @@ public class ForgedPartItem extends Item {
 		if (data == null) {
 			return super.getName(stack);
 		}
-		return Text.translatable("item.evolvedwarfare.forged_part.named", Text.translatable("part.evolvedwarfare." + data.part()),
-				Text.translatable("material.evolvedwarfare." + data.material()));
+		return Text.translatable(data.quality() <= 0 ? "item.evolvedwarfare.forged_part.rough" : "item.evolvedwarfare.forged_part.named",
+				Text.translatable("part.evolvedwarfare." + data.part()), Text.translatable("material.evolvedwarfare." + data.material()));
 	}
 
 	@Override
 	public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
 		PartData data = stack.get(ModComponents.FORGED_PART);
 		if (data == null) {
+			return;
+		}
+		if (data.quality() <= 0) {
+			tooltip.add(Text.translatable("tooltip.evolvedwarfare.forged_part.rough").formatted(Formatting.GOLD));
 			return;
 		}
 		tooltip.add(Text.translatable("tooltip.evolvedwarfare.forged.quality", Text.translatable("forge_quality.evolvedwarfare." + ForgeQuality.key(data.quality())))

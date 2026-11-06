@@ -42,6 +42,13 @@ public final class ModComponents {
 					.codec(com.evolvedwarfare.smithing.PartData.CODEC).packetCodec(com.evolvedwarfare.smithing.PartData.PACKET_CODEC).build());
 	public static final ComponentType<Integer> FORGE_QUALITY = Registry.register(Registries.DATA_COMPONENT_TYPE, EvolvedWarfare.id("forge_quality"),
 			ComponentType.<Integer>builder().codec(com.mojang.serialization.Codec.INT).packetCodec(net.minecraft.network.codec.PacketCodecs.VAR_INT).build());
+	/** Lo que lleva un crisol (metal, lingotes sin fundir, metal fundido y cuándo se enfría). */
+	public static final ComponentType<com.evolvedwarfare.smithing.CrucibleContents> CRUCIBLE = Registry.register(Registries.DATA_COMPONENT_TYPE,
+			EvolvedWarfare.id("crucible"), ComponentType.<com.evolvedwarfare.smithing.CrucibleContents>builder()
+					.codec(com.evolvedwarfare.smithing.CrucibleContents.CODEC).packetCodec(com.evolvedwarfare.smithing.CrucibleContents.PACKET_CODEC).build());
+	/** Una pieza en bruto (recién sacada del molde): lo bien que salió el molde y el vertido (0-1); se afila en el yunque. */
+	public static final ComponentType<Float> CAST_SCORE = Registry.register(Registries.DATA_COMPONENT_TYPE, EvolvedWarfare.id("cast_score"),
+			ComponentType.<Float>builder().codec(com.mojang.serialization.Codec.FLOAT).packetCodec(net.minecraft.network.codec.PacketCodecs.FLOAT).build());
 	public static final ComponentType<Integer> HEAT = Registry.register(Registries.DATA_COMPONENT_TYPE, EvolvedWarfare.id("heat"),
 			ComponentType.<Integer>builder().codec(com.mojang.serialization.Codec.INT).packetCodec(net.minecraft.network.codec.PacketCodecs.VAR_INT).build());
 

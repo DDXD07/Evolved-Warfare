@@ -57,7 +57,7 @@ public class ForgedToolRecipe extends SpecialCraftingRecipe {
 		}
 		ForgedPart kind = ForgedPart.byId(data.part());
 		ForgeMaterial material = ForgeMaterial.byId(data.material());
-		if (kind == null || material == null || sticks != kind.sticks) {
+		if (kind == null || material == null || sticks != kind.sticks || data.quality() <= 0) { // en bruto: antes al yunque
 			return null;
 		}
 		if (grips != (kind.extra == ForgedPart.Extra.GRIP ? 1 : 0) || chains != (kind.extra == ForgedPart.Extra.CHAIN ? 1 : 0)) {

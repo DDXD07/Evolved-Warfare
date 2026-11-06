@@ -395,6 +395,8 @@ public final class ModItems {
 						entries.add(ModBlocks.TRADER_CATALOG);
 						entries.add(SMITHING_HAMMER);
 						entries.add(SMITHING_MANUAL);
+						entries.add(com.evolvedwarfare.registry.ModBlocks.CRUCIBLE);
+						entries.add(com.evolvedwarfare.registry.ModBlocks.CLAY_MOLD);
 						entries.add(HOT_IRON_INGOT);
 						entries.add(HOT_GOLD_INGOT);
 						for (Item fish : new Item[] {PERCH, CARP, TROUT, PIKE, EEL, TUNA, SWORDFISH, STURGEON, BAIT, MAGIC_BAIT}) {

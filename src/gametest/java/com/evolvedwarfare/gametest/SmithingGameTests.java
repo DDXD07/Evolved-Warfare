@@ -138,4 +138,81 @@ public class SmithingGameTests implements FabricGameTest {
 		check(prices[0] == 20 && prices[1] == 20, "El armero no vende el manual a 20 Glory Coins");
 		ctx.complete();
 	}
+
+	/**
+	 * La fundición entera: el crisol sobre una hoguera funde 3 lingotes al rojo (y sin fuego no funde), el molde tallado se
+	 * llena con lo justo, cuaja, se enfría y a 3 golpes suelta la pieza en bruto, que no se monta en la mesa (antes al yunque).
+	 */
+	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 700)
+	public void castingFlow(TestContext ctx) {
+		var world = ctx.getWorld();
+		net.minecraft.util.math.BlockPos fire = ctx.getAbsolutePos(new net.minecraft.util.math.BlockPos(1, 1, 1));
+		world.setBlockState(fire, net.minecraft.block.Blocks.CAMPFIRE.getDefaultState());
+		world.setBlockState(fire.up(), com.evolvedwarfare.registry.ModBlocks.CRUCIBLE.getDefaultState());
+		net.minecraft.util.math.BlockPos cold = ctx.getAbsolutePos(new net.minecraft.util.math.BlockPos(3, 1, 3));
+		world.setBlockState(cold, com.evolvedwarfare.registry.ModBlocks.CRUCIBLE.getDefaultState());
+		net.minecraft.util.math.BlockPos moldPos = ctx.getAbsolutePos(new net.minecraft.util.math.BlockPos(3, 1, 1));
+		world.setBlockState(moldPos, com.evolvedwarfare.registry.ModBlocks.CLAY_MOLD.getDefaultState());
+		var crucible = (com.evolvedwarfare.smithing.CrucibleBlockEntity) world.getBlockEntity(fire.up());
+		var unheated = (com.evolvedwarfare.smithing.CrucibleBlockEntity) world.getBlockEntity(cold);
+		boolean in = crucible.insert(ForgeMaterial.IRON) && crucible.insert(ForgeMaterial.IRON) && crucible.insert(ForgeMaterial.IRON);
+		boolean mixed = crucible.insert(ForgeMaterial.GOLD);
+		unheated.insert(ForgeMaterial.IRON);
+		ctx.waitAndRun(3 * com.evolvedwarfare.smithing.CrucibleBlockEntity.MELT_TICKS + 10, () -> {
+			float molten = crucible.contents().molten();
+			int coldSolid = unheated.contents().solid();
+			var mold = (com.evolvedwarfare.smithing.MoldBlockEntity) world.getBlockEntity(moldPos);
+			boolean carved = mold.carve(ForgedPart.PICKAXE_HEAD, new long[] {-1L, 0L, 0L, 0L}, 0.9F);
+			boolean goldRefused = mold.accepts(ForgeMaterial.GOLD); // el pico sí admite oro (antes de verter hierro)
+			float used = mold.pour(ForgeMaterial.IRON, molten);
+			LOG.info("[EW-GAMETEST] fundición: fundido {} (sin fuego, sin fundir {}), mezcla de metales {}, tallado {}, vertido {}", molten, coldSolid,
+					mixed, carved, used);
+			check(in && !mixed && Math.abs(molten - 3.0F) < 0.01F && coldSolid == 1, "El crisol no funde bien");
+			check(carved && goldRefused && Math.abs(mold.fill() - 3.0F) < 0.01F, "El molde no se llena");
+			ctx.waitAndRun(com.evolvedwarfare.smithing.MoldBlockEntity.SET_TICKS + com.evolvedwarfare.smithing.MoldBlockEntity.COOL_TICKS + 10, () -> {
+				int stage = mold.stage();
+				ItemStack a = mold.crack();
+				ItemStack b = mold.crack();
+				ItemStack piece = mold.crack();
+				Float cast = piece == null ? null : piece.get(ModComponents.CAST_SCORE);
+				int quality = cast == null ? -1 : Smithing.finalQuality(cast, 1.0F);
+				ForgedToolRecipe recipe = new ForgedToolRecipe(CraftingRecipeCategory.EQUIPMENT);
+				boolean roughCrafts = piece != null && recipe.matches(grid(piece, new ItemStack(Items.STICK), new ItemStack(Items.STICK)), world);
+				LOG.info("[EW-GAMETEST] fundición: etapa {}, pieza {} (nota {}, con afilado perfecto calidad {}), en bruto se monta {}", stage,
+						piece == null ? "ninguna" : piece.getName().getString(), cast, quality, roughCrafts);
+				check(stage == com.evolvedwarfare.smithing.MoldBlockEntity.SOLID && a == null && b == null && piece != null, "El molde no suelta la pieza");
+				check(cast != null && cast > 0.9F && quality == 4 && !roughCrafts, "La pieza en bruto no va bien");
+				ctx.complete();
+			});
+		});
+	}
+
+	/** El molde de arcilla: frasco de agua + arcilla + palo, y se queda el frasco vacío. */
+	@GameTest(templateName = EMPTY_STRUCTURE)
+	public void clayMoldRecipe(TestContext ctx) {
+		var world = ctx.getWorld();
+		ItemStack water = net.minecraft.component.type.PotionContentsComponent.createStack(Items.POTION, net.minecraft.potion.Potions.WATER);
+		ItemStack awkward = net.minecraft.component.type.PotionContentsComponent.createStack(Items.POTION, net.minecraft.potion.Potions.AWKWARD);
+		var recipe = new com.evolvedwarfare.smithing.ClayMoldRecipe(CraftingRecipeCategory.MISC);
+		var input = grid(water, new ItemStack(Items.CLAY_BALL), new ItemStack(Items.STICK));
+		boolean ok = recipe.matches(input, world);
+		boolean wrong = recipe.matches(grid(awkward, new ItemStack(Items.CLAY_BALL), new ItemStack(Items.STICK)), world);
+		boolean bottle = recipe.getRemainder(input).get(0).isOf(Items.GLASS_BOTTLE);
+		boolean result = recipe.craft(input, world.getRegistryManager()).isOf(com.evolvedwarfare.registry.ModBlocks.CLAY_MOLD.asItem());
+		LOG.info("[EW-GAMETEST] molde: receta {}, con otra poción {}, queda el frasco {}, sale el molde {}", ok, wrong, bottle, result);
+		check(ok && !wrong && bottle && result, "La receta del molde no va");
+		ctx.complete();
+	}
+
+	/** Lo bien vertido: lo justo, perfecto; de menos o de más, peor; derramar, aún peor. */
+	@GameTest(templateName = EMPTY_STRUCTURE)
+	public void pourScores(TestContext ctx) {
+		float exact = com.evolvedwarfare.smithing.MoldBlockEntity.pourScore(3.0F, 3.0F, false);
+		float little = com.evolvedwarfare.smithing.MoldBlockEntity.pourScore(2.4F, 3.0F, false);
+		float much = com.evolvedwarfare.smithing.MoldBlockEntity.pourScore(3.3F, 3.0F, false);
+		float spilled = com.evolvedwarfare.smithing.MoldBlockEntity.pourScore(3.3F, 3.0F, true);
+		LOG.info("[EW-GAMETEST] vertido: justo {}, de menos {}, de más {}, derramado {}", exact, little, much, spilled);
+		check(exact == 1.0F && little < 0.9F && much < 0.9F && spilled < much, "Las notas del vertido no van");
+		ctx.complete();
+	}
 }

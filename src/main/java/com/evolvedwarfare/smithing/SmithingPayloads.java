@@ -11,17 +11,18 @@ public final class SmithingPayloads {
 	private SmithingPayloads() {
 	}
 
-	/** Servidor → cliente: abre la forja (metal del lingote al rojo, cuántos, diamantes que llevas, nivel). */
-	public record Open(int session, int material, int ingots, int diamonds, int level, long seed) implements CustomPayload {
+	/** Servidor → cliente: abre el afilado (metal, la pieza en bruto, su nota del molde, diamantes que llevas, nivel). */
+	public record Open(int session, int material, int part, float cast, int diamonds, int level, long seed) implements CustomPayload {
 		public static final Id<Open> ID = new Id<>(EvolvedWarfare.id("forge_open"));
 		public static final PacketCodec<RegistryByteBuf, Open> CODEC = PacketCodec.of((p, buf) -> {
 			buf.writeVarInt(p.session);
 			buf.writeVarInt(p.material);
-			buf.writeVarInt(p.ingots);
+			buf.writeVarInt(p.part);
+			buf.writeFloat(p.cast);
 			buf.writeVarInt(p.diamonds);
 			buf.writeVarInt(p.level);
 			buf.writeLong(p.seed);
-		}, buf -> new Open(buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readLong()));
+		}, buf -> new Open(buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readFloat(), buf.readVarInt(), buf.readVarInt(), buf.readLong()));
 
 		@Override
 		public Id<? extends CustomPayload> getId() {

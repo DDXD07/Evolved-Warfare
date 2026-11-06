@@ -34,17 +34,23 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 
 /**
- * La herrería realista: las herramientas y armas de hierro, oro y diamante ya no se hacen en la mesa. Se calienta el
- * lingote (alto horno u horno) y, con el lingote al rojo en la mano y el martillo de herrero encima, clic derecho a un
- * yunque: se elige la pieza y se forja con el minijuego ({@link ForgeMinigame}). La pieza se monta en la mesa con su mango
- * ({@link ForgedToolRecipe}). El nivel de herrería (0-10) sube forjando y agranda la zona buena.
+ * La herrería realista: las herramientas y armas de hierro, oro y diamante ya no se hacen en la mesa.
+ * <ol>
+ * <li>Se calienta el lingote (alto horno u horno) y se funde en un crisol sobre el fuego ({@link CrucibleBlock}).</li>
+ * <li>Se pone un molde de arcilla ({@link MoldBlock}), se elige la pieza y se talla (minijuego).</li>
+ * <li>Se vierte el metal del crisol en el molde (lo justo), cuaja, se enfría y se rompe: sale la pieza en bruto.</li>
+ * <li>Con la pieza en bruto en la mano y el martillo encima, clic derecho a un yunque: se afila con el minijuego del martillo
+ * ({@link ForgeMinigame}) y, con hierro y diamantes, se le puede dar filo de diamante.</li>
+ * <li>La pieza se monta en la mesa con su mango ({@link ForgedToolRecipe}).</li>
+ * </ol>
+ * La calidad sale del molde, del vertido y del afilado. El nivel de herrería (0-10) sube forjando y agranda la zona buena.
  */
 public final class Smithing {
 	public static final AttachmentType<Integer> XP = AttachmentRegistry.<Integer>builder().persistent(Codec.INT).initializer(() -> 0)
 			.buildAndRegister(EvolvedWarfare.id("smithing_xp"));
 	private static final int[] LEVELS = {0, 25, 70, 140, 230, 340, 470, 630, 820, 1040, 1300};
 
-	record Session(int id, ForgeMaterial material, BlockPos anvil, long started) {
+	record Session(int id, ForgeMaterial material, BlockPos anvil, long started, int slot, ForgedPart part, float cast) {
 	}
 
 	private static final Map<UUID, Session> SESSIONS = new HashMap<>();
@@ -58,10 +64,26 @@ public final class Smithing {
 				new SpecialRecipeSerializer<>(ForgedToolRecipe::new));
 		PayloadTypeRegistry.playS2C().register(SmithingPayloads.Open.ID, SmithingPayloads.Open.CODEC);
 		PayloadTypeRegistry.playC2S().register(SmithingPayloads.Result.ID, SmithingPayloads.Result.CODEC);
+		ClayMoldRecipe.SERIALIZER = Registry.register(Registries.RECIPE_SERIALIZER, EvolvedWarfare.id("clay_mold"),
+				new SpecialRecipeSerializer<>(ClayMoldRecipe::new));
+		PayloadTypeRegistry.playS2C().register(MoldPayloads.Open.ID, MoldPayloads.Open.CODEC);
+		PayloadTypeRegistry.playC2S().register(MoldPayloads.Carve.ID, MoldPayloads.Carve.CODEC);
+		ServerPlayNetworking.registerGlobalReceiver(MoldPayloads.Carve.ID, (payload, context) -> carve(context.player(), payload));
 		ServerPlayNetworking.registerGlobalReceiver(SmithingPayloads.Result.ID, (payload, context) -> finish(context.player(), payload));
 		UseBlockCallback.EVENT.register((player, world, hand, hit) -> {
-			if (hand != Hand.MAIN_HAND || !world.getBlockState(hit.getBlockPos()).isIn(BlockTags.ANVIL)
-					|| !(player.getMainHandStack().getItem() instanceof HotIngotItem hot)) {
+			if (hand != Hand.MAIN_HAND || !world.getBlockState(hit.getBlockPos()).isIn(BlockTags.ANVIL)) {
+				return ActionResult.PASS;
+			}
+			ItemStack held = player.getMainHandStack();
+			if (held.getItem() instanceof HotIngotItem) {
+				// ya no se forja el lingote: se funde
+				if (!world.isClient) {
+					player.sendMessage(Text.translatable("message.evolvedwarfare.smithing.use_crucible").formatted(Formatting.GOLD), true);
+				}
+				return ActionResult.FAIL;
+			}
+			PartData data = held.get(ModComponents.FORGED_PART);
+			if (!held.isOf(ModItems.FORGED_PART) || data == null || data.quality() > 0) {
 				return ActionResult.PASS;
 			}
 			if (world.isClient) {
@@ -71,7 +93,12 @@ public final class Smithing {
 				player.sendMessage(Text.translatable("message.evolvedwarfare.smithing.need_hammer").formatted(Formatting.GOLD), true);
 				return ActionResult.FAIL;
 			}
-			open((ServerPlayerEntity) player, hot.material, hit.getBlockPos());
+			ForgedPart part = ForgedPart.byId(data.part());
+			ForgeMaterial material = ForgeMaterial.byId(data.material());
+			if (part == null || material == null) {
+				return ActionResult.FAIL;
+			}
+			open((ServerPlayerEntity) player, material, part, held.getOrDefault(ModComponents.CAST_SCORE, 0.5F), hit.getBlockPos());
 			return ActionResult.SUCCESS;
 		});
 	}
@@ -123,13 +150,36 @@ public final class Smithing {
 		}
 	}
 
-	public static void open(ServerPlayerEntity player, ForgeMaterial material, BlockPos anvil) {
-		Session s = new Session(nextId++, material, anvil.toImmutable(), player.getWorld().getTime());
+	/** Abre el afilado de una pieza en bruto (la de la mano) en el yunque. */
+	public static void open(ServerPlayerEntity player, ForgeMaterial material, ForgedPart part, float cast, BlockPos anvil) {
+		Session s = new Session(nextId++, material, anvil.toImmutable(), player.getWorld().getTime(), player.getInventory().selectedSlot, part, cast);
 		SESSIONS.put(player.getUuid(), s);
 		com.evolvedwarfare.network.ActivityPayload.set(player, com.evolvedwarfare.network.ActivityPayload.FORGING);
-		net.minecraft.item.Item hot = material == ForgeMaterial.GOLD ? ModItems.HOT_GOLD_INGOT : ModItems.HOT_IRON_INGOT;
-		ServerPlayNetworking.send(player, new SmithingPayloads.Open(s.id(), material.ordinal(), count(player.getInventory(), hot),
-				count(player.getInventory(), Items.DIAMOND), level(player), player.getRandom().nextLong()));
+		ServerPlayNetworking.send(player, new SmithingPayloads.Open(s.id(), material.ordinal(), part.ordinal(), cast,
+				player.isCreative() ? 99 : count(player.getInventory(), Items.DIAMOND), level(player), player.getRandom().nextLong()));
+	}
+
+	/** La pieza en bruto, recién sacada del molde (calidad 0), con la nota del molde y el vertido. */
+	public static ItemStack rough(ForgedPart part, ForgeMaterial material, float cast) {
+		ItemStack stack = part(part, material, 0);
+		stack.set(ModComponents.CAST_SCORE, Math.max(0.0F, Math.min(1.0F, cast)));
+		return stack;
+	}
+
+	/** La calidad final: un 45 % el molde y el vertido, un 55 % el afilado. */
+	public static int finalQuality(float cast, float hammer) {
+		return ForgeMinigame.quality(Math.max(0.0F, Math.min(1.0F, cast * 0.45F + hammer * 0.55F)));
+	}
+
+	private static void carve(ServerPlayerEntity player, MoldPayloads.Carve c) {
+		if (c.part() < 0 || c.part() >= ForgedPart.values().length || player.squaredDistanceTo(net.minecraft.util.math.Vec3d.ofCenter(c.pos())) > 64
+				|| !(player.getWorld().getBlockEntity(c.pos()) instanceof MoldBlockEntity mold)) {
+			return;
+		}
+		if (mold.carve(ForgedPart.values()[c.part()], c.bits(), c.score())) {
+			player.getWorld().playSound(null, c.pos(), SoundEvents.BLOCK_MUD_PLACE, SoundCategory.BLOCKS, 0.8F, 1.0F);
+			addXp(player, 1);
+		}
 	}
 
 	/** Hace la pieza (para el yunque y las pruebas). */
@@ -142,27 +192,28 @@ public final class Smithing {
 	private static void finish(ServerPlayerEntity player, SmithingPayloads.Result result) {
 		Session s = SESSIONS.remove(player.getUuid());
 		com.evolvedwarfare.network.ActivityPayload.set(player, com.evolvedwarfare.network.ActivityPayload.NONE);
-		if (s == null || s.id() != result.session() || result.part() < 0 || result.part() >= ForgedPart.values().length
-				|| !(player.getWorld() instanceof ServerWorld world)) {
+		if (s == null || s.id() != result.session() || result.part() != s.part().ordinal() || !(player.getWorld() instanceof ServerWorld world)) {
 			return;
 		}
-		ForgedPart part = ForgedPart.values()[result.part()];
+		ForgedPart part = s.part();
 		ForgeMaterial material = result.diamond() && s.material() == ForgeMaterial.IRON ? ForgeMaterial.DIAMOND : s.material();
 		if (part.result(material) == null || world.getTime() - s.started() < part.strikes * 4L) {
 			return;
 		}
-		net.minecraft.item.Item hot = s.material() == ForgeMaterial.GOLD ? ModItems.HOT_GOLD_INGOT : ModItems.HOT_IRON_INGOT;
 		PlayerInventory inv = player.getInventory();
+		// la pieza en bruto sigue donde estaba
+		ItemStack rough = inv.getStack(s.slot());
+		PartData data = rough.get(ModComponents.FORGED_PART);
+		if (!rough.isOf(ModItems.FORGED_PART) || data == null || data.quality() > 0 || !data.part().equals(part.id)
+				|| !data.material().equals(s.material().id)) {
+			return;
+		}
+		if (material == ForgeMaterial.DIAMOND && !player.isCreative() && count(inv, Items.DIAMOND) < part.cost) {
+			player.sendMessage(Text.translatable("message.evolvedwarfare.smithing.need_diamonds", part.cost).formatted(Formatting.RED), true);
+			return;
+		}
+		rough.decrement(1);
 		if (!player.isCreative()) {
-			if (count(inv, hot) < part.cost) {
-				player.sendMessage(Text.translatable("message.evolvedwarfare.smithing.need_ingots", part.cost).formatted(Formatting.RED), true);
-				return;
-			}
-			if (material == ForgeMaterial.DIAMOND && count(inv, Items.DIAMOND) < part.cost) {
-				player.sendMessage(Text.translatable("message.evolvedwarfare.smithing.need_diamonds", part.cost).formatted(Formatting.RED), true);
-				return;
-			}
-			take(inv, hot, part.cost);
 			if (material == ForgeMaterial.DIAMOND) {
 				take(inv, Items.DIAMOND, part.cost);
 			}
@@ -173,7 +224,7 @@ public final class Smithing {
 				}
 			}
 		}
-		int quality = ForgeMinigame.quality(Math.max(0.0F, Math.min(1.0F, result.score())));
+		int quality = finalQuality(s.cast(), result.score());
 		ItemStack piece = part(part, material, quality);
 		if (!inv.insertStack(piece)) {
 			player.dropItem(piece, false);
