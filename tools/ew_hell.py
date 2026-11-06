@@ -102,7 +102,7 @@ DENSITY = {"type": "minecraft:min", "argument1": SURFACE, "argument2": {"type": 
 # (por debajo de y 10) queda macizo y lo de debajo de 32 es lava
 ABYSS = noise("hell_abyss")
 ABYSS_WALLS = {"type": "minecraft:noise", "noise": "%s:hell_abyss_walls" % NS, "xz_scale": 1.0, "y_scale": 0.6}
-CARVE = {"type": "minecraft:max", "argument1": add(mul(6.0, add(0.48, mul(-1.0, ABYSS))), mul(0.7, ABYSS_WALLS)),
+CARVE = {"type": "minecraft:max", "argument1": add(mul(6.0, add(0.5, mul(-1.0, ABYSS))), mul(0.7, ABYSS_WALLS)),
          "argument2": {"type": "minecraft:y_clamped_gradient", "from_y": 0, "to_y": 12, "from_value": 3.0, "to_value": -12.0}}
 DENSITY = {"type": "minecraft:min", "argument1": DENSITY, "argument2": CARVE}
 FINAL_DENSITY = {"type": "minecraft:squeeze", "argument": mul(0.64, {"type": "minecraft:interpolated",
@@ -224,9 +224,9 @@ DIMENSION_TYPE = {
 
 
 ANY = [-1.0, 1.0]
-LOW_C = [-1.0, 0.35]
-LOW_E = [-1.0, 0.32]
-LOW_W = [-1.0, 0.4]
+LOW_C = [-1.0, 0.5]
+LOW_E = [-1.0, 0.45]
+LOW_W = [-1.0, 0.56]
 
 
 def point(biome, temperature, humidity, offset, c=LOW_C, e=LOW_E, w=LOW_W):
@@ -247,9 +247,9 @@ DIMENSION = {"type": "minecraft:the_nether", "generator": {"type": "minecraft:no
         point("%s:sodom_ruins" % NS, 0.4, -0.4, 0.0),
         point("%s:valley_of_bones" % NS, -0.3, 0.3, 0.05),
         point("%s:sodom_ruins" % NS, 0.35, 0.35, 0.05),
-        point("%s:sulfur_mountains" % NS, ANY, ANY, 0.0, c=[0.35, 1.0], e=ANY, w=LOW_W),
-        point("%s:lake_of_fire" % NS, ANY, ANY, 0.0, c=LOW_C, e=[0.32, 1.0], w=LOW_W),
-        point("%s:abyss" % NS, ANY, ANY, 0.0, c=ANY, e=ANY, w=[0.4, 1.0]),
+        point("%s:sulfur_mountains" % NS, ANY, ANY, 0.0, c=[0.5, 1.0], e=ANY, w=LOW_W),
+        point("%s:lake_of_fire" % NS, ANY, ANY, 0.0, c=LOW_C, e=[0.45, 1.0], w=LOW_W),
+        point("%s:abyss" % NS, ANY, ANY, 0.0, c=ANY, e=ANY, w=[0.56, 1.0]),
     ]}}}
 
 ORES = ["minecraft:ore_magma", "minecraft:spring_closed", "minecraft:ore_gravel_nether", "minecraft:ore_blackstone", "minecraft:ore_gold_nether",
