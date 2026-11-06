@@ -1737,6 +1737,35 @@ daño cualquier arma, pero las de **Bendición Divina** les hacen la mitad más.
     junto a la lava).
 - Los **libros de condena** también debilitan a estos tres.
 
+## Fase 37 — El Nether vivo: flora, fauna y el techo de roca
+
+- **Vuelve el techo de roca, mucho más alto y vivo**: el Nether mide ahora 320 de alto, con una **bóveda a ~230** (sube y
+  baja con su propio ruido), muy por encima de las montañas, así que sigue pareciendo abierto. De ella **cuelgan
+  estalactitas** de hasta 25 bloques, **cascadas de lava**, racimos de **piedra luminosa** y **lianas de brasas** que
+  brillan; por debajo se ve roca negra, basalto y magma. Aquí y allá, **pilares colosales** suben desde los lagos y los
+  valles hasta el techo y se ensanchan al llegar. Encima, roca y la roca madre de siempre.
+- La lluvia de fuego ahora **cae de la bóveda encendida**; los rayos, las visiones y las estructuras buscan **el suelo de
+  la caverna** (no lo alto del techo).
+- **Cuatro biomas con flora**, como los del mundo normal pero infernales (en la franja templada, entre los bíblicos y los
+  de siempre):
+  - **Bosque Calcinado**: árboles de **tronco calcinado** y **hojas de brasa** que brillan y sueltan pavesas (normales y
+    grandes), hierba y helechos de brasa, **flores infernales** (brillan) y sangrecascos. Ciervos de ceniza y polillas.
+  - **Selva de Espinas**: **espinos gigantes** (troncos de 2x2) con **hojas de espino** y **lianas de brasas**, zarzas de
+    espinas que **pinchan y frenan**, nylium carmesí y lianas llorosas. Hoglins y serpientes de fuego.
+  - **Ciénaga de los Ahorcados**: barro, almas y **charcos de lava**, **árboles de los ahorcados** (muertos, con una rama
+    de la que cuelga una cadena con un farol de almas o una calavera), **lirios cadáver** y sangrecascos. Sapos de lava,
+    espíritus y brujas.
+  - **Pradera de Brasas**: llanuras de **tierra chamuscada**, hierba de brasa y flores infernales, pocos árboles y
+    **manadas de ciervos de ceniza**.
+- **La fauna**:
+  - **Polillas de brasa**: revolotean por todo el Nether vivo y **cuelgan del techo** para descansar; sueltan chispas.
+  - **Ciervos de ceniza**: tímidos (**huyen si te acercas de pie**; agachado se dejan), en manada; se crían con **flores
+    infernales**. Dan **carne de ciervo de ceniza** (el **asado** a veces protege del fuego), cuero y huesos.
+  - **Sapos de lava**: **andan y saltan sobre la lava**; se crían con **sangrecascos**. Dan crema de magma.
+- Bloques nuevos: tierra chamuscada, tronco y tablones calcinados (4 tablones por tronco), hojas de brasa y de espino,
+  hierba y helecho de brasa, flor infernal (tinte naranja), lirio cadáver (tinte gris claro), sangrecasco, zarza de
+  espinas y liana de brasas (se trepa).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -1758,6 +1787,7 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
 - `ew_damned.py` — las criaturas del Nether bíblico (fase 2): sus modelos (con el papel de cada parte para animarlas), texturas, sonidos, botín, objetos que sueltan y la sal bendita.
 - `ew_hellstructs.py` — las estructuras del Nether bíblico (fase 3): las plantillas (Babel, templos, pilares de sal, cementerios, el trono del lago, las cámaras del Abismo, las minas y Sodoma), sus estructuras y dónde salen, los bloques nuevos, el botín con los libros de saber y los textos. Los añadidos de la Fortaleza del Abaddon están en `ew_citadel.py`.
 - `ew_apocalypse.py` — el Apocalipsis (fase 4 del Nether bíblico): los modelos del Ángel del Abismo, el Falso Profeta y la Bestia mayor (con las siete cabezas que se le caen), su botín, los fragmentos de sello y los objetos de los jefes, el círculo de ritual, los iconos de los efectos y los textos.
+- `ew_hellflora.py` — el Nether vivo (fase 37): los bloques de la flora infernal (texturas, modelos, botín, etiquetas y recetas), los árboles y matas, las lianas del techo y las cascadas de lava, la fauna (polillas, ciervos y sapos) y los textos. El techo de roca y los biomas están en `ew_hell.py`.
 - `ew_inferno.py` — el Nether bíblico (fase 1): los bloques nuevos (sal, polvo de hueso, grietas, cristales de azufre...), las decoraciones de los biomas, las maldiciones, las visiones y sus textos. El terreno y los biomas siguen en `ew_hell.py`.
 - `ew_casting.py` — la fundición: modelos y texturas del crisol y del molde, sus recetas, etiquetas y textos.
 - `ew_smithbook.py` — el Manual del Herrero: su icono, el grabado de la forja (con los modelos 3D) y los textos del libro.

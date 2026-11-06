@@ -29,7 +29,8 @@
 		"PlayerEntityThirstMixin",
 		"PoolStructurePieceAccessor",
 		"SinglePoolElementAccessor",
-		"StructurePoolBasedGeneratorMixin"
+		"StructurePoolBasedGeneratorMixin",
+		"NetherFloorHeightMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

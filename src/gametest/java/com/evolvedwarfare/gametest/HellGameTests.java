@@ -45,11 +45,12 @@ public class HellGameTests implements FabricGameTest {
 		DimensionType type = server.getRegistryManager().get(RegistryKeys.DIMENSION_TYPE).get(DimensionTypes.THE_NETHER);
 		var biomes = server.getRegistryManager().get(RegistryKeys.BIOME);
 		boolean all = true;
-		for (String b : new String[] {"lake_of_fire", "valley_of_bones", "sodom_ruins", "abyss", "sulfur_mountains"}) {
+		for (String b : new String[] {"lake_of_fire", "valley_of_bones", "sodom_ruins", "abyss", "sulfur_mountains", "charred_forest", "thorn_jungle",
+				"hanged_swamp", "ember_meadow"}) {
 			all &= biomes.contains(RegistryKey.of(RegistryKeys.BIOME, EvolvedWarfare.id(b)));
 		}
 		LOG.info("[EW-GAMETEST] Nether: techo {}, altura lógica {}, biomas nuevos {}", type.hasCeiling(), type.logicalHeight(), all);
-		check(!type.hasCeiling() && type.logicalHeight() == 256 && all, "El Nether sigue con techo o faltan biomas");
+		check(type.hasCeiling() && type.height() == 320 && all, "El Nether no tiene su techo de roca o faltan biomas");
 		ServerWorld nether = server.getWorld(World.NETHER);
 		if (nether == null) {
 			LOG.info("[EW-GAMETEST] Nether: el servidor de pruebas no tiene Nether (no se mira el terreno)");
@@ -68,16 +69,14 @@ public class HellGameTests implements FabricGameTest {
 				int x = i * 96 - 600;
 				int z = j * 96 - 600;
 				VerticalBlockSample column = gen.getColumnSample(x, z, nether, noise);
-				int surface = -1;
-				for (int y = 250; y > 0; y--) {
-					BlockState s = column.getState(y);
-					if (!s.isAir() && s.getFluidState().isEmpty()) {
-						surface = y;
-						break;
-					}
-				}
+				int surface = Hell.floorY(column, st -> !st.isAir() && st.getFluidState().isEmpty(), 0, Hell.CAVE_TOP) - 1;
 				columns++;
-				if (!column.getState(252).isAir()) {
+				// el techo: roca maciza arriba, y un buen hueco de aire entre el suelo y la bóveda
+				int roof = surface + 1;
+				while (roof < 300 && column.getState(roof).isAir()) {
+					roof++;
+				}
+				if (!column.getState(290).isAir() && (roof - surface > 30 || surface < 0)) {
 					roofs++;
 				}
 				if (column.getState(31).isOf(Blocks.LAVA) && column.getState(40).isAir()) {
@@ -94,13 +93,7 @@ public class HellGameTests implements FabricGameTest {
 		for (int j = 0; j < 24; j++) {
 			for (int i = 0; i < 64; i++) {
 				VerticalBlockSample column = gen.getColumnSample(i * 40 - 1280, j * 80 - 960, nether, noise);
-				int surface = 0;
-				for (int y = 250; y > 0; y--) {
-					if (!column.getState(y).isAir()) {
-						surface = y;
-						break;
-					}
-				}
+				int surface = Math.max(0, Hell.floorY(column, st -> !st.isAir(), 0, Hell.CAVE_TOP) - 1);
 				boolean molten = column.getState(surface).isOf(Blocks.LAVA);
 				cells++;
 				if (molten) {
@@ -141,19 +134,17 @@ public class HellGameTests implements FabricGameTest {
 					case "sodom_ruins" -> 'S';
 					case "abyss" -> 'A';
 					case "sulfur_mountains" -> 'M';
+					case "charred_forest" -> 'f';
+					case "thorn_jungle" -> 'j';
+					case "hanged_swamp" -> 's';
+					case "ember_meadow" -> 'p';
 					default -> '.';
 				};
 				bmap.append(c);
 				if (c == 'A') {
 					abyssCells++;
 					VerticalBlockSample column = gen.getColumnSample(x, z, nether, noise);
-					int surface = 0;
-					for (int y = 250; y > 0; y--) {
-						if (!column.getState(y).isAir()) {
-							surface = y;
-							break;
-						}
-					}
+					int surface = Math.max(0, Hell.floorY(column, st -> !st.isAir(), 0, Hell.CAVE_TOP) - 1);
 					if (surface < 40) {
 						abyssDeep++;
 					}
@@ -165,13 +156,14 @@ public class HellGameTests implements FabricGameTest {
 			bmap.append('\n');
 		}
 		LOG.info("[EW-GAMETEST] biomas del Nether {} (Abismo hondo en {} de {}; suelos {}):{}", found, abyssDeep, abyssCells, deepLog, bmap);
-		for (String b : new String[] {"lake_of_fire", "valley_of_bones", "sodom_ruins", "abyss", "sulfur_mountains"}) {
+		for (String b : new String[] {"lake_of_fire", "valley_of_bones", "sodom_ruins", "abyss", "sulfur_mountains", "charred_forest", "thorn_jungle",
+				"hanged_swamp", "ember_meadow"}) {
 			check(found.getOrDefault(b, 0) > 10, "Casi no sale el bioma " + b);
 		}
 		check(abyssCells == 0 || abyssDeep * 2 > abyssCells, "El Abismo no es hondo");
 		LOG.info("[EW-GAMETEST] terreno del Nether: {} columnas, con techo {}, suelo de {} a {}, lagos de fuego al aire {}", columns, roofs, lowest,
 				highest, lava);
-		check(roofs == 0, "Hay techo en el Nether");
+		check(roofs * 10 >= columns * 9, "Falta el techo de roca en " + (columns - roofs) + " de " + columns + " columnas");
 		check(highest > 110, "No hay montañas: lo más alto es " + highest);
 		check(lava > 0, "No hay lagos de fuego al aire libre");
 		ctx.complete();

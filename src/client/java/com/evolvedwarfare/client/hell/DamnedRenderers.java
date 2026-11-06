@@ -8,7 +8,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.entity.mob.MobEntity;
 
 /** Cómo se ven las criaturas del Nether bíblico (con los modelos de tools/ew_damned.py). */
 public final class DamnedRenderers {
@@ -21,7 +21,7 @@ public final class DamnedRenderers {
 		return layer;
 	}
 
-	private static <T extends HostileEntity> void simple(EntityType<T> type, String id, EntityModelLayer layer, float shadow, float scale,
+	private static <T extends MobEntity> void simple(EntityType<T> type, String id, EntityModelLayer layer, float shadow, float scale,
 			boolean translucent) {
 		EntityRendererRegistry.register(type, ctx -> new BossRenderer<T>(ctx, id, layer, shadow, translucent).scaled(scale));
 	}
@@ -42,6 +42,10 @@ public final class DamnedRenderers {
 				.withVariant(NephilimEntity::armored, new BossModel<>(ctx.getPart(nephArmored), "nephilim_armored"), "nephilim_armored"));
 		simple(DamnedEntities.DAMNED_SPIRIT, "damned_spirit", layer("damned_spirit"), 0.0F, 1.0F, true);
 		simple(DamnedEntities.SALT_STATUE, "salt_statue", layer("salt_statue"), 0.5F, 1.0F, false);
+		// la fauna del Nether vivo (tools/ew_hellflora.py)
+		simple(com.evolvedwarfare.hell.HellFlora.EMBER_MOTH, "ember_moth", layer("ember_moth"), 0.1F, 1.0F, false);
+		simple(com.evolvedwarfare.hell.HellFlora.ASH_STAG, "ash_stag", layer("ash_stag"), 0.6F, 1.0F, false);
+		simple(com.evolvedwarfare.hell.HellFlora.LAVA_TOAD, "lava_toad", layer("lava_toad"), 0.4F, 1.0F, false);
 		// los mini jefes del Apocalipsis (tools/ew_apocalypse.py)
 		simple(com.evolvedwarfare.hell.Apocalypse.ABYSS_ANGEL, "abyss_angel", layer("abyss_angel"), 0.8F, 1.0F, false);
 		simple(com.evolvedwarfare.hell.Apocalypse.FALSE_PROPHET, "false_prophet", layer("false_prophet"), 0.6F, 1.0F, false);

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "evolvedwarfare:charred_log"
+    }
+  ],
+  "result": {
+    "id": "evolvedwarfare:charred_planks",
+    "count": 4
+  }
+}

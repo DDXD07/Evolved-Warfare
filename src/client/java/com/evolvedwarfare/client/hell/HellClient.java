@@ -55,6 +55,14 @@ public final class HellClient {
 	public static void register() {
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.SULFUR_CRYSTAL, RenderLayer.getCutout());
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.STONE_FRUIT, RenderLayer.getCutout());
+		// la flora del Nether vivo (fase 37)
+		for (net.minecraft.block.Block b : new net.minecraft.block.Block[] {com.evolvedwarfare.hell.HellFlora.EMBER_GRASS,
+				com.evolvedwarfare.hell.HellFlora.EMBER_FERN, com.evolvedwarfare.hell.HellFlora.HELLBLOOM, com.evolvedwarfare.hell.HellFlora.CORPSE_LILY,
+				com.evolvedwarfare.hell.HellFlora.BLOODCAP, com.evolvedwarfare.hell.HellFlora.THORN_BUSH, com.evolvedwarfare.hell.HellFlora.EMBER_VINE}) {
+			BlockRenderLayerMap.INSTANCE.putBlock(b, RenderLayer.getCutout());
+		}
+		BlockRenderLayerMap.INSTANCE.putBlock(com.evolvedwarfare.hell.HellFlora.EMBER_LEAVES, RenderLayer.getCutoutMipped());
+		BlockRenderLayerMap.INSTANCE.putBlock(com.evolvedwarfare.hell.HellFlora.THORN_LEAVES, RenderLayer.getCutoutMipped());
 		// las estructuras (fase 35)
 		BlockRenderLayerMap.INSTANCE.putBlock(com.evolvedwarfare.hell.HellStructures.SHIFTING_BLOCK, RenderLayer.getTranslucent());
 		BlockRenderLayerMap.INSTANCE.putBlock(com.evolvedwarfare.hell.HellStructures.BABEL_PORTAL, RenderLayer.getTranslucent());

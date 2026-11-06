@@ -237,7 +237,7 @@ public final class HellStructures {
 			}
 			dir = dir.normalize();
 			int x = (int) (player.getX() + dir.x * 20), z = (int) (player.getZ() + dir.z * 20);
-			int y = world.getTopY(Heightmap.Type.MOTION_BLOCKING, x, z);
+			int y = Hell.floorY(world, x, z, player.getBlockY() + 12);
 			ServerPlayNetworking.send(player, new HellPayloads.Vision(x + 0.5, Math.min(y, player.getBlockY() + 12), z + 0.5));
 		}
 	}

@@ -6,11 +6,11 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.render.entity.feature.EyesFeatureRenderer;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.util.Identifier;
 
 /** Un mini jefe: su modelo, su piel y lo que le brilla (ojos, el horno de Moloc). */
-public class BossRenderer<T extends HostileEntity> extends MobEntityRenderer<T, BossModel<T>> {
+public class BossRenderer<T extends MobEntity> extends MobEntityRenderer<T, BossModel<T>> {
 	private final Identifier texture;
 	private final RenderLayer eyes;
 	private float scale = 1.0F;
@@ -64,8 +64,9 @@ public class BossRenderer<T extends HostileEntity> extends MobEntityRenderer<T, 
 
 	@Override
 	protected void scale(T entity, net.minecraft.client.util.math.MatrixStack matrices, float amount) {
-		if (scale != 1.0F) {
-			matrices.scale(scale, scale, scale);
+		float s = entity.isBaby() ? scale * 0.5F : scale;
+		if (s != 1.0F) {
+			matrices.scale(s, s, s);
 		}
 	}
 

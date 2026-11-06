@@ -66,6 +66,7 @@ public final class Hell {
 		NetherClimate.register();
 		DamnedEntities.register();
 		HellStructures.register();
+		HellFlora.register();
 		Apocalypse.register();
 		BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeys.SOUL_SAND_VALLEY), SpawnGroup.MONSTER, ModEntities.LEGION, 2, 1, 1);
 		// también en los biomas de siempre del Nether
@@ -150,6 +151,53 @@ public final class Hell {
 		}
 	}
 
+	/** Por debajo de aquí empieza la caverna (por encima, la bóveda y sus estalactitas). */
+	public static final int CAVE_TOP = 205;
+
+	/**
+	 * El suelo de una columna (el primer bloque que corta el paso, o líquido, con aire encima), buscando hacia abajo desde
+	 * fromY. Con el techo de roca, los mapas de alturas dan en lo alto de la bóveda; esto da el suelo de la caverna.
+	 */
+	public static int floorY(net.minecraft.world.World world, int x, int z, int fromY) {
+		BlockPos.Mutable p = new BlockPos.Mutable(x, Math.min(fromY, world.getTopY() - 2), z);
+		boolean aboveSolid = blocks(world.getBlockState(p.up()));
+		for (; p.getY() > world.getBottomY(); p.move(net.minecraft.util.math.Direction.DOWN)) {
+			boolean solid = blocks(world.getBlockState(p));
+			if (solid && !aboveSolid) {
+				return p.getY() + 1;
+			}
+			aboveSolid = solid;
+		}
+		return fromY;
+	}
+
+	/** El techo encima de (x, y, z): el primer bloque macizo hacia arriba (o lo alto del mundo). */
+	public static int roofY(net.minecraft.world.World world, int x, int y, int z) {
+		BlockPos.Mutable p = new BlockPos.Mutable(x, y, z);
+		while (p.getY() < world.getTopY() - 1 && !blocks(world.getBlockState(p))) {
+			p.move(net.minecraft.util.math.Direction.UP);
+		}
+		return p.getY();
+	}
+
+	private static boolean blocks(net.minecraft.block.BlockState s) {
+		return s.blocksMovement() || !s.getFluidState().isEmpty();
+	}
+
+	/** Lo mismo sobre una columna de la generación (para las estructuras): devuelve el suelo, o -1 si no hay. */
+	public static int floorY(net.minecraft.world.gen.chunk.VerticalBlockSample column, java.util.function.Predicate<net.minecraft.block.BlockState> solid,
+			int bottom, int fromY) {
+		boolean above = solid.test(column.getState(fromY + 1));
+		for (int y = fromY; y > bottom; y--) {
+			boolean s = solid.test(column.getState(y));
+			if (s && !above) {
+				return y + 1;
+			}
+			above = s;
+		}
+		return -1;
+	}
+
 	/** Deja caer una bola de fuego en un sitio al azar alrededor (solo donde se ve el cielo). Devuelve la bola, o null. */
 	@Nullable
 	public static SmallFireballEntity drop(ServerWorld world, BlockPos around, Random random) {
@@ -158,9 +206,11 @@ public final class Hell {
 		if (!world.isChunkLoaded(x >> 4, z >> 4)) {
 			return null;
 		}
-		int top = world.getTopY(Heightmap.Type.MOTION_BLOCKING, x, z);
-		double y = Math.min(world.getTopY() - 2, Math.max(top, around.getY()) + 30);
-		if (y <= top + 4) {
+		// con techo (fase 37): el fuego cae de la bóveda encendida, hasta 40 bloques por encima del suelo
+		int top = floorY(world, x, z, around.getY() + 24);
+		int roof = roofY(world, x, top, z);
+		double y = Math.min(roof - 1.5, top + 40);
+		if (y <= top + 6) {
 			return null;
 		}
 		Vec3d velocity = new Vec3d((random.nextDouble() - 0.5) * 0.2, -1.0, (random.nextDouble() - 0.5) * 0.2);

@@ -19,8 +19,8 @@
               0.38
             ],
             "humidity": [
-              0.1,
-              0.45
+              0.35,
+              0.65
             ],
             "offset": 0.0,
             "temperature": [
@@ -46,8 +46,8 @@
               0.38
             ],
             "humidity": [
-              0.1,
-              0.45
+              0.35,
+              0.65
             ],
             "offset": 0.0,
             "temperature": [
@@ -73,8 +73,8 @@
               0.38
             ],
             "humidity": [
-              0.1,
-              0.45
+              0.35,
+              0.65
             ],
             "offset": 0.0,
             "temperature": [
@@ -100,7 +100,7 @@
               0.38
             ],
             "humidity": [
-              0.45,
+              0.65,
               1.0
             ],
             "offset": 0.0,
@@ -127,12 +127,120 @@
               0.38
             ],
             "humidity": [
-              0.45,
+              0.65,
               1.0
             ],
             "offset": 0.0,
             "temperature": [
               0.0,
+              1.0
+            ],
+            "weirdness": [
+              -1.0,
+              0.52
+            ]
+          }
+        },
+        {
+          "biome": "evolvedwarfare:hanged_swamp",
+          "parameters": {
+            "continentalness": [
+              -1.0,
+              0.45
+            ],
+            "depth": 0.0,
+            "erosion": [
+              -1.0,
+              0.38
+            ],
+            "humidity": [
+              -0.2,
+              0.35
+            ],
+            "offset": 0.0,
+            "temperature": [
+              -1.0,
+              -0.4
+            ],
+            "weirdness": [
+              -1.0,
+              0.52
+            ]
+          }
+        },
+        {
+          "biome": "evolvedwarfare:charred_forest",
+          "parameters": {
+            "continentalness": [
+              -1.0,
+              0.45
+            ],
+            "depth": 0.0,
+            "erosion": [
+              -1.0,
+              0.38
+            ],
+            "humidity": [
+              -0.2,
+              0.35
+            ],
+            "offset": 0.0,
+            "temperature": [
+              -0.4,
+              0.05
+            ],
+            "weirdness": [
+              -1.0,
+              0.52
+            ]
+          }
+        },
+        {
+          "biome": "evolvedwarfare:ember_meadow",
+          "parameters": {
+            "continentalness": [
+              -1.0,
+              0.45
+            ],
+            "depth": 0.0,
+            "erosion": [
+              -1.0,
+              0.38
+            ],
+            "humidity": [
+              -0.2,
+              0.35
+            ],
+            "offset": 0.0,
+            "temperature": [
+              0.05,
+              0.45
+            ],
+            "weirdness": [
+              -1.0,
+              0.52
+            ]
+          }
+        },
+        {
+          "biome": "evolvedwarfare:thorn_jungle",
+          "parameters": {
+            "continentalness": [
+              -1.0,
+              0.45
+            ],
+            "depth": 0.0,
+            "erosion": [
+              -1.0,
+              0.38
+            ],
+            "humidity": [
+              -0.2,
+              0.35
+            ],
+            "offset": 0.0,
+            "temperature": [
+              0.45,
               1.0
             ],
             "weirdness": [
@@ -155,7 +263,7 @@
             ],
             "humidity": [
               -1.0,
-              0.1
+              -0.2
             ],
             "offset": 0.0,
             "temperature": [
@@ -182,7 +290,7 @@
             ],
             "humidity": [
               -1.0,
-              0.1
+              -0.2
             ],
             "offset": 0.0,
             "temperature": [

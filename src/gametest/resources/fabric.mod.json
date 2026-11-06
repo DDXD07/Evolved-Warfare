@@ -38,7 +38,8 @@
 			"com.evolvedwarfare.gametest.FishingGameTests",
 			"com.evolvedwarfare.gametest.SmithingGameTests",
 			"com.evolvedwarfare.gametest.HellStructureGameTests",
-			"com.evolvedwarfare.gametest.ApocalypseGameTests"
+			"com.evolvedwarfare.gametest.ApocalypseGameTests",
+			"com.evolvedwarfare.gametest.HellFloraGameTests"
 		]
 	},
 	"depends": {

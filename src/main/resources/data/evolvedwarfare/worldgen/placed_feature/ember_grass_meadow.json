@@ -1,0 +1,12 @@
+{
+  "feature": "evolvedwarfare:ember_grass_meadow",
+  "placement": [
+    {
+      "type": "minecraft:count_on_every_layer",
+      "count": 5
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

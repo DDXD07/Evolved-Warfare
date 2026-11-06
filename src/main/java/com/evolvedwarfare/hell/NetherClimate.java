@@ -400,7 +400,7 @@ public final class NetherClimate {
 		if (!world.isChunkLoaded(x >> 4, z >> 4)) {
 			return null;
 		}
-		int y = world.getTopY(Heightmap.Type.MOTION_BLOCKING, x, z);
+		int y = Hell.floorY(world, x, z, near.getBlockY() + 20);
 		BlockPos hit = new BlockPos(x, y, z);
 		LightningEntity bolt = EntityType.LIGHTNING_BOLT.create(world);
 		if (bolt != null) {
@@ -473,7 +473,7 @@ public final class NetherClimate {
 			double d = 16 + random.nextInt(12);
 			int x = (int) (player.getX() + dir.x * d);
 			int z = (int) (player.getZ() + dir.z * d);
-			int y = Math.max(player.getBlockY() - 6, Math.min(player.getBlockY() + 8, world.getTopY(Heightmap.Type.MOTION_BLOCKING, x, z)));
+			int y = Math.max(player.getBlockY() - 6, Math.min(player.getBlockY() + 8, Hell.floorY(world, x, z, player.getBlockY() + 12)));
 			ServerPlayNetworking.send(player, new HellPayloads.Vision(x + 0.5, y, z + 0.5));
 		} else {
 			// un susurro detrás

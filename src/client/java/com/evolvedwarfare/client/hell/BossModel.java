@@ -19,7 +19,7 @@ import net.minecraft.client.model.ModelPartData;
 import net.minecraft.client.model.ModelTransform;
 import net.minecraft.client.model.TexturedModelData;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
-import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.util.math.MathHelper;
 
 /**
@@ -27,7 +27,7 @@ import net.minecraft.util.math.MathHelper;
  * según el papel de cada parte: piernas que andan, brazos que se balancean y golpean, cabeza que mira, mandíbula que se abre
  * al atacar, alas que baten, cola que se mece y un cuerpo que respira.
  */
-public class BossModel<T extends HostileEntity> extends SinglePartEntityModel<T> {
+public class BossModel<T extends MobEntity> extends SinglePartEntityModel<T> {
 	record Part(ModelPart part, String role, int phase, int side, String flap) {
 	}
 

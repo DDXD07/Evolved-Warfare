@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smoking",
+  "category": "food",
+  "ingredient": {
+    "item": "evolvedwarfare:raw_ash_venison"
+  },
+  "result": {
+    "id": "evolvedwarfare:cooked_ash_venison"
+  },
+  "experience": 0.35,
+  "cookingtime": 100
+}

@@ -286,6 +286,18 @@ def models():
 # ------------------------------------------------------------------ las decoraciones de los biomas
 
 def placed(feature, placement):
+    """Con techo (fase 37), los mapas de alturas dan en lo alto de la bóveda: lo que iba "en la superficie" va en cada suelo
+    (count_on_every_layer, como la flora del Nether de siempre)."""
+    if any(m.get("type") == "minecraft:heightmap" for m in placement):
+        out = []
+        for m in placement:
+            if m.get("type") == "minecraft:in_square":
+                continue
+            if m.get("type") == "minecraft:heightmap":
+                out.append({"type": "minecraft:count_on_every_layer", "count": 1})
+                continue
+            out.append(m)
+        placement = out
     return {"feature": feature, "placement": placement}
 
 

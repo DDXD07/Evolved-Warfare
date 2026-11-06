@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "evolvedwarfare:block/scorched_soil_top",
+    "side": "evolvedwarfare:block/scorched_soil_side",
+    "bottom": "minecraft:block/soul_soil"
+  }
+}

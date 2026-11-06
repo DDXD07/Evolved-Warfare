@@ -1,0 +1,134 @@
+{
+  "has_precipitation": false,
+  "temperature": 2.0,
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 4853262,
+    "sky_color": 4853262,
+    "water_color": 4159204,
+    "water_fog_color": 329011,
+    "particle": {
+      "options": {
+        "type": "minecraft:crimson_spore"
+      },
+      "probability": 0.02
+    },
+    "ambient_sound": "minecraft:ambient.crimson_forest.loop",
+    "additions_sound": {
+      "sound": "minecraft:ambient.crimson_forest.additions",
+      "tick_chance": 0.0111
+    },
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.crimson_forest.mood",
+      "tick_delay": 6000
+    },
+    "music": {
+      "max_delay": 24000,
+      "min_delay": 12000,
+      "replace_current_music": false,
+      "sound": "minecraft:music.nether.crimson_forest"
+    }
+  },
+  "carvers": {
+    "air": "minecraft:nether_cave"
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "evolvedwarfare:thorn_giants",
+      "evolvedwarfare:charred_trees",
+      "evolvedwarfare:thorn_bush_patch",
+      "evolvedwarfare:ember_grass_patch",
+      "evolvedwarfare:bloodcap_patch",
+      "evolvedwarfare:ember_fern_patch",
+      "minecraft:weeping_vines",
+      "minecraft:ore_magma",
+      "minecraft:spring_closed",
+      "minecraft:ore_gravel_nether",
+      "minecraft:ore_blackstone",
+      "minecraft:ore_gold_nether",
+      "minecraft:ore_quartz_nether",
+      "minecraft:ore_ancient_debris_large",
+      "minecraft:ore_debris_small",
+      "minecraft:glowstone_extra",
+      "minecraft:glowstone",
+      "evolvedwarfare:ceiling_vines",
+      "evolvedwarfare:roof_lavafall"
+    ],
+    [],
+    [
+      "minecraft:spring_lava"
+    ],
+    []
+  ],
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [
+      {
+        "type": "evolvedwarfare:ember_moth",
+        "weight": 30,
+        "minCount": 2,
+        "maxCount": 5
+      }
+    ],
+    "axolotls": [],
+    "misc": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": [],
+    "creature": [
+      {
+        "type": "minecraft:hoglin",
+        "weight": 12,
+        "minCount": 2,
+        "maxCount": 3
+      },
+      {
+        "type": "evolvedwarfare:ash_stag",
+        "weight": 8,
+        "minCount": 1,
+        "maxCount": 2
+      }
+    ],
+    "monster": [
+      {
+        "type": "evolvedwarfare:imp",
+        "weight": 15,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "evolvedwarfare:demon",
+        "weight": 6,
+        "minCount": 1,
+        "maxCount": 1
+      },
+      {
+        "type": "evolvedwarfare:lost_soul",
+        "weight": 10,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "minecraft:zombified_piglin",
+        "weight": 15,
+        "minCount": 1,
+        "maxCount": 2
+      },
+      {
+        "type": "evolvedwarfare:fire_serpent",
+        "weight": 20,
+        "minCount": 1,
+        "maxCount": 2
+      }
+    ]
+  }
+}

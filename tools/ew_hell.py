@@ -80,6 +80,10 @@ NOISES = {
     # el Abismo: dónde están los pozos (y sus paredes irregulares)
     "hell_abyss": {"firstOctave": -7, "amplitudes": [1.0, 0.6]},
     "hell_abyss_walls": {"firstOctave": -4, "amplitudes": [1.0, 0.5]},
+    # el techo (fase 37): su altura, las estalactitas y los pilares que lo sostienen
+    "hell_roof": {"firstOctave": -7, "amplitudes": [1.0, 0.5, 0.25]},
+    "hell_stalactites": {"firstOctave": -3, "amplitudes": [1.0, 0.4]},
+    "hell_pillars": {"firstOctave": -6, "amplitudes": [1.0, 0.3]},
 }
 
 # la altura del suelo (en "densidad": 1 = 64 bloques): llano a ~52, colinas de ±16, montañas de hasta +110 y hoyas de
@@ -105,10 +109,27 @@ ABYSS_WALLS = {"type": "minecraft:noise", "noise": "%s:hell_abyss_walls" % NS, "
 CARVE = {"type": "minecraft:max", "argument1": add(mul(10.0, add(0.46, mul(-1.0, ABYSS))), mul(0.3, ABYSS_WALLS)),
          "argument2": {"type": "minecraft:y_clamped_gradient", "from_y": 0, "to_y": 12, "from_value": 3.0, "to_value": -12.0}}
 DENSITY = {"type": "minecraft:min", "argument1": DENSITY, "argument2": CARVE}
+# el techo de roca (fase 37): una bóveda a ~230 (±10 con su ruido), muy por encima de las montañas, de la que cuelgan
+# estalactitas de hasta ~25 bloques, y aquí y allá pilares colosales que la sostienen desde el suelo (y se ensanchan al
+# llegar arriba); por encima, roca hasta la roca madre de y 320
+ROOF_Y = 230
+
+
+def gradient(y0, y1, v0, v1):
+    return {"type": "minecraft:y_clamped_gradient", "from_y": y0, "to_y": y1, "from_value": v0, "to_value": v1}
+
+
+STALACTITES = {"type": "minecraft:noise", "noise": "%s:hell_stalactites" % NS, "xz_scale": 1.0, "y_scale": 0.05}
+ROOF = add(add(gradient(ROOF_Y - 70, ROOF_Y + 70, -6.0, 6.0), mul(0.9, noise("hell_roof"))),
+           mul(gradient(ROOF_Y - 80, ROOF_Y, 0.0, 1.0), mul(3.0, clamp(add(STALACTITES, -0.3), 0.0, 1.0))))
+PILLARS = clamp(mul(30.0, add(add(noise("hell_pillars"), mul(0.12, gradient(ROOF_Y - 90, ROOF_Y, 0.0, 1.0))), -0.8)), -1.0, 30.0)
+DENSITY = {"type": "minecraft:max", "argument1": DENSITY, "argument2": {"type": "minecraft:max", "argument1": ROOF, "argument2": PILLARS}}
 FINAL_DENSITY = {"type": "minecraft:squeeze", "argument": mul(0.64, {"type": "minecraft:interpolated",
                                                                       "argument": {"type": "minecraft:blend_density", "argument": DENSITY}})}
 
 BIOMES = ["lake_of_fire", "valley_of_bones", "sodom_ruins", "abyss", "sulfur_mountains"]
+# los biomas con flora (fase 37): como los del mundo normal, pero del infierno
+FLORA = ["charred_forest", "thorn_jungle", "hanged_swamp", "ember_meadow"]
 OLD_BIOMES = ["ash_plains", "brimstone_fields"]
 
 
@@ -159,7 +180,24 @@ def below(y):
     return {"type": "minecraft:not", "invert": above(y)}
 
 
+SOIL = "%s:scorched_soil" % NS
 HELL_RULES = [
+    # la bóveda: por debajo, roca negra, basalto y magma (y netherrack, donde cuelga la piedra luminosa)
+    cond(above(150), cond(ceiling(), seq(
+        cond(selector(0.6), block("minecraft:magma_block")),
+        cond(selector(0.25), block("minecraft:blackstone")),
+        cond(selector(-0.1), block("minecraft:basalt", {"axis": "y"}))))),
+    # los biomas con flora: tierra chamuscada (y barro y charcos de lava en la ciénaga)
+    cond(biome_is("charred_forest", "ember_meadow"), seq(
+        cond(floor(), seq(cond(selector(0.65), block("minecraft:soul_soil")), block(SOIL))),
+        cond(floor(True), block("minecraft:soul_soil")))),
+    cond(biome_is("thorn_jungle"), seq(
+        cond(floor(), seq(cond(selector(0.45), block("minecraft:crimson_nylium")), block(SOIL))),
+        cond(floor(True), block("minecraft:soul_soil")))),
+    cond(biome_is("hanged_swamp"), seq(
+        cond(floor(), seq(cond(selector(0.62), block("minecraft:lava", {"level": "0"})), cond(selector(0.25), block("minecraft:mud")),
+                          cond(selector(-0.3), block("minecraft:soul_soil")), block(SOIL))),
+        cond(floor(True), block("minecraft:mud")))),
     # las cumbres: piedra negra, basalto y obsidiana
     cond(above(118), cond(floor(True), seq(
         cond(selector(0.55), block("minecraft:obsidian")),
@@ -202,23 +240,22 @@ HELL_RULES = [
 def noise_settings():
     with open(os.path.join(HERE, "vanilla", "nether_noise_settings.json"), encoding="utf-8") as f:
         s = json.load(f)
-    s["noise"]["height"] = 256
+    s["noise"]["height"] = 320
     s["noise_router"]["final_density"] = FINAL_DENSITY
     # los biomas siguen al terreno: las montañas (continentalidad), las hoyas de lava (erosión) y el Abismo (rareza)
     s["noise_router"]["continents"] = noise("hell_mountain_mask")
     s["noise_router"]["erosion"] = noise("hell_basins")
     s["noise_router"]["ridges"] = ABYSS
     rules = s["surface_rule"]["sequence"]
-    # fuera el techo de roca madre (y el relleno de debajo del techo)
-    kept = [r for r in rules if "bedrock_roof" not in json.dumps(r) and "below_top" not in json.dumps(r)]
-    s["surface_rule"]["sequence"] = kept[:1] + HELL_RULES + kept[1:]
+    # vuelve el techo de roca madre (fase 37): las reglas de vanilla tal cual, y las nuestras después del suelo y el techo
+    s["surface_rule"]["sequence"] = rules[:3] + HELL_RULES + rules[3:]
     return s
 
 
 DIMENSION_TYPE = {
     "ambient_light": 0.1, "bed_works": False, "coordinate_scale": 8.0, "effects": "%s:hell" % NS, "fixed_time": 18000,
-    "has_ceiling": False, "has_raids": False, "has_skylight": False, "height": 256, "infiniburn": "#minecraft:infiniburn_nether",
-    "logical_height": 256, "min_y": 0, "monster_spawn_block_light_limit": 15, "monster_spawn_light_level": 7, "natural": False,
+    "has_ceiling": True, "has_raids": False, "has_skylight": False, "height": 320, "infiniburn": "#minecraft:infiniburn_nether",
+    "logical_height": 248, "min_y": 0, "monster_spawn_block_light_limit": 15, "monster_spawn_light_level": 7, "natural": False,
     "piglin_safe": True, "respawn_anchor_works": True, "ultrawarm": True,
 }
 
@@ -237,14 +274,19 @@ def point(biome, temperature, humidity, offset, c=LOW_C, e=LOW_E, w=LOW_W):
 DIMENSION = {"type": "minecraft:the_nether", "generator": {"type": "minecraft:noise", "settings": "minecraft:nether", "biome_source": {
     "type": "minecraft:multi_noise", "biomes": [
         # temperatura y humedad repartidas en casillas (así cada sitio cae en una sola): los de siempre, en lo húmedo
-        point("minecraft:basalt_deltas", [-1.0, -0.25], [0.1, 0.45], 0.0),
-        point("minecraft:nether_wastes", [-0.25, 0.25], [0.1, 0.45], 0.0),
-        point("minecraft:crimson_forest", [0.25, 1.0], [0.1, 0.45], 0.0),
-        point("minecraft:warped_forest", [-1.0, 0.0], [0.45, 1.0], 0.0),
-        point("minecraft:soul_sand_valley", [0.0, 1.0], [0.45, 1.0], 0.0),
+        point("minecraft:basalt_deltas", [-1.0, -0.25], [0.35, 0.65], 0.0),
+        point("minecraft:nether_wastes", [-0.25, 0.25], [0.35, 0.65], 0.0),
+        point("minecraft:crimson_forest", [0.25, 1.0], [0.35, 0.65], 0.0),
+        point("minecraft:warped_forest", [-1.0, 0.0], [0.65, 1.0], 0.0),
+        point("minecraft:soul_sand_valley", [0.0, 1.0], [0.65, 1.0], 0.0),
+        # los de flora, en lo templado
+        point("%s:hanged_swamp" % NS, [-1.0, -0.4], [-0.2, 0.35], 0.0),
+        point("%s:charred_forest" % NS, [-0.4, 0.05], [-0.2, 0.35], 0.0),
+        point("%s:ember_meadow" % NS, [0.05, 0.45], [-0.2, 0.35], 0.0),
+        point("%s:thorn_jungle" % NS, [0.45, 1.0], [-0.2, 0.35], 0.0),
         # los bíblicos, en lo seco
-        point("%s:valley_of_bones" % NS, [-1.0, 0.0], [-1.0, 0.1], 0.0),
-        point("%s:sodom_ruins" % NS, [0.0, 1.0], [-1.0, 0.1], 0.0),
+        point("%s:valley_of_bones" % NS, [-1.0, 0.0], [-1.0, -0.2], 0.0),
+        point("%s:sodom_ruins" % NS, [0.0, 1.0], [-1.0, -0.2], 0.0),
         point("%s:sulfur_mountains" % NS, ANY, ANY, 0.0, c=[0.45, 1.0], e=ANY, w=LOW_W),
         point("%s:lake_of_fire" % NS, ANY, ANY, 0.0, c=LOW_C, e=[0.38, 1.0], w=LOW_W),
         point("%s:abyss" % NS, ANY, ANY, 0.0, c=ANY, e=ANY, w=[0.52, 1.0]),
@@ -268,7 +310,7 @@ def biome(fog, particle, features7, loop=None, additions=None, mood=None, music=
     features = [[] for _ in range(11)]
     features[2] = list(step2)
     features[4] = list(step4)
-    features[7] = list(features7)
+    features[7] = list(features7) + ["minecraft:glowstone_extra", "minecraft:glowstone", f("ceiling_vines"), f("roof_lavafall")]
     features[9] = list(step9)
     return {"has_precipitation": False, "temperature": 2.0, "downfall": 0.0, "effects": effects,
             "carvers": {"air": "minecraft:nether_cave"}, "features": features, "spawn_costs": {},
@@ -281,8 +323,47 @@ def f(name):
     return "%s:%s" % (NS, name)
 
 
-def biomes():
+FLORA_MOBS = [("%s:imp" % NS, 15, 1, 2), ("%s:demon" % NS, 6, 1, 1), ("%s:lost_soul" % NS, 10, 1, 2), ("minecraft:zombified_piglin", 15, 1, 2)]
+
+
+def flora_biome(fog, particle, features, creatures, monsters, loop, mood, music, additions=None, chance=0.0111):
+    b = biome(fog, particle, features + ORES, loop=loop, additions=additions, mood=mood, music=music, monsters=FLORA_MOBS + monsters, chance=chance)
+    b["spawners"]["creature"] = [{"type": t, "weight": w, "minCount": a, "maxCount": c} for (t, w, a, c) in creatures]
+    b["spawners"]["ambient"] = [{"type": "%s:ember_moth" % NS, "weight": 30, "minCount": 2, "maxCount": 5}]
+    b["spawn_costs"] = {}
+    return b
+
+
+def flora_biomes():
     return {
+        "charred_forest": flora_biome(0x3A1A10, {"options": {"type": "minecraft:lava"}, "probability": 0.0015},
+                                      [f("charred_trees"), f("charred_fancy_trees"), f("ember_grass_patch"), f("hellbloom_patch"), f("bloodcap_patch"),
+                                       f("ember_fern_patch")],
+                                      [("%s:ash_stag" % NS, 30, 2, 4), ("minecraft:strider", 10, 1, 2)], [("%s:fallen" % NS, 4, 1, 1)],
+                                      "minecraft:ambient.crimson_forest.loop", "minecraft:ambient.crimson_forest.mood", "minecraft:music.nether.crimson_forest",
+                                      additions="minecraft:block.fire.ambient", chance=0.006),
+        "thorn_jungle": flora_biome(0x4A0E0E, {"options": {"type": "minecraft:crimson_spore"}, "probability": 0.02},
+                                    [f("thorn_giants"), f("charred_trees"), f("thorn_bush_patch"), f("ember_grass_patch"), f("bloodcap_patch"),
+                                     f("ember_fern_patch"), "minecraft:weeping_vines"],
+                                    [("minecraft:hoglin", 12, 2, 3), ("%s:ash_stag" % NS, 8, 1, 2)], [("%s:fire_serpent" % NS, 20, 1, 2)],
+                                    "minecraft:ambient.crimson_forest.loop", "minecraft:ambient.crimson_forest.mood", "minecraft:music.nether.crimson_forest",
+                                    additions="minecraft:ambient.crimson_forest.additions"),
+        "hanged_swamp": flora_biome(0x1E1A14, {"options": {"type": "minecraft:smoke"}, "probability": 0.006},
+                                    [f("gallows_trees"), f("corpse_lily_patch"), f("bloodcap_patch"), f("ember_grass_patch")],
+                                    [("%s:lava_toad" % NS, 30, 2, 5), ("minecraft:strider", 20, 1, 2)],
+                                    [("%s:damned_spirit" % NS, 10, 1, 2), ("minecraft:skeleton", 20, 1, 2), ("minecraft:witch", 5, 1, 1)],
+                                    "minecraft:ambient.soul_sand_valley.loop", "minecraft:ambient.soul_sand_valley.mood",
+                                    "minecraft:music.nether.soul_sand_valley", additions="minecraft:block.chain.step", chance=0.004),
+        "ember_meadow": flora_biome(0x5A2A0A, {"options": {"type": "minecraft:lava"}, "probability": 0.003},
+                                    [f("meadow_trees"), f("ember_grass_meadow"), f("hellbloom_meadow"), f("ember_fern_patch")],
+                                    [("%s:ash_stag" % NS, 40, 3, 6), ("minecraft:strider", 10, 1, 2)], [("%s:desert_goat" % NS, 10, 1, 3)],
+                                    "minecraft:ambient.nether_wastes.loop", "minecraft:ambient.nether_wastes.mood", "minecraft:music.nether.nether_wastes",
+                                    additions="minecraft:block.fire.ambient", chance=0.004),
+    }
+
+
+def biomes():
+    return {**flora_biomes(),
         "lake_of_fire": biome(0x6A1606, {"options": {"type": "minecraft:lava"}, "probability": 0.006},
                               ["minecraft:spring_open", "minecraft:patch_fire", f("salt_island"), f("bone_pile"), f("sunken_ruin")] + ORES,
                               loop="minecraft:ambient.basalt_deltas.loop", additions="minecraft:ambient.soul_sand_valley.additions",
@@ -541,7 +622,7 @@ def main():
         write_json(os.path.join(DATA, "worldgen/biome/%s.json" % name), b)
     write_json(os.path.join(DATA, "worldgen/configured_feature/ore_brimstone.json"), ORE_BRIMSTONE_CONFIGURED)
     write_json(os.path.join(DATA, "worldgen/placed_feature/ore_brimstone.json"), ORE_BRIMSTONE_PLACED)
-    add_tag(os.path.join(MC_DATA, "tags/worldgen/biome/is_nether.json"), ["%s:%s" % (NS, b) for b in BIOMES])
+    add_tag(os.path.join(MC_DATA, "tags/worldgen/biome/is_nether.json"), ["%s:%s" % (NS, b) for b in BIOMES + FLORA])
     for tag in ("nether_fortress/has_structure", "bastion_remnant/has_structure", "nether_fossil/has_structure", "ruined_portal_nether/has_structure"):
         values = ["%s:%s" % (NS, b) for b in BIOMES]
         if tag.startswith("nether_fossil"):
