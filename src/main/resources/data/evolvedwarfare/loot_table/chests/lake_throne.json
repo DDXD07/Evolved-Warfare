@@ -1,0 +1,453 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 3,
+        "max": 5
+      },
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:gold_ingot",
+          "weight": 6,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 6
+              },
+              "add": false
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:blaze_rod",
+          "weight": 5,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 4
+              },
+              "add": false
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:brimstone",
+          "weight": 6,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 3,
+                "max": 8
+              },
+              "add": false
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:magma_cream",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 4
+              },
+              "add": false
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:fire_charge",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 5
+              },
+              "add": false
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:diamond",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              },
+              "add": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:written_book",
+          "functions": [
+            {
+              "function": "minecraft:set_book_cover",
+              "title": "~",
+              "author": "?",
+              "generation": 3
+            },
+            {
+              "function": "minecraft:set_written_book_pages",
+              "mode": "replace_all",
+              "pages": [
+                {
+                  "translate": "lore.evolvedwarfare.0.0"
+                },
+                {
+                  "translate": "lore.evolvedwarfare.0.1"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_name",
+              "name": {
+                "translate": "lore.evolvedwarfare.0.title",
+                "italic": false,
+                "color": "gold"
+              },
+              "target": "custom_name"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:written_book",
+          "functions": [
+            {
+              "function": "minecraft:set_book_cover",
+              "title": "~",
+              "author": "?",
+              "generation": 3
+            },
+            {
+              "function": "minecraft:set_written_book_pages",
+              "mode": "replace_all",
+              "pages": [
+                {
+                  "translate": "lore.evolvedwarfare.1.0"
+                },
+                {
+                  "translate": "lore.evolvedwarfare.1.1"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_name",
+              "name": {
+                "translate": "lore.evolvedwarfare.1.title",
+                "italic": false,
+                "color": "gold"
+              },
+              "target": "custom_name"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:written_book",
+          "functions": [
+            {
+              "function": "minecraft:set_book_cover",
+              "title": "~",
+              "author": "?",
+              "generation": 3
+            },
+            {
+              "function": "minecraft:set_written_book_pages",
+              "mode": "replace_all",
+              "pages": [
+                {
+                  "translate": "lore.evolvedwarfare.2.0"
+                },
+                {
+                  "translate": "lore.evolvedwarfare.2.1"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_name",
+              "name": {
+                "translate": "lore.evolvedwarfare.2.title",
+                "italic": false,
+                "color": "gold"
+              },
+              "target": "custom_name"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:written_book",
+          "functions": [
+            {
+              "function": "minecraft:set_book_cover",
+              "title": "~",
+              "author": "?",
+              "generation": 3
+            },
+            {
+              "function": "minecraft:set_written_book_pages",
+              "mode": "replace_all",
+              "pages": [
+                {
+                  "translate": "lore.evolvedwarfare.3.0"
+                },
+                {
+                  "translate": "lore.evolvedwarfare.3.1"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_name",
+              "name": {
+                "translate": "lore.evolvedwarfare.3.title",
+                "italic": false,
+                "color": "gold"
+              },
+              "target": "custom_name"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:written_book",
+          "functions": [
+            {
+              "function": "minecraft:set_book_cover",
+              "title": "~",
+              "author": "?",
+              "generation": 3
+            },
+            {
+              "function": "minecraft:set_written_book_pages",
+              "mode": "replace_all",
+              "pages": [
+                {
+                  "translate": "lore.evolvedwarfare.4.0"
+                },
+                {
+                  "translate": "lore.evolvedwarfare.4.1"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_name",
+              "name": {
+                "translate": "lore.evolvedwarfare.4.title",
+                "italic": false,
+                "color": "gold"
+              },
+              "target": "custom_name"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:written_book",
+          "functions": [
+            {
+              "function": "minecraft:set_book_cover",
+              "title": "~",
+              "author": "?",
+              "generation": 3
+            },
+            {
+              "function": "minecraft:set_written_book_pages",
+              "mode": "replace_all",
+              "pages": [
+                {
+                  "translate": "lore.evolvedwarfare.5.0"
+                },
+                {
+                  "translate": "lore.evolvedwarfare.5.1"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_name",
+              "name": {
+                "translate": "lore.evolvedwarfare.5.title",
+                "italic": false,
+                "color": "gold"
+              },
+              "target": "custom_name"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:written_book",
+          "functions": [
+            {
+              "function": "minecraft:set_book_cover",
+              "title": "~",
+              "author": "?",
+              "generation": 3
+            },
+            {
+              "function": "minecraft:set_written_book_pages",
+              "mode": "replace_all",
+              "pages": [
+                {
+                  "translate": "lore.evolvedwarfare.6.0"
+                },
+                {
+                  "translate": "lore.evolvedwarfare.6.1"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_name",
+              "name": {
+                "translate": "lore.evolvedwarfare.6.title",
+                "italic": false,
+                "color": "gold"
+              },
+              "target": "custom_name"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:written_book",
+          "functions": [
+            {
+              "function": "minecraft:set_book_cover",
+              "title": "~",
+              "author": "?",
+              "generation": 3
+            },
+            {
+              "function": "minecraft:set_written_book_pages",
+              "mode": "replace_all",
+              "pages": [
+                {
+                  "translate": "lore.evolvedwarfare.7.0"
+                },
+                {
+                  "translate": "lore.evolvedwarfare.7.1"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_name",
+              "name": {
+                "translate": "lore.evolvedwarfare.7.title",
+                "italic": false,
+                "color": "gold"
+              },
+              "target": "custom_name"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:written_book",
+          "functions": [
+            {
+              "function": "minecraft:set_book_cover",
+              "title": "~",
+              "author": "?",
+              "generation": 3
+            },
+            {
+              "function": "minecraft:set_written_book_pages",
+              "mode": "replace_all",
+              "pages": [
+                {
+                  "translate": "lore.evolvedwarfare.8.0"
+                },
+                {
+                  "translate": "lore.evolvedwarfare.8.1"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_name",
+              "name": {
+                "translate": "lore.evolvedwarfare.8.title",
+                "italic": false,
+                "color": "gold"
+              },
+              "target": "custom_name"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:written_book",
+          "functions": [
+            {
+              "function": "minecraft:set_book_cover",
+              "title": "~",
+              "author": "?",
+              "generation": 3
+            },
+            {
+              "function": "minecraft:set_written_book_pages",
+              "mode": "replace_all",
+              "pages": [
+                {
+                  "translate": "lore.evolvedwarfare.9.0"
+                },
+                {
+                  "translate": "lore.evolvedwarfare.9.1"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_name",
+              "name": {
+                "translate": "lore.evolvedwarfare.9.title",
+                "italic": false,
+                "color": "gold"
+              },
+              "target": "custom_name"
+            }
+          ]
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.4
+        }
+      ]
+    }
+  ]
+}

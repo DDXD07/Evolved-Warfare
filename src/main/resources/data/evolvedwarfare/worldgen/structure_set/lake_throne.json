@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "evolvedwarfare:lake_throne",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 14,
+    "separation": 5,
+    "salt": 66615
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:jigsaw",
+  "biomes": "#evolvedwarfare:has_structure/abyss_vault",
+  "max_distance_from_center": 80,
+  "size": 1,
+  "start_height": {
+    "absolute": 12
+  },
+  "start_pool": "evolvedwarfare:hell/abyss_vault",
+  "step": "underground_structures",
+  "terrain_adaptation": "none",
+  "use_expansion_hack": false,
+  "spawn_overrides": {}
+}

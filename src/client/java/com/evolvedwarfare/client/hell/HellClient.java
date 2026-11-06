@@ -55,6 +55,15 @@ public final class HellClient {
 	public static void register() {
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.SULFUR_CRYSTAL, RenderLayer.getCutout());
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.STONE_FRUIT, RenderLayer.getCutout());
+		// las estructuras (fase 35)
+		BlockRenderLayerMap.INSTANCE.putBlock(com.evolvedwarfare.hell.HellStructures.SHIFTING_BLOCK, RenderLayer.getTranslucent());
+		BlockRenderLayerMap.INSTANCE.putBlock(com.evolvedwarfare.hell.HellStructures.BABEL_PORTAL, RenderLayer.getTranslucent());
+		BlockRenderLayerMap.INSTANCE.putBlock(com.evolvedwarfare.hell.HellStructures.FALLEN_WING, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(com.evolvedwarfare.hell.HellStructures.FALLEN_SWORD, RenderLayer.getCutout());
+		net.minecraft.client.render.block.entity.BlockEntityRendererFactories.register(com.evolvedwarfare.hell.HellStructures.IDOL_ENTITY, IdolRenderer::new);
+		net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry.register(
+				com.evolvedwarfare.hell.HellStructures.FALLEN_BLADE, com.evolvedwarfare.EvolvedWarfare.id("blade"),
+				(stack, world, entity, seed) -> com.evolvedwarfare.hell.FallenBladeItem.kind(stack) / 10.0F);
 		ClientPlayNetworking.registerGlobalReceiver(HellPayloads.Corruption.ID, (p, c) -> corruption = p.value());
 		ClientPlayNetworking.registerGlobalReceiver(HellPayloads.Vision.ID, (p, c) -> VISIONS.add(new Vision(new Vec3d(p.x(), p.y(), p.z()),
 				Util.getMeasuringTimeMs(), new long[] {0L})));

@@ -485,7 +485,82 @@ def citadel():
     cage(t, 66, 72)
     cage(t, 16, 26)
     cage(t, 16, 60)
+    abaddon_additions(t)
     return t
+
+
+def E(name, **props):
+    return S(f"{NS}:{name}", **props)
+
+
+def abaddon_additions(t, x0=40, z0=28, x1=77, z1=59):
+    """La Fortaleza del Abaddon (fase 35): el trono que despierta, su cámara secreta, la biblioteca de condena, sellos
+    rotos por suelos y muros, y cadenas y alas en las paredes del salón."""
+    zc = (z0 + z1) // 2
+    tx, ty = x1 - 3, 4
+    # el trono del abismo (donde se sienta el señor)
+    t.put(tx, ty, zc, E("abyss_throne", facing="west"))
+    # la cámara secreta dentro del estrado, tras un muro sellado (lo abre el trono)
+    for x in range(70, 76):
+        for z in range(zc - 2, zc + 4):
+            t.put(x, 0, z, BLACK)
+            for y in (1, 2):
+                t.put(x, y, z, "air")
+    for y in (1, 2):
+        t.put(69, y, zc - 3, E("sealed_wall"))
+        for x in range(70, 76):
+            t.put(x, y, zc - 3, E("sealed_wall"))
+    t.put(73, 1, zc + 3, *chest("north", f"{NS}:chests/citadel_secret"))
+    t.put(71, 1, zc + 3, *chest("north", f"{NS}:chests/citadel_secret"))
+    t.put(75, 1, zc, E("broken_seal"))
+    t.put(72, 2, zc, S("soul_lantern", hanging="true", waterlogged="false"))
+    # sellos rotos en el suelo del salón (en la alfombra no) y en los muros
+    for x in range(x0 + 4, x1 - 10, 5):
+        for z in (zc - 3, zc + 4):
+            t.put(x, 0, z, E("broken_seal"))
+    for x in range(x0 + 6, x1 - 8, 6):
+        for z in (z0, z1):
+            t.put(x, 4, z, E("broken_seal"))
+    # cadenas y restos de alas por las paredes de dentro
+    for x in range(x0 + 2, x1 - 9, 3):
+        for (z, face) in ((z0 + 1, "south"), (z1 - 1, "north")):
+            if t.get(x, 1, z) in (None, S("air")) and t.get(x, 2, z) in (None, S("air")):
+                t.put(x, 2, z, E("fallen_wing", facing=face))
+            for y in range(10, 15):
+                if t.get(x, y, z) in (None, S("air")):
+                    t.put(x, y, z, S("chain", axis="y", waterlogged="false"))
+    # la biblioteca de condena (al norte del salón)
+    bx0, bz0, bx1, bz1, top = 42, 16, 62, 24, 7
+    for x in range(bx0, bx1 + 1):
+        for z in range(bz0, bz1 + 1):
+            edge = x in (bx0, bx1) or z in (bz0, bz1)
+            t.put(x, 0, z, BLACK if (x + z) % 2 else S("polished_blackstone"))
+            for y in range(1, top + 1):
+                t.put(x, y, z, (CRACKED if (x * 3 + y) % 7 == 0 else BLACK) if edge or y == top else "air")
+    for y in (1, 2, 3):
+        for x in (51, 52, 53):
+            t.put(x, y, bz1, "air")
+    for x in range(bx0 + 1, bx1):
+        if x in (51, 52, 53):
+            continue
+        for y in range(1, 5):
+            t.put(x, y, bz0 + 1, S("bookshelf") if y < 4 else S("chiseled_bookshelf", facing="south", **{"slot_%d_occupied" % i: "false" for i in range(6)}))
+            if x % 3 == 0:
+                t.put(x, y, bz1 - 1, S("bookshelf"))
+    for x in (45, 49, 55, 59):
+        t.put(x, 1, bz0 + 4, S("lectern", facing="north", has_book="false", powered="false"))
+        t.put(x, 1, bz0 + 5, E("broken_seal"))
+    t.put(bx0 + 1, 1, bz0 + 3, *chest("east", f"{NS}:chests/citadel_library"))
+    t.put(bx1 - 1, 1, bz0 + 3, *chest("west", f"{NS}:chests/citadel_library"))
+    t.put(52, 1, bz0 + 3, *chest("south", f"{NS}:chests/lore"))
+    for x in range(bx0 + 3, bx1 - 2, 4):
+        for y in (5, 6):
+            t.put(x, y, bz0 + 4, S("chain", axis="y", waterlogged="false"))
+        t.put(x, 4, bz0 + 4, S("soul_lantern", hanging="true", waterlogged="false"))
+        t.put(x, 3, bz1 - 1, E("fallen_wing", facing="north")) if x % 3 else None
+    # el calabozo: sellos rotos en el suelo
+    for x in range(24, 37, 4):
+        t.put(x, 0, 71, E("broken_seal"))
 
 
 BOSSES = [("legion", 40), ("beelzebub", 30), ("moloch", 20), ("abaddon", 10)]

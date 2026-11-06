@@ -425,7 +425,9 @@ def main():
     os.makedirs(os.path.join(ASSETS, "textures/entity/hell"), exist_ok=True)
     vision().save(os.path.join(ASSETS, "textures/entity/hell/vision.png"))
     corruption_icon().save(os.path.join(ASSETS, "textures/gui/corruption.png"))
-    write_json(os.path.join(DATA, "tags/worldgen/structure/hell_landmarks.json"), {"replace": False, "values": [n("nether_citadel")]})
+    lm = os.path.join(DATA, "tags/worldgen/structure/hell_landmarks.json")
+    old = json.load(open(lm, encoding="utf-8"))["values"] if os.path.exists(lm) else []
+    write_json(lm, {"replace": False, "values": [n("nether_citadel")] + [v for v in old if v != n("nether_citadel")]})
     write_json(os.path.join(DATA, "damage_type/judgement.json"), {"exhaustion": 0.0, "message_id": NS + ".judgement", "scaling": "never",
                                                                  "effects": "burning"})
     for path in sorted(glob.glob(os.path.join(ASSETS, "lang", "*.json"))):

@@ -1,6 +1,14 @@
 {
   "replace": false,
   "values": [
-    "evolvedwarfare:nether_citadel"
+    "evolvedwarfare:nether_citadel",
+    "evolvedwarfare:babel_tower",
+    "evolvedwarfare:false_temple",
+    "evolvedwarfare:salt_pillar_field",
+    "evolvedwarfare:fallen_graveyard",
+    "evolvedwarfare:lake_throne",
+    "evolvedwarfare:abyss_vault",
+    "evolvedwarfare:sulfur_mine",
+    "evolvedwarfare:sodom_temple"
   ]
 }

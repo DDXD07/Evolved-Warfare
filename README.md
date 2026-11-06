@@ -1659,6 +1659,46 @@ Las criaturas son la consecuencia de estar ahí demasiado tiempo (o de tocar lo 
 - **Sal bendita** (2 de sal fina, polvo de piedra luminosa y una pepita de oro): purifica a los espíritus; echada sobre ti,
   quita corrupción y una maldición.
 
+## Fase 35 — Nether bíblico, parte 3: las estructuras
+
+El Nether ya no está vacío: cada bioma tiene sus lugares, con botín, trampas, guardianes y libros de saber.
+
+- **Torre de Babel rota** (ruinas y valle): nueve pisos de ladrillos que cambian de material en cada piso (las lenguas
+  confundidas), con una escalera de caracol y medio lado derrumbado hacia el vacío. Las **runas** de las paredes **cambian
+  de forma al acercarte**; hay **suelos agrietados** que crujen y se hunden (agachado aguantan), **bloques cambiantes** que
+  aparecen y desaparecen, un cofre por piso y **guardianes**: el **caído acorazado** (pisos 3 y 6), un **nephilim menor**
+  (piso 5) y grupos de **langostas mayores** (pisos 7 y 8). Arriba, un **anillo de piedra**: la **puerta de las visiones**
+  no lleva a ninguna parte, pero al cruzarla ves por un instante algo (y una silueta hacia un lugar del Nether).
+- **Templos de falsos dioses** (en casi todos los biomas): un **altar** entre cuatro **ídolos** cuyas cabezas **giran para
+  mirarte**. Ofrece comida, oro, libros o armas (clic derecho con ello): cuanto más vale, más probable es un **don fuerte**
+  (fuerza, resistencia, regeneración, velocidad, prisa o resistencia al fuego durante minutos); si no, una **maldición**
+  que dura hasta salir del Nether. Debajo, una **cripta** con más ofrendas, nichos de calaveras y libros.
+  **Ritual de purificación**: sal bendita sobre el altar quita todas las maldiciones y mucha corrupción.
+- **Campos de pilares de sal** (ruinas y valle): un laberinto de 48x48 de pilares de sal sobre **sal fina** (frena y da
+  sed), con **estatuas de sal** entre ellos.
+- **Cementerios de ángeles caídos** (valle y montañas): cientos de **alas rotas** clavadas en el polvo, armaduras oxidadas
+  en pie y **espadas que aún brillan**: arráncalas con la mano vacía y te llevas una **hoja caída** (de la Ira: quema; de la
+  Plaga: envenena y marchita; del Silencio: ciega; de la Caída: lanza lejos), cada una con su precio para quien la empuña
+  (calor del juicio, hambre, ceguera o vida). Al arrancarla puede caerte una maldición y **se despiertan** los **caídos
+  dormidos** de las **tumbas abiertas** (también se despiertan si te acercas).
+- **El trono del lago de fuego**: una plataforma de piedra negra en medio de la lava con un trono vacío, cadenas rotas y
+  un sello roto.
+- **Cámaras selladas del Abismo**: en el fondo, un brocal con escalera baja a una cámara con un sello roto en el suelo y
+  cuatro cofres.
+- **Minas de azufre abandonadas** (montañas): torre del pozo, pozo con escalera y una galería entibada con raíles,
+  cristales de azufre y **herramientas oxidadas**.
+- **Sodoma** (ruinas): **casas** con una placa de presión que dispara fuego desde la pared, **suelos que se hunden** sobre
+  lava y **habitantes inmóviles** que se mueven cuando te acercas; y el **templo**, con columnas, flechas desde los lados
+  de la nave, un suelo que se hunde sobre magma, su altar y su ídolo.
+- **La Fortaleza del Abaddon** (la Ciudadela): **sellos rotos** por el suelo y los muros, **cadenas y restos de alas** en
+  las paredes del salón, una **biblioteca de condena** al norte y el **trono del Abismo**: solo te reconoce si **has muerto
+  3 veces en el Nether**; entonces se abre la **cámara secreta** del estrado (con un tesoro y un libro de Bendición Divina).
+- **Libros de condena** (en cofres): leerlos hace daño (debilidad, hambre, marchitez, oscuridad y corrupción), pero si hay
+  un **señor del abismo** cerca le quitan una quinta parte de la vida y lo debilitan; si no, te **revelan dónde está** un
+  lugar del Nether (cuál, a cuántos bloques y hacia dónde).
+- **Libros de saber**: diez textos (la torre, los caídos, las ciudades de la llanura, el pozo, Abadón, los sellos...)
+  repartidos por los cofres.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -1678,6 +1718,7 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
   modelos de objeto, las recetas, las etiquetas y los textos; con `--preview` las dibuja puestas (delante, detrás y
   andando).
 - `ew_damned.py` — las criaturas del Nether bíblico (fase 2): sus modelos (con el papel de cada parte para animarlas), texturas, sonidos, botín, objetos que sueltan y la sal bendita.
+- `ew_hellstructs.py` — las estructuras del Nether bíblico (fase 3): las plantillas (Babel, templos, pilares de sal, cementerios, el trono del lago, las cámaras del Abismo, las minas y Sodoma), sus estructuras y dónde salen, los bloques nuevos, el botín con los libros de saber y los textos. Los añadidos de la Fortaleza del Abaddon están en `ew_citadel.py`.
 - `ew_inferno.py` — el Nether bíblico (fase 1): los bloques nuevos (sal, polvo de hueso, grietas, cristales de azufre...), las decoraciones de los biomas, las maldiciones, las visiones y sus textos. El terreno y los biomas siguen en `ew_hell.py`.
 - `ew_casting.py` — la fundición: modelos y texturas del crisol y del molde, sus recetas, etiquetas y textos.
 - `ew_smithbook.py` — el Manual del Herrero: su icono, el grabado de la forja (con los modelos 3D) y los textos del libro.

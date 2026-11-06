@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "solid=true": {
+      "model": "evolvedwarfare:block/shifting_block"
+    },
+    "solid=false": {
+      "model": "evolvedwarfare:block/shifting_block_ghost"
+    }
+  }
+}

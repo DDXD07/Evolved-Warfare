@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "evolvedwarfare:item/fallen_blade_0"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "evolvedwarfare:blade": 0.0
+      },
+      "model": "evolvedwarfare:item/fallen_blade_0"
+    },
+    {
+      "predicate": {
+        "evolvedwarfare:blade": 0.1
+      },
+      "model": "evolvedwarfare:item/fallen_blade_1"
+    },
+    {
+      "predicate": {
+        "evolvedwarfare:blade": 0.2
+      },
+      "model": "evolvedwarfare:item/fallen_blade_2"
+    },
+    {
+      "predicate": {
+        "evolvedwarfare:blade": 0.3
+      },
+      "model": "evolvedwarfare:item/fallen_blade_3"
+    }
+  ]
+}

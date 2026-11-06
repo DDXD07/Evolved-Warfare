@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "evolvedwarfare:block/abyss_throne",
+      "y": 90
+    },
+    "facing=east": {
+      "model": "evolvedwarfare:block/abyss_throne",
+      "y": 180
+    },
+    "facing=south": {
+      "model": "evolvedwarfare:block/abyss_throne",
+      "y": 270
+    },
+    "facing=west": {
+      "model": "evolvedwarfare:block/abyss_throne",
+      "y": 0
+    }
+  }
+}

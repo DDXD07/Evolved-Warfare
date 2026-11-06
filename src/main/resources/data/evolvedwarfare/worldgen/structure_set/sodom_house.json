@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "evolvedwarfare:sodom_house",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 7,
+    "separation": 2,
+    "salt": 66618
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "evolvedwarfare:block/fallen_sword",
+      "y": 0
+    },
+    "facing=east": {
+      "model": "evolvedwarfare:block/fallen_sword",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "evolvedwarfare:block/fallen_sword",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "evolvedwarfare:block/fallen_sword",
+      "y": 270
+    }
+  }
+}

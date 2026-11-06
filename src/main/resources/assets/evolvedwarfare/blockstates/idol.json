@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "evolvedwarfare:block/idol"
+    },
+    "facing=south": {
+      "model": "evolvedwarfare:block/idol"
+    },
+    "facing=east": {
+      "model": "evolvedwarfare:block/idol"
+    },
+    "facing=west": {
+      "model": "evolvedwarfare:block/idol"
+    }
+  }
+}

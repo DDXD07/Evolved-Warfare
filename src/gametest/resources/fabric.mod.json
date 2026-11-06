@@ -36,7 +36,8 @@
 			"com.evolvedwarfare.gametest.DemonBossGameTests",
 			"com.evolvedwarfare.gametest.CitadelGameTests",
 			"com.evolvedwarfare.gametest.FishingGameTests",
-			"com.evolvedwarfare.gametest.SmithingGameTests"
+			"com.evolvedwarfare.gametest.SmithingGameTests",
+			"com.evolvedwarfare.gametest.HellStructureGameTests"
 		]
 	},
 	"depends": {
