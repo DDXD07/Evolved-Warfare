@@ -115,6 +115,7 @@ public final class Backpacks {
 		PayloadTypeRegistry.playC2S().register(OpenPayload.ID, OpenPayload.CODEC);
 		ServerPlayNetworking.registerGlobalReceiver(OpenPayload.ID, (payload, context) -> open(context.player()));
 		ServerTickEvents.END_SERVER_TICK.register(Backpacks::tick);
+		Sorting.register();
 	}
 
 	// ------------------------------------------------------------------ quién va limitado y qué lleva
@@ -171,6 +172,9 @@ public final class Backpacks {
 	private static void tick(MinecraftServer server) {
 		boolean slow = server.getTicks() % 10 == 0;
 		for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
+			if (server.getTicks() % 5 == 0) {
+				Loadout.show(player);
+			}
 			if (!limited(player)) {
 				removeWeight(player);
 				continue;
@@ -180,13 +184,14 @@ public final class Backpacks {
 			if (inv.selectedSlot >= HOTBAR) {
 				inv.selectedSlot = HOTBAR - 1;
 			}
-			float fill = inventory(player).fill();
-			if (player.isSprinting() && fill > 0.25F) {
-				player.addExhaustion(0.012F * fill * (1 + BackpackItem.slots(worn(player)) / 27.0F));
+			int heavy = heavyUsed(player);
+			if (player.isSprinting() && heavy > 0) {
+				player.addExhaustion(0.006F * heavy);
 			}
 			if (slow) {
 				tidy(player);
-				weigh(player, fill);
+				Loadout.fix(player);
+				weigh(player, heavy);
 			}
 		}
 	}
@@ -210,19 +215,44 @@ public final class Backpacks {
 		return moved;
 	}
 
-	/** El peso: una mochila muy llena frena (hasta un 20 % con todo lleno). */
-	public static void weigh(PlayerEntity player, float fill) {
+	/** Huecos de carga pesada de una mochila de n huecos (los últimos): 2, 3, 5, 7 y 10. */
+	public static int heavySlots(int slots) {
+		return slots == 0 ? 0 : Math.max(2, slots / 5);
+	}
+
+	/** ¿Es de carga pesada el hueco i de una mochila de n huecos? */
+	public static boolean isHeavy(int i, int slots) {
+		return i < slots && i >= slots - heavySlots(slots);
+	}
+
+	/** Cuántos huecos de carga pesada lleva ocupados (al estilo de 7 Days to Die: cada uno frena un 4 %). */
+	public static int heavyUsed(PlayerEntity player) {
+		int n = size(player);
+		BackpackInventory inv = inventory(player);
+		int used = 0;
+		for (int i = n - heavySlots(n); i < n; i++) {
+			if (i >= 0 && !inv.getStack(i).isEmpty()) {
+				used++;
+			}
+		}
+		return used;
+	}
+
+	public static final double SLOW_PER_HEAVY = 0.04;
+
+	/** El peso: cada hueco de carga pesada ocupado frena un 4 %. */
+	public static void weigh(PlayerEntity player, int heavy) {
 		EntityAttributeInstance speed = player.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
 		if (speed == null) {
 			return;
 		}
-		double slow = fill <= 0.3F ? 0.0 : -0.2 * (fill - 0.3) / 0.7;
+		double slow = -SLOW_PER_HEAVY * heavy;
 		EntityAttributeModifier old = speed.getModifier(WEIGHT);
-		if (slow == 0.0) {
+		if (heavy == 0) {
 			if (old != null) {
 				speed.removeModifier(WEIGHT);
 			}
-		} else if (old == null || Math.abs(old.value() - slow) > 0.005) {
+		} else if (old == null || Math.abs(old.value() - slow) > 0.001) {
 			speed.updateModifier(new EntityAttributeModifier(WEIGHT, slow, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
 		}
 	}

@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "evolvedwarfare:musket",
+    "evolvedwarfare:javelin",
+    "evolvedwarfare:longbow",
+    "evolvedwarfare:prophet_staff"
+  ]
+}

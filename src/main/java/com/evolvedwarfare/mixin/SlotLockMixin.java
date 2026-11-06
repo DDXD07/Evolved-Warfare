@@ -41,6 +41,10 @@ public abstract class SlotLockMixin {
 	private void evolvedwarfare$closed(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
 		if (evolvedwarfare$locked()) {
 			cir.setReturnValue(false);
+		} else if (inventory instanceof PlayerInventory pi && getIndex() < Backpacks.HOTBAR && Backpacks.limited(pi.player)
+				&& !com.evolvedwarfare.backpack.Loadout.accepts(getIndex(), stack)) {
+			// la carga: arma en el 1, herramientas en el 2 y el 3, lo demás en el 4 y el 5
+			cir.setReturnValue(false);
 		}
 	}
 }

@@ -75,6 +75,9 @@ public abstract class InventoryScreenBackpackMixin extends AbstractInventoryScre
 			if (slot.isEnabled() && slot.y >= Backpacks.HOTBAR_Y - 2 || slot.id == 46) {
 				if (slot.isEnabled()) {
 					Panels.slot(context, x + slot.x - 1, y + slot.y - 1);
+					if (slot instanceof com.evolvedwarfare.backpack.BackpackSlots.Pack p && p.heavy()) {
+						Panels.heavy(context, x + slot.x - 1, y + slot.y - 1);
+					}
 				}
 			}
 		}
@@ -96,5 +99,10 @@ public abstract class InventoryScreenBackpackMixin extends AbstractInventoryScre
 				: Text.translatable("container.evolvedwarfare.backpack", worn.getName(), com.evolvedwarfare.backpack.BackpackItem.used(worn),
 						Backpacks.size(client.player));
 		context.drawText(textRenderer, label, 8, Backpacks.PACK_Y - 11, 0x404040, false);
+		int heavy = Backpacks.heavyUsed(client.player);
+		if (heavy > 0) {
+			String t = "-" + Math.round(heavy * Backpacks.SLOW_PER_HEAVY * 100) + "%";
+			context.drawText(textRenderer, t, backgroundWidth - 24 - textRenderer.getWidth(t), Backpacks.PACK_Y - 11, 0xB02010, false);
+		}
 	}
 }

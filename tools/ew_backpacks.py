@@ -147,6 +147,9 @@ TEXTS = {
     "container.evolvedwarfare.hotbar": ("Barra rápida (%s)", "Hotbar (%s)"),
     "message.evolvedwarfare.backpack.none": ("No llevas mochila", "You are not wearing a backpack"),
     "key.evolvedwarfare.backpack": ("Abrir la mochila", "Open backpack"),
+    "item.evolvedwarfare.backpack.heavy": ("Los %s últimos huecos son de carga pesada: cada uno ocupado te frena un %s %%",
+                                           "The last %s slots are heavy load: each one used slows you by %s %%"),
+    "container.evolvedwarfare.sort": ("Ordenar y clasificar", "Sort and classify"),
 }
 for t in range(5):
     TEXTS["item.evolvedwarfare.backpack_%s" % TIERS[t]] = (NAMES[t][0] + " (%d)" % SIZES[t], NAMES[t][1] + " (%d)" % SIZES[t])
@@ -171,6 +174,9 @@ def main():
                                                                      "base": {"item": n("backpack_" + TIERS[t - 1])}, "addition": {"item": addition},
                                                                      "result": {"id": n("backpack_" + TIERS[t]), "count": 1}})
     add_tag(os.path.join(MC_DATA, "tags/item/dyeable.json"), [n("backpack_" + x) for x in TIERS])
+    # la carga (fase 39): qué es arma (hueco 1) y qué herramienta (huecos 2 y 3) además de lo de vanilla
+    add_tag(os.path.join(DATA, "tags/item/loadout/weapons.json"), [n("musket"), n("javelin"), n("longbow"), n("prophet_staff")])
+    add_tag(os.path.join(DATA, "tags/item/loadout/tools.json"), [n("smithing_hammer"), "minecraft:spyglass"])
     for path in sorted(glob.glob(os.path.join(ASSETS, "lang", "*.json"))):
         english = path.endswith("en_us.json")
         with open(path, encoding="utf-8") as fh:

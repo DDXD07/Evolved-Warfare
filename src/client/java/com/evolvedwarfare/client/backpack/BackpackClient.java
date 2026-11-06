@@ -68,6 +68,33 @@ public final class BackpackClient {
 			}
 		});
 		BlockEntityRendererFactories.register(Backpacks.BACKPACK_ENTITY, ctx -> new OnGround());
+		// el botón de ordenar en las mochilas, los cofres, barriles y cajas de shulker (y en la mochila del inventario)
+		net.fabricmc.fabric.api.client.screen.v1.ScreenEvents.AFTER_INIT.register((client, screen, w, h) -> {
+			if (!(screen instanceof net.minecraft.client.gui.screen.ingame.HandledScreen<?> hs) || client.player == null) {
+				return;
+			}
+			var acc = (com.evolvedwarfare.mixin.client.HandledScreenAccessor) hs;
+			int target;
+			int bx, by;
+			if (screen instanceof BackpackScreen || screen instanceof net.minecraft.client.gui.screen.ingame.GenericContainerScreen
+					|| screen instanceof net.minecraft.client.gui.screen.ingame.ShulkerBoxScreen) {
+				target = 0;
+				bx = acc.evolvedwarfare$x() + acc.evolvedwarfare$width() - 19;
+				by = acc.evolvedwarfare$y() + 4;
+			} else if (screen instanceof net.minecraft.client.gui.screen.ingame.InventoryScreen && Backpacks.limited(client.player)) {
+				target = 1;
+				bx = acc.evolvedwarfare$x() + acc.evolvedwarfare$width() - 19;
+				by = acc.evolvedwarfare$y() + Backpacks.PACK_Y - 13;
+			} else {
+				return;
+			}
+			int syncId = hs.getScreenHandler().syncId;
+			var button = net.minecraft.client.gui.widget.ButtonWidget.builder(net.minecraft.text.Text.literal("⇅"),
+					b -> ClientPlayNetworking.send(new com.evolvedwarfare.backpack.Sorting.SortPayload(syncId, target)))
+					.dimensions(bx, by, 12, 11).tooltip(net.minecraft.client.gui.tooltip.Tooltip.of(net.minecraft.text.Text.translatable(
+							"container.evolvedwarfare.sort"))).build();
+			net.fabricmc.fabric.api.client.screen.v1.Screens.getButtons(screen).add(button);
+		});
 	}
 
 	/** La mochila a la espalda. */
@@ -79,8 +106,38 @@ public final class BackpackClient {
 		@Override
 		public void render(MatrixStack matrices, VertexConsumerProvider consumers, int light, AbstractClientPlayerEntity player, float limbAngle,
 				float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
+			if (player.isInvisible()) {
+				return;
+			}
 			ItemStack worn = Backpacks.worn(player);
-			if (worn.isEmpty() || player.isInvisible()) {
+			var shown = com.evolvedwarfare.backpack.Loadout.shown(player);
+			ItemStack held = player.getMainHandStack();
+			var renderer = MinecraftClient.getInstance().getItemRenderer();
+			for (int i = 0; i < shown.size() && i < 3; i++) {
+				ItemStack s = shown.get(i);
+				if (s.isEmpty() || ItemStack.areItemsAndComponentsEqual(s, held)) {
+					continue;
+				}
+				matrices.push();
+				getContextModel().body.rotate(matrices);
+				if (i == 0) {
+					// a la espalda, en diagonal (por encima de la mochila si la lleva)
+					matrices.translate(0.0F, 0.32F, worn.isEmpty() ? 0.17F : 0.45F);
+					matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(45.0F));
+					matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0F));
+					matrices.scale(0.85F, -0.85F, -0.85F);
+				} else {
+					// a la cadera (derecha o izquierda), colgando
+					float side = i == 1 ? -1.0F : 1.0F;
+					matrices.translate(side * 0.31F, 0.68F, 0.02F);
+					matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90.0F * side));
+					matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-135.0F));
+					matrices.scale(0.55F, -0.55F, -0.55F);
+				}
+				renderer.renderItem(s, ModelTransformationMode.FIXED, light, OverlayTexture.DEFAULT_UV, matrices, consumers, player.getWorld(), player.getId() + i);
+				matrices.pop();
+			}
+			if (worn.isEmpty()) {
 				return;
 			}
 			matrices.push();

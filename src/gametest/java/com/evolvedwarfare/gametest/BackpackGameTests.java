@@ -75,7 +75,8 @@ public class BackpackGameTests implements FabricGameTest {
 		int used = BackpackItem.used(Backpacks.worn(player));
 		LOG.info("[EW-GAMETEST] mochilas: sin mochila {} de {} (huecos {}), con la básica {} a la mochila ({} huecos usados)", took, STUFF.length, without, into,
 				used);
-		check(took == 5 && without == 5 && into == 3 && used == 3, "El inventario no es de 5 o no va a la mochila");
+		// los bloques solo caben en los huecos 4 y 5 (los otros tres son de la carga)
+		check(took == 2 && without == 2 && into == 3 && used == 3, "El inventario no es de 5 o no va a la mochila");
 		ctx.complete();
 	}
 
@@ -83,7 +84,7 @@ public class BackpackGameTests implements FabricGameTest {
 	public void inventoryScreenSlots(TestContext ctx) {
 		ServerPlayerEntity player = survivor(ctx);
 		var slots = player.playerScreenHandler.slots;
-		Slot locked = slots.get(9), lockedBar = slots.get(42), bar = slots.get(36), back = slots.get(46), pack = slots.get(47), far = slots.get(47 + 12);
+		Slot locked = slots.get(9), lockedBar = slots.get(42), bar = slots.get(39), back = slots.get(46), pack = slots.get(47), far = slots.get(47 + 12);
 		boolean before = pack.isEnabled();
 		Backpacks.setWorn(player, new ItemStack(Backpacks.BACKPACKS[0]));
 		LOG.info("[EW-GAMETEST] pantalla: cerrado {} {}, barra en y {}, espalda acepta mochila {} y tierra {}, mochila {}->{}, hueco 13 {}", locked.isEnabled(),
@@ -93,10 +94,10 @@ public class BackpackGameTests implements FabricGameTest {
 				&& back.canInsert(new ItemStack(Backpacks.BACKPACKS[1])) && !back.canInsert(new ItemStack(Items.DIRT)) && !before && pack.isEnabled()
 				&& !far.isEnabled() && !pack.canInsert(new ItemStack(Backpacks.BACKPACKS[2])), "Los huecos del inventario no están bien");
 		// mayúsculas + clic desde la barra: a la mochila
-		player.getInventory().setStack(0, new ItemStack(Items.DIRT, 16));
-		player.playerScreenHandler.quickMove(player, 36);
-		LOG.info("[EW-GAMETEST] mayúsculas: barra {}, mochila {}", player.getInventory().getStack(0), Backpacks.inventory(player).getStack(0));
-		check(player.getInventory().getStack(0).isEmpty() && Backpacks.inventory(player).getStack(0).isOf(Items.DIRT), "Mayúsculas + clic no lleva a la mochila");
+		player.getInventory().setStack(3, new ItemStack(Items.DIRT, 16));
+		player.playerScreenHandler.quickMove(player, 39);
+		LOG.info("[EW-GAMETEST] mayúsculas: barra {}, mochila {}", player.getInventory().getStack(3), Backpacks.inventory(player).getStack(0));
+		check(player.getInventory().getStack(3).isEmpty() && Backpacks.inventory(player).getStack(0).isOf(Items.DIRT), "Mayúsculas + clic no lleva a la mochila");
 		ctx.complete();
 	}
 
@@ -139,18 +140,83 @@ public class BackpackGameTests implements FabricGameTest {
 	}
 
 	@GameTest(templateName = EMPTY_STRUCTURE)
-	public void fullBackpackIsHeavy(TestContext ctx) {
+	public void heavySlotsSlowYouDown(TestContext ctx) {
 		ServerPlayerEntity player = survivor(ctx);
 		Backpacks.setWorn(player, new ItemStack(Backpacks.BACKPACKS[0]));
 		double light = player.getAttributeValue(EntityAttributes.GENERIC_MOVEMENT_SPEED);
-		for (int i = 0; i < 10; i++) {
-			Backpacks.inventory(player).insert(new ItemStack(Items.STONE, 64));
+		// los 8 primeros huecos (ligeros) llenos: no pesa
+		for (int i = 0; i < 8; i++) {
+			Backpacks.inventory(player).setStack(i, new ItemStack(Items.STONE, 64));
 		}
-		float fill = Backpacks.inventory(player).fill();
-		Backpacks.weigh(player, fill);
-		double heavy = player.getAttributeValue(EntityAttributes.GENERIC_MOVEMENT_SPEED);
-		LOG.info("[EW-GAMETEST] peso: lleno {}, velocidad {} -> {}", fill, light, heavy);
-		check(fill > 0.99F && heavy < light * 0.85, "Una mochila llena no pesa");
+		Backpacks.weigh(player, Backpacks.heavyUsed(player));
+		double still = player.getAttributeValue(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+		// los 2 últimos (carga pesada): cada uno un 4 %
+		Backpacks.inventory(player).setStack(8, new ItemStack(Items.STONE, 1));
+		Backpacks.inventory(player).setStack(9, new ItemStack(Items.STONE, 1));
+		int heavy = Backpacks.heavyUsed(player);
+		Backpacks.weigh(player, heavy);
+		double slow = player.getAttributeValue(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+		LOG.info("[EW-GAMETEST] carga pesada: huecos {} {} {} {} {}; velocidad {} -> {} -> {} ({} pesados)", Backpacks.heavySlots(10), Backpacks.heavySlots(18),
+				Backpacks.heavySlots(27), Backpacks.heavySlots(36), Backpacks.heavySlots(54), light, still, slow, heavy);
+		check(Math.abs(still - light) < 1e-6 && heavy == 2 && Math.abs(slow - light * 0.92) < 1e-4, "Los huecos de carga pesada no frenan");
+		ctx.complete();
+	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE)
+	public void loadoutSlots(TestContext ctx) {
+		ServerPlayerEntity player = survivor(ctx);
+		Backpacks.setWorn(player, new ItemStack(Backpacks.BACKPACKS[0]));
+		var inv = player.getInventory();
+		inv.insertStack(new ItemStack(Items.IRON_SWORD));
+		inv.insertStack(new ItemStack(Items.IRON_PICKAXE));
+		inv.insertStack(new ItemStack(Items.IRON_AXE));
+		inv.insertStack(new ItemStack(Items.DIRT, 10));
+		inv.insertStack(new ItemStack(Items.BREAD, 3));
+		inv.insertStack(new ItemStack(Items.DIAMOND_SWORD));
+		inv.insertStack(new ItemStack(com.evolvedwarfare.registry.ModItems.MUSKET));
+		boolean placed = inv.getStack(0).isOf(Items.IRON_SWORD) && inv.getStack(1).isOf(Items.IRON_PICKAXE) && inv.getStack(2).isOf(Items.IRON_AXE)
+				&& inv.getStack(3).isOf(Items.DIRT) && inv.getStack(4).isOf(Items.BREAD);
+		boolean spare = Backpacks.inventory(player).getStack(0).isOf(Items.DIAMOND_SWORD) && Backpacks.inventory(player).getStack(1).isOf(
+				com.evolvedwarfare.registry.ModItems.MUSKET);
+		var slots = player.playerScreenHandler.slots;
+		boolean rules = slots.get(36).canInsert(new ItemStack(Items.BOW)) && !slots.get(36).canInsert(new ItemStack(Items.DIRT))
+				&& slots.get(37).canInsert(new ItemStack(Items.SHEARS)) && !slots.get(37).canInsert(new ItemStack(Items.IRON_SWORD))
+				&& !slots.get(39).canInsert(new ItemStack(Items.IRON_SHOVEL)) && slots.get(40).canInsert(new ItemStack(Items.TORCH));
+		// algo fuera de su sitio (un comando, un atajo) se recoloca
+		inv.setStack(4, ItemStack.EMPTY);
+		inv.setStack(3, new ItemStack(Items.STONE_SHOVEL));
+		int fixed = com.evolvedwarfare.backpack.Loadout.fix(player);
+		com.evolvedwarfare.backpack.Loadout.show(player);
+		var shown = com.evolvedwarfare.backpack.Loadout.shown(player);
+		LOG.info("[EW-GAMETEST] la carga: en su sitio {}, de repuesto en la mochila {}, reglas {}, recolocados {}, a la vista {}", placed, spare, rules, fixed,
+				shown);
+		check(placed && spare && rules && fixed == 1 && inv.getStack(3).isEmpty() && shown.size() == 3 && shown.get(0).isOf(Items.IRON_SWORD),
+				"La carga (arma, herramientas, lo demás) no va");
+		ctx.complete();
+	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE)
+	public void sortAndClassify(TestContext ctx) {
+		var inv = new net.minecraft.inventory.SimpleInventory(9);
+		inv.setStack(0, new ItemStack(Items.DIRT, 10));
+		inv.setStack(2, new ItemStack(Items.APPLE, 2));
+		inv.setStack(3, new ItemStack(Items.DIRT, 60));
+		inv.setStack(5, new ItemStack(Items.IRON_SWORD));
+		inv.setStack(7, new ItemStack(Items.IRON_CHESTPLATE));
+		inv.setStack(8, new ItemStack(Items.IRON_PICKAXE));
+		List<Slot> slots = new java.util.ArrayList<>();
+		for (int i = 0; i < 9; i++) {
+			slots.add(new Slot(inv, i, 0, 0));
+		}
+		com.evolvedwarfare.backpack.Sorting.sortSlots(slots);
+		StringBuilder order = new StringBuilder();
+		for (int i = 0; i < 9; i++) {
+			order.append(inv.getStack(i).isEmpty() ? "-" : inv.getStack(i).getItem().toString() + "x" + inv.getStack(i).getCount()).append(' ');
+		}
+		LOG.info("[EW-GAMETEST] ordenar: {}", order);
+		check(inv.getStack(0).isOf(Items.IRON_SWORD) && inv.getStack(1).isOf(Items.IRON_PICKAXE) && inv.getStack(2).isOf(Items.IRON_CHESTPLATE)
+				&& inv.getStack(3).isOf(Items.APPLE) && inv.getStack(4).isOf(Items.DIRT) && inv.getStack(4).getCount() == 64 && inv.getStack(5).getCount() == 6
+				&& inv.getStack(6).isEmpty(), "Ordenar no clasifica bien");
 		ctx.complete();
 	}
 

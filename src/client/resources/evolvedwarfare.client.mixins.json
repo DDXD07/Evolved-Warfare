@@ -5,6 +5,7 @@
 	"client": [
 		"AbstractClientPlayerEntityMixin",
 		"InventoryScreenBackpackMixin",
+		"HandledScreenAccessor",
 		"InGameHudHotbarMixin",
 		"HandledScreenLockedCoverMixin",
 		"BackgroundRendererFogMixin",

@@ -66,6 +66,13 @@ public abstract class InGameHudHotbarMixin {
 				context.drawItemInSlot(client.textRenderer, s, x + 3 + i * 20, y + 3);
 			}
 		}
+		// los huecos de la carga vacíos: su icono (espada, pico, hacha), tenue
+		var atlas = client.getSpriteAtlas(net.minecraft.screen.PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
+		for (int i = 0; i < 3; i++) {
+			if (player.getInventory().getStack(i).isEmpty()) {
+				context.drawSprite(x + 3 + i * 20, y + 3, 0, 16, 16, atlas.apply(com.evolvedwarfare.backpack.Loadout.emptyIcon(i)), 1.0F, 1.0F, 1.0F, 0.45F);
+			}
+		}
 		if (!off.isEmpty()) {
 			int ox = leftArm ? x - 26 : x + w + 10;
 			context.drawItem(player, off, ox, y + 3, seed++);
@@ -81,6 +88,12 @@ public abstract class InGameHudHotbarMixin {
 			int color = fill > 0.75F ? 0xFFE04030 : fill > 0.45F ? 0xFFE0C040 : 0xFF50C050;
 			context.fill(ix + 2, y + 16, ix + 15, y + 18, 0xFF000000);
 			context.fill(ix + 2, y + 16, ix + 2 + bw, y + 17, color);
+			// la carga pesada: cuánto te frena
+			int heavy = Backpacks.heavyUsed(player);
+			if (heavy > 0) {
+				String t = "-" + Math.round(heavy * Backpacks.SLOW_PER_HEAVY * 100) + "%";
+				context.drawTextWithShadow(client.textRenderer, t, ix + 19, y + 8, 0xFFFF5040);
+			}
 		}
 		if (px < 0) {
 			return;

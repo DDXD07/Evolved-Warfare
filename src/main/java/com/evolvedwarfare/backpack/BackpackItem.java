@@ -85,6 +85,8 @@ public class BackpackItem extends Item {
 	@Override
 	public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
 		tooltip.add(Text.translatable("item.evolvedwarfare.backpack.slots", used(stack), slots()).formatted(Formatting.GOLD));
+		tooltip.add(Text.translatable("item.evolvedwarfare.backpack.heavy", Backpacks.heavySlots(slots()), (int) Math.round(Backpacks.SLOW_PER_HEAVY * 100))
+				.formatted(Formatting.RED));
 		tooltip.add(Text.translatable("item.evolvedwarfare.backpack.desc").formatted(Formatting.GRAY));
 	}
 

@@ -21,6 +21,12 @@ public final class Panels {
 		c.fill(x + w - 3, y + 3, x + w - 1, y + h - 1, DARK);
 	}
 
+	/** Marca un hueco de carga pesada (rojizo, con una franja abajo). */
+	public static void heavy(DrawContext c, int x, int y) {
+		c.fill(x + 1, y + 1, x + 17, y + 17, 0x40D02010);
+		c.fill(x + 1, y + 15, x + 17, y + 17, 0xA0B02010);
+	}
+
 	/** Un hueco de 18x18 (x, y: su esquina). */
 	public static void slot(DrawContext c, int x, int y) {
 		c.fill(x, y, x + 18, y + 18, 0xFF8B8B8B);

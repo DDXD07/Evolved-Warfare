@@ -31,7 +31,7 @@ public abstract class PlayerScreenHandlerBackpackMixin {
 	private void evolvedwarfare$backpackSlots(PlayerInventory inventory, boolean onServer, PlayerEntity owner, CallbackInfo ci) {
 		ScreenHandler self = (ScreenHandler) (Object) this;
 		for (int i = 0; i < Backpacks.HOTBAR; i++) {
-			Slot moved = new Slot(inventory, i, 44 + i * 18, Backpacks.HOTBAR_Y);
+			Slot moved = new com.evolvedwarfare.backpack.BackpackSlots.Role(inventory, i, 44 + i * 18, Backpacks.HOTBAR_Y);
 			moved.id = HOTBAR0 + i;
 			self.slots.set(HOTBAR0 + i, moved);
 		}
@@ -69,6 +69,8 @@ public abstract class PlayerScreenHandlerBackpackMixin {
 			ok = false;
 			if (stack.getItem() instanceof BackpackItem) {
 				ok = inv.evolvedwarfare$insertItem(stack, BACK, BACK + 1, false);
+			} else if (com.evolvedwarfare.backpack.Loadout.role(stack) != com.evolvedwarfare.backpack.Loadout.Role.OTHER) {
+				ok = false;
 			} else {
 				EquipmentSlot eq = player.getPreferredEquipmentSlot(stack);
 				if (eq.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
@@ -80,6 +82,7 @@ public abstract class PlayerScreenHandlerBackpackMixin {
 				ok = inv.evolvedwarfare$insertItem(stack, PACK0, packEnd, false);
 			}
 		} else if (index >= PACK0) {
+			// a su sitio de la barra (insertItem respeta lo que admite cada hueco)
 			ok = inv.evolvedwarfare$insertItem(stack, HOTBAR0, hotbarEnd, false);
 		} else {
 			// la mesa, la armadura, la mano izquierda, la espalda o lo que quede en los huecos cerrados

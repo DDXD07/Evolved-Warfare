@@ -2037,5 +2037,7 @@
   "item.evolvedwarfare.backpack_traveler": "Mochila de viajero (18)",
   "item.evolvedwarfare.backpack_explorer": "Mochila de explorador (27)",
   "item.evolvedwarfare.backpack_adventurer": "Mochila de aventurero (36)",
-  "item.evolvedwarfare.backpack_abyssal": "Mochila abisal (54)"
+  "item.evolvedwarfare.backpack_abyssal": "Mochila abisal (54)",
+  "item.evolvedwarfare.backpack.heavy": "Los %s últimos huecos son de carga pesada: cada uno ocupado te frena un %s %%",
+  "container.evolvedwarfare.sort": "Ordenar y clasificar"
 }

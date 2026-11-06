@@ -23,6 +23,9 @@ public class BackpackScreen extends HandledScreen<BackpackScreenHandler> {
 		for (Slot slot : handler.slots) {
 			if (slot.isEnabled()) {
 				Panels.slot(context, x + slot.x - 1, y + slot.y - 1);
+				if (slot instanceof com.evolvedwarfare.backpack.BackpackSlots.Pack p && p.heavy()) {
+					Panels.heavy(context, x + slot.x - 1, y + slot.y - 1);
+				}
 			}
 		}
 	}

@@ -10,6 +10,19 @@ public final class BackpackSlots {
 	private BackpackSlots() {
 	}
 
+	/** Un hueco de la barra con su papel en la carga (icono de hueco vacío: espada, pico, hacha). */
+	public static class Role extends Slot {
+		public Role(Inventory inventory, int index, int x, int y) {
+			super(inventory, index, x, y);
+		}
+
+		@Override
+		public com.mojang.datafixers.util.Pair<net.minecraft.util.Identifier, net.minecraft.util.Identifier> getBackgroundSprite() {
+			var icon = Loadout.emptyIcon(getIndex());
+			return icon == null ? null : com.mojang.datafixers.util.Pair.of(net.minecraft.screen.PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, icon);
+		}
+	}
+
 	/** El hueco de la espalda: solo mochilas. */
 	public static class Back extends Slot {
 		private final PlayerEntity player;
@@ -49,6 +62,11 @@ public final class BackpackSlots {
 
 		private int slots() {
 			return limit >= 0 ? limit : Backpacks.size(player);
+		}
+
+		/** ¿Es un hueco de carga pesada (de la mochila que llevas puesta)? */
+		public boolean heavy() {
+			return inventory instanceof BackpackInventory && Backpacks.isHeavy(getIndex(), slots());
 		}
 
 		@Override

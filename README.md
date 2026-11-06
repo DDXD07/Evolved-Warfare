@@ -1791,6 +1791,26 @@ como siempre. En creativo, todo como en vanilla.
 - En la barra (abajo) se ve la mochila que llevas con una barrita de lo llena que va. En los cofres y demás, los huecos
   cerrados se tapan; lo que quedara en ellos (de antes, o al pasar de creativo) va a la mochila o se cae al suelo.
 
+## Fase 39 — El inventario nuevo, parte 2: la carga (al estilo de Helldivers 2), la carga pesada y ordenar
+
+- **La carga**: en supervivencia, como en Helldivers 2, solo llevas **tres cosas de combate o trabajo** encima, cada una en
+  su sitio de la barra, y **solo desde ahí se usan**:
+  - **Hueco 1 — arma principal** (espadas, hachas, arcos, ballestas, tridentes, mazas, mosquetes, jabalinas, el báculo del
+    profeta...). Se ve **a la espalda** (en diagonal, por encima de la mochila si la llevas).
+  - **Huecos 2 y 3 — herramientas** (picos, palas, azadas, hachas, tijeras, cañas, mechero, cepillo, catalejo, el martillo
+    de forja). Se ven **colgando de la cadera derecha e izquierda**.
+  - **Huecos 4 y 5 — lo que quieras**, menos armas y herramientas.
+  - Las demás armas y herramientas puedes llevarlas **de repuesto en la mochila**, pero para usarlas tienes que ponerlas en
+    su hueco. Lo que recoges va solo a su sitio (y si está ocupado, a la mochila); lo que acabe fuera de su sitio (con un
+    comando, un atajo...) se recoloca. Los huecos vacíos de la carga muestran su icono (espada, pico, hacha).
+  - Lo que tienes en la mano no se dibuja dos veces: se ve en la mano, y el resto en la espalda y la cadera.
+- **Carga pesada** (como en 7 Days to Die): los **últimos huecos de cada mochila** (2, 3, 5, 7 y 10 según el tier) son de
+  carga pesada (en rojo): **cada uno ocupado te frena un 4 %** y correr gasta más hambre. En la barra y en el inventario se
+  ve cuánto te frena. (Sustituye al peso por lo llena que fuera la mochila.)
+- **Ordenar y clasificar**: un botón **⇅** en las mochilas (la del inventario, la de la tecla B y las del suelo), los
+  cofres, barriles y cajas de shulker: junta los montones iguales y ordena por armas, herramientas, armadura, comida,
+  bloques y lo demás. Lo ordenado va delante, así que los huecos de carga pesada se vacían si cabe todo en los ligeros.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

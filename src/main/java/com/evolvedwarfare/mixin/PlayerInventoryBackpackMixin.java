@@ -74,11 +74,11 @@ public abstract class PlayerInventoryBackpackMixin {
 				&& existing.getCount() < existing.getMaxCount();
 	}
 
-	/** Lo que no cabe en la barra va a la mochila. */
-	@Inject(method = "insertStack(ILnet/minecraft/item/ItemStack;)Z", at = @At("RETURN"), cancellable = true)
-	private void evolvedwarfare$toBackpack(int slot, ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
-		if (slot == -1 && !stack.isEmpty() && Backpacks.limited(player) && Backpacks.insert(player, stack)) {
-			cir.setReturnValue(stack.isEmpty() || cir.getReturnValueZ());
+	/** Lo que recoges va a su sitio de la barra (arma, herramientas, lo demás) y, si no cabe, a la mochila. */
+	@Inject(method = "insertStack(ILnet/minecraft/item/ItemStack;)Z", at = @At("HEAD"), cancellable = true)
+	private void evolvedwarfare$toLoadout(int slot, ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+		if (slot == -1 && !stack.isEmpty() && Backpacks.limited(player)) {
+			cir.setReturnValue(com.evolvedwarfare.backpack.Loadout.insert(player, stack));
 		}
 	}
 

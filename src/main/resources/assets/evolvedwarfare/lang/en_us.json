@@ -2037,5 +2037,7 @@
   "item.evolvedwarfare.backpack_traveler": "Traveler's Backpack (18)",
   "item.evolvedwarfare.backpack_explorer": "Explorer's Backpack (27)",
   "item.evolvedwarfare.backpack_adventurer": "Adventurer's Backpack (36)",
-  "item.evolvedwarfare.backpack_abyssal": "Abyssal Backpack (54)"
+  "item.evolvedwarfare.backpack_abyssal": "Abyssal Backpack (54)",
+  "item.evolvedwarfare.backpack.heavy": "The last %s slots are heavy load: each one used slows you by %s %%",
+  "container.evolvedwarfare.sort": "Sort and classify"
 }
