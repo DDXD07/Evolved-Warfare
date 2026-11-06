@@ -236,17 +236,15 @@ def point(biome, temperature, humidity, offset, c=LOW_C, e=LOW_E, w=LOW_W):
 
 DIMENSION = {"type": "minecraft:the_nether", "generator": {"type": "minecraft:noise", "settings": "minecraft:nether", "biome_source": {
     "type": "minecraft:multi_noise", "biomes": [
-        # los de siempre, más raros
-        point("minecraft:nether_wastes", 0.0, 0.0, 0.25),
-        point("minecraft:soul_sand_valley", 0.0, -0.6, 0.3),
-        point("minecraft:crimson_forest", 0.6, 0.2, 0.4),
-        point("minecraft:warped_forest", -0.2, 0.6, 0.45),
-        point("minecraft:basalt_deltas", -0.6, 0.2, 0.35),
-        # los bíblicos
-        point("%s:valley_of_bones" % NS, -0.4, -0.4, 0.0),
-        point("%s:sodom_ruins" % NS, 0.4, -0.4, 0.0),
-        point("%s:valley_of_bones" % NS, -0.3, 0.3, 0.05),
-        point("%s:sodom_ruins" % NS, 0.35, 0.35, 0.05),
+        # temperatura y humedad repartidas en casillas (así cada sitio cae en una sola): los de siempre, en lo húmedo
+        point("minecraft:basalt_deltas", [-1.0, -0.25], [0.1, 0.45], 0.0),
+        point("minecraft:nether_wastes", [-0.25, 0.25], [0.1, 0.45], 0.0),
+        point("minecraft:crimson_forest", [0.25, 1.0], [0.1, 0.45], 0.0),
+        point("minecraft:warped_forest", [-1.0, 0.0], [0.45, 1.0], 0.0),
+        point("minecraft:soul_sand_valley", [0.0, 1.0], [0.45, 1.0], 0.0),
+        # los bíblicos, en lo seco
+        point("%s:valley_of_bones" % NS, [-1.0, 0.0], [-1.0, 0.1], 0.0),
+        point("%s:sodom_ruins" % NS, [0.0, 1.0], [-1.0, 0.1], 0.0),
         point("%s:sulfur_mountains" % NS, ANY, ANY, 0.0, c=[0.5, 1.0], e=ANY, w=LOW_W),
         point("%s:lake_of_fire" % NS, ANY, ANY, 0.0, c=LOW_C, e=[0.45, 1.0], w=LOW_W),
         point("%s:abyss" % NS, ANY, ANY, 0.0, c=ANY, e=ANY, w=[0.56, 1.0]),

@@ -7,6 +7,33 @@
       "type": "minecraft:multi_noise",
       "biomes": [
         {
+          "biome": "minecraft:basalt_deltas",
+          "parameters": {
+            "continentalness": [
+              -1.0,
+              0.5
+            ],
+            "depth": 0.0,
+            "erosion": [
+              -1.0,
+              0.45
+            ],
+            "humidity": [
+              0.1,
+              0.45
+            ],
+            "offset": 0.0,
+            "temperature": [
+              -1.0,
+              -0.25
+            ],
+            "weirdness": [
+              -1.0,
+              0.56
+            ]
+          }
+        },
+        {
           "biome": "minecraft:nether_wastes",
           "parameters": {
             "continentalness": [
@@ -18,30 +45,15 @@
               -1.0,
               0.45
             ],
-            "humidity": 0.0,
-            "offset": 0.25,
-            "temperature": 0.0,
-            "weirdness": [
-              -1.0,
-              0.56
-            ]
-          }
-        },
-        {
-          "biome": "minecraft:soul_sand_valley",
-          "parameters": {
-            "continentalness": [
-              -1.0,
-              0.5
-            ],
-            "depth": 0.0,
-            "erosion": [
-              -1.0,
+            "humidity": [
+              0.1,
               0.45
             ],
-            "humidity": -0.6,
-            "offset": 0.3,
-            "temperature": 0.0,
+            "offset": 0.0,
+            "temperature": [
+              -0.25,
+              0.25
+            ],
             "weirdness": [
               -1.0,
               0.56
@@ -60,9 +72,15 @@
               -1.0,
               0.45
             ],
-            "humidity": 0.2,
-            "offset": 0.4,
-            "temperature": 0.6,
+            "humidity": [
+              0.1,
+              0.45
+            ],
+            "offset": 0.0,
+            "temperature": [
+              0.25,
+              1.0
+            ],
             "weirdness": [
               -1.0,
               0.56
@@ -81,9 +99,15 @@
               -1.0,
               0.45
             ],
-            "humidity": 0.6,
-            "offset": 0.45,
-            "temperature": -0.2,
+            "humidity": [
+              0.45,
+              1.0
+            ],
+            "offset": 0.0,
+            "temperature": [
+              -1.0,
+              0.0
+            ],
             "weirdness": [
               -1.0,
               0.56
@@ -91,7 +115,7 @@
           }
         },
         {
-          "biome": "minecraft:basalt_deltas",
+          "biome": "minecraft:soul_sand_valley",
           "parameters": {
             "continentalness": [
               -1.0,
@@ -102,9 +126,15 @@
               -1.0,
               0.45
             ],
-            "humidity": 0.2,
-            "offset": 0.35,
-            "temperature": -0.6,
+            "humidity": [
+              0.45,
+              1.0
+            ],
+            "offset": 0.0,
+            "temperature": [
+              0.0,
+              1.0
+            ],
             "weirdness": [
               -1.0,
               0.56
@@ -123,9 +153,15 @@
               -1.0,
               0.45
             ],
-            "humidity": -0.4,
+            "humidity": [
+              -1.0,
+              0.1
+            ],
             "offset": 0.0,
-            "temperature": -0.4,
+            "temperature": [
+              -1.0,
+              0.0
+            ],
             "weirdness": [
               -1.0,
               0.56
@@ -144,51 +180,15 @@
               -1.0,
               0.45
             ],
-            "humidity": -0.4,
+            "humidity": [
+              -1.0,
+              0.1
+            ],
             "offset": 0.0,
-            "temperature": 0.4,
-            "weirdness": [
-              -1.0,
-              0.56
-            ]
-          }
-        },
-        {
-          "biome": "evolvedwarfare:valley_of_bones",
-          "parameters": {
-            "continentalness": [
-              -1.0,
-              0.5
+            "temperature": [
+              0.0,
+              1.0
             ],
-            "depth": 0.0,
-            "erosion": [
-              -1.0,
-              0.45
-            ],
-            "humidity": 0.3,
-            "offset": 0.05,
-            "temperature": -0.3,
-            "weirdness": [
-              -1.0,
-              0.56
-            ]
-          }
-        },
-        {
-          "biome": "evolvedwarfare:sodom_ruins",
-          "parameters": {
-            "continentalness": [
-              -1.0,
-              0.5
-            ],
-            "depth": 0.0,
-            "erosion": [
-              -1.0,
-              0.45
-            ],
-            "humidity": 0.35,
-            "offset": 0.05,
-            "temperature": 0.35,
             "weirdness": [
               -1.0,
               0.56
