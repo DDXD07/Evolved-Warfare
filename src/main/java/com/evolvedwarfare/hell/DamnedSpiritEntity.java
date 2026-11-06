@@ -197,8 +197,8 @@ public class DamnedSpiritEntity extends DamnedBase {
 	}
 
 	@Override
-	protected void dropEquipment(DamageSource source, boolean causedByPlayer) {
-		super.dropEquipment(source, causedByPlayer);
+	protected void dropEquipment(ServerWorld world, DamageSource source, boolean causedByPlayer) {
+		super.dropEquipment(world, source, causedByPlayer);
 		dropStolen();
 	}
 
