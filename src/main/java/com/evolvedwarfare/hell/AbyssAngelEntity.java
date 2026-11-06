@@ -197,7 +197,7 @@ public class AbyssAngelEntity extends MiniBossEntity {
 	}
 
 	@Override
-	protected float getSoundPitch() {
+	public float getSoundPitch() {
 		return 0.6F;
 	}
 }

@@ -251,7 +251,7 @@ public class GreaterBeastEntity extends MiniBossEntity {
 	}
 
 	@Override
-	protected float getSoundPitch() {
+	public float getSoundPitch() {
 		return 0.5F;
 	}
 }

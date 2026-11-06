@@ -295,7 +295,7 @@ public class FalseProphetEntity extends MiniBossEntity {
 	}
 
 	@Override
-	protected float getSoundPitch() {
+	public float getSoundPitch() {
 		return 0.7F;
 	}
 }
