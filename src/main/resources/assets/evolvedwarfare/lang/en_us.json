@@ -2039,5 +2039,18 @@
   "item.evolvedwarfare.backpack_adventurer": "Adventurer's Backpack (36)",
   "item.evolvedwarfare.backpack_abyssal": "Abyssal Backpack (54)",
   "item.evolvedwarfare.backpack.heavy": "The last %s slots are heavy load: each one used slows you by %s %%",
-  "container.evolvedwarfare.sort": "Sort and classify"
+  "container.evolvedwarfare.sort": "Sort and classify",
+  "entity.evolvedwarfare.locomotive": "Steam Locomotive",
+  "entity.evolvedwarfare.flatcar": "Flatcar",
+  "item.evolvedwarfare.locomotive": "Steam Locomotive",
+  "item.evolvedwarfare.locomotive.desc": "Place it on a rail. Burns coal blocks; right click to board, W speeds up, S brakes, space whistles.",
+  "item.evolvedwarfare.flatcar": "Flatcar",
+  "item.evolvedwarfare.flatcar.desc": "Right click a locomotive (or a car of its train) to couple it behind. Build anything on it.",
+  "message.evolvedwarfare.train.dash": "%s km/h · throttle %s %% · coal: %s blocks",
+  "message.evolvedwarfare.train.fuel": "Coal: %s blocks",
+  "message.evolvedwarfare.train.full": "The coal bunker is full",
+  "message.evolvedwarfare.train.no_room": "No room for another flatcar (short track, moving train or 12 max)",
+  "message.evolvedwarfare.train.not_empty": "Empty the flatcar before uncoupling it",
+  "message.evolvedwarfare.train.couple_hint": "Couple the flatcar to a locomotive (right click it)",
+  "message.evolvedwarfare.train.not_buildable": "That cannot go on the train (chests, doors, beds, liquids...)"
 }

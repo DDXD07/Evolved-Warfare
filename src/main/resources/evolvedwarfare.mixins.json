@@ -5,6 +5,9 @@
 	"mixins": [
 		"BiomeSeasonMixin",
 		"ScreenHandlerInvoker",
+		"EntityTrainCollisionMixin",
+		"ServerPlayNetworkHandlerTrainMixin",
+		"LivingEntityJumpingAccessor",
 		"PlayerScreenHandlerBackpackMixin",
 		"SlotLockMixin",
 		"PlayerInventoryBackpackMixin",

@@ -1824,6 +1824,29 @@ como siempre. En creativo, todo como en vanilla.
   con las dos manos, la subes y **te la echas a la espalda**. Clic normal la abre, como antes.
 - Mientras dejas o recoges la mochila las manos están ocupadas (no se ve lo que llevas en ellas).
 
+## Fase 41 — El tren de vapor
+
+- **Locomotora de vapor** (12 de largo): ponla en una vía (las de siempre: normales, propulsoras, detectoras o activadoras;
+  rectas, curvas y cuestas). Tiene bastidor, cuatro ruedas motrices por lado con sus bielas (giran al andar), caldera con
+  aros de latón, chimenea que echa humo, farol, quitapiedras, cabina con techo y carbonera.
+  - **Funciona con bloques de carbón**: clic derecho con uno (agachado, el montón entero; caben 64). Cada bloque da unos
+    2 minutos a toda marcha; parada no gasta.
+  - **Conducir**: clic derecho con la mano vacía para subir a la cabina. **W** abre el regulador (acelera), **S** lo cierra
+    (frena y, parada, marcha atrás), **espacio** el silbato, agacharse para bajar. En la barra se ve la velocidad, el
+    regulador y el carbón que queda. Hasta unos 43 km/h hacia delante y 18 marcha atrás; frena más fuerte que acelera.
+  - Mantiene cargados los chunks por donde va mientras anda.
+- **Plataformas** (5 x 9,5): clic derecho con una en la locomotora (o en cualquier vagón de su tren) para engancharla
+  detrás (hasta 12). **Construye encima lo que quieras, hasta 8 de alto**: clic derecho con un bloque para ponerlo (mira
+  hacia ti; losas y escaleras arriba o abajo según dónde apuntes) y clic izquierdo para quitarlo (te lo devuelve), **incluso
+  con el tren en marcha**. Lo construido choca, se pisa y viaja con el tren. (No valen bloques con inventario o de dos
+  partes: cofres, hornos, puertas, camas... ni líquidos.)
+- **Lo de encima viaja con el tren**: jugadores, criaturas y soportes que estén sobre una plataforma (o sobre la
+  locomotora) se mueven y giran con ella, sin caerse, y no te echan del servidor por "volar".
+- **Desenganchar**: agachado y con la mano vacía en el tren parado: se suelta la última plataforma (si está vacía) y te la
+  devuelve; sin plataformas, se recoge la locomotora (con el carbón que le quede).
+- Recetas: locomotora (bloque de hierro, cristal, bloque de hierro / horno, alto horno, horno / 3 vagonetas); plataforma
+  (3 losas de madera / lingote de hierro, vagoneta, lingote de hierro).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -1847,6 +1870,7 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
 - `ew_apocalypse.py` — el Apocalipsis (fase 4 del Nether bíblico): los modelos del Ángel del Abismo, el Falso Profeta y la Bestia mayor (con las siete cabezas que se le caen), su botín, los fragmentos de sello y los objetos de los jefes, el círculo de ritual, los iconos de los efectos y los textos.
 - `ew_hellflora.py` — el Nether vivo (fase 37): los bloques de la flora infernal (texturas, modelos, botín, etiquetas y recetas), los árboles y matas, las lianas del techo y las cascadas de lava, la fauna (polillas, ciervos y sapos) y los textos. El techo de roca y los biomas están en `ew_hell.py`.
 - `ew_backpacks.py` — las cinco mochilas (fase 38): sus modelos 3D (más grandes por tier), texturas (cuero para teñir, correas y herrajes), recetas de la mesa y de la herrería, la etiqueta de tintes y los textos.
+- `ew_trains.py` — el tren de vapor (fase 41): los modelos de la locomotora y la plataforma (a media escala, con ruedas y bielas), sus texturas e iconos, las recetas y los textos.
 - `ew_inferno.py` — el Nether bíblico (fase 1): los bloques nuevos (sal, polvo de hueso, grietas, cristales de azufre...), las decoraciones de los biomas, las maldiciones, las visiones y sus textos. El terreno y los biomas siguen en `ew_hell.py`.
 - `ew_casting.py` — la fundición: modelos y texturas del crisol y del molde, sus recetas, etiquetas y textos.
 - `ew_smithbook.py` — el Manual del Herrero: su icono, el grabado de la forja (con los modelos 3D) y los textos del libro.

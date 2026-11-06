@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "transportation",
+  "pattern": [
+    "IGI",
+    "FBF",
+    "MMM"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_block"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    },
+    "F": {
+      "item": "minecraft:furnace"
+    },
+    "B": {
+      "item": "minecraft:blast_furnace"
+    },
+    "M": {
+      "item": "minecraft:minecart"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:locomotive",
+    "count": 1
+  }
+}

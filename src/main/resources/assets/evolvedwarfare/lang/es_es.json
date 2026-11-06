@@ -2039,5 +2039,18 @@
   "item.evolvedwarfare.backpack_adventurer": "Mochila de aventurero (36)",
   "item.evolvedwarfare.backpack_abyssal": "Mochila abisal (54)",
   "item.evolvedwarfare.backpack.heavy": "Los %s últimos huecos son de carga pesada: cada uno ocupado te frena un %s %%",
-  "container.evolvedwarfare.sort": "Ordenar y clasificar"
+  "container.evolvedwarfare.sort": "Ordenar y clasificar",
+  "entity.evolvedwarfare.locomotive": "Locomotora de vapor",
+  "entity.evolvedwarfare.flatcar": "Plataforma",
+  "item.evolvedwarfare.locomotive": "Locomotora de vapor",
+  "item.evolvedwarfare.locomotive.desc": "Ponla en una vía. Quema bloques de carbón; súbete con clic derecho, W acelera, S frena, espacio silba.",
+  "item.evolvedwarfare.flatcar": "Plataforma",
+  "item.evolvedwarfare.flatcar.desc": "Clic derecho en una locomotora (o en un vagón de su tren) para engancharla detrás. Construye encima lo que quieras.",
+  "message.evolvedwarfare.train.dash": "%s km/h · regulador %s %% · carbón: %s bloques",
+  "message.evolvedwarfare.train.fuel": "Carbón: %s bloques",
+  "message.evolvedwarfare.train.full": "La carbonera está llena",
+  "message.evolvedwarfare.train.no_room": "No cabe otra plataforma (vía corta, tren en marcha o máximo de 12)",
+  "message.evolvedwarfare.train.not_empty": "Vacía la plataforma antes de desengancharla",
+  "message.evolvedwarfare.train.couple_hint": "Engancha la plataforma a una locomotora (clic derecho en ella)",
+  "message.evolvedwarfare.train.not_buildable": "Eso no se puede poner en el tren (cofres, puertas, camas, líquidos...)"
 }
