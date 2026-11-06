@@ -244,7 +244,7 @@ def features():
     vines = {"type": "minecraft:attached_to_leaves", "probability": 0.35, "exclusion_radius_xz": 0, "exclusion_radius_y": 0,
              "required_empty_blocks": 2, "block_provider": simple(state("ember_vine")), "directions": ["down"]}
     cf["thorn_giant"] = tree({"type": "minecraft:giant_trunk_placer", "base_height": 13, "height_rand_a": 6, "height_rand_b": 5},
-                             {"type": "minecraft:mega_jungle_foliage_placer", "radius": 2, "offset": 0, "height": 2}, two_layers(1, 1, 2),
+                             {"type": "minecraft:jungle_foliage_placer", "radius": 2, "offset": 0, "height": 2}, two_layers(1, 1, 2),
                              leaves="thorn_leaves", decorators=[vines])
     cf["gallows_tree"] = {"type": n("gallows_tree"), "config": {}}
     cf["ceiling_vines"] = {"type": n("ceiling_vines"), "config": {}}

@@ -42,7 +42,7 @@
       "height_rand_b": 5
     },
     "foliage_placer": {
-      "type": "minecraft:mega_jungle_foliage_placer",
+      "type": "minecraft:jungle_foliage_placer",
       "radius": 2,
       "offset": 0,
       "height": 2
