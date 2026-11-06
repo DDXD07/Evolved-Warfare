@@ -305,9 +305,22 @@ public final class HellFlora {
 			for (int y = 0; y < h; y++) {
 				world.setBlockState(origin.up(y), CHARRED_LOG.getDefaultState(), Block.NOTIFY_LISTENERS);
 			}
-			Direction dir = Direction.Type.HORIZONTAL.random(random);
 			int len = 2 + random.nextInt(2);
 			BlockPos branch = origin.up(h - 1);
+			// la rama, hacia donde haya sitio para ella y para la cuerda
+			Direction dir = Direction.Type.HORIZONTAL.random(random);
+			for (int t = 0; t < 4; t++) {
+				Direction d = Direction.fromHorizontal((dir.getHorizontal() + t) % 4);
+				boolean free = true;
+				for (int k = 1; k <= len && free; k++) {
+					free = world.getBlockState(branch.offset(d, k)).isAir();
+				}
+				free = free && world.getBlockState(branch.offset(d, len).down()).isAir() && world.getBlockState(branch.offset(d, len).down(2)).isAir();
+				if (free) {
+					dir = d;
+					break;
+				}
+			}
 			for (int k = 1; k <= len; k++) {
 				BlockPos p = branch.offset(dir, k);
 				if (world.getBlockState(p).isAir()) {
