@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "evolvedwarfare:backpack_basic",
+    "evolvedwarfare:backpack_traveler",
+    "evolvedwarfare:backpack_explorer",
+    "evolvedwarfare:backpack_adventurer",
+    "evolvedwarfare:backpack_abyssal"
+  ]
+}

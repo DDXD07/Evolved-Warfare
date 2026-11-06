@@ -32,6 +32,7 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		ModModelLayers.init();
+		com.evolvedwarfare.client.backpack.BackpackClient.register();
 		EntityRendererRegistry.register(ModEntities.RECRUIT, RecruitRenderer::new);
 		EntityRendererRegistry.register(ModEntities.SOLDIER, RecruitRenderer::new);
 		EntityRendererRegistry.register(ModEntities.CITY_GUARD, RecruitRenderer::new);

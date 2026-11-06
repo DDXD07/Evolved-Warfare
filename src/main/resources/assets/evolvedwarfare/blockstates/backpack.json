@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "evolvedwarfare:block/backpack"
+    },
+    "facing=south": {
+      "model": "evolvedwarfare:block/backpack"
+    },
+    "facing=east": {
+      "model": "evolvedwarfare:block/backpack"
+    },
+    "facing=west": {
+      "model": "evolvedwarfare:block/backpack"
+    }
+  }
+}

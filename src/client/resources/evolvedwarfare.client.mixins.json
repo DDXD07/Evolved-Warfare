@@ -4,6 +4,9 @@
 	"compatibilityLevel": "JAVA_21",
 	"client": [
 		"AbstractClientPlayerEntityMixin",
+		"InventoryScreenBackpackMixin",
+		"InGameHudHotbarMixin",
+		"HandledScreenLockedCoverMixin",
 		"BackgroundRendererFogMixin",
 		"GameRendererHeatMixin",
 		"ArmorFeatureDismemberMixin",

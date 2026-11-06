@@ -1766,6 +1766,31 @@ daño cualquier arma, pero las de **Bendición Divina** les hacen la mitad más.
   hierba y helecho de brasa, flor infernal (tinte naranja), lirio cadáver (tinte gris claro), sangrecasco, zarza de
   espinas y liana de brasas (se trepa).
 
+## Fase 38 — El inventario nuevo, parte 1: 5 huecos y las mochilas
+
+En supervivencia (y aventura) el jugador ya no tiene 36 huecos: solo **5**, que son la **barra rápida** (teclas 1-5 y la
+rueda dan la vuelta en 5). Todo lo demás se lleva en la **mochila**. La armadura, la mano izquierda y la mesa 2x2 siguen
+como siempre. En creativo, todo como en vanilla.
+
+- **Cinco mochilas**: **básica (10 huecos)**, **de viajero (18)**, **de explorador (27)**, **de aventurero (36)** y **abisal
+  (54)**, cada una más grande (bolsas a los lados, saco de dormir, farolillo) y con correas y herrajes de su material.
+  - La básica: 7 de cuero y 2 de cuerda en la mesa (cuerda, cuero, cuerda / cuero, nada, cuero / cuero x3).
+  - Las demás se **mejoran en la mesa de herrería** desde la anterior, **sin perder nada de lo de dentro**: cuero +
+    hierro, cuero + oro, cuero + diamante, y plantilla de netherite + lingote de netherite.
+- **Hueco de la espalda**: en el inventario, entre el personaje y la mesa. Pon ahí la mochila (o clic derecho con ella)
+  y debajo de la barra aparecen sus huecos (tantas filas como tenga; la pantalla crece o encoge). Se ve **a la espalda**
+  de los jugadores.
+- **Lo que recoges** va a la barra y, si está llena, **directo a la mochila**. Mayúsculas + clic reparte entre barra,
+  mochila, armadura y espalda.
+- **Tecla B**: abre solo la mochila (con tu barra debajo).
+- **En el suelo**: agachado + clic derecho con ella sobre un bloque la dejas como un **cofre** (otros también pueden
+  abrirla); al romperla vuelve a ser la mochila con todo dentro.
+- **Al morir** la mochila **cae entera**, con todo dentro (salvo con conservar el inventario).
+- **Peso**: una mochila muy llena **te frena** (hasta un 20 %) y correr gasta más hambre.
+- **Se tiñen** como la armadura de cuero.
+- En la barra (abajo) se ve la mochila que llevas con una barrita de lo llena que va. En los cofres y demás, los huecos
+  cerrados se tapan; lo que quedara en ellos (de antes, o al pasar de creativo) va a la mochila o se cae al suelo.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -1788,6 +1813,7 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
 - `ew_hellstructs.py` — las estructuras del Nether bíblico (fase 3): las plantillas (Babel, templos, pilares de sal, cementerios, el trono del lago, las cámaras del Abismo, las minas y Sodoma), sus estructuras y dónde salen, los bloques nuevos, el botín con los libros de saber y los textos. Los añadidos de la Fortaleza del Abaddon están en `ew_citadel.py`.
 - `ew_apocalypse.py` — el Apocalipsis (fase 4 del Nether bíblico): los modelos del Ángel del Abismo, el Falso Profeta y la Bestia mayor (con las siete cabezas que se le caen), su botín, los fragmentos de sello y los objetos de los jefes, el círculo de ritual, los iconos de los efectos y los textos.
 - `ew_hellflora.py` — el Nether vivo (fase 37): los bloques de la flora infernal (texturas, modelos, botín, etiquetas y recetas), los árboles y matas, las lianas del techo y las cascadas de lava, la fauna (polillas, ciervos y sapos) y los textos. El techo de roca y los biomas están en `ew_hell.py`.
+- `ew_backpacks.py` — las cinco mochilas (fase 38): sus modelos 3D (más grandes por tier), texturas (cuero para teñir, correas y herrajes), recetas de la mesa y de la herrería, la etiqueta de tintes y los textos.
 - `ew_inferno.py` — el Nether bíblico (fase 1): los bloques nuevos (sal, polvo de hueso, grietas, cristales de azufre...), las decoraciones de los biomas, las maldiciones, las visiones y sus textos. El terreno y los biomas siguen en `ew_hell.py`.
 - `ew_casting.py` — la fundición: modelos y texturas del crisol y del molde, sus recetas, etiquetas y textos.
 - `ew_smithbook.py` — el Manual del Herrero: su icono, el grabado de la forja (con los modelos 3D) y los textos del libro.

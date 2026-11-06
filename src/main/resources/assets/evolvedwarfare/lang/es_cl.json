@@ -2023,5 +2023,19 @@
   "entity.evolvedwarfare.ash_stag": "Ciervo de ceniza",
   "item.evolvedwarfare.ash_stag_spawn_egg": "Huevo de ciervo de ceniza",
   "entity.evolvedwarfare.lava_toad": "Sapo de lava",
-  "item.evolvedwarfare.lava_toad_spawn_egg": "Huevo de sapo de lava"
+  "item.evolvedwarfare.lava_toad_spawn_egg": "Huevo de sapo de lava",
+  "item.evolvedwarfare.backpack.slots": "Lleva %s de %s huecos",
+  "item.evolvedwarfare.backpack.desc": "Clic derecho: a la espalda. Agachado sobre el suelo: la dejas como un cofre. Se tiñe.",
+  "block.evolvedwarfare.backpack": "Mochila",
+  "container.evolvedwarfare.backpack": "%s (%s/%s)",
+  "container.evolvedwarfare.backpack_slot": "Mochila (ponla en el hueco de la espalda)",
+  "container.evolvedwarfare.no_backpack": "Sin mochila: solo llevas 5 huecos",
+  "container.evolvedwarfare.hotbar": "Barra rápida (%s)",
+  "message.evolvedwarfare.backpack.none": "No llevas mochila",
+  "key.evolvedwarfare.backpack": "Abrir la mochila",
+  "item.evolvedwarfare.backpack_basic": "Mochila básica (10)",
+  "item.evolvedwarfare.backpack_traveler": "Mochila de viajero (18)",
+  "item.evolvedwarfare.backpack_explorer": "Mochila de explorador (27)",
+  "item.evolvedwarfare.backpack_adventurer": "Mochila de aventurero (36)",
+  "item.evolvedwarfare.backpack_abyssal": "Mochila abisal (54)"
 }

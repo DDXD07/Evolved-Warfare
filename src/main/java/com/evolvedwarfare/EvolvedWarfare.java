@@ -56,6 +56,7 @@ public class EvolvedWarfare implements ModInitializer {
 		ModBlocks.init();
 		ModEntities.init();
 		ModItems.init();
+		com.evolvedwarfare.backpack.Backpacks.register();
 		ModScreens.init();
 		ModNetworking.init();
 		ModStructures.init();

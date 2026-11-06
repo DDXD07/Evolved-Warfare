@@ -2023,5 +2023,19 @@
   "entity.evolvedwarfare.ash_stag": "Ash Stag",
   "item.evolvedwarfare.ash_stag_spawn_egg": "Ash Stag Spawn Egg",
   "entity.evolvedwarfare.lava_toad": "Lava Toad",
-  "item.evolvedwarfare.lava_toad_spawn_egg": "Lava Toad Spawn Egg"
+  "item.evolvedwarfare.lava_toad_spawn_egg": "Lava Toad Spawn Egg",
+  "item.evolvedwarfare.backpack.slots": "Holds %s of %s slots",
+  "item.evolvedwarfare.backpack.desc": "Right click: put it on. Sneak on the ground: place it like a chest. Dyeable.",
+  "block.evolvedwarfare.backpack": "Backpack",
+  "container.evolvedwarfare.backpack": "%s (%s/%s)",
+  "container.evolvedwarfare.backpack_slot": "Backpack (put it in the back slot)",
+  "container.evolvedwarfare.no_backpack": "No backpack: you only carry 5 slots",
+  "container.evolvedwarfare.hotbar": "Hotbar (%s)",
+  "message.evolvedwarfare.backpack.none": "You are not wearing a backpack",
+  "key.evolvedwarfare.backpack": "Open backpack",
+  "item.evolvedwarfare.backpack_basic": "Basic Backpack (10)",
+  "item.evolvedwarfare.backpack_traveler": "Traveler's Backpack (18)",
+  "item.evolvedwarfare.backpack_explorer": "Explorer's Backpack (27)",
+  "item.evolvedwarfare.backpack_adventurer": "Adventurer's Backpack (36)",
+  "item.evolvedwarfare.backpack_abyssal": "Abyssal Backpack (54)"
 }

@@ -4,6 +4,12 @@
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"BiomeSeasonMixin",
+		"ScreenHandlerInvoker",
+		"PlayerScreenHandlerBackpackMixin",
+		"SlotLockMixin",
+		"PlayerInventoryBackpackMixin",
+		"ScreenHandlerSwapMixin",
+		"PlayerEntityBackpackDropMixin",
 		"CraftingScreenHandlerMixin",
 		"FishingBobberMinigameMixin",
 		"FlowableFluidMixin",

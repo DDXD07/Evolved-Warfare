@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": {
+    "item": "minecraft:leather"
+  },
+  "base": {
+    "item": "evolvedwarfare:backpack_basic"
+  },
+  "addition": {
+    "item": "minecraft:iron_ingot"
+  },
+  "result": {
+    "id": "evolvedwarfare:backpack_traveler",
+    "count": 1
+  }
+}
