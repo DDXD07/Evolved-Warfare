@@ -18,7 +18,8 @@ import net.minecraft.world.World;
  * coordenadas (x a lo ancho, y hacia arriba desde su base, z hacia delante), con lo que chocan y sobre lo que andan
  * jugadores y criaturas, y lo que lleva encima, que se mueve (y gira) con él para que nada se caiga.
  *
- * Para chocar se usa el giro redondeado a 90° (las vías van rectas casi siempre; en las curvas se nota poco).
+ * Para chocar se usa el giro de verdad (también en las curvas): cada pieza (de un bloque como mucho) se convierte en la
+ * caja del mundo que la envuelve.
  */
 public abstract class TrainCarEntity extends Entity {
 	/** Lo que han girado las ruedas (para dibujarlas, en el cliente). */
@@ -75,22 +76,50 @@ public abstract class TrainCarEntity extends Entity {
 	}
 
 	public Vec3d toWorld(double x, double y, double z) {
-		return toWorld(getPos(), snap(getYaw()), x, y, z);
+		return toWorld(getPos(), getYaw(), x, y, z);
 	}
 
 	public Vec3d toLocal(Vec3d world) {
-		return toLocal(getPos(), snap(getYaw()), world);
+		return toLocal(getPos(), getYaw(), world);
 	}
 
-	/** Las cajas macizas en el mundo (con el giro redondeado). */
+	/** Parte una caja grande en piezas de un bloque como mucho (para que al girarla no crezca). */
+	public static List<Box> split(Box b) {
+		List<Box> out = new ArrayList<>();
+		int nx = Math.max(1, (int) Math.ceil(b.getLengthX() - 1e-6)), nz = Math.max(1, (int) Math.ceil(b.getLengthZ() - 1e-6));
+		double sx = b.getLengthX() / nx, sz = b.getLengthZ() / nz;
+		for (int i = 0; i < nx; i++) {
+			for (int k = 0; k < nz; k++) {
+				out.add(new Box(b.minX + i * sx, b.minY, b.minZ + k * sz, b.minX + (i + 1) * sx, b.maxY, b.minZ + (k + 1) * sz));
+			}
+		}
+		return out;
+	}
+
+	/** La caja del mundo que envuelve una caja del coche girada. */
+	public static Box rotated(Vec3d origin, float yaw, Box b) {
+		double minX = Double.MAX_VALUE, minZ = Double.MAX_VALUE, maxX = -Double.MAX_VALUE, maxZ = -Double.MAX_VALUE;
+		for (double x : new double[] {b.minX, b.maxX}) {
+			for (double z : new double[] {b.minZ, b.maxZ}) {
+				Vec3d w = toWorld(origin, yaw, x, 0, z);
+				minX = Math.min(minX, w.x);
+				maxX = Math.max(maxX, w.x);
+				minZ = Math.min(minZ, w.z);
+				maxZ = Math.max(maxZ, w.z);
+			}
+		}
+		// en las curvas la caja que envuelve crece un poco: se encoge lo que ha crecido para que no estorbe de más
+		double grow = (maxX - minX + maxZ - minZ - b.getLengthX() - b.getLengthZ()) * 0.25;
+		return new Box(minX + grow * 0.5, origin.y + b.minY, minZ + grow * 0.5, maxX - grow * 0.5, origin.y + b.maxY, maxZ - grow * 0.5);
+	}
+
+	/** Las cajas macizas en el mundo (con el giro de verdad). */
 	public List<Box> worldBoxes() {
-		float yaw = snap(getYaw());
+		float yaw = getYaw();
 		if (!getPos().equals(boxesPos) || yaw != boxesYaw || boxesVersion != boxesVersion()) {
 			List<Box> out = new ArrayList<>();
 			for (Box b : localBoxes()) {
-				Vec3d a = toWorld(getPos(), yaw, b.minX, b.minY, b.minZ);
-				Vec3d c = toWorld(getPos(), yaw, b.maxX, b.maxY, b.maxZ);
-				out.add(new Box(a, c));
+				out.add(rotated(getPos(), yaw, b));
 			}
 			worldBoxes = out;
 			boxesPos = getPos();
@@ -98,6 +127,37 @@ public abstract class TrainCarEntity extends Entity {
 			boxesVersion = boxesVersion();
 		}
 		return worldBoxes;
+	}
+
+	/** Lo que se puede apuntar en coordenadas del coche (por defecto, lo macizo). */
+	protected List<Box> localTargets() {
+		return localBoxes();
+	}
+
+	/**
+	 * Dónde da un rayo (del ojo al alcance) en el coche: el punto más cercano de lo que se puede apuntar, o null. Así se
+	 * apunta al tren solo donde hay tren, y lo de alrededor (y detrás) se puede picar y usar.
+	 */
+	@org.jetbrains.annotations.Nullable
+	public Vec3d raycast(Vec3d from, Vec3d to) {
+		Vec3d lf = toLocal(from), lt = toLocal(to);
+		Vec3d best = null;
+		double bestD = Double.MAX_VALUE;
+		for (Box b : localTargets()) {
+			Box e = b.expand(0.02);
+			if (e.contains(lf)) {
+				return from;
+			}
+			var hit = e.raycast(lf, lt);
+			if (hit.isPresent()) {
+				double d = hit.get().squaredDistanceTo(lf);
+				if (d < bestD) {
+					bestD = d;
+					best = hit.get();
+				}
+			}
+		}
+		return best == null ? null : toWorld(best.x, best.y, best.z);
 	}
 
 	/** Lo que choca dentro de esa caja (para la física de jugadores y criaturas). */
@@ -125,11 +185,19 @@ public abstract class TrainCarEntity extends Entity {
 
 	@Override
 	protected Box calculateBoundingBox() {
-		float yaw = snap(getYaw());
-		boolean turned = Math.abs(MathHelper.wrapDegrees(yaw)) % 180.0F > 45.0F;
-		double hx = turned ? halfLength() : halfWidth(), hz = turned ? halfWidth() : halfLength();
+		Box local = new Box(-halfWidth(), 0, -halfLength(), halfWidth(), height(), halfLength());
 		Vec3d p = getPos();
-		return new Box(p.x - hx, p.y, p.z - hz, p.x + hx, p.y + height(), p.z + hz);
+		double minX = Double.MAX_VALUE, minZ = Double.MAX_VALUE, maxX = -Double.MAX_VALUE, maxZ = -Double.MAX_VALUE;
+		for (double x : new double[] {local.minX, local.maxX}) {
+			for (double z : new double[] {local.minZ, local.maxZ}) {
+				Vec3d w = toWorld(p, getYaw(), x, 0, z);
+				minX = Math.min(minX, w.x);
+				maxX = Math.max(maxX, w.x);
+				minZ = Math.min(minZ, w.z);
+				maxZ = Math.max(maxZ, w.z);
+			}
+		}
+		return new Box(minX, p.y, minZ, maxX, p.y + height(), maxZ);
 	}
 
 	/** Lo pone en su sitio (en la vía) y se lleva lo de encima. */

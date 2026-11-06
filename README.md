@@ -1847,6 +1847,20 @@ como siempre. En creativo, todo como en vanilla.
 - Recetas: locomotora (bloque de hierro, cristal, bloque de hierro / horno, alto horno, horno / 3 vagonetas); plataforma
   (3 losas de madera / lingote de hierro, vagoneta, lingote de hierro).
 
+## Fase 42 — El tren sin límites
+
+Lo que antes no se podía hacer en las plataformas, ahora sí:
+
+- **Bloques con inventario**: cofres, barriles, cajas de shulker, dispensadores, soltadores y tolvas guardan lo suyo en el vagón (se guarda con el mundo). Al quitarlos sueltan lo de dentro; la caja de shulker se lleva su contenido, como siempre, y una caja llena puesta en el tren conserva lo que llevaba.
+- **Hornos, ahumadores y altos hornos** que cuecen de verdad mientras el tren va (y se encienden y apagan).
+- **Mesas**: de crafteo, herrería, encantar, yunque, piedra de afilar, cortapiedras, telar y cartografía; y el cofre de ender.
+- **Bloques de dos partes**: puertas (se abren y cierran las dos mitades), camas (pie y cabecera), plantas altas. Trampillas, puertas de valla y palancas también se usan.
+- **Agua y lava** con cubo (se ven en el vagón) y se recogen con el cubo vacío.
+- **Choques en las curvas con el giro real**: cada pieza (de un bloque como mucho) se gira de verdad en vez de redondearse a 90°.
+- **Apuntar con precisión**: el tren solo se apunta donde hay tren (la plataforma y lo construido), así que se puede picar, poner y usar lo del mundo que hay alrededor y detrás.
+- **Desvíos**: las vías se leen en cada momento, así que un cruce en T de vanilla con redstone cambia el camino del tren como el de una vagoneta.
+- Los cofres, camas, cajas de shulker y carteles se dibujan con su modelo animado.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

@@ -109,6 +109,7 @@ TEXTS = {
     "message.evolvedwarfare.train.no_room": ("No cabe otra plataforma (vía corta, tren en marcha o máximo de 12)",
                                              "No room for another flatcar (short track, moving train or 12 max)"),
     "message.evolvedwarfare.train.not_empty": ("Vacía la plataforma antes de desengancharla", "Empty the flatcar before uncoupling it"),
+    "message.evolvedwarfare.train.no_sleep": ("No se puede dormir en un tren en marcha", "You can't sleep on a moving train"),
     "message.evolvedwarfare.train.couple_hint": ("Engancha la plataforma a una locomotora (clic derecho en ella)", "Couple the flatcar to a locomotive (right click it)"),
     "message.evolvedwarfare.train.not_buildable": ("Eso no se puede poner en el tren (cofres, puertas, camas, líquidos...)",
                                                    "That cannot go on the train (chests, doors, beds, liquids...)"),

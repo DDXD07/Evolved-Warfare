@@ -2052,5 +2052,6 @@
   "message.evolvedwarfare.train.no_room": "No cabe otra plataforma (vía corta, tren en marcha o máximo de 12)",
   "message.evolvedwarfare.train.not_empty": "Vacía la plataforma antes de desengancharla",
   "message.evolvedwarfare.train.couple_hint": "Engancha la plataforma a una locomotora (clic derecho en ella)",
-  "message.evolvedwarfare.train.not_buildable": "Eso no se puede poner en el tren (cofres, puertas, camas, líquidos...)"
+  "message.evolvedwarfare.train.not_buildable": "Eso no se puede poner en el tren (cofres, puertas, camas, líquidos...)",
+  "message.evolvedwarfare.train.no_sleep": "No se puede dormir en un tren en marcha"
 }

@@ -2052,5 +2052,6 @@
   "message.evolvedwarfare.train.no_room": "No room for another flatcar (short track, moving train or 12 max)",
   "message.evolvedwarfare.train.not_empty": "Empty the flatcar before uncoupling it",
   "message.evolvedwarfare.train.couple_hint": "Couple the flatcar to a locomotive (right click it)",
-  "message.evolvedwarfare.train.not_buildable": "That cannot go on the train (chests, doors, beds, liquids...)"
+  "message.evolvedwarfare.train.not_buildable": "That cannot go on the train (chests, doors, beds, liquids...)",
+  "message.evolvedwarfare.train.no_sleep": "You can't sleep on a moving train"
 }

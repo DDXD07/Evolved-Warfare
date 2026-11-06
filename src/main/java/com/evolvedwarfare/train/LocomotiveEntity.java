@@ -70,6 +70,14 @@ public class LocomotiveEntity extends TrainCarEntity {
 	/** Lo macizo de la locomotora (en bloques, coordenadas del coche): el bastidor, la caldera, la chimenea, la cabina y la carbonera. */
 	private static List<Box> boxes() {
 		List<Box> b = new ArrayList<>();
+		for (Box big : bigBoxes()) {
+			b.addAll(split(big));
+		}
+		return b;
+	}
+
+	private static List<Box> bigBoxes() {
+		List<Box> b = new ArrayList<>();
 		b.add(new Box(-1.5, 0.55, -6.0, 1.5, FlatcarEntity.DECK, 6.0));     // el bastidor (se pisa)
 		b.add(new Box(-1.0, FlatcarEntity.DECK, -1.75, 1.0, 3.25, 5.75));   // la caldera
 		b.add(new Box(-0.375, 3.25, 4.25, 0.375, 4.75, 5.0));              // la chimenea

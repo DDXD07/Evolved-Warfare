@@ -118,4 +118,66 @@ public class TrainGameTests implements FabricGameTest {
 			ctx.complete();
 		});
 	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 320)
+	public void trainBlocksWork(TestContext ctx) {
+		ServerWorld world = ctx.getWorld();
+		BlockPos o = ctx.getAbsolutePos(new BlockPos(0, 60, 3));
+		java.util.Set<net.minecraft.util.math.ChunkPos> forced = new java.util.HashSet<>();
+		for (int i = -8; i < 40; i += 4) {
+			forced.add(new net.minecraft.util.math.ChunkPos(o.east(i)));
+		}
+		forced.forEach(c -> world.setChunkForced(c.x, c.z, true));
+		for (int i = 0; i < 32; i++) {
+			rail(world, o.east(i), RailShape.EAST_WEST);
+		}
+		LocomotiveEntity loco = Trains.spawnLocomotive(world, o.east(24), Direction.EAST);
+		check(loco != null, "No se pone la locomotora");
+		FlatcarEntity a = Trains.addWagon(loco);
+		check(a != null, "No se engancha la plataforma");
+		// un cofre con cosas, una puerta (dos partes), una cama (dos partes), un horno, agua
+		check(a.build(new int[] {0, 0, 0}, Blocks.CHEST.getDefaultState()), "No se pone el cofre");
+		check(a.build(new int[] {2, 0, 0}, Blocks.OAK_DOOR.getDefaultState()), "No se pone la puerta");
+		check(a.build(new int[] {4, 0, 0}, Blocks.RED_BED.getDefaultState().with(net.minecraft.block.BedBlock.FACING, Direction.SOUTH)), "No se pone la cama");
+		check(a.build(new int[] {0, 0, 4}, Blocks.FURNACE.getDefaultState()), "No se pone el horno");
+		check(a.build(new int[] {4, 0, 6}, Blocks.WATER.getDefaultState()), "No se pone el agua");
+		check(!a.build(new int[] {2, 1, 0}, Blocks.STONE.getDefaultState()), "Se pone algo dentro de la puerta");
+		var chest = a.cell(0, 0, 0);
+		chest.setStack(5, new net.minecraft.item.ItemStack(net.minecraft.item.Items.DIAMOND, 7));
+		var furnace = a.cell(0, 0, 4);
+		furnace.setStack(0, new net.minecraft.item.ItemStack(net.minecraft.item.Items.RAW_IRON, 1));
+		furnace.setStack(1, new net.minecraft.item.ItemStack(net.minecraft.item.Items.COAL, 1));
+		boolean door = a.get(2, 1, 0) != null && a.get(2, 1, 0).isOf(Blocks.OAK_DOOR);
+		boolean bed = a.get(4, 0, 1) != null && a.get(4, 0, 1).isOf(Blocks.RED_BED);
+		// guardar y cargar: el cofre sigue con lo suyo
+		net.minecraft.nbt.NbtCompound nbt = a.writeNbt(new net.minecraft.nbt.NbtCompound());
+		FlatcarEntity copy = Trains.FLATCAR.create(world);
+		copy.readNbt(nbt);
+		var copied = copy.cell(0, 0, 0);
+		boolean saved = copied != null && copied.getStack(5).isOf(net.minecraft.item.Items.DIAMOND) && copied.getStack(5).getCount() == 7;
+		// en las curvas se choca con el giro de verdad
+		Vec3d corner = com.evolvedwarfare.train.TrainCarEntity.toWorld(Vec3d.ZERO, 45.0F, 0.5, 0.5, 0.5);
+		net.minecraft.util.math.Box turned = com.evolvedwarfare.train.TrainCarEntity.rotated(Vec3d.ZERO, 45.0F, new net.minecraft.util.math.Box(0, 0, 0, 1, 1, 1));
+		boolean curve = turned.contains(corner) && turned.getLengthX() < 1.3;
+		// apuntar: desde arriba se da en la plataforma; de lado por encima de lo construido, no
+		Vec3d above = a.toWorld(1.5, 6.0, 2.0), below = a.toWorld(1.5, -1.0, 2.0);
+		Vec3d hit = a.raycast(above, below);
+		Vec3d side = a.raycast(a.toWorld(-6.0, 5.0, 0.0), a.toWorld(6.0, 5.0, 0.0));
+		boolean aims = hit != null && Math.abs(hit.y - (a.getY() + FlatcarEntity.DECK + 1.0)) < 0.1 && side == null;
+		ctx.runAtTick(260, () -> {
+			boolean smelted = furnace.getStack(2).isOf(net.minecraft.item.Items.IRON_INGOT);
+			var drops = a.remove(new int[] {0, 0, 0});
+			boolean dropped = drops.size() == 2 && drops.get(0).isOf(net.minecraft.item.Items.CHEST) && drops.get(1).isOf(net.minecraft.item.Items.DIAMOND);
+			a.remove(new int[] {2, 1, 0});
+			boolean doorGone = a.get(2, 0, 0) == null && a.get(2, 1, 0) == null;
+			LOG.info("[EW-GAMETEST] bloques en el tren: puerta {}, cama {}, guardado {}, curva {} ({}), apuntar {} / {}, horno {} ({}), al romper {}, puerta quitada {}",
+					door, bed, saved, curve, turned, hit, side, smelted, furnace.getStack(0), drops, doorGone);
+			check(door && bed && saved && curve && aims && smelted && dropped && doorGone, "Los bloques del tren no funcionan");
+			copy.discard();
+			a.discard();
+			loco.discard();
+			forced.forEach(c -> world.setChunkForced(c.x, c.z, false));
+			ctx.complete();
+		});
+	}
 }
