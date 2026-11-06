@@ -252,6 +252,14 @@ public final class HellStructures {
 			world.playSound(null, pos, SoundEvents.BLOCK_RESPAWN_ANCHOR_DEPLETE.value(), SoundCategory.BLOCKS, 1.0F, 0.5F);
 			return -1;
 		}
+		for (net.minecraft.util.Hand hand : net.minecraft.util.Hand.values()) {
+			net.minecraft.item.ItemStack held = player.getStackInHand(hand);
+			if (held.isOf(Apocalypse.ABYSS_KEY) && Apocalypse.wakeAngel(world, player, pos) != null) {
+				held.decrementUnlessCreative(1, player);
+				openSealed(world, pos, 16);
+				return 0;
+			}
+		}
 		int opened = openSealed(world, pos, 16);
 		if (opened > 0) {
 			player.sendMessage(Text.translatable("message.evolvedwarfare.throne.open").formatted(Formatting.GOLD), true);
@@ -286,9 +294,11 @@ public final class HellStructures {
 		world.playSound(null, player.getBlockPos(), SoundEvents.ITEM_BOOK_PAGE_TURN, SoundCategory.PLAYERS, 1.0F, 0.5F);
 		world.playSound(null, player.getBlockPos(), SoundEvents.AMBIENT_SOUL_SAND_VALLEY_MOOD.value(), SoundCategory.PLAYERS, 1.0F, 0.7F);
 		// los señores del abismo cercanos
-		List<HellBossEntity> bosses = world.getEntitiesByClass(HellBossEntity.class, player.getBoundingBox().expand(32), HellBossEntity::isAlive);
+		List<net.minecraft.entity.mob.HostileEntity> bosses = world.getEntitiesByClass(net.minecraft.entity.mob.HostileEntity.class,
+				player.getBoundingBox().expand(32), e -> e.isAlive() && (e instanceof HellBossEntity || e instanceof MiniBossEntity)
+						&& !(e instanceof FalseProphetEntity f && f.illusion()));
 		if (!bosses.isEmpty()) {
-			for (HellBossEntity boss : bosses) {
+			for (net.minecraft.entity.mob.HostileEntity boss : bosses) {
 				boss.setHealth(Math.max(1.0F, boss.getHealth() - boss.getMaxHealth() * 0.2F));
 				boss.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 1200, 1));
 				boss.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 600, 0));

@@ -1699,6 +1699,44 @@ El Nether ya no está vacío: cada bioma tiene sus lugares, con botín, trampas,
 - **Libros de saber**: diez textos (la torre, los caídos, las ciudades de la llanura, el pozo, Abadón, los sellos...)
   repartidos por los cofres.
 
+## Fase 36 — Nether bíblico, parte 4: el Apocalipsis
+
+Los tres mini jefes, los siete sellos y los ritos. Son mini jefes de verdad (barra de vida, fases, poderes): les hace
+daño cualquier arma, pero las de **Bendición Divina** les hacen la mitad más.
+
+- **El Ángel del Abismo** (380 de vida, vuela): solo despierta en el **trono del Abismo** de la Fortaleza, si el trono te
+  reconoce (3 muertes en el Nether) y llevas la **Llave del Abismo**. Vuela en corro sobre ti y **cae en picado** con su
+  espada de fuego; desde el 60 % de vida **llama a las langostas del humo** y apaga la luz (oscuridad); desde el 30 %
+  **abre el pozo**: columnas de fuego bajo los pies de todos. Suelta las **Alas del Abismo** (un gran salto alado y caída
+  lenta), una estrella del Nether, metal del Abismo y diamantes.
+- **El Falso Profeta** (260 de vida): responde a las ofrendas de los muy corruptos (corrupción 60 o más) en los altares de
+  los falsos dioses, o a su rito. No pelea de cerca: **se desvanece y aparece más lejos**, hace bajar **fuego del cielo**,
+  hace **"milagros"** (las criaturas hostiles de alrededor se vuelven sus **seguidoras**, más fuertes), **te cambia lo que
+  llevas en la mano** por otra cosa de la barra y, desde la mitad de la vida, se rodea de **ilusiones de sí mismo** (se
+  deshacen de un golpe). Junto a un altar se cura. Suelta su **báculo** (fuego del cielo donde miras, cuesta corrupción) y
+  un fragmento de sello.
+- **La Bestia mayor** (560 de vida): sale del lago de fuego con su rito. **Anda sobre la lava**, escupe **una bola de fuego
+  por cada cabeza** que le queda, golpea el suelo y **ruge** (lentitud y serpientes de fuego). Tiene **siete cabezas** (y
+  diez cuernos con sus coronas): **cada séptimo de vida que pierde se le cae una**; con una sola, **su herida mortal sana**
+  (una vez): recupera vida y le vuelven a salir dos. Suelta el **Cuerno de la Bestia** (las criaturas hostiles cercanas se
+  asustan, se debilitan y huyen) y dos fragmentos de sello.
+- **Los siete sellos**: fragmentos de cada uno (del caballo blanco, el rojo, el negro, el pálido, las almas del altar, el
+  gran terremoto y el silencio del cielo) en la cima de Babel, la cámara secreta de la Fortaleza, el tesoro, las cámaras
+  del Abismo, el trono del lago, el templo de Sodoma, las criptas y la biblioteca, y los sueltan los señores de la
+  Ciudadela, el Falso Profeta y la Bestia.
+- **El círculo de ritual** (4 de piedra negra pulida en cruz con sal bendita en el centro): pon encima hasta 7 ofrendas
+  (flotan en corro) y tócalo con la mano vacía; agachado recoges la última. Los ritos:
+  - **Purificación** (sal bendita, lingote de oro, polvo de piedra luminosa): quita las maldiciones, mucha corrupción y da
+    10 minutos de **protección bendita** (ninguna maldición te alcanza).
+  - **Pacto oscuro** (metal del Abismo, pluma oscura, arena de almas; solo en el Nether): 5 minutos de más fuerza,
+    velocidad y rapidez de golpe, a cambio de hambre y 25 de corrupción.
+  - **Los siete sellos** (un fragmento de cada uno): la **Llave del Abismo**.
+  - **Consagración** (libro, 2 sales benditas, bloque de oro y un fragmento): un libro de **Bendición Divina**.
+  - **Llamar al profeta** (bloque de oro, libro escrito y una vela).
+  - **Despertar a la Bestia** (crema de magma, vara de blaze, fragmento de armadura caída y libro de condena; en el Nether,
+    junto a la lava).
+- Los **libros de condena** también debilitan a estos tres.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -1719,6 +1757,7 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
   andando).
 - `ew_damned.py` — las criaturas del Nether bíblico (fase 2): sus modelos (con el papel de cada parte para animarlas), texturas, sonidos, botín, objetos que sueltan y la sal bendita.
 - `ew_hellstructs.py` — las estructuras del Nether bíblico (fase 3): las plantillas (Babel, templos, pilares de sal, cementerios, el trono del lago, las cámaras del Abismo, las minas y Sodoma), sus estructuras y dónde salen, los bloques nuevos, el botín con los libros de saber y los textos. Los añadidos de la Fortaleza del Abaddon están en `ew_citadel.py`.
+- `ew_apocalypse.py` — el Apocalipsis (fase 4 del Nether bíblico): los modelos del Ángel del Abismo, el Falso Profeta y la Bestia mayor (con las siete cabezas que se le caen), su botín, los fragmentos de sello y los objetos de los jefes, el círculo de ritual, los iconos de los efectos y los textos.
 - `ew_inferno.py` — el Nether bíblico (fase 1): los bloques nuevos (sal, polvo de hueso, grietas, cristales de azufre...), las decoraciones de los biomas, las maldiciones, las visiones y sus textos. El terreno y los biomas siguen en `ew_hell.py`.
 - `ew_casting.py` — la fundición: modelos y texturas del crisol y del molde, sus recetas, etiquetas y textos.
 - `ew_smithbook.py` — el Manual del Herrero: su icono, el grabado de la forja (con los modelos 3D) y los textos del libro.

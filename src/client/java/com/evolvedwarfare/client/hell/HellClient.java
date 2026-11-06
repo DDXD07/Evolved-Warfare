@@ -61,6 +61,11 @@ public final class HellClient {
 		BlockRenderLayerMap.INSTANCE.putBlock(com.evolvedwarfare.hell.HellStructures.FALLEN_WING, RenderLayer.getCutout());
 		BlockRenderLayerMap.INSTANCE.putBlock(com.evolvedwarfare.hell.HellStructures.FALLEN_SWORD, RenderLayer.getCutout());
 		net.minecraft.client.render.block.entity.BlockEntityRendererFactories.register(com.evolvedwarfare.hell.HellStructures.IDOL_ENTITY, IdolRenderer::new);
+		net.minecraft.client.render.block.entity.BlockEntityRendererFactories.register(com.evolvedwarfare.hell.Apocalypse.RITUAL_CIRCLE_ENTITY,
+				RitualCircleRenderer::new);
+		net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry.register(
+				com.evolvedwarfare.hell.Apocalypse.SEAL_FRAGMENT, com.evolvedwarfare.EvolvedWarfare.id("seal"),
+				(stack, world, entity, seed) -> com.evolvedwarfare.hell.SealFragmentItem.kind(stack) / 10.0F);
 		net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry.register(
 				com.evolvedwarfare.hell.HellStructures.FALLEN_BLADE, com.evolvedwarfare.EvolvedWarfare.id("blade"),
 				(stack, world, entity, seed) -> com.evolvedwarfare.hell.FallenBladeItem.kind(stack) / 10.0F);

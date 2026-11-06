@@ -45,7 +45,7 @@ public final class Curses {
 
 	/** Le echa la maldición (si no la tenía), sin fin. */
 	public static boolean curse(PlayerEntity player, RegistryEntry<StatusEffect> curse) {
-		if (player.hasStatusEffect(curse) || creative(player) || player.isSpectator()) {
+		if (player.hasStatusEffect(curse) || creative(player) || player.isSpectator() || player.hasStatusEffect(Apocalypse.BLESSED_WARD)) {
 			return false;
 		}
 		return player.addStatusEffect(new StatusEffectInstance(curse, StatusEffectInstance.INFINITE, 0, false, true, true));

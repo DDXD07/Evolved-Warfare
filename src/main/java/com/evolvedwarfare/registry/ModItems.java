@@ -406,6 +406,7 @@ public final class ModItems {
 						entries.add(BLESSED_SALT);
 						com.evolvedwarfare.hell.DamnedEntities.EGGS.forEach(entries::add);
 						com.evolvedwarfare.hell.HellStructures.CREATIVE.forEach(entries::add);
+						com.evolvedwarfare.hell.Apocalypse.CREATIVE.forEach(entries::add);
 						entries.add(com.evolvedwarfare.registry.ModBlocks.CRUCIBLE);
 						entries.add(com.evolvedwarfare.registry.ModBlocks.CLAY_MOLD);
 						entries.add(HOT_IRON_INGOT);

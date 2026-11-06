@@ -42,5 +42,9 @@ public final class DamnedRenderers {
 				.withVariant(NephilimEntity::armored, new BossModel<>(ctx.getPart(nephArmored), "nephilim_armored"), "nephilim_armored"));
 		simple(DamnedEntities.DAMNED_SPIRIT, "damned_spirit", layer("damned_spirit"), 0.0F, 1.0F, true);
 		simple(DamnedEntities.SALT_STATUE, "salt_statue", layer("salt_statue"), 0.5F, 1.0F, false);
+		// los mini jefes del Apocalipsis (tools/ew_apocalypse.py)
+		simple(com.evolvedwarfare.hell.Apocalypse.ABYSS_ANGEL, "abyss_angel", layer("abyss_angel"), 0.8F, 1.0F, false);
+		simple(com.evolvedwarfare.hell.Apocalypse.FALSE_PROPHET, "false_prophet", layer("false_prophet"), 0.6F, 1.0F, false);
+		simple(com.evolvedwarfare.hell.Apocalypse.GREATER_BEAST, "greater_beast", layer("greater_beast"), 2.0F, 1.9F, false);
 	}
 }

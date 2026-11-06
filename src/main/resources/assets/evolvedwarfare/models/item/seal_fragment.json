@@ -1,0 +1,50 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "evolvedwarfare:item/seal_fragment_0"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "evolvedwarfare:seal": 0.0
+      },
+      "model": "evolvedwarfare:item/seal_fragment_0"
+    },
+    {
+      "predicate": {
+        "evolvedwarfare:seal": 0.1
+      },
+      "model": "evolvedwarfare:item/seal_fragment_1"
+    },
+    {
+      "predicate": {
+        "evolvedwarfare:seal": 0.2
+      },
+      "model": "evolvedwarfare:item/seal_fragment_2"
+    },
+    {
+      "predicate": {
+        "evolvedwarfare:seal": 0.3
+      },
+      "model": "evolvedwarfare:item/seal_fragment_3"
+    },
+    {
+      "predicate": {
+        "evolvedwarfare:seal": 0.4
+      },
+      "model": "evolvedwarfare:item/seal_fragment_4"
+    },
+    {
+      "predicate": {
+        "evolvedwarfare:seal": 0.5
+      },
+      "model": "evolvedwarfare:item/seal_fragment_5"
+    },
+    {
+      "predicate": {
+        "evolvedwarfare:seal": 0.6
+      },
+      "model": "evolvedwarfare:item/seal_fragment_6"
+    }
+  ]
+}

@@ -152,6 +152,12 @@ public class BossModel<T extends HostileEntity> extends SinglePartEntityModel<T>
 					m.pitch += MathHelper.sin(animationProgress * 0.06F) * 0.08F;
 				}
 				case "body" -> m.pitch += MathHelper.sin(animationProgress * 0.05F) * 0.02F;
+				// las siete cabezas de la Bestia: cada una se mueve a su aire, y las que ha perdido no se ven
+				case "multihead" -> {
+					m.visible = !(entity instanceof com.evolvedwarfare.hell.GreaterBeastEntity b) || p.phase() <= b.heads();
+					m.yaw += MathHelper.sin(animationProgress * 0.07F + p.phase() * 1.3F) * 0.12F;
+					m.pitch += MathHelper.sin(animationProgress * 0.09F + p.phase() * 0.7F) * 0.1F + (angry ? -0.1F : 0.0F);
+				}
 				// un cuerpo de serpiente: cada trozo ondula un poco después del anterior
 				case "segment" -> m.yaw += MathHelper.sin(animationProgress * (0.25F + speed * 0.35F) - p.phase() * 0.9F) * (0.25F + speed * 0.2F);
 				default -> {

@@ -350,6 +350,11 @@ public final class StructureBlocks {
 				player.sendMessage(Text.translatable("message.evolvedwarfare.altar.curse").formatted(Formatting.DARK_RED), true);
 				NetherClimate.addCorruption(player, 6);
 			}
+			// a los muy corruptos, a veces les responde el Falso Profeta
+			if (NetherClimate.corruption(player) >= 60 && random.nextInt(4) == 0 && !Apocalypse.prophetNear(world, pos)) {
+				player.sendMessage(Text.translatable("message.evolvedwarfare.prophet.altar").formatted(Formatting.GOLD, Formatting.ITALIC), false);
+				Apocalypse.summon(world, Apocalypse.FALSE_PROPHET, pos.offset(player.getHorizontalFacing(), 3).up(), player);
+			}
 			return boon;
 		}
 

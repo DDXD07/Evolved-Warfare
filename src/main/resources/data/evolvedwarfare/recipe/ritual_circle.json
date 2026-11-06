@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " B ",
+    "BSB",
+    " B "
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:polished_blackstone"
+    },
+    "S": {
+      "item": "evolvedwarfare:blessed_salt"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:ritual_circle",
+    "count": 1
+  }
+}
