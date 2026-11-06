@@ -73,11 +73,9 @@ public class BackpackItem extends Item {
 			return ActionResult.PASS;
 		}
 		BlockPos pos = context.getBlockPos().offset(context.getSide());
-		if (context.getWorld() instanceof ServerWorld world) {
-			if (!BackpackBlock.place(world, pos, context.getStack().copy(), player.getHorizontalFacing().getOpposite())) {
-				return ActionResult.FAIL;
-			}
-			context.getStack().decrementUnlessCreative(1, player);
+		if (context.getWorld() instanceof ServerWorld && player instanceof net.minecraft.server.network.ServerPlayerEntity sp
+				&& !PackActions.startPlace(sp, pos, player.getHorizontalFacing().getOpposite(), false)) {
+			return ActionResult.FAIL;
 		}
 		return ActionResult.success(context.getWorld().isClient);
 	}

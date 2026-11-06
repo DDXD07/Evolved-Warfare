@@ -259,4 +259,31 @@ public class BackpackGameTests implements FabricGameTest {
 				&& Backpacks.inventory(player).getStack(0).isOf(Items.FLINT), "El tinte o la recogida de los huecos cerrados no van");
 		ctx.complete();
 	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 80)
+	public void placeAndPickUpWithAnimation(TestContext ctx) {
+		ServerWorld world = ctx.getWorld();
+		BlockPos pos = ctx.getAbsolutePos(new BlockPos(2, 2, 2));
+		world.setBlockState(pos.down(), Blocks.STONE.getDefaultState());
+		ServerPlayerEntity player = survivor(ctx);
+		Backpacks.setWorn(player, new ItemStack(Backpacks.BACKPACKS[1]));
+		Backpacks.inventory(player).insert(new ItemStack(Items.IRON_INGOT, 9));
+		boolean started = com.evolvedwarfare.backpack.PackActions.startPlace(player, pos, Direction.NORTH, true);
+		boolean[] midway = new boolean[1];
+		ctx.runAtTick(5, () -> midway[0] = !Backpacks.worn(player).isEmpty() && world.getBlockState(pos).isAir()
+				&& com.evolvedwarfare.network.ActivityPayload.current(player) == com.evolvedwarfare.network.ActivityPayload.PLACING_PACK);
+		ctx.runAtTick(20, () -> {
+			boolean placed = world.getBlockState(pos).isOf(Backpacks.BACKPACK_BLOCK) && Backpacks.worn(player).isEmpty();
+			boolean picking = com.evolvedwarfare.backpack.PackActions.startPickup(player, pos);
+			ctx.runAtTick(40, () -> {
+				boolean worn = Backpacks.worn(player).isOf(Backpacks.BACKPACKS[1]) && BackpackItem.used(Backpacks.worn(player)) == 1;
+				LOG.info("[EW-GAMETEST] dejar y recoger: empieza {}, a medias {}, en el suelo {}, recogiendo {}, de nuevo a la espalda {} (bloque {})", started,
+						midway[0], placed, picking, worn, world.getBlockState(pos).isAir());
+				check(started && midway[0] && placed && picking && worn && world.getBlockState(pos).isAir()
+						&& com.evolvedwarfare.network.ActivityPayload.current(player) == com.evolvedwarfare.network.ActivityPayload.NONE,
+						"Dejar o recoger la mochila no va");
+				ctx.complete();
+			});
+		});
+	}
 }

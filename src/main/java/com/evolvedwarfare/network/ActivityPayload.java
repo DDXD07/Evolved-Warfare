@@ -24,6 +24,10 @@ public record ActivityPayload(int entityId, byte activity) implements CustomPayl
 	public static final byte FORGING = 2;
 	/** Vertiendo el metal del crisol en un molde. */
 	public static final byte POURING = 3;
+	/** Dejando la mochila en el suelo (se la quita de la espalda, o la baja de la mano). */
+	public static final byte PLACING_PACK = 4;
+	/** Recogiendo la mochila del suelo y echándosela a la espalda. */
+	public static final byte DONNING_PACK = 5;
 
 	public static final CustomPayload.Id<ActivityPayload> ID = new CustomPayload.Id<>(EvolvedWarfare.id("activity"));
 	public static final PacketCodec<RegistryByteBuf, ActivityPayload> CODEC = PacketCodec.tuple(PacketCodecs.VAR_INT, ActivityPayload::entityId,

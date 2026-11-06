@@ -146,8 +146,10 @@ public final class Loadout {
 	/** Actualiza lo que se ve encima (si ha cambiado). */
 	public static void show(PlayerEntity player) {
 		List<ItemStack> now = new ArrayList<>(3);
+		boolean limited = Backpacks.limited(player);
 		for (int i = 0; i < 3; i++) {
-			now.add(player.getInventory().getStack(i).copyWithCount(1));
+			// en creativo no hay carga: no se lleva nada a la vista
+			now.add(limited ? player.getInventory().getStack(i).copyWithCount(1) : ItemStack.EMPTY);
 		}
 		List<ItemStack> old = player.getAttachedOrElse(SHOWN, List.of());
 		boolean same = old.size() == 3;

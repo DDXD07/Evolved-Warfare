@@ -21,5 +21,6 @@ public abstract class BipedEntityModelMixin {
 		com.evolvedwarfare.client.catalog.CatalogRemote.pose((BipedEntityModel<?>) (Object) this, entity);
 		com.evolvedwarfare.client.thirst.DrinkAnimation.pose((BipedEntityModel<?>) (Object) this, entity);
 		com.evolvedwarfare.client.anim.ActivityPoses.pose((BipedEntityModel<?>) (Object) this, entity);
+		com.evolvedwarfare.client.backpack.HolsterAnimations.pose((BipedEntityModel<?>) (Object) this, entity, animationProgress);
 	}
 }

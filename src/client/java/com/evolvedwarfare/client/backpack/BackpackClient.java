@@ -45,6 +45,7 @@ public final class BackpackClient {
 		HandledScreens.register(Backpacks.SCREEN, BackpackScreen::new);
 		ColorProviderRegistry.ITEM.register((stack, tint) -> tint == 0 ? DyedColorComponent.getColor(stack, 0xFF8B5A2B) : -1, Backpacks.BACKPACKS);
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
+			HolsterAnimations.tick(client);
 			if (client.player == null) {
 				return;
 			}
@@ -111,11 +112,11 @@ public final class BackpackClient {
 			}
 			ItemStack worn = Backpacks.worn(player);
 			var shown = com.evolvedwarfare.backpack.Loadout.shown(player);
-			ItemStack held = player.getMainHandStack();
+			ItemStack held = HolsterAnimations.visibleHand(player, tickDelta);
 			var renderer = MinecraftClient.getInstance().getItemRenderer();
 			for (int i = 0; i < shown.size() && i < 3; i++) {
 				ItemStack s = shown.get(i);
-				if (s.isEmpty() || ItemStack.areItemsAndComponentsEqual(s, held)) {
+				if (s.isEmpty() || ItemStack.areItemsEqual(s, held)) {
 					continue;
 				}
 				matrices.push();
@@ -137,12 +138,24 @@ public final class BackpackClient {
 				renderer.renderItem(s, ModelTransformationMode.FIXED, light, OverlayTexture.DEFAULT_UV, matrices, consumers, player.getWorld(), player.getId() + i);
 				matrices.pop();
 			}
-			if (worn.isEmpty()) {
+			HolsterAnimations.PackPose pose = HolsterAnimations.packPose(player);
+			if (worn.isEmpty() || pose.where() < 0) {
 				return;
 			}
 			matrices.push();
 			getContextModel().body.rotate(matrices);
-			matrices.translate(0.0F, 0.45F, 0.28F);
+			if (pose.where() == 1) {
+				// bajándola al suelo, delante, con las dos manos
+				float q = pose.progress();
+				matrices.translate(0.0F, 0.45F + 0.55F * q, -0.42F - 0.1F * q);
+			} else if (pose.where() == 2) {
+				// subiéndola del suelo por encima del hombro
+				float q = pose.progress();
+				float arc = net.minecraft.util.math.MathHelper.sin(q * (float) Math.PI) * 0.35F;
+				matrices.translate(0.0F, net.minecraft.util.math.MathHelper.lerp(q, 0.95F, -0.1F) - arc, net.minecraft.util.math.MathHelper.lerp(q, -0.45F, 0.28F));
+			} else {
+				matrices.translate(0.0F, 0.45F, 0.28F);
+			}
 			matrices.scale(0.62F, -0.62F, -0.62F);
 			MinecraftClient.getInstance().getItemRenderer().renderItem(worn, ModelTransformationMode.FIXED, light, OverlayTexture.DEFAULT_UV, matrices,
 					consumers, player.getWorld(), player.getId());

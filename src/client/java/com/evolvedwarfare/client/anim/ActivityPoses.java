@@ -70,11 +70,23 @@ public final class ActivityPoses {
 		if (s != null && s.activity() == ActivityPayload.POURING && entity == client.player && !client.player.isUsingItem()) {
 			return null;
 		}
+		if (s != null && (s.activity() == ActivityPayload.PLACING_PACK || s.activity() == ActivityPayload.DONNING_PACK)) {
+			return s;
+		}
 		if (s != null && s.activity() != ActivityPayload.POURING && entity == client.player && !(client.currentScreen instanceof com.evolvedwarfare.client.fishing.FishingScreen)
 				&& !(client.currentScreen instanceof com.evolvedwarfare.client.smithing.ForgingScreen)) {
 			return null;
 		}
 		return s;
+	}
+
+	/** Cuánto lleva (0-1) de dejar o recoger la mochila, o -1 si no está en ello. */
+	public static float packProgress(Entity entity, byte activity) {
+		State s = state(entity);
+		if (s == null || s.activity() != activity) {
+			return -1.0F;
+		}
+		return Math.min(1.0F, (now() - s.start()) / 600.0F);
 	}
 
 	/** Desde la pantalla de pesca: si se mantiene pulsado y lo que tira el pez (0-1). */

@@ -1811,6 +1811,19 @@ como siempre. En creativo, todo como en vanilla.
   cofres, barriles y cajas de shulker: junta los montones iguales y ordena por armas, herramientas, armadura, comida,
   bloques y lo demás. Lo ordenado va delante, así que los huecos de carga pesada se vacían si cabe todo en los ligeros.
 
+## Fase 40 — Animaciones de la carga y de la mochila
+
+- **Envainar y desenvainar**: al cambiar de hueco, la mano lleva lo que tenía a su sitio (el arma **por encima del hombro, a
+  la espalda**; las herramientas **a la cadera**, la del otro lado cruzando por delante), lo suelta y va a por lo nuevo,
+  que **saca de su sitio** con un ruido de metal (armas) o de cuero (herramientas). Se ve en tercera persona (también en
+  los demás jugadores) y en primera persona (la mano se va hacia el hombro o hacia abajo y vuelve con lo nuevo). Lo que va
+  en la mano no se ve en el cuerpo, y lo guardado sí, hasta que se coge.
+- **Dejar la mochila**: agachado + clic derecho **con la mano vacía** en el suelo: la coges del hombro, te la descuelgas y
+  la bajas hasta el suelo con las dos manos (también si la llevas en la mano). Tarda poco más de medio segundo.
+- **Recogerla**: agachado + clic derecho con la mano vacía en una mochila del suelo (sin llevar otra): te agachas, la coges
+  con las dos manos, la subes y **te la echas a la espalda**. Clic normal la abre, como antes.
+- Mientras dejas o recoges la mochila las manos están ocupadas (no se ve lo que llevas en ellas).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
