@@ -115,6 +115,7 @@ public class HellGameTests implements FabricGameTest {
 		java.util.Map<String, Integer> found = new java.util.TreeMap<>();
 		StringBuilder bmap = new StringBuilder("\n");
 		int abyssDeep = 0;
+		StringBuilder deepLog = new StringBuilder();
 		int abyssCells = 0;
 		var sampler = noise.getMultiNoiseSampler();
 		// el mundo de pruebas usa el Nether de serie: los biomas se miran con la fuente de biomas del datapack
@@ -156,11 +157,14 @@ public class HellGameTests implements FabricGameTest {
 					if (surface < 40) {
 						abyssDeep++;
 					}
+					if (abyssCells < 40) {
+						deepLog.append(surface).append(column.getState(surface).getBlock().getTranslationKey().replace("block.minecraft.", ":")).append(' ');
+					}
 				}
 			}
 			bmap.append('\n');
 		}
-		LOG.info("[EW-GAMETEST] biomas del Nether {} (Abismo hondo en {} de {}):{}", found, abyssDeep, abyssCells, bmap);
+		LOG.info("[EW-GAMETEST] biomas del Nether {} (Abismo hondo en {} de {}; suelos {}):{}", found, abyssDeep, abyssCells, deepLog, bmap);
 		for (String b : new String[] {"lake_of_fire", "valley_of_bones", "sodom_ruins", "abyss", "sulfur_mountains"}) {
 			check(found.getOrDefault(b, 0) > 10, "Casi no sale el bioma " + b);
 		}
