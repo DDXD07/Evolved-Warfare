@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "evolvedwarfare:flint_knife",
+    "evolvedwarfare:copper_knife",
+    "evolvedwarfare:iron_knife",
+    "evolvedwarfare:obsidian_knife"
+  ]
+}

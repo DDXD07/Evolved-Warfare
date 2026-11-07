@@ -2053,5 +2053,15 @@
   "message.evolvedwarfare.train.not_empty": "Vacía la plataforma antes de desengancharla",
   "message.evolvedwarfare.train.couple_hint": "Engancha la plataforma a una locomotora (clic derecho en ella)",
   "message.evolvedwarfare.train.not_buildable": "Eso no se puede poner en el tren (cofres, puertas, camas, líquidos...)",
-  "message.evolvedwarfare.train.no_sleep": "No se puede dormir en un tren en marcha"
+  "message.evolvedwarfare.train.no_sleep": "No se puede dormir en un tren en marcha",
+  "item.evolvedwarfare.flint_knife": "Cuchillo de sílex",
+  "item.evolvedwarfare.copper_knife": "Cuchillo de cobre",
+  "item.evolvedwarfare.iron_knife": "Cuchillo de hierro",
+  "item.evolvedwarfare.obsidian_knife": "Cuchillo de obsidiana",
+  "item.evolvedwarfare.knife.desc": "Clic derecho a un animal abatido para despellejarlo",
+  "entity.evolvedwarfare.carcass": "Animal abatido",
+  "entity.evolvedwarfare.blood_stain": "Mancha de sangre",
+  "message.evolvedwarfare.skinning": "Despellejando %s",
+  "message.evolvedwarfare.skinning.need_knife": "Necesitas un cuchillo en la mano para despellejarlo",
+  "message.evolvedwarfare.skinning.busy": "Alguien ya lo está despellejando"
 }

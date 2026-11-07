@@ -2053,5 +2053,15 @@
   "message.evolvedwarfare.train.not_empty": "Empty the flatcar before uncoupling it",
   "message.evolvedwarfare.train.couple_hint": "Couple the flatcar to a locomotive (right click it)",
   "message.evolvedwarfare.train.not_buildable": "That cannot go on the train (chests, doors, beds, liquids...)",
-  "message.evolvedwarfare.train.no_sleep": "You can't sleep on a moving train"
+  "message.evolvedwarfare.train.no_sleep": "You can't sleep on a moving train",
+  "item.evolvedwarfare.flint_knife": "Flint Knife",
+  "item.evolvedwarfare.copper_knife": "Copper Knife",
+  "item.evolvedwarfare.iron_knife": "Iron Knife",
+  "item.evolvedwarfare.obsidian_knife": "Obsidian Knife",
+  "item.evolvedwarfare.knife.desc": "Right-click a downed animal to skin it",
+  "entity.evolvedwarfare.carcass": "Downed Animal",
+  "entity.evolvedwarfare.blood_stain": "Blood Stain",
+  "message.evolvedwarfare.skinning": "Skinning %s",
+  "message.evolvedwarfare.skinning.need_knife": "You need a knife in hand to skin it",
+  "message.evolvedwarfare.skinning.busy": "Someone is already skinning it"
 }

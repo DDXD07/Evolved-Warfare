@@ -2,6 +2,10 @@
   "replace": false,
   "values": [
     "evolvedwarfare:smithing_hammer",
-    "minecraft:spyglass"
+    "minecraft:spyglass",
+    "evolvedwarfare:flint_knife",
+    "evolvedwarfare:copper_knife",
+    "evolvedwarfare:iron_knife",
+    "evolvedwarfare:obsidian_knife"
   ]
 }

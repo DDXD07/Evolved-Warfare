@@ -1904,6 +1904,14 @@ Lo que antes no se podía hacer en las plataformas, ahora sí:
 - Las herramientas de la cadera se ven más grandes, colgadas del cinturón hasta el muslo.
 - Cuelgan sueltas (`HipSwing`, un péndulo con muelle por jugador): al arrancar se quedan atrás y al frenar se van hacia delante, al girar se abren, al andar se balancean con las piernas y al saltar o caer rebotan.
 
+## Fase 46 — La caza: despellejar
+
+- **El animal cazado cae al suelo** y se queda ahí, tumbado de lado (se dibuja el animal de verdad, con su color o pelaje), sin soltar nada. Así pasa con los animales adultos que dan carne (vacas, cerdos, ovejas, gallinas, conejos, ciervos y demás fauna; no las mascotas ni las crías). Si nadie lo despelleja, a los 5 minutos se pudre y suelta lo de siempre.
+- **Cuchillos** en 4 materiales: sílex, cobre, hierro y obsidiana (en el 2x2: el material arriba a la derecha y un palo abajo a la izquierda). Sirven de arma corta y caben en la barra como arma o como herramienta.
+- **Despellejar**: con el cuchillo en la mano, clic derecho al animal. El jugador se agacha y se queda quieto 5 segundos trabajando (una mano lo sujeta y la otra corta, también en primera persona), con sangre y sonidos y una barra de progreso. Al acabar suelta **4-10 de cuero** y **2-6 de su carne** (cocinada si murió quemado), más lo demás que llevara (lana, plumas, huesos...). El cuchillo se gasta un poco. Si te alejas o cambias de objeto, se para.
+- Queda una **mancha de sangre** en el suelo que se va apagando y desaparece a los 10 segundos.
+- `tools/ew_hunting.py`: texturas de los cuchillos y la sangre, recetas, etiquetas y textos.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -2008,3 +2016,4 @@ clase (80 piezas con receta, números ocultos, ventajas que suben con el materia
 espalda). GitHub las pasa en cada cambio
 (trabajo `gametest`) y deja el registro en la rama `gametest-logs`. El código está en `src/gametest` y no va en el `.jar`.
 - `ew_check_features.py`: busca ciclos en el orden de las features de los biomas (`python3 tools/ew_check_features.py src/main/resources`).
+- `ew_hunting.py`: los cuchillos (texturas, recetas, etiquetas), la mancha de sangre y los textos de la caza.

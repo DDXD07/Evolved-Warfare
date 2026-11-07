@@ -34,6 +34,7 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		ModModelLayers.init();
 		com.evolvedwarfare.client.backpack.BackpackClient.register();
 		com.evolvedwarfare.client.train.TrainRenderers.register();
+		com.evolvedwarfare.client.hunting.HuntingRenderers.register();
 		EntityRendererRegistry.register(ModEntities.RECRUIT, RecruitRenderer::new);
 		EntityRendererRegistry.register(ModEntities.SOLDIER, RecruitRenderer::new);
 		EntityRendererRegistry.register(ModEntities.CITY_GUARD, RecruitRenderer::new);

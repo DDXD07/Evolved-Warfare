@@ -410,6 +410,7 @@ public final class ModItems {
 						com.evolvedwarfare.hell.HellFlora.CREATIVE.forEach(entries::add);
 						com.evolvedwarfare.backpack.Backpacks.ITEMS.forEach(entries::add);
 						com.evolvedwarfare.train.Trains.ITEMS.forEach(entries::add);
+						com.evolvedwarfare.hunting.Hunting.ITEMS.forEach(entries::add);
 						entries.add(com.evolvedwarfare.registry.ModBlocks.CRUCIBLE);
 						entries.add(com.evolvedwarfare.registry.ModBlocks.CLAY_MOLD);
 						entries.add(HOT_IRON_INGOT);

@@ -70,7 +70,8 @@ public final class ActivityPoses {
 		if (s != null && s.activity() == ActivityPayload.POURING && entity == client.player && !client.player.isUsingItem()) {
 			return null;
 		}
-		if (s != null && (s.activity() == ActivityPayload.PLACING_PACK || s.activity() == ActivityPayload.DONNING_PACK)) {
+		if (s != null && (s.activity() == ActivityPayload.PLACING_PACK || s.activity() == ActivityPayload.DONNING_PACK
+				|| s.activity() == ActivityPayload.SKINNING)) {
 			return s;
 		}
 		if (s != null && s.activity() != ActivityPayload.POURING && entity == client.player && !(client.currentScreen instanceof com.evolvedwarfare.client.fishing.FishingScreen)
@@ -151,6 +152,19 @@ public final class ActivityPoses {
 			other.roll = 0.0F;
 			model.body.pitch = -0.08F * pull;
 			model.head.pitch = Math.max(model.head.pitch, 0.25F);
+		} else if (s.activity() == ActivityPayload.SKINNING) {
+			// agachado sobre el animal: una mano lo sujeta y la otra corta con el cuchillo, tirando de la piel
+			float cut = MathHelper.sin(t * 6.5F);
+			float pull = MathHelper.sin(t * 1.3F);
+			main.pitch = -0.75F + cut * 0.35F;
+			main.yaw = (-0.25F + cut * 0.12F) * side;
+			main.roll = 0.0F;
+			other.pitch = -0.9F + pull * 0.15F;
+			other.yaw = 0.35F * side;
+			other.roll = 0.0F;
+			model.head.pitch = 0.85F;
+			model.head.yaw = 0.0F;
+			model.body.pitch = Math.max(model.body.pitch, 0.5F) + 0.05F * cut;
 		} else if (s.activity() == ActivityPayload.POURING) {
 			// el crisol con las dos manos, inclinado hacia el molde
 			float wobble = MathHelper.sin(t * 9.0F) * 0.03F;
@@ -201,6 +215,19 @@ public final class ActivityPoses {
 			matrices.translate(0.0F, 0.12F + pull * 0.05F, 0.05F + pull * 0.08F);
 			matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(18.0F + pull * 12.0F + shake));
 			matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(MathHelper.sin(t * 2.0F) * 2.0F));
+			return false;
+		}
+		if (a == ActivityPayload.SKINNING) {
+			matrices.push();
+			if (hand == Hand.MAIN_HAND) {
+				// el cuchillo, abajo, cortando adelante y atrás
+				float cut = MathHelper.sin(time() * 6.5F);
+				matrices.translate(0.0F, -0.18F + cut * 0.05F, -0.1F + cut * 0.12F);
+				matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-35.0F + cut * 22.0F));
+				matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(cut * 6.0F));
+			} else {
+				matrices.translate(0.0F, -0.25F, 0.05F);
+			}
 			return false;
 		}
 		if (a == ActivityPayload.POURING) {
