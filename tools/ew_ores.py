@@ -13,7 +13,7 @@ Geología (simplificada) que se imita:
 - Diamante: chimeneas de kimberlita (tubos verticales de toba) en los escudos antiguos (taiga, tundra, sabana, desierto).
 - Esmeralda: vetas en las montañas.
 - Nether: vetas de cuarzo y de oro (de aguas termales) y bolsas pequeñas y raras de escombros ancestrales.
-En total, algo menos que en vanilla (un 30 % menos), pero muy concentrado: hay que buscar.
+En total, bastante menos que en vanilla (los yacimientos, un 40 % menos probables que en la primera versión), pero muy concentrado: hay que buscar.
 
 Uso: python3 tools/ew_ores.py [raíz del proyecto]
 """
@@ -117,6 +117,12 @@ def count(n):
     return {"type": "minecraft:count", "count": n}
 
 
+def weighted(*pairs):
+    """Un número al azar con pesos: weighted((1, 4), (2, 1)) da 1 cuatro de cada cinco veces (media 1,2)."""
+    return {"type": "minecraft:count", "count": {"type": "minecraft:weighted_list",
+                                                 "distribution": [{"data": d, "weight": w} for d, w in pairs]}}
+
+
 SQUARE = {"type": "minecraft:in_square"}
 BIOME = {"type": "minecraft:biome"}
 
@@ -141,31 +147,31 @@ def dep(name):
 NONE = placed("minecraft:ore_coal", count(0))
 OW = "#minecraft:is_overworld"
 PLACED = {
-    "ore_coal_upper": placed(dep("coal"), rarity(3), SQUARE, height(40, 130), favored("#evolvedwarfare:ores/coal", 0.3), BIOME),
-    "ore_coal_lower": placed(dep("coal_deep"), rarity(6), SQUARE, height(0, 40), favored("#evolvedwarfare:ores/coal", 0.3), BIOME),
-    "ore_iron_upper": placed(dep("iron_mountain"), rarity(3), SQUARE, height(72, 220), favored("#evolvedwarfare:ores/iron", 0.0), BIOME),
-    "ore_iron_middle": placed(dep("iron"), rarity(5), SQUARE, height(-24, 64), favored("#evolvedwarfare:ores/iron", 0.45), BIOME),
+    "ore_coal_upper": placed(dep("coal"), rarity(5), SQUARE, height(40, 130), favored("#evolvedwarfare:ores/coal", 0.3), BIOME),
+    "ore_coal_lower": placed(dep("coal_deep"), rarity(10), SQUARE, height(0, 40), favored("#evolvedwarfare:ores/coal", 0.3), BIOME),
+    "ore_iron_upper": placed(dep("iron_mountain"), rarity(5), SQUARE, height(72, 220), favored("#evolvedwarfare:ores/iron", 0.0), BIOME),
+    "ore_iron_middle": placed(dep("iron"), rarity(8), SQUARE, height(-24, 64), favored("#evolvedwarfare:ores/iron", 0.45), BIOME),
     "ore_iron_small": NONE,
-    "ore_gold": placed(dep("gold"), rarity(6), SQUARE, height(-64, 32), favored("#evolvedwarfare:ores/gold", 0.35), BIOME),
+    "ore_gold": placed(dep("gold"), rarity(10), SQUARE, height(-64, 32), favored("#evolvedwarfare:ores/gold", 0.35), BIOME),
     "ore_gold_lower": NONE,
-    "ore_gold_extra": placed(dep("gold_badlands"), rarity(2), SQUARE, height(32, 120), favored("#minecraft:is_badlands", 1.0), BIOME),
-    "ore_redstone": placed(dep("redstone"), rarity(3), SQUARE, height(-64, 12), favored(OW, 1.0), BIOME),
+    "ore_gold_extra": placed(dep("gold_badlands"), rarity(3), SQUARE, height(32, 120), favored("#minecraft:is_badlands", 1.0), BIOME),
+    "ore_redstone": placed(dep("redstone"), rarity(5), SQUARE, height(-64, 12), favored(OW, 1.0), BIOME),
     "ore_redstone_lower": NONE,
-    "ore_diamond": placed(dep("diamond"), rarity(12), SQUARE, height(-12, 8), favored("#evolvedwarfare:ores/diamond", 0.5), BIOME),
+    "ore_diamond": placed(dep("diamond"), rarity(20), SQUARE, height(-12, 8), favored("#evolvedwarfare:ores/diamond", 0.5), BIOME),
     "ore_diamond_medium": NONE,
     "ore_diamond_large": NONE,
     "ore_diamond_buried": NONE,
-    "ore_lapis": placed(dep("lapis"), rarity(7), SQUARE, height(-32, 32), favored("#evolvedwarfare:ores/lapis", 0.3), BIOME),
+    "ore_lapis": placed(dep("lapis"), rarity(12), SQUARE, height(-32, 32), favored("#evolvedwarfare:ores/lapis", 0.3), BIOME),
     "ore_lapis_buried": NONE,
-    "ore_copper": placed(dep("copper"), rarity(5), SQUARE, height(-8, 96), favored("#evolvedwarfare:ores/copper", 0.35), BIOME),
-    "ore_copper_large": placed(dep("copper_rich"), rarity(2), SQUARE, height(-8, 96), favored(OW, 1.0), BIOME),
-    "ore_emerald": placed(dep("emerald"), rarity(6), SQUARE, height(-16, 200), favored("#evolvedwarfare:ores/emerald", 0.0), BIOME),
+    "ore_copper": placed(dep("copper"), rarity(8), SQUARE, height(-8, 96), favored("#evolvedwarfare:ores/copper", 0.35), BIOME),
+    "ore_copper_large": placed(dep("copper_rich"), rarity(3), SQUARE, height(-8, 96), favored(OW, 1.0), BIOME),
+    "ore_emerald": placed(dep("emerald"), rarity(10), SQUARE, height(-16, 200), favored("#evolvedwarfare:ores/emerald", 0.0), BIOME),
     # el Nether
-    "ore_quartz_nether": placed(dep("quartz"), count(2), SQUARE, height("above_bottom:10", "below_top:10"), BIOME),
-    "ore_quartz_deltas": placed(dep("quartz"), count(3), SQUARE, height("above_bottom:10", "below_top:10"), BIOME),
-    "ore_gold_nether": placed(dep("nether_gold"), count(1), SQUARE, height("above_bottom:10", "below_top:10"), BIOME),
-    "ore_gold_deltas": placed(dep("nether_gold"), count(2), SQUARE, height("above_bottom:10", "below_top:10"), BIOME),
-    "ore_ancient_debris_large": placed(dep("debris"), rarity(10), SQUARE, height(8, 40), BIOME),
+    "ore_quartz_nether": placed(dep("quartz"), weighted((1, 4), (2, 1)), SQUARE, height("above_bottom:10", "below_top:10"), BIOME),
+    "ore_quartz_deltas": placed(dep("quartz"), weighted((1, 1), (2, 4)), SQUARE, height("above_bottom:10", "below_top:10"), BIOME),
+    "ore_gold_nether": placed(dep("nether_gold"), weighted((0, 2), (1, 3)), SQUARE, height("above_bottom:10", "below_top:10"), BIOME),
+    "ore_gold_deltas": placed(dep("nether_gold"), weighted((1, 4), (2, 1)), SQUARE, height("above_bottom:10", "below_top:10"), BIOME),
+    "ore_ancient_debris_large": placed(dep("debris"), rarity(17), SQUARE, height(8, 40), BIOME),
     "ore_debris_small": NONE,
 }
 
@@ -276,7 +282,7 @@ def main():
         write_json(os.path.join(cf, "deposit_%s.json" % name), {"type": NS + ":deposit", "config": cfg})
     write_json(os.path.join(cf, "alluvial_gold.json"), {"type": NS + ":alluvial_gold", "config": {}})
     write_json(os.path.join(DATA, "worldgen/placed_feature/alluvial_gold.json"),
-               placed(NS + ":alluvial_gold", rarity(3), SQUARE, {"type": "minecraft:heightmap", "heightmap": "OCEAN_FLOOR_WG"}, BIOME))
+               placed(NS + ":alluvial_gold", rarity(5), SQUARE, {"type": "minecraft:heightmap", "heightmap": "OCEAN_FLOOR_WG"}, BIOME))
     for vid, pf in PLACED.items():
         write_json(os.path.join(MC, "worldgen/placed_feature/%s.json" % vid), pf)
     for k, values in BIOMES.items():

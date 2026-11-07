@@ -1958,6 +1958,10 @@ Las menas de vanilla ya no salen sueltas por todas partes: salen en **yacimiento
 - Los yacimientos usan los mismos nombres de vanilla, así no cambia el orden de las features (con una prueba que lo comprueba, también en el mundo normal).
 - `tools/ew_ores.py`: los yacimientos (feature `evolvedwarfare:deposit` y el modificador `evolvedwarfare:in_biomes`), etiquetas de biomas, guijarros, grava aurífera, pico y textos.
 
+## Fase 49.1 — Yacimientos más escasos
+
+- Todos los yacimientos (y las manchas de oro de aluvión) son un **40 % menos probables**: cada uno trae lo mismo, pero hay que buscar más. En el Nether, las vetas por chunk bajan en la misma proporción.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
