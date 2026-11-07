@@ -355,7 +355,12 @@ def biome(fog, particle, features7, loop=None, additions=None, mood=None, music=
     features = [[] for _ in range(11)]
     features[2] = list(step2)
     features[4] = list(step4)
-    features[7] = list(features7) + ["minecraft:glowstone_extra", "minecraft:glowstone", f("ceiling_vines"), f("roof_lavafall")]
+    # como en vanilla, la piedra luminosa va antes que las menas (si el orden no es el mismo en todos los biomas del Nether, el
+    # juego no puede ordenar las features y no se genera ni un chunk: no se podía entrar al Nether)
+    step7 = list(features7)
+    at = next((i for i, x in enumerate(step7) if x in ORES), len(step7))
+    step7[at:at] = ["minecraft:glowstone_extra", "minecraft:glowstone"]
+    features[7] = step7 + [f("ceiling_vines"), f("roof_lavafall")]
     features[9] = list(step9)
     return {"has_precipitation": False, "temperature": 2.0, "downfall": 0.0, "effects": effects,
             "carvers": {"air": "minecraft:nether_cave"}, "features": features, "spawn_costs": {},

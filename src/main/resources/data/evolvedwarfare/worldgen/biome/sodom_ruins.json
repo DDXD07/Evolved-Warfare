@@ -40,6 +40,8 @@
       "evolvedwarfare:salt_pillar",
       "evolvedwarfare:salt_tree",
       "minecraft:patch_fire",
+      "minecraft:glowstone_extra",
+      "minecraft:glowstone",
       "minecraft:ore_magma",
       "minecraft:spring_closed",
       "minecraft:ore_gravel_nether",
@@ -48,8 +50,6 @@
       "minecraft:ore_quartz_nether",
       "minecraft:ore_ancient_debris_large",
       "minecraft:ore_debris_small",
-      "minecraft:glowstone_extra",
-      "minecraft:glowstone",
       "evolvedwarfare:ceiling_vines",
       "evolvedwarfare:roof_lavafall"
     ],

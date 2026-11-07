@@ -47,6 +47,8 @@
       "evolvedwarfare:ember_grass_meadow",
       "evolvedwarfare:hellbloom_meadow",
       "evolvedwarfare:ember_fern_patch",
+      "minecraft:glowstone_extra",
+      "minecraft:glowstone",
       "minecraft:ore_magma",
       "minecraft:spring_closed",
       "minecraft:ore_gravel_nether",
@@ -55,8 +57,6 @@
       "minecraft:ore_quartz_nether",
       "minecraft:ore_ancient_debris_large",
       "minecraft:ore_debris_small",
-      "minecraft:glowstone_extra",
-      "minecraft:glowstone",
       "evolvedwarfare:ceiling_vines",
       "evolvedwarfare:roof_lavafall"
     ],
