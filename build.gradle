@@ -30,6 +30,7 @@ sourceSets {
 
 loom {
 	splitEnvironmentSourceSets()
+	accessWidenerPath = file("src/main/resources/evolvedwarfare.accesswidener")
 
 	mods {
 		"evolvedwarfare" {

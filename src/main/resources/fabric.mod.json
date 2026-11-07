@@ -18,6 +18,7 @@
 			"com.evolvedwarfare.client.config.ModMenuIntegration"
 		]
 	},
+	"accessWidener": "evolvedwarfare.accesswidener",
 	"mixins": [
 		"evolvedwarfare.mixins.json",
 		{

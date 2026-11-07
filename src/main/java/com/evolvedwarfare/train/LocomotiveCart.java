@@ -9,6 +9,7 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.entity.vehicle.StorageMinecartEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -134,12 +135,12 @@ public class LocomotiveCart extends StorageMinecartEntity implements TrainCar {
 	}
 
 	@Override
-	public Type getMinecartType() {
+	public AbstractMinecartEntity.Type getMinecartType() {
 		return Type.FURNACE;
 	}
 
 	@Override
-	protected Item asItem() {
+	public Item asItem() {
 		return Trains.LOCOMOTIVE_ITEM;
 	}
 

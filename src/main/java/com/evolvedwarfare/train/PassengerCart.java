@@ -28,12 +28,12 @@ public class PassengerCart extends AbstractMinecartEntity implements TrainCar {
 	}
 
 	@Override
-	public Type getMinecartType() {
+	public AbstractMinecartEntity.Type getMinecartType() {
 		return Type.RIDEABLE;
 	}
 
 	@Override
-	protected Item asItem() {
+	public Item asItem() {
 		return Trains.PASSENGER_ITEM;
 	}
 
