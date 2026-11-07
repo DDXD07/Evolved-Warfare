@@ -273,7 +273,9 @@ def features():
     pf["ceiling_vines"] = [{"type": "minecraft:count", "count": 24}, {"type": "minecraft:in_square"},
                            {"type": "minecraft:height_range", "height": {"type": "minecraft:uniform", "min_inclusive": {"absolute": 150},
                                                                         "max_inclusive": {"absolute": 245}}}, BIOME_F]
-    pf["roof_lavafall"] = [{"type": "minecraft:count", "count": 5}, {"type": "minecraft:in_square"},
+    # las cascadas del techo, pocas: cada una cae al suelo y lo cubre de lava (con cinco por chunk el suelo llano de los
+    # biomas con flora se llenaba de mantos de lava que crecían sin parar)
+    pf["roof_lavafall"] = [{"type": "minecraft:rarity_filter", "chance": 6}, {"type": "minecraft:in_square"},
                            {"type": "minecraft:height_range", "height": {"type": "minecraft:uniform", "min_inclusive": {"absolute": 170},
                                                                         "max_inclusive": {"absolute": 260}}}, BIOME_F]
     feature_of = {"charred_trees": "charred_tree", "charred_fancy_trees": "charred_fancy_tree", "meadow_trees": "charred_tree",

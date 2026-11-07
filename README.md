@@ -1876,6 +1876,10 @@ Lo que antes no se podía hacer en las plataformas, ahora sí:
 - **La causa de verdad**: el orden de las features de los biomas del Nether no era el mismo en todos (la piedra luminosa iba después de las menas en los biomas del mod y antes en los de vanilla, y el Pantano de los ahorcados tenía dos plantas al revés que la Selva de espinos). Con un ciclo así Minecraft no puede ordenarlas, no genera ni un chunk del Nether ("Feature order cycle found") y el servidor se queda atascado: el portal no lleva, los huevos no sacan criaturas y los comandos no hacen nada.
 - Arreglado en `tools/ew_hell.py`, con una prueba que ordena las features de todos los biomas del Nether (los del mod y los de vanilla) igual que el juego, y `tools/ew_check_features.py` para mirarlo sin abrir el juego.
 
+## Fase 42.4 — Menos mantos de lava
+
+- Las cascadas de lava del techo eran cinco por chunk: cada una caía en el suelo llano de los biomas con flora y lo cubría de un manto de lava que bajaba por las laderas (parecían "tsunamis" de lava al azar). Ahora hay una cada seis chunks más o menos.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
