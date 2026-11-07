@@ -41,6 +41,7 @@ public abstract class TrainCarEntity extends Entity {
 	protected TrainCarEntity(EntityType<?> type, World world) {
 		super(type, world);
 		this.noClip = true;
+		cars(world).add(this);
 	}
 
 	/** Las cajas macizas en coordenadas del coche. */
@@ -208,8 +209,36 @@ public abstract class TrainCarEntity extends Entity {
 		setBoundingBox(calculateBoundingBox());
 	}
 
+	/** Los coches cargados (de cada lado: el servidor y el cliente), para saber deprisa si hay alguno cerca. */
+	private static final java.util.Set<TrainCarEntity> SERVER_CARS = java.util.Collections.newSetFromMap(new java.util.WeakHashMap<>());
+	private static final java.util.Set<TrainCarEntity> CLIENT_CARS = java.util.Collections.newSetFromMap(new java.util.WeakHashMap<>());
+
+	private static java.util.Set<TrainCarEntity> cars(World world) {
+		return world.isClient ? CLIENT_CARS : SERVER_CARS;
+	}
+
+	/** ¿Hay algún coche de tren cerca de esa caja (a 16 bloques)? */
+	public static boolean anyNear(World world, Box box) {
+		java.util.Set<TrainCarEntity> set = cars(world);
+		if (set.isEmpty()) {
+			return false;
+		}
+		Box near = box.expand(16.0);
+		java.util.Iterator<TrainCarEntity> it = set.iterator();
+		while (it.hasNext()) {
+			TrainCarEntity car = it.next();
+			if (car.isRemoved()) {
+				it.remove();
+			} else if (car.getWorld() == world && car.getBoundingBox().intersects(near)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	@Override
 	public void tick() {
+		cars(getWorld()).add(this);
 		super.tick();
 		World world = getWorld();
 		if (carryPos == null) {

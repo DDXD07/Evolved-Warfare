@@ -83,7 +83,7 @@ public class PerfGameTests implements FabricGameTest {
 		var player = ctx.createMockCreativeServerPlayerInWorld();
 		player.refreshPositionAndAngles(o.getX() + 24, y, o.getZ() + 24, 0, 0);
 		LOG.info("[EW-GAMETEST] RENDIMIENTO: {} criaturas", spawned);
-		Map<String, Integer> self = new ConcurrentHashMap<>(), ours = new ConcurrentHashMap<>();
+		Map<String, Integer> self = new ConcurrentHashMap<>(), ours = new ConcurrentHashMap<>(), who = new ConcurrentHashMap<>();
 		AtomicBoolean on = new AtomicBoolean(false);
 		Thread server = Thread.currentThread();
 		int[] samples = {0};
@@ -94,6 +94,15 @@ public class PerfGameTests implements FabricGameTest {
 					if (st.length > 0) {
 						samples[0]++;
 						self.merge(name(st[0]), 1, Integer::sum);
+						// quién: el primer marco que no es de Java ni de fastutil (de Minecraft o del mod)
+						for (int i = 0; i < st.length; i++) {
+							String c = st[i].getClassName();
+							if (!c.startsWith("java.") && !c.startsWith("jdk.") && !c.startsWith("it.unimi") && !c.startsWith("com.google")) {
+								String up = i + 1 < st.length ? name(st[i + 1]) : "";
+								who.merge(name(st[i]) + " < " + up, 1, Integer::sum);
+								break;
+							}
+						}
 						java.util.Set<String> seen = new java.util.HashSet<>();
 						for (StackTraceElement el : st) {
 							if (el.getClassName().startsWith("com.evolvedwarfare") && !el.getClassName().contains("gametest")) {
@@ -141,6 +150,9 @@ public class PerfGameTests implements FabricGameTest {
 					ms, samples[0], t[2] / 1e6));
 			sb.append(" lo más caliente (marco de arriba):\n");
 			self.entrySet().stream().sorted((a, b) -> b.getValue() - a.getValue()).limit(25)
+					.forEach(e -> sb.append(String.format("  %5d  %s%n", e.getValue(), e.getKey())));
+			sb.append(" quién (primer marco de Minecraft o del mod):\n");
+			who.entrySet().stream().sorted((a, b) -> b.getValue() - a.getValue()).limit(30)
 					.forEach(e -> sb.append(String.format("  %5d  %s%n", e.getValue(), e.getKey())));
 			sb.append(" del mod (incluido lo que llama):\n");
 			ours.entrySet().stream().sorted((a, b) -> b.getValue() - a.getValue()).limit(45)

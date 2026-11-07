@@ -53,6 +53,20 @@ public final class FiniteFluids {
 	private FiniteFluids() {
 	}
 
+	private static net.minecraft.server.world.ServerWorld unitsWorld;
+	private static FluidUnits unitsCache;
+
+	/** Las capas guardadas de ese mundo (se recuerda la última: se pide miles de veces por tic). */
+	private static FluidUnits units(net.minecraft.server.world.ServerWorld world) {
+		if (world != unitsWorld || unitsCache == null) {
+			unitsCache = FluidUnits.get(world);
+			unitsWorld = world;
+		}
+		return unitsCache;
+	}
+
+	private static final Direction[] SIDES = {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
+
 	public static boolean enabled() {
 		return EwConfig.get().realisticFluids;
 	}
@@ -76,7 +90,7 @@ public final class FiniteFluids {
 			}
 			int level = Math.max(1, Math.min(7, fs.getLevel()));
 			if (world instanceof net.minecraft.server.world.ServerWorld sw) {
-				FluidUnits units = FluidUnits.get(sw);
+				FluidUnits units = units(sw);
 				int stored = units.get(pos);
 				if (stored > 0 && levelOf(stored) == level) {
 					return stored;
@@ -136,7 +150,7 @@ public final class FiniteFluids {
 			next = flowable.getFlowing(levelOf(amount), false).getBlockState();
 		}
 		if (world instanceof net.minecraft.server.world.ServerWorld sw) {
-			FluidUnits.get(sw).set(pos, amount);
+			units(sw).set(pos, amount);
 		}
 		if (old == next) {
 			return;
@@ -196,9 +210,9 @@ public final class FiniteFluids {
 		}
 		// 2. se reparte por los lados (solo si abajo no cabe más)
 		if (a > 0 && room(world, down, fluid) == 0) {
-			List<Direction> dirs = new ArrayList<>(Direction.Type.HORIZONTAL.stream().toList());
-			Collections.shuffle(dirs, new java.util.Random(world.random.nextLong()));
-			for (Direction d : dirs) {
+			int first = world.random.nextInt(4);
+			for (int k = 0; k < 4; k++) {
+				Direction d = SIDES[(first + k) & 3];
 				if (a <= 0) {
 					break;
 				}
@@ -265,24 +279,35 @@ public final class FiniteFluids {
 		if (amountAt(world, start, fluid) <= 0) {
 			return false;
 		}
-		Set<BlockPos> seen = new HashSet<>();
+		it.unimi.dsi.fastutil.longs.LongOpenHashSet seen = new it.unimi.dsi.fastutil.longs.LongOpenHashSet();
+		it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap infiniteCells = new it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap();
 		ArrayDeque<BlockPos> queue = new ArrayDeque<>();
 		TreeMap<Integer, List<BlockPos>> layers = new TreeMap<>(Collections.reverseOrder());
 		queue.add(start.toImmutable());
-		seen.add(start.toImmutable());
+		seen.add(start.asLong());
+		int sea = world.getSeaLevel();
 		long total = 0;
+		BlockPos.Mutable q = new BlockPos.Mutable();
 		while (!queue.isEmpty() && seen.size() < SEARCH) {
 			BlockPos p = queue.poll();
-			if (isInfinite(world, p, fluid)) {
-				return true;
+			if (p.getY() < sea) {
+				long cell = BlockPos.asLong(p.getX() >> 2, p.getY() >> 2, p.getZ() >> 2);
+				if (infiniteCells.computeIfAbsent(cell, c -> isInfinite(world, p, fluid))) {
+					return true;
+				}
 			}
 			int a = amountAt(world, p, fluid);
 			total += a;
 			layers.computeIfAbsent(p.getY(), k -> new ArrayList<>()).add(p);
 			for (Direction d : Direction.values()) {
-				BlockPos q = p.offset(d);
-				if (!seen.contains(q) && amountAt(world, q, fluid) > 0 && world.getBlockState(q).getBlock() instanceof FluidBlock) {
-					seen.add(q.toImmutable());
+				q.set(p, d);
+				long key = q.asLong();
+				if (seen.contains(key)) {
+					continue;
+				}
+				BlockState qs = world.getBlockState(q);
+				if (qs.getBlock() instanceof FluidBlock && qs.getFluidState().getFluid().matchesType(fluid)) {
+					seen.add(key);
 					queue.add(q.toImmutable());
 				}
 			}

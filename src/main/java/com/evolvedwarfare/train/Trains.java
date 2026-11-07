@@ -211,6 +211,10 @@ public final class Trains {
 			return base;
 		}
 		World world = entity.getWorld();
+		// casi siempre no hay ningún tren cerca: se mira primero la lista de coches del mundo (barato) antes de buscar entidades
+		if (!TrainCarEntity.anyNear(world, box)) {
+			return base;
+		}
 		List<TrainCarEntity> cars = world.getEntitiesByClass(TrainCarEntity.class, box.expand(8.0), c -> true);
 		if (cars.isEmpty()) {
 			return base;
@@ -227,6 +231,9 @@ public final class Trains {
 	/** ¿Va de pie sobre un tren? (para no echarle por "volar"). */
 	public static boolean onTrain(Entity entity) {
 		Box feet = entity.getBoundingBox().expand(0.1, 0.0, 0.1).stretch(0, -0.6, 0);
+		if (!TrainCarEntity.anyNear(entity.getWorld(), feet)) {
+			return false;
+		}
 		for (TrainCarEntity car : entity.getWorld().getEntitiesByClass(TrainCarEntity.class, feet.expand(8.0), c -> true)) {
 			for (Box b : car.worldBoxes()) {
 				if (b.intersects(feet)) {

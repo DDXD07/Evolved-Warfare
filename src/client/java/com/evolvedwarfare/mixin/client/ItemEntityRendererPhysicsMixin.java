@@ -45,12 +45,13 @@ public abstract class ItemEntityRendererPhysicsMixin {
 		int copies = stack.getCount() > 48 ? 4 : stack.getCount() > 32 ? 3 : stack.getCount() > 16 ? 2 : 1;
 		boolean resting = entity.isOnGround() || entity.isTouchingWater() && Math.abs(entity.getVelocity().y) < 0.02;
 		float age = entity.getItemAge() + tickDelta;
-		java.util.Random random = new java.util.Random(seed + id);
+		// desplazamientos de cada pieza del montón, fijos (sin crear un Random por objeto y fotograma)
+		long h = seed * 0x9E3779B97F4A7C15L + id;
 		for (int i = 0; i < copies; i++) {
 			matrices.push();
 			if (resting) {
 				if (i > 0) {
-					matrices.translate((random.nextFloat() - 0.5F) * 0.18F, 0, (random.nextFloat() - 0.5F) * 0.18F);
+					matrices.translate((jitter(h, i * 2) - 0.5F) * 0.18F, 0, (jitter(h, i * 2 + 1) - 0.5F) * 0.18F);
 				}
 				if (depth) {
 					matrices.translate(0, -0.0625F + i * 0.0F, 0);
@@ -69,11 +70,20 @@ public abstract class ItemEntityRendererPhysicsMixin {
 				matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(spin + age * 9.0F));
 				matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(MathHelper.wrapDegrees(age * 23.0F + spin)));
 				if (i > 0) {
-					matrices.translate((random.nextFloat() - 0.5F) * 0.15F, (random.nextFloat() - 0.5F) * 0.15F, (random.nextFloat() - 0.5F) * 0.15F);
+					matrices.translate((jitter(h, i * 3) - 0.5F) * 0.15F, (jitter(h, i * 3 + 1) - 0.5F) * 0.15F,
+							(jitter(h, i * 3 + 2) - 0.5F) * 0.15F);
 				}
 			}
 			itemRenderer.renderItem(stack, ModelTransformationMode.GROUND, false, matrices, consumers, light, OverlayTexture.DEFAULT_UV, model);
 			matrices.pop();
 		}
+	}
+
+	private static float jitter(long h, int k) {
+		long x = h + k * 0xBF58476D1CE4E5B9L;
+		x ^= x >>> 31;
+		x *= 0x94D049BB133111EBL;
+		x ^= x >>> 29;
+		return (x & 0xFFFFFF) / (float) 0x1000000;
 	}
 }

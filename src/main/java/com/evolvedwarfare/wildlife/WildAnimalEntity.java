@@ -64,8 +64,14 @@ public class WildAnimalEntity extends AnimalEntity {
 		this.fed = this.random.nextInt(2400);
 	}
 
+	private WildSpecies speciesCache;
+
 	public WildSpecies species() {
-		return Wildlife.of(getType());
+		WildSpecies s = speciesCache;
+		if (s == null) {
+			s = speciesCache = Wildlife.of(getType());
+		}
+		return s;
 	}
 
 	// ------------------------------------------------------------------ cerebro
@@ -80,7 +86,7 @@ public class WildAnimalEntity extends AnimalEntity {
 			goalSelector.add(1, new MeleeAttackGoal(this, s.role == WildSpecies.Role.PREDATOR ? 1.35 : 1.25, true));
 		}
 		goalSelector.add(2, new AnimalMateGoal(this, 1.0));
-		goalSelector.add(3, new TemptGoal(this, 1.1, stack -> species().food().test(stack), false));
+		goalSelector.add(3, new TemptGoal(this, 1.1, stack -> species().isFood(stack), false));
 		if (s.fleeDistance > 0) {
 			float d = s.fleeDistance;
 			goalSelector.add(3, new FleeEntityGoal<>(this, PlayerEntity.class,
@@ -124,7 +130,7 @@ public class WildAnimalEntity extends AnimalEntity {
 
 	@Override
 	public boolean isBreedingItem(ItemStack stack) {
-		return species().food().test(stack);
+		return species().isFood(stack);
 	}
 
 	@Nullable

@@ -167,11 +167,25 @@ public final class Climate {
 		float heat = 0.0F;
 		float cold = 0.0F;
 		BlockPos.Mutable p = new BlockPos.Mutable();
+		// leyendo directamente de las secciones de los chunks (y saltando las que están vacías): son 726 bloques por jugador
 		for (int dx = -5; dx <= 5; dx++) {
-			for (int dy = -2; dy <= 3; dy++) {
-				for (int dz = -5; dz <= 5; dz++) {
-					p.set(center.getX() + dx, center.getY() + dy, center.getZ() + dz);
-					BlockState state = world.getBlockState(p);
+			for (int dz = -5; dz <= 5; dz++) {
+				int x = center.getX() + dx, z = center.getZ() + dz;
+				if (!world.isChunkLoaded(x >> 4, z >> 4)) {
+					continue;
+				}
+				net.minecraft.world.chunk.Chunk chunk = world.getChunk(x >> 4, z >> 4);
+				for (int dy = -2; dy <= 3; dy++) {
+					int y = center.getY() + dy;
+					if (world.isOutOfHeightLimit(y)) {
+						continue;
+					}
+					net.minecraft.world.chunk.ChunkSection section = chunk.getSection(chunk.getSectionIndex(y));
+					if (section.isEmpty()) {
+						continue;
+					}
+					p.set(x, y, z);
+					BlockState state = section.getBlockState(x & 15, y & 15, z & 15);
 					if (state.isAir()) {
 						continue;
 					}
@@ -466,10 +480,13 @@ public final class Climate {
 					continue;
 				}
 				BlockPos top = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, new BlockPos(x, 0, z));
+				BlockState state = world.getBlockState(top);
+				if (!state.isOf(Blocks.SNOW) && !world.getBlockState(top.down()).isOf(Blocks.ICE) && !world.getBlockState(top.down()).isOf(Blocks.SNOW)) {
+					continue;
+				}
 				if (world.getBiome(top).value().getTemperature() < 0.15F) {
 					continue;
 				}
-				BlockState state = world.getBlockState(top);
 				if (state.isOf(Blocks.SNOW)) {
 					int layers = state.get(SnowBlock.LAYERS);
 					world.setBlockState(top, layers > 1 ? state.with(SnowBlock.LAYERS, layers - 1) : Blocks.AIR.getDefaultState());

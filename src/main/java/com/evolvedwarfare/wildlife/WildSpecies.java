@@ -100,8 +100,31 @@ public enum WildSpecies {
 		return name().toLowerCase(Locale.ROOT);
 	}
 
+	private Ingredient foodCache;
+	private java.util.Set<net.minecraft.item.Item> foodItems;
+
+	/** Lo que come (se calcula una vez: antes se creaba un ingrediente nuevo cada vez, y se mira cada tic por cada jugador). */
 	public Ingredient food() {
-		return food.get();
+		if (foodCache == null) {
+			foodCache = food.get();
+		}
+		return foodCache;
+	}
+
+	/** ¿Es comida suya? (rápido: un conjunto de objetos) */
+	public boolean isFood(net.minecraft.item.ItemStack stack) {
+		if (stack.isEmpty()) {
+			return false;
+		}
+		java.util.Set<net.minecraft.item.Item> items = foodItems;
+		if (items == null) {
+			items = new java.util.HashSet<>();
+			for (net.minecraft.item.ItemStack s : food().getMatchingStacks()) {
+				items.add(s.getItem());
+			}
+			foodItems = items;
+		}
+		return items.contains(stack.getItem());
 	}
 
 	/** ¿Caza a ese? */
@@ -111,8 +134,13 @@ public enum WildSpecies {
 				return true;
 			}
 		}
-		return preyVanilla.get().contains(type);
+		if (preyCache == null) {
+			preyCache = preyVanilla.get();
+		}
+		return preyCache.contains(type);
 	}
+
+	private List<EntityType<?>> preyCache;
 
 	/** ¿Caza a esa especie? (para que la presa huya de él) */
 	public boolean hunts(WildSpecies s) {

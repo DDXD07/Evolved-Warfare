@@ -119,6 +119,10 @@ def main():
         write_json(os.path.join(R, name + ".json"), {"type": "minecraft:crafting_shaped", "category": "equipment", "pattern": [" M", "S "],
                                                      "key": {"M": {"item": material}, "S": {"item": "minecraft:stick"}},
                                                      "result": {"id": "%s:%s" % (NS, name), "count": 1}})
+    # hilo de la lana (deshacer un bloque de lana: lo mismo que costó hacerlo)
+    write_json(os.path.join(R, "string_from_wool.json"), {"type": "minecraft:crafting_shapeless", "category": "misc",
+                                                         "ingredients": [{"tag": "minecraft:wool"}],
+                                                         "result": {"id": "minecraft:string", "count": 4}})
     os.makedirs(os.path.join(ASSETS, "textures/entity"), exist_ok=True)
     blood_texture().save(os.path.join(ASSETS, "textures/entity/blood_stain.png"))
     knives = ["%s:%s" % (NS, k) for k in KNIVES]
