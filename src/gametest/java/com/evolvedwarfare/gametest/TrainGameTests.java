@@ -1,182 +1,82 @@
 package com.evolvedwarfare.gametest;
 
-import com.evolvedwarfare.train.FlatcarEntity;
-import com.evolvedwarfare.train.LocomotiveEntity;
-import com.evolvedwarfare.train.Track;
+import com.evolvedwarfare.train.FreightCart;
+import com.evolvedwarfare.train.LocomotiveCart;
+import com.evolvedwarfare.train.PassengerCart;
+import com.evolvedwarfare.train.TenderCart;
+import com.evolvedwarfare.train.TrainCar;
 import com.evolvedwarfare.train.Trains;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.RailBlock;
 import net.minecraft.block.enums.RailShape;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.decoration.ArmorStandEntity;
+import net.minecraft.entity.vehicle.AbstractMinecartEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.test.GameTest;
 import net.minecraft.test.GameTestException;
 import net.minecraft.test.TestContext;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** El tren de vapor (fase 41): las vías, la locomotora con carbón, las plataformas, construir en ellas y llevar lo de encima. */
+/** El tren de vapor: la locomotora quema el carbón del ténder y arrastra a sus vagones enganchados, a su distancia. */
 public class TrainGameTests implements FabricGameTest {
 	private static final Logger LOG = LoggerFactory.getLogger("ew-gametest");
 
-	private static void check(boolean ok, String message) {
-		if (!ok) {
-			throw new GameTestException(message);
-		}
+	private static <T extends AbstractMinecartEntity> T put(ServerWorld world, net.minecraft.entity.EntityType<T> type, BlockPos rail) {
+		T cart = type.create(world);
+		cart.refreshPositionAndAngles(rail.getX() + 0.5, rail.getY() + 0.0625, rail.getZ() + 0.5, 0, 0);
+		world.spawnEntity(cart);
+		return cart;
 	}
 
-	private static void rail(ServerWorld world, BlockPos p, RailShape shape) {
-		world.setBlockState(p.down(), Blocks.STONE.getDefaultState(), 2);
-		world.setBlockState(p, Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, shape), 2);
-	}
-
-	@GameTest(templateName = EMPTY_STRUCTURE)
-	public void railsAreWalked(TestContext ctx) {
+	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 300)
+	public void steamTrainPullsItsCars(TestContext ctx) {
 		ServerWorld world = ctx.getWorld();
-		// una recta de 3 hacia el este, una curva hacia el sur y 2 al sur
-		BlockPos o = ctx.getAbsolutePos(new BlockPos(1, 2, 1));
-		rail(world, o, RailShape.EAST_WEST);
-		rail(world, o.east(), RailShape.EAST_WEST);
-		rail(world, o.east(2), RailShape.EAST_WEST);
-		rail(world, o.east(3), RailShape.SOUTH_WEST);
-		rail(world, o.east(3).south(), RailShape.NORTH_SOUTH);
-		rail(world, o.east(3).south(2), RailShape.NORTH_SOUTH);
-		Track.Pos start = Track.start(world, o, Direction.EAST);
-		Track.Walk ahead = Track.walk(world, start, 3.0);
-		Vec3d p = Track.point(world, ahead.pos())[0];
-		Track.Walk back = Track.walk(world, ahead.pos(), -3.0);
-		Vec3d q = Track.point(world, back.pos())[0];
-		Track.Walk end = Track.walk(world, start, 10.0);
-		Vec3d s = Track.point(world, start)[0];
-		LOG.info("[EW-GAMETEST] vías: de {} a {} (curva), y de vuelta {}; al final {} (parada {})", s, p, q, Track.point(world, end.pos())[0], end.blocked());
-		check(!ahead.blocked() && ahead.pos().rail().equals(o.east(3)) && q.distanceTo(s) < 0.01 && end.blocked()
-				&& end.pos().rail().equals(o.east(3).south(2)), "El tren no sabe andar por las vías");
-		ctx.complete();
-	}
-
-	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 200)
-	public void steamTrainCarriesItsLoad(TestContext ctx) {
-		ServerWorld world = ctx.getWorld();
-		BlockPos o = ctx.getAbsolutePos(new BlockPos(0, 40, 3));
-		// la vía sale de la zona de la prueba: que sus chunks también se muevan
-		java.util.Set<net.minecraft.util.math.ChunkPos> forced = new java.util.HashSet<>();
-		for (int i = -8; i < 72; i += 4) {
-			forced.add(new net.minecraft.util.math.ChunkPos(o.east(i)));
+		BlockPos o = ctx.getAbsolutePos(new BlockPos(0, 1, 0)).add(0, 0, 300);
+		java.util.List<ChunkPos> forced = new java.util.ArrayList<>();
+		for (int i = -2; i < 70; i += 8) {
+			ChunkPos c = new ChunkPos(o.east(i));
+			forced.add(c);
+			world.setChunkForced(c.x, c.z, true);
 		}
-		forced.forEach(c -> world.setChunkForced(c.x, c.z, true));
-		for (int i = 0; i < 64; i++) {
-			rail(world, o.east(i), RailShape.EAST_WEST);
+		for (int i = -4; i < 64; i++) {
+			world.setBlockState(o.east(i).down(), Blocks.STONE.getDefaultState());
+			world.setBlockState(o.east(i), Blocks.RAIL.getDefaultState().with(RailBlock.SHAPE, RailShape.EAST_WEST));
+			world.setBlockState(o.east(i).up(), Blocks.AIR.getDefaultState());
+			world.setBlockState(o.east(i).up(2), Blocks.AIR.getDefaultState());
 		}
-		LocomotiveEntity loco = Trains.spawnLocomotive(world, o.east(30), Direction.EAST);
-		check(loco != null, "No se pone la locomotora");
-		FlatcarEntity a = Trains.addWagon(loco), b = Trains.addWagon(loco);
-		check(a != null && b != null, "No se enganchan las plataformas");
-		a.set(2, 0, 4, Blocks.OAK_PLANKS.getDefaultState());
-		a.set(2, 1, 4, Blocks.OAK_STAIRS.getDefaultState());
-		double gap = loco.getX() - a.getX();
-		// un cerdo quieto en la segunda plataforma, y un soporte de armadura que cae sobre la primera
-		var pig = EntityType.PIG.create(world);
-		pig.setAiDisabled(true);
-		pig.refreshPositionAndAngles(b.getX() + 1.0, b.getY() + FlatcarEntity.DECK, b.getZ(), 0, 0);
-		world.spawnEntity(pig);
-		ArmorStandEntity stand = new ArmorStandEntity(world, a.getX() - 1.5, a.getY() + FlatcarEntity.DECK + 3.0, a.getZ() - 1.0);
-		world.spawnEntity(stand);
-		double startX = loco.getX();
-		boolean noFuel = loco.fuel() == 0;
-		ctx.runAtTick(30, () -> {
-			// sin carbón no anda
-			loco.setTarget(LocomotiveEntity.MAX_SPEED);
-		});
-		ctx.runAtTick(60, () -> LOG.info("[EW-GAMETEST] el tren a los 60: en el mundo {}, vivo {}, edad {}, objetivo {}, vel {}, vía {}", world.getEntity(loco.getUuid()) == loco,
-				loco.isAlive(), loco.age, loco.target(), loco.speed(), loco.track()));
-		ctx.runAtTick(45, () -> {
-			check(Math.abs(loco.getX() - startX) < 0.01, "Anda sin carbón");
-			loco.addFuel(10 * LocomotiveEntity.COAL_BLOCK);
-			loco.setTarget(LocomotiveEntity.MAX_SPEED);
-		});
-		ctx.runAtTick(150, () -> {
-			double moved = loco.getX() - startX;
-			double gapNow = loco.getX() - a.getX();
-			boolean pigOn = Math.abs(pig.getX() - b.getX()) < 2.5 && pig.getY() > b.getY() + 1.0;
-			boolean standOn = stand.getY() > a.getY() + 1.0 && Math.abs(stand.getX() - a.getX()) < 2.5;
-			LOG.info("[EW-GAMETEST] el tren: sin carbón {}, ha andado {} (vel {}), separación {} -> {}, cerdo encima {} ({} / {}), soporte encima {} ({}), "
-					+ "carbón {}, bloques {}", noFuel, moved, loco.speed(), gap, gapNow, pigOn, pig.getPos(), b.getPos(), standOn, stand.getPos(), loco.fuel(),
-					a.blockCount());
-			check(noFuel && moved > 5 && Math.abs(gapNow - LocomotiveEntity.wagonOffset(0)) < 0.3 && pigOn && standOn
-					&& loco.fuel() < 10 * LocomotiveEntity.COAL_BLOCK && a.blockCount() == 2, "El tren no lleva bien su carga");
-			pig.discard();
-			stand.discard();
-			a.discard();
-			b.discard();
-			loco.discard();
+		LocomotiveCart loco = put(world, Trains.LOCOMOTIVE, o.east(10));
+		loco.setHeading(new Vec3d(1, 0, 0));
+		TenderCart tender = put(world, Trains.TENDER, o.east(8));
+		FreightCart freight = put(world, Trains.FREIGHT, o.east(6));
+		PassengerCart passenger = put(world, Trains.PASSENGER, o.east(4));
+		TrainCar.couple(loco, tender);
+		TrainCar.couple(tender, freight);
+		TrainCar.couple(freight, passenger);
+		tender.setStack(0, new ItemStack(Items.COAL, 8));
+		freight.setStack(40, new ItemStack(Items.DIAMOND, 3));
+		loco.setThrottle(LocomotiveCart.MAX_NOTCH);
+		double start = loco.getX();
+		ctx.runAtTick(160, () -> {
+			double run = loco.getX() - start;
+			double g1 = loco.getX() - tender.getX(), g2 = tender.getX() - freight.getX(), g3 = freight.getX() - passenger.getX();
+			int coal = tender.getStack(0).getCount();
+			LOG.info("[EW-GAMETEST] tren: recorre {} bloques, huecos {} / {} / {}, carbón en el ténder {}, fuego {}, velocidad {}, en mercancías {}", run, g1, g2,
+					g3, coal, loco.fuel(), loco.getVelocity().x, freight.size());
+			boolean ok = run > 12 && Math.abs(g1 - TrainCar.SPACING) < 0.8 && Math.abs(g2 - TrainCar.SPACING) < 0.8 && Math.abs(g3 - TrainCar.SPACING) < 0.8
+					&& coal < 8 && freight.size() == 54 && freight.getStack(40).isOf(Items.DIAMOND);
+			for (var c : new AbstractMinecartEntity[] {loco, tender, freight, passenger}) {
+				c.discard();
+			}
 			forced.forEach(c -> world.setChunkForced(c.x, c.z, false));
-			ctx.complete();
-		});
-	}
-
-	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 320)
-	public void trainBlocksWork(TestContext ctx) {
-		ServerWorld world = ctx.getWorld();
-		BlockPos o = ctx.getAbsolutePos(new BlockPos(0, 60, 3));
-		java.util.Set<net.minecraft.util.math.ChunkPos> forced = new java.util.HashSet<>();
-		for (int i = -8; i < 40; i += 4) {
-			forced.add(new net.minecraft.util.math.ChunkPos(o.east(i)));
-		}
-		forced.forEach(c -> world.setChunkForced(c.x, c.z, true));
-		for (int i = 0; i < 32; i++) {
-			rail(world, o.east(i), RailShape.EAST_WEST);
-		}
-		LocomotiveEntity loco = Trains.spawnLocomotive(world, o.east(24), Direction.EAST);
-		check(loco != null, "No se pone la locomotora");
-		FlatcarEntity a = Trains.addWagon(loco);
-		check(a != null, "No se engancha la plataforma");
-		// un cofre con cosas, una puerta (dos partes), una cama (dos partes), un horno, agua
-		check(a.build(new int[] {0, 0, 0}, Blocks.CHEST.getDefaultState()), "No se pone el cofre");
-		check(a.build(new int[] {2, 0, 0}, Blocks.OAK_DOOR.getDefaultState()), "No se pone la puerta");
-		check(a.build(new int[] {4, 0, 0}, Blocks.RED_BED.getDefaultState().with(net.minecraft.block.BedBlock.FACING, Direction.SOUTH)), "No se pone la cama");
-		check(a.build(new int[] {0, 0, 4}, Blocks.FURNACE.getDefaultState()), "No se pone el horno");
-		check(a.build(new int[] {4, 0, 6}, Blocks.WATER.getDefaultState()), "No se pone el agua");
-		check(!a.build(new int[] {2, 1, 0}, Blocks.STONE.getDefaultState()), "Se pone algo dentro de la puerta");
-		var chest = a.cell(0, 0, 0);
-		chest.setStack(5, new net.minecraft.item.ItemStack(net.minecraft.item.Items.DIAMOND, 7));
-		var furnace = a.cell(0, 0, 4);
-		furnace.setStack(0, new net.minecraft.item.ItemStack(net.minecraft.item.Items.RAW_IRON, 1));
-		furnace.setStack(1, new net.minecraft.item.ItemStack(net.minecraft.item.Items.COAL, 1));
-		boolean door = a.get(2, 1, 0) != null && a.get(2, 1, 0).isOf(Blocks.OAK_DOOR);
-		boolean bed = a.get(4, 0, 1) != null && a.get(4, 0, 1).isOf(Blocks.RED_BED);
-		// guardar y cargar: el cofre sigue con lo suyo
-		net.minecraft.nbt.NbtCompound nbt = a.writeNbt(new net.minecraft.nbt.NbtCompound());
-		FlatcarEntity copy = Trains.FLATCAR.create(world);
-		copy.readNbt(nbt);
-		var copied = copy.cell(0, 0, 0);
-		boolean saved = copied != null && copied.getStack(5).isOf(net.minecraft.item.Items.DIAMOND) && copied.getStack(5).getCount() == 7;
-		// en las curvas se choca con el giro de verdad
-		Vec3d corner = com.evolvedwarfare.train.TrainCarEntity.toWorld(Vec3d.ZERO, 45.0F, 0.5, 0.5, 0.5);
-		net.minecraft.util.math.Box turned = com.evolvedwarfare.train.TrainCarEntity.rotated(Vec3d.ZERO, 45.0F, new net.minecraft.util.math.Box(0, 0, 0, 1, 1, 1));
-		boolean curve = turned.contains(corner) && turned.getLengthX() < 1.3;
-		// apuntar: desde arriba se da en la plataforma; de lado por encima de lo construido, no
-		Vec3d above = a.toWorld(1.5, 6.0, 2.0), below = a.toWorld(1.5, -1.0, 2.0);
-		Vec3d hit = a.raycast(above, below);
-		Vec3d side = a.raycast(a.toWorld(-6.0, 5.0, 0.0), a.toWorld(6.0, 5.0, 0.0));
-		boolean aims = hit != null && Math.abs(hit.y - (a.getY() + FlatcarEntity.DECK + 1.0)) < 0.1 && side == null;
-		ctx.runAtTick(260, () -> {
-			boolean smelted = furnace.getStack(2).isOf(net.minecraft.item.Items.IRON_INGOT);
-			var drops = a.remove(new int[] {0, 0, 0});
-			boolean dropped = drops.size() == 2 && drops.get(0).isOf(net.minecraft.item.Items.CHEST) && drops.get(1).isOf(net.minecraft.item.Items.DIAMOND);
-			a.remove(new int[] {2, 1, 0});
-			boolean doorGone = a.get(2, 0, 0) == null && a.get(2, 1, 0) == null;
-			LOG.info("[EW-GAMETEST] bloques en el tren: puerta {}, cama {}, guardado {}, curva {} ({}), apuntar {} / {}, horno {} ({}), al romper {}, puerta quitada {}",
-					door, bed, saved, curve, turned, hit, side, smelted, furnace.getStack(0), drops, doorGone);
-			check(door && bed && saved && curve && aims && smelted && dropped && doorGone, "Los bloques del tren no funcionan");
-			copy.discard();
-			a.discard();
-			loco.discard();
-			forced.forEach(c -> world.setChunkForced(c.x, c.z, false));
+			if (!ok) {
+				throw new GameTestException("El tren no tira bien de sus vagones: recorre " + run + ", huecos " + g1 + " / " + g2 + " / " + g3 + ", carbón " + coal);
+			}
 			ctx.complete();
 		});
 	}

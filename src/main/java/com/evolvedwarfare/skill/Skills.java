@@ -144,7 +144,8 @@ public final class Skills {
 		if (data.levels[i] >= Skill.MAX_LEVEL) {
 			return;
 		}
-		data.xp[i] += amount * (float) EwConfig.get().skillXpRate;
+		// las habilidades suben un 70 % más despacio que antes (fase 51)
+		data.xp[i] += amount * 0.3F * (float) EwConfig.get().skillXpRate;
 		boolean leveled = false;
 		while (data.levels[i] < Skill.MAX_LEVEL && data.xp[i] >= Skill.xpToNext(data.levels[i])) {
 			data.xp[i] -= Skill.xpToNext(data.levels[i]);
