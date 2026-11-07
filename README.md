@@ -1970,6 +1970,19 @@ Las menas de vanilla ya no salen sueltas por todas partes: salen en **yacimiento
 - A cada uno le toca siempre el mismo aspecto (por su UUID), repartido entre todas las variantes.
 - `tools/ew_skins.py`: el pintor de personas (sustituye a las pieles de `ew_textures.py`); con una carpeta de vistas previas hace una hoja con todas.
 
+## Fase 51 — El tren, a escala de las vías
+
+El tren grande de antes (con plataformas para construir encima) se cambia por uno **del tamaño de una vagoneta**, sobre las vías de siempre: curvas, cuestas, desvíos y raíles propulsores funcionan como con cualquier vagoneta.
+
+- **Locomotora de vapor** (hierro, un horno y una vagoneta): quema **carbón normal** (y carbón vegetal, bloques de carbón o cualquier combustible de horno, lo que duraría en un horno). **Agachado + clic derecho** abre la **caldera**: tres huecos de combustible, una barra con el fuego que le queda, la velocidad y el regulador con botones (−, 0, +), para moverla sin subirse. Con un combustible en la mano, agachado + clic derecho lo mete directamente. **Clic derecho** para subirse: **W** y **S** suben y bajan el regulador (de *Atrás 2* a *Avante 4*, hasta 36 km/h), **espacio** pita; abajo se ve la velocidad, la marcha y los minutos de fuego. Echa humo mientras quema.
+- **Vagones** (se ponen en la vía justo detrás del último coche del tren y se enganchan solos; agachado + clic derecho con la mano vacía los desengancha):
+  - **De pasajeros**: dos asientos, ventanas y techo. Lleva también criaturas.
+  - **De mercancías**: un furgón con **54 huecos** (lo que un cofre doble).
+  - **Ténder**: 27 huecos de combustible; cuando a la locomotora se le acaba el suyo, tira del ténder (o de los ténderes) de su tren.
+- Los vagones siguen a su distancia exacta del de delante (sin empujarse ni separarse) y se sueltan si se quedan muy lejos.
+- **Habilidades**: la experiencia que dan se reduce un **70 %** (la opción "Velocidad de las habilidades" sigue multiplicando encima).
+- Lo del tren grande (locomotora, plataformas y sus objetos) desaparece de los mundos.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
