@@ -40,6 +40,7 @@ public final class BackpackClient {
 	}
 
 	public static void register() {
+		HipSwing.register();
 		open = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.evolvedwarfare.backpack", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_B,
 				"key.categories.evolvedwarfare"));
 		HandledScreens.register(Backpacks.SCREEN, BackpackScreen::new);
@@ -128,12 +129,16 @@ public final class BackpackClient {
 					matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0F));
 					matrices.scale(0.85F, -0.85F, -0.85F);
 				} else {
-					// a la cadera (derecha o izquierda), colgando
+					// colgada del cinturón (derecha o izquierda) hasta el muslo, suelta: se balancea con lo que hace el jugador
 					float side = i == 1 ? -1.0F : 1.0F;
-					matrices.translate(side * 0.31F, 0.68F, 0.02F);
+					HipSwing.State swing = HipSwing.of(player);
+					matrices.translate(side * 0.31F, 0.66F, 0.02F);
+					matrices.multiply(RotationAxis.POSITIVE_X.rotation(swing.pitch(tickDelta)));
+					matrices.multiply(RotationAxis.POSITIVE_Z.rotation(swing.roll(tickDelta) - side * 0.06F));
+					matrices.translate(0.0F, 0.26F, 0.0F);
 					matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90.0F * side));
 					matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-135.0F));
-					matrices.scale(0.55F, -0.55F, -0.55F);
+					matrices.scale(0.72F, -0.72F, -0.72F);
 				}
 				renderer.renderItem(s, ModelTransformationMode.FIXED, light, OverlayTexture.DEFAULT_UV, matrices, consumers, player.getWorld(), player.getId() + i);
 				matrices.pop();

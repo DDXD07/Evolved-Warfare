@@ -1899,6 +1899,11 @@ Lo que antes no se podía hacer en las plataformas, ahora sí:
 - **Lo que se tira tiene física**: ya no flota ni gira sobre el suelo. Al caer da vueltas; en el suelo queda tumbado (los objetos planos) o apoyado (los bloques), cada uno con su giro, y un montón grande se ve como varias piezas. No se desliza al caer y en el agua se hunde despacio en vez de flotar.
 - **La barra rápida tiene 6 huecos**: el 1 para el arma, el 2 y el 3 para herramientas, y el 4, 5 y 6 para lo demás.
 
+## Fase 45 — Herramientas colgando de verdad
+
+- Las herramientas de la cadera se ven más grandes, colgadas del cinturón hasta el muslo.
+- Cuelgan sueltas (`HipSwing`, un péndulo con muelle por jugador): al arrancar se quedan atrás y al frenar se van hacia delante, al girar se abren, al andar se balancean con las piernas y al saltar o caer rebotan.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
