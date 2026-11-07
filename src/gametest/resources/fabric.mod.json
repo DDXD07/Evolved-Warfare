@@ -40,6 +40,7 @@
 			"com.evolvedwarfare.gametest.HellStructureGameTests",
 			"com.evolvedwarfare.gametest.ApocalypseGameTests",
 			"com.evolvedwarfare.gametest.HellFloraGameTests",
+			"com.evolvedwarfare.gametest.NetherEntryGameTests",
 			"com.evolvedwarfare.gametest.BackpackGameTests",
 			"com.evolvedwarfare.gametest.TrainGameTests"
 		]
