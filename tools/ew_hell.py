@@ -394,7 +394,7 @@ def flora_biomes():
                                     "minecraft:ambient.crimson_forest.loop", "minecraft:ambient.crimson_forest.mood", "minecraft:music.nether.crimson_forest",
                                     additions="minecraft:ambient.crimson_forest.additions"),
         "hanged_swamp": flora_biome(0x1E1A14, {"options": {"type": "minecraft:smoke"}, "probability": 0.006},
-                                    [f("gallows_trees"), f("corpse_lily_patch"), f("bloodcap_patch"), f("ember_grass_patch")],
+                                    [f("gallows_trees"), f("corpse_lily_patch"), f("ember_grass_patch"), f("bloodcap_patch")],
                                     [("%s:lava_toad" % NS, 30, 2, 5), ("minecraft:strider", 20, 1, 2)],
                                     [("%s:damned_spirit" % NS, 10, 1, 2), ("minecraft:skeleton", 20, 1, 2), ("minecraft:witch", 5, 1, 1)],
                                     "minecraft:ambient.soul_sand_valley.loop", "minecraft:ambient.soul_sand_valley.mood",

@@ -172,4 +172,22 @@ public class NetherEntryGameTests implements FabricGameTest {
 		check(target != null && target.world() == nether && portalError == null, "El portal no lleva al Nether");
 		ctx.complete();
 	}
+
+	/** El orden de las features tiene que ser el mismo en todos los biomas del Nether (si no, el juego no puede generar ningún chunk). */
+	@GameTest(templateName = EMPTY_STRUCTURE)
+	public void netherFeatureOrderIsConsistent(TestContext ctx) {
+		ServerWorld nether = ctx.getWorld().getServer().getWorld(World.NETHER);
+		var biomes = new java.util.ArrayList<>(nether.getChunkManager().getChunkGenerator().getBiomeSource().getBiomes());
+		var all = ctx.getWorld().getRegistryManager().get(net.minecraft.registry.RegistryKeys.BIOME);
+		// también todos los del mod y los del Nether de vanilla, por si otro mundo los usa
+		all.streamEntries().filter(e -> e.registryKey().getValue().getNamespace().equals("evolvedwarfare") || e.isIn(net.minecraft.registry.tag.BiomeTags.IS_NETHER))
+				.filter(e -> !biomes.contains(e)).forEach(biomes::add);
+		try {
+			net.minecraft.world.gen.feature.util.PlacedFeatureIndexer.collectIndexedFeatures(biomes, b -> b.value().getGenerationSettings().getFeatures(), true);
+		} catch (IllegalStateException e) {
+			throw new GameTestException("Orden de features con un ciclo: " + e.getMessage());
+		}
+		LOG.info("[EW-GAMETEST] orden de features del Nether: bien ({} biomas)", biomes.size());
+		ctx.complete();
+	}
 }
