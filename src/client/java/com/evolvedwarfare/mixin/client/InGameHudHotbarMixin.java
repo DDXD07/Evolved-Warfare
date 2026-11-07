@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/** La barra rápida de 5 (en supervivencia), con la mochila que llevas a la derecha y lo llena que va. */
+/** La barra rápida de 6 (en supervivencia), con la mochila que llevas a la derecha y lo llena que va. */
 @Mixin(InGameHud.class)
 public abstract class InGameHudHotbarMixin {
 	private static final Identifier HOTBAR = Identifier.ofVanilla("hud/hotbar");

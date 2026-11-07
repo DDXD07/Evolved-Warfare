@@ -75,8 +75,8 @@ public class BackpackGameTests implements FabricGameTest {
 		int used = BackpackItem.used(Backpacks.worn(player));
 		LOG.info("[EW-GAMETEST] mochilas: sin mochila {} de {} (huecos {}), con la básica {} a la mochila ({} huecos usados)", took, STUFF.length, without, into,
 				used);
-		// los bloques solo caben en los huecos 4 y 5 (los otros tres son de la carga)
-		check(took == 2 && without == 2 && into == 3 && used == 3, "El inventario no es de 5 o no va a la mochila");
+		// los bloques solo caben en los huecos 4, 5 y 6 (los otros tres son de la carga)
+		check(took == 3 && without == 3 && into == 3 && used == 3, "El inventario no es de 5 o no va a la mochila");
 		ctx.complete();
 	}
 

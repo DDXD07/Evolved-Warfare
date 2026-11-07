@@ -30,7 +30,7 @@ import net.minecraft.util.Identifier;
  * <ul>
  * <li>Hueco 1: el arma principal (espadas, hachas, arcos, ballestas, tridentes, mazas, mosquetes, jabalinas...), a la espalda.</li>
  * <li>Huecos 2 y 3: herramientas (picos, palas, azadas, hachas, tijeras, cañas, el martillo...), a la cadera derecha e izquierda.</li>
- * <li>Huecos 4 y 5: lo que quieras, menos armas y herramientas.</li>
+ * <li>Huecos 4, 5 y 6: lo que quieras, menos armas y herramientas.</li>
  * </ul>
  * Las demás armas y herramientas se pueden guardar en la mochila, pero no usar.
  */

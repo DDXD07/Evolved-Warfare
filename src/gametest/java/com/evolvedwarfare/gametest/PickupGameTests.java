@@ -38,4 +38,24 @@ public class PickupGameTests implements FabricGameTest {
 		}
 		ctx.complete();
 	}
+
+	/** En el agua no flota: se hunde. */
+	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 120)
+	public void droppedItemsSinkInWater(TestContext ctx) {
+		for (int y = 1; y <= 4; y++) {
+			ctx.setBlockState(new net.minecraft.util.math.BlockPos(1, y, 1), net.minecraft.block.Blocks.WATER);
+		}
+		Vec3d at = ctx.getAbsolute(new Vec3d(1.5, 4.5, 1.5));
+		ItemEntity item = new ItemEntity(ctx.getWorld(), at.x, at.y, at.z, new ItemStack(Items.IRON_INGOT));
+		item.setVelocity(Vec3d.ZERO);
+		ctx.getWorld().spawnEntity(item);
+		double start = item.getY();
+		ctx.runAtTick(80, () -> {
+			if (!(item.getY() < start - 1.5)) {
+				throw new GameTestException("Lo tirado flota en el agua: de " + start + " a " + item.getY());
+			}
+			item.discard();
+			ctx.complete();
+		});
+	}
 }

@@ -22,7 +22,7 @@ public class BackpackScreenHandler extends ScreenHandler {
 		}
 		int y = 18 + rows * 18 + 14;
 		for (int i = 0; i < Backpacks.HOTBAR; i++) {
-			addSlot(new Slot(playerInventory, i, 44 + i * 18, y));
+			addSlot(new Slot(playerInventory, i, 35 + i * 18, y));
 		}
 	}
 

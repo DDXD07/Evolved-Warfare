@@ -55,7 +55,7 @@ import net.minecraft.world.GameRules;
  */
 public final class Backpacks {
 	/** Los huecos de la barra rápida (y de todo el inventario sin mochila). */
-	public static final int HOTBAR = 5;
+	public static final int HOTBAR = 6;
 	/** Dónde van en la pantalla del inventario: la barra, y la primera fila de la mochila. */
 	public static final int HOTBAR_Y = 88, PACK_Y = 112;
 	public static final int[] SIZES = {10, 18, 27, 36, 54};

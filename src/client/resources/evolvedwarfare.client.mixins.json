@@ -28,6 +28,7 @@
 		"ItemStackTooltipMixin",
 		"MinecraftClientDrinkMixin",
 		"MinecraftClientPickupMixin",
+		"ItemEntityRendererPhysicsMixin",
 		"PlayerEntityRendererMixin"
 	],
 	"injectors": {

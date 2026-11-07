@@ -9,6 +9,7 @@
 		"ServerPlayNetworkHandlerTrainMixin",
 		"ProjectileUtilTrainMixin",
 		"ItemEntityPickupMixin",
+		"ItemEntityPhysicsMixin",
 		"LivingEntityJumpingAccessor",
 		"PlayerScreenHandlerBackpackMixin",
 		"SlotLockMixin",

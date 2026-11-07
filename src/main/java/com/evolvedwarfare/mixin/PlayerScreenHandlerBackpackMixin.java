@@ -24,14 +24,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 @Mixin(PlayerScreenHandler.class)
 public abstract class PlayerScreenHandlerBackpackMixin {
-	/** Índices: 36-40 barra, 45 mano izquierda, 46 espalda, 47-100 mochila. */
+	/** Índices: 36-41 barra, 45 mano izquierda, 46 espalda, 47-100 mochila. */
 	private static final int HOTBAR0 = 36, BACK = 46, PACK0 = 47;
 
 	@Inject(method = "<init>", at = @At("TAIL"))
 	private void evolvedwarfare$backpackSlots(PlayerInventory inventory, boolean onServer, PlayerEntity owner, CallbackInfo ci) {
 		ScreenHandler self = (ScreenHandler) (Object) this;
 		for (int i = 0; i < Backpacks.HOTBAR; i++) {
-			Slot moved = new com.evolvedwarfare.backpack.BackpackSlots.Role(inventory, i, 44 + i * 18, Backpacks.HOTBAR_Y);
+			Slot moved = new com.evolvedwarfare.backpack.BackpackSlots.Role(inventory, i, 35 + i * 18, Backpacks.HOTBAR_Y);
 			moved.id = HOTBAR0 + i;
 			self.slots.set(HOTBAR0 + i, moved);
 		}
