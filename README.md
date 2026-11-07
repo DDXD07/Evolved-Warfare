@@ -1871,6 +1871,11 @@ Lo que antes no se podía hacer en las plataformas, ahora sí:
 - Ahora una regla al principio resuelve de una vez lo de dentro de la roca (lejos del suelo y del techo), sin cambiar el terreno: en las pruebas, generar una zona grande tarda un 40 % menos (22 s → 13 s) y buscar o crear el portal del otro lado, casi la mitad (6,6 s → 3,6 s).
 - Prueba nueva: generar el Nether, viajar allí (jugador y criaturas) y cruzar un portal, con un vigilante que vuelca los hilos si algo se cuelga.
 
+## Fase 42.3 — Por fin se entra al Nether
+
+- **La causa de verdad**: el orden de las features de los biomas del Nether no era el mismo en todos (la piedra luminosa iba después de las menas en los biomas del mod y antes en los de vanilla, y el Pantano de los ahorcados tenía dos plantas al revés que la Selva de espinos). Con un ciclo así Minecraft no puede ordenarlas, no genera ni un chunk del Nether ("Feature order cycle found") y el servidor se queda atascado: el portal no lleva, los huevos no sacan criaturas y los comandos no hacen nada.
+- Arreglado en `tools/ew_hell.py`, con una prueba que ordena las features de todos los biomas del Nether (los del mod y los de vanilla) igual que el juego, y `tools/ew_check_features.py` para mirarlo sin abrir el juego.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -1974,3 +1979,4 @@ se mueven con animación y quedan en su sitio (rastrillo arriba y abajo, puente 
 clase (80 piezas con receta, números ocultos, ventajas que suben con el material: recarga, velocidad, daño por la
 espalda). GitHub las pasa en cada cambio
 (trabajo `gametest`) y deja el registro en la rama `gametest-logs`. El código está en `src/gametest` y no va en el `.jar`.
+- `ew_check_features.py`: busca ciclos en el orden de las features de los biomas (`python3 tools/ew_check_features.py src/main/resources`).
