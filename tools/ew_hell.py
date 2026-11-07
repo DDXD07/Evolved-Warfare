@@ -286,12 +286,13 @@ def interior_shortcut(rest):
             raise ValueError("regla de superficie que pone algo dentro de la roca sin bioma: %s" % json.dumps(r)[:200])
     depth = lambda kind: {"type": "minecraft:stone_depth", "offset": 0, "surface_type": kind, "add_surface_depth": True,
                           "secondary_depth_range": 0}
-    cond = {"type": "minecraft:condition", "if_true": {"type": "minecraft:not", "invert": depth("floor")},
-            "then_run": {"type": "minecraft:condition", "if_true": {"type": "minecraft:not", "invert": depth("ceiling")},
-                         "then_run": {"type": "minecraft:block", "result_state": {"Name": "minecraft:netherrack"}}}}
+    # primero la profundidad (barata) y solo después el bioma (que es caro de mirar en cada bloque)
+    inner = {"type": "minecraft:block", "result_state": {"Name": "minecraft:netherrack"}}
     if special:
-        cond = {"type": "minecraft:condition", "if_true": {"type": "minecraft:not", "invert": {"type": "minecraft:biome", "biome_is": special}},
-                "then_run": cond}
+        inner = {"type": "minecraft:condition", "if_true": {"type": "minecraft:not", "invert": {"type": "minecraft:biome", "biome_is": special}},
+                 "then_run": inner}
+    cond = {"type": "minecraft:condition", "if_true": {"type": "minecraft:not", "invert": depth("floor")},
+            "then_run": {"type": "minecraft:condition", "if_true": {"type": "minecraft:not", "invert": depth("ceiling")}, "then_run": inner}}
     print("atajo del interior de la roca: salvo en", special)
     return cond
 

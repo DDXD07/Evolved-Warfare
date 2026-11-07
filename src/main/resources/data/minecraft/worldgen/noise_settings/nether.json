@@ -562,13 +562,11 @@
         "if_true": {
           "type": "minecraft:not",
           "invert": {
-            "type": "minecraft:biome",
-            "biome_is": [
-              "evolvedwarfare:lake_of_fire",
-              "evolvedwarfare:sodom_ruins",
-              "evolvedwarfare:abyss",
-              "evolvedwarfare:sulfur_mountains"
-            ]
+            "type": "minecraft:stone_depth",
+            "offset": 0,
+            "surface_type": "floor",
+            "add_surface_depth": true,
+            "secondary_depth_range": 0
           }
         },
         "then_run": {
@@ -578,7 +576,7 @@
             "invert": {
               "type": "minecraft:stone_depth",
               "offset": 0,
-              "surface_type": "floor",
+              "surface_type": "ceiling",
               "add_surface_depth": true,
               "secondary_depth_range": 0
             }
@@ -588,11 +586,13 @@
             "if_true": {
               "type": "minecraft:not",
               "invert": {
-                "type": "minecraft:stone_depth",
-                "offset": 0,
-                "surface_type": "ceiling",
-                "add_surface_depth": true,
-                "secondary_depth_range": 0
+                "type": "minecraft:biome",
+                "biome_is": [
+                  "evolvedwarfare:lake_of_fire",
+                  "evolvedwarfare:sodom_ruins",
+                  "evolvedwarfare:abyss",
+                  "evolvedwarfare:sulfur_mountains"
+                ]
               }
             },
             "then_run": {
