@@ -41,14 +41,14 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		// al salir de un servidor, vuelve a lo de la configuración propia
 		net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents.DISCONNECT.register((handler, client) ->
 				com.evolvedwarfare.inventory.StackLimit.setFromServer(com.evolvedwarfare.config.EwConfig.get().stackLimit));
-		EntityRendererRegistry.register(ModEntities.RECRUIT, RecruitRenderer::new);
-		EntityRendererRegistry.register(ModEntities.SOLDIER, RecruitRenderer::new);
-		EntityRendererRegistry.register(ModEntities.CITY_GUARD, RecruitRenderer::new);
-		EntityRendererRegistry.register(ModEntities.WORKER, RecruitRenderer::new);
+		EntityRendererRegistry.register(ModEntities.RECRUIT, c -> new RecruitRenderer<>(c, "recruit", 14));
+		EntityRendererRegistry.register(ModEntities.SOLDIER, c -> new RecruitRenderer<>(c, "soldier", 12));
+		EntityRendererRegistry.register(ModEntities.CITY_GUARD, c -> new RecruitRenderer<>(c, "city_guard", 10));
+		EntityRendererRegistry.register(ModEntities.WORKER, c -> new RecruitRenderer<>(c, "worker", 12));
 		EntityRendererRegistry.register(ModEntities.TRADER, com.evolvedwarfare.client.render.TraderRenderer::new);
-		EntityRendererRegistry.register(ModEntities.BANDIT, context -> new FactionNpcRenderer<>(context, "bandit", BanditEntity.VARIANTS));
-		EntityRendererRegistry.register(ModEntities.VIKING, context -> new FactionNpcRenderer<>(context, "viking", VikingEntity.VARIANTS));
-		EntityRendererRegistry.register(ModEntities.PIRATE, context -> new FactionNpcRenderer<>(context, "pirate", PirateEntity.VARIANTS));
+		EntityRendererRegistry.register(ModEntities.BANDIT, context -> new FactionNpcRenderer<>(context, "bandit", 12));
+		EntityRendererRegistry.register(ModEntities.VIKING, context -> new FactionNpcRenderer<>(context, "viking", 12));
+		EntityRendererRegistry.register(ModEntities.PIRATE, context -> new FactionNpcRenderer<>(context, "pirate", 12));
 		// asedio (fase 7)
 		for (com.evolvedwarfare.siege.SiegeKind kind : com.evolvedwarfare.siege.SiegeKind.values()) {
 			EntityRendererRegistry.register(ModEntities.engineType(kind),

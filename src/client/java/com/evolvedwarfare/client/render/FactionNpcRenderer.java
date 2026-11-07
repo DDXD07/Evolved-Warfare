@@ -28,6 +28,6 @@ public class FactionNpcRenderer<T extends FactionNpcEntity> extends NpcBipedRend
 		if (entity.getRole() == NpcRole.CAPTAIN) {
 			return captain;
 		}
-		return skins[Math.floorMod(entity.getVariant(), skins.length)];
+		return skins[RecruitRenderer.index(entity, entity.getVariant(), skins.length)];
 	}
 }

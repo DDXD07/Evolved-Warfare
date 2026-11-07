@@ -1962,6 +1962,14 @@ Las menas de vanilla ya no salen sueltas por todas partes: salen en **yacimiento
 
 - Todos los yacimientos (y las manchas de oro de aluvión) son un **40 % menos probables**: cada uno trae lo mismo, pero hay que buscar más. En el Nether, las vetas por chunk bajan en la misma proporción.
 
+## Fase 50 — Personas con más detalle
+
+- **Pieles nuevas para todas las personas del mod**, de 64x64 y con las dos capas (la de encima para capuchas, sombreros, cascos, chalecos, capas, cuellos de piel, cotas de malla...), con tela con trama, luz arriba y sombra abajo, costuras, botones, hebillas, bordados y emblemas.
+- **Muchas más variantes**, cada oficio con las suyas: reclutas 14, soldados 12 (gambesón acolchado, sobreveste del color de su compañía con cruz, torre o rombo, a veces casco con nasal y cota), guardias de ciudad 10 (azul y blanco con la torre de la ciudad), trabajadores 12 (herrero con mandil y guantes, campesino con sombrero de paja, minero o leñador con chaleco y rodilleras, molinero con delantal), comerciantes 10 (túnicas de colores ricos con ribetes, turbante con gema, boina, faja y bolsa de dinero), bandidos 12 + jefe (capuchas, máscaras, bandoleras, capas), piratas 12 + capitán (rayas, pañuelos, fajas, pendientes, tatuajes, parches; el capitán con tricornio de calavera) y vikingos 12 + jarl (trenzas, barbas trenzadas, pinturas de guerra, cuellos de piel, brazales, cascos).
+- Cada persona tiene su piel, pelo y peinado (corto, rapado, calvo, largo, coleta, trenzas, moño), barba (de tres días, corta, completa, larga, trenzada, bigote), color de ojos y a veces cicatrices, pecas, parche, pendiente o tatuaje. Hay hombres y mujeres.
+- A cada uno le toca siempre el mismo aspecto (por su UUID), repartido entre todas las variantes.
+- `tools/ew_skins.py`: el pintor de personas (sustituye a las pieles de `ew_textures.py`); con una carpeta de vistas previas hace una hoja con todas.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -2068,3 +2076,4 @@ espalda). GitHub las pasa en cada cambio
 - `ew_check_features.py`: busca ciclos en el orden de las features de los biomas (`python3 tools/ew_check_features.py src/main/resources`).
 - `ew_hunting.py`: los cuchillos (texturas, recetas, etiquetas), la mancha de sangre y los textos de la caza.
 - `ew_ores.py`: las menas realistas (yacimientos por bioma y profundidad, oro de aluvión, guijarros y pico de prospector).
+- `ew_skins.py`: las pieles de todas las personas (reclutas, soldados, guardias, trabajadores, comerciantes, bandidos, piratas, vikingos), con variantes y vista previa.
