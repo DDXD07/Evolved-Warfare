@@ -1888,6 +1888,12 @@ Lo que antes no se podía hacer en las plataformas, ahora sí:
 
 - El hacha de sílex se craftea en el 2x2 del inventario: sílex y palo arriba, palo debajo a la derecha (`FS` / ` S`).
 
+## Fase 43 — Recoger a mano
+
+- Lo que hay tirado en el suelo ya no se recoge solo al pasar por encima.
+- Se recoge **agachándose** encima, o con **clic derecho** mirándolo (hasta 4,5 bloques, si no hay un bloque o una criatura delante).
+- Las tolvas, las criaturas y la experiencia siguen igual.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

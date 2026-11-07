@@ -116,6 +116,7 @@ public final class Backpacks {
 		ServerPlayNetworking.registerGlobalReceiver(OpenPayload.ID, (payload, context) -> open(context.player()));
 		ServerTickEvents.END_SERVER_TICK.register(Backpacks::tick);
 		Sorting.register();
+		com.evolvedwarfare.pickup.Pickup.register();
 		PackActions.register();
 		ServerTickEvents.END_SERVER_TICK.register(PackActions::tick);
 	}

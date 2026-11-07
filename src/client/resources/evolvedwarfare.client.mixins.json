@@ -27,6 +27,7 @@
 		"InGameHudMixin",
 		"ItemStackTooltipMixin",
 		"MinecraftClientDrinkMixin",
+		"MinecraftClientPickupMixin",
 		"PlayerEntityRendererMixin"
 	],
 	"injectors": {
