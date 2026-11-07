@@ -19,6 +19,8 @@ import net.minecraft.world.World;
 /** El vagón de mercancías: un furgón cerrado con 54 huecos (lo que un cofre doble). */
 public class FreightCart extends StorageMinecartEntity implements TrainCar {
 	private final Link link = new Link();
+	/** Su propio inventario: el de las vagonetas con cofre es de 36 como mucho. */
+	private net.minecraft.util.collection.DefaultedList<ItemStack> items = net.minecraft.util.collection.DefaultedList.ofSize(54, ItemStack.EMPTY);
 
 	public FreightCart(EntityType<? extends FreightCart> type, World world) {
 		super(type, world);
@@ -32,6 +34,16 @@ public class FreightCart extends StorageMinecartEntity implements TrainCar {
 	@Override
 	public int size() {
 		return 54;
+	}
+
+	@Override
+	public net.minecraft.util.collection.DefaultedList<ItemStack> getInventory() {
+		return items;
+	}
+
+	@Override
+	public void resetInventory() {
+		items = net.minecraft.util.collection.DefaultedList.ofSize(54, ItemStack.EMPTY);
 	}
 
 	@Override
