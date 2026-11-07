@@ -1935,6 +1935,29 @@ Lo que antes no se podía hacer en las plataformas, ahora sí:
 - Las pilas de más de 99 se guardan y se cargan bien (Minecraft solo guardaba hasta 99), y si luego se vuelve a Estándar no se pierde nada: las pilas grandes que ya hubiera se quedan como están.
 - En un servidor manda lo del servidor: se manda a cada jugador al entrar y cuando cambia.
 
+## Fase 49 — Menas realistas
+
+Las menas de vanilla ya no salen sueltas por todas partes: salen en **yacimientos** como los de verdad, cada uno con su forma, su profundidad y sus biomas (en los demás biomas, menos o nada). En total hay un 30 % menos que en vanilla, pero muy concentrado: o encuentras un yacimiento o no hay nada. Solo en el terreno nuevo (lo ya generado no cambia).
+
+| Mineral | Yacimiento | Dónde |
+|---|---|---|
+| Carbón | Mantos: capas anchas y finas (estratos) | Llanuras, bosques, taigas y pantanos; y=0 a 130 |
+| Hierro | Lentes grandes (hierro bandeado) | Montañas, colinas, mesas, sabana alta; y=-24 a 64 y, en las montañas, hasta 220 |
+| Cobre | Pórfidos: cuerpos enormes y pobres; en las cuevas de goteo, lentes ricas | Desiertos, mesas, sabanas, montañas; y=-8 a 96 |
+| Oro | Vetas finas de cuarzo, hondas; en las mesas, altas y ricas; **aluvión** en los ríos | Montañas, mesas, colinas; y=-64 a 32 |
+| Redstone | Lentes hondas (como el cinabrio) | Todas partes; y=-64 a 12 |
+| Lapislázuli | Lentes en el mármol | Montañas y colinas; y=-32 a 32 |
+| Diamante | **Chimeneas de kimberlita**: tubos verticales de toba con diamantes dispersos, desde el fondo del mundo | Taiga, tundra, sabana, desierto, llanuras, oscuridad profunda |
+| Esmeralda | Vetas | Solo montañas |
+| Cuarzo y oro del Nether | Vetas en el netherrack | Todo el Nether |
+| Escombros ancestrales | Bolsas pequeñas y raras | Nether, y=8 a 40 |
+
+- **Oro de aluvión**: en el lecho de los ríos, manchas de **grava aurífera** (se cava con pala y suelta 2-5 pepitas de oro y la grava; con toque de seda, el bloque).
+- **Guijarros de mineral**: encima de los yacimientos poco hondos (y de todas las chimeneas de kimberlita), piedrecitas teñidas del mineral en la superficie: negras del carbón, óxido del hierro, verdín del cobre, motas de oro, rojas, azules, grises con brillo celeste del diamante, blancas con verde de la esmeralda.
+- **Pico de prospector** (2 lingotes de hierro y un palo, en el 2x2): clic derecho a la roca y dice qué mineral hay a 20 bloques (lo raro pesa más), si mucho o poco, a qué distancia y hacia dónde (norte, sureste... arriba, abajo). Cada 2 segundos; se gasta.
+- Los yacimientos usan los mismos nombres de vanilla, así no cambia el orden de las features (con una prueba que lo comprueba, también en el mundo normal).
+- `tools/ew_ores.py`: los yacimientos (feature `evolvedwarfare:deposit` y el modificador `evolvedwarfare:in_biomes`), etiquetas de biomas, guijarros, grava aurífera, pico y textos.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -2040,3 +2063,4 @@ espalda). GitHub las pasa en cada cambio
 (trabajo `gametest`) y deja el registro en la rama `gametest-logs`. El código está en `src/gametest` y no va en el `.jar`.
 - `ew_check_features.py`: busca ciclos en el orden de las features de los biomas (`python3 tools/ew_check_features.py src/main/resources`).
 - `ew_hunting.py`: los cuchillos (texturas, recetas, etiquetas), la mancha de sangre y los textos de la caza.
+- `ew_ores.py`: las menas realistas (yacimientos por bioma y profundidad, oro de aluvión, guijarros y pico de prospector).
