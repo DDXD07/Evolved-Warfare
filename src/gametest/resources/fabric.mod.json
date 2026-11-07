@@ -43,6 +43,7 @@
 			"com.evolvedwarfare.gametest.NetherEntryGameTests",
 			"com.evolvedwarfare.gametest.PickupGameTests",
 			"com.evolvedwarfare.gametest.HuntingGameTests",
+			"com.evolvedwarfare.gametest.PerfGameTests",
 			"com.evolvedwarfare.gametest.BackpackGameTests",
 			"com.evolvedwarfare.gametest.TrainGameTests"
 		]
