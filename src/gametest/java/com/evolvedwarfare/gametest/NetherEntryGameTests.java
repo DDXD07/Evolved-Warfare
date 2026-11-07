@@ -190,4 +190,45 @@ public class NetherEntryGameTests implements FabricGameTest {
 		LOG.info("[EW-GAMETEST] orden de features del Nether: bien ({} biomas)", biomes.size());
 		ctx.complete();
 	}
+
+	/** Diagnóstico: lava suelta (fuente con aire al lado o debajo, que se derrama) en una zona generada: a qué altura y en qué bioma. */
+	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 400)
+	public void netherLavaSpills(TestContext ctx) {
+		ServerWorld nether = ctx.getWorld().getServer().getWorld(World.NETHER);
+		java.util.Map<String, Integer> byY = new java.util.TreeMap<>(), byBiome = new java.util.TreeMap<>();
+		int spills = 0, sources = 0;
+		BlockPos.Mutable p = new BlockPos.Mutable();
+		for (int cx = 60; cx < 76; cx++) {
+			for (int cz = -8; cz < 8; cz++) {
+				var chunk = nether.getChunk(cx, cz);
+				for (int x = 0; x < 16; x++) {
+					for (int z = 0; z < 16; z++) {
+						for (int y = 1; y < 250; y++) {
+							p.set(cx * 16 + x, y, cz * 16 + z);
+							var st = chunk.getBlockState(p);
+							if (!st.isOf(net.minecraft.block.Blocks.LAVA) || st.getFluidState().getLevel() != 8 || !st.getFluidState().isStill()) {
+								continue;
+							}
+							sources++;
+							boolean open = false;
+							for (var d : new net.minecraft.util.math.Direction[] {net.minecraft.util.math.Direction.DOWN, net.minecraft.util.math.Direction.NORTH,
+									net.minecraft.util.math.Direction.SOUTH, net.minecraft.util.math.Direction.EAST, net.minecraft.util.math.Direction.WEST}) {
+								var n = nether.getBlockState(p.offset(d));
+								if (n.isAir() || n.getFluidState().isOf(net.minecraft.fluid.Fluids.FLOWING_LAVA)) {
+									open = true;
+								}
+							}
+							if (open) {
+								spills++;
+								byY.merge(String.format("%03d", y / 8 * 8), 1, Integer::sum);
+								byBiome.merge(nether.getBiome(p).getKey().map(k -> k.getValue().getPath()).orElse("?"), 1, Integer::sum);
+							}
+						}
+					}
+				}
+			}
+		}
+		LOG.info("[EW-GAMETEST] LAVA suelta: {} de {} fuentes; por altura {}; por bioma {}", spills, sources, byY, byBiome);
+		ctx.complete();
+	}
 }
