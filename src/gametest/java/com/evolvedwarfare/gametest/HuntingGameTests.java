@@ -40,6 +40,7 @@ public class HuntingGameTests implements FabricGameTest {
 			}
 			CarcassEntity carcass = carcasses.get(0);
 			player.setStackInHand(Hand.MAIN_HAND, new ItemStack(Hunting.FLINT_KNIFE));
+			player.refreshPositionAndAngles(carcass.getX() + 1.3, carcass.getY(), carcass.getZ(), 90, 40);
 			carcass.interact(player, Hand.MAIN_HAND);
 			LOG.info("[EW-GAMETEST] caza: jugador en {} ({} en el mundo), abatido en {}, mano {}", player.getPos(),
 					ctx.getWorld().getPlayerByUuid(player.getUuid()) != null, carcass.getPos(), player.getMainHandStack());

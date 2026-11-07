@@ -169,7 +169,7 @@ public class CarcassEntity extends Entity {
 
 	private boolean canSkin(ServerPlayerEntity p) {
 		return p != null && p.isAlive() && !p.isRemoved() && p.getWorld() == getWorld() && Hunting.isKnife(p.getMainHandStack())
-				&& p.squaredDistanceTo(getBoundingBox().getCenter()) < 3.2 * 3.2 + Math.max(animalWidth(), animalHeight());
+				&& Math.sqrt(p.squaredDistanceTo(getBoundingBox().getCenter())) < 4.0 + Math.max(animalWidth(), animalHeight()) * 0.5;
 	}
 
 	private void skinTick(ServerWorld world) {
