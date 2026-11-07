@@ -29,7 +29,7 @@ public class NetherEntryGameTests implements FabricGameTest {
 	private static Thread watchdog(String what) {
 		Thread t = new Thread(() -> {
 			try {
-				Thread.sleep(40_000);
+				Thread.sleep(90_000);
 			} catch (InterruptedException e) {
 				return;
 			}
@@ -67,6 +67,17 @@ public class NetherEntryGameTests implements FabricGameTest {
 				throw new GameTestException("El Nether no se genera: " + e);
 			}
 			LOG.info("[EW-GAMETEST] chunk del Nether {} {} en {} ms", c[0], c[1], System.currentTimeMillis() - t);
+		}
+		// una zona grande, como la que carga un jugador al llegar
+		for (int cx = 60; cx < 76; cx++) {
+			for (int cz = -8; cz < 8; cz++) {
+				long t = System.currentTimeMillis();
+				nether.getChunk(cx, cz, ChunkStatus.FULL, true);
+				long d = System.currentTimeMillis() - t;
+				if (d > 1500) {
+					LOG.info("[EW-GAMETEST] chunk lento del Nether {} {}: {} ms", cx, cz, d);
+				}
+			}
 		}
 		dog.interrupt();
 		LOG.info("[EW-GAMETEST] Nether generado en {} ms", System.currentTimeMillis() - t0);
