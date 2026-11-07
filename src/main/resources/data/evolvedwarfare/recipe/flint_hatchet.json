@@ -2,9 +2,8 @@
  "type": "minecraft:crafting_shaped",
  "category": "equipment",
  "pattern": [
-  "F",
-  "S",
-  "S"
+  "FS",
+  " S"
  ],
  "key": {
   "F": {

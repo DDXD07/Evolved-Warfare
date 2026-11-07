@@ -366,7 +366,7 @@ def main():
                {"type": "minecraft:crafting_shaped", "category": "building", "pattern": ["S", "S"],
                 "key": {"S": {"item": "minecraft:oak_slab"}}, "result": {"id": "minecraft:oak_planks", "count": 1}})
     write_json(os.path.join(rec, "flint_hatchet.json"),
-               {"type": "minecraft:crafting_shaped", "category": "equipment", "pattern": ["F", "S", "S"],
+               {"type": "minecraft:crafting_shaped", "category": "equipment", "pattern": ["FS", " S"],
                 "key": {"F": {"item": "minecraft:flint"}, "S": {"item": "minecraft:stick"}}, "result": {"id": "%s:flint_hatchet" % NS, "count": 1}})
     write_json(os.path.join(rec, "lemonade.json"),
                {"type": "minecraft:crafting_shapeless", "category": "misc",

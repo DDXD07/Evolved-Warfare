@@ -1884,6 +1884,10 @@ Lo que antes no se podía hacer en las plataformas, ahora sí:
 
 - El texto encima de los huecos de la mochila en el inventario se dibuja a la mitad de tamaño para que no se salga de la ventana.
 
+## Fase 42.6 — Hacha de sílex a mano
+
+- El hacha de sílex se craftea en el 2x2 del inventario: sílex y palo arriba, palo debajo a la derecha (`FS` / ` S`).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
