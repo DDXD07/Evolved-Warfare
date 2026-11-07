@@ -63,6 +63,7 @@ public class TenderCart extends StorageMinecartEntity implements TrainCar {
 	public void tick() {
 		TrainCar.follow(this);
 		super.tick();
+		TrainCar.moved(this);
 	}
 
 	@Override

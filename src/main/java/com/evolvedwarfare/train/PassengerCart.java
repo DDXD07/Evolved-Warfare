@@ -85,6 +85,7 @@ public class PassengerCart extends AbstractMinecartEntity implements TrainCar {
 	public void tick() {
 		TrainCar.follow(this);
 		super.tick();
+		TrainCar.moved(this);
 	}
 
 	@Override

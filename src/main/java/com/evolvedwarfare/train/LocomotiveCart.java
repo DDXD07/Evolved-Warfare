@@ -196,6 +196,7 @@ public class LocomotiveCart extends StorageMinecartEntity implements TrainCar {
 			smoke();
 		}
 		super.tick();
+		TrainCar.moved(this);
 		// hacia dónde mira: sigue a la vía (sin darse la vuelta al ir marcha atrás)
 		Vec3d v = getVelocity();
 		double h = Math.sqrt(v.x * v.x + v.z * v.z);

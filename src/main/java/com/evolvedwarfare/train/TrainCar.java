@@ -29,6 +29,8 @@ public interface TrainCar {
 		@Nullable
 		public UUID front, back;
 		int missing;
+		/** El tic del mundo en que se movió por última vez. */
+		public long movedTick = -1;
 
 		public void write(NbtCompound nbt) {
 			if (front != null) {
@@ -75,16 +77,22 @@ public interface TrainCar {
 		if (dist < 1e-4) {
 			return;
 		}
-		double err = dist - SPACING;
-		Vec3d target = f.getVelocity().add(d.multiply(1.0 / dist).multiply(MathHelperClamp(err * 0.9, -0.6, 0.6)));
-		if (target.lengthSquared() > 1.0) {
-			target = target.normalize();
-		}
-		me.setVelocity(target);
+		// lo que tiene que andar este tic para quedar justo a su distancia del de delante (contando con lo que ande el de
+		// delante si aún no se ha movido en este tic)
+		Vec3d dir = d.multiply(1.0 / dist);
+		boolean frontMoved = front.link().movedTick == world.getTime();
+		double go = dist - SPACING + (frontMoved ? 0.0 : f.getVelocity().dotProduct(dir));
+		go = MathHelperClamp(go, -0.6, 0.8);
+		me.setVelocity(dir.multiply(go).add(0, me.getVelocity().y, 0));
 	}
 
 	private static double MathHelperClamp(double v, double lo, double hi) {
 		return Math.max(lo, Math.min(hi, v));
+	}
+
+	/** Después de moverse. */
+	static void moved(TrainCar self) {
+		self.link().movedTick = self.cart().getWorld().getTime();
 	}
 
 	/** ¿Son del mismo tren? (para que no se empujen entre ellos) */
