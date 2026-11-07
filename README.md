@@ -1922,7 +1922,7 @@ Lo que antes no se podía hacer en las plataformas, ahora sí:
   - **Clima**: el calor de alrededor lee directamente de las secciones de los chunks y se salta las vacías; el deshielo mira el bloque antes que el bioma.
   - **Nether**: las runas y bloques cambiantes se buscan solo en las secciones que los tienen (mirando su paleta).
   - **Objetos en el suelo** (cliente): sin crear un generador aleatorio por objeto y fotograma.
-  - En el banco: de unos 7,7 ms por tic a unos 3 ms.
+  - En el banco: de unos 7,7 ms por tic a entre 3 y 6 ms (varía con las otras pruebas que corren a la vez); mirar la comida de la fauna pasó de ser lo más caro del mod (486 muestras) a casi nada (11-16).
 
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
