@@ -1924,6 +1924,10 @@ Lo que antes no se podía hacer en las plataformas, ahora sí:
   - **Objetos en el suelo** (cliente): sin crear un generador aleatorio por objeto y fotograma.
   - En el banco: de unos 7,7 ms por tic a entre 3 y 6 ms (varía con las otras pruebas que corren a la vez); mirar la comida de la fauna pasó de ser lo más caro del mod (486 muestras) a casi nada (11-16).
 
+## Fase 47.1 — Cuerda sencilla
+
+- La rienda (cuerda) se hace con 3 de hilo en cualquier sitio, también en el 2x2, sin bola de slime. La receta de vanilla sigue funcionando.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

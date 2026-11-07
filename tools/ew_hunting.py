@@ -123,6 +123,10 @@ def main():
     write_json(os.path.join(R, "string_from_wool.json"), {"type": "minecraft:crafting_shapeless", "category": "misc",
                                                          "ingredients": [{"tag": "minecraft:wool"}],
                                                          "result": {"id": "minecraft:string", "count": 4}})
+    # la rienda (cuerda) sin bola de slime: tres hilos trenzados, en cualquier sitio del 2x2
+    write_json(os.path.join(R, "lead_from_string.json"), {"type": "minecraft:crafting_shapeless", "category": "misc",
+                                                         "ingredients": [{"item": "minecraft:string"}] * 3,
+                                                         "result": {"id": "minecraft:lead", "count": 1}})
     os.makedirs(os.path.join(ASSETS, "textures/entity"), exist_ok=True)
     blood_texture().save(os.path.join(ASSETS, "textures/entity/blood_stain.png"))
     knives = ["%s:%s" % (NS, k) for k in KNIVES]
