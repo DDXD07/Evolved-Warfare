@@ -66,7 +66,7 @@ public final class Loadout {
 		return weapon ? Role.WEAPON : tool ? Role.TOOL : Role.OTHER;
 	}
 
-	/** ¿Puede ir esto en ese hueco de la barra (0 a 4)? */
+	/** ¿Puede ir esto en ese hueco de la barra (0 a 5)? */
 	public static boolean accepts(int slot, ItemStack stack) {
 		if (stack.isEmpty() || slot < 0 || slot >= Backpacks.HOTBAR) {
 			return true;
@@ -85,7 +85,7 @@ public final class Loadout {
 			case WEAPON -> new int[] {PRIMARY};
 			case TOOL -> new int[] {RIGHT_HIP, LEFT_HIP};
 			case BOTH -> new int[] {RIGHT_HIP, LEFT_HIP, PRIMARY};
-			default -> new int[] {3, 4};
+			default -> new int[] {3, 4, 5};
 		};
 	}
 
