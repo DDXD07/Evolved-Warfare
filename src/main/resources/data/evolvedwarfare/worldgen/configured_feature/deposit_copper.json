@@ -1,0 +1,33 @@
+{
+  "type": "evolvedwarfare:deposit",
+  "config": {
+    "targets": [
+      {
+        "target": {
+          "predicate_type": "minecraft:tag_match",
+          "tag": "minecraft:stone_ore_replaceables"
+        },
+        "state": {
+          "Name": "minecraft:copper_ore"
+        }
+      },
+      {
+        "target": {
+          "predicate_type": "minecraft:tag_match",
+          "tag": "minecraft:deepslate_ore_replaceables"
+        },
+        "state": {
+          "Name": "minecraft:deepslate_copper_ore"
+        }
+      }
+    ],
+    "shape": "disseminated",
+    "size": {
+      "type": "minecraft:uniform",
+      "min_inclusive": 9,
+      "max_inclusive": 12
+    },
+    "density": 0.09,
+    "indicator": "copper"
+  }
+}

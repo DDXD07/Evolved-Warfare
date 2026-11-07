@@ -60,6 +60,7 @@ public class EvolvedWarfare implements ModInitializer {
 		com.evolvedwarfare.train.Trains.register();
 		com.evolvedwarfare.hunting.Hunting.register();
 		com.evolvedwarfare.inventory.StackLimit.register();
+		com.evolvedwarfare.ores.Ores.register();
 		ModScreens.init();
 		ModNetworking.init();
 		ModStructures.init();

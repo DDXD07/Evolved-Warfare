@@ -55,6 +55,7 @@ public final class HellClient {
 	public static void register() {
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.SULFUR_CRYSTAL, RenderLayer.getCutout());
 		BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.STONE_FRUIT, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(com.evolvedwarfare.ores.Ores.PEBBLES, RenderLayer.getCutout());
 		// la flora del Nether vivo (fase 37)
 		for (net.minecraft.block.Block b : new net.minecraft.block.Block[] {com.evolvedwarfare.hell.HellFlora.EMBER_GRASS,
 				com.evolvedwarfare.hell.HellFlora.EMBER_FERN, com.evolvedwarfare.hell.HellFlora.HELLBLOOM, com.evolvedwarfare.hell.HellFlora.CORPSE_LILY,

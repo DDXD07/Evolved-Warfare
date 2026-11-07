@@ -1,0 +1,32 @@
+{
+  "feature": "evolvedwarfare:deposit_lapis",
+  "placement": [
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 14
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "minecraft:uniform",
+        "min_inclusive": {
+          "absolute": -32
+        },
+        "max_inclusive": {
+          "absolute": 32
+        }
+      }
+    },
+    {
+      "type": "evolvedwarfare:in_biomes",
+      "favored": "#evolvedwarfare:ores/lapis",
+      "elsewhere": 0.3
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

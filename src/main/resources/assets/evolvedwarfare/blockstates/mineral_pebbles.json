@@ -1,0 +1,124 @@
+{
+  "variants": {
+    "mineral=coal,turn=0": {
+      "model": "evolvedwarfare:block/pebbles_coal"
+    },
+    "mineral=coal,turn=1": {
+      "model": "evolvedwarfare:block/pebbles_coal",
+      "y": 90
+    },
+    "mineral=coal,turn=2": {
+      "model": "evolvedwarfare:block/pebbles_coal",
+      "y": 180
+    },
+    "mineral=coal,turn=3": {
+      "model": "evolvedwarfare:block/pebbles_coal",
+      "y": 270
+    },
+    "mineral=iron,turn=0": {
+      "model": "evolvedwarfare:block/pebbles_iron"
+    },
+    "mineral=iron,turn=1": {
+      "model": "evolvedwarfare:block/pebbles_iron",
+      "y": 90
+    },
+    "mineral=iron,turn=2": {
+      "model": "evolvedwarfare:block/pebbles_iron",
+      "y": 180
+    },
+    "mineral=iron,turn=3": {
+      "model": "evolvedwarfare:block/pebbles_iron",
+      "y": 270
+    },
+    "mineral=copper,turn=0": {
+      "model": "evolvedwarfare:block/pebbles_copper"
+    },
+    "mineral=copper,turn=1": {
+      "model": "evolvedwarfare:block/pebbles_copper",
+      "y": 90
+    },
+    "mineral=copper,turn=2": {
+      "model": "evolvedwarfare:block/pebbles_copper",
+      "y": 180
+    },
+    "mineral=copper,turn=3": {
+      "model": "evolvedwarfare:block/pebbles_copper",
+      "y": 270
+    },
+    "mineral=gold,turn=0": {
+      "model": "evolvedwarfare:block/pebbles_gold"
+    },
+    "mineral=gold,turn=1": {
+      "model": "evolvedwarfare:block/pebbles_gold",
+      "y": 90
+    },
+    "mineral=gold,turn=2": {
+      "model": "evolvedwarfare:block/pebbles_gold",
+      "y": 180
+    },
+    "mineral=gold,turn=3": {
+      "model": "evolvedwarfare:block/pebbles_gold",
+      "y": 270
+    },
+    "mineral=redstone,turn=0": {
+      "model": "evolvedwarfare:block/pebbles_redstone"
+    },
+    "mineral=redstone,turn=1": {
+      "model": "evolvedwarfare:block/pebbles_redstone",
+      "y": 90
+    },
+    "mineral=redstone,turn=2": {
+      "model": "evolvedwarfare:block/pebbles_redstone",
+      "y": 180
+    },
+    "mineral=redstone,turn=3": {
+      "model": "evolvedwarfare:block/pebbles_redstone",
+      "y": 270
+    },
+    "mineral=lapis,turn=0": {
+      "model": "evolvedwarfare:block/pebbles_lapis"
+    },
+    "mineral=lapis,turn=1": {
+      "model": "evolvedwarfare:block/pebbles_lapis",
+      "y": 90
+    },
+    "mineral=lapis,turn=2": {
+      "model": "evolvedwarfare:block/pebbles_lapis",
+      "y": 180
+    },
+    "mineral=lapis,turn=3": {
+      "model": "evolvedwarfare:block/pebbles_lapis",
+      "y": 270
+    },
+    "mineral=diamond,turn=0": {
+      "model": "evolvedwarfare:block/pebbles_diamond"
+    },
+    "mineral=diamond,turn=1": {
+      "model": "evolvedwarfare:block/pebbles_diamond",
+      "y": 90
+    },
+    "mineral=diamond,turn=2": {
+      "model": "evolvedwarfare:block/pebbles_diamond",
+      "y": 180
+    },
+    "mineral=diamond,turn=3": {
+      "model": "evolvedwarfare:block/pebbles_diamond",
+      "y": 270
+    },
+    "mineral=emerald,turn=0": {
+      "model": "evolvedwarfare:block/pebbles_emerald"
+    },
+    "mineral=emerald,turn=1": {
+      "model": "evolvedwarfare:block/pebbles_emerald",
+      "y": 90
+    },
+    "mineral=emerald,turn=2": {
+      "model": "evolvedwarfare:block/pebbles_emerald",
+      "y": 180
+    },
+    "mineral=emerald,turn=3": {
+      "model": "evolvedwarfare:block/pebbles_emerald",
+      "y": 270
+    }
+  }
+}

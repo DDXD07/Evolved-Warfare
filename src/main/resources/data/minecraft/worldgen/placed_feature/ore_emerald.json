@@ -1,0 +1,32 @@
+{
+  "feature": "evolvedwarfare:deposit_emerald",
+  "placement": [
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 6
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "minecraft:uniform",
+        "min_inclusive": {
+          "absolute": -16
+        },
+        "max_inclusive": {
+          "absolute": 200
+        }
+      }
+    },
+    {
+      "type": "evolvedwarfare:in_biomes",
+      "favored": "#evolvedwarfare:ores/emerald",
+      "elsewhere": 0.0
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

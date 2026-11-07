@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:is_taiga",
+    "minecraft:snowy_plains",
+    "minecraft:ice_spikes",
+    "#minecraft:is_savanna",
+    "minecraft:desert",
+    "minecraft:deep_dark",
+    "minecraft:plains"
+  ]
+}

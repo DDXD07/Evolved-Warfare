@@ -1,0 +1,32 @@
+{
+  "feature": "evolvedwarfare:deposit_gold",
+  "placement": [
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 6
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:height_range",
+      "height": {
+        "type": "minecraft:uniform",
+        "min_inclusive": {
+          "absolute": -64
+        },
+        "max_inclusive": {
+          "absolute": 32
+        }
+      }
+    },
+    {
+      "type": "evolvedwarfare:in_biomes",
+      "favored": "#evolvedwarfare:ores/gold",
+      "elsewhere": 0.35
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

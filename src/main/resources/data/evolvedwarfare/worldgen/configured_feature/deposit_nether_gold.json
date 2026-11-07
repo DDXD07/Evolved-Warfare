@@ -1,0 +1,23 @@
+{
+  "type": "evolvedwarfare:deposit",
+  "config": {
+    "targets": [
+      {
+        "target": {
+          "predicate_type": "minecraft:block_match",
+          "block": "minecraft:netherrack"
+        },
+        "state": {
+          "Name": "minecraft:nether_gold_ore"
+        }
+      }
+    ],
+    "shape": "vein",
+    "size": {
+      "type": "minecraft:uniform",
+      "min_inclusive": 5,
+      "max_inclusive": 8
+    },
+    "density": 0.5
+  }
+}

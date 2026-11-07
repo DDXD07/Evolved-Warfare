@@ -1,0 +1,36 @@
+{
+  "type": "evolvedwarfare:deposit",
+  "config": {
+    "targets": [
+      {
+        "target": {
+          "predicate_type": "minecraft:tag_match",
+          "tag": "minecraft:stone_ore_replaceables"
+        },
+        "state": {
+          "Name": "minecraft:diamond_ore"
+        }
+      },
+      {
+        "target": {
+          "predicate_type": "minecraft:tag_match",
+          "tag": "minecraft:deepslate_ore_replaceables"
+        },
+        "state": {
+          "Name": "minecraft:deepslate_diamond_ore"
+        }
+      }
+    ],
+    "shape": "pipe",
+    "size": {
+      "type": "minecraft:uniform",
+      "min_inclusive": 2,
+      "max_inclusive": 3
+    },
+    "density": 0.1,
+    "host": {
+      "Name": "minecraft:tuff"
+    },
+    "indicator": "diamond"
+  }
+}
