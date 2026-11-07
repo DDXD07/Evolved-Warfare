@@ -94,7 +94,12 @@ public abstract class InventoryScreenBackpackMixin extends AbstractInventoryScre
 		Text label = worn.isEmpty() ? Text.translatable("container.evolvedwarfare.backpack_slot")
 				: Text.translatable("container.evolvedwarfare.backpack", worn.getName(), com.evolvedwarfare.backpack.BackpackItem.used(worn),
 						Backpacks.size(client.player));
-		context.drawText(textRenderer, label, 8, Backpacks.PACK_Y - 11, 0x404040, false);
+		// en pequeño (a la mitad) para que quepa encima de los huecos
+		context.getMatrices().push();
+		context.getMatrices().translate(8, Backpacks.PACK_Y - 6, 0);
+		context.getMatrices().scale(0.5F, 0.5F, 1.0F);
+		context.drawText(textRenderer, label, 0, 0, 0x404040, false);
+		context.getMatrices().pop();
 		int heavy = Backpacks.heavyUsed(client.player);
 		if (heavy > 0) {
 			String t = "-" + Math.round(heavy * Backpacks.SLOW_PER_HEAVY * 100) + "%";

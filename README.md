@@ -1880,6 +1880,10 @@ Lo que antes no se podía hacer en las plataformas, ahora sí:
 
 - Las cascadas de lava del techo eran cinco por chunk: cada una caía en el suelo llano de los biomas con flora y lo cubría de un manto de lava que bajaba por las laderas (parecían "tsunamis" de lava al azar). Ahora hay una cada seis chunks más o menos.
 
+## Fase 42.5 — Etiqueta de la mochila en pequeño
+
+- El texto encima de los huecos de la mochila en el inventario se dibuja a la mitad de tamaño para que no se salga de la ventana.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
