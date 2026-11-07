@@ -1861,6 +1861,10 @@ Lo que antes no se podía hacer en las plataformas, ahora sí:
 - **Desvíos**: las vías se leen en cada momento, así que un cruce en T de vanilla con redstone cambia el camino del tren como el de una vagoneta.
 - Los cofres, camas, cajas de shulker y carteles se dibujan con su modelo animado.
 
+## Fase 42.1 — Inventario más limpio
+
+- Se quita el aviso "Sin mochila: solo llevas 5 huecos" que salía en el inventario al abrirlo sin mochila.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

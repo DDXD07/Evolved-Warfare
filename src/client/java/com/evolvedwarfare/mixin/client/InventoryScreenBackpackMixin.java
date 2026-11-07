@@ -81,10 +81,6 @@ public abstract class InventoryScreenBackpackMixin extends AbstractInventoryScre
 				}
 			}
 		}
-		if (Backpacks.size(client.player) == 0) {
-			context.drawCenteredTextWithShadow(textRenderer, Text.translatable("container.evolvedwarfare.no_backpack"), x + backgroundWidth / 2,
-					y + Backpacks.PACK_Y + 5, 0xA0A0A0);
-		}
 		InventoryScreen.drawEntity(context, x + 26, y + 8, x + 75, y + 78, 30, 0.0625F, mouseX, mouseY, client.player);
 		ci.cancel();
 	}
