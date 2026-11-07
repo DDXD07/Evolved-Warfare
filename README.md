@@ -1865,6 +1865,12 @@ Lo que antes no se podía hacer en las plataformas, ahora sí:
 
 - Se quita el aviso "Sin mochila: solo llevas 5 huecos" que salía en el inventario al abrirlo sin mochila.
 
+## Fase 42.2 — Entrar al Nether sin congelarse
+
+- La generación del Nether era muy lenta: con 320 de alto, cada bloque de roca recorría todas las reglas de superficie de los biomas infernales. Al cruzar un portal el servidor tiene que generar de golpe la zona del otro lado, y el juego se quedaba congelado (el portal sin llevarte, los huevos sin sacar criaturas, los comandos sin hacer nada).
+- Ahora una regla al principio resuelve de una vez lo de dentro de la roca (lejos del suelo y del techo), sin cambiar el terreno: en las pruebas, generar una zona grande tarda un 40 % menos (22 s → 13 s) y buscar o crear el portal del otro lado, casi la mitad (6,6 s → 3,6 s).
+- Prueba nueva: generar el Nether, viajar allí (jugador y criaturas) y cruzar un portal, con un vigilante que vuelca los hilos si algo se cuelga.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
