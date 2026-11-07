@@ -70,6 +70,13 @@ public class WildlifeGameTests implements FabricGameTest {
 			animal.damage(world.getDamageSources().generic(), 1000.0F);
 			Box box = new Box(ctx.getAbsolutePos(new BlockPos(4, 1, 4))).expand(3.0);
 			List<ItemEntity> drops = world.getEntitiesByClass(ItemEntity.class, box, e -> true);
+			// los de caza se quedan en el suelo (para despellejarlos) con lo que soltarían guardado
+			for (var c : world.getEntitiesByClass(com.evolvedwarfare.hunting.CarcassEntity.class, box, e -> true)) {
+				for (ItemStack l : c.loot()) {
+					drops.add(new ItemEntity(world, c.getX(), c.getY(), c.getZ(), l.copy()));
+				}
+				c.discard();
+			}
 			String names = drops.stream().map(e -> e.getStack().toString()).collect(Collectors.joining(", "));
 			Item[] must = expected(s);
 			if (must.length > 0) {

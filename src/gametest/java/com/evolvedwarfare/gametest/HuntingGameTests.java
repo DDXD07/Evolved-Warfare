@@ -41,10 +41,15 @@ public class HuntingGameTests implements FabricGameTest {
 			CarcassEntity carcass = carcasses.get(0);
 			player.setStackInHand(Hand.MAIN_HAND, new ItemStack(Hunting.FLINT_KNIFE));
 			carcass.interact(player, Hand.MAIN_HAND);
+			LOG.info("[EW-GAMETEST] caza: jugador en {} ({} en el mundo), abatido en {}, mano {}", player.getPos(),
+					ctx.getWorld().getPlayerByUuid(player.getUuid()) != null, carcass.getPos(), player.getMainHandStack());
 			if (ActivityPayload.current(player) != ActivityPayload.SKINNING) {
 				throw new GameTestException("No empieza a despellejar");
 			}
 		});
+		ctx.runAtTick(35, () -> LOG.info("[EW-GAMETEST] caza: tras 5 tics, actividad {}, avance {}, jugador en {}, mano {}", ActivityPayload.current(player),
+				ctx.getWorld().getEntitiesByClass(CarcassEntity.class, area, e -> true).stream().map(c -> c.progress()).toList(), player.getPos(),
+				player.getMainHandStack()));
 		ctx.runAtTick(30 + Hunting.SKIN_TIME + 10, () -> {
 			int leather = 0, beef = 0;
 			for (ItemEntity e : ctx.getWorld().getEntitiesByClass(ItemEntity.class, area, e -> true)) {

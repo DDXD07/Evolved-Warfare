@@ -175,6 +175,8 @@ public class CarcassEntity extends Entity {
 	private void skinTick(ServerWorld world) {
 		ServerPlayerEntity p = skinningPlayer(world);
 		if (!canSkin(p)) {
+			com.evolvedwarfare.EvolvedWarfare.LOGGER.debug("despellejar parado: jugador {}, cuchillo {}, distancia {}", p, p != null ? p.getMainHandStack() : null,
+					p != null ? Math.sqrt(p.squaredDistanceTo(getBoundingBox().getCenter())) : -1);
 			stopSkinning(world);
 			return;
 		}
