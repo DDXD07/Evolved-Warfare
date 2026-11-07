@@ -248,8 +248,52 @@ def noise_settings():
     s["noise_router"]["ridges"] = ABYSS
     rules = s["surface_rule"]["sequence"]
     # vuelve el techo de roca madre (fase 37): las reglas de vanilla tal cual, y las nuestras después del suelo y el techo
-    s["surface_rule"]["sequence"] = rules[:3] + HELL_RULES + rules[3:]
+    rest = HELL_RULES + rules[3:]
+    s["surface_rule"]["sequence"] = rules[:3] + [interior_shortcut(rest)] + rest
     return s
+
+
+def _fires_inside(rule):
+    """¿Puede dar un bloque lejos de la superficie (con todas las condiciones de profundidad falsas)?"""
+    t = rule["type"]
+    if t == "minecraft:sequence":
+        return any(_fires_inside(r) for r in rule["sequence"])
+    if t == "minecraft:condition":
+        c = rule["if_true"]
+        if c["type"] == "minecraft:stone_depth":
+            return False
+        return _fires_inside(rule["then_run"])
+    return True
+
+
+def interior_shortcut(rest):
+    """
+    Lo de dentro de la roca (lejos del suelo y del techo) es casi todo netherrack, pero cada bloque recorría todas las
+    reglas de superficie (cientos de comprobaciones por columna con 320 de alto: lo más lento de la generación, y lo que
+    congelaba el juego al entrar al Nether). Esta regla lo resuelve de una vez, sin cambiar el resultado: solo salta en
+    los biomas cuyas reglas no ponen nada distinto dentro de la roca.
+    """
+    special = []
+    for r in rest:
+        if not _fires_inside(r):
+            continue
+        c = r.get("if_true", {})
+        if r["type"] == "minecraft:condition" and c.get("type") == "minecraft:biome":
+            special += c["biome_is"]
+        elif r["type"] == "minecraft:block":
+            break  # la última: netherrack para todo lo demás
+        else:
+            raise ValueError("regla de superficie que pone algo dentro de la roca sin bioma: %s" % json.dumps(r)[:200])
+    depth = lambda kind: {"type": "minecraft:stone_depth", "offset": 0, "surface_type": kind, "add_surface_depth": True,
+                          "secondary_depth_range": 0}
+    cond = {"type": "minecraft:condition", "if_true": {"type": "minecraft:not", "invert": depth("floor")},
+            "then_run": {"type": "minecraft:condition", "if_true": {"type": "minecraft:not", "invert": depth("ceiling")},
+                         "then_run": {"type": "minecraft:block", "result_state": {"Name": "minecraft:netherrack"}}}}
+    if special:
+        cond = {"type": "minecraft:condition", "if_true": {"type": "minecraft:not", "invert": {"type": "minecraft:biome", "biome_is": special}},
+                "then_run": cond}
+    print("atajo del interior de la roca: salvo en", special)
+    return cond
 
 
 DIMENSION_TYPE = {

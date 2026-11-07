@@ -560,6 +560,53 @@
       {
         "type": "minecraft:condition",
         "if_true": {
+          "type": "minecraft:not",
+          "invert": {
+            "type": "minecraft:biome",
+            "biome_is": [
+              "evolvedwarfare:lake_of_fire",
+              "evolvedwarfare:sodom_ruins",
+              "evolvedwarfare:abyss",
+              "evolvedwarfare:sulfur_mountains"
+            ]
+          }
+        },
+        "then_run": {
+          "type": "minecraft:condition",
+          "if_true": {
+            "type": "minecraft:not",
+            "invert": {
+              "type": "minecraft:stone_depth",
+              "offset": 0,
+              "surface_type": "floor",
+              "add_surface_depth": true,
+              "secondary_depth_range": 0
+            }
+          },
+          "then_run": {
+            "type": "minecraft:condition",
+            "if_true": {
+              "type": "minecraft:not",
+              "invert": {
+                "type": "minecraft:stone_depth",
+                "offset": 0,
+                "surface_type": "ceiling",
+                "add_surface_depth": true,
+                "secondary_depth_range": 0
+              }
+            },
+            "then_run": {
+              "type": "minecraft:block",
+              "result_state": {
+                "Name": "minecraft:netherrack"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "minecraft:condition",
+        "if_true": {
           "type": "minecraft:y_above",
           "anchor": {
             "absolute": 150
