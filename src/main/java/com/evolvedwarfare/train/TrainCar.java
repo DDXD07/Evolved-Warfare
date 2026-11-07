@@ -76,7 +76,7 @@ public interface TrainCar {
 			return;
 		}
 		double err = dist - SPACING;
-		Vec3d target = f.getVelocity().add(d.multiply(1.0 / dist).multiply(MathHelperClamp(err * 0.45, -0.4, 0.4)));
+		Vec3d target = f.getVelocity().add(d.multiply(1.0 / dist).multiply(MathHelperClamp(err * 0.9, -0.6, 0.6)));
 		if (target.lengthSquared() > 1.0) {
 			target = target.normalize();
 		}

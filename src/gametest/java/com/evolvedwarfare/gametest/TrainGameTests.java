@@ -62,13 +62,13 @@ public class TrainGameTests implements FabricGameTest {
 		freight.setStack(40, new ItemStack(Items.DIAMOND, 3));
 		loco.setThrottle(LocomotiveCart.MAX_NOTCH);
 		double start = loco.getX();
-		ctx.runAtTick(160, () -> {
+		ctx.runAtTick(120, () -> {
 			double run = loco.getX() - start;
 			double g1 = loco.getX() - tender.getX(), g2 = tender.getX() - freight.getX(), g3 = freight.getX() - passenger.getX();
 			int coal = tender.getStack(0).getCount();
 			LOG.info("[EW-GAMETEST] tren: recorre {} bloques, huecos {} / {} / {}, carbón en el ténder {}, fuego {}, velocidad {}, en mercancías {}", run, g1, g2,
 					g3, coal, loco.fuel(), loco.getVelocity().x, freight.size());
-			boolean ok = run > 12 && Math.abs(g1 - TrainCar.SPACING) < 0.8 && Math.abs(g2 - TrainCar.SPACING) < 0.8 && Math.abs(g3 - TrainCar.SPACING) < 0.8
+			boolean ok = run > 12 && Math.abs(g1 - TrainCar.SPACING) < 0.4 && Math.abs(g2 - TrainCar.SPACING) < 0.4 && Math.abs(g3 - TrainCar.SPACING) < 0.4
 					&& coal < 8 && freight.size() == 54 && freight.getStack(40).isOf(Items.DIAMOND);
 			for (var c : new AbstractMinecartEntity[] {loco, tender, freight, passenger}) {
 				c.discard();
