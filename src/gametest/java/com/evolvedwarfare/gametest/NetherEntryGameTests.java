@@ -94,6 +94,28 @@ public class NetherEntryGameTests implements FabricGameTest {
 			moved.discard();
 		}
 		check(ok, "No se puede viajar al Nether");
+		// por un portal de verdad (lejos de lo ya generado, para que tenga que crear el portal del otro lado)
+		ServerWorld world = ctx.getWorld();
+		BlockPos far = new BlockPos(here.getX() + 4000, 70, here.getZ() + 4000);
+		world.getChunk(far);
+		world.setBlockState(far, net.minecraft.block.Blocks.NETHER_PORTAL.getDefaultState(), 18);
+		var pig2 = EntityType.PIG.create(world);
+		pig2.refreshPositionAndAngles(far, 0, 0);
+		Thread dog3 = watchdog("buscar o crear el portal del Nether");
+		long tp = System.currentTimeMillis();
+		TeleportTarget target = null;
+		Throwable portalError = null;
+		try {
+			target = ((net.minecraft.block.NetherPortalBlock) net.minecraft.block.Blocks.NETHER_PORTAL).createTeleportTarget(world, pig2, far);
+		} catch (Throwable e) {
+			portalError = e;
+			LOG.error("[EW-GAMETEST] el portal del Nether falla", e);
+		}
+		dog3.interrupt();
+		LOG.info("[EW-GAMETEST] portal al Nether: destino {} en {} ({} ms), error {}", target != null ? target.pos() : null,
+				target != null ? target.world().getRegistryKey().getValue() : null, System.currentTimeMillis() - tp, portalError);
+		world.setBlockState(far, net.minecraft.block.Blocks.AIR.getDefaultState(), 18);
+		check(target != null && target.world() == nether && portalError == null, "El portal no lleva al Nether");
 		ctx.complete();
 	}
 }
