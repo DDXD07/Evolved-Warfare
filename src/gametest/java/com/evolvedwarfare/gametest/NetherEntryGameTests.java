@@ -68,7 +68,42 @@ public class NetherEntryGameTests implements FabricGameTest {
 			}
 			LOG.info("[EW-GAMETEST] chunk del Nether {} {} en {} ms", c[0], c[1], System.currentTimeMillis() - t);
 		}
-		// una zona grande, como la que carga un jugador al llegar
+		// una zona grande, como la que carga un jugador al llegar (y mientras, dónde se va el tiempo)
+		java.util.Map<String, Integer> hot = new java.util.concurrent.ConcurrentHashMap<>(), ours = new java.util.concurrent.ConcurrentHashMap<>();
+		java.util.concurrent.atomic.AtomicBoolean sampling = new java.util.concurrent.atomic.AtomicBoolean(true);
+		Thread sampler = new Thread(() -> {
+			while (sampling.get()) {
+				for (var e : Thread.getAllStackTraces().entrySet()) {
+					String n = e.getKey().getName();
+					if (!n.contains("Worker") && !n.contains("Server thread")) {
+						continue;
+					}
+					StackTraceElement[] st = e.getValue();
+					if (st.length == 0 || e.getKey().getState() != Thread.State.RUNNABLE) {
+						continue;
+					}
+					StringBuilder k = new StringBuilder();
+					for (int i = 0; i < Math.min(3, st.length); i++) {
+						k.append(st[i].getClassName().replaceAll(".*\\.", "")).append('.').append(st[i].getMethodName()).append(" < ");
+					}
+					hot.merge(k.toString(), 1, Integer::sum);
+					for (StackTraceElement el : st) {
+						if (el.getClassName().contains("evolvedwarfare") || el.getClassName().contains("Feature") || el.getClassName().contains("Structure")
+								|| el.getClassName().contains("DensityFunction") && false) {
+							ours.merge(el.getClassName().replaceAll(".*\\.", "") + "." + el.getMethodName(), 1, Integer::sum);
+							break;
+						}
+					}
+				}
+				try {
+					Thread.sleep(5);
+				} catch (InterruptedException ex) {
+					return;
+				}
+			}
+		}, "ew-sampler");
+		sampler.setDaemon(true);
+		sampler.start();
 		for (int cx = 60; cx < 76; cx++) {
 			for (int cz = -8; cz < 8; cz++) {
 				long t = System.currentTimeMillis();
@@ -79,6 +114,14 @@ public class NetherEntryGameTests implements FabricGameTest {
 				}
 			}
 		}
+		sampling.set(false);
+		StringBuilder prof = new StringBuilder("[EW-GAMETEST] PERFIL del Nether (lo más caliente):\n");
+		hot.entrySet().stream().sorted((x, y) -> y.getValue() - x.getValue()).limit(30)
+				.forEach(e -> prof.append("  ").append(e.getValue()).append("  ").append(e.getKey()).append('\n'));
+		prof.append(" por quién (primer marco de features, estructuras o del mod):\n");
+		ours.entrySet().stream().sorted((x, y) -> y.getValue() - x.getValue()).limit(30)
+				.forEach(e -> prof.append("  ").append(e.getValue()).append("  ").append(e.getKey()).append('\n'));
+		LOG.info(prof.toString());
 		dog.interrupt();
 		LOG.info("[EW-GAMETEST] Nether generado en {} ms", System.currentTimeMillis() - t0);
 		// viajar: una criatura y un jugador
