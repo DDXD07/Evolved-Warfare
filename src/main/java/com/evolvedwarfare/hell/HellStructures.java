@@ -163,6 +163,10 @@ public final class HellStructures {
 		int changed = 0;
 		long phase = world.getTime() / 60;
 		for (BlockPos p : BlockPos.iterate(center.add(-10, -6, -10), center.add(10, 6, 10))) {
+			// se salta enseguida lo que está en secciones de chunk sin runas ni bloques cambiantes (casi todo)
+			if (!sectionHasShifting(world, p)) {
+				continue;
+			}
 			BlockState state = world.getBlockState(p);
 			if (state.isOf(BABEL_RUNE)) {
 				if (p.getSquaredDistance(center) <= 64 && world.random.nextInt(5) < 2) {
@@ -183,6 +187,28 @@ public final class HellStructures {
 			}
 		}
 		return changed;
+	}
+
+	private static long lastSection = Long.MIN_VALUE;
+	private static boolean lastSectionHas;
+	private static long lastSectionTime = -1;
+
+	/** ¿Tiene la sección (16x16x16) de ese bloque alguna runa o bloque cambiante? (mira su paleta; se recuerda la última) */
+	private static boolean sectionHasShifting(ServerWorld world, BlockPos p) {
+		long key = net.minecraft.util.math.ChunkSectionPos.asLong(p.getX() >> 4, p.getY() >> 4, p.getZ() >> 4);
+		if (key == lastSection && lastSectionTime == world.getTime()) {
+			return lastSectionHas;
+		}
+		boolean has = false;
+		if (!world.isOutOfHeightLimit(p.getY()) && world.isChunkLoaded(p.getX() >> 4, p.getZ() >> 4)) {
+			var chunk = world.getChunk(p.getX() >> 4, p.getZ() >> 4);
+			var section = chunk.getSection(chunk.getSectionIndex(p.getY()));
+			has = !section.isEmpty() && section.hasAny(st -> st.isOf(BABEL_RUNE) || st.isOf(SHIFTING_BLOCK));
+		}
+		lastSection = key;
+		lastSectionHas = has;
+		lastSectionTime = world.getTime();
+		return has;
 	}
 
 	/** Despierta a las criaturas dormidas (las de las tumbas y los habitantes de Sodoma) cercanas; devuelve cuántas. */

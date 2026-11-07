@@ -1912,6 +1912,18 @@ Lo que antes no se podía hacer en las plataformas, ahora sí:
 - Queda una **mancha de sangre** en el suelo que se va apagando y desaparece a los 10 segundos.
 - `tools/ew_hunting.py`: texturas de los cuchillos y la sangre, recetas, etiquetas y textos.
 
+## Fase 47 — Optimización e hilo de lana
+
+- **Hilo de la lana**: un bloque de lana (de cualquier color) en la mesa o en el 2x2 da 4 de hilo.
+- **Banco de rendimiento** (`PerfGameTests`): una zona con 79 criaturas (fauna, soldados, bandidos, trabajadores, demonios y animales de vanilla), agua que corre a un foso y 30 cubos sacados de un estanque, con un muestreador que cuenta en qué se va el tiempo del servidor. Con él:
+  - **Fauna** (lo más caro con diferencia): cada animal miraba cada tic, por cada jugador, si llevaba su comida en la mano, y para eso creaba un ingrediente nuevo (con sus objetos) cada vez. Ahora se calcula una vez y se mira en un conjunto. La especie de cada animal también se recuerda.
+  - **Agua y lava realistas**: sin crear listas ni generadores aleatorios en cada tic de cada bloque; las capas guardadas del mundo se recuerdan; al cambiar solo la altura del líquido se avisa a los líquidos vecinos en vez de hacer la ronda completa de actualizaciones (salvo junto a otro líquido, por la obsidiana); y sacar un cubo de un lago recorre el lago con un conjunto de números y mira si es el mar una vez por cada 4x4x4 bloques en vez de en cada bloque. Sacar un cubo cuesta la mitad.
+  - **Trenes**: las colisiones (que se miran para cada criatura en cada movimiento) primero comprueban si hay algún tren cerca en una lista de coches, en vez de buscar entidades.
+  - **Clima**: el calor de alrededor lee directamente de las secciones de los chunks y se salta las vacías; el deshielo mira el bloque antes que el bioma.
+  - **Nether**: las runas y bloques cambiantes se buscan solo en las secciones que los tienen (mirando su paleta).
+  - **Objetos en el suelo** (cliente): sin crear un generador aleatorio por objeto y fotograma.
+  - En el banco: de unos 7,7 ms por tic a unos 3 ms.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

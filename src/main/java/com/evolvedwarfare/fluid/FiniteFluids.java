@@ -159,7 +159,33 @@ public final class FiniteFluids {
 			// una planta o algo que se lleva el agua
 			Block.dropStacks(old, world, pos, world.getBlockEntity(pos));
 		}
+		if (old.getBlock() instanceof FluidBlock && next.getBlock() instanceof FluidBlock && !touchesOtherFluid(world, pos, fluid)) {
+			// solo cambia la altura del líquido: a los vecinos que no son líquido les da igual; a los de líquido se les avisa
+			// para que se muevan (sin la ronda entera de actualizaciones de vecinos, que era lo más caro del agua)
+			world.setBlockState(pos, next, Block.NOTIFY_LISTENERS);
+			FlowableFluid kind = (FlowableFluid) (fluid.matchesType(Fluids.LAVA) ? Fluids.LAVA : Fluids.WATER);
+			int rate = kind.getTickRate(world);
+			for (Direction d : Direction.values()) {
+				BlockPos n = pos.offset(d);
+				if (world.getFluidState(n).getFluid().matchesType(kind)) {
+					world.scheduleFluidTick(n, kind, rate);
+				}
+			}
+			world.scheduleFluidTick(pos, kind, rate);
+			return;
+		}
 		world.setBlockState(pos, next, Block.NOTIFY_ALL);
+	}
+
+	/** ¿Hay al lado otro líquido (agua junto a lava)? Entonces sí hace falta la actualización completa (obsidiana, piedra). */
+	private static boolean touchesOtherFluid(World world, BlockPos pos, Fluid fluid) {
+		for (Direction d : Direction.values()) {
+			FluidState n = world.getFluidState(pos.offset(d));
+			if (!n.isEmpty() && !n.getFluid().matchesType(fluid)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/** Añade capas a un sitio (hasta llenarlo). Devuelve las que han cabido. */
