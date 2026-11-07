@@ -2063,5 +2063,9 @@
   "entity.evolvedwarfare.blood_stain": "Mancha de sangre",
   "message.evolvedwarfare.skinning": "Despellejando %s",
   "message.evolvedwarfare.skinning.need_knife": "Necesitas un cuchillo en la mano para despellejarlo",
-  "message.evolvedwarfare.skinning.busy": "Alguien ya lo está despellejando"
+  "message.evolvedwarfare.skinning.busy": "Alguien ya lo está despellejando",
+  "config.evolvedwarfare.category.inventory": "Inventario",
+  "config.evolvedwarfare.stackLimit": "Límite por hueco",
+  "config.evolvedwarfare.stackLimit.tip": "Cuánto cabe en un hueco de lo que se apila: Estándar (64), 100, 500, 1000 o 5000. Lo que no se apila (herramientas, armaduras) sigue de uno en uno. En un servidor manda lo del servidor.",
+  "config.evolvedwarfare.stackLimit.standard": "Estándar (64)"
 }

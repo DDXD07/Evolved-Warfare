@@ -35,6 +35,12 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		com.evolvedwarfare.client.backpack.BackpackClient.register();
 		com.evolvedwarfare.client.train.TrainRenderers.register();
 		com.evolvedwarfare.client.hunting.HuntingRenderers.register();
+		net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.registerGlobalReceiver(
+				com.evolvedwarfare.inventory.StackLimit.StackLimitPayload.ID,
+				(payload, context) -> com.evolvedwarfare.inventory.StackLimit.setFromServer(payload.limit()));
+		// al salir de un servidor, vuelve a lo de la configuración propia
+		net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents.DISCONNECT.register((handler, client) ->
+				com.evolvedwarfare.inventory.StackLimit.setFromServer(com.evolvedwarfare.config.EwConfig.get().stackLimit));
 		EntityRendererRegistry.register(ModEntities.RECRUIT, RecruitRenderer::new);
 		EntityRendererRegistry.register(ModEntities.SOLDIER, RecruitRenderer::new);
 		EntityRendererRegistry.register(ModEntities.CITY_GUARD, RecruitRenderer::new);

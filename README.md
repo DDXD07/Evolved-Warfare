@@ -1928,6 +1928,13 @@ Lo que antes no se podía hacer en las plataformas, ahora sí:
 
 - La rienda (cuerda) se hace con 3 de hilo en cualquier sitio, también en el 2x2, sin bola de slime. La receta de vanilla sigue funcionando.
 
+## Fase 48 — Límite por hueco
+
+- Opción nueva en la configuración (pestaña **Inventario**, también `/evolvedwarfare config stackLimit`): **Estándar (64)**, **100**, **500**, **1000** o **5000** de todo lo que se apila. Lo que no se apila (herramientas, armas, armaduras) sigue de uno en uno.
+- Vale para el inventario, la mochila, cofres, barriles, cajas de shulker, tolvas, hornos y el cofre de ender. Las cantidades grandes se ven en corto en la casilla (1500 → "1.5k").
+- Las pilas de más de 99 se guardan y se cargan bien (Minecraft solo guardaba hasta 99), y si luego se vuelve a Estándar no se pierde nada: las pilas grandes que ya hubiera se quedan como están.
+- En un servidor manda lo del servidor: se manda a cada jugador al entrar y cuando cambia.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

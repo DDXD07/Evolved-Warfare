@@ -12,6 +12,11 @@ import net.minecraft.util.collection.DefaultedList;
  * pantalla de la mochila). Guarda una copia viva y la devuelve al objeto (a su componente) cada vez que cambia.
  */
 public class BackpackInventory implements Inventory {
+	@Override
+	public int getMaxCountPerStack() {
+		return com.evolvedwarfare.inventory.StackLimit.inventory(99);
+	}
+
 	public static final int MAX = 54;
 	private final PlayerEntity player;
 	private final DefaultedList<ItemStack> items = DefaultedList.ofSize(MAX, ItemStack.EMPTY);

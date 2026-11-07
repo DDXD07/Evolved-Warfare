@@ -160,6 +160,12 @@ public final class EwConfig {
 	public boolean locationalVanillaMobs = false;
 	/** Desmembramiento de los NPCs del mod (cortar brazos y piernas, decapitar). */
 	public boolean dismemberment = true;
+
+	// ------------------------------------------------------------------ inventario
+	/** Lo máximo que cabe en un hueco de lo que se apila (64 = como siempre; 100, 500, 1000 o 5000). */
+	public int stackLimit = 64;
+	/** Los valores que se pueden elegir para stackLimit. */
+	public static final int[] STACK_LIMITS = {64, 100, 500, 1000, 5000};
 	/** Multiplica la probabilidad de cortar (1 = normal). */
 	public double dismembermentChance = 1.0;
 
@@ -249,7 +255,8 @@ public final class EwConfig {
 			new Option("legsDamage", "combat", 0.0, 10.0, 0.1),
 			new Option("locationalVanillaMobs", "combat", 0, 1, 1),
 			new Option("dismemberment", "combat", 0, 1, 1),
-			new Option("dismembermentChance", "combat", 0.0, 5.0, 0.1));
+			new Option("dismembermentChance", "combat", 0.0, 5.0, 0.1),
+			new Option("stackLimit", "inventory", 64, 5000, 1));
 
 	public static EwConfig get() {
 		return instance;
@@ -282,6 +289,7 @@ public final class EwConfig {
 		}
 		instance = loaded != null ? loaded : new EwConfig();
 		instance.clampAll();
+		com.evolvedwarfare.inventory.StackLimit.changed(instance.stackLimit);
 		save();
 	}
 
@@ -300,6 +308,7 @@ public final class EwConfig {
 	/** Vuelve a los valores de fábrica. */
 	public static synchronized void reset() {
 		instance = new EwConfig();
+		com.evolvedwarfare.inventory.StackLimit.changed(instance.stackLimit);
 		save();
 	}
 
@@ -333,6 +342,34 @@ public final class EwConfig {
 
 	/** Cambia una opción (recortada a sus límites). */
 	public void set(Option option, double value) {
+		if (option.key().equals("stackLimit")) {
+			// solo los valores de la lista: al subir, el siguiente; al bajar, el anterior; si no, el más cercano
+			int now = stackLimit, pick = STACK_LIMITS[0];
+			if (value > now + 0.5) {
+				pick = STACK_LIMITS[STACK_LIMITS.length - 1];
+				for (int v : STACK_LIMITS) {
+					if (v > now) {
+						pick = v;
+						break;
+					}
+				}
+			} else if (value < now - 0.5) {
+				for (int v : STACK_LIMITS) {
+					if (v < now) {
+						pick = v;
+					}
+				}
+			} else {
+				for (int v : STACK_LIMITS) {
+					if (Math.abs(v - value) < Math.abs(pick - value)) {
+						pick = v;
+					}
+				}
+			}
+			stackLimit = pick;
+			com.evolvedwarfare.inventory.StackLimit.changed(pick);
+			return;
+		}
 		double clamped = Math.max(option.min(), Math.min(option.max(), value));
 		try {
 			Field field = option.field();
@@ -351,6 +388,9 @@ public final class EwConfig {
 	/** El valor para mostrar ("sí"/"no" lo traduce quien lo muestra). */
 	public String display(Option option) {
 		double value = value(option);
+		if (option.key().equals("stackLimit")) {
+			return stackLimit == 64 ? net.minecraft.text.Text.translatable("config.evolvedwarfare.stackLimit.standard").getString() : Integer.toString(stackLimit);
+		}
 		if (option.isBoolean()) {
 			return value >= 0.5 ? "true" : "false";
 		}

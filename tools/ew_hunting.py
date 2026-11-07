@@ -36,6 +36,11 @@ TEXTS = {
     "entity.evolvedwarfare.blood_stain": ("Mancha de sangre", "Blood Stain"),
     "message.evolvedwarfare.skinning": ("Despellejando %s", "Skinning %s"),
     "message.evolvedwarfare.skinning.need_knife": ("Necesitas un cuchillo en la mano para despellejarlo", "You need a knife in hand to skin it"),
+    "config.evolvedwarfare.category.inventory": ("Inventario", "Inventory"),
+    "config.evolvedwarfare.stackLimit": ("Límite por hueco", "Stack limit"),
+    "config.evolvedwarfare.stackLimit.tip": ("Cuánto cabe en un hueco de lo que se apila: Estándar (64), 100, 500, 1000 o 5000. Lo que no se apila (herramientas, armaduras) sigue de uno en uno. En un servidor manda lo del servidor.",
+                                             "How many stackable items fit in a slot: Standard (64), 100, 500, 1000 or 5000. Unstackable items (tools, armor) stay at one. On a server, the server's setting applies."),
+    "config.evolvedwarfare.stackLimit.standard": ("Estándar (64)", "Standard (64)"),
     "message.evolvedwarfare.skinning.busy": ("Alguien ya lo está despellejando", "Someone is already skinning it"),
 }
 

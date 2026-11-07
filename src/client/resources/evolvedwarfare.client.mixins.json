@@ -30,6 +30,7 @@
 		"MinecraftClientPickupMixin",
 		"ItemEntityRendererPhysicsMixin",
 		"KeyboardInputSkinningMixin",
+		"DrawContextCountMixin",
 		"PlayerEntityRendererMixin"
 	],
 	"injectors": {
