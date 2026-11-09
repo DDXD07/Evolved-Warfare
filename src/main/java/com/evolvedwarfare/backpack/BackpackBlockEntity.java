@@ -39,6 +39,17 @@ public class BackpackBlockEntity extends BlockEntity implements Inventory {
 	}
 
 	/** La mochila otra vez como objeto, con todo dentro. */
+	/** Saca la mochila entera (con lo de dentro) y deja el bloque vacío, para que al quitarlo no suelte otra copia. */
+	public ItemStack take() {
+		ItemStack out = toItem();
+		backpack = ItemStack.EMPTY;
+		for (int i = 0; i < items.size(); i++) {
+			items.set(i, ItemStack.EMPTY);
+		}
+		changed();
+		return out;
+	}
+
 	public ItemStack toItem() {
 		if (backpack.isEmpty()) {
 			return ItemStack.EMPTY;

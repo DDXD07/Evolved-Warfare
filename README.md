@@ -1983,6 +1983,10 @@ El tren grande de antes (con plataformas para construir encima) se cambia por un
 - **Habilidades**: la experiencia que dan se reduce un **70 %** (la opción "Velocidad de las habilidades" sigue multiplicando encima).
 - Lo del tren grande (locomotora, plataformas y sus objetos) desaparece de los mundos.
 
+## Fase 51.1 — La mochila no se duplica
+
+- Al recoger una mochila del suelo y ponérsela, el bloque se quitaba todavía con la mochila dentro y soltaba otra copia al suelo. Ahora se saca entera antes de quitar el bloque (con una prueba).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

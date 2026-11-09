@@ -139,8 +139,8 @@ public final class PackActions {
 		if (!(p.world().getBlockEntity(p.pos()) instanceof BackpackBlockEntity be) || !Backpacks.worn(player).isEmpty()) {
 			return;
 		}
-		ItemStack stack = be.toItem();
-		be.clear();
+		// se saca entera del bloque antes de quitarlo (si no, al quitarlo soltaba otra copia al suelo)
+		ItemStack stack = be.take();
 		p.world().removeBlock(p.pos(), false);
 		Backpacks.setWorn(player, stack);
 		p.world().playSound(null, player.getBlockPos(), SoundEvents.ITEM_ARMOR_EQUIP_LEATHER.value(), SoundCategory.PLAYERS, 1.0F, 1.0F);
