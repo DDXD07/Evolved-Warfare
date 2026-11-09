@@ -293,6 +293,8 @@ public class BackpackGameTests implements FabricGameTest {
 		var pos = ctx.getAbsolutePos(new net.minecraft.util.math.BlockPos(1, 2, 1));
 		var world = ctx.getWorld();
 		net.minecraft.item.ItemStack pack = new net.minecraft.item.ItemStack(com.evolvedwarfare.backpack.Backpacks.BACKPACKS[0]);
+		world.setBlockState(pos.down(), net.minecraft.block.Blocks.STONE.getDefaultState());
+		world.setBlockState(pos, net.minecraft.block.Blocks.AIR.getDefaultState());
 		com.evolvedwarfare.backpack.BackpackBlock.place(world, pos, pack, net.minecraft.util.math.Direction.NORTH);
 		if (!(world.getBlockEntity(pos) instanceof com.evolvedwarfare.backpack.BackpackBlockEntity be)) {
 			throw new net.minecraft.test.GameTestException("No se pone la mochila");

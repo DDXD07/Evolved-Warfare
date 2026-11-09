@@ -82,7 +82,8 @@ public interface TrainCar {
 		Vec3d dir = d.multiply(1.0 / dist);
 		boolean frontMoved = front.link().movedTick == world.getTime();
 		double go = dist - SPACING + (frontMoved ? 0.0 : f.getVelocity().dotProduct(dir));
-		go = MathHelperClamp(go, -0.6, 0.8);
+		// nunca más de lo que hay hasta el de delante (para no adelantarlo si él no llega a moverse)
+		go = MathHelperClamp(go, -0.6, Math.min(0.8, dist - 0.6));
 		me.setVelocity(dir.multiply(go).add(0, me.getVelocity().y, 0));
 	}
 
