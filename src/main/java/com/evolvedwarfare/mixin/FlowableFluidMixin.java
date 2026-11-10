@@ -18,7 +18,9 @@ public abstract class FlowableFluidMixin {
 		if (world.isClient || !FiniteFluids.enabled() || !FiniteFluids.handles(state.getFluid())) {
 			return;
 		}
-		FiniteFluids.tick(world, pos, state.getFluid());
+		if (FiniteFluids.withinBudget(world, pos, state.getFluid())) {
+			FiniteFluids.tick(world, pos, state.getFluid());
+		}
 		ci.cancel();
 	}
 }

@@ -46,6 +46,7 @@
 			"com.evolvedwarfare.gametest.PerfGameTests",
 			"com.evolvedwarfare.gametest.StackLimitGameTests",
 			"com.evolvedwarfare.gametest.OreGameTests",
+			"com.evolvedwarfare.gametest.WaterSettleGameTests",
 			"com.evolvedwarfare.gametest.BackpackGameTests",
 			"com.evolvedwarfare.gametest.TrainGameTests"
 		]

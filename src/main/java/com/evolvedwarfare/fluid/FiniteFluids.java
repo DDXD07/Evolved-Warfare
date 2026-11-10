@@ -208,7 +208,31 @@ public final class FiniteFluids {
 	 * vecino que tenga dos menos, o uno menos si ese vecino sigue bajando; y por los bordes, todo). Devuelve si se ha
 	 * movido algo.
 	 */
+	/** Cuántos tics de líquido se han hecho en el tic del mundo que va (para repartir la carga). */
+	private static long budgetTime = -1;
+	private static int budgetUsed;
+	/** Lo más que se mueve en un tic del mundo: lo demás espera unos tics (como mucho, unos 3000 bloques de líquido por tic). */
+	public static final int BUDGET = 3000;
+	/** Para las pruebas: cuántos tics de líquido se han hecho en total. */
+	public static long ticksDone;
+
+	/** ¿Queda sitio en este tic del mundo? Si no, se deja para luego (el tic se vuelve a programar). */
+	public static boolean withinBudget(World world, BlockPos pos, Fluid fluid) {
+		long now = world.getTime();
+		if (now != budgetTime) {
+			budgetTime = now;
+			budgetUsed = 0;
+		}
+		if (++budgetUsed <= BUDGET) {
+			return true;
+		}
+		FlowableFluid kind = (FlowableFluid) (fluid.matchesType(Fluids.LAVA) ? Fluids.LAVA : Fluids.WATER);
+		world.scheduleFluidTick(pos, kind, kind.getTickRate(world) + world.random.nextInt(10));
+		return false;
+	}
+
 	public static boolean tick(World world, BlockPos pos, Fluid fluid) {
+		ticksDone++;
 		BlockState state = world.getBlockState(pos);
 		if (!(state.getBlock() instanceof FluidBlock)) {
 			return false; // anegado: no suelta su agua
@@ -253,7 +277,10 @@ public final class FiniteFluids {
 					give = Math.max(1, a / 2);
 				} else if (a - na >= 2) {
 					give = Math.max(1, (a - na) / 3);
-				} else if (a - na == 1 && lower(world, n, na, pos, fluid)) {
+				} else if (a - na == 1 && room(world, n.down(), fluid) > 0) {
+					// la última capa solo se mueve si al lado puede seguir cayendo: antes también pasaba si el vecino tenía
+					// otro más bajo, y en las orillas una capa suelta iba y venía entre dos bloques para siempre (los tics de
+					// agua no paraban nunca y el mundo se trababa cerca de lagos y ríos)
 					give = 1;
 				}
 				if (give > 0) {
@@ -272,24 +299,6 @@ public final class FiniteFluids {
 			world.scheduleFluidTick(pos, fluid.matchesType(Fluids.LAVA) ? Fluids.LAVA : Fluids.WATER, fluid.getTickRate(world));
 		}
 		return moved || a != start;
-	}
-
-	/** ¿Tiene ese vecino a su vez otro más bajo (o un hueco debajo)? Así una capa sigue bajando y el agua queda plana. */
-	private static boolean lower(World world, BlockPos n, int na, BlockPos from, Fluid fluid) {
-		if (room(world, n.down(), fluid) > 0) {
-			return true;
-		}
-		for (Direction d : Direction.Type.HORIZONTAL) {
-			BlockPos m = n.offset(d);
-			if (m.equals(from)) {
-				continue;
-			}
-			int ma = amountAt(world, m, fluid);
-			if (ma >= 0 && ma < na) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	// ------------------------------------------------------------------ sacar líquido
