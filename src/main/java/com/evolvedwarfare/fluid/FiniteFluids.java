@@ -211,8 +211,8 @@ public final class FiniteFluids {
 	/** Cuántos tics de líquido se han hecho en el tic del mundo que va (para repartir la carga). */
 	private static long budgetTime = -1;
 	private static int budgetUsed;
-	/** Lo más que se mueve en un tic del mundo: lo demás espera unos tics (como mucho, unos 3000 bloques de líquido por tic). */
-	public static final int BUDGET = 3000;
+	/** Lo más que se mueve en un tic del mundo: lo demás espera unos tics (como mucho, unos 1000 bloques de líquido por tic). */
+	public static final int BUDGET = 1000;
 	/** Para las pruebas: cuántos tics de líquido se han hecho en total. */
 	public static long ticksDone;
 
@@ -250,6 +250,11 @@ public final class FiniteFluids {
 		// 1. cae
 		BlockPos down = pos.down();
 		int below = room(world, down, fluid);
+		// el mar (o un río) no bombea agua sin fin a lo que no es mar: solo llena lo que también lo es (si no, cada
+		// orilla, cueva o hueco junto al agua se llenaba de capas finas que no paraban de moverse, y el mundo se trababa)
+		if (below > 0 && infinite && !isInfinite(world, down, fluid)) {
+			below = 0;
+		}
 		if (below > 0 && world.isInBuildLimit(down)) {
 			int move = infinite ? below : Math.min(a, below);
 			add(world, down, fluid, move);
@@ -268,7 +273,7 @@ public final class FiniteFluids {
 				}
 				BlockPos n = pos.offset(d);
 				int na = amountAt(world, n, fluid);
-				if (na < 0 || na >= FULL) {
+				if (na < 0 || na >= FULL || infinite && !isInfinite(world, n, fluid)) {
 					continue;
 				}
 				boolean edge = na == 0 && room(world, n.down(), fluid) > 0;
@@ -278,9 +283,8 @@ public final class FiniteFluids {
 				} else if (a - na >= 2) {
 					give = Math.max(1, (a - na) / 3);
 				} else if (a - na == 1 && room(world, n.down(), fluid) > 0) {
-					// la última capa solo se mueve si al lado puede seguir cayendo: antes también pasaba si el vecino tenía
-					// otro más bajo, y en las orillas una capa suelta iba y venía entre dos bloques para siempre (los tics de
-					// agua no paraban nunca y el mundo se trababa cerca de lagos y ríos)
+					// la última capa solo se mueve si al lado puede seguir cayendo (antes también si el vecino tenía otro más
+					// bajo: el agua tardaba el triple en quedarse quieta)
 					give = 1;
 				}
 				if (give > 0) {

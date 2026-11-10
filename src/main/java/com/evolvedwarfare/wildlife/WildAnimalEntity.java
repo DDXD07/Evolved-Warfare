@@ -89,12 +89,12 @@ public class WildAnimalEntity extends AnimalEntity {
 		goalSelector.add(3, new TemptGoal(this, 1.1, stack -> species().isFood(stack), false));
 		if (s.fleeDistance > 0) {
 			float d = s.fleeDistance;
-			goalSelector.add(3, new FleeEntityGoal<>(this, PlayerEntity.class,
+			goalSelector.add(3, new CalmFleeGoal<>(this, PlayerEntity.class,
 					e -> !e.isSneaking() || e.squaredDistanceTo(this) < (d * d) / 9.0, d, 1.3, 1.7,
 					e -> e instanceof PlayerEntity p && !p.isCreative() && !p.isSpectator()));
 		}
 		if (s.role == WildSpecies.Role.PREY) {
-			goalSelector.add(3, new FleeEntityGoal<>(this, WildAnimalEntity.class, 10.0F, 1.3, 1.7,
+			goalSelector.add(3, new CalmFleeGoal<>(this, WildAnimalEntity.class, e -> true, 10.0F, 1.3, 1.7,
 					e -> e instanceof WildAnimalEntity w && w.species().hunts(species())));
 		}
 		goalSelector.add(4, new FollowParentGoal(this, 1.1));
@@ -262,6 +262,29 @@ public class WildAnimalEntity extends AnimalEntity {
 	// ------------------------------------------------------------------ comportamientos propios
 
 	/** En manada: si se aleja de los suyos, vuelve con el más cercano. */
+	/**
+	 * Huir, pero sin buscar a quién cada tic: se mira cada 5 tics (con su desfase por animal). Con muchos animales juntos,
+	 * buscar depredadores y jugadores alrededor cada tic era lo más caro de la fauna.
+	 */
+	static class CalmFleeGoal<T extends LivingEntity> extends FleeEntityGoal<T> {
+		private int wait;
+
+		CalmFleeGoal(net.minecraft.entity.mob.PathAwareEntity mob, Class<T> fleeFrom, java.util.function.Predicate<LivingEntity> extra, float distance,
+				double slow, double fast, java.util.function.Predicate<LivingEntity> inclusion) {
+			super(mob, fleeFrom, extra, distance, slow, fast, inclusion);
+			this.wait = mob.getRandom().nextInt(5);
+		}
+
+		@Override
+		public boolean canStart() {
+			if (--wait > 0) {
+				return false;
+			}
+			wait = 5;
+			return super.canStart();
+		}
+	}
+
 	static class HerdGoal extends Goal {
 		private final WildAnimalEntity mob;
 		@Nullable

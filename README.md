@@ -1987,6 +1987,14 @@ El tren grande de antes (con plataformas para construir encima) se cambia por un
 
 - Al recoger una mochila del suelo y ponérsela, el bloque se quitaba todavía con la mochila dentro y soltaba otra copia al suelo. Ahora se saca entera antes de quitar el bloque (con una prueba).
 
+## Fase 51.2 — Sin tirones cerca del agua
+
+- **El mar y los ríos ya no bombean agua sin fin a lo que no es mar**: el agua "infinita" (por debajo del nivel del mar en océanos, ríos y pantanos) llenaba también cada orilla, hueco o cueva de al lado que no fuera mar, con capas finas que nunca terminaban de moverse; cerca del agua el servidor iba con segundos de retraso. Ahora solo llena lo que también es mar (como las cuevas bajo el océano).
+- **El agua se queda quieta antes**: la última capa solo se mueve si al lado puede seguir cayendo (en la prueba, el agua tarda un tercio de tics en calmarse).
+- **Tope de trabajo**: como mucho 1000 bloques de agua o lava se mueven en un tic del mundo; el resto espera unos tics. Así, aunque se suelte mucha agua de golpe (un lago que se vacía en una cueva), el juego no se traba.
+- **Fauna**: los animales buscan de quién huir cada 5 tics en vez de cada tic.
+- Prueba nueva: un estanque que se desborda se queda quieto (0 tics de agua en los últimos 100 tics).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
