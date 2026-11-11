@@ -160,7 +160,11 @@ public class VillageGameTests implements FabricGameTest {
 		var step = world.getBlockState(a.up());
 		boolean ok = step.getBlock() instanceof net.minecraft.block.StairsBlock
 				&& step.get(net.minecraft.block.StairsBlock.FACING) == net.minecraft.util.math.Direction.EAST;
-		LOG.info("[EW-GAMETEST] escalones: {}", step);
+		LOG.info("[EW-GAMETEST] escalones: {} (a {} b {}; altura a {}/{}, b {}/{}; en a {}, en b+1 {})", step, a, b,
+				world.getTopY(net.minecraft.world.Heightmap.Type.WORLD_SURFACE, a.getX(), a.getZ()),
+				world.getTopY(net.minecraft.world.Heightmap.Type.WORLD_SURFACE_WG, a.getX(), a.getZ()),
+				world.getTopY(net.minecraft.world.Heightmap.Type.WORLD_SURFACE, b.getX(), b.getZ()),
+				world.getTopY(net.minecraft.world.Heightmap.Type.WORLD_SURFACE_WG, b.getX(), b.getZ()), world.getBlockState(a), world.getBlockState(b.up()));
 		if (!ok) {
 			throw new GameTestException("La calle en cuesta no tiene su escalón: " + step);
 		}
