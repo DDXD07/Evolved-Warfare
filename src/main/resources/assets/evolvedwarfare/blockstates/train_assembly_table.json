@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "evolvedwarfare:block/train_assembly_table"
+    },
+    "facing=east": {
+      "model": "evolvedwarfare:block/train_assembly_table",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "evolvedwarfare:block/train_assembly_table",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "evolvedwarfare:block/train_assembly_table",
+      "y": 270
+    }
+  }
+}

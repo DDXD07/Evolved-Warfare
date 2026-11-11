@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "evolvedwarfare:track_switch_left"
+    }
+  ],
+  "result": {
+    "id": "evolvedwarfare:track_switch_right",
+    "count": 1
+  }
+}

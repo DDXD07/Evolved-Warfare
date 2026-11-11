@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "evolvedwarfare:track_curve_right"
+    },
+    {
+      "item": "evolvedwarfare:track_straight"
+    },
+    {
+      "item": "evolvedwarfare:track_straight"
+    },
+    {
+      "item": "minecraft:lever"
+    }
+  ],
+  "result": {
+    "id": "evolvedwarfare:track_switch_right",
+    "count": 1
+  }
+}

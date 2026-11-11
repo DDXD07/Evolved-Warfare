@@ -1,0 +1,123 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:track_straight"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "evolvedwarfare:big_track",
+          "properties": {
+            "part": "1",
+            "shape": "straight"
+          }
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:track_slope"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "evolvedwarfare:big_track",
+          "properties": {
+            "part": "1",
+            "shape": "slope"
+          }
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:track_curve_right"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "evolvedwarfare:big_track",
+          "properties": {
+            "part": "1",
+            "shape": "curve",
+            "left": "false"
+          }
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:track_curve_left"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "evolvedwarfare:big_track",
+          "properties": {
+            "part": "1",
+            "shape": "curve",
+            "left": "true"
+          }
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:track_switch_right"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "evolvedwarfare:big_track",
+          "properties": {
+            "part": "1",
+            "shape": "switch",
+            "left": "false"
+          }
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "evolvedwarfare:track_switch_left"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "evolvedwarfare:big_track",
+          "properties": {
+            "part": "1",
+            "shape": "switch",
+            "left": "true"
+          }
+        }
+      ]
+    }
+  ]
+}

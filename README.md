@@ -2005,6 +2005,14 @@ El tren grande de antes (con plataformas para construir encima) se cambia por un
 - **Ténder**: depósito negro con franja de latón y placa, bordas, carbón amontonado, depósito de agua con su boca, escalera y caja de herramientas.
 - Todos con bastidor, vigas de topes rojas, topes, enganches, bogies con cajas de grasa y ruedas con su cubo.
 
+## Fase 52 — Tren grande con vías de dos de ancho y construcción tipo ARK
+
+- **Vías grandes** (dos bloques de ancho): recta (2 de largo), cuesta (sube 1 en 4; agachado, baja), curva amplia de radio 4 a la derecha o a la izquierda y desvío a la derecha o a la izquierda (clic derecho para cambiarlo; su palanca se pone verde o roja). Cada trozo ocupa varios bloques y se rompe entero. Al ponerlo se engancha solo a la punta de vía suelta más cercana (en su dirección y a su altura) y se ve antes dónde irá (verde si cabe, rojo si no).
+- **El tren**: solo locomotora (unos 5 bloques de largo), ténder (27 huecos de carbón) y plataforma (3 x 6 bloques), hasta 10 vagones. La locomotora se pone en la vía; los vagones se enganchan con clic derecho en un coche del tren. Se conduce como antes (W y S, el regulador; espacio, el silbato; agachado + clic derecho, la caldera). Se puede andar por encima de todo, y lo que va encima se mueve con el tren.
+- **Crafteo por partes**: chasis, juego de ruedas, caldera de vapor, cabina y carbonera (en la mesa de crafteo), y con ellas, en la **mesa de ensamblaje del tren**, se montan la locomotora (chasis, 3 ruedas, caldera y cabina), el ténder (chasis, 2 ruedas y carbonera) y la plataforma (chasis, 2 ruedas y 12 tablones).
+- **Construir en la plataforma, como en ARK**: el **martillo de construcción** abre un menú con los materiales (paja, madera, piedra y metal, cada uno más resistente) y las piezas (pared, pared con puerta, pared con ventana, techo, tejado inclinado, escalera y barandilla), con la pieza en 3D girando, su resistencia y lo que cuesta. Con la pieza en la mano se ve dónde iría en la plataforma (verde o roja) y se pone con clic derecho. Dos plantas; lo de arriba necesita apoyo (techo sobre paredes, pared de arriba sobre techo) y, si se quita, se cae. Las puertas se abren con clic derecho; las piezas se recogen con el martillo agachado y se rompen a golpes.
+- Se quitan los vagones de pasajeros y de mercancías.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -2028,7 +2036,7 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
 - `ew_apocalypse.py` — el Apocalipsis (fase 4 del Nether bíblico): los modelos del Ángel del Abismo, el Falso Profeta y la Bestia mayor (con las siete cabezas que se le caen), su botín, los fragmentos de sello y los objetos de los jefes, el círculo de ritual, los iconos de los efectos y los textos.
 - `ew_hellflora.py` — el Nether vivo (fase 37): los bloques de la flora infernal (texturas, modelos, botín, etiquetas y recetas), los árboles y matas, las lianas del techo y las cascadas de lava, la fauna (polillas, ciervos y sapos) y los textos. El techo de roca y los biomas están en `ew_hell.py`.
 - `ew_backpacks.py` — las cinco mochilas (fase 38): sus modelos 3D (más grandes por tier), texturas (cuero para teñir, correas y herrajes), recetas de la mesa y de la herrería, la etiqueta de tintes y los textos.
-- `ew_trains.py` — el tren de vapor (fase 41): los modelos de la locomotora y la plataforma (a media escala, con ruedas y bielas), sus texturas e iconos, las recetas y los textos.
+- `ew_trains.py` — el tren grande (fase 52): los modelos de la locomotora, el ténder y la plataforma (con ruedas que giran), sus texturas e iconos, los iconos de las vías, las partes y el martillo, los modelos de las 28 piezas de construcción (con texturas de vanilla), la mesa de ensamblaje, las recetas, lo que sueltan los bloques y los textos.
 - `ew_inferno.py` — el Nether bíblico (fase 1): los bloques nuevos (sal, polvo de hueso, grietas, cristales de azufre...), las decoraciones de los biomas, las maldiciones, las visiones y sus textos. El terreno y los biomas siguen en `ew_hell.py`.
 - `ew_casting.py` — la fundición: modelos y texturas del crisol y del molde, sus recetas, etiquetas y textos.
 - `ew_smithbook.py` — el Manual del Herrero: su icono, el grabado de la forja (con los modelos 3D) y los textos del libro.

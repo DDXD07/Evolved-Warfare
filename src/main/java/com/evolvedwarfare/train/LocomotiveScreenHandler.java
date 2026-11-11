@@ -16,13 +16,13 @@ public class LocomotiveScreenHandler extends ScreenHandler {
 	private final Inventory fuel;
 	private final PropertyDelegate properties;
 	@Nullable
-	private final LocomotiveCart loco;
+	private final LocomotiveEntity loco;
 
 	public LocomotiveScreenHandler(int syncId, PlayerInventory player) {
 		this(syncId, player, new SimpleInventory(3), new ArrayPropertyDelegate(4), null);
 	}
 
-	public LocomotiveScreenHandler(int syncId, PlayerInventory player, Inventory fuel, PropertyDelegate properties, @Nullable LocomotiveCart loco) {
+	public LocomotiveScreenHandler(int syncId, PlayerInventory player, Inventory fuel, PropertyDelegate properties, @Nullable LocomotiveEntity loco) {
 		super(Trains.LOCOMOTIVE_SCREEN, syncId);
 		this.fuel = fuel;
 		this.properties = properties;
@@ -32,7 +32,7 @@ public class LocomotiveScreenHandler extends ScreenHandler {
 			addSlot(new Slot(fuel, i, 44 + i * 18, 53) {
 				@Override
 				public boolean canInsert(ItemStack stack) {
-					return LocomotiveCart.fuelTime(stack) > 0;
+					return LocomotiveEntity.fuelTime(stack) > 0;
 				}
 			});
 		}
@@ -93,7 +93,7 @@ public class LocomotiveScreenHandler extends ScreenHandler {
 			if (!insertItem(stack, 3, slots.size(), true)) {
 				return ItemStack.EMPTY;
 			}
-		} else if (LocomotiveCart.fuelTime(stack) <= 0 || !insertItem(stack, 0, 3, false)) {
+		} else if (LocomotiveEntity.fuelTime(stack) <= 0 || !insertItem(stack, 0, 3, false)) {
 			return ItemStack.EMPTY;
 		}
 		if (stack.isEmpty()) {

@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable_with_bottom",
+  "textures": {
+    "top": "evolvedwarfare:block/train_assembly_table_top",
+    "side": "evolvedwarfare:block/train_assembly_table_side",
+    "front": "evolvedwarfare:block/train_assembly_table_front",
+    "bottom": "minecraft:block/oak_planks"
+  }
+}

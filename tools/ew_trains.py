@@ -1,9 +1,11 @@
-"""El tren de vapor (fase 51): la locomotora y los vagones (pasajeros, mercancías y ténder), del tamaño de una vagoneta.
+"""El tren de vapor grande (fase 52): la locomotora, el ténder y la plataforma, para las vías de dos de ancho.
 
-Los modelos van a media escala (1 unidad = 1/8 de bloque; el renderer los dibuja al doble), con el frente hacia -z como
-todos los del mod. La locomotora: bastidor, cuatro ruedas motrices por lado con sus bielas, caldera con aros de latón,
-caja de humos, chimenea, domo, farol, quitapiedras, cabina con techo y la carbonera. La plataforma: un tablero de 5 x 9,5
-con sus vigas, topes y dos bogies.
+Los modelos van a lo largo del eje x (el frente hacia -x), con y hacia abajo y la vía en y=6; el renderer los dibuja
+grandes (la locomotora y el ténder a 2,5 veces, unos 5 y 4 bloques de largo; la plataforma al doble: 3 x 6 bloques). Todas
+las cajas miden píxeles enteros (con decimales, Minecraft coloca mal la textura de sus caras).
+
+También: los iconos (de los coches, sus partes, las vías, el martillo y las piezas de construcción, estas con las texturas
+de vanilla), la mesa de ensamblaje, las recetas, lo que sueltan los bloques y los textos.
 
 Uso: python3 tools/ew_trains.py [raíz del proyecto] [--preview carpeta]
 """
@@ -68,7 +70,7 @@ def wheel_set(a, xs, r, z=6, name="w"):
                 w.cube((-r + 1, 0, 0), (2, 2, 1), **C(BLACK))                                                    # el contrapeso
 
 
-def frame_and_bogies(a, half=14, bogie_x=9):
+def frame_and_bogies(a, half=14, bogie_x=9, wz=5):
     frame = a.part("frame", None, (0, 0, 0), role="body")
     frame.cube((-half, 1, -6), (2 * half, 2, 12), **C(IRON, rings=((70, 68, 72), 1)))           # el bastidor
     for x in (-half - 1, half):
@@ -81,7 +83,7 @@ def frame_and_bogies(a, half=14, bogie_x=9):
         frame.cube((x - 4, 3, -7), (8, 1, 14), **C(DARK))                                         # los bogies
         frame.cube((x - 1, 2, -7), (2, 2, 1), **C(STEEL))                                         # las cajas de grasa
         frame.cube((x - 1, 2, 6), (2, 2, 1), **C(STEEL))
-    wheel_set(a, (-bogie_x - 2, -bogie_x + 2, bogie_x - 2, bogie_x + 2), 2, z=6)
+    wheel_set(a, (-bogie_x - 2, -bogie_x + 2, bogie_x - 2, bogie_x + 2), 2, z=wz)
     return frame
 
 
@@ -100,12 +102,12 @@ def locomotive():
     frame.cube((-14, 0, -8), (18, 1, 2), **C(BLACK))                                            # los estribos
     frame.cube((-14, 0, 6), (18, 1, 2), **C(BLACK))
     wheel_set(a, (-11,), 2, z=5, name="lead")                                                   # las ruedas guía
-    wheel_set(a, (-5, 1, 7), 3, z=6, name="drive")                                              # las motrices
+    wheel_set(a, (-5, 1, 7), 3, z=5, name="drive")                                              # las motrices
     for side in (-1, 1):
-        z = 7 if side > 0 else -8
+        z = 6 if side > 0 else -7
         frame.cube((-5, 2, z), (13, 1, 1), **C(STEEL, high=((190, 190, 198), 1)))               # la biela de acoplamiento
         frame.cube((-11, 1, z), (7, 1, 1), **C(STEEL))                                           # la biela motriz
-        frame.cube((-13, -2, -7 if side < 0 else 4), (5, 3, 3), **C(BLACK, rings=(BRASS, 2)))   # los cilindros
+        frame.cube((-13, -2, -9 if side < 0 else 6), (5, 3, 3), **C(BLACK, rings=(BRASS, 2)))   # los cilindros
     boiler = a.part("boiler", "frame", (0, 0, 0), role="none")
     boiler.cube((-13, -8, -5), (17, 8, 10), **C(BLACK, high=((54, 54, 60), 1), low=((20, 20, 24), 1)))   # la caldera
     boiler.cube((-13, -9, -4), (17, 1, 8), **C((44, 44, 50)))                                            # su lomo, redondeado
@@ -152,60 +154,9 @@ def locomotive():
     return a
 
 
-def passenger():
-    a = W.Animal("passenger_car")
-    frame_and_bogies(a)
-    body = a.part("body", "frame", (0, 0, 0), role="none")
-    green = C(GREEN, low=((30, 62, 40), 1), spots=((52, 104, 66), 0.03))
-    body.cube((-14, 0, -8), (28, 1, 16), **C(DARK))                                                # el suelo
-    for side in (-1, 1):
-        z = 7 if side > 0 else -8
-        body.cube((-14, -6, z), (28, 6, 1), **green)                                               # el zócalo
-        body.cube((-14, -7, z), (28, 1, 1), **C(CREAM))                                            # la moldura
-        body.cube((-14, -14, z), (28, 2, 1), **C(CREAM, low=((180, 164, 124), 1)))                 # el friso
-        for x in (-14, -9, -4, 1, 6, 11):
-            body.cube((x, -12, z), (2 if x == 11 else 1, 5, 1), **green)                            # los postes de las ventanas
-        body.cube((-13, -12, z - side), (26, 5, 1), **C(GLASS, high=((126, 156, 176), 1)))         # el cristal (hundido)
-    for x in (-15, 14):
-        body.cube((x, -14, -8), (1, 14, 16), **C(BROWN, rings=((84, 38, 24), 2)))                   # los testeros
-        body.cube((x - 1 if x < 0 else x + 1, -11, -2), (1, 10, 4), **C((92, 42, 28), high=((130, 64, 42), 1)))   # las puertas
-        body.cube((x - 1 if x < 0 else x + 1, -6, 1), (1, 1, 1), **C(BRASS))
-    body.cube((-11, -5, -6), (22, 3, 12), **C((96, 56, 34), rings=((70, 40, 24), 2)))             # los asientos (por las ventanas)
-    body.cube((-16, -16, -9), (32, 2, 18), **C(GRAY, high=((100, 100, 108), 1), low=((54, 54, 60), 1)))   # el techo
-    body.cube((-11, -18, -5), (22, 2, 10), **C(GRAY, rings=(GLASS, 3)))                            # la linterna del techo
-    for x in (-8, 7):
-        body.cube((x, -19, -1), (2, 1, 2), **C(DARK))                                             # las chimeneas de las lámparas
-    return a
-
-
-def freight():
-    a = W.Animal("freight_car")
-    frame_and_bogies(a)
-    body = a.part("body", "frame", (0, 0, 0), role="none")
-    body.cube((-14, -14, -8), (28, 15, 16), **C(RUST, rings=((96, 40, 26), 2), spots=((140, 66, 44), 0.05)))   # el furgón de tablas
-    for side in (-1, 1):
-        z = 8 if side > 0 else -9
-        for x in (-14, -9, 8, 13):
-            body.cube((x, -14, z), (1, 15, 1), **C(DARK))                                         # los montantes de hierro
-        body.cube((-4, -12, z), (8, 12, 1), **C((96, 42, 28), rings=((70, 30, 20), 2)))           # la puerta corredera
-        body.cube((-5, -13, z), (10, 1, 1), **C(DARK))                                            # su riel de arriba
-        body.cube((-5, 0, z), (10, 1, 1), **C(DARK))                                              # y el de abajo
-        body.cube((2, -7, z + side), (1, 2, 1), **C(BRASS))                                       # el tirador
-        body.cube((-4, -12, z + side), (8, 1, 1), **C(DARK))                                      # los refuerzos de la puerta
-        body.cube((-4, -1, z + side), (8, 1, 1), **C(DARK))
-        body.cube((-12, -10, z + side), (3, 2, 1), **C(CREAM))                                    # el rótulo
-    for x in (-15, 14):
-        for y in (-12, -9, -6, -3):
-            body.cube((x if x < 0 else x, y, 5), (1, 1, 2), **C(STEEL))                            # los peldaños de la escalera
-    body.cube((15, -12, -2), (1, 3, 3), **C(BRASS, rings=(DARK, 1)))                              # el volante del freno
-    body.cube((-15, -16, -9), (30, 2, 18), **C((70, 34, 24), low=((50, 24, 16), 1)))             # el techo
-    body.cube((-14, -17, -1), (28, 1, 2), **C(WOOD, rings=((90, 62, 36), 2)))                     # la pasarela
-    return a
-
-
 def tender():
     a = W.Animal("coal_tender")
-    frame_and_bogies(a, half=12, bogie_x=7)
+    frame_and_bogies(a, half=12, bogie_x=7, wz=5)
     body = a.part("body", "frame", (0, 0, 0), role="none")
     tank = C(BLACK, high=((54, 54, 60), 1))
     body.cube((-12, -10, -8), (24, 10, 16), **tank)                                              # el depósito
@@ -226,27 +177,100 @@ def tender():
     return a
 
 
-MODELS = collections.OrderedDict([("steam_locomotive", locomotive), ("passenger_car", passenger), ("freight_car", freight), ("coal_tender", tender)])
+
+def flatcar():
+    """La plataforma: un tablero de tablas de 48 x 24 (3 x 6 bloques al doble), con sus largueros, vigas de topes y dos bogies."""
+    a = W.Animal("flatcar")
+    frame = a.part("frame", None, (0, 0, 0), role="body")
+    frame.cube((-24, -2, -12), (48, 2, 24), **C(WOOD, rings=((92, 62, 36), 3), spots=((140, 100, 62), 0.04)))   # el tablero
+    for z in (-13, 12):
+        frame.cube((-24, -2, z), (48, 4, 1), **C(RED, low=(DARK, 1), spots=((110, 24, 20), 0.05)))           # los largueros
+        for x in range(-21, 22, 7):
+            frame.cube((x, -3, z), (1, 3, 1), **C(DARK))                                                     # los cajetines de teleros
+    for x in (-25, 24):
+        frame.cube((x, -2, -13), (1, 5, 26), **C(RED, low=(DARK, 1)))                                        # las vigas de los topes
+        bx = x - 1 if x < 0 else x + 1
+        for z in (-10, 8):
+            frame.cube((bx, 0, z), (1, 2, 2), **C(STEEL))                                                     # los topes
+        frame.cube((bx, 0, -1), (1, 1, 2), **C(DARK))                                                         # el enganche
+    frame.cube((-24, 0, -3), (48, 3, 6), **C(IRON, rings=((70, 68, 72), 1)))                                 # la viga central
+    for x in (-16, 16):
+        frame.cube((x - 6, 2, -7), (12, 1, 14), **C(DARK))                                                    # los bogies
+        for z in (-8, 7):
+            frame.cube((x - 6, 1, z), (12, 3, 1), **C(IRON, high=((80, 78, 84), 1)))                          # sus costados
+            frame.cube((x - 1, 2, z - 1 if z < 0 else z + 1), (2, 2, 1), **C(STEEL))                          # las cajas de grasa
+    wheel_set(a, (-19, -13, 13, 19), 3, z=5)
+    return a
+
+
+MODELS = collections.OrderedDict([("steam_locomotive", locomotive), ("coal_tender", tender), ("flatcar", flatcar)])
+
+# las piezas de construcción: (id, español, inglés)
+KINDS = [("wall", "Pared", "Wall"), ("doorway", "Pared con puerta", "Doorway"), ("window", "Pared con ventana", "Window Wall"),
+         ("ceiling", "Techo", "Ceiling"), ("roof", "Tejado inclinado", "Sloped Roof"), ("stairs", "Escalera", "Staircase"),
+         ("railing", "Barandilla", "Railing")]
+MATERIALS = [("straw", "de paja", "Straw"), ("wood", "de madera", "Wooden"), ("stone", "de piedra", "Stone"), ("metal", "de metal", "Metal")]
+# las texturas de vanilla de cada material (las mismas que usa el juego): el material, el remate, la puerta y el tejado
+MAT_TEX = {
+    "straw": ("block/hay_block_side", "block/bamboo_block", "block/bamboo_planks", "block/hay_block_top"),
+    "wood": ("block/oak_planks", "block/stripped_spruce_log", "block/spruce_planks", "block/spruce_planks"),
+    "stone": ("block/stone_bricks", "block/smooth_stone", "block/dark_oak_planks", "block/deepslate_tiles"),
+    "metal": ("block/iron_block", "block/smooth_basalt", "block/iron_trapdoor", "block/iron_block"),
+}
+TRACKS = [("track_straight", "Vía recta", "Straight Track", "Dos de ancho y dos de largo. Se engancha sola a la punta de vía más cercana.",
+           "Two wide, two long. Snaps to the nearest loose track end."),
+          ("track_slope", "Vía en cuesta", "Sloped Track", "Sube un bloque en cuatro. Agachado, baja.", "Rises one block over four. Sneak to go down."),
+          ("track_curve_right", "Curva a la derecha", "Right Curve", "Curva amplia (radio 4) hacia la derecha.", "Wide curve (radius 4) to the right."),
+          ("track_curve_left", "Curva a la izquierda", "Left Curve", "Curva amplia (radio 4) hacia la izquierda.", "Wide curve (radius 4) to the left."),
+          ("track_switch_right", "Desvío a la derecha", "Right Switch", "Recta y curva a la derecha; clic derecho en él para cambiarlo.",
+           "Straight and right curve; right click it to throw it."),
+          ("track_switch_left", "Desvío a la izquierda", "Left Switch", "Recta y curva a la izquierda; clic derecho en él para cambiarlo.",
+           "Straight and left curve; right click it to throw it.")]
+PARTS = [("train_chassis", "Chasis de tren", "Train Chassis"), ("train_wheels", "Juego de ruedas", "Wheel Set"),
+         ("steam_boiler", "Caldera de vapor", "Steam Boiler"), ("train_cab", "Cabina", "Driver's Cab"), ("coal_bunker", "Carbonera", "Coal Bunker")]
+
 TEXTS = {
     "entity.evolvedwarfare.steam_locomotive": ("Locomotora de vapor", "Steam Locomotive"),
-    "entity.evolvedwarfare.passenger_car": ("Vagón de pasajeros", "Passenger Car"),
-    "entity.evolvedwarfare.freight_car": ("Vagón de mercancías", "Freight Car"),
     "entity.evolvedwarfare.coal_tender": ("Ténder", "Coal Tender"),
+    "entity.evolvedwarfare.flatcar": ("Plataforma", "Flatcar"),
     "item.evolvedwarfare.steam_locomotive": ("Locomotora de vapor", "Steam Locomotive"),
-    "item.evolvedwarfare.steam_locomotive.desc": ("En una vía. Agachado + clic derecho: la caldera (carbón). Súbete: W y S, el regulador; espacio, el silbato.",
-                                                  "On a rail. Sneak + right click: the firebox (coal). Ride it: W and S, the throttle; space, the whistle."),
-    "item.evolvedwarfare.passenger_car": ("Vagón de pasajeros", "Passenger Car"),
-    "item.evolvedwarfare.passenger_car.desc": ("Dos asientos. Ponlo en la vía justo detrás del tren y se engancha solo.",
-                                               "Two seats. Place it on the rail right behind the train and it couples itself."),
-    "item.evolvedwarfare.freight_car": ("Vagón de mercancías", "Freight Car"),
-    "item.evolvedwarfare.freight_car.desc": ("54 huecos. Ponlo en la vía justo detrás del tren y se engancha solo.",
-                                             "54 slots. Place it on the rail right behind the train and it couples itself."),
+    "item.evolvedwarfare.steam_locomotive.desc": ("Ponla en una vía grande. Súbete: W y S, el regulador; espacio, el silbato. Agachado + clic derecho: la caldera.",
+                                                  "Place it on a big track. Ride it: W and S, the throttle; space, the whistle. Sneak + right click: the firebox."),
     "item.evolvedwarfare.coal_tender": ("Ténder", "Coal Tender"),
-    "item.evolvedwarfare.coal_tender.desc": ("27 huecos de combustible: la locomotora tira de él cuando se le acaba el suyo.",
-                                             "27 fuel slots: the locomotive draws from it when its own runs out."),
+    "item.evolvedwarfare.coal_tender.desc": ("Clic derecho en un coche del tren para engancharlo detrás. 27 huecos de carbón para la locomotora.",
+                                             "Right click a train car to couple it at the back. 27 coal slots for the locomotive."),
+    "item.evolvedwarfare.flatcar": ("Plataforma", "Flatcar"),
+    "item.evolvedwarfare.flatcar.desc": ("Clic derecho en un coche del tren para engancharla detrás. Construye encima con el martillo de construcción.",
+                                         "Right click a train car to couple it at the back. Build on it with the building hammer."),
+    "item.evolvedwarfare.train_part.desc": ("Se monta en la mesa de ensamblaje del tren.", "Assembled at the train assembly table."),
+    "item.evolvedwarfare.building_hammer": ("Martillo de construcción", "Building Hammer"),
+    "item.evolvedwarfare.building_hammer.desc": ("Clic derecho: el menú de construcción. Agachado + clic derecho en una pieza: recogerla; en un coche: desengancharlo.",
+                                                 "Right click: the building menu. Sneak + right click a piece: pick it up; a car: uncouple it."),
+    "item.evolvedwarfare.piece.desc": ("Apunta a la plataforma del tren: verde, cabe; rojo, no. Clic derecho para ponerla.",
+                                       "Aim at the train flatcar: green fits, red doesn't. Right click to place it."),
+    "block.evolvedwarfare.big_track": ("Vía grande", "Big Track"),
+    "block.evolvedwarfare.train_assembly_table": ("Mesa de ensamblaje del tren", "Train Assembly Table"),
     "container.evolvedwarfare.steam_locomotive": ("Caldera", "Firebox"),
     "gui.evolvedwarfare.locomotive.fuel": ("Fuego: %s:%s", "Fire: %s:%s"),
     "gui.evolvedwarfare.locomotive.speed": ("%s,%s km/h", "%s.%s km/h"),
+    "gui.evolvedwarfare.build.title": ("Construcción", "Building"),
+    "gui.evolvedwarfare.build.craft": ("Fabricar", "Craft"),
+    "gui.evolvedwarfare.build.max": ("Máx", "Max"),
+    "gui.evolvedwarfare.build.hp": ("Resistencia: %s", "Durability: %s"),
+    "gui.evolvedwarfare.build.material.straw": ("Paja", "Straw"),
+    "gui.evolvedwarfare.build.material.wood": ("Madera", "Wood"),
+    "gui.evolvedwarfare.build.material.stone": ("Piedra", "Stone"),
+    "gui.evolvedwarfare.build.material.metal": ("Metal", "Metal"),
+    "gui.evolvedwarfare.build.hint1": ("Con la pieza en la mano, apunta a la plataforma:", "Hold the piece and aim at the flatcar:"),
+    "gui.evolvedwarfare.build.hint2": ("verde = cabe. Martillo agachado: recoger.", "green = fits. Sneak with hammer: pick up."),
+    "gui.evolvedwarfare.assembly.build": ("Montar", "Assemble"),
+    "gui.evolvedwarfare.assembly.hint": ("Las partes se fabrican en la mesa de crafteo.", "Craft the parts at a crafting table."),
+    "message.evolvedwarfare.track.no_room": ("No cabe la vía ahí", "The track doesn't fit there"),
+    "message.evolvedwarfare.build.cant": ("No se puede poner ahí (necesita apoyo o el sitio está ocupado)", "Can't place it there (needs support or the spot is taken)"),
+    "message.evolvedwarfare.build.hp": ("Resistencia: %s / %s", "Durability: %s / %s"),
+    "message.evolvedwarfare.train.no_room": ("No cabe otro vagón (vía corta, tren en marcha o máximo de 10)", "No room for another car (short track, moving train or 10 max)"),
+    "message.evolvedwarfare.train.not_empty": ("Quita lo construido antes de desenganchar la plataforma", "Remove what's built before uncoupling the flatcar"),
+    "message.evolvedwarfare.train.couple_hint": ("Engánchalo a un tren: clic derecho en la locomotora o en un vagón", "Couple it to a train: right click the locomotive or a car"),
     "message.evolvedwarfare.train.notch.forward": ("Avante %s", "Ahead %s"),
     "message.evolvedwarfare.train.notch.reverse": ("Atrás %s", "Astern %s"),
     "message.evolvedwarfare.train.notch.neutral": ("Parado", "Stopped"),
@@ -254,6 +278,19 @@ TEXTS = {
     "message.evolvedwarfare.train.coupled": ("Enganchado al tren", "Coupled to the train"),
     "message.evolvedwarfare.train.uncoupled": ("Desenganchado", "Uncoupled"),
 }
+for tid, es, en, des, den in TRACKS:
+    TEXTS["item.evolvedwarfare." + tid] = (es, en)
+    TEXTS["item.evolvedwarfare." + tid + ".desc"] = (des, den)
+for pid, es, en in PARTS:
+    TEXTS["item.evolvedwarfare." + pid] = (es, en)
+for mid, mes, men in MATERIALS:
+    for kid, kes, ken in KINDS:
+        TEXTS["item.evolvedwarfare.%s_%s" % (mid, kid)] = ("%s %s" % (kes, mes), "%s %s" % (men, ken))
+OLD_KEYS = ["entity.evolvedwarfare.passenger_car", "entity.evolvedwarfare.freight_car", "item.evolvedwarfare.passenger_car",
+            "item.evolvedwarfare.passenger_car.desc", "item.evolvedwarfare.freight_car", "item.evolvedwarfare.freight_car.desc",
+            "entity.evolvedwarfare.locomotive", "item.evolvedwarfare.locomotive", "item.evolvedwarfare.locomotive.desc",
+            "message.evolvedwarfare.train.fuel", "message.evolvedwarfare.train.full", "message.evolvedwarfare.train.not_buildable",
+            "message.evolvedwarfare.train.no_sleep"]
 
 
 def pack(a):
@@ -284,8 +321,208 @@ def pack(a):
     raise ValueError("no cabe: " + a.sid)
 
 
+# ------------------------------------------------------------------ iconos dibujados a mano (16 x 16)
+
+def icon(draw_fn):
+    img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    px = img.load()
+
+    def put(x, y, c):
+        if 0 <= x < 16 and 0 <= y < 16:
+            px[x, y] = c + (255,) if len(c) == 3 else c
+
+    def rect(x0, y0, x1, y1, c):
+        for yy in range(y0, y1 + 1):
+            for xx in range(x0, x1 + 1):
+                put(xx, yy, c)
+    draw_fn(put, rect)
+    return img
+
+
+def shade(c, f):
+    return tuple(max(0, min(255, int(v * f))) for v in c)
+
+
+def track_icon(kind):
+    import math
+    SLEEP = (76, 52, 32)
+    RAIL = (150, 152, 160)
+    GRAV = (120, 116, 110)
+
+    def path_points(kind):
+        if kind == "straight":
+            return [[(8, 15 - t) for t in range(16)]]
+        if kind == "slope":
+            return [[(2 + t * 0.8, 14 - t * 0.8) for t in range(16)]]
+        sgn = 1 if kind.endswith("right") else -1
+        arc = [(8 + sgn * (9 - 9 * math.cos(a)), 15 - 9 * math.sin(a)) for a in [i / 15 * math.pi / 2 for i in range(16)]]
+        if kind.startswith("switch"):
+            return [[(8, 15 - t) for t in range(16)], arc]
+        return [arc]
+
+    def fn(put, rect):
+        paths = path_points(kind)
+        for pts in paths:
+            for i in range(len(pts) - 1):
+                (x0, y0), (x1, y1) = pts[i], pts[i + 1]
+                dx, dy = x1 - x0, y1 - y0
+                l = math.hypot(dx, dy) or 1
+                nx, ny = -dy / l, dx / l
+                if i % 2 == 0:
+                    for k in range(-4, 5):
+                        put(int(round(x0 + nx * k)), int(round(y0 + ny * k)), SLEEP if abs(k) < 4 else shade(SLEEP, 0.7))
+        for pts in paths:
+            for i in range(len(pts) - 1):
+                (x0, y0), (x1, y1) = pts[i], pts[i + 1]
+                dx, dy = x1 - x0, y1 - y0
+                l = math.hypot(dx, dy) or 1
+                nx, ny = -dy / l, dx / l
+                for side in (-2.6, 2.6):
+                    for f in (0.0, 0.5):
+                        put(int(round(x0 + dx * f + nx * side)), int(round(y0 + dy * f + ny * side)), RAIL)
+        if kind.startswith("switch"):
+            rect(1, 11, 2, 13, (60, 40, 24))
+            put(1, 10, (90, 200, 90))
+            put(1, 9, (90, 200, 90))
+    return icon(fn)
+
+
+def part_icon(pid):
+    def chassis(put, rect):
+        rect(1, 7, 14, 9, IRON)
+        rect(1, 6, 14, 6, shade(IRON, 1.5))
+        rect(0, 5, 1, 10, RED)
+        rect(14, 5, 15, 10, RED)
+        for x in (4, 7, 10):
+            rect(x, 6, x, 10, DARK)
+        rect(3, 10, 5, 11, DARK)
+        rect(10, 10, 12, 11, DARK)
+
+    def wheels(put, rect):
+        import math
+        for cx in (4.5, 11.5):
+            for y in range(16):
+                for x in range(16):
+                    d = math.hypot(x + 0.5 - cx, y + 0.5 - 9)
+                    if d < 4.2:
+                        put(x, y, RED if d > 3.2 else DARK if d > 1.3 else STEEL)
+        rect(4, 9, 11, 9, STEEL)
+
+    def boiler(put, rect):
+        rect(1, 4, 14, 11, BLACK)
+        rect(1, 4, 14, 5, (60, 60, 66))
+        rect(1, 11, 14, 11, (16, 16, 18))
+        for x in (4, 8, 12):
+            rect(x, 3, x, 12, BRASS)
+        rect(0, 5, 0, 10, (48, 48, 54))
+        rect(5, 1, 7, 3, BLACK)
+        rect(10, 2, 11, 3, BRASS)
+
+    def cab(put, rect):
+        rect(2, 4, 13, 14, RED)
+        rect(1, 2, 14, 3, BLACK)
+        rect(4, 6, 6, 9, GLASS)
+        rect(9, 6, 11, 9, GLASS)
+        rect(2, 14, 13, 14, (96, 20, 18))
+        rect(6, 11, 9, 12, BRASS)
+
+    def bunker(put, rect):
+        rect(1, 6, 14, 14, BLACK)
+        rect(1, 6, 14, 6, (60, 60, 66))
+        rect(2, 4, 13, 6, COAL)
+        rect(4, 3, 10, 4, COAL)
+        for (x, y) in ((3, 4), (6, 3), (9, 4), (11, 5), (5, 5)):
+            put(x, y, (80, 76, 80))
+        rect(1, 10, 14, 10, BRASS)
+        rect(5, 11, 9, 13, RED)
+    return icon({"train_chassis": chassis, "train_wheels": wheels, "steam_boiler": boiler, "train_cab": cab, "coal_bunker": bunker}[pid])
+
+
+def hammer_icon():
+    def fn(put, rect):
+        HANDLE = (128, 88, 50)
+        for i in range(10):
+            put(3 + i, 14 - i, HANDLE)
+            put(4 + i, 14 - i, shade(HANDLE, 0.75))
+        rect(8, 1, 14, 4, STEEL)
+        rect(8, 1, 14, 1, (190, 192, 200))
+        rect(8, 4, 14, 4, (80, 82, 90))
+        rect(14, 0, 15, 5, (90, 92, 100))
+        rect(6, 2, 7, 3, (90, 92, 100))
+    return icon(fn)
+
+
+def table_textures():
+    import random as R
+    rng = R.Random(7)
+    top = Image.new("RGBA", (16, 16))
+    side = Image.new("RGBA", (16, 16))
+    front = Image.new("RGBA", (16, 16))
+    tp, sp, fp = top.load(), side.load(), front.load()
+    for y in range(16):
+        for x in range(16):
+            v = rng.randint(-8, 8)
+            tp[x, y] = shade((92, 94, 102), 1 + v / 100) + (255,)
+            plank = (y // 4) % 2
+            sp[x, y] = shade((118, 82, 48) if plank else (106, 74, 44), 1 + v / 90) + (255,)
+            fp[x, y] = sp[x, y]
+    for i in range(16):
+        tp[i, 0] = tp[i, 15] = tp[0, i] = tp[15, i] = (56, 56, 62, 255)
+    for (x, y) in ((1, 1), (14, 1), (1, 14), (14, 14)):
+        tp[x, y] = (170, 172, 180, 255)
+    # una vía grabada en lo alto
+    for y in range(2, 14):
+        tp[5, y] = tp[10, y] = (176, 178, 186, 255)
+        if y % 3 == 0:
+            for x in range(4, 12):
+                if x not in (5, 10):
+                    tp[x, y] = (100, 70, 42, 255)
+    for img in (sp, fp):
+        for x in range(16):
+            img[x, 0] = img[x, 1] = (72, 72, 80, 255)
+            img[x, 15] = (60, 60, 66, 255)
+    # el frente: una rueda de tren
+    import math
+    for y in range(16):
+        for x in range(16):
+            d = math.hypot(x + 0.5 - 8, y + 0.5 - 8.5)
+            if d < 5:
+                fp[x, y] = ((140, 30, 26, 255) if d > 3.8 else (40, 40, 44, 255) if d > 1.4 else (160, 162, 170, 255))
+    return top, side, front
+
+
+# ------------------------------------------------------------------ los modelos de objeto de las piezas (con texturas de vanilla)
+
+def el(frm, to, tex):
+    faces = {f: {"texture": "#" + tex} for f in ("north", "south", "east", "west", "up", "down")}
+    return {"from": frm, "to": to, "faces": faces}
+
+
+def piece_elements(kind):
+    if kind == "wall":
+        return [el([1, 0, 7], [15, 16, 9], "main"), el([0.5, 0, 6.5], [15.5, 2, 9.5], "trim"), el([0.5, 14, 6.5], [15.5, 16, 9.5], "trim")]
+    if kind == "doorway":
+        return [el([1, 0, 7], [4, 16, 9], "main"), el([12, 0, 7], [15, 16, 9], "main"), el([4, 13, 7], [12, 16, 9], "main"),
+                el([4, 0, 7.5], [12, 13, 8.5], "door"), el([10, 6, 6.5], [11, 7, 9.5], "trim")]
+    if kind == "window":
+        return [el([1, 0, 7], [15, 6, 9], "main"), el([1, 12, 7], [15, 16, 9], "main"), el([1, 6, 7], [4, 12, 9], "main"),
+                el([12, 6, 7], [15, 12, 9], "main"), el([4, 6, 7.75], [12, 12, 8.25], "glass"), el([3.5, 5.5, 6.5], [12.5, 6.5, 9.5], "trim")]
+    if kind == "ceiling":
+        return [el([0, 7, 0], [16, 10, 16], "main"), el([2, 5, 0.5], [4, 7, 15.5], "trim"), el([12, 5, 0.5], [14, 7, 15.5], "trim")]
+    if kind == "roof":
+        return [el([0, i * 3, i * 4], [16, i * 3 + 4, i * 4 + 4], "roof") for i in range(4)]
+    if kind == "stairs":
+        return [el([1, 0, i * 4], [15, (i + 1) * 4, i * 4 + 4], "main") for i in range(4)]
+    if kind == "railing":
+        return [el([1, 0, 7], [3, 11, 9], "trim"), el([13, 0, 7], [15, 11, 9], "trim"), el([3, 9, 7.5], [13, 11, 8.5], "main"),
+                el([3, 4, 7.5], [13, 6, 8.5], "main")]
+    raise ValueError(kind)
+
+
 def main():
     tex_dir = os.path.join(ASSETS, "textures/entity/train")
+    item_dir = os.path.join(ASSETS, "textures/item")
+    block_dir = os.path.join(ASSETS, "textures/block")
     os.makedirs(tex_dir, exist_ok=True)
     previews = []
     for mid, gen in MODELS.items():
@@ -296,6 +533,7 @@ def main():
         rng = random.Random(mid)
         for p in a.parts:
             for c in p.cubes:
+                assert all(float(v).is_integer() for v in c.size), (mid, c.size)
                 W.paint_cube(img, c, rng)
                 D.paint_extra(img, glow, c, rng)
         img.save(os.path.join(tex_dir, mid + ".png"))
@@ -305,49 +543,128 @@ def main():
         write_json(os.path.join(ASSETS, "hell/%s.json" % mid), {"texture": [tw, th], "parts": parts}, indent=None)
         previews.append((mid, parts, img))
         print("  %s: textura %dx%d" % (mid, tw, th))
-    for name in MODELS:
+
+    def gen_item(name):
         write_json(os.path.join(ASSETS, "models/item/%s.json" % name), {"parent": "minecraft:item/generated", "textures": {"layer0": "%s:item/%s" % (NS, name)}})
-    # lo del tren grande de antes
-    for old in ("locomotive", "flatcar"):
+    for name in MODELS:
+        gen_item(name)
+    # lo de los trenes de antes (los vagones de pasajeros y de mercancías, la plataforma vieja)
+    for old in ("passenger_car", "freight_car", "locomotive"):
         for f in (os.path.join(tex_dir, old + ".png"), os.path.join(tex_dir, old + "_glow.png"), os.path.join(ASSETS, "hell/%s.json" % old),
-                  os.path.join(ASSETS, "models/item/%s.json" % old), os.path.join(ASSETS, "textures/item/%s.png" % old),
-                  os.path.join(DATA, "recipe/%s.json" % old)):
+                  os.path.join(ASSETS, "models/item/%s.json" % old), os.path.join(item_dir, "%s.png" % old)):
             if os.path.exists(f):
                 os.remove(f)
-    # los iconos (a partir de la vista previa del modelo)
+    for old in ("passenger_car", "freight_car", "locomotive", "flatcar", "steam_locomotive", "coal_tender"):
+        f = os.path.join(DATA, "recipe/%s.json" % old)
+        if os.path.exists(f):
+            os.remove(f)
+    # los iconos de los coches (a partir del modelo)
     for mid, parts, img in previews:
-        icon = render_entity(parts, img, size=64, yaw=35.0, pitch=15.0, center="auto").convert("RGBA")
-        px = icon.load()
+        ic = render_entity(parts, img, size=64, yaw=35.0, pitch=15.0, center="auto").convert("RGBA")
+        px = ic.load()
         bg = px[0, 0]
-        for y in range(icon.height):
-            for x in range(icon.width):
+        for y in range(ic.height):
+            for x in range(ic.width):
                 if px[x, y][:3] == bg[:3]:
                     px[x, y] = (0, 0, 0, 0)
-        icon.resize((32, 32), Image.LANCZOS).save(os.path.join(ASSETS, "textures/item/%s.png" % mid))
+        ic.resize((32, 32), Image.LANCZOS).save(os.path.join(item_dir, "%s.png" % mid))
+    # las vías, las partes y el martillo
+    for tid, *_ in TRACKS:
+        track_icon(tid.replace("track_", "")).save(os.path.join(item_dir, tid + ".png"))
+        gen_item(tid)
+    for pid, *_ in PARTS:
+        part_icon(pid).save(os.path.join(item_dir, pid + ".png"))
+        gen_item(pid)
+    hammer_icon().save(os.path.join(item_dir, "building_hammer.png"))
+    write_json(os.path.join(ASSETS, "models/item/building_hammer.json"),
+               {"parent": "minecraft:item/handheld", "textures": {"layer0": "%s:item/building_hammer" % NS}})
+    # las piezas: modelos 3D con las texturas de vanilla
+    for mid, *_ in MATERIALS:
+        main_t, trim_t, door_t, roof_t = MAT_TEX[mid]
+        for kid, *_ in KINDS:
+            write_json(os.path.join(ASSETS, "models/item/%s_%s.json" % (mid, kid)), {
+                "parent": "minecraft:block/block",
+                "textures": {"main": "minecraft:" + main_t, "trim": "minecraft:" + trim_t, "door": "minecraft:" + door_t,
+                             "roof": "minecraft:" + roof_t, "glass": "minecraft:block/glass", "particle": "minecraft:" + main_t},
+                "elements": piece_elements(kid)})
+    # las vías grandes (se dibujan aparte: el modelo solo da las partículas)
+    write_json(os.path.join(ASSETS, "blockstates/big_track.json"), {"multipart": [{"apply": {"model": "%s:block/big_track" % NS}}]})
+    write_json(os.path.join(ASSETS, "models/block/big_track.json"), {"textures": {"particle": "minecraft:block/gravel"}})
+    pools = []
+    for tid, *_ in TRACKS:
+        shape = tid.replace("track_", "").replace("_right", "").replace("_left", "")
+        props = {"part": "1", "shape": shape}
+        if shape in ("curve", "switch"):
+            props["left"] = "true" if tid.endswith("left") else "false"
+        pools.append({"rolls": 1, "entries": [{"type": "minecraft:item", "name": "%s:%s" % (NS, tid)}],
+                      "conditions": [{"condition": "minecraft:block_state_property", "block": "%s:big_track" % NS, "properties": props}]})
+    write_json(os.path.join(DATA, "loot_table/blocks/big_track.json"), {"type": "minecraft:block", "pools": pools})
+    # la mesa de ensamblaje
+    top, side, front = table_textures()
+    os.makedirs(block_dir, exist_ok=True)
+    top.save(os.path.join(block_dir, "train_assembly_table_top.png"))
+    side.save(os.path.join(block_dir, "train_assembly_table_side.png"))
+    front.save(os.path.join(block_dir, "train_assembly_table_front.png"))
+    b = "%s:block/train_assembly_table" % NS
+    write_json(os.path.join(ASSETS, "models/block/train_assembly_table.json"), {
+        "parent": "minecraft:block/orientable_with_bottom",
+        "textures": {"top": b + "_top", "side": b + "_side", "front": b + "_front", "bottom": "minecraft:block/oak_planks"}})
+    write_json(os.path.join(ASSETS, "blockstates/train_assembly_table.json"), {"variants": {
+        "facing=north": {"model": b}, "facing=east": {"model": b, "y": 90}, "facing=south": {"model": b, "y": 180}, "facing=west": {"model": b, "y": 270}}})
+    write_json(os.path.join(ASSETS, "models/item/train_assembly_table.json"), {"parent": b})
+    write_json(os.path.join(DATA, "loot_table/blocks/train_assembly_table.json"), {"type": "minecraft:block", "pools": [
+        {"rolls": 1, "entries": [{"type": "minecraft:item", "name": "%s:train_assembly_table" % NS}], "conditions": [{"condition": "minecraft:survives_explosion"}]}]})
+    # las recetas
     R = os.path.join(DATA, "recipe")
 
-    def shaped(name, pattern, key):
-        write_json(os.path.join(R, name + ".json"), {"type": "minecraft:crafting_shaped", "category": "transportation", "pattern": pattern,
-                                                    "key": key, "result": {"id": "%s:%s" % (NS, name), "count": 1}})
-    shaped("steam_locomotive", ["I  ", "IFI", "IMI"], {"I": {"item": "minecraft:iron_ingot"}, "F": {"item": "minecraft:furnace"},
-                                                       "M": {"item": "minecraft:minecart"}})
-    shaped("passenger_car", ["PGP", "PMP"], {"P": {"tag": "minecraft:planks"}, "G": {"item": "minecraft:glass_pane"}, "M": {"item": "minecraft:minecart"}})
-    shaped("freight_car", ["PCP", "PMP"], {"P": {"tag": "minecraft:planks"}, "C": {"item": "minecraft:chest"}, "M": {"item": "minecraft:minecart"}})
-    shaped("coal_tender", ["I I", "IMI"], {"I": {"item": "minecraft:iron_ingot"}, "M": {"item": "minecraft:chest_minecart"}})
+    def shaped(name, pattern, key, count=1):
+        write_json(os.path.join(R, name + ".json"), {"type": "minecraft:crafting_shaped", "category": "misc", "pattern": pattern,
+                                                    "key": key, "result": {"id": "%s:%s" % (NS, name), "count": count}})
+
+    def shapeless(file, result, ingredients, count=1):
+        write_json(os.path.join(R, file + ".json"), {"type": "minecraft:crafting_shapeless", "category": "misc",
+                                                    "ingredients": [{"item": i} if ":" in i and not i.startswith("#") else {"tag": i[1:]} for i in ingredients],
+                                                    "result": {"id": "%s:%s" % (NS, result), "count": count}})
+    I, P, N = {"item": "minecraft:iron_ingot"}, {"tag": "minecraft:planks"}, {"item": "minecraft:iron_nugget"}
+    shaped("track_straight", ["IPI", "IGI", "IPI"], {"I": I, "P": P, "G": {"item": "minecraft:gravel"}}, 2)
+    ns = lambda n: "%s:%s" % (NS, n)  # noqa: E731
+    shapeless("track_slope", "track_slope", [ns("track_straight"), ns("track_straight"), "minecraft:cobblestone"])
+    shapeless("track_curve_right", "track_curve_right", [ns("track_straight")] * 3)
+    shapeless("track_curve_left", "track_curve_left", [ns("track_curve_right")])
+    shapeless("track_curve_right_from_left", "track_curve_right", [ns("track_curve_left")])
+    shapeless("track_switch_right", "track_switch_right", [ns("track_curve_right"), ns("track_straight"), ns("track_straight"), "minecraft:lever"])
+    shapeless("track_switch_left", "track_switch_left", [ns("track_switch_right")])
+    shapeless("track_switch_right_from_left", "track_switch_right", [ns("track_switch_left")])
+    shaped("train_chassis", ["III", "PPP", "III"], {"I": I, "P": P})
+    shaped("train_wheels", ["NIN", "I I", "NIN"], {"I": I, "N": N})
+    shaped("steam_boiler", ["CIC", "IFI", "CIC"], {"C": {"item": "minecraft:copper_ingot"}, "I": I, "F": {"item": "minecraft:furnace"}})
+    shaped("train_cab", ["PGP", "P P", "III"], {"P": P, "G": {"item": "minecraft:glass_pane"}, "I": I})
+    shaped("coal_bunker", ["I I", "ICI", "III"], {"I": I, "C": {"item": "minecraft:chest"}})
+    shaped("building_hammer", ["II ", "IS ", "  S"], {"I": I, "S": {"item": "minecraft:stick"}})
+    shaped("train_assembly_table", ["III", "CTC", "PPP"], {"I": I, "C": {"item": "minecraft:copper_ingot"}, "T": {"item": "minecraft:crafting_table"},
+                                                           "P": P})
+    # los textos
     for path in sorted(glob.glob(os.path.join(ASSETS, "lang", "*.json"))):
         english = path.endswith("en_us.json")
         with open(path, encoding="utf-8") as f:
             lang = json.load(f, object_pairs_hook=collections.OrderedDict)
+        for key in OLD_KEYS:
+            lang.pop(key, None)
         for key, (es, en) in TEXTS.items():
             lang[key] = en if english else es
         write_json(path, lang)
     if PREVIEW:
         os.makedirs(PREVIEW, exist_ok=True)
-        sheet = Image.new("RGB", (1200, 300), (70, 74, 80))
+        sheet = Image.new("RGB", (1200, 400), (70, 74, 80))
         for k, (mid, parts, img) in enumerate(previews):
-            sheet.paste(render_entity(parts, img, size=300, yaw=35.0, pitch=15.0, center="auto"), (k * 300, 0))
+            sheet.paste(render_entity(parts, img, size=400, yaw=35.0, pitch=15.0, center="auto"), (k * 400, 0))
         sheet.save(os.path.join(PREVIEW, "trains.png"))
-    print("el tren de vapor: locomotora, vagón de pasajeros, de mercancías y ténder")
+        icons = Image.new("RGBA", (16 * 14, 16), (60, 64, 70, 255))
+        for k, n in enumerate([t[0] for t in TRACKS] + [p[0] for p in PARTS] + ["building_hammer"]):
+            ic = Image.open(os.path.join(item_dir, n + ".png")).convert("RGBA")
+            icons.alpha_composite(ic, (k * 16, 0))
+        icons.resize((16 * 14 * 6, 16 * 6), Image.NEAREST).save(os.path.join(PREVIEW, "train_icons.png"))
+    print("el tren grande: locomotora, ténder y plataforma; vías, partes, mesa, martillo y %d piezas" % (len(KINDS) * len(MATERIALS)))
 
 
 if __name__ == "__main__":

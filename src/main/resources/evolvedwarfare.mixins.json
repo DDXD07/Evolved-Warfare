@@ -4,6 +4,9 @@
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"BiomeSeasonMixin",
+		"EntityTrainCollisionMixin",
+		"ServerPlayNetworkHandlerTrainMixin",
+		"ProjectileUtilTrainMixin",
 		"ScreenHandlerInvoker",
 		"ItemEntityPickupMixin",
 		"LivingEntityJumpingAccessor",

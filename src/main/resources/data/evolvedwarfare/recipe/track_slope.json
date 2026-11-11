@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "evolvedwarfare:track_straight"
+    },
+    {
+      "item": "evolvedwarfare:track_straight"
+    },
+    {
+      "item": "minecraft:cobblestone"
+    }
+  ],
+  "result": {
+    "id": "evolvedwarfare:track_slope",
+    "count": 1
+  }
+}
