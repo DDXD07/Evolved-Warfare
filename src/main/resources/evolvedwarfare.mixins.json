@@ -16,6 +16,7 @@
 		"CodecsStackMixin",
 		"PlayerInventoryLimitMixin",
 		"SimpleInventoryLimitMixin",
+		"StorageMinecartLimitMixin",
 		"LockableContainerLimitMixin",
 		"DoubleInventoryLimitMixin",
 		"PlayerScreenHandlerBackpackMixin",

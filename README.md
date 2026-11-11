@@ -2013,6 +2013,10 @@ El tren grande de antes (con plataformas para construir encima) se cambia por un
 - **Construir en la plataforma, como en ARK**: el **martillo de construcción** abre un menú con los materiales (paja, madera, piedra y metal, cada uno más resistente) y las piezas (pared, pared con puerta, pared con ventana, techo, tejado inclinado, escalera y barandilla), con la pieza en 3D girando, su resistencia y lo que cuesta. Con la pieza en la mano se ve dónde iría en la plataforma (verde o roja) y se pone con clic derecho. Dos plantas; lo de arriba necesita apoyo (techo sobre paredes, pared de arriba sobre techo) y, si se quita, se cae. Las puertas se abren con clic derecho; las piezas se recogen con el martillo agachado y se rompen a golpes.
 - Se quitan los vagones de pasajeros y de mercancías.
 
+## Fase 52.1 — El límite por hueco funciona de verdad
+
+- Con el límite por hueco de la configuración en 100, 500, 1000 o 5000, los inventarios (el del jugador, cofres, barriles, cajas de shulker, cofres dobles, vagonetas con cofre o tolva y demás) se quedaban en 99: en el jar, el cambio que sube su límite conservaba su nombre de desarrollo y Minecraft nunca lo llamaba (en las pruebas, que usan esos nombres, sí funcionaba). Ahora se traduce al compilar y las pilas llegan al límite elegido.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
