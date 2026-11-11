@@ -145,7 +145,7 @@ public class VillageGameTests implements FabricGameTest {
 		BlockPos a = ctx.getAbsolutePos(new BlockPos(1, 1, 1));
 		BlockPos b = a.east();
 		// una calle que sube un bloque: la de abajo en a, la de arriba en b
-		for (BlockPos p : BlockPos.iterate(a.add(-1, 0, -1), b.add(1, 4, 1))) {
+		for (BlockPos p : BlockPos.iterate(a.add(-1, 0, -1), b.add(1, 14, 1))) {
 			world.setBlockState(p, net.minecraft.block.Blocks.AIR.getDefaultState());
 		}
 		world.setBlockState(a, net.minecraft.block.Blocks.DIRT_PATH.getDefaultState());
