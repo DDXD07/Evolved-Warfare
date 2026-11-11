@@ -1,6 +1,6 @@
 package com.evolvedwarfare.screen;
 
-import com.evolvedwarfare.entity.TraderEntity;
+import com.evolvedwarfare.trade.Shop;
 import com.evolvedwarfare.logistics.Market;
 import com.evolvedwarfare.registry.ModScreens;
 import com.evolvedwarfare.trade.Deal;
@@ -52,7 +52,7 @@ public class TraderScreenHandler extends ScreenHandler {
 	public static final int HEIGHT = HOTBAR_Y + 24;
 
 	@Nullable
-	private final TraderEntity trader;
+	private final Shop trader;
 	private final Data data;
 	private final PropertyDelegate stock;
 
@@ -62,12 +62,12 @@ public class TraderScreenHandler extends ScreenHandler {
 	}
 
 	/** Servidor. */
-	public TraderScreenHandler(int syncId, PlayerInventory playerInventory, TraderEntity trader, Data data) {
+	public TraderScreenHandler(int syncId, PlayerInventory playerInventory, Shop trader, Data data) {
 		this(syncId, playerInventory, trader, data, stockOf(trader, data));
 	}
 
 	/** Lo que le queda hoy de cada línea (se manda al cliente). */
-	protected static PropertyDelegate stockOf(TraderEntity trader, Data data) {
+	protected static PropertyDelegate stockOf(Shop trader, Data data) {
 		return new PropertyDelegate() {
 			@Override
 			public int get(int index) {
@@ -85,14 +85,14 @@ public class TraderScreenHandler extends ScreenHandler {
 		};
 	}
 
-	private TraderScreenHandler(int syncId, PlayerInventory playerInventory, @Nullable TraderEntity trader, Data data,
+	private TraderScreenHandler(int syncId, PlayerInventory playerInventory, @Nullable Shop trader, Data data,
 			PropertyDelegate stock) {
 		this(ModScreens.TRADER, syncId, playerInventory, trader, data, stock);
 	}
 
 	/** Para el catálogo (otro tipo de menú con la misma compraventa). */
 	protected TraderScreenHandler(net.minecraft.screen.ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory,
-			@Nullable TraderEntity trader, Data data, PropertyDelegate stock) {
+			@Nullable Shop trader, Data data, PropertyDelegate stock) {
 		super(type, syncId);
 		this.trader = trader;
 		this.data = data;
@@ -253,14 +253,14 @@ public class TraderScreenHandler extends ScreenHandler {
 		if (trader == null) {
 			return true;
 		}
-		return trader.isAlive() && player.squaredDistanceTo(trader) <= 64.0;
+		return trader.merchant().isAlive() && player.squaredDistanceTo(trader.merchant()) <= 64.0;
 	}
 
 	@Override
 	public void onClosed(PlayerEntity player) {
 		super.onClosed(player);
-		if (trader != null && trader.getCustomer() == player) {
-			trader.setCustomer(null);
+		if (trader != null && trader.merchant().getCustomer() == player) {
+			trader.merchant().setCustomer(null);
 		}
 	}
 }

@@ -1,6 +1,6 @@
 package com.evolvedwarfare.screen;
 
-import com.evolvedwarfare.entity.TraderEntity;
+import com.evolvedwarfare.trade.Shop;
 import com.evolvedwarfare.registry.ModScreens;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.RegistryByteBuf;
@@ -33,7 +33,7 @@ public class CatalogScreenHandler extends TraderScreenHandler {
 	}
 
 	/** Servidor. */
-	public CatalogScreenHandler(int syncId, PlayerInventory playerInventory, TraderEntity trader, Opening opening) {
+	public CatalogScreenHandler(int syncId, PlayerInventory playerInventory, Shop trader, Opening opening) {
 		super(ModScreens.CATALOG, syncId, playerInventory, trader, opening.data(), stockOf(trader, opening.data()));
 		this.opening = opening;
 	}

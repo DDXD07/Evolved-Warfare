@@ -57,8 +57,20 @@ public final class VillageExtras {
 	private record Cell(int x, int z) {
 	}
 
+	/** El terreno (de la generación, no de lo ya puesto): la altura del suelo y si hay agua encima. */
+	public interface Terrain {
+		int ground(int x, int z);
+
+		boolean dry(int x, int z);
+	}
+
 	@Nullable
 	public static VillageExtrasPiece create(VillageStyle style, List<StructurePiece> pieces, StructureTemplateManager templates) {
+		return create(style, pieces, templates, null);
+	}
+
+	@Nullable
+	public static VillageExtrasPiece create(VillageStyle style, List<StructurePiece> pieces, StructureTemplateManager templates, @Nullable Terrain terrain) {
 		if (pieces.isEmpty()) {
 			return null;
 		}
@@ -242,6 +254,14 @@ public final class VillageExtras {
 		sortedWall.sort(Comparator.comparingInt(Cell::x).thenComparingInt(Cell::z));
 		List<Cell> lanterns = spaced(sortedWall, WALL_LANTERN_SPACING, c -> !postCells.contains(key(c.x, c.z)));
 
+		// ---------------------------------------------------------------- los edificios nuevos (mercado, taberna, granero, atalaya)
+		int[] buildings = new int[0];
+		if (terrain != null) {
+			BlockBox center = pieces.get(0).getBoundingBox();
+			buildings = planBuildings(terrain, gx0, gz0, w, h, region, houseBoxes, path, road, (center.getMinX() + center.getMaxX()) / 2,
+					(center.getMinZ() + center.getMaxZ()) / 2);
+		}
+
 		// ---------------------------------------------------------------- caja y pieza
 		int bx0 = Integer.MAX_VALUE, bz0 = Integer.MAX_VALUE, bx1 = Integer.MIN_VALUE, bz1 = Integer.MIN_VALUE;
 		for (Cell c : wall) {
@@ -258,9 +278,181 @@ public final class VillageExtras {
 			bx1 = Math.max(bx1, x);
 			bz1 = Math.max(bz1, z);
 		}
-		BlockBox box = new BlockBox(bx0, y0 - 16, bz0, bx1, y1 + 16, bz1);
+		int top = y1 + 16, bottom = y0 - 16;
+		for (int i = 0; i + 4 < buildings.length; i += 5) {
+			top = Math.max(top, buildings[i + 4] + 20);
+			bottom = Math.min(bottom, buildings[i + 4] - 10);
+		}
+		BlockBox box = new BlockBox(bx0, bottom, bz0, bx1, top, bz1);
 		return new VillageExtrasPiece(style, box, pack(plainWall, c -> !postCells.contains(key(c.x, c.z))),
-				packKeys(postCells), packKeys(road), pack(lamps, c -> true), pack(lanterns, c -> true));
+				packKeys(postCells), packKeys(road), pack(lamps, c -> true), pack(lanterns, c -> true), buildings);
+	}
+
+	// ==================================================================== los edificios
+
+	/** Un sitio posible para un edificio: la esquina, el giro y lo bueno que es (menos es mejor). */
+	private record Spot(int x, int z, int rot, double score) {
+	}
+
+	/**
+	 * Busca sitio dentro de la empalizada (a 3 bloques de ella como poco) para la plaza del mercado y la taberna (lo más
+	 * cerca del centro), el granero y una o dos atalayas (cerca de la empalizada), sin pisar casas ni calles, con la entrada
+	 * a una calle (menos las atalayas) y en terreno seco y casi llano. Devuelve los elementos de 5 en 5.
+	 */
+	private static int[] planBuildings(Terrain terrain, int gx0, int gz0, int w, int h, boolean[] region, List<BlockBox> houses,
+			LongOpenHashSet path, LongOpenHashSet road, int cx, int cz) {
+		boolean[] notRegion = new boolean[w * h];
+		for (int i = 0; i < w * h; i++) {
+			notRegion[i] = !region[i];
+		}
+		float[] inDist = chamfer(w, h, notRegion);
+		boolean[] blocked = new boolean[w * h];
+		for (int i = 0; i < w * h; i++) {
+			blocked[i] = inDist[i] < 3;
+		}
+		for (BlockBox b : houses) {
+			fill(blocked, gx0, gz0, w, h, b.getMinX() - 1, b.getMinZ() - 1, b.getMaxX() + 1, b.getMaxZ() + 1);
+		}
+		for (LongOpenHashSet set : List.of(path, road)) {
+			for (long k : set) {
+				int x = (int) (k >> 32), z = (int) k;
+				fill(blocked, gx0, gz0, w, h, x, z, x, z);
+			}
+		}
+		IntArrayList out = new IntArrayList();
+		int[] order = {VillageBuildings.MARKET, VillageBuildings.TAVERN, VillageBuildings.GRANARY, VillageBuildings.TOWER, VillageBuildings.TOWER};
+		List<int[]> towers = new ArrayList<>();
+		for (int type : order) {
+			if (type == VillageBuildings.TOWER && !towers.isEmpty() && w * h < 9000) {
+				break;
+			}
+			int[] got = place(type, terrain, gx0, gz0, w, h, blocked, inDist, path, cx, cz, towers);
+			if (got == null && type == VillageBuildings.MARKET) {
+				got = place(VillageBuildings.MARKET_SMALL, terrain, gx0, gz0, w, h, blocked, inDist, path, cx, cz, towers);
+			}
+			if (got == null) {
+				continue;
+			}
+			out.addElements(out.size(), got);
+			int t = got[0], fw = (got[3] & 1) == 0 ? VillageBuildings.width(t) : VillageBuildings.depth(t);
+			int fd = (got[3] & 1) == 0 ? VillageBuildings.depth(t) : VillageBuildings.width(t);
+			fill(blocked, gx0, gz0, w, h, got[1] - 2, got[2] - 2, got[1] + fw + 1, got[2] + fd + 1);
+			if (t == VillageBuildings.TOWER) {
+				towers.add(new int[] {got[1], got[2]});
+			}
+		}
+		return out.toIntArray();
+	}
+
+	private static void fill(boolean[] grid, int gx0, int gz0, int w, int h, int x0, int z0, int x1, int z1) {
+		for (int z = Math.max(0, z0 - gz0); z <= Math.min(h - 1, z1 - gz0); z++) {
+			for (int x = Math.max(0, x0 - gx0); x <= Math.min(w - 1, x1 - gx0); x++) {
+				grid[z * w + x] = true;
+			}
+		}
+	}
+
+	@Nullable
+	private static int[] place(int type, Terrain terrain, int gx0, int gz0, int w, int h, boolean[] blocked, float[] inDist, LongOpenHashSet path,
+			int cx, int cz, List<int[]> towers) {
+		// sumas acumuladas de lo ocupado, para mirar rectángulos de golpe
+		int[] sum = new int[(w + 1) * (h + 1)];
+		for (int z = 0; z < h; z++) {
+			for (int x = 0; x < w; x++) {
+				sum[(z + 1) * (w + 1) + x + 1] = (blocked[z * w + x] ? 1 : 0) + sum[z * (w + 1) + x + 1] + sum[(z + 1) * (w + 1) + x] - sum[z * (w + 1) + x];
+			}
+		}
+		int bw = VillageBuildings.width(type), bd = VillageBuildings.depth(type);
+		boolean tower = type == VillageBuildings.TOWER;
+		List<Spot> spots = new ArrayList<>();
+		for (int rot = 0; rot < 4; rot++) {
+			int fw = (rot & 1) == 0 ? bw : bd, fd = (rot & 1) == 0 ? bd : bw;
+			for (int z = 0; z + fd <= h; z++) {
+				for (int x = 0; x + fw <= w; x++) {
+					int n = sum[(z + fd) * (w + 1) + x + fw] - sum[z * (w + 1) + x + fw] - sum[(z + fd) * (w + 1) + x] + sum[z * (w + 1) + x];
+					if (n > 0) {
+						continue;
+					}
+					int wx = x + gx0, wz = z + gz0;
+					double score;
+					if (tower) {
+						float d = inDist[(z + fd / 2) * w + x + fw / 2];
+						if (d > 8) {
+							continue;
+						}
+						boolean near = false;
+						for (int[] t : towers) {
+							near |= (t[0] - wx) * (t[0] - wx) + (t[1] - wz) * (t[1] - wz) < 40 * 40;
+						}
+						if (near) {
+							continue;
+						}
+						score = d + ((wx * 31 + wz * 17) & 7) * 0.1;
+					} else {
+						if (frontStreet(path, rot, wx, wz, fw, fd) < 2) {
+							continue;
+						}
+						double dx = wx + fw / 2.0 - cx, dz = wz + fd / 2.0 - cz;
+						score = dx * dx + dz * dz;
+						if (type == VillageBuildings.GRANARY) {
+							score = Math.abs(Math.sqrt(score) - 30);
+						}
+					}
+					spots.add(new Spot(wx, wz, rot, score));
+				}
+			}
+		}
+		spots.sort(Comparator.comparingDouble(Spot::score));
+		int tries = 0;
+		for (Spot sp : spots) {
+			if (++tries > 40) {
+				break;
+			}
+			int fw = (sp.rot & 1) == 0 ? bw : bd, fd = (sp.rot & 1) == 0 ? bd : bw;
+			int[][] probes = {{sp.x, sp.z}, {sp.x + fw - 1, sp.z}, {sp.x, sp.z + fd - 1}, {sp.x + fw - 1, sp.z + fd - 1}, {sp.x + fw / 2, sp.z + fd / 2}};
+			int lo = Integer.MAX_VALUE, hi = Integer.MIN_VALUE;
+			boolean dry = true;
+			for (int[] p : probes) {
+				int y = terrain.ground(p[0], p[1]);
+				lo = Math.min(lo, y);
+				hi = Math.max(hi, y);
+				dry &= terrain.dry(p[0], p[1]);
+			}
+			if (dry && hi - lo <= 3) {
+				return new int[] {type, sp.x, sp.z, sp.rot, terrain.ground(sp.x + fw / 2, sp.z + fd / 2)};
+			}
+		}
+		return null;
+	}
+
+	/** Cuántas casillas de calle hay delante de la entrada (a 1 o 2 bloques). */
+	private static int frontStreet(LongOpenHashSet path, int rot, int x0, int z0, int fw, int fd) {
+		int n = 0;
+		for (int k = 1; k <= 2; k++) {
+			switch (rot & 3) {
+				case 0 -> {
+					for (int x = x0; x < x0 + fw; x++) {
+						n += path.contains(key(x, z0 - k)) ? 1 : 0;
+					}
+				}
+				case 1 -> {
+					for (int z = z0; z < z0 + fd; z++) {
+						n += path.contains(key(x0 + fw - 1 + k, z)) ? 1 : 0;
+					}
+				}
+				case 2 -> {
+					for (int x = x0; x < x0 + fw; x++) {
+						n += path.contains(key(x, z0 + fd - 1 + k)) ? 1 : 0;
+					}
+				}
+				default -> {
+					for (int z = z0; z < z0 + fd; z++) {
+						n += path.contains(key(x0 - k, z)) ? 1 : 0;
+					}
+				}
+			}
+		}
+		return n;
 	}
 
 	// ==================================================================== utilidades

@@ -51,7 +51,19 @@ public abstract class StructurePoolBasedGeneratorMixin {
 				collector.addPiece(piece);
 			}
 			try {
-				VillageExtrasPiece extras = VillageExtras.create(style, pieces, templates);
+				var gen = context.chunkGenerator();
+				VillageExtras.Terrain terrain = new VillageExtras.Terrain() {
+					@Override
+					public int ground(int x, int z) {
+						return gen.getHeightOnGround(x, z, Heightmap.Type.WORLD_SURFACE_WG, context.world(), context.noiseConfig());
+					}
+
+					@Override
+					public boolean dry(int x, int z) {
+						return ground(x, z) == gen.getHeightOnGround(x, z, Heightmap.Type.OCEAN_FLOOR_WG, context.world(), context.noiseConfig());
+					}
+				};
+				VillageExtrasPiece extras = VillageExtras.create(style, pieces, templates, terrain);
 				if (extras != null) {
 					collector.addPiece(extras);
 				}

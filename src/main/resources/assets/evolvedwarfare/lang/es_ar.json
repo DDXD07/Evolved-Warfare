@@ -2219,5 +2219,9 @@
   "structure.minecraft.ocean_ruin_warm": "Ruinas submarinas",
   "structure.minecraft.shipwreck": "Naufragio",
   "structure.minecraft.shipwreck_beached": "Naufragio en la playa",
-  "structure.minecraft.trial_chambers": "Cámaras de desafío"
+  "structure.minecraft.trial_chambers": "Cámaras de desafío",
+  "message.evolvedwarfare.villager.working": "%s trabaja de %s: no tiene tienda",
+  "message.evolvedwarfare.villager.idle": "%s no tiene oficio ni tienda",
+  "gui.evolvedwarfare.villager.shop": "%s · %s",
+  "gui.evolvedwarfare.trader.village": "Aldea nv. %s · %s%%"
 }

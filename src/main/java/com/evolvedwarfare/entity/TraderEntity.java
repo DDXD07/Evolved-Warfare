@@ -59,7 +59,7 @@ import org.jetbrains.annotations.Nullable;
  * lo que tiene depende del nivel de su ciudad ({@link CityLevels}). Repone sus existencias cada mañana.
  * Huye de los monstruos y de los asaltantes.
  */
-public class TraderEntity extends MerchantEntity {
+public class TraderEntity extends MerchantEntity implements com.evolvedwarfare.trade.Shop {
 	private static final TrackedData<Integer> TYPE = DataTracker.registerData(TraderEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	private static final TrackedData<Integer> VARIANT = DataTracker.registerData(TraderEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	/** Hasta dónde se aleja de su puesto. */
@@ -317,6 +317,7 @@ public class TraderEntity extends MerchantEntity {
 	}
 
 	/** Lotes que le quedan hoy de la línea {@code index}. */
+	@Override
 	public int stockLeft(int index, Deal deal) {
 		if (stock == null || index < 0 || index >= stock.length) {
 			return deal.stock();
@@ -324,6 +325,7 @@ public class TraderEntity extends MerchantEntity {
 		return Math.min(stock[index], deal.stock());
 	}
 
+	@Override
 	public void consumeStock(int index, int lots) {
 		List<Deal> deals = catalog();
 		if (index < 0 || index >= deals.size()) {
@@ -338,7 +340,13 @@ public class TraderEntity extends MerchantEntity {
 		stock[index] = Math.max(0, stock[index] - lots);
 	}
 
+	@Override
+	public MerchantEntity merchant() {
+		return this;
+	}
+
 	/** Después de cada trato. */
+	@Override
 	public void onTrade(PlayerEntity player) {
 		playSound(getYesSound(), 0.8F, getSoundPitch());
 	}

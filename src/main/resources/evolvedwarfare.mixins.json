@@ -4,6 +4,7 @@
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"BiomeSeasonMixin",
+		"VillagerShopMixin",
 		"EntityTrainCollisionMixin",
 		"ServerPlayNetworkHandlerTrainMixin",
 		"ProjectileUtilTrainMixin",

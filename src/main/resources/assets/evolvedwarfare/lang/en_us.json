@@ -2219,5 +2219,9 @@
   "structure.minecraft.ocean_ruin_warm": "Ocean Ruins",
   "structure.minecraft.shipwreck": "Shipwreck",
   "structure.minecraft.shipwreck_beached": "Beached Shipwreck",
-  "structure.minecraft.trial_chambers": "Trial Chambers"
+  "structure.minecraft.trial_chambers": "Trial Chambers",
+  "message.evolvedwarfare.villager.working": "%s works as a %s: no shop",
+  "message.evolvedwarfare.villager.idle": "%s has no job and no shop",
+  "gui.evolvedwarfare.villager.shop": "%s · %s",
+  "gui.evolvedwarfare.trader.village": "Village lv. %s · %s%%"
 }

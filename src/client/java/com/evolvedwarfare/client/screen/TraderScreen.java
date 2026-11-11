@@ -246,9 +246,14 @@ public class TraderScreen extends HandledScreen<TraderScreenHandler> {
 		context.drawText(textRenderer, money, moneyX, 8, theme.money(), false);
 		smallCoin(context, backgroundWidth - 12 - 9, 7);
 		// nivel de la ciudad
-		int level = handler.cityLevel();
-		Text city = handler.pricePercent() > 0
-				? Text.translatable("gui.evolvedwarfare.trader.city", level, handler.pricePercent())
+		// (un nivel negativo: es la tienda de un aldeano)
+		boolean village = handler.cityLevel() < 0;
+		int level = Math.abs(handler.cityLevel());
+		int percent = handler.pricePercent();
+		Text city = village
+				? Text.translatable("gui.evolvedwarfare.trader.village", level, (percent >= 0 ? "+" : "") + percent)
+				: percent > 0
+				? Text.translatable("gui.evolvedwarfare.trader.city", level, percent)
 				: Text.translatable("gui.evolvedwarfare.trader.city_base", level);
 		context.drawText(textRenderer, city, backgroundWidth - 9 - textRenderer.getWidth(city), 20, theme.levelColor(level), false);
 

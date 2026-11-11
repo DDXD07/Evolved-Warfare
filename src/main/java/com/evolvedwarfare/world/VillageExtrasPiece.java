@@ -34,9 +34,16 @@ public class VillageExtrasPiece extends StructurePiece {
 	private final int[] road;
 	private final int[] lamps;
 	private final int[] lanterns;
+	/** Los edificios añadidos: de 5 en 5 (tipo, x y z de la esquina, giro, altura del suelo). */
+	private final int[] buildings;
 
 	public VillageExtrasPiece(VillageStyle style, BlockBox box, int[] wall, int[] posts, int[] road, int[] lamps,
 			int[] lanterns) {
+		this(style, box, wall, posts, road, lamps, lanterns, new int[0]);
+	}
+
+	public VillageExtrasPiece(VillageStyle style, BlockBox box, int[] wall, int[] posts, int[] road, int[] lamps,
+			int[] lanterns, int[] buildings) {
 		super(ModStructures.VILLAGE_EXTRAS, 0, box);
 		this.style = style;
 		this.wall = wall;
@@ -44,6 +51,11 @@ public class VillageExtrasPiece extends StructurePiece {
 		this.road = road;
 		this.lamps = lamps;
 		this.lanterns = lanterns;
+		this.buildings = buildings;
+	}
+
+	public int[] buildings() {
+		return buildings;
 	}
 
 	public VillageExtrasPiece(NbtCompound nbt) {
@@ -54,6 +66,7 @@ public class VillageExtrasPiece extends StructurePiece {
 		this.road = nbt.getIntArray("Road");
 		this.lamps = nbt.getIntArray("Lamps");
 		this.lanterns = nbt.getIntArray("Lanterns");
+		this.buildings = nbt.getIntArray("Buildings");
 	}
 
 	@Override
@@ -64,6 +77,7 @@ public class VillageExtrasPiece extends StructurePiece {
 		nbt.putIntArray("Road", road);
 		nbt.putIntArray("Lamps", lamps);
 		nbt.putIntArray("Lanterns", lanterns);
+		nbt.putIntArray("Buildings", buildings);
 	}
 
 	@Override
@@ -105,6 +119,60 @@ public class VillageExtrasPiece extends StructurePiece {
 				placeLamp(world, lamps[i], lamps[i + 1], pos);
 			}
 		}
+		for (int i = 0; i + 4 < buildings.length; i += 5) {
+			placeBuilding(world, chunkBox, buildings[i], buildings[i + 1], buildings[i + 2], buildings[i + 3], buildings[i + 4], pos);
+		}
+	}
+
+	private static final net.minecraft.util.BlockRotation[] ROTATIONS = {net.minecraft.util.BlockRotation.NONE,
+			net.minecraft.util.BlockRotation.CLOCKWISE_90, net.minecraft.util.BlockRotation.CLOCKWISE_180,
+			net.minecraft.util.BlockRotation.COUNTERCLOCKWISE_90};
+
+	/** De las coordenadas del edificio (lx, lz) a las del mundo, con su giro (la entrada al norte, al este, al sur o al oeste). */
+	static int[] toWorld(int rot, int w, int d, int x0, int z0, int lx, int lz) {
+		return switch (rot & 3) {
+			case 0 -> new int[] {x0 + lx, z0 + lz};
+			case 1 -> new int[] {x0 + (d - 1 - lz), z0 + lx};
+			case 2 -> new int[] {x0 + (w - 1 - lx), z0 + (d - 1 - lz)};
+			default -> new int[] {x0 + lz, z0 + (w - 1 - lx)};
+		};
+	}
+
+	/** Un edificio: el cimiento hasta el suelo, el hueco despejado encima y lo que lleva (solo lo de este chunk). */
+	private void placeBuilding(StructureWorldAccess world, BlockBox chunkBox, int type, int x0, int z0, int rot, int y, BlockPos.Mutable pos) {
+		int w = VillageBuildings.width(type), d = VillageBuildings.depth(type);
+		int fw = (rot & 1) == 0 ? w : d, fd = (rot & 1) == 0 ? d : w;
+		if (x0 > chunkBox.getMaxX() || x0 + fw - 1 < chunkBox.getMinX() || z0 > chunkBox.getMaxZ() || z0 + fd - 1 < chunkBox.getMinZ()) {
+			return;
+		}
+		int height = VillageBuildings.height(type);
+		BlockState foundation = VillageBuildings.stone(style);
+		int[] waterTop = new int[1];
+		for (int lx = 0; lx < w; lx++) {
+			for (int lz = 0; lz < d; lz++) {
+				int[] p = toWorld(rot, w, d, x0, z0, lx, lz);
+				if (!inside(chunkBox, p[0], p[1])) {
+					continue;
+				}
+				int ground = findGround(world, p[0], p[1], pos, waterTop);
+				for (int yy = Math.max(ground + 1, y - 8); yy < y; yy++) {
+					set(world, pos.set(p[0], yy, p[1]), foundation);
+				}
+				for (int yy = y + 1; yy <= y + height + 3; yy++) {
+					BlockState old = world.getBlockState(pos.set(p[0], yy, p[1]));
+					if (!old.isAir()) {
+						set(world, pos, Blocks.AIR.getDefaultState());
+					}
+				}
+			}
+		}
+		net.minecraft.util.BlockRotation rotation = ROTATIONS[rot & 3];
+		VillageBuildings.build(type, style, (lx, ly, lz, state) -> {
+			int[] p = toWorld(rot, w, d, x0, z0, lx, lz);
+			if (inside(chunkBox, p[0], p[1])) {
+				set(world, pos.set(p[0], y + ly, p[1]), state.rotate(rotation));
+			}
+		});
 	}
 
 	/**

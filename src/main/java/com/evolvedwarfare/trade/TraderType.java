@@ -306,15 +306,30 @@ public enum TraderType {
 	 * cada día).
 	 */
 	public List<Deal> catalog(int cityLevel, long seed, long day, @Nullable net.minecraft.registry.DynamicRegistryManager registries) {
+		return catalog(cityLevel, seed, day, registries, false);
+	}
+
+	/** Lo que vende un aldeano tendero: solo lo común y lo poco común, un 15 % más barato que en las ciudades. */
+	public static final double VILLAGE_DISCOUNT = 0.85;
+
+	/**
+	 * El catálogo; en una aldea ({@code village}), el básico: solo las líneas comunes y poco comunes, y lo que vende, un
+	 * {@value #VILLAGE_DISCOUNT} del precio de la ciudad.
+	 */
+	public List<Deal> catalog(int cityLevel, long seed, long day, @Nullable net.minecraft.registry.DynamicRegistryManager registries, boolean village) {
 		java.util.Random random = new java.util.Random(seed * 31L + ordinal());
 		Quality quality = Quality.forLevel(cityLevel);
 		int index = 0;
-		double markup = CityLevels.priceMultiplier(cityLevel);
+		double markup = CityLevels.priceMultiplier(cityLevel) * (village ? VILLAGE_DISCOUNT : 1.0);
 		Pricing pricing = pricing();
 		List<Deal> sells = new ArrayList<>();
 		List<Deal> buys = new ArrayList<>();
 		for (Entry entry : entries()) {
 			double variance = 1.0 + (random.nextDouble() * 2.0 - 1.0) * VARIANCE;
+			if (village && entry.tier().ordinal() > Tier.UNCOMMON.ordinal()) {
+				index++;
+				continue;
+			}
 			int maxCount = maxCount(entry.item());
 			Tier tier = entry.tier();
 			double fair = pricing.factor()[tier.ordinal()] * entry.value();
@@ -322,7 +337,7 @@ public enum TraderType {
 				sells.add(new Deal(true, new ItemStack(entry.item()), entry.count(), (int) entry.value(), dailyLots(tier.sellStock, entry.count()), tier, -1));
 			} else if (entry.sell()) {
 				int[] lot = sellLot(fair * variance, entry.count(), maxCount, tier);
-				int price = markup > 1.0 ? niceCeil(lot[1] * markup) : lot[1];
+				int price = markup > 1.0 ? niceCeil(lot[1] * markup) : markup < 1.0 ? Math.max(1, niceCeil(lot[1] * markup)) : lot[1];
 				ItemStack prototype = new ItemStack(entry.item());
 				int grade = -1;
 				if (Quality.affects(prototype)) {

@@ -2023,6 +2023,16 @@ El tren grande de antes (con plataformas para construir encima) se cambia por un
 - **Lo que sale**: las ciudades del mod con su nombre, los asentamientos (bandidos, vikingos, piratas, mercenarios), castillos y atalayas, y las estructuras de vanilla (aldeas, templos, mansiones, monumentos, puestos de saqueadores, ciudades antiguas, ruinas, naufragios, cámaras de desafío), cada una con su símbolo y, al pasar el ratón, su nombre; tu flecha y la de los demás jugadores con su nombre. Solo del mundo normal.
 - **Territorios**: con "Reclamar" se marcan chunks en el mapa (clic o arrastrando), se les pone nombre y se reclaman por Glory Coins (10 por chunk; se puede cambiar en la configuración, igual que el máximo de 256 chunks por jugador). Tienen que estar pegados entre sí y explorados; con el mismo nombre se amplía el territorio. "Liberar" suelta los tuyos que estén marcados. Todos ven los territorios en su Atlas (en lo que hayan explorado), resaltados en color con su nombre en una cinta. Solo son una marca en el mapa (no protegen nada).
 
+## Fase 54 — Aldeas vanilla con mercado, taberna, granero y atalaya; aldeanos con tienda
+
+- **Edificios nuevos en las aldeas vanilla** (dentro de la empalizada, sin pisar casas ni calles, en terreno seco y casi llano, con la entrada a una calle y con los materiales de cada tipo de aldea):
+  - **Plaza del mercado**: empedrada, con un **pozo** (brocal, agua honda, postes y tejadillo con farol), **puestos con toldo** de rayas (mostrador y mercancías: heno, barriles, calabazas, lana...), bancos mirando al pozo, un atril de anuncios y farolas en las esquinas. Si no cabe la grande (11 x 11), una más pequeña (9 x 9).
+  - **Taberna**: barra con barriles y soporte para pociones, dos mesas con sus sillas, faroles colgados de las vigas, ventanas y tejado a dos aguas.
+  - **Granero**: portón ancho, heno apilado, barriles, compostador y calabazas.
+  - **Atalaya** (una, o dos en las aldeas grandes, cerca de la empalizada): cuatro pilares, escalera de mano, plataforma con barandilla, farol y una **campana** bajo el tejado.
+- **Los aldeanos ya no comercian con esmeraldas.** Unos 2 de cada 5 de los que tienen oficio tienen **tienda** con la compraventa del mod (en Glory Coins, la misma pantalla que los comerciantes de las ciudades), con el catálogo básico de su oficio (solo lo común y lo poco común) y **un 15 % más barato** que en las ciudades; la calidad, según la distancia, como en las ciudades. Los demás **solo trabajan** (al hablarles dicen en qué).
+  - granjero, pescador y carnicero: tendero (comida); armero, herrero de armas y de herramientas: armero; albañil: cantero; cartógrafo, bibliotecario y clérigo: joyero; pastor, peletero y flechero: sastre (en el desierto, mercader de especias; en la nieve, peletero).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
