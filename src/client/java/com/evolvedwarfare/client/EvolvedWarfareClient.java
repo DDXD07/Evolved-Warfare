@@ -34,6 +34,7 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		ModModelLayers.init();
 		com.evolvedwarfare.client.backpack.BackpackClient.register();
 		com.evolvedwarfare.client.train.TrainRenderers.register();
+		com.evolvedwarfare.client.atlas.AtlasClient.register();
 		com.evolvedwarfare.client.hunting.HuntingRenderers.register();
 		net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.registerGlobalReceiver(
 				com.evolvedwarfare.inventory.StackLimit.StackLimitPayload.ID,

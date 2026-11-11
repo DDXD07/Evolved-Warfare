@@ -48,7 +48,8 @@
 			"com.evolvedwarfare.gametest.OreGameTests",
 			"com.evolvedwarfare.gametest.WaterSettleGameTests",
 			"com.evolvedwarfare.gametest.BackpackGameTests",
-			"com.evolvedwarfare.gametest.TrainGameTests"
+			"com.evolvedwarfare.gametest.TrainGameTests",
+			"com.evolvedwarfare.gametest.AtlasGameTests"
 		]
 	},
 	"depends": {

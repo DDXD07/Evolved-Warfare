@@ -2017,6 +2017,12 @@ El tren grande de antes (con plataformas para construir encima) se cambia por un
 
 - Con el límite por hueco de la configuración en 100, 500, 1000 o 5000, los inventarios (el del jugador, cofres, barriles, cajas de shulker, cofres dobles, vagonetas con cofre o tolva y demás) se quedaban en 99: en el jar, el cambio que sube su límite conservaba su nombre de desarrollo y Minecraft nunca lo llamaba (en las pruebas, que usan esos nombres, sí funcionaba). Ahora se traduce al compilar y las pilas llegan al límite elegido.
 
+## Fase 53 — El Atlas
+
+- **Atlas** (libro + brújula + 2 papeles): el mapa de lo que has explorado (lo de cada jugador, solo suyo), en tinta sobre papel como los catálogos de los comerciantes, que se va dibujando mientras exploras (unos 5 chunks alrededor) y se actualiza en tiempo real cerca de ti: relieve con curvas de nivel cada 8 bloques, el agua más oscura cuanto más honda y rayada, y lo construido tal cual. Se arrastra para moverlo y se acerca con la rueda (de 1:4 a 8:1); "Centrar" vuelve a tu sitio.
+- **Lo que sale**: las ciudades del mod con su nombre, los asentamientos (bandidos, vikingos, piratas, mercenarios), castillos y atalayas, y las estructuras de vanilla (aldeas, templos, mansiones, monumentos, puestos de saqueadores, ciudades antiguas, ruinas, naufragios, cámaras de desafío), cada una con su símbolo y, al pasar el ratón, su nombre; tu flecha y la de los demás jugadores con su nombre. Solo del mundo normal.
+- **Territorios**: con "Reclamar" se marcan chunks en el mapa (clic o arrastrando), se les pone nombre y se reclaman por Glory Coins (10 por chunk; se puede cambiar en la configuración, igual que el máximo de 256 chunks por jugador). Tienen que estar pegados entre sí y explorados; con el mismo nombre se amplía el territorio. "Liberar" suelta los tuyos que estén marcados. Todos ven los territorios en su Atlas (en lo que hayan explorado), resaltados en color con su nombre en una cinta. Solo son una marca en el mapa (no protegen nada).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
@@ -2040,6 +2046,7 @@ Las estructuras se generan con scripts de Python (no hace falta tocarlos para ju
 - `ew_apocalypse.py` — el Apocalipsis (fase 4 del Nether bíblico): los modelos del Ángel del Abismo, el Falso Profeta y la Bestia mayor (con las siete cabezas que se le caen), su botín, los fragmentos de sello y los objetos de los jefes, el círculo de ritual, los iconos de los efectos y los textos.
 - `ew_hellflora.py` — el Nether vivo (fase 37): los bloques de la flora infernal (texturas, modelos, botín, etiquetas y recetas), los árboles y matas, las lianas del techo y las cascadas de lava, la fauna (polillas, ciervos y sapos) y los textos. El techo de roca y los biomas están en `ew_hell.py`.
 - `ew_backpacks.py` — las cinco mochilas (fase 38): sus modelos 3D (más grandes por tier), texturas (cuero para teñir, correas y herrajes), recetas de la mesa y de la herrería, la etiqueta de tintes y los textos.
+- `ew_atlas.py` — el Atlas (fase 53): su icono, su modelo, la receta y los textos (también los nombres de las estructuras de vanilla que salen en el mapa).
 - `ew_trains.py` — el tren grande (fase 52): los modelos de la locomotora, el ténder y la plataforma (con ruedas que giran), sus texturas e iconos, los iconos de las vías, las partes y el martillo, los modelos de las 28 piezas de construcción (con texturas de vanilla), la mesa de ensamblaje, las recetas, lo que sueltan los bloques y los textos.
 - `ew_inferno.py` — el Nether bíblico (fase 1): los bloques nuevos (sal, polvo de hueso, grietas, cristales de azufre...), las decoraciones de los biomas, las maldiciones, las visiones y sus textos. El terreno y los biomas siguen en `ew_hell.py`.
 - `ew_casting.py` — la fundición: modelos y texturas del crisol y del molde, sus recetas, etiquetas y textos.

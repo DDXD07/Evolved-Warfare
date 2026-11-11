@@ -164,6 +164,11 @@ public final class EwConfig {
 	// ------------------------------------------------------------------ inventario
 	/** Lo máximo que cabe en un hueco de lo que se apila (64 = como siempre; 100, 500, 1000 o 5000). */
 	public int stackLimit = 64;
+	// ------------------------------------------------------------------ atlas
+	/** Lo que cuesta reclamar un chunk de territorio en el Atlas (Glory Coins). */
+	public int atlasClaimCost = 10;
+	/** Cuántos chunks de territorio puede tener cada jugador. */
+	public int atlasMaxChunks = 256;
 	/** Los valores que se pueden elegir para stackLimit. */
 	public static final int[] STACK_LIMITS = {64, 100, 500, 1000, 5000};
 	/** Multiplica la probabilidad de cortar (1 = normal). */
@@ -256,7 +261,9 @@ public final class EwConfig {
 			new Option("locationalVanillaMobs", "combat", 0, 1, 1),
 			new Option("dismemberment", "combat", 0, 1, 1),
 			new Option("dismembermentChance", "combat", 0.0, 5.0, 0.1),
-			new Option("stackLimit", "inventory", 64, 5000, 1));
+			new Option("stackLimit", "inventory", 64, 5000, 1),
+			new Option("atlasClaimCost", "atlas", 0, 10000, 1),
+			new Option("atlasMaxChunks", "atlas", 1, 10000, 1));
 
 	public static EwConfig get() {
 		return instance;

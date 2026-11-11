@@ -58,6 +58,7 @@ public class EvolvedWarfare implements ModInitializer {
 		ModItems.init();
 		com.evolvedwarfare.backpack.Backpacks.register();
 		com.evolvedwarfare.train.Trains.register();
+		com.evolvedwarfare.atlas.Atlas.register();
 		com.evolvedwarfare.hunting.Hunting.register();
 		com.evolvedwarfare.inventory.StackLimit.register();
 		com.evolvedwarfare.ores.Ores.register();
