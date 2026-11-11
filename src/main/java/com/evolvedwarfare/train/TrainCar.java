@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface TrainCar {
 	/** La distancia entre los centros de dos coches enganchados (bloques). */
-	double SPACING = 1.65;
+	double SPACING = 2.05;
 	/** Más lejos que esto, el enganche se suelta. */
 	double SNAP = 7.0;
 

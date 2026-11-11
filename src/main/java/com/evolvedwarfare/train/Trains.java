@@ -55,7 +55,7 @@ public final class Trains {
 
 	private static <T extends AbstractMinecartEntity> EntityType<T> type(String name, EntityType.EntityFactory<T> factory) {
 		return Registry.register(Registries.ENTITY_TYPE, EvolvedWarfare.id(name),
-				EntityType.Builder.create(factory, SpawnGroup.MISC).dimensions(0.98F, 0.7F).passengerAttachments(0.1875F).maxTrackingRange(8)
+				EntityType.Builder.create(factory, SpawnGroup.MISC).dimensions(0.98F, 1.1F).passengerAttachments(0.1875F).maxTrackingRange(8)
 						.build(name));
 	}
 

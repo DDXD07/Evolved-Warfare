@@ -1995,6 +1995,16 @@ El tren grande de antes (con plataformas para construir encima) se cambia por un
 - **Fauna**: los animales buscan de quién huir cada 5 tics en vez de cada tic.
 - Prueba nueva: un estanque que se desborda se queda quieto (0 tics de agua en los últimos 100 tics).
 
+## Fase 51.3 — Trenes más grandes y con detalle
+
+- **Texturas arregladas**: había piezas del modelo con medidas con decimales y Minecraft colocaba mal la textura de sus caras (franjas y colores de otras piezas). Ahora todas las piezas miden píxeles enteros.
+- **Más grandes**: 1,75 bloques de largo (2 con los topes), un bloque de ancho y hasta 1,5 de alto; los coches van enganchados a 2 bloques.
+- **Locomotora nueva**: caldera negra con aros de latón, caja de humos con su puerta, farol, chimenea ensanchada con boca de cobre, domo de vapor, arenero, silbato y válvula, pasamanos, cilindros, quitapiedras en escalones, ruedas guía y tres pares de motrices con contrapeso y bielas, estribos y una cabina con ventanas delanteras, techo con alero y claraboya, el frente del hogar con la puerta encendida, manómetros, placa del número y el carbón del fogonero.
+- **Vagón de pasajeros**: zócalo verde, moldura y friso crema, ventanas con el cristal hundido entre postes, asientos que se ven por las ventanas, testeros de madera con puertas y techo con linterna y chimeneas de las lámparas.
+- **Vagón de mercancías**: furgón de tablas con montantes de hierro, puerta corredera con rieles y refuerzos, rótulo, escalera, volante del freno y pasarela en el techo.
+- **Ténder**: depósito negro con franja de latón y placa, bordas, carbón amontonado, depósito de agua con su boca, escalera y caja de herramientas.
+- Todos con bastidor, vigas de topes rojas, topes, enganches, bogies con cajas de grasa y ruedas con su cubo.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
