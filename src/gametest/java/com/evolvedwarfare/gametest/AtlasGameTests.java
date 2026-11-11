@@ -23,11 +23,12 @@ public class AtlasGameTests implements FabricGameTest {
 	public void atlasDrawsWaterDarker(TestContext ctx) {
 		ServerWorld world = ctx.getWorld();
 		BlockPos o = ctx.getAbsolutePos(new BlockPos(0, 0, 0));
-		ChunkPos cp = new ChunkPos(o.add(16, 0, 16));
+		ChunkPos cp = new ChunkPos(o.add(0, 0, 560));
 		int y = o.getY();
 		BlockPos base = new BlockPos(cp.getStartX(), y, cp.getStartZ());
-		for (BlockPos p : BlockPos.iterate(base, base.add(15, 6, 15))) {
-			world.setBlockState(p, p.getY() == y ? Blocks.STONE.getDefaultState() : Blocks.AIR.getDefaultState());
+		world.setChunkForced(cp.x, cp.z, true);
+		for (BlockPos p : BlockPos.iterate(base, base.add(15, 40, 15))) {
+			world.setBlockState(p, p.getY() == y ? Blocks.GRASS_BLOCK.getDefaultState() : Blocks.AIR.getDefaultState());
 		}
 		// un estanque de 3 de hondo en la mitad de abajo del chunk
 		for (BlockPos p : BlockPos.iterate(base.add(0, 0, 8), base.add(15, 0, 15))) {
@@ -39,9 +40,10 @@ public class AtlasGameTests implements FabricGameTest {
 		WorldChunk chunk = world.getChunk(cp.x, cp.z);
 		byte[] img = Atlas.scan(world, chunk);
 		int land = img[3 * 16 + 5] & 255, water = img[12 * 16 + 5] & 255;
-		LOG.info("[EW-GAMETEST] atlas: piedra {}, agua {}", land, water);
+		world.setChunkForced(cp.x, cp.z, false);
+		LOG.info("[EW-GAMETEST] atlas: hierba {}, agua {}", land, water);
 		if (img.length != 256 || water >= land) {
-			throw new GameTestException("El Atlas no dibuja bien el agua: piedra " + land + ", agua " + water);
+			throw new GameTestException("El Atlas no dibuja bien el agua: hierba " + land + ", agua " + water);
 		}
 		ctx.complete();
 	}

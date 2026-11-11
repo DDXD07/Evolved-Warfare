@@ -447,9 +447,9 @@ public final class Atlas {
 				}
 				int shade;
 				if (depth > 0) {
-					shade = 200 - depth * 7;
+					shade = 150 - depth * 8;
 					if (Math.floorMod(wz + (wx >> 2), 4) == 0) {
-						shade -= 28;
+						shade -= 25;
 					}
 				} else {
 					MapColor mc = s.getMapColor(chunk, p);
