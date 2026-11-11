@@ -27,6 +27,21 @@ import net.minecraft.util.math.Direction;
  */
 public final class VillageBuildings {
 	public static final int MARKET = 0, TAVERN = 1, GRANARY = 2, TOWER = 3, MARKET_SMALL = 4;
+	/** Las decoraciones de las calles (de 10 en adelante: pequeñas, con el frente a la calle). */
+	public static final int BARRELS = 10, HAY = 11, WOODPILE = 12, FLOWERS = 13, BENCH = 14, SCARECROW = 15, CRATES = 16, POTS = 17, CAMPFIRE = 18;
+
+	public static boolean decor(int type) {
+		return type >= 10;
+	}
+
+	/** Las decoraciones que van en cada tipo de aldea. */
+	public static int[] decorations(VillageStyle s) {
+		return switch (s) {
+			case DESERT -> new int[] {BARRELS, HAY, POTS, BENCH, CRATES, POTS, SCARECROW};
+			case TAIGA, SNOWY -> new int[] {BARRELS, WOODPILE, CAMPFIRE, BENCH, CRATES, WOODPILE, FLOWERS};
+			default -> new int[] {BARRELS, HAY, WOODPILE, FLOWERS, BENCH, SCARECROW, CRATES, FLOWERS};
+		};
+	}
 
 	private VillageBuildings() {
 	}
@@ -34,6 +49,9 @@ public final class VillageBuildings {
 	/** Ancho (lx), fondo (lz) y alto de cada una. */
 	public static int width(int type) {
 		return switch (type) {
+			case BARRELS, HAY, BENCH, CRATES, POTS -> 2;
+			case WOODPILE, FLOWERS -> 3;
+			case SCARECROW, CAMPFIRE -> 1;
 			case MARKET -> 11;
 			case TAVERN -> 9;
 			case GRANARY -> 7;
@@ -44,6 +62,8 @@ public final class VillageBuildings {
 
 	public static int depth(int type) {
 		return switch (type) {
+			case HAY -> 2;
+			case BARRELS, WOODPILE, FLOWERS, BENCH, SCARECROW, CRATES, POTS, CAMPFIRE -> 1;
 			case MARKET -> 11;
 			case TAVERN -> 7;
 			case GRANARY -> 7;
@@ -53,6 +73,9 @@ public final class VillageBuildings {
 	}
 
 	public static int height(int type) {
+		if (decor(type)) {
+			return 3;
+		}
 		return switch (type) {
 			case TAVERN -> 10;
 			case GRANARY -> 9;
@@ -187,9 +210,73 @@ public final class VillageBuildings {
 			case TAVERN -> tavern(s, put);
 			case GRANARY -> granary(s, put);
 			case TOWER -> tower(s, put);
+			default -> decoration(type, s, put);
+		}
+	}
+
+	private static final Block[] FLOWER_KINDS = {Blocks.POPPY, Blocks.DANDELION, Blocks.CORNFLOWER, Blocks.OXEYE_DAISY, Blocks.ALLIUM, Blocks.AZURE_BLUET,
+			Blocks.RED_TULIP, Blocks.ORANGE_TULIP};
+
+	/** Las decoraciones (el frente, lz = 0, da a la calle). */
+	private static void decoration(int type, VillageStyle s, Put put) {
+		BlockState logX = log(s).contains(Properties.AXIS) ? log(s).with(Properties.AXIS, Direction.Axis.X) : log(s);
+		switch (type) {
+			case BARRELS -> {
+				put.at(0, 1, 0, Blocks.BARREL.getDefaultState());
+				put.at(1, 1, 0, Blocks.BARREL.getDefaultState());
+				put.at(0, 2, 0, Blocks.BARREL.getDefaultState());
+			}
+			case HAY -> {
+				put.at(0, 1, 0, Blocks.HAY_BLOCK.getDefaultState());
+				put.at(1, 1, 0, Blocks.HAY_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.X));
+				put.at(0, 1, 1, Blocks.HAY_BLOCK.getDefaultState());
+				put.at(1, 1, 1, Blocks.HAY_BLOCK.getDefaultState());
+				put.at(0, 2, 1, Blocks.HAY_BLOCK.getDefaultState().with(Properties.AXIS, Direction.Axis.Z));
+			}
+			case WOODPILE -> {
+				for (int lx = 0; lx < 3; lx++) {
+					put.at(lx, 1, 0, logX);
+				}
+				put.at(0, 2, 0, logX);
+				put.at(1, 2, 0, logX);
+				put.at(2, 2, 0, Blocks.CHAIN.getDefaultState());
+			}
+			case FLOWERS -> {
+				for (int lx = 0; lx < 3; lx++) {
+					put.at(lx, 0, 0, Blocks.GRASS_BLOCK.getDefaultState());
+					put.at(lx, 1, 0, FLOWER_KINDS[Math.floorMod(lx * 3 + s.ordinal() * 5, FLOWER_KINDS.length)].getDefaultState());
+				}
+			}
+			case BENCH -> {
+				put.at(0, 1, 0, stair(s, Direction.SOUTH, false));
+				put.at(1, 1, 0, stair(s, Direction.SOUTH, false));
+			}
+			case SCARECROW -> {
+				put.at(0, 1, 0, fence(s));
+				put.at(0, 2, 0, Blocks.HAY_BLOCK.getDefaultState());
+				put.at(0, 3, 0, Blocks.CARVED_PUMPKIN.getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
+			}
+			case CRATES -> {
+				put.at(0, 1, 0, Blocks.COMPOSTER.getDefaultState());
+				put.at(1, 1, 0, Blocks.BARREL.getDefaultState());
+				put.at(1, 2, 0, lantern(false));
+			}
+			case POTS -> {
+				put.at(0, 1, 0, Blocks.DECORATED_POT.getDefaultState());
+				put.at(1, 1, 0, Blocks.TERRACOTTA.getDefaultState());
+				put.at(1, 2, 0, Blocks.POTTED_CACTUS.getDefaultState());
+			}
+			case CAMPFIRE -> put.at(0, 1, 0, Blocks.CAMPFIRE.getDefaultState().with(Properties.LIT, true));
 			default -> {
 			}
 		}
+	}
+
+	/** El escalón de las calles en cuesta. */
+	public static BlockState streetStair(VillageStyle s, Direction up, int x, int z) {
+		Block b = s == VillageStyle.DESERT ? Blocks.SMOOTH_SANDSTONE_STAIRS
+				: (((x * 73856093) ^ (z * 19349663)) & 3) == 0 ? Blocks.MOSSY_COBBLESTONE_STAIRS : Blocks.COBBLESTONE_STAIRS;
+		return b.getDefaultState().with(StairsBlock.FACING, up);
 	}
 
 	/** Un tejado a dos aguas a lo largo de lz (los aleros, a los lados lx = 0 y lx = w-1), desde la altura y0. */

@@ -42,6 +42,7 @@ public class VillageGameTests implements FabricGameTest {
 		ChunkGenerator gen = world.getChunkManager().getChunkGenerator();
 		int planned = 0, tries = 0;
 		boolean market = false;
+		int decor = 0;
 		StringBuilder found = new StringBuilder();
 		for (int i = 0; i < 6 && planned < 3; i++) {
 			tries++;
@@ -54,21 +55,31 @@ public class VillageGameTests implements FabricGameTest {
 			for (StructurePiece piece : start.getChildren()) {
 				if (piece instanceof VillageExtrasPiece extras) {
 					int[] b = extras.buildings();
-					int n = b.length / 5;
+					int n = 0, dec = 0;
+					boolean m = false;
+					StringBuilder f = new StringBuilder();
+					for (int k = 0; k + 4 < b.length; k += 5) {
+						if (VillageBuildings.decor(b[k])) {
+							dec++;
+						} else {
+							n++;
+							f.append(b[k]).append(' ');
+							m |= b[k] == VillageBuildings.MARKET || b[k] == VillageBuildings.MARKET_SMALL;
+						}
+					}
 					if (n > planned) {
 						planned = n;
+						decor = dec;
+						market = m;
 						found.setLength(0);
-						market = false;
-						for (int k = 0; k < b.length; k += 5) {
-							found.append(b[k]).append(' ');
-							market |= b[k] == VillageBuildings.MARKET || b[k] == VillageBuildings.MARKET_SMALL;
-						}
+						found.append(f);
 					}
 				}
 			}
 		}
-		LOG.info("[EW-GAMETEST] aldea: {} edificios nuevos ({}) en {} intentos, mercado {}", planned, found.toString().trim(), tries, market);
-		if (planned < 2 || !market) {
+		LOG.info("[EW-GAMETEST] aldea: {} edificios nuevos ({}) en {} intentos, mercado {}, decoraciones {}", planned, found.toString().trim(), tries,
+				market, decor);
+		if (planned < 2 || !market || decor < 3) {
 			throw new GameTestException("Las aldeas no reciben sus edificios nuevos: " + planned + " (" + found + ")");
 		}
 		ctx.complete();
@@ -124,6 +135,34 @@ public class VillageGameTests implements FabricGameTest {
 		worker.discard();
 		if (!opened || !workerClosed || !basic || !cheaper) {
 			throw new GameTestException("Los aldeanos no comercian bien: tienda " + opened + ", trabajador " + workerClosed + ", básico " + basic + ", barato " + cheaper);
+		}
+		ctx.complete();
+	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE)
+	public void streetsGetStepsOnSlopes(TestContext ctx) {
+		ServerWorld world = ctx.getWorld();
+		BlockPos a = ctx.getAbsolutePos(new BlockPos(1, 1, 1));
+		BlockPos b = a.east();
+		// una calle que sube un bloque: la de abajo en a, la de arriba en b
+		for (BlockPos p : BlockPos.iterate(a.add(-1, 0, -1), b.add(1, 4, 1))) {
+			world.setBlockState(p, net.minecraft.block.Blocks.AIR.getDefaultState());
+		}
+		world.setBlockState(a, net.minecraft.block.Blocks.DIRT_PATH.getDefaultState());
+		world.setBlockState(b, net.minecraft.block.Blocks.DIRT.getDefaultState());
+		world.setBlockState(b.up(), net.minecraft.block.Blocks.DIRT_PATH.getDefaultState());
+		int[] streets = {a.getX(), a.getZ(), b.getX(), b.getZ()};
+		net.minecraft.util.math.BlockBox box = new net.minecraft.util.math.BlockBox(a.getX() - 2, a.getY() - 4, a.getZ() - 2, b.getX() + 2, b.getY() + 6, b.getZ() + 2);
+		VillageExtrasPiece piece = new VillageExtrasPiece(com.evolvedwarfare.world.VillageStyle.PLAINS, box, new int[0], new int[0], new int[0], new int[0],
+				new int[0], new int[0], streets);
+		piece.generate(world, world.getStructureAccessor(), world.getChunkManager().getChunkGenerator(), net.minecraft.util.math.random.Random.create(1), box,
+				new ChunkPos(a), a);
+		var step = world.getBlockState(a.up());
+		boolean ok = step.getBlock() instanceof net.minecraft.block.StairsBlock
+				&& step.get(net.minecraft.block.StairsBlock.FACING) == net.minecraft.util.math.Direction.EAST;
+		LOG.info("[EW-GAMETEST] escalones: {}", step);
+		if (!ok) {
+			throw new GameTestException("La calle en cuesta no tiene su escalón: " + step);
 		}
 		ctx.complete();
 	}

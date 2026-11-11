@@ -37,13 +37,16 @@ public class VillageExtrasPiece extends StructurePiece {
 	/** Los edificios añadidos: de 5 en 5 (tipo, x y z de la esquina, giro, altura del suelo). */
 	private final int[] buildings;
 
+	/** Las casillas de las calles (para los escalones de las cuestas). */
+	private final int[] streets;
+
 	public VillageExtrasPiece(VillageStyle style, BlockBox box, int[] wall, int[] posts, int[] road, int[] lamps,
 			int[] lanterns) {
-		this(style, box, wall, posts, road, lamps, lanterns, new int[0]);
+		this(style, box, wall, posts, road, lamps, lanterns, new int[0], new int[0]);
 	}
 
 	public VillageExtrasPiece(VillageStyle style, BlockBox box, int[] wall, int[] posts, int[] road, int[] lamps,
-			int[] lanterns, int[] buildings) {
+			int[] lanterns, int[] buildings, int[] streets) {
 		super(ModStructures.VILLAGE_EXTRAS, 0, box);
 		this.style = style;
 		this.wall = wall;
@@ -52,6 +55,7 @@ public class VillageExtrasPiece extends StructurePiece {
 		this.lamps = lamps;
 		this.lanterns = lanterns;
 		this.buildings = buildings;
+		this.streets = streets;
 	}
 
 	public int[] buildings() {
@@ -67,6 +71,7 @@ public class VillageExtrasPiece extends StructurePiece {
 		this.lamps = nbt.getIntArray("Lamps");
 		this.lanterns = nbt.getIntArray("Lanterns");
 		this.buildings = nbt.getIntArray("Buildings");
+		this.streets = nbt.getIntArray("Streets");
 	}
 
 	@Override
@@ -78,6 +83,7 @@ public class VillageExtrasPiece extends StructurePiece {
 		nbt.putIntArray("Lamps", lamps);
 		nbt.putIntArray("Lanterns", lanterns);
 		nbt.putIntArray("Buildings", buildings);
+		nbt.putIntArray("Streets", streets);
 	}
 
 	@Override
@@ -114,6 +120,19 @@ public class VillageExtrasPiece extends StructurePiece {
 				placeColumn(world, posts[i], posts[i + 1], POST_HEIGHT, true, pos);
 			}
 		}
+		// los escalones de las cuestas (en las calles y en los caminos de las puertas), antes que las farolas
+		LongOpenHashSet steps = new LongOpenHashSet();
+		for (int[] list : new int[][] {streets, road}) {
+			for (int i = 0; i + 1 < list.length; i += 2) {
+				steps.add(((long) list[i] << 32) | (list[i + 1] & 0xFFFFFFFFL));
+			}
+		}
+		for (long k : steps) {
+			int x = (int) (k >> 32), z = (int) k;
+			if (inside(chunkBox, x, z)) {
+				placeStep(world, x, z, steps, pos);
+			}
+		}
 		for (int i = 0; i + 1 < lamps.length; i += 2) {
 			if (inside(chunkBox, lamps[i], lamps[i + 1])) {
 				placeLamp(world, lamps[i], lamps[i + 1], pos);
@@ -121,6 +140,30 @@ public class VillageExtrasPiece extends StructurePiece {
 		}
 		for (int i = 0; i + 4 < buildings.length; i += 5) {
 			placeBuilding(world, chunkBox, buildings[i], buildings[i + 1], buildings[i + 2], buildings[i + 3], buildings[i + 4], pos);
+		}
+	}
+
+	/** Si la calle de al lado está un bloque más alta, un escalón (mirando hacia arriba) para subir sin saltar. */
+	private void placeStep(StructureWorldAccess world, int x, int z, LongOpenHashSet steps, BlockPos.Mutable pos) {
+		int[] waterTop = new int[1];
+		int y = findGround(world, x, z, pos, waterTop);
+		if (waterTop[0] != Integer.MIN_VALUE || !VillageStyle.isStreet(world.getBlockState(pos.set(x, y, z)))) {
+			return;
+		}
+		if (!isFree(world.getBlockState(pos.set(x, y + 1, z))) || !isFree(world.getBlockState(pos.set(x, y + 2, z)))) {
+			return;
+		}
+		for (net.minecraft.util.math.Direction d : net.minecraft.util.math.Direction.Type.HORIZONTAL) {
+			int nx = x + d.getOffsetX(), nz = z + d.getOffsetZ();
+			if (!steps.contains(((long) nx << 32) | (nz & 0xFFFFFFFFL))) {
+				continue;
+			}
+			int ny = findGround(world, nx, nz, new BlockPos.Mutable(), new int[1]);
+			BlockState there = world.getBlockState(new BlockPos(nx, ny, nz));
+			if (ny == y + 1 && (VillageStyle.isStreet(there) || there.getBlock() instanceof net.minecraft.block.StairsBlock)) {
+				set(world, pos.set(x, y + 1, z), VillageBuildings.streetStair(style, d, x, z));
+				return;
+			}
 		}
 	}
 
@@ -160,7 +203,7 @@ public class VillageExtrasPiece extends StructurePiece {
 				}
 				for (int yy = y + 1; yy <= y + height + 3; yy++) {
 					BlockState old = world.getBlockState(pos.set(p[0], yy, p[1]));
-					if (!old.isAir()) {
+					if (!old.isAir() && (!VillageBuildings.decor(type) || old.isReplaceable())) {
 						set(world, pos, Blocks.AIR.getDefaultState());
 					}
 				}

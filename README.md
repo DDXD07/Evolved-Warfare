@@ -2033,6 +2033,11 @@ El tren grande de antes (con plataformas para construir encima) se cambia por un
 - **Los aldeanos ya no comercian con esmeraldas.** Unos 2 de cada 5 de los que tienen oficio tienen **tienda** con la compraventa del mod (en Glory Coins, la misma pantalla que los comerciantes de las ciudades), con el catálogo básico de su oficio (solo lo común y lo poco común) y **un 15 % más barato** que en las ciudades; la calidad, según la distancia, como en las ciudades. Los demás **solo trabajan** (al hablarles dicen en qué).
   - granjero, pescador y carnicero: tendero (comida); armero, herrero de armas y de herramientas: armero; albañil: cantero; cartógrafo, bibliotecario y clérigo: joyero; pastor, peletero y flechero: sastre (en el desierto, mercader de especias; en la nieve, peletero).
 
+## Fase 54.1 — Escalones en las cuestas y más decoración en las aldeas
+
+- **Escalones**: donde una calle de la aldea (o el camino de una puerta) sube un bloque respecto a la casilla de al lado, se pone un escalón de piedra (adoquín o adoquín musgoso; arenisca lisa en el desierto) mirando hacia arriba, para subir andando sin saltar.
+- **Decoración de las calles**: en los huecos libres pegados a las calles, separadas entre sí y en terreno llano, con el frente a la calle: barriles, montones de heno, leña apilada, parterres de flores, bancos, espantapájaros y cajas con farol; en el desierto, vasijas decoradas y cactus en maceta; en la taiga y la nieve, hogueras. Hasta 40 por aldea (según lo larga que sea), sin cortar árboles ni tejados.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
