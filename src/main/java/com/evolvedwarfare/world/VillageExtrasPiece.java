@@ -242,7 +242,7 @@ public class VillageExtrasPiece extends StructurePiece {
 	 */
 	private static int findGround(StructureWorldAccess world, int x, int z, BlockPos.Mutable pos, int[] waterTop) {
 		waterTop[0] = Integer.MIN_VALUE;
-		int y = world.getTopY(Heightmap.Type.WORLD_SURFACE_WG, x, z) + 3;
+		int y = Math.max(world.getTopY(Heightmap.Type.WORLD_SURFACE_WG, x, z), world.getTopY(Heightmap.Type.WORLD_SURFACE, x, z)) + 3;
 		int bottom = world.getBottomY();
 		for (; y > bottom; y--) {
 			BlockState state = world.getBlockState(pos.set(x, y, z));
