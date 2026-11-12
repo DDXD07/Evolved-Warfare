@@ -203,6 +203,8 @@ public final class Climate {
 				}
 			}
 		}
+		// las fogatas y hornos de los trenes (no son bloques del mundo)
+		heat += com.evolvedwarfare.train.Trains.trainWarmth(world, center);
 		return Math.min(heat, 25.0F) + Math.max(cold, -8.0F);
 	}
 

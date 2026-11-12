@@ -183,4 +183,41 @@ public class TrainGameTests implements FabricGameTest {
 		}
 		ctx.complete();
 	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 900)
+	public void platformBlocksWork(TestContext ctx) {
+		ServerWorld world = ctx.getWorld();
+		BlockPos o = ctx.getAbsolutePos(new BlockPos(0, 1, 0)).add(0, 0, 520);
+		List<ChunkPos> forced = force(world, o, 8, 8);
+		clear(world, o, 6, 6);
+		PlatformEntity flat = Trains.PLATFORM.create(world);
+		flat.refreshPositionAndAngles(o.getX() + 0.5, o.getY() + 2, o.getZ() + 0.5, 0, 0);
+		flat.setNoGravity(true);
+		world.spawnEntity(flat);
+		boolean furnace = flat.addBlock(com.evolvedwarfare.train.TrainBlocks.Kind.FURNACE, new int[] {0, 0, 0, 0});
+		boolean campfire = flat.addBlock(com.evolvedwarfare.train.TrainBlocks.Kind.CAMPFIRE, new int[] {2, 5, 0, 0});
+		boolean chest = flat.addBlock(com.evolvedwarfare.train.TrainBlocks.Kind.CHEST, new int[] {1, 2, 0, 0});
+		boolean taken = !flat.addBlock(com.evolvedwarfare.train.TrainBlocks.Kind.BARREL, new int[] {1, 2, 0, 0});
+		boolean noFloor = !flat.addBlock(com.evolvedwarfare.train.TrainBlocks.Kind.BARREL, new int[] {1, 3, 1, 0});
+		var f = flat.blocks().get(0);
+		f.inventory.setStack(0, new ItemStack(Items.RAW_IRON, 2));
+		f.inventory.setStack(1, new ItemStack(Items.COAL, 1));
+		var c = flat.blocks().get(1);
+		boolean cooking = c.addToCampfire(world, new ItemStack(Items.BEEF));
+		ctx.runAtTick(700, () -> {
+			int ingots = f.inventory.getStack(2).isOf(Items.IRON_INGOT) ? f.inventory.getStack(2).getCount() : 0;
+			boolean cooked = !world.getEntitiesByClass(net.minecraft.entity.ItemEntity.class, flat.getBoundingBox().expand(4),
+					e -> e.getStack().isOf(Items.COOKED_BEEF)).isEmpty();
+			float warm = Trains.trainWarmth(world, BlockPos.ofFloored(flat.getPos()));
+			LOG.info("[EW-GAMETEST] bloques del tren: horno {}, fogata {}, cofre {}, sitio ocupado {}, sin suelo {}, lingotes {}, cocinado {} ({}), calor {}", furnace,
+					campfire, chest, taken, noFloor, ingots, cooked, cooking, warm);
+			flat.discard();
+			world.getEntitiesByClass(net.minecraft.entity.ItemEntity.class, flat.getBoundingBox().expand(6), e -> true).forEach(net.minecraft.entity.Entity::discard);
+			forced.forEach(cp -> world.setChunkForced(cp.x, cp.z, false));
+			if (!(furnace && campfire && chest && taken && noFloor && ingots == 2 && cooked && warm > 0)) {
+				throw new GameTestException("Los bloques de la plataforma no funcionan: lingotes " + ingots + ", cocinado " + cooked + ", calor " + warm);
+			}
+			ctx.complete();
+		});
+	}
 }

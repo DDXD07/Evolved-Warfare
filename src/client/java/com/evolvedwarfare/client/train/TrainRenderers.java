@@ -142,6 +142,40 @@ public final class TrainRenderers {
 		}
 	}
 
+	/** Los bloques de la plataforma (cofres, hornos, fogatas con lo que cocinan, la mesa). */
+	static void drawBlocks(PlatformEntity flat, MatrixStack matrices, VertexConsumerProvider consumers, int light) {
+		MinecraftClient client = MinecraftClient.getInstance();
+		for (com.evolvedwarfare.train.TrainBlocks.Placed b : flat.blocks()) {
+			var box = b.box();
+			var state = b.state();
+			matrices.push();
+			matrices.translate(box.minX, box.minY, box.minZ);
+			if (state.getRenderType() == net.minecraft.block.BlockRenderType.ENTITYBLOCK_ANIMATED) {
+				// los cofres se dibujan como objeto: se giran a mano
+				matrices.translate(0.5, 0, 0.5);
+				matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0F - b.facing.asRotation()));
+				matrices.translate(-0.5, 0, -0.5);
+			}
+			client.getBlockRenderManager().renderBlockAsEntity(state, matrices, consumers, light, OverlayTexture.DEFAULT_UV);
+			if (b.kind.campfire()) {
+				for (int i = 0; i < 4; i++) {
+					ItemStack s = b.inventory.getStack(i);
+					if (s.isEmpty()) {
+						continue;
+					}
+					matrices.push();
+					matrices.translate(0.3 + (i % 2) * 0.4, 0.44, 0.3 + (i / 2) * 0.4);
+					matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90.0F));
+					matrices.scale(0.375F, 0.375F, 0.375F);
+					client.getItemRenderer().renderItem(s, net.minecraft.client.render.model.json.ModelTransformationMode.FIXED, light, OverlayTexture.DEFAULT_UV,
+							matrices, consumers, flat.getWorld(), flat.getId() * 4 + i);
+					matrices.pop();
+				}
+			}
+			matrices.pop();
+		}
+	}
+
 	static class CarRenderer<T extends TrainCarEntity> extends EntityRenderer<T> {
 		private final ModelPart root;
 		private final Identifier texture, glow;
@@ -207,6 +241,9 @@ public final class TrainRenderers {
 					drawPiece(matrices, vc, Building.parts(p), p.material, light, -1);
 				}
 			}
+			if (car instanceof PlatformEntity flat && !flat.blocks().isEmpty()) {
+				drawBlocks(flat, matrices, consumers, light);
+			}
 			matrices.pop();
 			super.render(car, yaw, tickDelta, matrices, consumers, light);
 		}
@@ -244,6 +281,24 @@ public final class TrainRenderers {
 				grown.add(new Building.Part(p.box().expand(0.01), p.tex(), p.solid()));
 			}
 			drawPiece(m, vc, grown, piece.material, light, ok ? GOOD : BAD);
+			m.pop();
+		} else if (com.evolvedwarfare.train.TrainBlocks.Kind.of(stack.getItem()) != null && client.crosshairTarget instanceof EntityHitResult eh
+				&& eh.getEntity() instanceof PlatformEntity flat) {
+			int[] at = flat.blockSlotFor(eh.getPos(), player.getRotationVec(tickDelta));
+			if (at == null) {
+				return;
+			}
+			boolean ok = flat.canPlaceBlock(at);
+			var kind = com.evolvedwarfare.train.TrainBlocks.Kind.of(stack.getItem());
+			var probe = new com.evolvedwarfare.train.TrainBlocks.Placed(kind, at[0], at[1], at[2], net.minecraft.util.math.Direction.NORTH);
+			double x = MathHelper.lerp(tickDelta, flat.prevX, flat.getX()), y = MathHelper.lerp(tickDelta, flat.prevY, flat.getY()),
+					z = MathHelper.lerp(tickDelta, flat.prevZ, flat.getZ());
+			m.push();
+			m.translate(x - cam.x, y - cam.y, z - cam.z);
+			m.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-MathHelper.lerpAngleDegrees(tickDelta, flat.prevYaw, flat.getYaw())));
+			m.multiply(RotationAxis.POSITIVE_X.rotationDegrees(MathHelper.lerp(tickDelta, flat.prevPitch, flat.getPitch())));
+			var sprite = client.getBlockRenderManager().getModels().getModelParticleSprite(kind.block.getDefaultState());
+			Cubes.box(m.peek(), vc, probe.box().expand(0.01), sprite, ok ? GOOD : BAD, light);
 			m.pop();
 		} else if (stack.getItem() instanceof TrackItem track && client.crosshairTarget instanceof BlockHitResult bh
 				&& bh.getType() == HitResult.Type.BLOCK) {

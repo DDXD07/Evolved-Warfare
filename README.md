@@ -2056,6 +2056,12 @@ El tren grande de antes (con plataformas para construir encima) se cambia por un
 - Al aplicarlos se vuelve a mirar lo que hay: si algo ha cambiado mientras tanto (un cubo, un bloque puesto), se mueve lo que se pueda, y el líquido sigue sin crearse ni perderse.
 - Se puede volver al cálculo de antes con la opción **Agua en otro hilo** de la configuración (en Clima).
 
+## Fase 56 — Bloques funcionales en la plataforma del tren
+
+- En la plataforma se pueden poner **cofres y barriles** (27 huecos), **hornos, ahumadores y altos hornos** (funcionan de verdad: combustible, recetas y su velocidad, y se encienden por delante), **fogatas y fogatas de almas** (clic derecho con comida cruda: cocinan hasta 4 cosas a la vez y lo hecho cae al lado; echan humo y dan calor para el clima) y la **mesa de crafteo** (al cerrar, devuelve lo que quede en la rejilla).
+- Se ponen con el bloque en la mano apuntando a la plataforma, con vista previa verde o roja, en una rejilla de 3 x 6 bloques por planta: en el suelo de la plataforma o, en la de arriba, sobre un techo; no se pueden poner donde hay una pared o una escalera. Miran hacia quien los pone.
+- Clic derecho los abre; agachado con el martillo de construcción se recogen (con lo que tengan dentro). Viajan con el tren, se choca con ellos y lo de dentro se guarda en la plataforma. Para desenganchar la plataforma hay que quitarlos antes.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

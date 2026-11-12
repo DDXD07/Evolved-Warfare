@@ -25,6 +25,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -37,6 +39,7 @@ public class PlatformEntity extends TrainCarEntity {
 	private static final TrackedData<NbtCompound> PIECES = DataTracker.registerData(PlatformEntity.class, TrackedDataHandlerRegistry.NBT_COMPOUND);
 
 	private final List<Building.Placed> pieces = new ArrayList<>();
+	private final List<TrainBlocks.Placed> blocks = new ArrayList<>();
 	private List<Box> boxes = List.of(), targets = List.of();
 	private int version;
 	private double top;
@@ -55,6 +58,10 @@ public class PlatformEntity extends TrainCarEntity {
 		return pieces;
 	}
 
+	public List<TrainBlocks.Placed> blocks() {
+		return blocks;
+	}
+
 	private void rebuild() {
 		List<Box> solid = new ArrayList<>(split(new Box(-1.5, 0.55, -3.0, 1.5, Building.DECK, 3.0)));
 		List<Box> tg = new ArrayList<>();
@@ -68,6 +75,11 @@ public class PlatformEntity extends TrainCarEntity {
 				top = Math.max(top, part.box().maxY - Building.DECK);
 			}
 			tg.add(Building.bounds(p));
+		}
+		for (TrainBlocks.Placed b : blocks) {
+			solid.add(b.box());
+			tg.add(b.box());
+			top = Math.max(top, b.box().maxY - Building.DECK);
 		}
 		boxes = solid;
 		targets = tg;
@@ -236,8 +248,53 @@ public class PlatformEntity extends TrainCarEntity {
 			}
 			return ActionResult.SUCCESS;
 		}
+		TrainBlocks.Kind blockKind = TrainBlocks.Kind.of(stack.getItem());
+		if (blockKind != null && !player.isSneaking()) {
+			int[] at = blockSlotFor(getPos().add(hitPos), player.getRotationVec(1.0F));
+			if (at == null || !canPlaceBlock(at)) {
+				if (!getWorld().isClient && hand == Hand.MAIN_HAND) {
+					player.sendMessage(Text.translatable("message.evolvedwarfare.build.cant").formatted(Formatting.RED), true);
+				}
+				return ActionResult.FAIL;
+			}
+			if (!getWorld().isClient) {
+				placeBlock(blockKind, at, player);
+				stack.decrementUnlessCreative(1, player);
+				var g = blockKind.block.getDefaultState().getSoundGroup();
+				getWorld().playSound(null, getBlockPos(), g.getPlaceSound(), SoundCategory.BLOCKS, 1.0F, g.getPitch() * 0.8F);
+			}
+			return ActionResult.SUCCESS;
+		}
 		if (hand != Hand.MAIN_HAND) {
 			return ActionResult.PASS;
+		}
+		TrainBlocks.Placed block = aimedBlock(player);
+		if (block != null) {
+			if (stack.isOf(Trains.BUILD_HAMMER) && player.isSneaking()) {
+				if (!getWorld().isClient) {
+					blocks.remove(block);
+					TrainBlocks.drop(this, block, player);
+					changed();
+					var g = block.kind.block.getDefaultState().getSoundGroup();
+					getWorld().playSound(null, getBlockPos(), g.getBreakSound(), SoundCategory.BLOCKS, 1.0F, g.getPitch() * 0.8F);
+				}
+				return ActionResult.SUCCESS;
+			}
+			if (block.kind.campfire()) {
+				if (!getWorld().isClient && block.addToCampfire(getWorld(), player.getAbilities().creativeMode ? stack.copy() : stack)) {
+					changed();
+				}
+				return ActionResult.SUCCESS;
+			}
+			if (!getWorld().isClient) {
+				TrainBlocks.open(player, this, block);
+				if (block.kind == TrainBlocks.Kind.CHEST) {
+					getWorld().playSound(null, getBlockPos(), SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, 0.6F, 1.0F);
+				} else if (block.kind == TrainBlocks.Kind.BARREL) {
+					getWorld().playSound(null, getBlockPos(), SoundEvents.BLOCK_BARREL_OPEN, SoundCategory.BLOCKS, 0.6F, 1.0F);
+				}
+			}
+			return ActionResult.SUCCESS;
 		}
 		Building.Placed aimed = aimed(player);
 		if (stack.isOf(Trains.BUILD_HAMMER) && player.isSneaking() && aimed != null) {
@@ -301,25 +358,184 @@ public class PlatformEntity extends TrainCarEntity {
 		return true;
 	}
 
-	/** Al recogerla: suelta las piezas que lleve. */
+	/** Al recogerla: suelta las piezas y los bloques que lleve (con lo que tengan dentro). */
 	public void dropContents() {
 		for (Building.Placed p : pieces) {
 			dropStack(new ItemStack(Trains.pieceItem(p.kind, p.material)));
 		}
+		for (TrainBlocks.Placed b : blocks) {
+			TrainBlocks.drop(this, b, null);
+		}
 		pieces.clear();
+		blocks.clear();
 		changed();
+	}
+
+	// ------------------------------------------------------------------ bloques (cofres, hornos, fogatas, mesa)
+
+	/** Dónde iría un bloque si se apunta ahí (punto y mirada del mundo): {columna, fila, planta}, o null. */
+	@Nullable
+	public int[] blockSlotFor(Vec3d hitWorld, Vec3d lookWorld) {
+		Vec3d hit = toLocal(hitWorld);
+		Vec3d look = toLocal(getPos().add(lookWorld)).subtract(toLocal(getPos()));
+		Vec3d q = hit.subtract(look.multiply(0.05));
+		int level = MathHelper.floor((q.y - Building.DECK + 0.2) / Building.LEVEL);
+		int x = MathHelper.floor(q.x + TrainBlocks.COLS / 2.0), z = MathHelper.floor(q.z + TrainBlocks.ROWS / 2.0);
+		if (level < 0 || level >= Building.LEVELS || x < 0 || x >= TrainBlocks.COLS || z < 0 || z >= TrainBlocks.ROWS) {
+			return null;
+		}
+		return new int[] {x, z, level, Building.rotFor(new Vec3d(-look.x, 0, -look.z))};
+	}
+
+	/** ¿Cabe un bloque ahí? (libre, sin chocar con paredes ni escaleras, y en la planta de arriba, sobre un techo). */
+	public boolean canPlaceBlock(int[] at) {
+		for (TrainBlocks.Placed b : blocks) {
+			if (b.x == at[0] && b.z == at[1] && b.level == at[2]) {
+				return false;
+			}
+		}
+		TrainBlocks.Placed probe = new TrainBlocks.Placed(TrainBlocks.Kind.CHEST, at[0], at[1], at[2], Direction.NORTH);
+		Box box = probe.box().contract(0.02);
+		for (Building.Placed p : pieces) {
+			for (Building.Part part : Building.parts(p)) {
+				if (part.solid() && part.box().intersects(box)) {
+					return false;
+				}
+			}
+		}
+		if (at[2] > 0) {
+			double cx = box.getCenter().x, cz = box.getCenter().z;
+			boolean floor = false;
+			for (Building.Placed p : pieces) {
+				if (p.kind == Building.Kind.CEILING && p.level == at[2] - 1) {
+					Box b = Building.bounds(p);
+					floor |= cx > b.minX && cx < b.maxX && cz > b.minZ && cz < b.maxZ;
+				}
+			}
+			return floor;
+		}
+		return true;
+	}
+
+	/** Pone un bloque (si cabe); para las pruebas y para quien lo necesite. */
+	public boolean addBlock(TrainBlocks.Kind kind, int[] at) {
+		if (!canPlaceBlock(at)) {
+			return false;
+		}
+		placeBlock(kind, at, null);
+		return true;
+	}
+
+	private void placeBlock(TrainBlocks.Kind kind, int[] at, @Nullable PlayerEntity player) {
+		Direction facing = switch (at[3]) {
+			case 0 -> Direction.SOUTH;
+			case 1 -> Direction.EAST;
+			case 2 -> Direction.NORTH;
+			default -> Direction.WEST;
+		};
+		blocks.add(new TrainBlocks.Placed(kind, at[0], at[1], at[2], facing));
+		changed();
+	}
+
+	/** El bloque al que se apunta (si está más cerca que cualquier pieza), o null. */
+	@Nullable
+	public TrainBlocks.Placed aimedBlock(PlayerEntity player) {
+		double reach = player.getEntityInteractionRange() + 1.0;
+		Vec3d eye = player.getEyePos();
+		Vec3d lf = toLocal(eye), lt = toLocal(eye.add(player.getRotationVec(1.0F).multiply(reach)));
+		TrainBlocks.Placed best = null;
+		double bestD = Double.MAX_VALUE;
+		for (TrainBlocks.Placed b : blocks) {
+			var hit = b.box().expand(0.01).raycast(lf, lt);
+			if (hit.isPresent() && hit.get().squaredDistanceTo(lf) < bestD) {
+				bestD = hit.get().squaredDistanceTo(lf);
+				best = b;
+			}
+		}
+		if (best == null) {
+			return null;
+		}
+		for (Building.Placed p : pieces) {
+			for (Building.Part part : Building.parts(p)) {
+				var hit = part.box().raycast(lf, lt);
+				if (hit.isPresent() && hit.get().squaredDistanceTo(lf) < bestD - 1e-4) {
+					return null;
+				}
+			}
+		}
+		return best;
+	}
+
+	/** Lo que se calienta cerca (para el clima): cada fogata u horno encendido, con su centro en el mundo. */
+	public void heat(java.util.function.BiConsumer<Vec3d, Float> out) {
+		for (TrainBlocks.Placed b : blocks) {
+			float w = TrainBlocks.warmth(b);
+			if (w > 0) {
+				Vec3d c = b.box().getCenter();
+				out.accept(toWorld(c.x, c.y, c.z), w);
+			}
+		}
+	}
+
+	@Override
+	public void tick() {
+		super.tick();
+		if (blocks.isEmpty()) {
+			return;
+		}
+		if (getWorld().isClient) {
+			for (TrainBlocks.Placed b : blocks) {
+				if (b.lit && (b.kind.campfire() ? random.nextInt(3) == 0 : random.nextInt(12) == 0)) {
+					Box box = b.box();
+					Vec3d c = toWorld(box.getCenter().x + (random.nextDouble() - 0.5) * 0.4, box.maxY, box.getCenter().z + (random.nextDouble() - 0.5) * 0.4);
+					getWorld().addParticle(b.kind.campfire() ? net.minecraft.particle.ParticleTypes.CAMPFIRE_COSY_SMOKE : net.minecraft.particle.ParticleTypes.SMOKE,
+							c.x, c.y, c.z, 0.0, b.kind.campfire() ? 0.07 : 0.02, 0.0);
+				}
+			}
+			return;
+		}
+		boolean sync = false;
+		int[] slot = new int[1];
+		for (TrainBlocks.Placed b : blocks) {
+			if (b.kind.furnace()) {
+				sync |= b.tickFurnace(getWorld());
+			} else if (b.kind.campfire()) {
+				ItemStack done = b.tickCampfire(getWorld(), slot);
+				if (!done.isEmpty()) {
+					Box box = b.box();
+					Vec3d c = toWorld(box.getCenter().x, box.maxY + 0.2, box.getCenter().z);
+					net.minecraft.entity.ItemEntity item = new net.minecraft.entity.ItemEntity(getWorld(), c.x, c.y, c.z, done);
+					item.setVelocity(Vec3d.ZERO);
+					getWorld().spawnEntity(item);
+					sync = true;
+				}
+			}
+		}
+		if (sync) {
+			changed();
+		}
 	}
 
 	// ------------------------------------------------------------------ guardar
 
-	private NbtCompound write() {
+	/** Lo que se guarda (full) o se manda al cliente (sin lo de dentro de los bloques). */
+	private NbtCompound write(boolean full) {
 		NbtCompound nbt = new NbtCompound();
 		NbtList list = new NbtList();
 		for (Building.Placed p : pieces) {
 			list.add(p.write());
 		}
 		nbt.put("List", list);
+		NbtList bl = new NbtList();
+		for (TrainBlocks.Placed b : blocks) {
+			bl.add(b.write(getRegistryManager(), full));
+		}
+		nbt.put("Blocks", bl);
 		return nbt;
+	}
+
+	private NbtCompound write() {
+		return write(false);
 	}
 
 	private void read(NbtCompound nbt) {
@@ -330,19 +546,26 @@ public class PlatformEntity extends TrainCarEntity {
 				pieces.add(p);
 			}
 		}
+		blocks.clear();
+		for (NbtElement e : nbt.getList("Blocks", NbtElement.COMPOUND_TYPE)) {
+			TrainBlocks.Placed b = TrainBlocks.Placed.read((NbtCompound) e, getRegistryManager());
+			if (b != null) {
+				blocks.add(b);
+			}
+		}
 		rebuild();
 	}
 
 	@Override
 	protected void readCustomDataFromNbt(NbtCompound nbt) {
 		read(nbt.getCompound("Pieces"));
-		dataTracker.set(PIECES, nbt.getCompound("Pieces"));
+		dataTracker.set(PIECES, write(false));
 		readLink(nbt);
 	}
 
 	@Override
 	protected void writeCustomDataToNbt(NbtCompound nbt) {
-		nbt.put("Pieces", write());
+		nbt.put("Pieces", write(true));
 		writeLink(nbt);
 	}
 }

@@ -352,7 +352,7 @@ public final class Trains {
 		List<TrainCarEntity> wagons = loco.loadedWagons();
 		if (!wagons.isEmpty()) {
 			TrainCarEntity last = wagons.get(wagons.size() - 1);
-			if (last instanceof PlatformEntity p && !p.pieces().isEmpty()) {
+			if (last instanceof PlatformEntity p && (!p.pieces().isEmpty() || !p.blocks().isEmpty())) {
 				player.sendMessage(Text.translatable("message.evolvedwarfare.train.not_empty").formatted(Formatting.RED), true);
 				return ActionResult.FAIL;
 			}
@@ -428,6 +428,20 @@ public final class Trains {
 			}
 		}
 		return false;
+	}
+
+	/** El calor de las fogatas y hornos encendidos de los trenes cerca de ese sitio (para el clima). */
+	public static float trainWarmth(World world, net.minecraft.util.math.BlockPos center) {
+		Box near = new Box(center).expand(6.0);
+		if (!TrainCarEntity.anyNear(world, near)) {
+			return 0.0F;
+		}
+		float[] heat = {0.0F};
+		net.minecraft.util.math.Vec3d c = net.minecraft.util.math.Vec3d.ofCenter(center);
+		for (PlatformEntity p : world.getEntitiesByClass(PlatformEntity.class, near.expand(4.0), x -> !x.blocks().isEmpty())) {
+			p.heat((pos, w) -> heat[0] += (float) (w * Math.max(0.0, 1.0 - pos.distanceTo(c) / 6.0)));
+		}
+		return heat[0];
 	}
 
 	/** El bloque de la mesa (para las pruebas). */
