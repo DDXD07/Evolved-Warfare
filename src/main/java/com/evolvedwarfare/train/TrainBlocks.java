@@ -296,7 +296,7 @@ public final class TrainBlocks {
 		}
 
 		/** Pone algo a cocinar en la fogata (si tiene receta y hueco). */
-		boolean addToCampfire(World world, ItemStack stack) {
+		public boolean addToCampfire(World world, ItemStack stack) {
 			if (recipe(world, stack) == null) {
 				return false;
 			}
