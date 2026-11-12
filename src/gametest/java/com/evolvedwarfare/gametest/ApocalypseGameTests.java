@@ -155,7 +155,7 @@ public class ApocalypseGameTests implements FabricGameTest {
 		ctx.complete();
 	}
 
-	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 40)
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "abyss_key", tickLimit = 40)
 	public void keyWakesTheAngel(TestContext ctx) {
 		ServerWorld world = ctx.getWorld();
 		ServerPlayerEntity player = survivor(ctx);

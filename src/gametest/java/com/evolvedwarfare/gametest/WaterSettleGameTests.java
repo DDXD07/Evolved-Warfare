@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 public class WaterSettleGameTests implements FabricGameTest {
 	private static final Logger LOG = LoggerFactory.getLogger("ew-gametest");
 
-	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 700)
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "water_settle", tickLimit = 700)
 	public void waterSettles(TestContext ctx) {
 		ServerWorld world = ctx.getWorld();
 		// por encima del nivel del mar (el agua de ahí es finita)
