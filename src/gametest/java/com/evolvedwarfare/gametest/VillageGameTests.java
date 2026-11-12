@@ -170,4 +170,48 @@ public class VillageGameTests implements FabricGameTest {
 		}
 		ctx.complete();
 	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE)
+	public void villageGroundIsFlattenedButNotPerfect(TestContext ctx) {
+		int w = 90, h = 90;
+		boolean[] region = new boolean[w * h];
+		for (int z = 15; z < 75; z++) {
+			for (int x = 15; x < 75; x++) {
+				region[z * w + x] = true;
+			}
+		}
+		// una ladera: sube un bloque cada 3
+		com.evolvedwarfare.world.VillageExtras.Terrain slope = new com.evolvedwarfare.world.VillageExtras.Terrain() {
+			@Override
+			public int ground(int x, int z) {
+				return 64 + x / 3;
+			}
+
+			@Override
+			public boolean dry(int x, int z) {
+				return true;
+			}
+		};
+		com.evolvedwarfare.world.VillageFlattenPiece f = com.evolvedwarfare.world.VillageFlattenPiece.plan(slope, 0, 0, w, h, region, List.of(), 1234);
+		int lo = Integer.MAX_VALUE, hi = Integer.MIN_VALUE, maxStep = 0;
+		for (int z = 15; z < 75; z++) {
+			int prev = Integer.MIN_VALUE;
+			for (int x = 15; x < 75; x++) {
+				int y = f.flat(x, z, slope.ground(x, z));
+				lo = Math.min(lo, y);
+				hi = Math.max(hi, y);
+				if (prev != Integer.MIN_VALUE) {
+					maxStep = Math.max(maxStep, Math.abs(y - prev));
+				}
+				prev = y;
+			}
+		}
+		int before = slope.ground(74, 0) - slope.ground(15, 0);
+		boolean outsideKept = f.flat(89, 40, slope.ground(89, 40)) == slope.ground(89, 40);
+		LOG.info("[EW-GAMETEST] aplanado: desnivel {} -> {} (de {} a {}), escalón mayor {}, fuera igual {}", before, hi - lo, lo, hi, maxStep, outsideKept);
+		if (!(hi - lo < before / 2 && hi - lo >= 2 && maxStep <= 2 && outsideKept)) {
+			throw new GameTestException("El aplanado de la aldea no va bien: " + before + " -> " + (hi - lo) + ", escalón " + maxStep);
+		}
+		ctx.complete();
+	}
 }

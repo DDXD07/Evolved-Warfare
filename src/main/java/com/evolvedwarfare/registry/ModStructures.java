@@ -13,6 +13,9 @@ import net.minecraft.world.gen.structure.StructureType;
 public final class ModStructures {
 	public static final StructurePieceType VILLAGE_EXTRAS = Registry.register(Registries.STRUCTURE_PIECE,
 			EvolvedWarfare.id("village_extras"), (StructurePieceType.Simple) VillageExtrasPiece::new);
+	/** El aplanado del terreno de las aldeas vanilla. */
+	public static final StructurePieceType VILLAGE_FLATTEN = Registry.register(Registries.STRUCTURE_PIECE,
+			EvolvedWarfare.id("village_flatten"), (StructurePieceType.Simple) com.evolvedwarfare.world.VillageFlattenPiece::new);
 	/** Torre de vigilancia generada por semilla (cada una distinta). */
 	public static final StructurePieceType WATCHTOWER_PIECE = Registry.register(Registries.STRUCTURE_PIECE,
 			EvolvedWarfare.id("watchtower"), (StructurePieceType.Simple) WatchtowerPiece::new);

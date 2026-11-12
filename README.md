@@ -2038,6 +2038,11 @@ El tren grande de antes (con plataformas para construir encima) se cambia por un
 - **Escalones**: donde una calle de la aldea (o el camino de una puerta) sube un bloque respecto a la casilla de al lado, se pone un escalón de piedra (adoquín o adoquín musgoso; arenisca lisa en el desierto) mirando hacia arriba, para subir andando sin saltar.
 - **Decoración de las calles**: en los huecos libres pegados a las calles, separadas entre sí y en terreno llano, con el frente a la calle: barriles, montones de heno, leña apilada, parterres de flores, bancos, espantapájaros y cajas con farol; en el desierto, vasijas decoradas y cactus en maceta; en la taiga y la nieve, hogueras. Hasta 40 por aldea (según lo larga que sea), sin cortar árboles ni tejados.
 
+## Fase 54.2 — Aldeas sobre terreno aplanado (a medias)
+
+- Dentro de la empalizada de las aldeas vanilla el terreno se aplana a medias: se acerca a la altura media de la aldea, pero queda un 30 % del desnivel que había (como mucho 4 bloques arriba o abajo) y ondulaciones suaves de un bloque, para que no quede perfecto; en los 8 bloques de fuera se vuelve poco a poco al terreno de verdad. Se recortan las lomas y se rellenan los hoyos con lo que corresponde (hierba sobre tierra, arena sobre arenisca...). No se toca el agua.
+- Las casas se suben o bajan a la altura del suelo nuevo antes de generarse el terreno (así Minecraft les ajusta el suelo alrededor como siempre), y las calles, que siguen el suelo, van ya sobre el aplanado. La plaza del mercado, la taberna, el granero, las atalayas y las decoraciones también buscan sitio sobre él.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

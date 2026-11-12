@@ -47,9 +47,7 @@ public abstract class StructurePoolBasedGeneratorMixin {
 		StructureTemplateManager templates = context.structureTemplateManager();
 		cir.setReturnValue(Optional.of(new Structure.StructurePosition(original.position(), collector -> {
 			List<StructurePiece> pieces = original.generate().toList().pieces();
-			for (StructurePiece piece : pieces) {
-				collector.addPiece(piece);
-			}
+			VillageExtras.Result result2 = null;
 			try {
 				var gen = context.chunkGenerator();
 				VillageExtras.Terrain terrain = new VillageExtras.Terrain() {
@@ -63,12 +61,19 @@ public abstract class StructurePoolBasedGeneratorMixin {
 						return ground(x, z) == gen.getHeightOnGround(x, z, Heightmap.Type.OCEAN_FLOOR_WG, context.world(), context.noiseConfig());
 					}
 				};
-				VillageExtrasPiece extras = VillageExtras.create(style, pieces, templates, terrain);
-				if (extras != null) {
-					collector.addPiece(extras);
-				}
+				result2 = VillageExtras.createAll(style, pieces, templates, terrain);
 			} catch (RuntimeException e) {
 				EvolvedWarfare.LOGGER.error("No se pudieron calcular las mejoras de una aldea", e);
+			}
+			// el orden: el centro de la aldea, el aplanado (antes que lo demás de cada chunk), las piezas y las mejoras
+			for (int i = 0; i < pieces.size(); i++) {
+				collector.addPiece(pieces.get(i));
+				if (i == 0 && result2 != null && result2.flatten() != null) {
+					collector.addPiece(result2.flatten());
+				}
+			}
+			if (result2 != null && result2.extras() != null) {
+				collector.addPiece(result2.extras());
 			}
 		})));
 	}

@@ -69,8 +69,25 @@ public final class VillageExtras {
 		return create(style, pieces, templates, null);
 	}
 
+	/** Lo que se añade a una aldea: las mejoras (empalizada, farolas, edificios...) y el aplanado del terreno. */
+	public record Result(@Nullable VillageExtrasPiece extras, @Nullable VillageFlattenPiece flatten) {
+	}
+
 	@Nullable
 	public static VillageExtrasPiece create(VillageStyle style, List<StructurePiece> pieces, StructureTemplateManager templates, @Nullable Terrain terrain) {
+		return createAll(style, pieces, templates, terrain).extras();
+	}
+
+	/** Las mejoras y el aplanado (que sube o baja las casas de la lista a su nueva altura). */
+	public static Result createAll(VillageStyle style, List<StructurePiece> pieces, StructureTemplateManager templates, @Nullable Terrain terrain) {
+		VillageFlattenPiece[] flatten = new VillageFlattenPiece[1];
+		VillageExtrasPiece extras = build(style, pieces, templates, terrain, flatten);
+		return new Result(extras, flatten[0]);
+	}
+
+	@Nullable
+	private static VillageExtrasPiece build(VillageStyle style, List<StructurePiece> pieces, StructureTemplateManager templates, @Nullable Terrain terrain,
+			VillageFlattenPiece[] flattenOut) {
 		if (pieces.isEmpty()) {
 			return null;
 		}
@@ -132,7 +149,8 @@ public final class VillageExtras {
 			y0 = Math.min(y0, b.getMinY());
 			y1 = Math.max(y1, b.getMaxY());
 		}
-		int pad = CLOSING_RADIUS + WALL_MARGIN + 3;
+		// (8 más para que quepa la transición del aplanado fuera de la empalizada)
+		int pad = CLOSING_RADIUS + WALL_MARGIN + 3 + VillageFlattenPiece.FADE;
 		int gx0 = x0 - pad;
 		int gz0 = z0 - pad;
 		int w = (x1 - x0 + 1) + 2 * pad;
@@ -257,6 +275,14 @@ public final class VillageExtras {
 		// ---------------------------------------------------------------- los edificios nuevos (mercado, taberna, granero, atalaya)
 		int[] buildings = new int[0];
 		if (terrain != null) {
+			// el terreno aplanado a medias (y las casas a su nueva altura)
+			BlockBox first = pieces.get(0).getBoundingBox();
+			VillageFlattenPiece flatten = VillageFlattenPiece.plan(terrain, gx0, gz0, w, h, region, houseBoxes, first.getMinX() * 31 + first.getMinZ());
+			if (flatten != null) {
+				flatten.shift(pieces, terrain);
+				terrain = flatten.flattened(terrain);
+				flattenOut[0] = flatten;
+			}
 			BlockBox center = pieces.get(0).getBoundingBox();
 			buildings = planBuildings(style, terrain, gx0, gz0, w, h, region, houseBoxes, path, pathCells, road,
 					(center.getMinX() + center.getMaxX()) / 2, (center.getMinZ() + center.getMaxZ()) / 2);
@@ -627,7 +653,7 @@ public final class VillageExtras {
 	}
 
 	/** Distancia aproximada (chamfer 1-√2) desde las celdas marcadas. */
-	private static float[] chamfer(int w, int h, boolean[] seeds) {
+	static float[] chamfer(int w, int h, boolean[] seeds) {
 		float[] d = new float[w * h];
 		for (int i = 0; i < d.length; i++) {
 			d[i] = seeds[i] ? 0.0F : 1.0E9F;
