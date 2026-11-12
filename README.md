@@ -676,30 +676,39 @@ monstruos y asaltantes (que también van a por ellos, así que defiende el merca
 
 ### Carreta
 
-Una plataforma de **3x3 bloques** sobre dos ruedas, con dos varas delante, para llevar tu taller o tu almacén contigo.
+Una plataforma de **5x3 bloques** sobre dos ruedas, con dos varas delante, sobre la que **construyes bloque a bloque**
+(como en Scrap Mechanic) tu taller, tu almacén o tu casa con ruedas.
 
 - **Fabricarla**: primero las piezas, luego la carreta.
   - **Rueda de carreta**: un tablón en el centro y cuatro palos alrededor (`_ S _`, `S P S`, `_ S _`).
   - **Plancha de carreta**: tres losas de madera encima de tres troncos.
   - **Carreta**: dos palos arriba (las varas, `S _ S`) y abajo rueda, plancha y rueda.
-- **Ponerla**: clic derecho en el suelo; queda con las varas hacia ti. Necesita sitio libre de 3x3.
+- **Ponerla**: clic derecho en el suelo; queda con las varas hacia ti. Necesita sitio libre de 5x3.
 - **Tirar tú**: con una **rienda** en la mano, clic derecho en la carreta: te pones entre las varas y te sigue a donde
   vayas (algo más despacio, y sube escalones de un bloque). **Agáchate** para soltarla y recuperar la rienda. Si se
   atasca y te alejas mucho, se suelta sola.
 - **Con caballo** (o burro o mula, domado): con la rienda en la mano, clic derecho en el caballo cerca de la carreta (o
   clic en la carreta con el caballo atado a ti). El caballo se coloca entre las varas; **súbete** y llévala. Para
-  soltarlo: bájate y agachado + clic derecho en la carreta.
-- **La carga** (clic derecho con la mano vacía): una pantalla con la carreta **vista desde arriba** y **9 huecos** (3x3,
-  delante arriba). Puedes poner **cofres, barriles, hornos** (también ahumador y alto horno), **mesas de crafteo** y
-  **camas**, en el orden que quieras. Cada cosa ocupa los mismos bloques que en el mundo: la **cama ocupa dos huecos**
-  seguidos (se ve de su color en la pantalla).
-- **Lo de encima se ve en 3D y se usa como siempre** (clic derecho en ello):
-  - **Cofre y barril**: 27 huecos cada uno.
-  - **Horno**: funde también en marcha (se ve encendido).
-  - **Mesa de crafteo**: la de siempre.
-  - **Cama**: fija tu reaparición junto a la carreta, aunque luego la muevas, y de noche puedes dormir en ella.
-- **Quitar algo** de su hueco: lo que tenga dentro cae al suelo. **Romper la carreta** (a golpes; con hacha va más rápido)
-  suelta la carreta, todo lo de encima y lo de dentro.
+  soltarlo: bájate y agachado + clic derecho en la carreta (con la mano vacía o la rienda).
+- **Construir**: con un bloque en la mano, clic derecho en la tabla o en un bloque de la carreta: se pone al lado, como
+  en el mundo. Antes de ponerlo se ve **en verde** dónde irá (en rojo si no cabe). Caben **5 de largo, 3 de ancho y 3
+  de alto**. Los bloques no se caen: no necesitan apoyo.
+  - Valen **casi todos**: bloques normales, troncos (según la cara), losas (arriba o abajo; dos iguales hacen un bloque
+    entero), escaleras, vallas, muros y paneles de cristal (se unen entre sí), cristal, puertas y trampillas (se abren
+    con clic derecho, salvo las de hierro), puertas de valla, faroles (cuelgan si se ponen por debajo), antorchas (en la
+    pared si se apunta a un lado), escaleras de mano, alfombras...
+  - Y los **funcionales**: **cofre y barril** (27 huecos), **horno, ahumador y alto horno** (funden también en marcha y
+    se ven encendidos), **fogatas** (clic derecho con comida cruda: cocinan hasta 4 cosas y lo hecho cae al lado),
+    **mesa de crafteo** y **cama** (fija tu reaparición junto a la carreta, aunque la muevas, y de noche puedes dormir).
+  - No valen los que necesitan el mundo: agua y lava, arena, grava y lo que cae, plantas, redstone, pistones, tolvas y
+    otros bloques con datos propios (carteles, cofres de ender, yunques...).
+  - Agachado, el bloque se pone aunque apuntes a un cofre o una puerta (sin agacharte, se usan).
+- **Quitar un bloque**: a golpes, como picar: con la herramienta buena (hacha para la madera, pico para la piedra) van
+  pocos golpes; a mano, bastantes más. Suelta el bloque (si la herramienta sirve, como en el mundo) y lo que tuviera
+  dentro. En creativo, de un golpe.
+- **Se choca con lo construido y se anda por encima**; lo que va de pie encima viaja con la carreta.
+- **Romper la carreta**: a golpes en la tabla o las ruedas (con hacha va más rápido). Suelta la carreta y todo lo
+  construido, con lo de dentro.
 
 ### Caja de víveres (antes, de cultivos)
 
@@ -2065,6 +2074,16 @@ El tren grande de antes (con plataformas para construir encima) se cambia por un
 ## Fase 56.1 — El tren se mueve fluido
 
 - En el cliente, los coches del tren ya no se ponen de golpe donde dice el servidor (los paquetes llegan a saltos y el giro viene redondeado a pasos de 1,4°, así que en las curvas y al ir rápido daba tirones cortos): cada coche va hacia la última posición y giro recibidos en 3 tics, como las vagonetas de vanilla, y el dibujo interpola entre tic y tic. Si el salto es muy grande (más de 8 bloques), se pone directamente. Las ruedas, el maquinista y lo que va de pie encima siguen ese movimiento suave.
+
+## Fase 57 — La carreta se construye bloque a bloque
+
+- La carreta ya **no tiene pantalla ni huecos**: es una tabla de **5x3** (antes 3x3) sobre la que se construye **bloque a bloque**, estilo Scrap Mechanic, hasta **3 de alto**. Con un bloque en la mano, clic derecho en la tabla o en otro bloque y se pone al lado, con vista previa verde (roja si no cabe). Los bloques van girados con la carreta y no necesitan apoyo.
+- Quedan como en el mundo: escaleras y lo que mira hacia ti según tu mirada, losas y escaleras arriba o abajo según dónde apuntes (dos losas iguales hacen un bloque), troncos según la cara, antorchas en la pared, faroles colgados, puertas de dos bloques y camas de dos; vallas, muros y paneles se unen entre sí.
+- Valen casi todos los bloques y los funcionales (cofre, barril, hornos, fogatas, mesa de crafteo y cama), que se usan con clic derecho; puertas, trampillas y puertas de valla se abren y se cierran. No valen líquidos, lo que cae, plantas, redstone, pistones ni bloques con datos propios.
+- Los bloques se quitan **a golpes**: según su dureza y la herramienta (con la buena, uno o pocos golpes; a mano, bastantes), y sueltan el bloque y lo de dentro. Si se golpea la tabla o las ruedas, se golpea la carreta.
+- Lo construido es macizo: se choca con ello, se anda por encima y lo que va de pie encima viaja con la carreta (con el sistema de los coches del tren). Los hornos y fogatas dan calor para el clima.
+- Las carretas de antes **se convierten solas**: lo que llevaban en sus 9 huecos pasa a bloques en las tres filas del centro, con lo que tenían dentro.
+- La rejilla de vóxeles es común (`voxel/`) para pasar luego el tren al mismo sistema.
 
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):

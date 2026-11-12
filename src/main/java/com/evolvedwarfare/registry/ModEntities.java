@@ -93,11 +93,11 @@ public final class ModEntities {
 					.maxTrackingRange(10)
 					.build("pirate"));
 
-	/** Carreta de 3x3 con su carga (la llevas tú o un caballo). */
+	/** Carreta de 5x3 sobre la que se construye bloque a bloque (la llevas tú o un caballo). */
 	public static final EntityType<com.evolvedwarfare.cart.CartEntity> CART = Registry.register(Registries.ENTITY_TYPE,
 			EvolvedWarfare.id("cart"),
 			EntityType.Builder.<com.evolvedwarfare.cart.CartEntity>create(com.evolvedwarfare.cart.CartEntity::new, SpawnGroup.MISC)
-					.dimensions(3.0F, 1.75F)
+					.dimensions(3.4F, 1.75F)
 					.maxTrackingRange(10)
 					.trackingTickInterval(2)
 					.build("cart"));

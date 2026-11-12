@@ -17,7 +17,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
-/** La carreta en la mano: clic derecho en el suelo la pone, con las varas hacia ti. Necesita sitio (3x3). */
+/** La carreta en la mano: clic derecho en el suelo la pone, con las varas hacia ti. Necesita sitio (5x3). */
 public class CartItem extends Item {
 	public CartItem(Settings settings) {
 		super(settings);

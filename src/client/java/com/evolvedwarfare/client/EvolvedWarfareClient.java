@@ -164,7 +164,7 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		// carreta: su modelo (con lo que lleva encima) y la pantalla de la carga
 		net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(com.evolvedwarfare.registry.ModEntities.CART,
 				com.evolvedwarfare.client.render.CartEntityRenderer::new);
-		HandledScreens.register(ModScreens.CART, com.evolvedwarfare.client.screen.CartScreen::new);
+		com.evolvedwarfare.client.train.VoxelRenderer.register();
 		// rastrillo y puente levadizo moviéndose
 		net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(com.evolvedwarfare.registry.ModEntities.GATE_MOVER,
 				com.evolvedwarfare.client.render.GateMoverRenderer::new);

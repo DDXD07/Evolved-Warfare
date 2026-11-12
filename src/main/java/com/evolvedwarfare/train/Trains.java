@@ -441,6 +441,9 @@ public final class Trains {
 		for (PlatformEntity p : world.getEntitiesByClass(PlatformEntity.class, near.expand(4.0), x -> !x.blocks().isEmpty())) {
 			p.heat((pos, w) -> heat[0] += (float) (w * Math.max(0.0, 1.0 - pos.distanceTo(c) / 6.0)));
 		}
+		for (com.evolvedwarfare.cart.CartEntity cart : world.getEntitiesByClass(com.evolvedwarfare.cart.CartEntity.class, near.expand(4.0), x -> true)) {
+			cart.heat((pos, w) -> heat[0] += (float) (w * Math.max(0.0, 1.0 - pos.distanceTo(c) / 6.0)));
+		}
 		return heat[0];
 	}
 

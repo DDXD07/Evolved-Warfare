@@ -63,11 +63,6 @@ public final class ModScreens {
 			Registries.SCREEN_HANDLER, EvolvedWarfare.id("crop_crate"),
 			new ExtendedScreenHandlerType<>(com.evolvedwarfare.screen.CropCrateScreenHandler::new, BlockPos.PACKET_CODEC));
 
-	/** La carga de una carreta. Al abrirse se envía el id de la carreta. */
-	public static final ScreenHandlerType<com.evolvedwarfare.cart.CartScreenHandler> CART = Registry.register(Registries.SCREEN_HANDLER,
-			EvolvedWarfare.id("cart"),
-			new ExtendedScreenHandlerType<>(com.evolvedwarfare.cart.CartScreenHandler::new, PacketCodecs.VAR_INT));
-
 	/** El Buzón de Ventas. Al abrirse se envía su posición. */
 	public static final ScreenHandlerType<com.evolvedwarfare.screen.SalesMailboxScreenHandler> SALES_MAILBOX = Registry.register(
 			Registries.SCREEN_HANDLER, EvolvedWarfare.id("sales_mailbox"),

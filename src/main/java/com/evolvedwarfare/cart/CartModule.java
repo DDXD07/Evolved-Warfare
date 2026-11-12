@@ -25,6 +25,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 /**
+ * (Solo para leer las carretas de antes de la fase 57, que se pasan a bloques.)
  * Lo que va encima de una carreta, en uno de sus 9 huecos: un cofre o un barril (27 huecos, como en el mundo), un horno,
  * ahumador o alto horno (funde también en marcha), una mesa de crafteo o una cama (que ocupa dos huecos seguidos).
  */
@@ -160,6 +161,14 @@ public final class CartModule {
 
 	public boolean lit() {
 		return burnTime > 0;
+	}
+
+	public int burnTime() {
+		return burnTime;
+	}
+
+	public int fuelTime() {
+		return fuelTime;
 	}
 
 	/** Lo de dentro, al suelo (al quitarlo de la carreta o romperla). */

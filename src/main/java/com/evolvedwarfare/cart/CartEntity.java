@@ -11,8 +11,19 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import com.evolvedwarfare.train.TrainCarEntity;
+import com.evolvedwarfare.voxel.VoxelBuild;
+import com.evolvedwarfare.voxel.VoxelGrid;
+import com.evolvedwarfare.voxel.VoxelHost;
+import com.evolvedwarfare.voxel.VoxelMachine;
+import net.minecraft.block.AbstractFurnaceBlock;
+import net.minecraft.block.BedBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.CampfireBlock;
+import net.minecraft.item.BlockItem;
+import net.minecraft.state.property.Properties;
+import net.minecraft.util.math.Direction;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -66,39 +77,46 @@ import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * La carreta: una plataforma de 3x3 bloques sobre dos ruedas, con dos varas delante.
+ * La carreta: una plataforma de 5x3 bloques sobre dos ruedas, con dos varas delante, sobre la que se construye bloque a
+ * bloque (estilo Scrap Mechanic): hasta 3 de alto, con casi cualquier bloque (ver {@link VoxelBuild#allowed}).
  *
  * <ul>
  * <li><b>Tirar tú</b>: con una rienda en la mano, clic derecho: te pones entre las varas y te sigue (vas un poco más
  * despacio). Agáchate para soltarla.</li>
  * <li><b>Con caballo</b>: rienda en la mano y clic derecho en un caballo (domado) que esté cerca de la carreta, o clic
  * en la carreta con un caballo atado a ti: el caballo se pone entre las varas. Súbete y llévala. Para soltarlo,
- * agachado + clic derecho en la carreta.</li>
- * <li><b>Clic derecho con la mano vacía</b>: la pantalla de la carga, vista desde arriba: 9 huecos (3x3) para cofres,
- * barriles, hornos, mesas de crafteo y camas (la cama ocupa dos). Lo que pongas se ve encima y se usa como en el mundo
- * (clic derecho en ello).</li>
+ * agachado + clic derecho en la carreta (con la mano vacía o la rienda).</li>
+ * <li><b>Construir</b>: con un bloque en la mano, clic derecho en la tabla o en un bloque de la carreta: se pone al lado,
+ * como en el mundo (se ve dónde antes de ponerlo). A golpes se quita (más deprisa con la herramienta buena).</li>
+ * <li><b>Usar</b>: clic derecho en un cofre, barril, horno, fogata, mesa de crafteo, cama, puerta o trampilla de la
+ * carreta (agachado, se pone el bloque en vez de usarlo).</li>
  * </ul>
  *
- * <p>Coordenadas propias (para las celdas y el dibujo): +Z hacia delante (las varas), +X a su izquierda, en bloques
- * desde el centro del suelo. Pasan al mundo girando -yaw, como {@link Vec3d#rotateY}. Hueco {@code i}: fila
- * {@code i / 3} (0 = delante) y columna {@code i % 3} (0 = izquierda, como se ve en la pantalla).</p>
+ * <p>Coordenadas propias: +Z hacia delante (las varas), +X a su izquierda, en bloques desde el centro del suelo. Pasan al
+ * mundo como las de los coches del tren ({@link TrainCarEntity#toWorld}). La rejilla empieza en la tabla ({@link #DECK}).</p>
  */
-public class CartEntity extends Entity implements ExtendedScreenHandlerFactory<Integer> {
-	public static final int CELLS = 9;
+public class CartEntity extends TrainCarEntity implements VoxelHost {
 	/** Altura de la tabla (encima van los bloques). */
 	public static final double DECK = 0.75;
+	/** La rejilla: 3 de ancho, 3 de alto, 5 de largo. */
+	public static final int WIDTH = 3, HEIGHT = 3, LENGTH = 5;
 	/** Del centro de la carreta a quien tira. */
-	public static final double PLAYER_HITCH = 3.0;
-	public static final double HORSE_HITCH = 3.6;
+	public static final double PLAYER_HITCH = 4.0;
+	public static final double HORSE_HITCH = 4.6;
 	public static final double WHEEL_RADIUS = 0.55;
 	private static final Identifier PULL_SLOWNESS = EvolvedWarfare.id("cart_pull");
+	private static final List<Box> BASE = List.of(new Box(-1.5, 0.0, -2.5, 1.5, DECK, 2.5));
+	private static final List<Box> BASE_SPLIT = TrainCarEntity.split(BASE.get(0));
+	private static final List<Box> WHEELS = List.of(new Box(1.55, 0.0, -WHEEL_RADIUS, 1.7, 2 * WHEEL_RADIUS, WHEEL_RADIUS),
+			new Box(-1.7, 0.0, -WHEEL_RADIUS, -1.55, 2 * WHEEL_RADIUS, WHEEL_RADIUS));
 
 	private static final TrackedData<Integer> PULLER = DataTracker.registerData(CartEntity.class, TrackedDataHandlerRegistry.INTEGER);
-	private static final TrackedData<NbtCompound> LOOK = DataTracker.registerData(CartEntity.class, TrackedDataHandlerRegistry.NBT_COMPOUND);
+	private static final TrackedData<NbtCompound> GRID = DataTracker.registerData(CartEntity.class, TrackedDataHandlerRegistry.NBT_COMPOUND);
 	private static final TrackedData<Integer> HURT = DataTracker.registerData(CartEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
-	/** Lo que hay en cada hueco (solo en el de la cabecera de la cama; el de los pies queda vacío pero ocupado). */
-	private final CartModule[] modules = new CartModule[CELLS];
+	/** Lo construido encima. */
+	private VoxelGrid grid;
+	private final VoxelBuild.Damage blockDamage = new VoxelBuild.Damage();
 	@Nullable
 	private UUID pullerUuid;
 	private int pullerWait;
@@ -107,394 +125,222 @@ public class CartEntity extends Entity implements ExtendedScreenHandlerFactory<I
 	private final Set<UUID> sleepers = new HashSet<>();
 	@Nullable
 	private BlockPos spawnPos;
-	// cliente: lo que lleva encima (para dibujarlo) y el giro de las ruedas
-	private final Look[] look = new Look[CELLS];
-	public float wheelAngle;
-	public float prevWheelAngle;
 	/** Cliente: quiénes tiran ahora de alguna carreta (para la postura de los brazos). */
 	public static final Map<Integer, Long> CLIENT_PULLERS = new ConcurrentHashMap<>();
 
-	/** Lo que se ve de un hueco: el objeto, dónde van los pies (cama) y si arde (horno). */
-	public record Look(Item item, int partner, boolean lit) {
-	}
-
 	public CartEntity(EntityType<?> type, World world) {
 		super(type, world);
+		this.noClip = false;
+		grid();
 	}
 
 	@Override
 	protected void initDataTracker(DataTracker.Builder builder) {
 		builder.add(PULLER, -1);
-		builder.add(LOOK, new NbtCompound());
+		builder.add(GRID, new NbtCompound());
 		builder.add(HURT, 0);
 	}
 
-	// ------------------------------------------------------------------ geometría
+	// ------------------------------------------------------------------ la rejilla
 
-	/** El centro de un hueco, a la altura de la tabla (coordenadas propias). */
-	public static Vec3d cellCenter(int cell) {
-		return new Vec3d(1 - cell % 3, DECK, 1 - cell / 3);
+	@Override
+	public VoxelGrid grid() {
+		if (grid == null) {
+			grid = new VoxelGrid(WIDTH, HEIGHT, LENGTH, -WIDTH / 2.0, DECK, -LENGTH / 2.0);
+		}
+		return grid;
+	}
+
+	@Override
+	public Entity self() {
+		return this;
+	}
+
+	@Override
+	public Vec3d gridToWorld(Vec3d local) {
+		return toWorld(local.x, local.y, local.z);
+	}
+
+	@Override
+	public Vec3d worldToGrid(Vec3d world) {
+		return toLocal(world);
 	}
 
 	public Vec3d toWorld(Vec3d local) {
-		return getPos().add(local.rotateY(-getYaw() * MathHelper.RADIANS_PER_DEGREE));
+		return toWorld(local.x, local.y, local.z);
 	}
 
-	public Vec3d toLocal(Vec3d world) {
-		return world.subtract(getPos()).rotateY(getYaw() * MathHelper.RADIANS_PER_DEGREE);
+	@Override
+	public List<Box> baseBoxes() {
+		return BASE;
 	}
 
-	private static boolean inside(int row, int col) {
-		return row >= 0 && row < 3 && col >= 0 && col < 3;
-	}
-
-	/** Dónde irían los pies de una cama con la cabecera en {@code head}: detrás, delante, a un lado o al otro. */
-	public static int bedPartner(int head, java.util.function.IntPredicate taken) {
-		int r = head / 3;
-		int c = head % 3;
-		int[][] tries = {{r + 1, c}, {r - 1, c}, {r, c + 1}, {r, c - 1}};
-		for (int[] t : tries) {
-			if (inside(t[0], t[1]) && !taken.test(t[0] * 3 + t[1])) {
-				return t[0] * 3 + t[1];
-			}
-		}
-		return -1;
-	}
-
-	/** La caja de lo que hay en un hueco (coordenadas propias): un bloque, o la cama entera (baja y de dos huecos). */
-	public static Box moduleBox(int cell, @Nullable CartModule.Kind kind, int partner) {
-		Vec3d c = cellCenter(cell);
-		Box box = new Box(c.x - 0.5, DECK, c.z - 0.5, c.x + 0.5, DECK + 1.0, c.z + 0.5);
-		if (kind == CartModule.Kind.BED && partner >= 0) {
-			Vec3d p = cellCenter(partner);
-			box = new Box(Math.min(c.x, p.x) - 0.5, DECK, Math.min(c.z, p.z) - 0.5, Math.max(c.x, p.x) + 0.5, DECK + 0.5625,
-					Math.max(c.z, p.z) + 0.5);
-		}
-		return box;
-	}
-
-	/** El hueco de lo que mira el jugador encima de la carreta, o -1 (la tabla u otra cosa). */
-	public int pickCell(PlayerEntity player) {
-		Vec3d eye = player.getEyePos();
-		Vec3d end = eye.add(player.getRotationVec(1.0F).multiply(player.getEntityInteractionRange() + 1.0));
-		Vec3d a = toLocal(eye);
-		Vec3d b = toLocal(end);
-		int best = -1;
-		double bestDistance = Double.MAX_VALUE;
-		for (int i = 0; i < CELLS; i++) {
-			CartModule.Kind kind = kindAt(i);
-			if (kind == null) {
-				continue;
-			}
-			Optional<Vec3d> hit = moduleBox(i, kind, partnerAt(i)).raycast(a, b);
-			if (hit.isPresent() && hit.get().squaredDistanceTo(a) < bestDistance) {
-				best = i;
-				bestDistance = hit.get().squaredDistanceTo(a);
-			}
-		}
-		Optional<Vec3d> deck = new Box(-1.5, 0.0, -1.5, 1.5, DECK, 1.5).raycast(a, b);
-		if (deck.isPresent() && deck.get().squaredDistanceTo(a) < bestDistance) {
-			return -1;
-		}
-		return best;
-	}
-
-	// ------------------------------------------------------------------ lo que lleva
-
-	@Nullable
-	public CartModule module(int cell) {
-		return cell >= 0 && cell < CELLS ? modules[cell] : null;
-	}
-
-	/** Si ese hueco está ocupado (por algo o por los pies de una cama). */
-	public boolean taken(int cell) {
-		return modules[cell] != null || bedHeadOf(cell) >= 0;
-	}
-
-	/** Si en ese hueco están los pies de una cama, el hueco de su cabecera; si no, -1. */
-	public int bedHeadOf(int cell) {
-		for (int i = 0; i < CELLS; i++) {
-			if (modules[i] != null && modules[i].partner == cell) {
-				return i;
-			}
-		}
-		return -1;
-	}
-
-	@Nullable
-	private CartModule.Kind kindAt(int cell) {
-		if (getWorld().isClient) {
-			Look l = look[cell];
-			return l == null ? null : CartModule.kindOf(new ItemStack(l.item()));
-		}
-		return modules[cell] == null ? null : modules[cell].kind;
-	}
-
-	private int partnerAt(int cell) {
-		if (getWorld().isClient) {
-			return look[cell] == null ? -1 : look[cell].partner();
-		}
-		return modules[cell] == null ? -1 : modules[cell].partner;
-	}
-
-	@Nullable
-	public Look look(int cell) {
-		return look[cell];
-	}
-
-	/** Pone algo en un hueco (la cama busca dónde van los pies). Devuelve si se pudo. */
-	public boolean install(int cell, ItemStack stack) {
-		CartModule.Kind kind = CartModule.kindOf(stack);
-		if (kind == null || taken(cell)) {
-			return false;
-		}
-		CartModule module = new CartModule(this, kind, stack);
-		if (kind == CartModule.Kind.BED) {
-			module.partner = bedPartner(cell, i -> i == cell || taken(i));
-			if (module.partner < 0) {
-				return false;
-			}
-		}
-		modules[cell] = module;
-		syncLook();
-		return true;
-	}
-
-	/** Quita lo de un hueco: lo de dentro cae al suelo y se devuelve el objeto. */
-	public ItemStack uninstall(int cell) {
-		CartModule module = modules[cell];
-		if (module == null) {
-			return ItemStack.EMPTY;
-		}
-		modules[cell] = null;
+	@Override
+	public void gridChanged() {
 		if (!getWorld().isClient) {
-			module.dropContents(getWorld(), toWorld(cellCenter(cell).add(0, 0.5, 0)));
+			getDataTracker().set(GRID, grid().write(getRegistryManager(), false));
 		}
-		syncLook();
-		return module.item.copy();
-	}
-
-	private void syncLook() {
-		if (getWorld().isClient) {
-			return;
-		}
-		NbtList list = new NbtList();
-		for (int i = 0; i < CELLS; i++) {
-			CartModule m = modules[i];
-			if (m != null) {
-				NbtCompound c = new NbtCompound();
-				c.putInt("s", i);
-				c.putString("i", Registries.ITEM.getId(m.item.getItem()).toString());
-				c.putInt("p", m.partner);
-				c.putBoolean("l", m.lit());
-				list.add(c);
-			}
-		}
-		NbtCompound nbt = new NbtCompound();
-		nbt.put("M", list);
-		getDataTracker().set(LOOK, nbt);
 	}
 
 	@Override
 	public void onTrackedDataSet(TrackedData<?> data) {
 		super.onTrackedDataSet(data);
-		if (LOOK.equals(data)) {
-			java.util.Arrays.fill(look, null);
-			NbtList list = getDataTracker().get(LOOK).getList("M", NbtElement.COMPOUND_TYPE);
-			for (int i = 0; i < list.size(); i++) {
-				NbtCompound c = list.getCompound(i);
-				int s = c.getInt("s");
-				if (s >= 0 && s < CELLS) {
-					look[s] = new Look(Registries.ITEM.get(Identifier.of(c.getString("i"))), c.getInt("p"), c.getBoolean("l"));
-				}
-			}
+		if (GRID.equals(data) && getWorld().isClient) {
+			grid().read(getDataTracker().get(GRID), getRegistryManager());
 		}
 	}
 
-	/** Los 9 huecos como inventario (para la pantalla de la carga). */
-	public final Inventory cells = new Inventory() {
-		@Override
-		public int size() {
-			return CELLS;
-		}
-
-		@Override
-		public boolean isEmpty() {
-			for (CartModule m : modules) {
-				if (m != null) {
-					return false;
-				}
-			}
-			return true;
-		}
-
-		@Override
-		public ItemStack getStack(int slot) {
-			return modules[slot] == null ? ItemStack.EMPTY : modules[slot].item;
-		}
-
-		@Override
-		public ItemStack removeStack(int slot, int amount) {
-			return amount > 0 ? uninstall(slot) : ItemStack.EMPTY;
-		}
-
-		@Override
-		public ItemStack removeStack(int slot) {
-			return uninstall(slot);
-		}
-
-		@Override
-		public void setStack(int slot, ItemStack stack) {
-			if (modules[slot] != null && stack == modules[slot].item) {
-				return;
-			}
-			uninstall(slot);
-			if (!stack.isEmpty()) {
-				install(slot, stack);
-			}
-		}
-
-		@Override
-		public int getMaxCountPerStack() {
-			return 1;
-		}
-
-		@Override
-		public boolean isValid(int slot, ItemStack stack) {
-			CartModule.Kind kind = CartModule.kindOf(stack);
-			return kind != null && !taken(slot) && (kind != CartModule.Kind.BED || bedPartner(slot, i -> i == slot || taken(i)) >= 0);
-		}
-
-		@Override
-		public void markDirty() {
-			syncLook();
-		}
-
-		@Override
-		public boolean canPlayerUse(PlayerEntity player) {
-			return isAlive() && player.squaredDistanceTo(CartEntity.this) <= 64.0;
-		}
-
-		@Override
-		public void clear() {
-			for (int i = 0; i < CELLS; i++) {
-				uninstall(i);
-			}
-		}
-	};
-
-	/** Para la pantalla: en cada hueco con los pies de una cama, su cabecera + 1 (0 si no). */
-	public final PropertyDelegate links = new PropertyDelegate() {
-		@Override
-		public int get(int index) {
-			return bedHeadOf(index) + 1;
-		}
-
-		@Override
-		public void set(int index, int value) {
-		}
-
-		@Override
-		public int size() {
-			return CELLS;
-		}
-	};
-
 	@Override
-	public Integer getScreenOpeningData(ServerPlayerEntity player) {
-		return getId();
+	protected List<Box> localBoxes() {
+		List<Box> out = new ArrayList<>(BASE_SPLIT);
+		out.addAll(grid().collisionBoxes());
+		return out;
 	}
 
 	@Override
-	public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
-		return new CartScreenHandler(syncId, playerInventory, this);
+	protected List<Box> localTargets() {
+		List<Box> out = new ArrayList<>(BASE);
+		out.addAll(WHEELS);
+		out.addAll(grid().outlineBoxes());
+		return out;
+	}
+
+	@Override
+	protected int boxesVersion() {
+		return grid().version();
+	}
+
+	@Override
+	protected double halfWidth() {
+		return 1.7;
+	}
+
+	@Override
+	protected double halfLength() {
+		return LENGTH / 2.0;
+	}
+
+	@Override
+	protected double height() {
+		return DECK + Math.max(1, grid == null ? 0 : grid.height());
+	}
+
+	@Override
+	protected double bogie() {
+		return 0.0;
+	}
+
+	@Override
+	protected double wheelRadius() {
+		return WHEEL_RADIUS;
+	}
+
+	/** Lo que mira el jugador en la carreta (un bloque o la tabla), o null. */
+	@Nullable
+	public VoxelGrid.Hit aim(PlayerEntity player) {
+		return VoxelBuild.aim(this, player, 1.0F);
 	}
 
 	// ------------------------------------------------------------------ clic derecho
 
 	@Override
 	public ActionResult interact(PlayerEntity player, Hand hand) {
-		if (hand != Hand.MAIN_HAND) {
-			return ActionResult.PASS;
-		}
 		World world = getWorld();
 		ItemStack stack = player.getStackInHand(hand);
 		Entity puller = puller();
-		// agachado: soltar a quien tira
-		if (player.isSneaking() && puller != null) {
-			if (!world.isClient) {
-				unhitch(player);
-			}
-			return ActionResult.success(world.isClient);
-		}
-		// un caballo atado a ti: se engancha
-		AbstractHorseEntity horse = leashedHorse(player);
-		if (horse != null && puller == null) {
-			if (!world.isClient) {
-				horse.detachLeash(true, false);
-				hitchHorse(horse, player);
-			}
-			return ActionResult.success(world.isClient);
-		}
-		// con la rienda: tiras tú (o la sueltas)
-		if (stack.isOf(Items.LEAD)) {
-			if (!world.isClient) {
-				if (puller == player) {
+		if (hand == Hand.MAIN_HAND) {
+			// agachado: soltar a quien tira
+			if (player.isSneaking() && puller != null && (stack.isEmpty() || stack.isOf(Items.LEAD))) {
+				if (!world.isClient) {
 					unhitch(player);
-				} else if (puller == null) {
-					stack.decrementUnlessCreative(1, player);
-					hitchPlayer(player);
-				} else {
-					player.sendMessage(Text.translatable("message.evolvedwarfare.cart.busy").formatted(Formatting.RED), true);
 				}
+				return ActionResult.success(world.isClient);
+			}
+			// un caballo atado a ti: se engancha
+			AbstractHorseEntity horse = leashedHorse(player);
+			if (horse != null && puller == null) {
+				if (!world.isClient) {
+					horse.detachLeash(true, false);
+					hitchHorse(horse, player);
+				}
+				return ActionResult.success(world.isClient);
+			}
+			// con la rienda: tiras tú (o la sueltas)
+			if (stack.isOf(Items.LEAD)) {
+				if (!world.isClient) {
+					if (puller == player) {
+						unhitch(player);
+					} else if (puller == null) {
+						stack.decrementUnlessCreative(1, player);
+						hitchPlayer(player);
+					} else {
+						player.sendMessage(Text.translatable("message.evolvedwarfare.cart.busy").formatted(Formatting.RED), true);
+					}
+				}
+				return ActionResult.success(world.isClient);
+			}
+		}
+		VoxelGrid.Hit hit = aim(player);
+		if (hit == null) {
+			return ActionResult.PASS;
+		}
+		// usar lo de encima (agachado no: así se pueden poner bloques contra un cofre)
+		if (hand == Hand.MAIN_HAND && hit.index() >= 0 && !player.isSneaking() && VoxelBuild.usable(grid(), hit.index(), stack)) {
+			if (!world.isClient) {
+				VoxelBuild.use(this, player, hit.index(), stack);
 			}
 			return ActionResult.success(world.isClient);
 		}
-		int cell = pickCell(player);
-		if (cell >= 0) {
-			if (!world.isClient) {
-				use(cell, player);
+		// construir
+		if (VoxelBuild.blockOf(stack) != null) {
+			VoxelBuild.Placement plan = VoxelBuild.plan(grid(), hit, stack, VoxelBuild.lookLocal(this, player, 1.0F));
+			if (plan == null) {
+				if (!world.isClient && hand == Hand.MAIN_HAND) {
+					player.sendMessage(Text.translatable("message.evolvedwarfare.build.cant").formatted(Formatting.RED), true);
+				}
+				return ActionResult.FAIL;
 			}
-			return ActionResult.success(world.isClient);
-		}
-		if (stack.isEmpty()) {
 			if (!world.isClient) {
-				player.openHandledScreen(this);
+				VoxelBuild.apply(this, plan);
+				BlockState placed = plan.states()[0];
+				stack.decrementUnlessCreative(1, player);
+				var g = placed.getSoundGroup();
+				Vec3d at = toWorld(grid().center(plan.cells()[0]));
+				world.playSound(null, at.x, at.y, at.z, g.getPlaceSound(), SoundCategory.BLOCKS, (g.getVolume() + 1.0F) / 2.0F, g.getPitch() * 0.8F);
 			}
 			return ActionResult.success(world.isClient);
 		}
 		return ActionResult.PASS;
 	}
 
-	/** Usar lo que hay en un hueco, como en el mundo. */
-	public void use(int cell, PlayerEntity player) {
-		CartModule m = modules[cell];
-		if (m == null) {
-			return;
-		}
-		switch (m.kind) {
-			case CHEST, BARREL -> player.openHandledScreen(new SimpleNamedScreenHandlerFactory(
-					(id, inventory, p) -> GenericContainerScreenHandler.createGeneric9x3(id, inventory, m.inventory), m.item.getName()));
-			case FURNACE -> player.openHandledScreen(new SimpleNamedScreenHandlerFactory(
-					(id, inventory, p) -> new FurnaceScreenHandler(id, inventory, m.inventory, m.furnaceProperties), m.item.getName()));
-			case SMOKER -> player.openHandledScreen(new SimpleNamedScreenHandlerFactory(
-					(id, inventory, p) -> new SmokerScreenHandler(id, inventory, m.inventory, m.furnaceProperties), m.item.getName()));
-			case BLAST_FURNACE -> player.openHandledScreen(new SimpleNamedScreenHandlerFactory(
-					(id, inventory, p) -> new BlastFurnaceScreenHandler(id, inventory, m.inventory, m.furnaceProperties), m.item.getName()));
-			case CRAFTING -> player.openHandledScreen(new SimpleNamedScreenHandlerFactory(
-					(id, inventory, p) -> new CartCraftingScreenHandler(id, inventory, this), Text.translatable("container.crafting")));
-			case BED -> {
-				if (player instanceof ServerPlayerEntity serverPlayer) {
-					sleep(cell, serverPlayer);
+	/** Pone un bloque tal cual en una celda (para las pruebas). */
+	public void putBlock(int x, int y, int z, BlockState state) {
+		VoxelBuild.put(this, grid().index(x, y, z), state);
+	}
+
+	/** Golpes: al bloque al que se apunta (se va rompiendo); si se apunta a la tabla o las ruedas, a la carreta. */
+	@Override
+	public boolean handleAttack(Entity attacker) {
+		if (attacker instanceof PlayerEntity player) {
+			VoxelGrid.Hit hit = aim(player);
+			if (hit != null && hit.index() >= 0) {
+				if (!getWorld().isClient) {
+					VoxelBuild.hit(this, player, hit.index(), blockDamage);
 				}
+				return true;
 			}
 		}
+		return false;
 	}
 
 	// ------------------------------------------------------------------ dormir
 
 	/** Como una cama: fija la reaparición junto a la carreta y, de noche y sin monstruos cerca, duermes. */
-	private void sleep(int cell, ServerPlayerEntity player) {
+	@Override
+	public void sleepOn(int head, PlayerEntity sleeper) {
+		if (!(sleeper instanceof ServerPlayerEntity player)) {
+			return;
+		}
 		ServerWorld world = (ServerWorld) getWorld();
 		BlockPos spawn = BlockPos.ofFloored(getPos());
 		player.setSpawnPoint(world.getRegistryKey(), spawn, getYaw(), true, true);
@@ -511,7 +357,7 @@ public class CartEntity extends Entity implements ExtendedScreenHandlerFactory<I
 			return;
 		}
 		if (!player.isCreative()) {
-			Vec3d at = toWorld(cellCenter(cell));
+			Vec3d at = toWorld(grid().center(head));
 			List<HostileEntity> monsters = world.getEntitiesByClass(HostileEntity.class,
 					new Box(at.x - 8, at.y - 5, at.z - 8, at.x + 8, at.y + 5, at.z + 8), monster -> monster.isAngryAt(player));
 			if (!monsters.isEmpty()) {
@@ -519,10 +365,10 @@ public class CartEntity extends Entity implements ExtendedScreenHandlerFactory<I
 				return;
 			}
 		}
-		Vec3d head = toWorld(cellCenter(cell));
-		player.sleep(BlockPos.ofFloored(head.x, head.y + 0.3, head.z));
+		Vec3d pillow = toWorld(grid().corner(head).add(0.5, 0.0, 0.5));
+		player.sleep(BlockPos.ofFloored(pillow.x, pillow.y + 0.3, pillow.z));
 		// tumbado encima de la cama de la carreta (no en el centro del bloque, que es lo que hace vanilla)
-		player.networkHandler.requestTeleport(head.x, head.y + 0.5625, head.z, player.getYaw(), player.getPitch());
+		player.networkHandler.requestTeleport(pillow.x, pillow.y + 0.5625, pillow.z, player.getYaw(), player.getPitch());
 		world.updateSleepingPlayers();
 	}
 
@@ -533,8 +379,9 @@ public class CartEntity extends Entity implements ExtendedScreenHandlerFactory<I
 	}
 
 	private boolean hasBed() {
-		for (int i = 0; i < CELLS; i++) {
-			if (kindAt(i) == CartModule.Kind.BED) {
+		VoxelGrid g = grid();
+		for (int i = 0; i < g.size(); i++) {
+			if (g.get(i).getBlock() instanceof BedBlock) {
 				return true;
 			}
 		}
@@ -654,9 +501,6 @@ public class CartEntity extends Entity implements ExtendedScreenHandlerFactory<I
 		if (getDataTracker().get(HURT) > 0) {
 			getDataTracker().set(HURT, getDataTracker().get(HURT) - 1);
 		}
-		prevWheelAngle = wheelAngle;
-		double beforeX = getX();
-		double beforeZ = getZ();
 		Entity puller = world.isClient ? puller() : resolvePuller();
 		if (puller != null) {
 			follow(puller);
@@ -666,22 +510,80 @@ public class CartEntity extends Entity implements ExtendedScreenHandlerFactory<I
 		} else {
 			fall();
 		}
-		// las ruedas giran con lo que avanza hacia delante (o hacia atrás)
-		double fx = -MathHelper.sin(getYaw() * MathHelper.RADIANS_PER_DEGREE);
-		double fz = MathHelper.cos(getYaw() * MathHelper.RADIANS_PER_DEGREE);
-		wheelAngle += (float) (((getX() - beforeX) * fx + (getZ() - beforeZ) * fz) / WHEEL_RADIUS);
-		if (!world.isClient) {
-			boolean lit = false;
-			for (CartModule m : modules) {
-				if (m != null && m.kind.furnace()) {
-					lit |= m.tickFurnace(world);
+		if (world.isClient) {
+			particles();
+			return;
+		}
+		tickMachines();
+		if (age % 40 == 0) {
+			moveSpawns((ServerWorld) world);
+		}
+	}
+
+	/** Los hornos funden y las fogatas cocinan (también en marcha). */
+	private void tickMachines() {
+		VoxelGrid g = grid();
+		boolean sync = false;
+		for (int i = 0; i < g.size(); i++) {
+			VoxelMachine m = g.machine(i);
+			if (m == null) {
+				continue;
+			}
+			if (m.kind.furnace()) {
+				if (m.tickFurnace(getWorld()) && g.get(i).contains(Properties.LIT)) {
+					g.set(i, g.get(i).with(Properties.LIT, m.lit()));
+					sync = true;
+				}
+			} else if (m.kind == VoxelMachine.Kind.CAMPFIRE && g.get(i).get(Properties.LIT)) {
+				ItemStack done = m.tickCampfire(getWorld());
+				if (!done.isEmpty()) {
+					Vec3d at = toWorld(grid().corner(i).add(0.5, 0.6, 0.5));
+					net.minecraft.entity.ItemEntity item = new net.minecraft.entity.ItemEntity(getWorld(), at.x, at.y, at.z, done);
+					item.setVelocity(Vec3d.ZERO);
+					getWorld().spawnEntity(item);
+					sync = true;
 				}
 			}
-			if (lit) {
-				syncLook();
+		}
+		if (sync) {
+			gridChanged();
+		}
+	}
+
+	/** Cliente: humo de las fogatas y los hornos encendidos, y la llama de antorchas. */
+	private void particles() {
+		VoxelGrid g = grid();
+		for (int i = 0; i < g.size(); i++) {
+			BlockState s = g.get(i);
+			if (s.isAir()) {
+				continue;
 			}
-			if (age % 40 == 0) {
-				moveSpawns((ServerWorld) world);
+			Block b = s.getBlock();
+			boolean lit = s.contains(Properties.LIT) && s.get(Properties.LIT);
+			Vec3d c = g.corner(i);
+			if (b instanceof CampfireBlock && lit && random.nextInt(3) == 0) {
+				Vec3d at = toWorld(c.x + 0.5 + (random.nextDouble() - 0.5) * 0.4, c.y + 0.5, c.z + 0.5 + (random.nextDouble() - 0.5) * 0.4);
+				getWorld().addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, at.x, at.y, at.z, 0.0, 0.07, 0.0);
+			} else if (b instanceof AbstractFurnaceBlock && lit && random.nextInt(12) == 0) {
+				Vec3d at = toWorld(c.x + 0.5, c.y + 1.0, c.z + 0.5);
+				getWorld().addParticle(ParticleTypes.SMOKE, at.x, at.y, at.z, 0.0, 0.02, 0.0);
+			} else if ((b == Blocks.TORCH || b == Blocks.SOUL_TORCH) && random.nextInt(4) == 0) {
+				Vec3d at = toWorld(c.x + 0.5, c.y + 0.7, c.z + 0.5);
+				getWorld().addParticle(b == Blocks.TORCH ? ParticleTypes.FLAME : ParticleTypes.SOUL_FIRE_FLAME, at.x, at.y, at.z, 0.0, 0.0, 0.0);
+			}
+		}
+	}
+
+	/** El calor de lo que arde encima (para el clima), con su sitio. */
+	public void heat(java.util.function.BiConsumer<Vec3d, Float> out) {
+		VoxelGrid g = grid();
+		for (int i = 0; i < g.size(); i++) {
+			VoxelMachine m = g.machine(i);
+			if (m != null) {
+				float w = m.warmth(g.get(i));
+				if (w > 0.0F) {
+					out.accept(toWorld(g.center(i)), w);
+				}
 			}
 		}
 	}
@@ -847,11 +749,13 @@ public class CartEntity extends Entity implements ExtendedScreenHandlerFactory<I
 	/** Rota: suelta lo de encima (con lo de dentro) y, si no es en creativo, la propia carreta. */
 	private void breakApart(boolean dropCart) {
 		unhitch(null);
-		for (int i = 0; i < CELLS; i++) {
-			if (modules[i] != null) {
-				Vec3d at = toWorld(cellCenter(i).add(0, 0.5, 0));
-				ItemStack item = uninstall(i);
-				getWorld().spawnEntity(new net.minecraft.entity.ItemEntity(getWorld(), at.x, at.y, at.z, item));
+		VoxelGrid g = grid();
+		for (int i = 0; i < g.size(); i++) {
+			if (!g.isEmpty(i)) {
+				Vec3d at = toWorld(g.center(i));
+				for (ItemStack item : VoxelBuild.remove(this, i, true)) {
+					VoxelBuild.drop(getWorld(), at, item);
+				}
 			}
 		}
 		if (dropCart) {
@@ -877,13 +781,7 @@ public class CartEntity extends Entity implements ExtendedScreenHandlerFactory<I
 
 	@Override
 	protected void writeCustomDataToNbt(NbtCompound nbt) {
-		NbtList list = new NbtList();
-		for (int i = 0; i < CELLS; i++) {
-			if (modules[i] != null) {
-				list.add(modules[i].toNbt(i, getRegistryManager()));
-			}
-		}
-		nbt.put("Modules", list);
+		nbt.put("Grid", grid().write(getRegistryManager(), true));
 		if (pullerUuid != null) {
 			nbt.putUuid("Puller", pullerUuid);
 		}
@@ -902,15 +800,10 @@ public class CartEntity extends Entity implements ExtendedScreenHandlerFactory<I
 
 	@Override
 	protected void readCustomDataFromNbt(NbtCompound nbt) {
-		java.util.Arrays.fill(modules, null);
-		NbtList list = nbt.getList("Modules", NbtElement.COMPOUND_TYPE);
-		for (int i = 0; i < list.size(); i++) {
-			NbtCompound c = list.getCompound(i);
-			int cell = c.getInt("Cell");
-			CartModule module = CartModule.fromNbt(this, c, getRegistryManager());
-			if (module != null && cell >= 0 && cell < CELLS) {
-				modules[cell] = module;
-			}
+		if (nbt.contains("Grid")) {
+			grid().read(nbt.getCompound("Grid"), getRegistryManager());
+		} else {
+			migrate(nbt.getList("Modules", NbtElement.COMPOUND_TYPE));
 		}
 		pullerUuid = nbt.containsUuid("Puller") ? nbt.getUuid("Puller") : null;
 		sleepers.clear();
@@ -920,6 +813,55 @@ public class CartEntity extends Entity implements ExtendedScreenHandlerFactory<I
 		}
 		spawnPos = nbt.contains("SpawnPos") ? BlockPos.fromLong(nbt.getLong("SpawnPos")) : null;
 		damage = nbt.getFloat("Damage");
-		syncLook();
+		gridChanged();
+	}
+
+	/**
+	 * Las carretas de antes (3x3 huecos con cofres, hornos, mesas y camas): cada cosa pasa a su bloque, en el mismo sitio
+	 * de la tabla nueva (las tres filas del centro), con lo que tenía dentro.
+	 */
+	private void migrate(NbtList list) {
+		VoxelGrid g = grid();
+		for (int k = 0; k < list.size(); k++) {
+			NbtCompound c = list.getCompound(k);
+			int cell = c.getInt("Cell");
+			CartModule module = CartModule.fromNbt(this, c, getRegistryManager());
+			if (module == null || cell < 0 || cell >= 9) {
+				continue;
+			}
+			int at = g.index(2 - cell % 3, 0, 3 - cell / 3);
+			BlockState state = switch (module.kind) {
+				case CHEST -> Blocks.CHEST.getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.SOUTH);
+				case BARREL -> Blocks.BARREL.getDefaultState().with(Properties.FACING, Direction.UP);
+				case FURNACE -> Blocks.FURNACE.getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.SOUTH).with(Properties.LIT, module.lit());
+				case SMOKER -> Blocks.SMOKER.getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.SOUTH).with(Properties.LIT, module.lit());
+				case BLAST_FURNACE -> Blocks.BLAST_FURNACE.getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.SOUTH)
+						.with(Properties.LIT, module.lit());
+				case CRAFTING -> Blocks.CRAFTING_TABLE.getDefaultState();
+				case BED -> null;
+			};
+			if (module.kind == CartModule.Kind.BED) {
+				if (module.partner < 0 || module.partner >= 9 || !(module.item.getItem() instanceof BlockItem bed)) {
+					continue;
+				}
+				int foot = g.index(2 - module.partner % 3, 0, 3 - module.partner / 3);
+				Direction toHead = Direction.getFacing(g.x(at) - g.x(foot), 0, g.z(at) - g.z(foot));
+				BlockState s = bed.getBlock().getDefaultState().with(Properties.HORIZONTAL_FACING, toHead);
+				g.set(foot, s.with(Properties.BED_PART, net.minecraft.block.enums.BedPart.FOOT));
+				g.set(at, s.with(Properties.BED_PART, net.minecraft.block.enums.BedPart.HEAD));
+				continue;
+			}
+			g.set(at, state);
+			VoxelMachine.Kind kind = VoxelMachine.Kind.of(state.getBlock());
+			if (kind != null) {
+				VoxelMachine m = new VoxelMachine(kind);
+				for (int i = 0; i < Math.min(m.inventory.size(), module.inventory.size()); i++) {
+					m.inventory.setStack(i, module.inventory.getStack(i).copy());
+				}
+				m.burn = module.burnTime();
+				m.burnTotal = module.fuelTime();
+				g.setMachine(at, m);
+			}
+		}
 	}
 }

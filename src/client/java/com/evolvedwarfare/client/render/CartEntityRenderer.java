@@ -28,9 +28,9 @@ import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 
 /**
- * La carreta en 3D, con las texturas de madera de vanilla: la tabla de 3x3, dos vigas debajo, el eje, dos ruedas de
+ * La carreta en 3D, con las texturas de madera de vanilla: la tabla de 5x3, dos vigas debajo, el eje, dos ruedas de
  * radios (giran según avanza) y las dos varas (en el suelo si nadie tira; a la altura de las manos, o de los costados
- * del caballo, si tiran de ella). Encima, lo que lleve: cofres, barriles, hornos (encendidos si funden), mesas y camas.
+ * del caballo, si tiran de ella). Encima, lo construido bloque a bloque ({@link com.evolvedwarfare.client.train.VoxelRenderer}).
  * Las coordenadas son las de {@link CartEntity} (+Z hacia las varas).
  */
 public class CartEntityRenderer extends EntityRenderer<CartEntity> {
@@ -44,7 +44,7 @@ public class CartEntityRenderer extends EntityRenderer<CartEntity> {
 
 	public CartEntityRenderer(EntityRendererFactory.Context context) {
 		super(context);
-		shadowRadius = 1.5F;
+		shadowRadius = 2.0F;
 	}
 
 	@Override
@@ -64,23 +64,18 @@ public class CartEntityRenderer extends EntityRenderer<CartEntity> {
 		}
 		VertexConsumer buffer = consumers.getBuffer(RenderLayer.getEntityCutoutNoCull(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE));
 		// la tabla, las vigas y el eje
-		box(matrices, buffer, sprite(DECK), -1.5F, 0.55F, -1.5F, 1.5F, (float) CartEntity.DECK, 1.5F, light);
-		box(matrices, buffer, sprite(BEAM), 0.95F, 0.40F, -1.65F, 1.2F, 0.55F, 1.6F, light);
-		box(matrices, buffer, sprite(BEAM), -1.2F, 0.40F, -1.65F, -0.95F, 0.55F, 1.6F, light);
+		box(matrices, buffer, sprite(DECK), -1.5F, 0.55F, -2.5F, 1.5F, (float) CartEntity.DECK, 2.5F, light);
+		box(matrices, buffer, sprite(BEAM), 0.95F, 0.40F, -2.65F, 1.2F, 0.55F, 2.6F, light);
+		box(matrices, buffer, sprite(BEAM), -1.2F, 0.40F, -2.65F, -0.95F, 0.55F, 2.6F, light);
 		box(matrices, buffer, sprite(BEAM), -WHEEL_X, R - 0.06F, -0.06F, WHEEL_X, R + 0.06F, 0.06F, light);
 		// las ruedas
-		float angle = MathHelper.lerp(tickDelta, cart.prevWheelAngle, cart.wheelAngle);
+		float angle = MathHelper.lerp(tickDelta, cart.lastWheelAngle, cart.wheelAngle);
 		wheel(matrices, buffer, WHEEL_X, angle, light);
 		wheel(matrices, buffer, -WHEEL_X, angle, light);
 		// las varas
 		shafts(cart, matrices, buffer, light);
-		// lo de encima
-		for (int i = 0; i < CartEntity.CELLS; i++) {
-			CartEntity.Look look = cart.look(i);
-			if (look != null) {
-				module(i, look, matrices, consumers, light);
-			}
-		}
+		// lo construido encima
+		com.evolvedwarfare.client.train.VoxelRenderer.draw(cart.grid(), matrices, consumers, light, cart.getWorld(), cart.getId() * 64);
 		matrices.pop();
 		super.render(cart, entityYaw, tickDelta, matrices, consumers, light);
 	}
@@ -128,13 +123,13 @@ public class CartEntityRenderer extends EntityRenderer<CartEntity> {
 		} else {
 			tipX = 0.55F;
 			tipY = 0.06F;
-			tipZ = 2.95F;
+			tipZ = 3.95F;
 		}
 		Sprite wood = sprite(SHAFT);
 		for (int side : new int[] {1, -1}) {
 			float bx = side * 0.7F;
 			float by = 0.62F;
-			float bz = 1.45F;
+			float bz = 2.45F;
 			float dx = side * tipX - bx;
 			float dy = tipY - by;
 			float dz = tipZ - bz;
@@ -148,45 +143,7 @@ public class CartEntityRenderer extends EntityRenderer<CartEntity> {
 			matrices.pop();
 		}
 		// travesaño entre las varas, pegado a la tabla
-		box(matrices, buffer, wood, -0.75F, 0.57F, 1.48F, 0.75F, 0.67F, 1.6F, light);
-	}
-
-	/** Lo que va en un hueco, mirando hacia fuera (la cama, hacia donde tiene los pies). */
-	private static void module(int cell, CartEntity.Look look, MatrixStack matrices, VertexConsumerProvider consumers, int light) {
-		ItemStack stack = new ItemStack(look.item());
-		CartModule.Kind kind = CartModule.kindOf(stack);
-		if (kind == null || !(look.item() instanceof BlockItem blockItem)) {
-			return;
-		}
-		Vec3d c = CartEntity.cellCenter(cell);
-		matrices.push();
-		matrices.translate(c.x, CartEntity.DECK, c.z);
-		Block block = blockItem.getBlock();
-		BlockState state = block.getDefaultState();
-		if (kind == CartModule.Kind.BED) {
-			Vec3d p = look.partner() >= 0 ? CartEntity.cellCenter(look.partner()) : c.add(0, 0, -1);
-			// el de vanilla tiene los pies hacia -Z de la cabecera
-			matrices.multiply(RotationAxis.POSITIVE_Y.rotation((float) MathHelper.atan2(-(p.x - c.x), -(p.z - c.z))));
-		} else {
-			int row = cell / 3;
-			int col = cell % 3;
-			double ox = col == 0 ? 1 : col == 2 ? -1 : 0;
-			double oz = ox != 0 ? 0 : row == 0 ? 1 : -1;
-			// el frente (cofre, horno) mira a +Z: se gira hacia fuera
-			matrices.multiply(RotationAxis.POSITIVE_Y.rotation((float) MathHelper.atan2(ox, oz)));
-			if (state.contains(Properties.HORIZONTAL_FACING)) {
-				state = state.with(Properties.HORIZONTAL_FACING, Direction.SOUTH);
-			}
-			if (kind.furnace()) {
-				state = state.with(AbstractFurnaceBlock.LIT, look.lit());
-			}
-		}
-		matrices.translate(-0.5F, 0.0F, -0.5F);
-		if (block == Blocks.BARREL) {
-			state = Blocks.BARREL.getDefaultState();
-		}
-		MinecraftClient.getInstance().getBlockRenderManager().renderBlockAsEntity(state, matrices, consumers, light, OverlayTexture.DEFAULT_UV);
-		matrices.pop();
+		box(matrices, buffer, wood, -0.75F, 0.57F, 2.48F, 0.75F, 0.67F, 2.6F, light);
 	}
 
 	// ------------------------------------------------------------------ cajas con textura de bloque
