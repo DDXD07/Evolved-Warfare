@@ -43,8 +43,8 @@ public final class FluidSim {
 	private FluidSim() {
 	}
 
-	/** Un movimiento: de dónde a dónde y cuántas capas (from infinito: no se gasta). */
-	record Move(long from, long to, int units, boolean water, boolean infiniteFrom) {
+	/** Lo que cambia un bloque en el lote: las capas que tenía al calcular y las que le quedan (se aplica la diferencia). */
+	record Move(long pos, int before, int after, boolean water) {
 	}
 
 	private static final class Sim {
@@ -137,35 +137,34 @@ public final class FluidSim {
 		return out;
 	}
 
-	/** Aplica los movimientos calculados, mirando lo que hay ahora (así no se crea ni se pierde nada). */
+	/**
+	 * Aplica lo calculado: a cada bloque, la diferencia entre lo que tenía al calcular y lo que le queda, sobre lo que tiene
+	 * ahora (si nada ha cambiado entretanto, queda exacto; si algo sí, se ajusta sin pasarse de lleno ni bajar de vacío).
+	 * Cada bloque se escribe una sola vez.
+	 */
 	private static void apply(ServerWorld world, Sim s) {
 		int end = Math.min(s.pending.size(), s.pendingIndex + APPLY);
-		LongOpenHashSet moved = new LongOpenHashSet();
-		BlockPos.Mutable from = new BlockPos.Mutable(), to = new BlockPos.Mutable();
+		BlockPos.Mutable at = new BlockPos.Mutable();
+		List<BlockPos> again = new ArrayList<>();
 		for (int i = s.pendingIndex; i < end; i++) {
 			Move m = s.pending.get(i);
 			Fluid fluid = m.water() ? Fluids.WATER : Fluids.LAVA;
-			from.set(m.from());
-			to.set(m.to());
-			if (!world.isChunkLoaded(from) || !world.isChunkLoaded(to)) {
+			at.set(m.pos());
+			if (!world.isChunkLoaded(at)) {
 				continue;
 			}
-			int units = m.units();
-			int have = 0;
-			if (!m.infiniteFrom()) {
-				have = FiniteFluids.amountAt(world, from, fluid);
-				if (have <= 0 || !(world.getBlockState(from).getBlock() instanceof FluidBlock)) {
-					continue;
-				}
-				units = Math.min(units, have);
+			int cur = FiniteFluids.amountAt(world, at, fluid);
+			if (cur < 0) {
+				continue;
 			}
-			int put = FiniteFluids.add(world, to.toImmutable(), fluid, units);
-			if (put > 0) {
-				if (!m.infiniteFrom()) {
-					FiniteFluids.setAmount(world, from.toImmutable(), fluid, have - put);
-				}
-				moved.add(m.from());
+			int next = Math.max(0, Math.min(FiniteFluids.FULL, cur + m.after() - m.before()));
+			if (next != cur) {
+				BlockPos p = at.toImmutable();
+				FiniteFluids.setAmount(world, p, fluid, next);
 				applied++;
+				if (next > 0) {
+					again.add(p);
+				}
 			}
 		}
 		s.pendingIndex = end;
@@ -173,9 +172,8 @@ public final class FluidSim {
 			s.pending.clear();
 			s.pendingIndex = 0;
 		}
-		// lo que se ha movido y aún tiene líquido, vuelve a mirarse
-		for (long k : moved) {
-			BlockPos p = BlockPos.fromLong(k);
+		// lo que ha cambiado y aún tiene líquido, vuelve a mirarse
+		for (BlockPos p : again) {
 			FluidState fs = world.getFluidState(p);
 			if (!fs.isEmpty() && FiniteFluids.handles(fs.getFluid())) {
 				FlowableFluid kind = (FlowableFluid) (fs.getFluid().matchesType(Fluids.LAVA) ? Fluids.LAVA : Fluids.WATER);
@@ -193,8 +191,9 @@ public final class FluidSim {
 		final int seaLevel, bottom, top;
 		final boolean ultrawarm;
 		final java.util.Random random;
-		/** Las capas que van quedando en este lote (lo ya movido). */
+		/** Las capas que van quedando en este lote (lo ya movido), y las que había antes. */
 		final Long2IntOpenHashMap overlay = new Long2IntOpenHashMap();
+		final Long2IntOpenHashMap before = new Long2IntOpenHashMap();
 		final BlockPos.Mutable pos = new BlockPos.Mutable();
 
 		View(Long2ObjectOpenHashMap<WorldChunk> chunks, FluidUnits units, int seaLevel, int bottom, int top, boolean ultrawarm, long seed) {
@@ -273,10 +272,29 @@ public final class FluidSim {
 					|| biome.matchesKey(BiomeKeys.SWAMP) || biome.matchesKey(BiomeKeys.MANGROVE_SWAMP);
 		}
 
+		/** Cambia lo que queda en un bloque (apuntando lo que tenía al empezar). */
+		private void set(long k, int value, Fluid fluid) {
+			if (!before.containsKey(k)) {
+				before.put(k, Math.max(0, amount(k, fluid)));
+			}
+			overlay.put(k, value);
+		}
+
 		private void move(List<Move> out, long from, long to, int n, Fluid fluid, boolean inf) {
-			out.add(new Move(from, to, n, fluid == Fluids.WATER, inf));
 			int t = Math.max(0, amount(to, fluid));
-			overlay.put(to, Math.min(FiniteFluids.FULL, t + n));
+			set(to, Math.min(FiniteFluids.FULL, t + n), fluid);
+		}
+
+		/** Los cambios netos del lote. */
+		void finish(List<Move> out, Fluid fluid) {
+			for (var e : before.long2IntEntrySet()) {
+				int after = overlay.get(e.getLongKey());
+				if (after != e.getIntValue()) {
+					out.add(new Move(e.getLongKey(), e.getIntValue(), after, fluid == Fluids.WATER));
+				}
+			}
+			before.clear();
+			overlay.clear();
 		}
 
 		/** Lo mismo que {@link FiniteFluids#tick}, para cada bloque del lote, apuntando los movimientos. */
@@ -337,9 +355,10 @@ public final class FluidSim {
 					}
 				}
 				if (!inf) {
-					overlay.put(k, a);
+					set(k, a, fluid);
 				}
 			}
+			finish(out, fluid);
 		}
 	}
 }
