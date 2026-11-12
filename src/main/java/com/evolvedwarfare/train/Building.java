@@ -448,8 +448,15 @@ public final class Building {
 		};
 	}
 
-	/** Los trozos de una pieza en ese sitio (open: si es una puerta, abierta). */
+	private static final java.util.Map<Integer, List<Part>> PARTS = new java.util.concurrent.ConcurrentHashMap<>();
+
+	/** Los trozos de una pieza en ese sitio (open: si es una puerta, abierta). Se calculan una vez y se guardan. */
 	public static List<Part> parts(Kind kind, int level, int a, int b, int rot, boolean open) {
+		int key = ((((kind.ordinal() * 4 + (level & 3)) * 16 + (a & 15)) * 16 + (b & 15)) * 4 + (rot & 3)) * 2 + (open ? 1 : 0);
+		return PARTS.computeIfAbsent(key, k -> List.copyOf(build(kind, level, a, b, rot, open)));
+	}
+
+	private static List<Part> build(Kind kind, int level, int a, int b, int rot, boolean open) {
 		List<Part> out = new ArrayList<>();
 		double y = floor(level), top = y + LEVEL, c = CELL;
 		switch (kind) {

@@ -58,6 +58,25 @@ public final class TrainRenderers {
 	private TrainRenderers() {
 	}
 
+	/** Para la precarga: las vías y las piezas de construcción, ya calculadas. */
+	public static void warm() {
+		TrackRenderer.warm();
+		for (Building.Kind k : Building.Kind.values()) {
+			for (int level = 0; level < Building.LEVELS; level++) {
+				for (int a = 0; a <= Building.NX; a++) {
+					for (int b = 0; b <= Building.NZ; b++) {
+						for (int rot = 0; rot < 4; rot++) {
+							Building.parts(k, level, a, b, rot, false);
+							if (k == Building.Kind.DOORWAY) {
+								Building.parts(k, level, a, b, rot, true);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	public static void register() {
 		TrainCarEntity.ClientAccess.set(() -> MinecraftClient.getInstance().player);
 		Trains.openBuildMenu = () -> MinecraftClient.getInstance().setScreen(new BuildScreen());

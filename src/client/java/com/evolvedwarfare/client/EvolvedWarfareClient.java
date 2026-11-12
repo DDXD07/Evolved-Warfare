@@ -34,6 +34,10 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		ModModelLayers.init();
 		com.evolvedwarfare.client.backpack.BackpackClient.register();
 		com.evolvedwarfare.client.train.TrainRenderers.register();
+		// la precarga, en otro hilo mientras el juego abre: las clases del mod, los modelos, las vías y las piezas
+		com.evolvedwarfare.perf.Preload.also(com.evolvedwarfare.client.hell.BossModel::warmAll);
+		com.evolvedwarfare.perf.Preload.also(com.evolvedwarfare.client.train.TrainRenderers::warm);
+		com.evolvedwarfare.perf.Preload.start();
 		com.evolvedwarfare.client.atlas.AtlasClient.register();
 		com.evolvedwarfare.client.hunting.HuntingRenderers.register();
 		net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.registerGlobalReceiver(

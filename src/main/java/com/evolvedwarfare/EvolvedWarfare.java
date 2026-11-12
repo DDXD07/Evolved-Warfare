@@ -59,6 +59,10 @@ public class EvolvedWarfare implements ModInitializer {
 		com.evolvedwarfare.backpack.Backpacks.register();
 		com.evolvedwarfare.train.Trains.register();
 		com.evolvedwarfare.atlas.Atlas.register();
+		if (net.fabricmc.loader.api.FabricLoader.getInstance().getEnvironmentType() == net.fabricmc.api.EnvType.SERVER) {
+			// en el cliente la arranca el cliente (cuando ya ha dicho qué más calentar)
+			com.evolvedwarfare.perf.Preload.start();
+		}
 		com.evolvedwarfare.hunting.Hunting.register();
 		com.evolvedwarfare.inventory.StackLimit.register();
 		com.evolvedwarfare.ores.Ores.register();

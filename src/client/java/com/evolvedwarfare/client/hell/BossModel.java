@@ -57,6 +57,29 @@ public class BossModel<T extends MobEntity> extends SinglePartEntityModel<T> {
 
 	private static final Map<String, JsonObject> CACHE = new HashMap<>();
 
+	/** Para la precarga: lee todos los modelos del mod (los JSON de assets/evolvedwarfare/hell). */
+	public static void warmAll() {
+		net.fabricmc.loader.api.FabricLoader.getInstance().getModContainer(EvolvedWarfare.MOD_ID).ifPresent(c -> {
+			for (java.nio.file.Path root : c.getRootPaths()) {
+				java.nio.file.Path dir = root.resolve("assets/" + EvolvedWarfare.MOD_ID + "/hell");
+				if (!java.nio.file.Files.isDirectory(dir)) {
+					continue;
+				}
+				try (var files = java.nio.file.Files.list(dir)) {
+					files.map(p -> p.getFileName().toString()).filter(n -> n.endsWith(".json")).forEach(n -> {
+						try {
+							load(n.substring(0, n.length() - 5));
+						} catch (RuntimeException ignored) {
+							// uno roto: se verá al usarlo
+						}
+					});
+				} catch (java.io.IOException ignored) {
+					// sin precarga de modelos
+				}
+			}
+		});
+	}
+
 	static synchronized JsonObject load(String id) {
 		return CACHE.computeIfAbsent(id, k -> {
 			String path = "/assets/" + EvolvedWarfare.MOD_ID + "/hell/" + k + ".json";

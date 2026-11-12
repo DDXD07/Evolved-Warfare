@@ -28,7 +28,9 @@ final class TrackRenderer implements BlockEntityRenderer<TrackBlock.TrackBlockEn
 
 	static final String[] TEX = {"block/gravel", "block/dark_oak_planks", "block/iron_block", "block/lime_concrete", "block/red_concrete",
 			"block/stripped_dark_oak_log"};
-	private static final Map<String, List<Elem>> CACHE = new HashMap<>();
+	private static final Map<String, List<Elem>> CACHE = new java.util.concurrent.ConcurrentHashMap<>();
+	/** Los trozos ya girados y colocados: sus caras (4 puntos, la normal y la textura), para no calcularlo en cada fotograma. */
+	private static final Map<String, float[][]> BAKED = new java.util.concurrent.ConcurrentHashMap<>();
 
 	@Override
 	public void render(TrackBlock.TrackBlockEntity be, float tickDelta, MatrixStack matrices, VertexConsumerProvider consumers, int light, int overlay) {
@@ -48,20 +50,80 @@ final class TrackRenderer implements BlockEntityRenderer<TrackBlock.TrackBlockEn
 	static void draw(MatrixStack matrices, VertexConsumer vc, Track.Piece p, int light, int tint) {
 		matrices.push();
 		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-p.facing().asRotation()));
-		for (Elem e : elems(p.shape(), p.left())) {
-			int color = tint != -1 ? tint : e.color();
-			int tex = e.tex();
+		MatrixStack.Entry entry = matrices.peek();
+		net.minecraft.client.texture.Sprite[] sprites = new net.minecraft.client.texture.Sprite[TEX.length];
+		for (int i = 0; i < TEX.length; i++) {
+			sprites[i] = Cubes.sprite(TEX[i]);
+		}
+		for (float[] q : baked(p.shape(), p.left())) {
+			int tex = (int) q[16];
 			if (tex == 3 && p.thrown()) {
 				tex = 4;
 			}
-			matrices.push();
-			matrices.translate(e.x(), e.y(), e.z());
-			matrices.multiply(RotationAxis.POSITIVE_Y.rotation(e.yaw()));
-			matrices.multiply(RotationAxis.POSITIVE_X.rotation(e.pitch()));
-			Cubes.box(matrices.peek(), vc, -e.hx(), -e.hy(), -e.hz(), e.hx(), e.hy(), e.hz(), Cubes.sprite(TEX[tex]), color, light);
-			matrices.pop();
+			int color = tint != -1 ? tint : (int) q[15] << 16 | (int) q[17];
+			net.minecraft.client.texture.Sprite s = sprites[tex];
+			for (int v = 0; v < 4; v++) {
+				vc.vertex(entry, q[v * 3], q[v * 3 + 1], q[v * 3 + 2]).color(color).texture(s.getFrameU(q[18 + v * 2]), s.getFrameV(q[19 + v * 2]))
+						.overlay(net.minecraft.client.render.OverlayTexture.DEFAULT_UV).light(light).normal(entry, q[12], q[13], q[14]);
+			}
 		}
 		matrices.pop();
+	}
+
+	/** Las caras de un trozo, ya giradas (una vez por forma). Cada una: 4 x (x, y, z), la normal, (relleno), textura, color y 4 x (u, v). */
+	static List<float[]> baked(Track.Shape shape, boolean left) {
+		return java.util.Arrays.asList(BAKED.computeIfAbsent(shape + "/" + left, k -> bake(elems(shape, left))));
+	}
+
+	private static float[][] bake(List<Elem> elems) {
+		List<float[]> out = new java.util.ArrayList<>();
+		for (Elem e : elems) {
+			org.joml.Matrix4f m = new org.joml.Matrix4f().translate(e.x(), e.y(), e.z()).rotateY(e.yaw()).rotateX(e.pitch());
+			org.joml.Matrix3f n = new org.joml.Matrix3f().rotateY(e.yaw()).rotateX(e.pitch());
+			float x0 = -e.hx(), y0 = -e.hy(), z0 = -e.hz(), x1 = e.hx(), y1 = e.hy(), z1 = e.hz();
+			float[][][] faces = {
+					{{x0, y0, z0}, {x1, y0, z0}, {x1, y0, z1}, {x0, y0, z1}, {0, -1, 0}},
+					{{x0, y1, z0}, {x0, y1, z1}, {x1, y1, z1}, {x1, y1, z0}, {0, 1, 0}},
+					{{x0, y0, z0}, {x0, y1, z0}, {x1, y1, z0}, {x1, y0, z0}, {0, 0, -1}},
+					{{x0, y0, z1}, {x1, y0, z1}, {x1, y1, z1}, {x0, y1, z1}, {0, 0, 1}},
+					{{x0, y0, z0}, {x0, y0, z1}, {x0, y1, z1}, {x0, y1, z0}, {-1, 0, 0}},
+					{{x1, y0, z0}, {x1, y1, z0}, {x1, y1, z1}, {x1, y0, z1}, {1, 0, 0}}};
+			for (float[][] f : faces) {
+				float[] q = new float[26];
+				for (int v = 0; v < 4; v++) {
+					org.joml.Vector3f p = m.transformPosition(new org.joml.Vector3f(f[v][0], f[v][1], f[v][2]));
+					q[v * 3] = p.x;
+					q[v * 3 + 1] = p.y;
+					q[v * 3 + 2] = p.z;
+				}
+				org.joml.Vector3f nn = n.transform(new org.joml.Vector3f(f[4][0], f[4][1], f[4][2]));
+				q[12] = nn.x;
+				q[13] = nn.y;
+				q[14] = nn.z;
+				q[16] = e.tex();
+				q[15] = e.color() >>> 16;
+				q[17] = e.color() & 0xFFFF;
+				// la textura: cada cara toma el cuadro de la textura según su tamaño (como mucho uno entero)
+				float du = Math.min(1.0F, (float) Math.sqrt(sq(q[3] - q[0]) + sq(q[4] - q[1]) + sq(q[5] - q[2])));
+				float dv = Math.min(1.0F, (float) Math.sqrt(sq(q[9] - q[0]) + sq(q[10] - q[1]) + sq(q[11] - q[2])));
+				float[] uv = {0, 1, du, 1, du, 1 - dv, 0, 1 - dv};
+				System.arraycopy(uv, 0, q, 18, 8);
+				out.add(q);
+			}
+		}
+		return out.toArray(new float[0][]);
+	}
+
+	private static float sq(float v) {
+		return v * v;
+	}
+
+	/** Para la precarga: deja hechas todas las formas. */
+	static void warm() {
+		for (Track.Shape shape : Track.Shape.values()) {
+			baked(shape, false);
+			baked(shape, true);
+		}
 	}
 
 	static List<Elem> elems(Track.Shape shape, boolean left) {

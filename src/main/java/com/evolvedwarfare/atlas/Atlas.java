@@ -80,6 +80,12 @@ public final class Atlas {
 	private static final LongLinkedOpenHashSet SCAN = new LongLinkedOpenHashSet();
 	private static final Map<UUID, LongArrayFIFOQueue> SEND = new HashMap<>();
 	private static final Set<UUID> VIEWERS = new HashSet<>();
+	private record Scanned(long key, byte[] image) {
+	}
+
+	private static final java.util.concurrent.ConcurrentLinkedQueue<Scanned> DONE = new java.util.concurrent.ConcurrentLinkedQueue<>();
+	private static final java.util.concurrent.atomic.AtomicInteger IN_FLIGHT = new java.util.concurrent.atomic.AtomicInteger();
+	private static final int MAX_IN_FLIGHT = 64;
 
 	private Atlas() {
 	}
@@ -335,15 +341,36 @@ public final class Atlas {
 				}
 			}
 		}
-		for (int i = 0; i < SCANS_PER_TICK && !SCAN.isEmpty(); i++) {
+		// los chunks se dibujan en los hilos del mod; aquí solo se reparten y se recogen
+		for (int i = 0; i < SCANS_PER_TICK && !SCAN.isEmpty() && IN_FLIGHT.get() < MAX_IN_FLIGHT; i++) {
 			long k = SCAN.removeFirstLong();
 			WorldChunk chunk = world.getChunkManager().getWorldChunk(ChunkPos.getPackedX(k), ChunkPos.getPackedZ(k));
 			if (chunk == null) {
 				continue;
 			}
-			byte[] img = scan(world, chunk);
-			byte[] old = state.images.get(k);
 			discover(world, state, chunk);
+			WorldChunk north = world.getChunkManager().getWorldChunk(chunk.getPos().x, chunk.getPos().z - 1);
+			int bottom = world.getBottomY();
+			IN_FLIGHT.incrementAndGet();
+			com.evolvedwarfare.perf.EwWorkers.POOL.execute(() -> {
+				try {
+					DONE.add(new Scanned(k, scan(bottom, chunk, north)));
+				} catch (Throwable e) {
+					// leído mientras cambiaba: se vuelve a intentar
+					DONE.add(new Scanned(k, null));
+				} finally {
+					IN_FLIGHT.decrementAndGet();
+				}
+			});
+		}
+		for (Scanned done; (done = DONE.poll()) != null; ) {
+			long k = done.key();
+			byte[] img = done.image();
+			if (img == null) {
+				SCAN.add(k);
+				continue;
+			}
+			byte[] old = state.images.get(k);
 			if (old == null || !Arrays.equals(old, img)) {
 				state.images.put(k, img);
 				state.markDirty();
@@ -419,11 +446,14 @@ public final class Atlas {
 	 * más oscura cuanto más honda, con rayas.
 	 */
 	public static byte[] scan(ServerWorld world, WorldChunk chunk) {
+		return scan(world.getBottomY(), chunk, world.getChunkManager().getWorldChunk(chunk.getPos().x, chunk.getPos().z - 1));
+	}
+
+	/** Lo mismo, sin tocar el mundo (solo los dos chunks): se puede hacer en otro hilo. */
+	public static byte[] scan(int bottom, WorldChunk chunk, @Nullable WorldChunk north) {
 		byte[] out = new byte[256];
 		ChunkPos cp = chunk.getPos();
-		WorldChunk north = world.getChunkManager().getWorldChunk(cp.x, cp.z - 1);
 		BlockPos.Mutable p = new BlockPos.Mutable();
-		int bottom = world.getBottomY();
 		int[] heights = new int[256];
 		for (int lz = 0; lz < 16; lz++) {
 			for (int lx = 0; lx < 16; lx++) {

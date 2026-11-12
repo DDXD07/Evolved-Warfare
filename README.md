@@ -2043,6 +2043,13 @@ El tren grande de antes (con plataformas para construir encima) se cambia por un
 - Dentro de la empalizada de las aldeas vanilla el terreno se aplana a medias: se acerca a la altura media de la aldea, pero queda un 30 % del desnivel que había (como mucho 4 bloques arriba o abajo) y ondulaciones suaves de un bloque, para que no quede perfecto; en los 8 bloques de fuera se vuelve poco a poco al terreno de verdad. Se recortan las lomas y se rellenan los hoyos con lo que corresponde (hierba sobre tierra, arena sobre arenisca...). No se toca el agua.
 - Las casas se suben o bajan a la altura del suelo nuevo antes de generarse el terreno (así Minecraft les ajusta el suelo alrededor como siempre), y las calles, que siguen el suelo, van ya sobre el aplanado. La plaza del mercado, la taberna, el granero, las atalayas y las decoraciones también buscan sitio sobre él.
 
+## Fase 55 — Más fluido: precarga e hilos propios
+
+- **Precarga al abrir el juego**: mientras Minecraft carga, un hilo aparte (`ew-preload`) carga todas las clases del mod, lee todos sus modelos 3D y deja calculadas las vías y las piezas de construcción, para que la primera vez que sale algo (un comerciante, un tren, el Atlas...) no haya tirón. En el registro sale cuánto ha tardado.
+- **Hilos de trabajo del mod** (`ew-worker`, de baja prioridad: como mucho la mitad de los núcleos y siempre dejando uno libre): el dibujo de los chunks del Atlas ya no va en el hilo del servidor; el servidor solo los reparte y recoge el resultado.
+- **Dibujo más ligero**: las vías grandes se dibujan con su geometría ya calculada (antes se giraba cada traviesa y cada raíl en cada fotograma) y las piezas de construcción se calculan una vez y se guardan (también para chocar con ellas y apuntarlas).
+- Lo que no puede ir en otro hilo (mover entidades, poner bloques, la física) se queda en el principal: Minecraft no lo permite. La generación de ciudades, aldeas y su terreno ya iba en los hilos de generación del mundo.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
