@@ -23,11 +23,16 @@ public class FluidUnits extends PersistentState {
 	}
 
 	/** Lo guardado, o 0. */
-	public int get(BlockPos pos) {
+	public synchronized int get(BlockPos pos) {
 		return units.get(pos.asLong());
 	}
 
-	public void set(BlockPos pos, int amount) {
+	/** Lo mismo, desde otro hilo (por la posición empaquetada). */
+	public synchronized int getSafe(long key) {
+		return units.get(key);
+	}
+
+	public synchronized void set(BlockPos pos, int amount) {
 		long key = pos.asLong();
 		if (amount <= 0 || amount >= FiniteFluids.FULL) {
 			if (units.remove(key) != 0) {
@@ -49,7 +54,7 @@ public class FluidUnits extends PersistentState {
 	}
 
 	@Override
-	public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
+	public synchronized NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
 		long[] keys = new long[units.size()];
 		byte[] values = new byte[units.size()];
 		int i = 0;

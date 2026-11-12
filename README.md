@@ -2050,6 +2050,12 @@ El tren grande de antes (con plataformas para construir encima) se cambia por un
 - **Dibujo más ligero**: las vías grandes se dibujan con su geometría ya calculada (antes se giraba cada traviesa y cada raíl en cada fotograma) y las piezas de construcción se calculan una vez y se guardan (también para chocar con ellas y apuntarlas).
 - Lo que no puede ir en otro hilo (mover entidades, poner bloques, la física) se queda en el principal: Minecraft no lo permite. La generación de ciudades, aldeas y su terreno ya iba en los hilos de generación del mundo.
 
+## Fase 55.1 — El agua, en los hilos del mod
+
+- El movimiento del agua y la lava finitas ya no se calcula en el hilo del servidor: cada bloque que tiene que moverse se apunta y, cada tic, un lote (hasta 4000) va a un hilo de trabajo, que lee los bloques de alrededor (con los chunks que le pasa el servidor) y decide cuánto cae y cuánto se reparte; en el tic siguiente el servidor solo aplica esos movimientos (hasta 6000 por tic).
+- Al aplicarlos se vuelve a mirar lo que hay: si algo ha cambiado mientras tanto (un cubo, un bloque puesto), se mueve lo que se pueda, y el líquido sigue sin crearse ni perderse.
+- Se puede volver al cálculo de antes con la opción **Agua en otro hilo** de la configuración (en Clima).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

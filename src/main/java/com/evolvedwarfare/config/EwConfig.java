@@ -88,6 +88,8 @@ public final class EwConfig {
 	public boolean showBodyTemperature = true;
 	/** Agua y lava realistas: no se crean ni se destruyen (solo el mar, los ríos y los pantanos son infinitos). */
 	public boolean realisticFluids = true;
+	/** El agua y la lava finitas se calculan en los hilos del mod (si no, en el del servidor, como antes). */
+	public boolean asyncFluids = true;
 	/** Los troncos solo se talan con hacha (no con la mano). */
 	public boolean axeForLogs = true;
 	/** Al talar uno de los dos primeros troncos de un árbol, cae entero (agachado, solo ese tronco). */
@@ -228,6 +230,7 @@ public final class EwConfig {
 			new Option("showBodyTemperature", "climate", 0, 1, 1),
 			new Option("thirstEnabled", "climate", 0, 1, 1),
 			new Option("realisticFluids", "climate", 0, 1, 1),
+			new Option("asyncFluids", "climate", 0, 1, 1),
 			new Option("axeForLogs", "climate", 0, 1, 1),
 			new Option("treeFelling", "climate", 0, 1, 1),
 			new Option("fireRain", "climate", 0, 1, 1),

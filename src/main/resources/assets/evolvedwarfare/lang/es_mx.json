@@ -2223,5 +2223,7 @@
   "message.evolvedwarfare.villager.working": "%s trabaja de %s: no tiene tienda",
   "message.evolvedwarfare.villager.idle": "%s no tiene oficio ni tienda",
   "gui.evolvedwarfare.villager.shop": "%s · %s",
-  "gui.evolvedwarfare.trader.village": "Aldea nv. %s · %s%%"
+  "gui.evolvedwarfare.trader.village": "Aldea nv. %s · %s%%",
+  "config.evolvedwarfare.asyncFluids": "Agua en otro hilo",
+  "config.evolvedwarfare.asyncFluids.tip": "El movimiento del agua y la lava finitas se calcula en los hilos del mod (menos lag). Desactívalo si notas algo raro con el agua."
 }

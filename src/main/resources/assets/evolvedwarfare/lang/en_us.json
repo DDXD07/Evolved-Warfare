@@ -2223,5 +2223,7 @@
   "message.evolvedwarfare.villager.working": "%s works as a %s: no shop",
   "message.evolvedwarfare.villager.idle": "%s has no job and no shop",
   "gui.evolvedwarfare.villager.shop": "%s · %s",
-  "gui.evolvedwarfare.trader.village": "Village lv. %s · %s%%"
+  "gui.evolvedwarfare.trader.village": "Village lv. %s · %s%%",
+  "config.evolvedwarfare.asyncFluids": "Fluids on worker threads",
+  "config.evolvedwarfare.asyncFluids.tip": "Finite water and lava movement is computed on the mod's worker threads (less lag). Turn it off if water behaves oddly."
 }

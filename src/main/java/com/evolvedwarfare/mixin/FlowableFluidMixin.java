@@ -18,7 +18,10 @@ public abstract class FlowableFluidMixin {
 		if (world.isClient || !FiniteFluids.enabled() || !FiniteFluids.handles(state.getFluid())) {
 			return;
 		}
-		if (FiniteFluids.withinBudget(world, pos, state.getFluid())) {
+		if (world instanceof net.minecraft.server.world.ServerWorld sw && com.evolvedwarfare.fluid.FluidSim.async()) {
+			// se calcula en un hilo de trabajo y se aplica en el tic siguiente
+			com.evolvedwarfare.fluid.FluidSim.queue(sw, pos, state.getFluid());
+		} else if (FiniteFluids.withinBudget(world, pos, state.getFluid())) {
 			FiniteFluids.tick(world, pos, state.getFluid());
 		}
 		ci.cancel();
