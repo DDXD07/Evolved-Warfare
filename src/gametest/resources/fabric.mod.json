@@ -20,6 +20,7 @@
 			"com.evolvedwarfare.gametest.CatalogGameTests",
 			"com.evolvedwarfare.gametest.GuideGameTests",
 			"com.evolvedwarfare.gametest.CartGameTests",
+			"com.evolvedwarfare.gametest.TownGameTests",
 			"com.evolvedwarfare.gametest.HeavyAttackGameTests",
 			"com.evolvedwarfare.gametest.HordeGameTests",
 			"com.evolvedwarfare.gametest.FactionArmorGameTests",

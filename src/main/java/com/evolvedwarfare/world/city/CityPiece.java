@@ -322,6 +322,31 @@ public class CityPiece extends StructurePiece {
 				spawn(world, guard, at, g.yaw());
 			}
 		}
+		// un NPC por cama (fase 58): los vecinos en sus casas (los de la misma casa son familia) y los guardias en el cuartel
+		int index = 0;
+		for (CityPlan.Bed b : plan.beds()) {
+			index++;
+			BlockPos head = new BlockPos(ox + b.x(), oy + b.y(), oz + b.z());
+			if (!chunkBox.contains(head)) {
+				continue;
+			}
+			float yaw = world.getRandom().nextFloat() * 360.0F;
+			if ("barracks".equals(b.role())) {
+				CityGuardEntity guard = ModEntities.CITY_GUARD.create(world.toServerWorld());
+				if (guard != null) {
+					guard.presetRole(index % 3 == 0 ? NpcRole.CROSSBOWMAN : index % 3 == 1 ? NpcRole.WARRIOR : NpcRole.ARCHER);
+					guard.setCity(key, center, radius, style);
+					settle(guard, head, key, 0L);
+					spawn(world, guard, head.up(), yaw);
+				}
+			} else {
+				com.evolvedwarfare.entity.RecruitEntity resident = ModEntities.RECRUIT.create(world.toServerWorld());
+				if (resident != null) {
+					settle(resident, head, key, key * 31L + b.household());
+					spawn(world, resident, head.up(), yaw);
+				}
+			}
+		}
 		for (CityPlan.Resident r : plan.residents()) {
 			BlockPos at = new BlockPos(ox + r.x(), oy + r.y(), oz + r.z());
 			if (chunkBox.contains(at)) {
@@ -331,6 +356,15 @@ public class CityPiece extends StructurePiece {
 				}
 			}
 		}
+	}
+
+	/** Su cama, su ciudad y su casa. */
+	private static void settle(com.evolvedwarfare.entity.AbstractNpcEntity npc, BlockPos bed, long city, long household) {
+		com.evolvedwarfare.town.NpcProfile p = npc.ewProfile();
+		p.bed = bed;
+		p.bedSearched = true;
+		p.community = city;
+		p.household = household;
 	}
 
 	private static void spawn(StructureWorldAccess world, MobEntity mob, BlockPos at, float yaw) {

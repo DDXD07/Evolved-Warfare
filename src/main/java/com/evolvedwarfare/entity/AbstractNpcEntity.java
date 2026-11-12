@@ -65,7 +65,7 @@ import org.jetbrains.annotations.Nullable;
  *       los días sin cobrar que diga la configuración (3), deserta.</li>
  * </ul>
  */
-public abstract class AbstractNpcEntity extends PathAwareEntity {
+public abstract class AbstractNpcEntity extends PathAwareEntity implements com.evolvedwarfare.town.Townsfolk {
 	public static final int UPKEEP_INTERVAL = 24000;
 	public static int maxUnpaidDays() {
 		return Math.max(1, EwConfig.get().maxUnpaidDays);
@@ -76,6 +76,12 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 
 	private static final TrackedData<Integer> VARIANT =
 			DataTracker.registerData(AbstractNpcEntity.class, TrackedDataHandlerRegistry.INTEGER);
+	/** Oficio y carácter (ver {@link com.evolvedwarfare.town.NpcProfile#packed}), para el cliente. */
+	private static final TrackedData<Integer> PROFILE =
+			DataTracker.registerData(AbstractNpcEntity.class, TrackedDataHandlerRegistry.INTEGER);
+
+	/** Quién es en su pueblo: oficio, carácter, cama, amistades. */
+	private final com.evolvedwarfare.town.NpcProfile profile = new com.evolvedwarfare.town.NpcProfile();
 
 	@Nullable
 	private UUID ownerUuid;
@@ -108,6 +114,38 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 	protected void initDataTracker(DataTracker.Builder builder) {
 		super.initDataTracker(builder);
 		builder.add(VARIANT, 0);
+		builder.add(PROFILE, 0);
+	}
+
+	// ------------------------------------------------------------------ su vida en el pueblo
+
+	@Override
+	public com.evolvedwarfare.town.NpcProfile ewProfile() {
+		return profile;
+	}
+
+	@Override
+	public void ewProfileChanged() {
+		if (!getWorld().isClient) {
+			getDataTracker().set(PROFILE, profile.packed(getVariant() >= NpcNames.FIRST_FEMALE_VARIANT));
+		}
+	}
+
+	@Override
+	public int ewProfileBits() {
+		return getDataTracker().get(PROFILE);
+	}
+
+	@Override
+	public boolean ewHired() {
+		return ownerUuid != null;
+	}
+
+	/** El oficio con el que nace (null: uno de vecino al azar). Los guardias lo cambian. */
+	@Override
+	@Nullable
+	public com.evolvedwarfare.town.NpcJob ewBirthJob() {
+		return null;
 	}
 
 	/** Con lanza o alabarda llega más lejos (fase 8). */
@@ -150,6 +188,7 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 		EntityData data = super.initialize(world, difficulty, spawnReason, entityData);
 		setLeftHanded(false);
 		initAppearance(world.getRandom());
+		com.evolvedwarfare.town.Town.roll(this, world.getRandom(), ewBirthJob());
 		if (ownerUuid == null) {
 			home = getBlockPos();
 			order = NpcOrder.HOME;
@@ -163,6 +202,7 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 
 	public void setVariant(int variant) {
 		getDataTracker().set(VARIANT, variant);
+		ewProfileChanged();
 	}
 
 	// ------------------------------------------------------------------ dueño y órdenes
@@ -251,6 +291,8 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 			provisions.setStack(i, ItemStack.EMPTY);
 		}
 		other.setVariant(getVariant());
+		other.profile.copyFrom(profile);
+		other.ewProfileChanged();
 	}
 
 	// ------------------------------------------------------------------ paga
@@ -298,6 +340,9 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 			// Solo cobra cuando sirve a alguien.
 			if (ownerUuid != null) {
 				tickUpkeep();
+			}
+			if (getWorld() instanceof ServerWorld sw) {
+				com.evolvedwarfare.town.Town.tick(this, sw);
 			}
 			// Bien pagado, se cura poco a poco.
 			if (unpaidDays == 0 && age % 100 == 0 && getHealth() < getMaxHealth()) {
@@ -375,9 +420,10 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 		if (isForHire()) {
 			if (!world.isClient) {
 				if (held.getItem() instanceof RecruitmentContractItem) {
-					hire(player, held);
+					held.decrementUnlessCreative(1, player);
+				signContract(player);
 				} else {
-					player.sendMessage(Text.translatable("message.evolvedwarfare.for_hire", getName()), true);
+					player.sendMessage(Text.translatable("message.evolvedwarfare.for_hire", getName(), com.evolvedwarfare.town.NpcProfile.describe(ewProfileBits())), true);
 				}
 			}
 			return ActionResult.success(world.isClient);
@@ -410,14 +456,17 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 		return ActionResult.success(world.isClient);
 	}
 
-	/** Firma el contrato: pasa a servir al jugador y lo sigue. */
-	private void hire(PlayerEntity player, ItemStack contract) {
+	/** Firma el contrato (ya cobrado): pasa a servir al jugador y lo sigue. Deja su cama del pueblo. */
+	public void signContract(PlayerEntity player) {
 		ownerUuid = player.getUuid();
 		home = null;
 		unpaidDays = 0;
 		upkeepTimer = UPKEEP_INTERVAL;
+		profile.bed = null;
+		profile.workplace = null;
+		profile.bedSearched = true;
+		ewProfileChanged();
 		setOrder(NpcOrder.FOLLOW);
-		contract.decrementUnlessCreative(1, player);
 		playSound(ModSounds.RECRUIT_YES, 1.0F, getSoundPitch());
 		if (getWorld() instanceof ServerWorld serverWorld) {
 			serverWorld.spawnParticles(ParticleTypes.HAPPY_VILLAGER, getX(), getBodyY(0.8), getZ(), 10, 0.4, 0.5, 0.4, 0.0);
@@ -530,6 +579,7 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 		nbt.putInt("UpkeepTimer", upkeepTimer);
 		nbt.putInt("UnpaidDays", unpaidDays);
 		nbt.put("Provisions", provisions.toNbtList(getRegistryManager()));
+		nbt.put("Profile", profile.write());
 	}
 
 	@Override
@@ -543,5 +593,9 @@ public abstract class AbstractNpcEntity extends PathAwareEntity {
 		upkeepTimer = nbt.contains("UpkeepTimer") ? nbt.getInt("UpkeepTimer") : UPKEEP_INTERVAL;
 		unpaidDays = nbt.getInt("UnpaidDays");
 		provisions.readNbtList(nbt.getList("Provisions", 10), getRegistryManager());
+		if (nbt.contains("Profile")) {
+			profile.read(nbt.getCompound("Profile"));
+		}
+		ewProfileChanged();
 	}
 }

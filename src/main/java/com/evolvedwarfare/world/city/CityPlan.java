@@ -44,11 +44,19 @@ public final class CityPlan {
 	public record Resident(int x, int y, int z) {
 	}
 
+	/**
+	 * Una cama con su dueño (fase 58): la cabecera, de qué es ("house": un vecino; "barracks": un guardia; las de las
+	 * tiendas son de su mercader y no se apuntan) y su casa (los de la misma casa son familia).
+	 */
+	public record Bed(int x, int y, int z, String role, int household) {
+	}
+
 	private final Map<Long, Block> blocks = new HashMap<>();
 	private final List<Loot> loot = new ArrayList<>();
 	private final List<Trader> traders = new ArrayList<>();
 	private final List<Guard> guards = new ArrayList<>();
 	private final List<Resident> residents = new ArrayList<>();
+	private final List<Bed> beds = new ArrayList<>();
 	/** Medio ancho de la muralla (de la plaza al borde de fuera) en x y en z. */
 	public int halfX;
 	public int halfZ;
@@ -120,6 +128,14 @@ public final class CityPlan {
 
 	public List<Resident> residents() {
 		return residents;
+	}
+
+	public void bed(Bed bed) {
+		beds.add(bed);
+	}
+
+	public List<Bed> beds() {
+		return beds;
 	}
 
 	/** ¿Está dentro de la muralla (o en ella)? Ahí se limpia todo lo que no sea de la ciudad. */

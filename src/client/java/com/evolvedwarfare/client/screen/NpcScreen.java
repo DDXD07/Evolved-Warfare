@@ -85,6 +85,11 @@ public class NpcScreen extends HandledScreen<NpcScreenHandler> {
 	public void render(DrawContext context, int mouseX, int mouseY, float delta) {
 		super.render(context, mouseX, mouseY, delta);
 		drawMouseoverTooltip(context, mouseX, mouseY);
+		// encima del retrato: su oficio de antes y su carácter
+		AbstractNpcEntity npc = handler.getNpc();
+		if (npc != null && mouseX >= x + 26 && mouseX < x + 76 && mouseY >= y + 17 && mouseY < y + 89) {
+			context.drawTooltip(textRenderer, com.evolvedwarfare.town.NpcProfile.describe(npc.ewProfileBits()), mouseX, mouseY);
+		}
 	}
 
 	@Override

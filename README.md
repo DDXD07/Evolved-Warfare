@@ -2085,6 +2085,21 @@ El tren grande de antes (con plataformas para construir encima) se cambia por un
 - Las carretas de antes **se convierten solas**: lo que llevaban en sus 9 huecos pasa a bloques en las tres filas del centro, con lo que tenían dentro.
 - La rejilla de vóxeles es común (`voxel/`) para pasar luego el tren al mismo sistema.
 
+## Fase 58 — La gente de los pueblos: una persona por cama, todos contratables
+
+Primera parte de la vida de los NPCs (luego vendrán su rutina diaria, las charlas entre ellos y hablar con ellos).
+
+- **Una persona por cama** en las ciudades amuralladas: cada cama de las casas tiene su vecino (los que comparten casa son **familia**) y cada cama del cuartel su guardia (además de los que vigilan las puertas, las torres y la plaza). Las camas de las tiendas son de su mercader. Ya no hay vecinos sueltos en la puerta de algunas casas. (Solo en las ciudades que se generen a partir de ahora.)
+- **Cada NPC es alguien**: tiene un **oficio** (campesino, panadero, herrero, carpintero, leñador, minero, cazador, pescador, pastor, sastre, cantero, tabernero, peón; los mercaderes y los guardias, el suyo) y un **carácter** (alegre, gruñón, miedoso, valiente, perezoso, amable o curioso). Se ve al hablar con él antes de contratarlo y, ya contratado, pasando el ratón por su retrato en su menú.
+- **Se conocen**: al poco de aparecer, cada uno conoce a los de su pueblo: a su familia la quiere mucho y con los demás se lleva mejor o peor según los caracteres (los gruñones caen mal salvo a los amables; los del mismo oficio se entienden). Se guarda y servirá para sus charlas.
+- **Su cama**: los de los campamentos, las torres y los que no tienen buscan una cama libre cerca (que no sea de otro NPC ni de un aldeano). Si un NPC muere, su cama queda libre.
+- **Todos se pueden contratar** con el Contrato de reclutamiento (clic derecho con él en la mano):
+  - **Vecinos y reclutas**: con el contrato, como siempre.
+  - **Guardias de la ciudad**: contrato y **15 Glory Coins** (ya saben luchar): pasan a ser tus soldados, con su clase, su equipo y su nombre. No si la ciudad te guarda rencor.
+  - **Mercaderes**: contrato y **25 Glory Coins**: cierran la tienda y se van contigo como reclutas (luego les das un arma o un puesto de trabajo).
+  - **Aldeanos** de las aldeas: con el contrato dejan la aldea y se van contigo como reclutas, con su oficio (el granjero, campesino; el herrero, herrero...).
+  - Al contratarlos dejan su cama del pueblo, pero se llevan su oficio, su carácter y sus amistades.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

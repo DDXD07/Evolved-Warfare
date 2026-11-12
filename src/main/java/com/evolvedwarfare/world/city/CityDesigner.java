@@ -931,7 +931,12 @@ public final class CityDesigner {
 			set(x, 2, z, door + "[facing=" + f.inward() + ",half=upper,hinge=left,open=false]");
 		}
 
+		/** De quién son las camas que se ponen ahora ("house", "barracks" o null si no se apuntan) y de qué casa. */
+		String bedRole;
+		int household;
+
 		void bed(Frame f, int footU, int footV, int headU, int headV, int y, String color) {
+
 			Dir dir;
 			if (headV > footV) {
 				dir = f.out.opposite();
@@ -944,6 +949,9 @@ public final class CityDesigner {
 			}
 			set(f.x(footU, footV), y, f.z(footU, footV), color + "_bed[facing=" + dir.id() + ",part=foot]");
 			set(f.x(headU, headV), y, f.z(headU, headV), color + "_bed[facing=" + dir.id() + ",part=head]");
+			if (bedRole != null) {
+				plan.bed(new CityPlan.Bed(f.x(headU, headV), y, f.z(headU, headV), bedRole, household));
+			}
 		}
 
 		void torch(Frame f, int u, int v, int y, String facing) {
@@ -1037,6 +1045,8 @@ public final class CityDesigner {
 				return;
 			}
 			Frame f = new Frame(lot.rect, lot.facing);
+			bedRole = "house";
+			household++;
 			int floors = (bw >= 6 && bd >= 6 && rnd.nextInt(100) < 50) ? 2 : 1;
 			String lower = pick(p.lowerWall);
 			String upper = floors > 1 ? pick(p.upperWall) : lower;
@@ -1069,9 +1079,8 @@ public final class CityDesigner {
 				torch(f, 1, bd - 2, 6, f.right());
 			}
 			roof(f, bw, bd, floors * 4 + 1);
-			if (rnd.nextInt(100) < 45) {
-				plan.resident(f.x(doorU, 2), 1, f.z(doorU, 2));
-			}
+			bedRole = null;
+			// los vecinos salen de sus camas (uno por cama, fase 58)
 		}
 
 		String lootTable() {
@@ -1220,9 +1229,12 @@ public final class CityDesigner {
 			int doorU = bw / 2;
 			door(f, doorU, pick(p.doors));
 			windows(f, bw, bd, 1, doorU);
+			bedRole = "barracks";
+			household++;
 			for (int u = 1; u + 1 <= bw - 2; u += 2) {
 				bed(f, u, bd - 3, u, bd - 2, 1, p.beds[0]);
 			}
+			bedRole = null;
 			set(f.x(1, 1), 1, f.z(1, 1), "chest[facing=" + f.right() + "]");
 			plan.loot(f.x(1, 1), 1, f.z(1, 1), "minecraft:chests/village/village_weaponsmith");
 			set(f.x(bw - 2, 1), 1, f.z(bw - 2, 1), "smithing_table");

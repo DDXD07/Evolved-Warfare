@@ -59,9 +59,12 @@ import org.jetbrains.annotations.Nullable;
  * lo que tiene depende del nivel de su ciudad ({@link CityLevels}). Repone sus existencias cada mañana.
  * Huye de los monstruos y de los asaltantes.
  */
-public class TraderEntity extends MerchantEntity implements com.evolvedwarfare.trade.Shop {
+public class TraderEntity extends MerchantEntity implements com.evolvedwarfare.trade.Shop, com.evolvedwarfare.town.Townsfolk {
 	private static final TrackedData<Integer> TYPE = DataTracker.registerData(TraderEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	private static final TrackedData<Integer> VARIANT = DataTracker.registerData(TraderEntity.class, TrackedDataHandlerRegistry.INTEGER);
+	private static final TrackedData<Integer> PROFILE = DataTracker.registerData(TraderEntity.class, TrackedDataHandlerRegistry.INTEGER);
+	/** Quién es en su pueblo (oficio: mercader). */
+	private final com.evolvedwarfare.town.NpcProfile profile = new com.evolvedwarfare.town.NpcProfile();
 	/** Hasta dónde se aleja de su puesto. */
 	private static final int HOME_RANGE = 8;
 
@@ -106,6 +109,29 @@ public class TraderEntity extends MerchantEntity implements com.evolvedwarfare.t
 		super.initDataTracker(builder);
 		builder.add(TYPE, 0);
 		builder.add(VARIANT, 0);
+		builder.add(PROFILE, 0);
+	}
+
+	@Override
+	public com.evolvedwarfare.town.NpcProfile ewProfile() {
+		return profile;
+	}
+
+	@Override
+	public void ewProfileChanged() {
+		if (!getWorld().isClient) {
+			getDataTracker().set(PROFILE, profile.packed(getVariant() >= NpcNames.FIRST_FEMALE_VARIANT));
+		}
+	}
+
+	@Override
+	public int ewProfileBits() {
+		return getDataTracker().get(PROFILE);
+	}
+
+	@Override
+	public boolean ewHired() {
+		return false;
 	}
 
 	@Override
@@ -179,6 +205,10 @@ public class TraderEntity extends MerchantEntity implements com.evolvedwarfare.t
 		this.bed = bed.toImmutable();
 		this.cityKey = cityKey;
 		this.home = this.counter;
+		profile.bed = this.bed;
+		profile.workplace = this.counter;
+		profile.community = cityKey;
+		profile.bedSearched = true;
 	}
 
 	public long getCityKey() {
@@ -269,6 +299,8 @@ public class TraderEntity extends MerchantEntity implements com.evolvedwarfare.t
 			prepare();
 			home = getBlockPos();
 		}
+		com.evolvedwarfare.town.Town.roll(this, random, com.evolvedwarfare.town.NpcJob.MERCHANT);
+		com.evolvedwarfare.town.Town.tick(this, world);
 		if (cityLevel <= 0) {
 			cityLevel = CityLevels.levelAt(world, home);
 		}
@@ -369,6 +401,13 @@ public class TraderEntity extends MerchantEntity implements com.evolvedwarfare.t
 		if (isSleeping()) {
 			if (!getWorld().isClient) {
 				player.sendMessage(Text.translatable("message.evolvedwarfare.trader.sleeping", getDisplayName()), true);
+			}
+			return ActionResult.success(getWorld().isClient);
+		}
+		if (stack.getItem() instanceof com.evolvedwarfare.item.RecruitmentContractItem) {
+			// con un contrato (y monedas) cierra la tienda y se va contigo
+			if (!getWorld().isClient) {
+				com.evolvedwarfare.town.Hiring.hireTrader(this, player, stack);
 			}
 			return ActionResult.success(getWorld().isClient);
 		}
@@ -588,6 +627,7 @@ public class TraderEntity extends MerchantEntity implements com.evolvedwarfare.t
 		nbt.putLong("CityKey", cityKey);
 		nbt.putBoolean("StairsChecked", stairsChecked);
 		nbt.putBoolean("CatalogChecked", catalogChecked);
+		nbt.put("Profile", profile.write());
 	}
 
 	@Override
@@ -623,5 +663,15 @@ public class TraderEntity extends MerchantEntity implements com.evolvedwarfare.t
 		cityKey = nbt.getLong("CityKey");
 		stairsChecked = nbt.getBoolean("StairsChecked");
 		catalogChecked = nbt.getBoolean("CatalogChecked");
+		if (nbt.contains("Profile")) {
+			profile.read(nbt.getCompound("Profile"));
+		} else if (bed != null) {
+			// los mercaderes de antes: su cama y su ciudad
+			profile.bed = bed;
+			profile.workplace = counter;
+			profile.community = cityKey;
+			profile.bedSearched = true;
+		}
+		ewProfileChanged();
 	}
 }

@@ -50,6 +50,7 @@ public class CityGuardEntity extends SoldierEntity {
 	/** De qué ciudad es (su clave, el centro de la plaza y el radio de la muralla) y su estilo. */
 	public void setCity(long key, BlockPos center, int radius, CityDesigner.Style cityStyle) {
 		this.cityKey = key;
+		ewProfile().community = key;
 		this.cityCenter = center;
 		this.cityRadius = radius;
 		this.style = cityStyle.ordinal();
@@ -74,14 +75,27 @@ public class CityGuardEntity extends SoldierEntity {
 		return data;
 	}
 
-	/** Nadie contrata a un guardia de la ciudad. */
+	/** No está libre como un recluta: es de la ciudad. Se le contrata pagando (ver {@link com.evolvedwarfare.town.Hiring#hireGuard}). */
 	@Override
 	public boolean isForHire() {
 		return false;
 	}
 
 	@Override
+	@Nullable
+	public com.evolvedwarfare.town.NpcJob ewBirthJob() {
+		return com.evolvedwarfare.town.NpcJob.GUARD;
+	}
+
+	@Override
 	protected ActionResult interactMob(PlayerEntity player, Hand hand) {
+		ItemStack held = player.getStackInHand(hand);
+		if (held.getItem() instanceof com.evolvedwarfare.item.RecruitmentContractItem) {
+			if (!getWorld().isClient) {
+				com.evolvedwarfare.town.Hiring.hireGuard(this, player, held);
+			}
+			return ActionResult.success(getWorld().isClient);
+		}
 		if (!getWorld().isClient) {
 			player.sendMessage(Text.translatable(CityLaw.wanted(getWorld(), cityKey, player) ? "message.evolvedwarfare.city_guard.angry"
 					: "message.evolvedwarfare.city_guard.hello"), true);

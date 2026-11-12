@@ -22,7 +22,12 @@ public final class NpcNames {
 	public static void randomize(AbstractNpcEntity npc, Random random) {
 		int variant = random.nextInt(VARIANTS);
 		npc.setVariant(variant);
+		npc.setCustomName(randomName(random, variant));
+	}
+
+	/** Un nombre al azar para ese aspecto (de hombre o de mujer). */
+	public static Text randomName(Random random, int variant) {
 		String[] names = variant >= FIRST_FEMALE_VARIANT ? FEMALE : MALE;
-		npc.setCustomName(Text.literal(names[random.nextInt(names.length)]));
+		return Text.literal(names[random.nextInt(names.length)]);
 	}
 }

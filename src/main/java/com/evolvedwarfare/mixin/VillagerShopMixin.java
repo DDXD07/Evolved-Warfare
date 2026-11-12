@@ -53,6 +53,14 @@ public abstract class VillagerShopMixin extends MerchantEntity implements Villag
 		if (stack.isOf(Items.VILLAGER_SPAWN_EGG) || stack.isOf(Items.NAME_TAG) || !self.isAlive() || self.isBaby() || self.hasCustomer()) {
 			return;
 		}
+		if (stack.getItem() instanceof com.evolvedwarfare.item.RecruitmentContractItem) {
+			// con un contrato deja la aldea y se va contigo (como recluta)
+			if (!self.getWorld().isClient) {
+				com.evolvedwarfare.town.Hiring.hireVillager(self, player, stack);
+			}
+			cir.setReturnValue(ActionResult.success(self.getWorld().isClient));
+			return;
+		}
 		if (self.isSleeping()) {
 			if (!self.getWorld().isClient) {
 				player.sendMessage(Text.translatable("message.evolvedwarfare.trader.sleeping", self.getDisplayName()), true);
