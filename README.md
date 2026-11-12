@@ -2062,6 +2062,10 @@ El tren grande de antes (con plataformas para construir encima) se cambia por un
 - Se ponen con el bloque en la mano apuntando a la plataforma, con vista previa verde o roja, en una rejilla de 3 x 6 bloques por planta: en el suelo de la plataforma o, en la de arriba, sobre un techo; no se pueden poner donde hay una pared o una escalera. Miran hacia quien los pone.
 - Clic derecho los abre; agachado con el martillo de construcción se recogen (con lo que tengan dentro). Viajan con el tren, se choca con ellos y lo de dentro se guarda en la plataforma. Para desenganchar la plataforma hay que quitarlos antes.
 
+## Fase 56.1 — El tren se mueve fluido
+
+- En el cliente, los coches del tren ya no se ponen de golpe donde dice el servidor (los paquetes llegan a saltos y el giro viene redondeado a pasos de 1,4°, así que en las curvas y al ir rápido daba tirones cortos): cada coche va hacia la última posición y giro recibidos en 3 tics, como las vagonetas de vanilla, y el dibujo interpola entre tic y tic. Si el salto es muy grande (más de 8 bloques), se pone directamente. Las ruedas, el maquinista y lo que va de pie encima siguen ese movimiento suave.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

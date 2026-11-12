@@ -273,11 +273,80 @@ public abstract class TrainCarEntity extends Entity {
 		return false;
 	}
 
+	/** En el cliente: hacia dónde va el coche (lo último que ha dicho el servidor) y en cuántos tics llega. */
+	private static final int LERP_TICKS = 3;
+	private int lerpSteps;
+	private double lerpX, lerpY, lerpZ;
+	private float lerpYaw, lerpPitch;
+
+	/**
+	 * Lo que manda el servidor no se pone de golpe (los paquetes llegan a saltos y el giro, redondeado): el coche va hacia ahí
+	 * en unos tics, como las vagonetas, y así se mueve fluido.
+	 */
+	@Override
+	public void updateTrackedPositionAndAngles(double x, double y, double z, float yaw, float pitch, int interpolationSteps) {
+		if (squaredDistanceTo(x, y, z) > 64.0) {
+			// muy lejos (recién cargado o un salto): directamente
+			lerpSteps = 0;
+			setPosition(x, y, z);
+			setRotation(yaw, pitch);
+			return;
+		}
+		lerpX = x;
+		lerpY = y;
+		lerpZ = z;
+		lerpYaw = yaw;
+		lerpPitch = pitch;
+		lerpSteps = LERP_TICKS;
+	}
+
+	@Override
+	public double getLerpTargetX() {
+		return lerpSteps > 0 ? lerpX : getX();
+	}
+
+	@Override
+	public double getLerpTargetY() {
+		return lerpSteps > 0 ? lerpY : getY();
+	}
+
+	@Override
+	public double getLerpTargetZ() {
+		return lerpSteps > 0 ? lerpZ : getZ();
+	}
+
+	@Override
+	public float getLerpTargetYaw() {
+		return lerpSteps > 0 ? lerpYaw : getYaw();
+	}
+
+	@Override
+	public float getLerpTargetPitch() {
+		return lerpSteps > 0 ? lerpPitch : getPitch();
+	}
+
+	/** Un paso hacia lo último que ha dicho el servidor. */
+	private void stepLerp() {
+		if (lerpSteps <= 0) {
+			return;
+		}
+		double x = getX() + (lerpX - getX()) / lerpSteps, y = getY() + (lerpY - getY()) / lerpSteps, z = getZ() + (lerpZ - getZ()) / lerpSteps;
+		float yaw = getYaw() + MathHelper.wrapDegrees(lerpYaw - getYaw()) / lerpSteps;
+		float pitch = getPitch() + (lerpPitch - getPitch()) / lerpSteps;
+		lerpSteps--;
+		setPosition(x, y, z);
+		setRotation(yaw, pitch);
+		setBoundingBox(calculateBoundingBox());
+	}
+
 	@Override
 	public void tick() {
 		cars(getWorld()).add(this);
 		super.tick();
 		World world = getWorld();
+		if (world.isClient) {
+			stepLerp();
+		}
 		if (carryPos == null) {
 			carryPos = getPos();
 			carryYaw = getYaw();
