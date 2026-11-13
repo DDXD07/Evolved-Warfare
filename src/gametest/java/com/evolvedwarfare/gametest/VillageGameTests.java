@@ -140,7 +140,7 @@ public class VillageGameTests implements FabricGameTest {
 	}
 
 	@GameTest(templateName = EMPTY_STRUCTURE)
-	public void streetsGetStepsOnSlopes(TestContext ctx) {
+	public void streetsGetNoSteps(TestContext ctx) {
 		ServerWorld world = ctx.getWorld();
 		BlockPos a = ctx.getAbsolutePos(new BlockPos(1, 1, 1));
 		BlockPos b = a.east();
@@ -158,21 +158,21 @@ public class VillageGameTests implements FabricGameTest {
 		piece.generate(world, world.getStructureAccessor(), world.getChunkManager().getChunkGenerator(), net.minecraft.util.math.random.Random.create(1), box,
 				new ChunkPos(a), a);
 		var step = world.getBlockState(a.up());
-		boolean ok = step.getBlock() instanceof net.minecraft.block.StairsBlock
-				&& step.get(net.minecraft.block.StairsBlock.FACING) == net.minecraft.util.math.Direction.EAST;
+		// fase 62: las calles ya no llevan escalones (el suelo de la aldea es casi plano)
+		boolean ok = !(step.getBlock() instanceof net.minecraft.block.StairsBlock);
 		LOG.info("[EW-GAMETEST] escalones: {} (a {} b {}; altura a {}/{}, b {}/{}; en a {}, en b+1 {})", step, a, b,
 				world.getTopY(net.minecraft.world.Heightmap.Type.WORLD_SURFACE, a.getX(), a.getZ()),
 				world.getTopY(net.minecraft.world.Heightmap.Type.WORLD_SURFACE_WG, a.getX(), a.getZ()),
 				world.getTopY(net.minecraft.world.Heightmap.Type.WORLD_SURFACE, b.getX(), b.getZ()),
 				world.getTopY(net.minecraft.world.Heightmap.Type.WORLD_SURFACE_WG, b.getX(), b.getZ()), world.getBlockState(a), world.getBlockState(b.up()));
 		if (!ok) {
-			throw new GameTestException("La calle en cuesta no tiene su escalón: " + step);
+			throw new GameTestException("La calle tiene escalón: " + step);
 		}
 		ctx.complete();
 	}
 
 	@GameTest(templateName = EMPTY_STRUCTURE)
-	public void villageGroundIsFlattenedButNotPerfect(TestContext ctx) {
+	public void villageGroundIsAlmostFlat(TestContext ctx) {
 		int w = 90, h = 90;
 		boolean[] region = new boolean[w * h];
 		for (int z = 15; z < 75; z++) {
@@ -209,7 +209,8 @@ public class VillageGameTests implements FabricGameTest {
 		int before = slope.ground(74, 0) - slope.ground(15, 0);
 		boolean outsideKept = f.flat(89, 40, slope.ground(89, 40)) == slope.ground(89, 40);
 		LOG.info("[EW-GAMETEST] aplanado: desnivel {} -> {} (de {} a {}), escalón mayor {}, fuera igual {}", before, hi - lo, lo, hi, maxStep, outsideKept);
-		if (!(hi - lo < before / 2 && hi - lo >= 2 && maxStep <= 2 && outsideKept)) {
+		// casi plano: ±1 bloque, sin escalones de más de uno, y fuera de la rampa el terreno de antes
+		if (!(hi - lo <= 2 && hi - lo >= 1 && maxStep <= 1 && outsideKept)) {
 			throw new GameTestException("El aplanado de la aldea no va bien: " + before + " -> " + (hi - lo) + ", escalón " + maxStep);
 		}
 		ctx.complete();

@@ -120,19 +120,7 @@ public class VillageExtrasPiece extends StructurePiece {
 				placeColumn(world, posts[i], posts[i + 1], POST_HEIGHT, true, pos);
 			}
 		}
-		// los escalones de las cuestas (en las calles y en los caminos de las puertas), antes que las farolas
-		LongOpenHashSet steps = new LongOpenHashSet();
-		for (int[] list : new int[][] {streets, road}) {
-			for (int i = 0; i + 1 < list.length; i += 2) {
-				steps.add(((long) list[i] << 32) | (list[i + 1] & 0xFFFFFFFFL));
-			}
-		}
-		for (long k : steps) {
-			int x = (int) (k >> 32), z = (int) k;
-			if (inside(chunkBox, x, z)) {
-				placeStep(world, x, z, steps, pos);
-			}
-		}
+		// (fase 62: ya no hay escalones en las calles; el suelo de la aldea queda casi plano)
 		for (int i = 0; i + 1 < lamps.length; i += 2) {
 			if (inside(chunkBox, lamps[i], lamps[i + 1])) {
 				placeLamp(world, lamps[i], lamps[i + 1], pos);
@@ -140,30 +128,6 @@ public class VillageExtrasPiece extends StructurePiece {
 		}
 		for (int i = 0; i + 4 < buildings.length; i += 5) {
 			placeBuilding(world, chunkBox, buildings[i], buildings[i + 1], buildings[i + 2], buildings[i + 3], buildings[i + 4], pos);
-		}
-	}
-
-	/** Si la calle de al lado está un bloque más alta, un escalón (mirando hacia arriba) para subir sin saltar. */
-	private void placeStep(StructureWorldAccess world, int x, int z, LongOpenHashSet steps, BlockPos.Mutable pos) {
-		int[] waterTop = new int[1];
-		int y = findGround(world, x, z, pos, waterTop);
-		if (waterTop[0] != Integer.MIN_VALUE || !VillageStyle.isStreet(world.getBlockState(pos.set(x, y, z)))) {
-			return;
-		}
-		if (!isFree(world.getBlockState(pos.set(x, y + 1, z))) || !isFree(world.getBlockState(pos.set(x, y + 2, z)))) {
-			return;
-		}
-		for (net.minecraft.util.math.Direction d : net.minecraft.util.math.Direction.Type.HORIZONTAL) {
-			int nx = x + d.getOffsetX(), nz = z + d.getOffsetZ();
-			if (!steps.contains(((long) nx << 32) | (nz & 0xFFFFFFFFL))) {
-				continue;
-			}
-			int ny = findGround(world, nx, nz, new BlockPos.Mutable(), new int[1]);
-			BlockState there = world.getBlockState(new BlockPos(nx, ny, nz));
-			if (ny == y + 1 && (VillageStyle.isStreet(there) || there.getBlock() instanceof net.minecraft.block.StairsBlock)) {
-				set(world, pos.set(x, y + 1, z), VillageBuildings.streetStair(style, d, x, z));
-				return;
-			}
 		}
 	}
 

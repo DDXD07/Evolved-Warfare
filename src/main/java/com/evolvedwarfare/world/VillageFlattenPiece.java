@@ -28,9 +28,10 @@ import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 
 /**
- * El terreno de las aldeas vanilla, aplanado a medias (fase 54.2): dentro de la empalizada el suelo se acerca a la altura
- * media de la aldea (queda un 30 % del desnivel, como mucho 4 bloques arriba o abajo) con ondulaciones suaves de un bloque,
- * y en los 8 bloques de fuera se va volviendo al terreno de verdad. No se toca el agua ni lo de debajo de las casas.
+ * El terreno de las aldeas vanilla, aplanado (fases 54.2 y 62): dentro de la empalizada el suelo queda casi plano, a la
+ * altura media de la aldea, con ondulaciones suaves de un bloque como mucho (para que no parezca hecho a máquina), y en
+ * los {@link #FADE} bloques de fuera baja o sube en rampa suave hasta el terreno de verdad. No se toca el agua ni lo de
+ * debajo de las casas.
  * <p>
  * Funciona en dos partes. Al trazar la aldea se calcula ese terreno y se suben o bajan las casas (y sus uniones) a su nueva
  * altura, antes de que se genere el terreno, para que Minecraft les ajuste el suelo alrededor. Y esta pieza, que va justo
@@ -38,9 +39,9 @@ import net.minecraft.world.gen.chunk.ChunkGenerator;
  * que siguen el suelo, ya van sobre el nuevo).
  */
 public class VillageFlattenPiece extends StructurePiece {
-	/** Cuánto desnivel queda (0 llano, 1 igual que antes) y hasta cuánto. */
-	public static final double KEEP = 0.3;
-	public static final int MAX_DEVIATION = 4, FADE = 8;
+	/** Cuánto desnivel queda (0 llano, 1 igual que antes) y hasta cuánto; la rampa de fuera. */
+	public static final double KEEP = 0.0;
+	public static final int MAX_DEVIATION = 1, FADE = 12;
 	private static final int SAMPLE = 8, CELL = 2;
 
 	private final int gx0, gz0, cw, ch, h0, seed;
@@ -164,7 +165,7 @@ public class VillageFlattenPiece extends StructurePiece {
 		return false;
 	}
 
-	/** Las ondulaciones: ruido suave de ±1,4 bloques (cada 9). */
+	/** Las ondulaciones: ruido suave de menos de un bloque y medio arriba o abajo (cada 9): al redondear, ±1. */
 	private double bump(int x, int z) {
 		double fx = x / 9.0, fz = z / 9.0;
 		int ix = MathHelper.floor(fx), iz = MathHelper.floor(fz);
@@ -177,7 +178,7 @@ public class VillageFlattenPiece extends StructurePiece {
 
 	private double corner(int x, int z) {
 		long h = it.unimi.dsi.fastutil.HashCommon.mix((long) x * 0x9E3779B97F4A7C15L ^ (long) z * 0xC2B2AE3D27D4EB4FL ^ seed);
-		return ((h >>> 11) / (double) (1L << 53) * 2.0 - 1.0) * 1.4;
+		return ((h >>> 11) / (double) (1L << 53) * 2.0 - 1.0) * 0.9;
 	}
 
 	/** La altura del suelo aplanado en (x, z), si la de antes era orig. */
@@ -187,7 +188,7 @@ public class VillageFlattenPiece extends StructurePiece {
 			return orig;
 		}
 		int dev = MathHelper.clamp((int) Math.round((orig - h0) * KEEP), -MAX_DEVIATION, MAX_DEVIATION);
-		double target = h0 + dev + bump(x, z);
+		double target = h0 + dev + MathHelper.clamp(Math.round(bump(x, z)), -1, 1);
 		return (int) Math.round(orig + (target - orig) * wgt);
 	}
 

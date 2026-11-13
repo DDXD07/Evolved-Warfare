@@ -2146,6 +2146,14 @@ Los NPCs del pueblo (los vecinos, los guardias del cuartel y los vigías de las 
   - Si es tuyo: **Sígueme**, **Espera aquí**, **Vive aquí** y **Equipo y paga** (su menú de siempre). Si es mercader: **Ver la tienda**.
 - **Lo que piensa de ti cambia**: hablar con él (un poco, una vez al día), **regalarle comida** (clic derecho con comida en la mano a un vecino libre: le gusta, sobre todo a los amables y alegres; uno cada minuto como mucho), contratarlo (le gusta) y **pegarle** (le cae fatal). Si le caes muy mal, **no trabaja para ti** ni con contrato.
 
+## Fase 62 — Aldeas vanilla casi planas, sin escaleras
+
+- El suelo de las aldeas vanilla ahora queda **casi plano**: dentro de la empalizada todo se lleva a la altura media de la aldea, dejando solo **ondulaciones suaves de un bloque** (para que no parezca hecho con regla). Antes quedaba un 30 % del desnivel y hasta 4 bloques arriba o abajo.
+- Si la aldea está en una ladera o junto a un desnivel, el terreno de fuera **sube o baja en rampa suave** en los 12 bloques que rodean la empalizada (antes 8), sin muros de tierra.
+- **Ya no se ponen escaleras en las calles**: con el suelo casi plano no hacen falta.
+- Se quedan los edificios añadidos (mercado, taberna, granero, torre) y las decoraciones. Como siempre, no se toca el agua ni lo de debajo de las casas.
+- Solo en las aldeas que se generen a partir de ahora.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
