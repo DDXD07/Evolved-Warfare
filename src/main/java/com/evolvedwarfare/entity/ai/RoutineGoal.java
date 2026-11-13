@@ -113,6 +113,11 @@ public class RoutineGoal extends Goal {
 				}
 			}
 		}
+		// charlando: quieto, mirando al otro (lo mira la charla)
+		if (com.evolvedwarfare.town.Chatter.talking(npc) && activity != Activity.SLEEP && activity != Activity.HIDE) {
+			npc.getNavigation().stop();
+			return;
+		}
 		if (target == null) {
 			idle(world);
 			return;

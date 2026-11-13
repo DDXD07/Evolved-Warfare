@@ -362,4 +362,62 @@ public class TownGameTests implements FabricGameTest {
 			ctx.complete();
 		});
 	}
+
+	// ------------------------------------------------------------------ fase 3: charlas
+
+	/** Todas las frases de las charlas existen (en inglés también), y una charla sale con nombres, sin claves sueltas. */
+	@GameTest(templateName = EMPTY_STRUCTURE)
+	public void chatLinesExist(TestContext ctx) {
+		floor(ctx);
+		net.minecraft.util.Language lang = net.minecraft.util.Language.getInstance();
+		int n = 0;
+		for (String key : com.evolvedwarfare.town.Chatter.allKeys()) {
+			check(lang.hasTranslation(key), "Falta el texto " + key);
+			n++;
+		}
+		RecruitEntity a = resident(ctx, 1, 1, com.evolvedwarfare.town.Personality.CURIOUS, null);
+		RecruitEntity b = resident(ctx, 2, 1, com.evolvedwarfare.town.Personality.GRUMPY, null);
+		a.ewProfile().addFamily(b.getUuid());
+		b.ewProfile().addFamily(a.getUuid());
+		StringBuilder sample = new StringBuilder();
+		for (int i = 0; i < 6; i++) {
+			List<net.minecraft.text.Text> lines = com.evolvedwarfare.town.Chatter.preview(a, b, ctx.getWorld());
+			check(lines.size() >= 2 && lines.size() <= 3, "Charla de " + lines.size() + " frases");
+			for (net.minecraft.text.Text t : lines) {
+				String str = t.getString();
+				check(!str.startsWith("chat.evolvedwarfare") && !str.contains("%"), "Frase sin traducir: " + str);
+				if (i == 0) {
+					sample.append(" | ").append(str);
+				}
+			}
+		}
+		LOG.info("[EW-GAMETEST] charlas: {} frases; ejemplo{}", n, sample);
+		a.discard();
+		b.discard();
+		ctx.complete();
+	}
+
+	/** Dos vecinos en la plaza, por la tarde, se ponen a charlar solos (y eso les cambia lo que piensan el uno del otro). */
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "town_chat", tickLimit = 700)
+	public void neighborsChatInTheSquare(TestContext ctx) {
+		floor(ctx);
+		RecruitEntity a = resident(ctx, 3, 4, com.evolvedwarfare.town.Personality.CHEERFUL, null);
+		RecruitEntity b = resident(ctx, 5, 4, com.evolvedwarfare.town.Personality.KIND, null);
+		a.forcedTime = 10000L;
+		b.forcedTime = 10000L;
+		a.ewProfile().setAffinity(b.getUuid(), 10);
+		b.ewProfile().setAffinity(a.getUuid(), 10);
+		long before = com.evolvedwarfare.town.Chatter.spoken;
+		boolean[] talked = {false};
+		ctx.waitAndRun(500, () -> {
+			long said = com.evolvedwarfare.town.Chatter.spoken - before;
+			int ab = a.ewProfile().affinity(b.getUuid()), ba = b.ewProfile().affinity(a.getUuid());
+			LOG.info("[EW-GAMETEST] charlas: en la plaza se han dicho {} frases; ahora se aprecian {} / {}", said, ab, ba);
+			check(said >= 2, "No charlan en la plaza");
+			check(ab != 10 || ba != 10, "Charlar no cambia lo que piensan");
+			a.discard();
+			b.discard();
+			ctx.complete();
+		});
+	}
 }

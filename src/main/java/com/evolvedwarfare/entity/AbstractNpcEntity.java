@@ -419,6 +419,9 @@ public abstract class AbstractNpcEntity extends PathAwareEntity implements com.e
 			}
 			if (getWorld() instanceof ServerWorld sw) {
 				com.evolvedwarfare.town.Town.tick(this, sw);
+				if (!isSleeping()) {
+					com.evolvedwarfare.town.Chatter.consider(this, sw);
+				}
 			}
 			// Bien pagado, se cura poco a poco.
 			if (unpaidDays == 0 && age % 100 == 0 && getHealth() < getMaxHealth()) {

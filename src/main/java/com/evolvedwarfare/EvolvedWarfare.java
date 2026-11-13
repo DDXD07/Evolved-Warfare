@@ -59,6 +59,8 @@ public class EvolvedWarfare implements ModInitializer {
 		com.evolvedwarfare.backpack.Backpacks.register();
 		com.evolvedwarfare.train.Trains.register();
 		com.evolvedwarfare.atlas.Atlas.register();
+		com.evolvedwarfare.town.Chatter.register();
+		net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents.SERVER_STOPPED.register(server -> com.evolvedwarfare.town.Chatter.clear());
 		com.evolvedwarfare.fluid.FluidSim.register();
 		if (net.fabricmc.loader.api.FabricLoader.getInstance().getEnvironmentType() == net.fabricmc.api.EnvType.SERVER) {
 			// en el cliente la arranca el cliente (cuando ya ha dicho qué más calentar)

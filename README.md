@@ -2115,6 +2115,18 @@ Los NPCs del pueblo (los vecinos, los guardias del cuartel y los vigías de las 
 - Si se atascan de camino a casa o a la cama (las escalas de las casas de dos plantas), al rato aparecen allí; si se atascan yendo a otro sitio, buscan otro.
 - Lo que llevan en la mano para la rutina (el pan, la azada, el martillo...) no se suelta al morir ni se queda al contratarlos.
 
+## Fase 60 — Los NPCs charlan entre ellos
+
+- Cuando dos del pueblo coinciden **se paran, se miran y charlan**, y lo que dicen sale en un **bocadillo** encima de su cabeza (se ve hasta 24 bloques; dura unos segundos y se desvanece), con un murmullo y un gesto de la mano.
+- **Dónde**: sobre todo en la **plaza por la tarde** (en corro); en **casa con su familia** (desayunando, cenando); a veces al **cruzarse trabajando**; los **guardias** cuando se encuentran en la ronda; y los contratados que esperan quietos, entre ellos. No charlan dormidos, escondidos, peleando ni con un cliente delante.
+- **De qué**: uno saca un tema según lo que pasa y el otro contesta; a veces el primero cierra.
+  - la **hora** (buenos días, buenas tardes, que ya es tarde) y el **tiempo** (la lluvia, el sol, el frío de la nieve, el calor del desierto);
+  - su **oficio** (el pan de hoy, el yunque, los peces que se escapan, las ovejas...) y su **carácter** (el gruñón se queja, el miedoso oye ruidos, el valiente fanfarronea, el perezoso quiere siesta, el curioso pregunta, el amable ofrece ayuda, el alegre recuerda fiestas);
+  - la **familia** («¿Has comido algo?»), un **susto reciente** (si han visto monstruos), si está **herido**, la **ronda** entre guardias, el **forastero** que les mira (tú) y **cotilleos** sobre alguien del pueblo que les cae muy bien o muy mal, por su nombre.
+- **La respuesta depende de lo que piensa del otro y de su carácter**: amable, normal o borde («Déjame en paz»). Si los cotilleos no le gustan, defiende al otro. Charlar **les acerca** (o les aleja si se contestan mal), y los cotilleos contagian un poco la opinión.
+- **Te saludan**: si te acercas a un vecino, de vez en cuando te dice algo según su carácter y la hora («¡Buenas, forastero!», «¿Qué miras?», «¡Ay! Me has asustado...», «No es hora de andar por ahí»). Agachado no te dicen nada.
+- Unas 145 frases distintas, en español y en inglés.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
