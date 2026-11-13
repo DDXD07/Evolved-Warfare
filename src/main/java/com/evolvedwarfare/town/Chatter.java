@@ -72,11 +72,14 @@ public final class Chatter {
 		LINES.put("hello.night", 2);
 	}
 
-	/** Lo que se dice: quién, el texto y cuánto dura el bocadillo (tics). */
-	public record SayPayload(int entityId, Text text, int ticks) implements CustomPayload {
+	/**
+	 * Lo que se dice: quién, con quién habla (-1: saluda a un jugador), el texto y cuánto dura el bocadillo (tics). El
+	 * cliente solo enseña los bocadillos de una charla si estás cerca y miras a uno de los dos.
+	 */
+	public record SayPayload(int entityId, int partnerId, Text text, int ticks) implements CustomPayload {
 		public static final Id<SayPayload> ID = new Id<>(EvolvedWarfare.id("npc_say"));
 		public static final PacketCodec<RegistryByteBuf, SayPayload> CODEC = PacketCodec.tuple(PacketCodecs.VAR_INT, SayPayload::entityId,
-				TextCodecs.REGISTRY_PACKET_CODEC, SayPayload::text, PacketCodecs.VAR_INT, SayPayload::ticks, SayPayload::new);
+				PacketCodecs.VAR_INT, SayPayload::partnerId, TextCodecs.REGISTRY_PACKET_CODEC, SayPayload::text, PacketCodecs.VAR_INT, SayPayload::ticks, SayPayload::new);
 
 		@Override
 		public Id<? extends CustomPayload> getId() {
@@ -342,10 +345,10 @@ public final class Chatter {
 	public static long spoken;
 
 	/** Lo dice: bocadillo para los jugadores que lo ven y un murmullo. */
-	public static void say(MobEntity speaker, Text text, ServerWorld world) {
+	public static void say(MobEntity speaker, @Nullable Entity partner, Text text, ServerWorld world) {
 		spoken++;
 		int ticks = Math.min(140, 50 + text.getString().length() * 2);
-		SayPayload payload = new SayPayload(speaker.getId(), text, ticks);
+		SayPayload payload = new SayPayload(speaker.getId(), partner == null ? -1 : partner.getId(), text, ticks);
 		for (ServerPlayerEntity player : PlayerLookup.tracking(speaker)) {
 			if (player.squaredDistanceTo(speaker) < 24 * 24) {
 				ServerPlayNetworking.send(player, payload);
@@ -378,7 +381,7 @@ public final class Chatter {
 			if (now >= talk.next) {
 				Line l = talk.lines.get(talk.index++);
 				Text text = line(l.topic(), l.speaker(), l.listener(), l.third(), l.speaker().getRandom());
-				say(l.speaker(), text, world);
+				say(l.speaker(), l.listener(), text, world);
 				talk.next = now + Math.min(140, 50 + text.getString().length() * 2) - 10;
 			}
 		}
@@ -420,7 +423,7 @@ public final class Chatter {
 		String topic = Routine.timeOfDay(world) >= 12500L ? "hello.night"
 				: p.personality == Personality.GRUMPY ? "hello.grumpy" : p.personality == Personality.FEARFUL ? "hello.fearful" : "hello.friendly";
 		npc.getLookControl().lookAt(player, 30.0F, 30.0F);
-		say(npc, line(topic, npc, player, null, npc.getRandom()), world);
+		say(npc, null, line(topic, npc, player, null, npc.getRandom()), world);
 	}
 
 	/** Para las pruebas: termina todas las charlas. */

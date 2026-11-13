@@ -2127,6 +2127,11 @@ Los NPCs del pueblo (los vecinos, los guardias del cuartel y los vigías de las 
 - **Te saludan**: si te acercas a un vecino, de vez en cuando te dice algo según su carácter y la hora («¡Buenas, forastero!», «¿Qué miras?», «¡Ay! Me has asustado...», «No es hora de andar por ahí»). Agachado no te dicen nada.
 - Unas 145 frases distintas, en español y en inglés.
 
+## Fase 60.1 — Los bocadillos solo si miras la charla
+
+- Para que la pantalla no se llene de conversaciones, los bocadillos de una charla **solo se ven si estás a 5 bloques o menos** de uno de los dos que hablan **y miras a uno de ellos**: entonces se ven **los bocadillos de los dos**, aunque solo mires a uno. Si dejas de mirar o te alejas, se desvanecen (y vuelven si los miras otra vez mientras sigan hablando).
+- Los saludos que te dicen a ti se ven si estás a 5 bloques o menos, sin tener que mirarles.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
