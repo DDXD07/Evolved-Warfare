@@ -36,6 +36,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.village.VillagerProfession;
+import net.minecraft.entity.mob.HuskEntity;
 import net.minecraft.world.GameMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -218,5 +219,149 @@ public class TownGameTests implements FabricGameTest {
 		recruits.forEach(RecruitEntity::discard);
 		farmer.discard();
 		ctx.complete();
+	}
+
+	// ------------------------------------------------------------------ fase 2: la rutina diaria
+
+	/** Un vecino libre en su casa, con su cama (si se le da). */
+	private static RecruitEntity resident(TestContext ctx, int x, int z, com.evolvedwarfare.town.Personality who, @org.jetbrains.annotations.Nullable BlockPos bedRel) {
+		RecruitEntity r = npc(ctx, ModEntities.RECRUIT, x, z);
+		NpcProfile p = r.ewProfile();
+		p.personality = who;
+		p.job = NpcJob.LABORER;
+		p.bedSearched = true;
+		p.center = ctx.getAbsolutePos(new BlockPos(4, 1, 4));
+		p.range = 3;
+		p.bed = bedRel == null ? null : ctx.getAbsolutePos(bedRel);
+		return r;
+	}
+
+	private static void bed(TestContext ctx, BlockPos head) {
+		ctx.setBlockState(head, Blocks.BLUE_BED.getDefaultState().with(BedBlock.FACING, Direction.NORTH).with(BedBlock.PART, BedPart.HEAD));
+		ctx.setBlockState(head.south(), Blocks.BLUE_BED.getDefaultState().with(BedBlock.FACING, Direction.NORTH).with(BedBlock.PART, BedPart.FOOT));
+	}
+
+	/** El horario: desayuno, trabajo, plaza, cena, cama; los perezosos se levantan más tarde; los guardias por turnos. */
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "town_routine")
+	public void dailySchedule(TestContext ctx) {
+		floor(ctx);
+		ServerWorld world = ctx.getWorld();
+		RecruitEntity a = resident(ctx, 1, 1, com.evolvedwarfare.town.Personality.CHEERFUL, new BlockPos(6, 1, 1));
+		RecruitEntity lazy = resident(ctx, 2, 1, com.evolvedwarfare.town.Personality.LAZY, new BlockPos(6, 1, 1));
+		StringBuilder log = new StringBuilder();
+		long[] times = {500, 3000, 10000, 12000, 15000};
+		com.evolvedwarfare.town.Activity[] expected = {com.evolvedwarfare.town.Activity.BREAKFAST, com.evolvedwarfare.town.Activity.WORK,
+				com.evolvedwarfare.town.Activity.LEISURE, com.evolvedwarfare.town.Activity.DINNER, com.evolvedwarfare.town.Activity.SLEEP};
+		for (int i = 0; i < times.length; i++) {
+			a.forcedTime = times[i];
+			var got = com.evolvedwarfare.town.Routine.plan(a, world);
+			log.append(times[i]).append('=').append(got).append(' ');
+			check(got == expected[i], "A las " + times[i] + " le toca " + got + " y no " + expected[i]);
+		}
+		lazy.forcedTime = 500L;
+		check(com.evolvedwarfare.town.Routine.plan(lazy, world) == com.evolvedwarfare.town.Activity.SLEEP, "El perezoso no se queda en la cama");
+		// guardia: según su turno
+		RecruitEntity guard = resident(ctx, 3, 1, com.evolvedwarfare.town.Personality.BRAVE, new BlockPos(6, 1, 1));
+		guard.ewProfile().job = NpcJob.GUARD;
+		guard.forcedTime = 3000L;
+		var day = com.evolvedwarfare.town.Routine.plan(guard, world);
+		guard.forcedTime = 18000L;
+		var night = com.evolvedwarfare.town.Routine.plan(guard, world);
+		boolean nightShift = com.evolvedwarfare.town.Routine.nightShift(guard);
+		check(nightShift ? day == com.evolvedwarfare.town.Activity.SLEEP && night == com.evolvedwarfare.town.Activity.PATROL
+				: day == com.evolvedwarfare.town.Activity.PATROL && night == com.evolvedwarfare.town.Activity.SLEEP,
+				"El guardia no sigue su turno: " + day + " / " + night + " (noche " + nightShift + ")");
+		// contratado: siguiéndote, nada; en casa con cama, solo dormir
+		ServerPlayerEntity owner = player(ctx, 0);
+		a.signContract(owner);
+		a.forcedTime = 15000L;
+		check(com.evolvedwarfare.town.Routine.plan(a, world) == com.evolvedwarfare.town.Activity.NONE, "Un contratado que te sigue hace su rutina");
+		a.setHomeHere();
+		a.ewProfile().bed = ctx.getAbsolutePos(new BlockPos(6, 1, 1));
+		check(com.evolvedwarfare.town.Routine.plan(a, world) == com.evolvedwarfare.town.Activity.SLEEP, "Un contratado en casa no duerme de noche");
+		a.forcedTime = 3000L;
+		check(com.evolvedwarfare.town.Routine.plan(a, world) == com.evolvedwarfare.town.Activity.NONE, "Un contratado en casa hace la rutina de día");
+		LOG.info("[EW-GAMETEST] rutina: {}; guardia de {}: día {} noche {}", log, nightShift ? "noche" : "día", day, night);
+		a.discard();
+		lazy.discard();
+		guard.discard();
+		ctx.complete();
+	}
+
+	/** De noche va a su cama y se acuesta; por la mañana se levanta y desayuna (con pan en la mano). */
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "town_routine", tickLimit = 600)
+	public void sleepsInItsBedAndWakesUp(TestContext ctx) {
+		floor(ctx);
+		BlockPos head = new BlockPos(6, 1, 2);
+		bed(ctx, head);
+		RecruitEntity r = resident(ctx, 1, 6, com.evolvedwarfare.town.Personality.KIND, head);
+		r.forcedTime = 15000L;
+		BlockPos abs = ctx.getAbsolutePos(head);
+		ctx.waitAndRun(250, () -> {
+			boolean slept = r.isSleeping() && ctx.getWorld().getBlockState(abs).get(BedBlock.OCCUPIED);
+			r.forcedTime = 300L;
+			boolean[] sawBread = {false};
+			for (int t = 1; t < 120; t++) {
+				ctx.runAtTick(ctx.getTick() + t, () -> sawBread[0] |= r.getMainHandStack().isOf(Items.BREAD));
+			}
+			ctx.waitAndRun(150, () -> {
+				LOG.info("[EW-GAMETEST] rutina: dormido en su cama {}; por la mañana despierto {} y con pan {} ({})", slept, !r.isSleeping(), sawBread[0],
+						r.getActivity());
+				check(slept, "No se acuesta en su cama: " + r.getActivity() + " en " + r.getBlockPos());
+				check(!r.isSleeping() && !ctx.getWorld().getBlockState(abs).get(BedBlock.OCCUPIED), "No se levanta por la mañana");
+				check(sawBread[0], "No desayuna");
+				r.discard();
+				ctx.complete();
+			});
+		});
+	}
+
+	/** El herrero va a su puesto (la mesa de herrería) y trabaja con el martillo en la mano; al morir no lo suelta. */
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "town_routine", tickLimit = 500)
+	public void blacksmithGoesToWork(TestContext ctx) {
+		floor(ctx);
+		BlockPos table = new BlockPos(6, 1, 6);
+		ctx.setBlockState(table, Blocks.SMITHING_TABLE);
+		RecruitEntity r = resident(ctx, 1, 1, com.evolvedwarfare.town.Personality.CHEERFUL, null);
+		r.ewProfile().job = NpcJob.BLACKSMITH;
+		r.forcedTime = 3000L;
+		BlockPos abs = ctx.getAbsolutePos(table);
+		ctx.waitAndRun(300, () -> {
+			double d = r.getPos().distanceTo(net.minecraft.util.math.Vec3d.ofBottomCenter(abs));
+			LOG.info("[EW-GAMETEST] rutina: herrero en {} (puesto {}), a {} del puesto, en la mano {}", r.getActivity(), r.ewProfile().workplace,
+					String.format(java.util.Locale.ROOT, "%.1f", d), r.getMainHandStack());
+			check(abs.equals(r.ewProfile().workplace), "No encuentra su puesto: " + r.ewProfile().workplace);
+			check(d < 3.0, "No va a su puesto: está a " + d);
+			check(r.getMainHandStack().isOf(Items.IRON_PICKAXE), "No trabaja con su herramienta: " + r.getMainHandStack());
+			r.damage(ctx.getWorld().getDamageSources().generic(), 1000.0F);
+			ctx.waitAndRun(5, () -> {
+				int dropped = ctx.getWorld().getEntitiesByClass(net.minecraft.entity.ItemEntity.class, new Box(abs).expand(8.0),
+						e -> e.getStack().isOf(Items.IRON_PICKAXE)).size();
+				check(dropped == 0, "Suelta la herramienta de la rutina al morir");
+				ctx.complete();
+			});
+		});
+	}
+
+	/** Con un monstruo a la vista corre a casa (el valiente lo ve más tarde). */
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "town_danger", tickLimit = 200)
+	public void residentsHideFromDanger(TestContext ctx) {
+		floor(ctx);
+		RecruitEntity r = resident(ctx, 2, 2, com.evolvedwarfare.town.Personality.FEARFUL, null);
+		r.forcedTime = 10000L;
+		net.minecraft.entity.mob.HuskEntity husk = EntityType.HUSK.create(ctx.getWorld());
+		BlockPos at = ctx.getAbsolutePos(new BlockPos(6, 1, 6));
+		husk.refreshPositionAndAngles(at.getX() + 0.5, at.getY(), at.getZ() + 0.5, 0.0F, 0.0F);
+		husk.setAiDisabled(true);
+		ctx.getWorld().spawnEntity(husk);
+		ctx.waitAndRun(60, () -> {
+			var now = r.getActivity();
+			var plan = com.evolvedwarfare.town.Routine.plan(r, ctx.getWorld());
+			LOG.info("[EW-GAMETEST] rutina: con un monstruo cerca el vecino hace {} ({})", now, plan);
+			husk.discard();
+			check(plan == com.evolvedwarfare.town.Activity.HIDE, "No se esconde del monstruo: " + plan);
+			r.discard();
+			ctx.complete();
+		});
 	}
 }

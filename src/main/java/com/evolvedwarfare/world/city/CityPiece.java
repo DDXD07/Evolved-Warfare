@@ -336,13 +336,13 @@ public class CityPiece extends StructurePiece {
 				if (guard != null) {
 					guard.presetRole(index % 3 == 0 ? NpcRole.CROSSBOWMAN : index % 3 == 1 ? NpcRole.WARRIOR : NpcRole.ARCHER);
 					guard.setCity(key, center, radius, style);
-					settle(guard, head, key, 0L);
+					settle(guard, head, key, 0L, center, radius);
 					spawn(world, guard, head.up(), yaw);
 				}
 			} else {
 				com.evolvedwarfare.entity.RecruitEntity resident = ModEntities.RECRUIT.create(world.toServerWorld());
 				if (resident != null) {
-					settle(resident, head, key, key * 31L + b.household());
+					settle(resident, head, key, key * 31L + b.household(), center, radius);
 					spawn(world, resident, head.up(), yaw);
 				}
 			}
@@ -359,8 +359,10 @@ public class CityPiece extends StructurePiece {
 	}
 
 	/** Su cama, su ciudad y su casa. */
-	private static void settle(com.evolvedwarfare.entity.AbstractNpcEntity npc, BlockPos bed, long city, long household) {
+	private static void settle(com.evolvedwarfare.entity.AbstractNpcEntity npc, BlockPos bed, long city, long household, BlockPos center, int radius) {
 		com.evolvedwarfare.town.NpcProfile p = npc.ewProfile();
+		p.center = center;
+		p.range = Math.max(8, radius - 4);
 		p.bed = bed;
 		p.bedSearched = true;
 		p.community = city;

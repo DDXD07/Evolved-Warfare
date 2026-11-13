@@ -225,6 +225,15 @@ public class WatchtowerPiece extends StructurePiece {
 					recruit.setHeadYaw(recruit.getYaw());
 					recruit.setBodyYaw(recruit.getYaw());
 					recruit.setPersistent();
+					if (recruit instanceof com.evolvedwarfare.entity.AbstractNpcEntity npc) {
+						// vigías: rondan la torre por turnos y duermen en sus literas
+						com.evolvedwarfare.town.NpcProfile p = npc.ewProfile();
+						p.job = com.evolvedwarfare.town.NpcJob.GUARD;
+						p.personality = com.evolvedwarfare.town.Personality.random(world.getRandom());
+						p.rolled = true;
+						p.center = pos;
+						p.range = 8;
+					}
 					recruit.initialize(world, world.getLocalDifficulty(pos), SpawnReason.STRUCTURE, null);
 					world.spawnEntityAndPassengers(recruit);
 				}

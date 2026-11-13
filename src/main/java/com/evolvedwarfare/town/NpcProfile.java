@@ -30,6 +30,14 @@ public final class NpcProfile {
 	/** Dónde trabaja (null: donde le toque). */
 	@Nullable
 	public BlockPos workplace;
+	/** Dónde se reúne el pueblo (la plaza; null: se busca una campana o se queda en casa) y hasta dónde llega el pueblo. */
+	@Nullable
+	public BlockPos center;
+	public int range;
+	/** Hasta cuándo (hora del mundo) hay peligro cerca (no se guarda). */
+	public long dangerUntil;
+	/** Cuándo buscó sitio de trabajo por última vez (no se guarda). */
+	public long workSearched = -100000L;
 	/** Su pueblo (la clave de la ciudad; 0: ninguno) y su casa (los que comparten casa son familia). */
 	public long community;
 	public long household;
@@ -113,6 +121,8 @@ public final class NpcProfile {
 		workplace = o.workplace;
 		community = o.community;
 		household = o.household;
+		center = o.center;
+		range = o.range;
 		bedSearched = o.bedSearched;
 		met = o.met;
 		relations.clear();
@@ -134,6 +144,10 @@ public final class NpcProfile {
 		}
 		n.putLong("Community", community);
 		n.putLong("Household", household);
+		if (center != null) {
+			n.putLong("Center", center.asLong());
+		}
+		n.putInt("Range", range);
 		n.putBoolean("BedSearched", bedSearched);
 		n.putBoolean("Met", met);
 		NbtList rel = new NbtList();
@@ -163,6 +177,8 @@ public final class NpcProfile {
 		workplace = n.contains("Work") ? BlockPos.fromLong(n.getLong("Work")) : null;
 		community = n.getLong("Community");
 		household = n.getLong("Household");
+		center = n.contains("Center") ? BlockPos.fromLong(n.getLong("Center")) : null;
+		range = n.getInt("Range");
 		bedSearched = n.getBoolean("BedSearched");
 		met = n.getBoolean("Met");
 		relations.clear();

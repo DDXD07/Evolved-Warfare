@@ -141,6 +141,73 @@ public abstract class AbstractNpcEntity extends PathAwareEntity implements com.e
 		return ownerUuid != null;
 	}
 
+	// ------------------------------------------------------------------ rutina diaria
+
+	/** Lo que hace ahora según su rutina (no se guarda: se vuelve a calcular). */
+	private com.evolvedwarfare.town.Activity activity = com.evolvedwarfare.town.Activity.NONE;
+	/** Lo que lleva en la mano es de la rutina (el pan, la azada...), no suyo: no se suelta al morir. */
+	private boolean prop;
+
+	/** Para las pruebas: la hora del día que ve este NPC (null = la del mundo; cada uno la suya, para no pisarse). */
+	@Nullable
+	public Long forcedTime;
+
+	public com.evolvedwarfare.town.Activity getActivity() {
+		return activity;
+	}
+
+	public void setActivity(com.evolvedwarfare.town.Activity activity) {
+		this.activity = activity;
+	}
+
+	/**
+	 * Qué rutina sigue: los del pueblo sin dueño que viven en su casa, la entera (los guardias de puesto fijo, ninguna);
+	 * los contratados a los que dejas en un sitio (no los soldados), solo dormir de noche si tienen cama cerca.
+	 */
+	public com.evolvedwarfare.town.Routine.Mode routineMode() {
+		if (ownerUuid != null) {
+			return order == NpcOrder.HOME && !(this instanceof SoldierEntity) && profile.bed != null ? com.evolvedwarfare.town.Routine.Mode.SLEEP_ONLY
+					: com.evolvedwarfare.town.Routine.Mode.NONE;
+		}
+		if (order != NpcOrder.HOME || this instanceof SoldierEntity && profile.job != com.evolvedwarfare.town.NpcJob.GUARD) {
+			return com.evolvedwarfare.town.Routine.Mode.NONE;
+		}
+		return com.evolvedwarfare.town.Routine.Mode.FULL;
+	}
+
+	/** Quiere una cama: los del pueblo y los contratados que viven en un sitio (no los soldados). */
+	@Override
+	public boolean ewWantsBed() {
+		return ownerUuid == null || order == NpcOrder.HOME && !(this instanceof SoldierEntity);
+	}
+
+	@Override
+	public BlockPos ewHomePos() {
+		return home != null ? home : getBlockPos();
+	}
+
+	/** Le pone algo en la mano para la rutina (si no lleva nada suyo). */
+	public void showProp(ItemStack stack) {
+		if (stack.isEmpty()) {
+			clearProp();
+			return;
+		}
+		if (prop && ItemStack.areItemsEqual(getMainHandStack(), stack)) {
+			return;
+		}
+		if (prop || getMainHandStack().isEmpty()) {
+			equipStack(EquipmentSlot.MAINHAND, stack);
+			prop = true;
+		}
+	}
+
+	public void clearProp() {
+		if (prop) {
+			equipStack(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+			prop = false;
+		}
+	}
+
 	/** El oficio con el que nace (null: uno de vecino al azar). Los guardias lo cambian. */
 	@Override
 	@Nullable
@@ -166,8 +233,9 @@ public abstract class AbstractNpcEntity extends PathAwareEntity implements com.e
 		goalSelector.add(1, new LongDoorInteractGoal(this, true));
 		goalSelector.add(2, new FollowOwnerNpcGoal(this, 1.0));
 		goalSelector.add(2, new StayGoal(this));
-		goalSelector.add(3, new ReturnHomeGoal(this, 1.0));
-		goalSelector.add(4, new WanderNearHomeGoal(this, 0.6));
+		goalSelector.add(3, new com.evolvedwarfare.entity.ai.RoutineGoal(this));
+		goalSelector.add(4, new ReturnHomeGoal(this, 1.0));
+		goalSelector.add(5, new WanderNearHomeGoal(this, 0.6));
 		goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 8.0F));
 		goalSelector.add(7, new LookAroundGoal(this));
 	}
@@ -275,6 +343,11 @@ public abstract class AbstractNpcEntity extends PathAwareEntity implements com.e
 	/** Le manda a vivir (o a vigilar) en un sitio concreto. */
 	public void setHomeAt(BlockPos pos) {
 		home = pos.toImmutable();
+		if (ownerUuid != null) {
+			// casa nueva: busca cama cerca
+			profile.bed = null;
+			profile.bedSearched = false;
+		}
 		setOrder(NpcOrder.HOME);
 	}
 
@@ -419,7 +492,9 @@ public abstract class AbstractNpcEntity extends PathAwareEntity implements com.e
 		ItemStack held = player.getStackInHand(hand);
 		if (isForHire()) {
 			if (!world.isClient) {
-				if (held.getItem() instanceof RecruitmentContractItem) {
+				if (isSleeping() && !(held.getItem() instanceof RecruitmentContractItem)) {
+					player.sendMessage(Text.translatable("message.evolvedwarfare.trader.sleeping", getDisplayName()), true);
+				} else if (held.getItem() instanceof RecruitmentContractItem) {
 					held.decrementUnlessCreative(1, player);
 				signContract(player);
 				} else {
@@ -466,6 +541,10 @@ public abstract class AbstractNpcEntity extends PathAwareEntity implements com.e
 		profile.workplace = null;
 		profile.bedSearched = true;
 		ewProfileChanged();
+		if (isSleeping()) {
+			wakeUp();
+		}
+		clearProp();
 		setOrder(NpcOrder.FOLLOW);
 		playSound(ModSounds.RECRUIT_YES, 1.0F, getSoundPitch());
 		if (getWorld() instanceof ServerWorld serverWorld) {
@@ -507,6 +586,7 @@ public abstract class AbstractNpcEntity extends PathAwareEntity implements com.e
 
 	@Override
 	public void onDeath(DamageSource source) {
+		clearProp();
 		if (!getWorld().isClient) {
 			notifyOwner(Text.translatable("message.evolvedwarfare.died", getName()));
 		}
@@ -580,6 +660,7 @@ public abstract class AbstractNpcEntity extends PathAwareEntity implements com.e
 		nbt.putInt("UnpaidDays", unpaidDays);
 		nbt.put("Provisions", provisions.toNbtList(getRegistryManager()));
 		nbt.put("Profile", profile.write());
+		nbt.putBoolean("Prop", prop);
 	}
 
 	@Override
@@ -596,6 +677,7 @@ public abstract class AbstractNpcEntity extends PathAwareEntity implements com.e
 		if (nbt.contains("Profile")) {
 			profile.read(nbt.getCompound("Profile"));
 		}
+		prop = nbt.getBoolean("Prop");
 		ewProfileChanged();
 	}
 }

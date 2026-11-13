@@ -2100,6 +2100,21 @@ Primera parte de la vida de los NPCs (luego vendrán su rutina diaria, las charl
   - **Aldeanos** de las aldeas: con el contrato dejan la aldea y se van contigo como reclutas, con su oficio (el granjero, campesino; el herrero, herrero...).
   - Al contratarlos dejan su cama del pueblo, pero se llevan su oficio, su carácter y sus amistades.
 
+## Fase 59 — La rutina diaria de los NPCs
+
+Los NPCs del pueblo (los vecinos, los guardias del cuartel y los vigías de las torres) ya no se quedan quietos junto a su casa: siguen un horario según la hora del día y su carácter.
+
+- **Vecinos**:
+  - **6:00** se levantan (los perezosos a las 7) y **desayunan en casa** (con pan en la mano, migas y ruido de comer).
+  - **7:00 a 15:00** van a **trabajar** a su sitio, con su herramienta en la mano, dando golpes y con el ruido de su oficio: el herrero en el yunque, la forja o la mesa de herrería (chispas); el panadero y el tabernero en el ahumador (humo); el cantero en el cortapiedras; el sastre en el telar; el carpintero en la mesa de flechas; el campesino en los cultivos o el compostador; el pescador en el agua o su barril; el leñador en los árboles; el pastor con las ovejas; el cazador sale fuera de las murallas; los peones van y vienen por el pueblo acarreando. Los perezosos trabajan menos y se toman ratos libres.
+  - **15:00 a 17:30** tiempo libre: se juntan en corro en la **plaza** (o junto a la campana del pueblo) y se miran unos a otros. Si llueve, se quedan en casa. Los miedosos vuelven antes.
+  - **Cenan en casa** y a las **18:30** se van a **dormir en su cama** (se tumban en ella; se ve ocupada). Si les despiertas a golpes, se levantan.
+- **Guardias con cama** (los del cuartel y los vigías de las torres): por **turnos**. Los de día rondan por la ciudad de 6:00 a 18:30 y duermen de noche; los de noche duermen de 7:00 a 16:00, comen, pasan un rato en la plaza y **rondan toda la noche**. Los de las puertas, las torres de la muralla y la plaza siguen en su puesto. Si ven a un enemigo, luchan.
+- **Peligro**: si un vecino ve un monstruo o un asaltante (los miedosos desde más lejos, los valientes solo de cerca) o le atacan, **corre a casa** y se queda allí hasta que pasa un rato sin peligro.
+- **Contratados**: si los dejas viviendo en un sitio (no los soldados), buscan una cama libre cerca y duermen en ella de noche; de día hacen lo que les mandes, como siempre. Si te siguen, no tienen rutina.
+- Si se atascan de camino a casa o a la cama (las escalas de las casas de dos plantas), al rato aparecen allí; si se atascan yendo a otro sitio, buscan otro.
+- Lo que llevan en la mano para la rutina (el pan, la azada, el martillo...) no se suelta al morir ni se queda al contratarlos.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

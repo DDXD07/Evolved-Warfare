@@ -51,6 +51,8 @@ public class CityGuardEntity extends SoldierEntity {
 	public void setCity(long key, BlockPos center, int radius, CityDesigner.Style cityStyle) {
 		this.cityKey = key;
 		ewProfile().community = key;
+		ewProfile().center = center;
+		ewProfile().range = Math.max(8, radius - 4);
 		this.cityCenter = center;
 		this.cityRadius = radius;
 		this.style = cityStyle.ordinal();
@@ -71,7 +73,10 @@ public class CityGuardEntity extends SoldierEntity {
 			setEquipmentDropChance(slot, 0.0F);
 		}
 		EntityData data = super.initialize(world, difficulty, spawnReason, entityData);
-		setOrder(NpcOrder.STAY);
+		// los del cuartel (con cama) siguen su turno; los de las puertas, las torres y la plaza no se mueven de su puesto
+		if (ewProfile().bed == null) {
+			setOrder(NpcOrder.STAY);
+		}
 		return data;
 	}
 

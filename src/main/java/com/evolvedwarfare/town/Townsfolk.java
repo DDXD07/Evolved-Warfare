@@ -22,6 +22,16 @@ public interface Townsfolk {
 		return null;
 	}
 
+	/** ¿Busca cama? (por defecto, los que no tienen dueño). */
+	default boolean ewWantsBed() {
+		return !ewHired();
+	}
+
+	/** Desde dónde busca cama (su casa). */
+	default net.minecraft.util.math.BlockPos ewHomePos() {
+		return ewSelf().getBlockPos();
+	}
+
 	/** ¿Tiene dueño (lo ha contratado alguien)? */
 	boolean ewHired();
 }

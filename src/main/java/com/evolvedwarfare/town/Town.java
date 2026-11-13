@@ -53,9 +53,9 @@ public final class Town {
 			p.bed = null;
 			p.bedSearched = false;
 		}
-		if (p.bed == null && !p.bedSearched && !t.ewHired()) {
+		if (p.bed == null && !p.bedSearched && t.ewWantsBed()) {
 			p.bedSearched = true;
-			p.bed = freeBed(world, self.getBlockPos(), BED_RADIUS, self);
+			p.bed = freeBed(world, t.ewHomePos(), BED_RADIUS, self);
 		}
 		if (!p.met && self.age > 40) {
 			p.met = true;
