@@ -246,12 +246,8 @@ public final class Dialogue {
 			case NEWS -> news(npc, p, world, random);
 			case HIRE -> hireAsk(npc, mood, random);
 			case HIRE_YES -> {
-				Text done = hire(player, npc, mood, random);
-				if (done == null) {
-					// contratado: el NPC puede haber cambiado (guardia → soldado, mercader → recluta); se cierra
-					return null;
-				}
-				yield done;
+				// null: contratado (el NPC puede haber cambiado: guardia → soldado, mercader → recluta); se cierra
+				yield hire(player, npc, mood, random);
 			}
 			case FOLLOW, STAY, LIVE -> {
 				if (mine == null) {
