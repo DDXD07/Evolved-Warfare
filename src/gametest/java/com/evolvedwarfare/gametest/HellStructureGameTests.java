@@ -177,7 +177,7 @@ public class HellStructureGameTests implements FabricGameTest {
 		ctx.complete();
 	}
 
-	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 40)
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "condemnation", tickLimit = 40)
 	public void condemnationWeakensLords(TestContext ctx) {
 		ServerWorld world = ctx.getWorld();
 		ServerPlayerEntity player = survivor(ctx);

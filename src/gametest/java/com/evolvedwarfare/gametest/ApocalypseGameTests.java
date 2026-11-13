@@ -61,7 +61,7 @@ public class ApocalypseGameTests implements FabricGameTest {
 		return (RitualCircleBlockEntity) ctx.getWorld().getBlockEntity(pos);
 	}
 
-	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 60)
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "mini_bosses", tickLimit = 60)
 	public void miniBossesStand(TestContext ctx) {
 		AbyssAngelEntity angel = ctx.spawnEntity(Apocalypse.ABYSS_ANGEL, 2, 3, 2);
 		FalseProphetEntity prophet = ctx.spawnEntity(Apocalypse.FALSE_PROPHET, 5, 2, 2);
