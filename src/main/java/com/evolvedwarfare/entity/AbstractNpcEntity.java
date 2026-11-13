@@ -152,6 +152,9 @@ public abstract class AbstractNpcEntity extends PathAwareEntity implements com.e
 	@Nullable
 	public Long forcedTime;
 
+	/** Cuándo comió por última vez (hora del mundo; 0: aún no). */
+	public long lastMeal;
+
 	public com.evolvedwarfare.town.Activity getActivity() {
 		return activity;
 	}

@@ -321,6 +321,7 @@ public class RoutineGoal extends Goal {
 		}
 		if (eatTimer >= 48) {
 			ate = true;
+			npc.lastMeal = world.getTime();
 			npc.clearProp();
 		}
 	}

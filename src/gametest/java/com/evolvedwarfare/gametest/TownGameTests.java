@@ -301,10 +301,8 @@ public class TownGameTests implements FabricGameTest {
 			boolean slept = r.isSleeping() && ctx.getWorld().getBlockState(abs).get(BedBlock.OCCUPIED);
 			r.forcedTime = 300L;
 			boolean[] sawBread = {false};
-			for (int t = 1; t < 120; t++) {
-				ctx.runAtTick(ctx.getTick() + t, () -> sawBread[0] |= r.getMainHandStack().isOf(Items.BREAD));
-			}
 			ctx.waitAndRun(150, () -> {
+				sawBread[0] = r.lastMeal > 0;
 				LOG.info("[EW-GAMETEST] rutina: dormido en su cama {}; por la mañana despierto {} y con pan {} ({})", slept, !r.isSleeping(), sawBread[0],
 						r.getActivity());
 				check(slept, "No se acuesta en su cama: " + r.getActivity() + " en " + r.getBlockPos());
