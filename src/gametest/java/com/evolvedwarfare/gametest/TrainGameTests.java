@@ -67,9 +67,13 @@ public class TrainGameTests implements FabricGameTest {
 		List<ChunkPos> forced = force(world, o, 48, 32);
 		clear(world, o, 32, 24);
 		int y = o.getY();
-		// 10 rectas hacia el este, una curva a la derecha (al sur) y 6 rectas hacia el sur
-		double[] at = {o.getX(), o.getZ()};
-		for (int i = 0; i < 10; i++) {
+		// 14 rectas hacia el este (desde 8 bloques antes, para que quepa detrás la plataforma de 10), una curva a la derecha
+		// (al sur) y 6 rectas hacia el sur
+		for (BlockPos p : BlockPos.iterate(o.add(-12, -1, -6), o.add(-6, 8, 6))) {
+			world.setBlockState(p, p.getY() == o.getY() - 1 ? Blocks.STONE.getDefaultState() : Blocks.AIR.getDefaultState());
+		}
+		double[] at = {o.getX() - 8, o.getZ()};
+		for (int i = 0; i < 14; i++) {
 			at = lay(world, Track.Shape.STRAIGHT, false, Direction.EAST, at[0], at[1], y);
 		}
 		at = lay(world, Track.Shape.CURVE, false, Direction.EAST, at[0], at[1], y);
@@ -77,8 +81,8 @@ public class TrainGameTests implements FabricGameTest {
 			at = lay(world, Track.Shape.STRAIGHT, false, Direction.SOUTH, at[0], at[1], y);
 		}
 		double endX = at[0], endZ = at[1];
-		// la locomotora en el último trozo recto, mirando al este, con un ténder y una plataforma (de 10 de largo) detrás
-		BlockPos sixth = BlockPos.ofFloored(o.getX() + 19.5, y, o.getZ() + 0.5);
+		// la locomotora en el duodécimo trozo, mirando al este, con un ténder y una plataforma (de 10 de largo) detrás
+		BlockPos sixth = BlockPos.ofFloored(o.getX() + 15.5, y, o.getZ() + 0.5);
 		LocomotiveEntity loco = Trains.LOCOMOTIVE.create(world);
 		loco.setTrack(Track.start(world, sixth, Direction.EAST));
 		world.spawnEntity(loco);
