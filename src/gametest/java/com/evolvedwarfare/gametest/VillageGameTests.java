@@ -194,9 +194,10 @@ public class VillageGameTests implements FabricGameTest {
 		};
 		com.evolvedwarfare.world.VillageFlattenPiece f = com.evolvedwarfare.world.VillageFlattenPiece.plan(slope, 0, 0, w, h, region, List.of(), 1234);
 		int lo = Integer.MAX_VALUE, hi = Integer.MIN_VALUE, maxStep = 0;
-		for (int z = 15; z < 75; z++) {
+		// por dentro (el borde, en casillas de 2, ya es el principio de la rampa)
+		for (int z = 17; z < 73; z++) {
 			int prev = Integer.MIN_VALUE;
-			for (int x = 15; x < 75; x++) {
+			for (int x = 17; x < 73; x++) {
 				int y = f.flat(x, z, slope.ground(x, z));
 				lo = Math.min(lo, y);
 				hi = Math.max(hi, y);
