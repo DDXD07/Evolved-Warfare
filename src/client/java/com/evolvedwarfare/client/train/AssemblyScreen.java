@@ -1,7 +1,7 @@
 package com.evolvedwarfare.client.train;
 
 import com.evolvedwarfare.train.AssemblyScreenHandler;
-import com.evolvedwarfare.train.Building;
+import com.evolvedwarfare.train.Costs;
 import com.evolvedwarfare.train.Trains;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ public class AssemblyScreen extends HandledScreen<AssemblyScreenHandler> {
 		for (int i = 0; i < buttons.size(); i++) {
 			boolean creative = client != null && client.player != null && client.player.getAbilities().creativeMode;
 			buttons.get(i).active = creative || client != null && client.player != null
-					&& Building.affordable(client.player.getInventory(), Trains.assemblies().get(i).needs()) > 0;
+					&& Costs.affordable(client.player.getInventory(), Trains.assemblies().get(i).needs()) > 0;
 		}
 	}
 
@@ -78,10 +78,10 @@ public class AssemblyScreen extends HandledScreen<AssemblyScreenHandler> {
 			ms.pop();
 			ctx.drawText(textRenderer, new ItemStack(a.result()).getName(), 46, ry + 5, TEXT, false);
 			for (int k = 0; k < a.needs().size(); k++) {
-				Building.Cost c = a.needs().get(k);
+				Costs.Cost c = a.needs().get(k);
 				int cx = 46 + k * 34, cy = ry + 18;
 				ctx.drawItem(new ItemStack(c.icon()), cx, cy);
-				int have = player == null ? 0 : Building.count(player.getInventory(), c.ingredient());
+				int have = player == null ? 0 : Costs.count(player.getInventory(), c.ingredient());
 				String s = have + "/" + c.count();
 				ms.push();
 				ms.translate(cx + 15, cy + 10, 200);

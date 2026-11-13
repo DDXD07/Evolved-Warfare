@@ -1,6 +1,5 @@
 package com.evolvedwarfare.gametest;
 
-import com.evolvedwarfare.train.Building;
 import com.evolvedwarfare.train.LocomotiveEntity;
 import com.evolvedwarfare.train.PlatformEntity;
 import com.evolvedwarfare.train.TenderEntity;
@@ -14,6 +13,8 @@ import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.test.GameTest;
 import net.minecraft.test.GameTestException;
@@ -76,8 +77,8 @@ public class TrainGameTests implements FabricGameTest {
 			at = lay(world, Track.Shape.STRAIGHT, false, Direction.SOUTH, at[0], at[1], y);
 		}
 		double endX = at[0], endZ = at[1];
-		// la locomotora en el octavo trozo, mirando al este, con un ténder y una plataforma detrás
-		BlockPos sixth = BlockPos.ofFloored(o.getX() + 15.5, y, o.getZ() + 0.5);
+		// la locomotora en el último trozo recto, mirando al este, con un ténder y una plataforma (de 10 de largo) detrás
+		BlockPos sixth = BlockPos.ofFloored(o.getX() + 19.5, y, o.getZ() + 0.5);
 		LocomotiveEntity loco = Trains.LOCOMOTIVE.create(world);
 		loco.setTrack(Track.start(world, sixth, Direction.EAST));
 		world.spawnEntity(loco);
@@ -149,72 +150,118 @@ public class TrainGameTests implements FabricGameTest {
 		ctx.complete();
 	}
 
-	@GameTest(templateName = EMPTY_STRUCTURE)
-	public void buildingNeedsSupport(TestContext ctx) {
-		List<Building.Placed> pieces = new ArrayList<>();
-		java.util.function.Function<Building.Slot, Boolean> put = s -> {
-			if (!Building.canPlace(pieces, s)) {
+	/** La plataforma de 5 x 10 se construye bloque a bloque, hasta 4 de alto; las de antes pasan a bloques (y devuelven las piezas). */
+	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 60)
+	public void platformBuildsBlockByBlock(TestContext ctx) {
+		ServerWorld world = ctx.getWorld();
+		BlockPos o = ctx.getAbsolutePos(new BlockPos(0, 1, 0)).add(0, 0, 600);
+		List<ChunkPos> forced = force(world, o, 10, 10);
+		clear(world, o, 8, 8);
+		PlatformEntity flat = Trains.PLATFORM.create(world);
+		flat.refreshPositionAndAngles(o.getX() + 0.5, o.getY() + 2, o.getZ() + 0.5, 0, 0);
+		flat.setNoGravity(true);
+		world.spawnEntity(flat);
+		var g = flat.grid();
+		java.util.function.BiFunction<Double, Double, Boolean> onDeck = (x, z) -> {
+			var plan = com.evolvedwarfare.voxel.VoxelBuild.plan(g, new com.evolvedwarfare.voxel.VoxelGrid.Hit(-1, net.minecraft.util.math.Direction.UP,
+					new Vec3d(x, PlatformEntity.DECK, z)), new ItemStack(Items.OAK_PLANKS), new Vec3d(0, -1, 0));
+			if (plan == null) {
 				return false;
 			}
-			pieces.add(new Building.Placed(s.kind(), Building.Material.WOOD, s.level(), s.a(), s.b(), s.rot()));
+			com.evolvedwarfare.voxel.VoxelBuild.apply(flat, plan);
 			return true;
 		};
-		boolean wall = put.apply(new Building.Slot(Building.Kind.WALL, 0, 0, 0, 0));
-		boolean sameSpot = !put.apply(new Building.Slot(Building.Kind.DOORWAY, 0, 0, 0, 0));
-		boolean ceiling = put.apply(new Building.Slot(Building.Kind.CEILING, 0, 0, 0, 0));
-		boolean nextCeiling = put.apply(new Building.Slot(Building.Kind.CEILING, 0, 1, 0, 0));
-		boolean floating = !put.apply(new Building.Slot(Building.Kind.CEILING, 0, 0, 3, 0));
-		boolean upstairsWall = put.apply(new Building.Slot(Building.Kind.WINDOW, 1, 1, 0, 0));
-		boolean noUpstairsWithoutFloor = !put.apply(new Building.Slot(Building.Kind.WALL, 1, 0, 3, 0));
-		boolean stairs = put.apply(new Building.Slot(Building.Kind.STAIRS, 0, 0, 2, 0));
-		boolean ceilingOverStairs = !put.apply(new Building.Slot(Building.Kind.CEILING, 0, 0, 2, 0));
-		// se apunta al suelo de la plataforma, cerca de un borde: la pared va en ese borde
-		Building.Slot aim = Building.slotFor(Building.Kind.WALL, new Vec3d(-1.4, Building.DECK, 0.4), new Vec3d(0, -1, 0));
-		boolean aimed = aim != null && aim.rot() == 1 && aim.a() == 0 && aim.level() == 0;
-		// se quita la pared de abajo: los techos y la ventana de arriba se caen
-		pieces.remove(0);
-		List<Building.Placed> fall = Building.unsupported(pieces);
-		boolean falls = fall.size() == 3;
-		LOG.info("[EW-GAMETEST] construir: pared {}, sitio ocupado {}, techo {}, techo al lado {}, techo en el aire {}, ventana arriba {}, "
-				+ "pared arriba sin suelo {}, escalera {}, techo sobre escalera {}, apuntar {}, se caen {}", wall, sameSpot, ceiling, nextCeiling, floating,
-				upstairsWall, noUpstairsWithoutFloor, stairs, ceilingOverStairs, aim, fall.size());
-		if (!(wall && sameSpot && ceiling && nextCeiling && floating && upstairsWall && noUpstairsWithoutFloor && stairs && ceilingOverStairs && aimed && falls)) {
-			throw new GameTestException("Las reglas de construcción fallan");
+		// las cuatro esquinas de 5 x 10
+		boolean corners = onDeck.apply(-2.4, -4.9) && onDeck.apply(2.4, -4.9) && onDeck.apply(-2.4, 4.9) && onDeck.apply(2.4, 4.9);
+		boolean outside = !onDeck.apply(2.6, 0.0);
+		// hasta 4 de alto
+		int x = 2, z = 5;
+		for (int y = 0; y < PlatformEntity.HEIGHT; y++) {
+			flat.putBlock(x, y, z, net.minecraft.block.Blocks.STONE.getDefaultState());
 		}
-		ctx.complete();
+		boolean tooHigh = com.evolvedwarfare.voxel.VoxelBuild.plan(g, new com.evolvedwarfare.voxel.VoxelGrid.Hit(g.index(x, PlatformEntity.HEIGHT - 1, z),
+				net.minecraft.util.math.Direction.UP, new Vec3d(0, PlatformEntity.DECK + PlatformEntity.HEIGHT, 0.5)), new ItemStack(Items.STONE),
+				new Vec3d(0, -1, 0)) == null;
+		double top = flat.worldBoxes().stream().mapToDouble(b -> b.maxY).max().orElse(0) - flat.getY();
+		// una plataforma de antes: un cofre con hierro y una pared de madera
+		NbtCompound old = new NbtCompound();
+		NbtCompound chest = new NbtCompound();
+		chest.putByte("K", (byte) 0);
+		chest.putByte("X", (byte) 1);
+		chest.putByte("Z", (byte) 2);
+		chest.putByte("L", (byte) 0);
+		chest.putByte("F", (byte) 2);
+		net.minecraft.util.collection.DefaultedList<ItemStack> inv = net.minecraft.util.collection.DefaultedList.ofSize(27, ItemStack.EMPTY);
+		inv.set(0, new ItemStack(Items.IRON_INGOT, 9));
+		NbtCompound invNbt = new NbtCompound();
+		net.minecraft.inventory.Inventories.writeNbt(invNbt, inv, world.getRegistryManager());
+		chest.put("Inv", invNbt);
+		NbtList blocks = new NbtList();
+		blocks.add(chest);
+		NbtCompound wall = new NbtCompound();
+		wall.putByte("K", (byte) 0);
+		wall.putByte("M", (byte) 1);
+		NbtList pieces = new NbtList();
+		pieces.add(wall);
+		old.put("Blocks", blocks);
+		old.put("List", pieces);
+		PlatformEntity older = Trains.PLATFORM.create(world);
+		NbtCompound nbt = older.writeNbt(new NbtCompound());
+		nbt.remove("Grid");
+		nbt.put("Pieces", old);
+		older.readNbt(nbt);
+		older.refreshPositionAndAngles(o.getX() + 0.5, o.getY() + 2, o.getZ() + 8.5, 0, 0);
+		older.setNoGravity(true);
+		world.spawnEntity(older);
+		var og = older.grid();
+		var m = og.machine(og.index(2, 0, 4));
+		boolean migrated = og.get(og.index(2, 0, 4)).isOf(net.minecraft.block.Blocks.CHEST) && m != null && m.inventory.getStack(0).getCount() == 9;
+		ctx.waitAndRun(10, () -> {
+			int planks = world.getEntitiesByClass(net.minecraft.entity.ItemEntity.class, older.getBoundingBox().expand(4),
+					e -> e.getStack().isOf(Items.OAK_PLANKS)).stream().mapToInt(e -> e.getStack().getCount()).sum();
+			LOG.info("[EW-GAMETEST] plataforma: esquinas {}, fuera {}, más de 4 {}, lo macizo llega a {}, la vieja pasa a bloques {} y devuelve {} tablones",
+					corners, !outside, !tooHigh, top, migrated, planks);
+			flat.discard();
+			older.discard();
+			world.getEntitiesByClass(net.minecraft.entity.ItemEntity.class, new net.minecraft.util.math.Box(o).expand(14), e -> true)
+					.forEach(net.minecraft.entity.Entity::discard);
+			forced.forEach(cp -> world.setChunkForced(cp.x, cp.z, false));
+			if (!(corners && outside && tooHigh && Math.abs(top - (PlatformEntity.DECK + PlatformEntity.HEIGHT)) < 0.01 && migrated && planks == 6)) {
+				throw new GameTestException("La plataforma no se construye bien bloque a bloque");
+			}
+			ctx.complete();
+		});
 	}
 
 	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 900)
 	public void platformBlocksWork(TestContext ctx) {
 		ServerWorld world = ctx.getWorld();
 		BlockPos o = ctx.getAbsolutePos(new BlockPos(0, 1, 0)).add(0, 0, 520);
-		List<ChunkPos> forced = force(world, o, 8, 8);
-		clear(world, o, 6, 6);
+		List<ChunkPos> forced = force(world, o, 10, 10);
+		clear(world, o, 8, 8);
 		PlatformEntity flat = Trains.PLATFORM.create(world);
 		flat.refreshPositionAndAngles(o.getX() + 0.5, o.getY() + 2, o.getZ() + 0.5, 0, 0);
 		flat.setNoGravity(true);
 		world.spawnEntity(flat);
-		boolean furnace = flat.addBlock(com.evolvedwarfare.train.TrainBlocks.Kind.FURNACE, new int[] {0, 0, 0, 0});
-		boolean campfire = flat.addBlock(com.evolvedwarfare.train.TrainBlocks.Kind.CAMPFIRE, new int[] {2, 5, 0, 0});
-		boolean chest = flat.addBlock(com.evolvedwarfare.train.TrainBlocks.Kind.CHEST, new int[] {1, 2, 0, 0});
-		boolean taken = !flat.addBlock(com.evolvedwarfare.train.TrainBlocks.Kind.BARREL, new int[] {1, 2, 0, 0});
-		boolean noFloor = !flat.addBlock(com.evolvedwarfare.train.TrainBlocks.Kind.BARREL, new int[] {1, 3, 1, 0});
-		var f = flat.blocks().get(0);
+		flat.putBlock(0, 0, 0, net.minecraft.block.Blocks.FURNACE.getDefaultState());
+		flat.putBlock(4, 0, 9, net.minecraft.block.Blocks.CAMPFIRE.getDefaultState());
+		flat.putBlock(2, 0, 4, net.minecraft.block.Blocks.CHEST.getDefaultState());
+		var g = flat.grid();
+		var f = g.machine(g.index(0, 0, 0));
 		f.inventory.setStack(0, new ItemStack(Items.RAW_IRON, 2));
 		f.inventory.setStack(1, new ItemStack(Items.COAL, 1));
-		var c = flat.blocks().get(1);
-		boolean cooking = c.addToCampfire(world, new ItemStack(Items.BEEF));
+		boolean cooking = g.machine(g.index(4, 0, 9)).addToCampfire(world, new ItemStack(Items.BEEF));
+		boolean chest = g.machine(g.index(2, 0, 4)) != null;
 		ctx.runAtTick(700, () -> {
 			int ingots = f.inventory.getStack(2).isOf(Items.IRON_INGOT) ? f.inventory.getStack(2).getCount() : 0;
 			boolean cooked = !world.getEntitiesByClass(net.minecraft.entity.ItemEntity.class, flat.getBoundingBox().expand(4),
 					e -> e.getStack().isOf(Items.COOKED_BEEF)).isEmpty();
-			float warm = Trains.trainWarmth(world, BlockPos.ofFloored(flat.getPos()));
-			LOG.info("[EW-GAMETEST] bloques del tren: horno {}, fogata {}, cofre {}, sitio ocupado {}, sin suelo {}, lingotes {}, cocinado {} ({}), calor {}", furnace,
-					campfire, chest, taken, noFloor, ingots, cooked, cooking, warm);
+			float warm = Trains.trainWarmth(world, BlockPos.ofFloored(flat.gridToWorld(g.center(g.index(4, 0, 9)))));
+			LOG.info("[EW-GAMETEST] bloques del tren: cofre {}, lingotes {}, cocinado {} ({}), calor {}", chest, ingots, cooked, cooking, warm);
 			flat.discard();
 			world.getEntitiesByClass(net.minecraft.entity.ItemEntity.class, flat.getBoundingBox().expand(6), e -> true).forEach(net.minecraft.entity.Entity::discard);
 			forced.forEach(cp -> world.setChunkForced(cp.x, cp.z, false));
-			if (!(furnace && campfire && chest && taken && noFloor && ingots == 2 && cooked && warm > 0)) {
+			if (!(chest && ingots == 2 && cooked && cooking && warm > 0)) {
 				throw new GameTestException("Los bloques de la plataforma no funcionan: lingotes " + ingots + ", cocinado " + cooked + ", calor " + warm);
 			}
 			ctx.complete();

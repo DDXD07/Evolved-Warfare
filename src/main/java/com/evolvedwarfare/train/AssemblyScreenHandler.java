@@ -27,7 +27,7 @@ public class AssemblyScreenHandler extends ScreenHandler {
 			return false;
 		}
 		Trains.Assembly a = Trains.assemblies().get(id);
-		if (!player.getAbilities().creativeMode && !Building.pay(player.getInventory(), a.needs())) {
+		if (!player.getAbilities().creativeMode && !Costs.pay(player.getInventory(), a.needs())) {
 			return false;
 		}
 		ItemStack out = new ItemStack(a.result());

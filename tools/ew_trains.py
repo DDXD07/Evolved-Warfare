@@ -179,44 +179,35 @@ def tender():
 
 
 def flatcar():
-    """La plataforma: un tablero de tablas de 48 x 24 (3 x 6 bloques al doble), con sus largueros, vigas de topes y dos bogies."""
+    """La plataforma (fase 63): un tablero de tablas de 80 x 40 (5 x 10 bloques al doble), con sus largueros, vigas de topes
+    y dos bogies (a 3,5 bloques del centro)."""
     a = W.Animal("flatcar")
     frame = a.part("frame", None, (0, 0, 0), role="body")
-    frame.cube((-24, -2, -12), (48, 2, 24), **C(WOOD, rings=((92, 62, 36), 3), spots=((140, 100, 62), 0.04)))   # el tablero
-    for z in (-13, 12):
-        frame.cube((-24, -2, z), (48, 4, 1), **C(RED, low=(DARK, 1), spots=((110, 24, 20), 0.05)))           # los largueros
-        for x in range(-21, 22, 7):
+    frame.cube((-40, -2, -20), (80, 2, 40), **C(WOOD, rings=((92, 62, 36), 3), spots=((140, 100, 62), 0.04)))   # el tablero
+    for z in (-21, 20):
+        frame.cube((-40, -2, z), (80, 4, 1), **C(RED, low=(DARK, 1), spots=((110, 24, 20), 0.05)))           # los largueros
+        for x in range(-35, 36, 7):
             frame.cube((x, -3, z), (1, 3, 1), **C(DARK))                                                     # los cajetines de teleros
-    for x in (-25, 24):
-        frame.cube((x, -2, -13), (1, 5, 26), **C(RED, low=(DARK, 1)))                                        # las vigas de los topes
+    for x in (-41, 40):
+        frame.cube((x, -2, -21), (1, 5, 42), **C(RED, low=(DARK, 1)))                                        # las vigas de los topes
         bx = x - 1 if x < 0 else x + 1
-        for z in (-10, 8):
+        for z in (-14, 12):
             frame.cube((bx, 0, z), (1, 2, 2), **C(STEEL))                                                     # los topes
         frame.cube((bx, 0, -1), (1, 1, 2), **C(DARK))                                                         # el enganche
-    frame.cube((-24, 0, -3), (48, 3, 6), **C(IRON, rings=((70, 68, 72), 1)))                                 # la viga central
-    for x in (-16, 16):
+    frame.cube((-40, 0, -3), (80, 3, 6), **C(IRON, rings=((70, 68, 72), 1)))                                 # la viga central
+    for z in (-12, 9):
+        frame.cube((-40, 0, z), (80, 2, 3), **C(IRON, high=((80, 78, 84), 1)))                                # las vigas de los lados
+    for x in (-28, 28):
         frame.cube((x - 6, 2, -7), (12, 1, 14), **C(DARK))                                                    # los bogies
         for z in (-8, 7):
             frame.cube((x - 6, 1, z), (12, 3, 1), **C(IRON, high=((80, 78, 84), 1)))                          # sus costados
             frame.cube((x - 1, 2, z - 1 if z < 0 else z + 1), (2, 2, 1), **C(STEEL))                          # las cajas de grasa
-    wheel_set(a, (-19, -13, 13, 19), 3, z=5)
+    wheel_set(a, (-31, -25, 25, 31), 3, z=5)
     return a
 
 
 MODELS = collections.OrderedDict([("steam_locomotive", locomotive), ("coal_tender", tender), ("flatcar", flatcar)])
 
-# las piezas de construcción: (id, español, inglés)
-KINDS = [("wall", "Pared", "Wall"), ("doorway", "Pared con puerta", "Doorway"), ("window", "Pared con ventana", "Window Wall"),
-         ("ceiling", "Techo", "Ceiling"), ("roof", "Tejado inclinado", "Sloped Roof"), ("stairs", "Escalera", "Staircase"),
-         ("railing", "Barandilla", "Railing")]
-MATERIALS = [("straw", "de paja", "Straw"), ("wood", "de madera", "Wooden"), ("stone", "de piedra", "Stone"), ("metal", "de metal", "Metal")]
-# las texturas de vanilla de cada material (las mismas que usa el juego): el material, el remate, la puerta y el tejado
-MAT_TEX = {
-    "straw": ("block/hay_block_side", "block/bamboo_block", "block/bamboo_planks", "block/hay_block_top"),
-    "wood": ("block/oak_planks", "block/stripped_spruce_log", "block/spruce_planks", "block/spruce_planks"),
-    "stone": ("block/stone_bricks", "block/smooth_stone", "block/dark_oak_planks", "block/deepslate_tiles"),
-    "metal": ("block/iron_block", "block/smooth_basalt", "block/iron_trapdoor", "block/iron_block"),
-}
 TRACKS = [("track_straight", "Vía recta", "Straight Track", "Dos de ancho y dos de largo. Se engancha sola a la punta de vía más cercana.",
            "Two wide, two long. Snaps to the nearest loose track end."),
           ("track_slope", "Vía en cuesta", "Sloped Track", "Sube un bloque en cuatro. Agachado, baja.", "Rises one block over four. Sneak to go down."),
@@ -240,34 +231,21 @@ TEXTS = {
     "item.evolvedwarfare.coal_tender.desc": ("Clic derecho en un coche del tren para engancharlo detrás. 27 huecos de carbón para la locomotora.",
                                              "Right click a train car to couple it at the back. 27 coal slots for the locomotive."),
     "item.evolvedwarfare.flatcar": ("Plataforma", "Flatcar"),
-    "item.evolvedwarfare.flatcar.desc": ("Clic derecho en un coche del tren para engancharla detrás. Construye encima con el martillo de construcción.",
-                                         "Right click a train car to couple it at the back. Build on it with the building hammer."),
+    "item.evolvedwarfare.flatcar.desc": ("Clic derecho en un coche del tren para engancharla detrás. 5 x 10: construye encima bloque a bloque.",
+                                         "Right click a train car to couple it at the back. 5 x 10: build on it block by block."),
     "item.evolvedwarfare.train_part.desc": ("Se monta en la mesa de ensamblaje del tren.", "Assembled at the train assembly table."),
-    "item.evolvedwarfare.building_hammer": ("Martillo de construcción", "Building Hammer"),
-    "item.evolvedwarfare.building_hammer.desc": ("Clic derecho: el menú de construcción. Agachado + clic derecho en una pieza: recogerla; en un coche: desengancharlo.",
-                                                 "Right click: the building menu. Sneak + right click a piece: pick it up; a car: uncouple it."),
-    "item.evolvedwarfare.piece.desc": ("Apunta a la plataforma del tren: verde, cabe; rojo, no. Clic derecho para ponerla.",
-                                       "Aim at the train flatcar: green fits, red doesn't. Right click to place it."),
+    "item.evolvedwarfare.building_hammer": ("Martillo del tren", "Train Hammer"),
+    "item.evolvedwarfare.building_hammer.desc": ("Agachado + clic derecho en un coche: desengancharlo (o recogerlo).",
+                                                 "Sneak + right click a car: uncouple it (or pick it up)."),
     "block.evolvedwarfare.big_track": ("Vía grande", "Big Track"),
     "block.evolvedwarfare.train_assembly_table": ("Mesa de ensamblaje del tren", "Train Assembly Table"),
     "container.evolvedwarfare.steam_locomotive": ("Caldera", "Firebox"),
     "gui.evolvedwarfare.locomotive.fuel": ("Fuego: %s:%s", "Fire: %s:%s"),
     "gui.evolvedwarfare.locomotive.speed": ("%s,%s km/h", "%s.%s km/h"),
-    "gui.evolvedwarfare.build.title": ("Construcción", "Building"),
-    "gui.evolvedwarfare.build.craft": ("Fabricar", "Craft"),
-    "gui.evolvedwarfare.build.max": ("Máx", "Max"),
-    "gui.evolvedwarfare.build.hp": ("Resistencia: %s", "Durability: %s"),
-    "gui.evolvedwarfare.build.material.straw": ("Paja", "Straw"),
-    "gui.evolvedwarfare.build.material.wood": ("Madera", "Wood"),
-    "gui.evolvedwarfare.build.material.stone": ("Piedra", "Stone"),
-    "gui.evolvedwarfare.build.material.metal": ("Metal", "Metal"),
-    "gui.evolvedwarfare.build.hint1": ("Con la pieza en la mano, apunta a la plataforma:", "Hold the piece and aim at the flatcar:"),
-    "gui.evolvedwarfare.build.hint2": ("verde = cabe. Martillo agachado: recoger.", "green = fits. Sneak with hammer: pick up."),
     "gui.evolvedwarfare.assembly.build": ("Montar", "Assemble"),
     "gui.evolvedwarfare.assembly.hint": ("Las partes se fabrican en la mesa de crafteo.", "Craft the parts at a crafting table."),
     "message.evolvedwarfare.track.no_room": ("No cabe la vía ahí", "The track doesn't fit there"),
-    "message.evolvedwarfare.build.cant": ("No se puede poner ahí (necesita apoyo o el sitio está ocupado)", "Can't place it there (needs support or the spot is taken)"),
-    "message.evolvedwarfare.build.hp": ("Resistencia: %s / %s", "Durability: %s / %s"),
+    "message.evolvedwarfare.build.cant": ("No se puede poner ahí (no cabe o el sitio está ocupado)", "Can't place it there (no room or the spot is taken)"),
     "message.evolvedwarfare.train.no_room": ("No cabe otro vagón (vía corta, tren en marcha o máximo de 10)", "No room for another car (short track, moving train or 10 max)"),
     "message.evolvedwarfare.train.not_empty": ("Quita lo construido antes de desenganchar la plataforma", "Remove what's built before uncoupling the flatcar"),
     "message.evolvedwarfare.train.couple_hint": ("Engánchalo a un tren: clic derecho en la locomotora o en un vagón", "Couple it to a train: right click the locomotive or a car"),
@@ -283,14 +261,17 @@ for tid, es, en, des, den in TRACKS:
     TEXTS["item.evolvedwarfare." + tid + ".desc"] = (des, den)
 for pid, es, en in PARTS:
     TEXTS["item.evolvedwarfare." + pid] = (es, en)
-for mid, mes, men in MATERIALS:
-    for kid, kes, ken in KINDS:
-        TEXTS["item.evolvedwarfare.%s_%s" % (mid, kid)] = ("%s %s" % (kes, mes), "%s %s" % (men, ken))
 OLD_KEYS = ["entity.evolvedwarfare.passenger_car", "entity.evolvedwarfare.freight_car", "item.evolvedwarfare.passenger_car",
             "item.evolvedwarfare.passenger_car.desc", "item.evolvedwarfare.freight_car", "item.evolvedwarfare.freight_car.desc",
             "entity.evolvedwarfare.locomotive", "item.evolvedwarfare.locomotive", "item.evolvedwarfare.locomotive.desc",
             "message.evolvedwarfare.train.fuel", "message.evolvedwarfare.train.full", "message.evolvedwarfare.train.not_buildable",
-            "message.evolvedwarfare.train.no_sleep"]
+            "message.evolvedwarfare.train.no_sleep", "item.evolvedwarfare.piece.desc", "message.evolvedwarfare.build.hp"]
+# las piezas de construcción de antes (fase 63: ahora se construye bloque a bloque)
+OLD_PIECES = ["%s_%s" % (m, k) for m in ("straw", "wood", "stone", "metal")
+              for k in ("wall", "doorway", "window", "ceiling", "roof", "stairs", "railing")]
+OLD_KEYS += ["item.evolvedwarfare." + p for p in OLD_PIECES]
+OLD_KEYS += ["gui.evolvedwarfare.build." + k for k in ("title", "craft", "max", "hp", "material.straw", "material.wood", "material.stone",
+                                                       "material.metal", "hint1", "hint2")]
 
 
 def pack(a):
@@ -498,27 +479,6 @@ def el(frm, to, tex):
     return {"from": frm, "to": to, "faces": faces}
 
 
-def piece_elements(kind):
-    if kind == "wall":
-        return [el([1, 0, 7], [15, 16, 9], "main"), el([0.5, 0, 6.5], [15.5, 2, 9.5], "trim"), el([0.5, 14, 6.5], [15.5, 16, 9.5], "trim")]
-    if kind == "doorway":
-        return [el([1, 0, 7], [4, 16, 9], "main"), el([12, 0, 7], [15, 16, 9], "main"), el([4, 13, 7], [12, 16, 9], "main"),
-                el([4, 0, 7.5], [12, 13, 8.5], "door"), el([10, 6, 6.5], [11, 7, 9.5], "trim")]
-    if kind == "window":
-        return [el([1, 0, 7], [15, 6, 9], "main"), el([1, 12, 7], [15, 16, 9], "main"), el([1, 6, 7], [4, 12, 9], "main"),
-                el([12, 6, 7], [15, 12, 9], "main"), el([4, 6, 7.75], [12, 12, 8.25], "glass"), el([3.5, 5.5, 6.5], [12.5, 6.5, 9.5], "trim")]
-    if kind == "ceiling":
-        return [el([0, 7, 0], [16, 10, 16], "main"), el([2, 5, 0.5], [4, 7, 15.5], "trim"), el([12, 5, 0.5], [14, 7, 15.5], "trim")]
-    if kind == "roof":
-        return [el([0, i * 3, i * 4], [16, i * 3 + 4, i * 4 + 4], "roof") for i in range(4)]
-    if kind == "stairs":
-        return [el([1, 0, i * 4], [15, (i + 1) * 4, i * 4 + 4], "main") for i in range(4)]
-    if kind == "railing":
-        return [el([1, 0, 7], [3, 11, 9], "trim"), el([13, 0, 7], [15, 11, 9], "trim"), el([3, 9, 7.5], [13, 11, 8.5], "main"),
-                el([3, 4, 7.5], [13, 6, 8.5], "main")]
-    raise ValueError(kind)
-
-
 def main():
     tex_dir = os.path.join(ASSETS, "textures/entity/train")
     item_dir = os.path.join(ASSETS, "textures/item")
@@ -578,15 +538,11 @@ def main():
     hammer_icon().save(os.path.join(item_dir, "building_hammer.png"))
     write_json(os.path.join(ASSETS, "models/item/building_hammer.json"),
                {"parent": "minecraft:item/handheld", "textures": {"layer0": "%s:item/building_hammer" % NS}})
-    # las piezas: modelos 3D con las texturas de vanilla
-    for mid, *_ in MATERIALS:
-        main_t, trim_t, door_t, roof_t = MAT_TEX[mid]
-        for kid, *_ in KINDS:
-            write_json(os.path.join(ASSETS, "models/item/%s_%s.json" % (mid, kid)), {
-                "parent": "minecraft:block/block",
-                "textures": {"main": "minecraft:" + main_t, "trim": "minecraft:" + trim_t, "door": "minecraft:" + door_t,
-                             "roof": "minecraft:" + roof_t, "glass": "minecraft:block/glass", "particle": "minecraft:" + main_t},
-                "elements": piece_elements(kid)})
+    # las piezas de antes: fuera
+    for old in OLD_PIECES:
+        f = os.path.join(ASSETS, "models/item/%s.json" % old)
+        if os.path.exists(f):
+            os.remove(f)
     # las vías grandes (se dibujan aparte: el modelo solo da las partículas)
     write_json(os.path.join(ASSETS, "blockstates/big_track.json"), {"multipart": [{"apply": {"model": "%s:block/big_track" % NS}}]})
     write_json(os.path.join(ASSETS, "models/block/big_track.json"), {"textures": {"particle": "minecraft:block/gravel"}})
@@ -664,7 +620,7 @@ def main():
             ic = Image.open(os.path.join(item_dir, n + ".png")).convert("RGBA")
             icons.alpha_composite(ic, (k * 16, 0))
         icons.resize((16 * 14 * 6, 16 * 6), Image.NEAREST).save(os.path.join(PREVIEW, "train_icons.png"))
-    print("el tren grande: locomotora, ténder y plataforma; vías, partes, mesa, martillo y %d piezas" % (len(KINDS) * len(MATERIALS)))
+    print("el tren grande: locomotora, ténder y plataforma; vías, partes, mesa y martillo")
 
 
 if __name__ == "__main__":

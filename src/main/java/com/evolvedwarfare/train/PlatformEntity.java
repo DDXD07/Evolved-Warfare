@@ -1,124 +1,140 @@
 package com.evolvedwarfare.train;
 
+import com.evolvedwarfare.voxel.VoxelBuild;
+import com.evolvedwarfare.voxel.VoxelGrid;
+import com.evolvedwarfare.voxel.VoxelHost;
+import com.evolvedwarfare.voxel.VoxelMachine;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.block.AbstractFurnaceBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.CampfireBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.AxeItem;
+import net.minecraft.inventory.Inventories;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.PickaxeItem;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * La plataforma (fase 52): un vagón plano de 3 x 6 bloques donde se construye como en ARK (paredes, puertas, ventanas,
- * techos, tejados, escaleras y barandillas de paja, madera, piedra o metal; ver {@link Building}). Lo construido va con el
- * tren: se choca con ello, se anda por encima y lo que está encima se mueve con él.
+ * La plataforma (fases 52 y 63): un vagón plano de 5 x 10 bloques sobre el que se construye bloque a bloque, como en la
+ * carreta (estilo Scrap Mechanic): hasta {@link #HEIGHT} de alto, con casi cualquier bloque (ver {@link VoxelBuild#allowed});
+ * cofres, hornos, fogatas, mesa, cama, puertas y trampillas se usan con clic derecho; a golpes se quitan. Lo construido va
+ * con el tren: se choca con ello, se anda por encima y lo que está encima se mueve con él.
  */
-public class PlatformEntity extends TrainCarEntity {
-	public static final double HALF_LENGTH = 3.15, BOGIE = 2.0;
-	private static final TrackedData<NbtCompound> PIECES = DataTracker.registerData(PlatformEntity.class, TrackedDataHandlerRegistry.NBT_COMPOUND);
+public class PlatformEntity extends TrainCarEntity implements VoxelHost {
+	/** La altura de la tabla y el tamaño de lo que se puede construir encima (ancho, alto, largo). */
+	public static final double DECK = 1.0;
+	public static final int WIDTH = 5, HEIGHT = 4, LENGTH = 10;
+	public static final double HALF_LENGTH = LENGTH / 2.0 + 0.15, BOGIE = 3.5;
+	private static final List<Box> BASE = List.of(new Box(-WIDTH / 2.0, 0.3, -LENGTH / 2.0, WIDTH / 2.0, DECK, LENGTH / 2.0));
+	private static final List<Box> BASE_SOLID = split(new Box(-WIDTH / 2.0, 0.55, -LENGTH / 2.0, WIDTH / 2.0, DECK, LENGTH / 2.0));
+	private static final TrackedData<NbtCompound> GRID = DataTracker.registerData(PlatformEntity.class, TrackedDataHandlerRegistry.NBT_COMPOUND);
 
-	private final List<Building.Placed> pieces = new ArrayList<>();
-	private final List<TrainBlocks.Placed> blocks = new ArrayList<>();
-	private List<Box> boxes = List.of(), targets = List.of();
-	private int version;
-	private double top;
+	private VoxelGrid grid;
+	private final VoxelBuild.Damage blockDamage = new VoxelBuild.Damage();
 
 	public PlatformEntity(EntityType<?> type, World world) {
 		super(type, world);
-		rebuild();
+		grid();
 	}
 
 	@Override
 	protected void initDataTracker(DataTracker.Builder builder) {
-		builder.add(PIECES, new NbtCompound());
+		builder.add(GRID, new NbtCompound());
 	}
 
-	public List<Building.Placed> pieces() {
-		return pieces;
-	}
+	// ------------------------------------------------------------------ la rejilla
 
-	public List<TrainBlocks.Placed> blocks() {
-		return blocks;
-	}
-
-	private void rebuild() {
-		List<Box> solid = new ArrayList<>(split(new Box(-1.5, 0.55, -3.0, 1.5, Building.DECK, 3.0)));
-		List<Box> tg = new ArrayList<>();
-		tg.add(new Box(-1.5, 0.3, -3.0, 1.5, Building.DECK, 3.0));
-		top = 0;
-		for (Building.Placed p : pieces) {
-			for (Building.Part part : Building.parts(p)) {
-				if (part.solid()) {
-					solid.addAll(split(part.box()));
-				}
-				top = Math.max(top, part.box().maxY - Building.DECK);
-			}
-			tg.add(Building.bounds(p));
+	@Override
+	public VoxelGrid grid() {
+		if (grid == null) {
+			grid = new VoxelGrid(WIDTH, HEIGHT, LENGTH, -WIDTH / 2.0, DECK, -LENGTH / 2.0);
 		}
-		for (TrainBlocks.Placed b : blocks) {
-			solid.add(b.box());
-			tg.add(b.box());
-			top = Math.max(top, b.box().maxY - Building.DECK);
+		return grid;
+	}
+
+	@Override
+	public Entity self() {
+		return this;
+	}
+
+	@Override
+	public Vec3d gridToWorld(Vec3d local) {
+		return toWorld(local.x, local.y, local.z);
+	}
+
+	@Override
+	public Vec3d worldToGrid(Vec3d world) {
+		return toLocal(world);
+	}
+
+	@Override
+	public List<Box> baseBoxes() {
+		return BASE;
+	}
+
+	@Override
+	public void gridChanged() {
+		if (!getWorld().isClient) {
+			getDataTracker().set(GRID, grid().write(getRegistryManager(), false));
 		}
-		boxes = solid;
-		targets = tg;
-		version++;
 		setBoundingBox(calculateBoundingBox());
-	}
-
-	/** Cambia las piezas (en el servidor): se guardan, se mandan al cliente y se recalcula lo macizo. */
-	private void changed() {
-		rebuild();
-		dataTracker.set(PIECES, write());
 	}
 
 	@Override
 	public void onTrackedDataSet(TrackedData<?> data) {
 		super.onTrackedDataSet(data);
-		if (PIECES.equals(data) && getWorld().isClient) {
-			read(dataTracker.get(PIECES));
+		if (GRID.equals(data) && getWorld().isClient) {
+			grid().read(getDataTracker().get(GRID), getRegistryManager());
+			setBoundingBox(calculateBoundingBox());
 		}
 	}
 
 	@Override
 	protected List<Box> localBoxes() {
-		return boxes;
+		List<Box> out = new ArrayList<>(BASE_SOLID);
+		out.addAll(grid().collisionBoxes());
+		return out;
 	}
 
 	@Override
 	protected List<Box> localTargets() {
-		return targets;
+		List<Box> out = new ArrayList<>(BASE);
+		out.addAll(grid().outlineBoxes());
+		return out;
 	}
 
 	@Override
 	protected int boxesVersion() {
-		return version;
+		return grid().version();
 	}
 
 	@Override
 	protected double halfWidth() {
-		return 1.5;
+		return WIDTH / 2.0;
 	}
 
 	@Override
@@ -133,378 +149,109 @@ public class PlatformEntity extends TrainCarEntity {
 
 	@Override
 	protected double height() {
-		return Building.DECK + top + 0.1;
+		return DECK + Math.max(0.5, grid == null ? 0 : grid.height()) + 0.1;
 	}
 
-	// ------------------------------------------------------------------ construir
-
-	/** ¿Se puede poner esa pieza ahí? */
-	public boolean canPlace(Building.Slot slot) {
-		return Building.canPlace(pieces, slot);
+	/** Pone un bloque tal cual en una celda (para las pruebas). */
+	public void putBlock(int x, int y, int z, BlockState state) {
+		VoxelBuild.put(this, grid().index(x, y, z), state);
 	}
 
-	/** Dónde iría una pieza si se apunta ahí (punto del mundo) mirando hacia look (del mundo). */
-	@Nullable
-	public Building.Slot slotFor(Building.Kind kind, Vec3d hitWorld, Vec3d lookWorld) {
-		Vec3d hit = toLocal(hitWorld);
-		Vec3d look = toLocal(getPos().add(lookWorld)).subtract(toLocal(getPos()));
-		return Building.slotFor(kind, hit, look);
-	}
-
-	public boolean place(Building.Slot slot, Building.Material material) {
-		if (!canPlace(slot)) {
-			return false;
-		}
-		pieces.add(new Building.Placed(slot.kind(), material, slot.level(), slot.a(), slot.b(), slot.rot()));
-		changed();
-		return true;
-	}
-
-	/** La pieza a la que da un rayo (del mundo), o null. */
-	@Nullable
-	public Building.Placed aimed(Vec3d from, Vec3d to) {
-		Vec3d lf = toLocal(from), lt = toLocal(to);
-		Building.Placed best = null;
-		double bestD = Double.MAX_VALUE;
-		boolean deck = false;
-		var deckHit = new Box(-1.5, 0.3, -3.0, 1.5, Building.DECK, 3.0).raycast(lf, lt);
-		double deckD = deckHit.map(h -> h.squaredDistanceTo(lf)).orElse(Double.MAX_VALUE);
-		for (Building.Placed p : pieces) {
-			for (Building.Part part : Building.parts(p)) {
-				Box b = part.box().expand(0.02);
-				if (b.contains(lf)) {
-					return p;
-				}
-				var hit = b.raycast(lf, lt);
-				if (hit.isPresent()) {
-					double d = hit.get().squaredDistanceTo(lf);
-					if (d < bestD) {
-						bestD = d;
-						best = p;
-					}
-				}
-			}
-		}
-		return bestD <= deckD ? best : null;
-	}
-
-	@Nullable
-	public Building.Placed aimed(PlayerEntity player) {
-		double reach = player.getEntityInteractionRange() + 1.0;
-		Vec3d eye = player.getEyePos();
-		return aimed(eye, eye.add(player.getRotationVec(1.0F).multiply(reach)));
-	}
-
-	/** Quita una pieza (y lo que se quede sin apoyo); devuelve las piezas que salen. */
-	public List<Building.Placed> remove(Building.Placed p) {
-		List<Building.Placed> out = new ArrayList<>();
-		if (!pieces.remove(p)) {
-			return out;
-		}
-		out.add(p);
-		List<Building.Placed> fall = Building.unsupported(pieces);
-		pieces.removeAll(fall);
-		out.addAll(fall);
-		changed();
-		return out;
-	}
-
-	private void give(PlayerEntity player, Building.Placed p) {
-		ItemStack s = new ItemStack(Trains.pieceItem(p.kind, p.material));
-		if (!player.giveItemStack(s)) {
-			player.dropItem(s, false);
-		}
-	}
-
-	public static BlockSoundGroup sound(Building.Material m) {
-		return switch (m) {
-			case STRAW -> BlockSoundGroup.GRASS;
-			case WOOD -> BlockSoundGroup.WOOD;
-			case STONE -> BlockSoundGroup.STONE;
-			case METAL -> BlockSoundGroup.METAL;
-		};
-	}
+	// ------------------------------------------------------------------ clic derecho y golpes
 
 	/**
-	 * Clic derecho (con el punto exacto donde se apunta): con una pieza en la mano, se pone donde se ve la vista previa;
-	 * agachado con el martillo, se recoge la pieza (o, sin piezas, se desengancha la plataforma); en una puerta, se abre.
+	 * Clic derecho: un vagón en la mano lo engancha y el martillo, agachado, desengancha (como en todos los coches); en un
+	 * bloque que se usa (cofre, horno, puerta...), se usa; con un bloque en la mano, se pone al lado de lo que se apunta.
 	 */
 	@Override
-	public ActionResult interactAt(PlayerEntity player, Vec3d hitPos, Hand hand) {
+	public ActionResult interact(PlayerEntity player, Hand hand) {
+		World world = getWorld();
 		ItemStack stack = player.getStackInHand(hand);
-		if (stack.getItem() instanceof PieceItem piece) {
-			Building.Slot slot = slotFor(piece.kind, getPos().add(hitPos), player.getRotationVec(1.0F));
-			if (slot == null || !canPlace(slot)) {
-				if (!getWorld().isClient && hand == Hand.MAIN_HAND) {
-					player.sendMessage(Text.translatable("message.evolvedwarfare.build.cant").formatted(Formatting.RED), true);
-				}
-				return ActionResult.FAIL;
-			}
-			if (!getWorld().isClient) {
-				place(slot, piece.material);
-				stack.decrementUnlessCreative(1, player);
-				BlockSoundGroup g = sound(piece.material);
-				getWorld().playSound(null, getBlockPos(), g.getPlaceSound(), SoundCategory.BLOCKS, 1.0F, g.getPitch() * 0.8F);
-			}
-			return ActionResult.SUCCESS;
-		}
-		TrainBlocks.Kind blockKind = TrainBlocks.Kind.of(stack.getItem());
-		if (blockKind != null && !player.isSneaking()) {
-			int[] at = blockSlotFor(getPos().add(hitPos), player.getRotationVec(1.0F));
-			if (at == null || !canPlaceBlock(at)) {
-				if (!getWorld().isClient && hand == Hand.MAIN_HAND) {
-					player.sendMessage(Text.translatable("message.evolvedwarfare.build.cant").formatted(Formatting.RED), true);
-				}
-				return ActionResult.FAIL;
-			}
-			if (!getWorld().isClient) {
-				placeBlock(blockKind, at, player);
-				stack.decrementUnlessCreative(1, player);
-				var g = blockKind.block.getDefaultState().getSoundGroup();
-				getWorld().playSound(null, getBlockPos(), g.getPlaceSound(), SoundCategory.BLOCKS, 1.0F, g.getPitch() * 0.8F);
-			}
-			return ActionResult.SUCCESS;
-		}
-		if (hand != Hand.MAIN_HAND) {
-			return ActionResult.PASS;
-		}
-		TrainBlocks.Placed block = aimedBlock(player);
-		if (block != null) {
-			if (stack.isOf(Trains.BUILD_HAMMER) && player.isSneaking()) {
-				if (!getWorld().isClient) {
-					blocks.remove(block);
-					TrainBlocks.drop(this, block, player);
-					changed();
-					var g = block.kind.block.getDefaultState().getSoundGroup();
-					getWorld().playSound(null, getBlockPos(), g.getBreakSound(), SoundCategory.BLOCKS, 1.0F, g.getPitch() * 0.8F);
-				}
-				return ActionResult.SUCCESS;
-			}
-			if (block.kind.campfire()) {
-				if (!getWorld().isClient && block.addToCampfire(getWorld(), player.getAbilities().creativeMode ? stack.copy() : stack)) {
-					changed();
-				}
-				return ActionResult.SUCCESS;
-			}
-			if (!getWorld().isClient) {
-				TrainBlocks.open(player, this, block);
-				if (block.kind == TrainBlocks.Kind.CHEST) {
-					getWorld().playSound(null, getBlockPos(), SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, 0.6F, 1.0F);
-				} else if (block.kind == TrainBlocks.Kind.BARREL) {
-					getWorld().playSound(null, getBlockPos(), SoundEvents.BLOCK_BARREL_OPEN, SoundCategory.BLOCKS, 0.6F, 1.0F);
-				}
-			}
-			return ActionResult.SUCCESS;
-		}
-		Building.Placed aimed = aimed(player);
-		if (stack.isOf(Trains.BUILD_HAMMER) && player.isSneaking() && aimed != null) {
-			if (!getWorld().isClient) {
-				for (Building.Placed p : remove(aimed)) {
-					if (!player.getAbilities().creativeMode || p != aimed) {
-						give(player, p);
-					}
-				}
-				BlockSoundGroup g = sound(aimed.material);
-				getWorld().playSound(null, getBlockPos(), g.getBreakSound(), SoundCategory.BLOCKS, 1.0F, g.getPitch() * 0.8F);
-			}
-			return ActionResult.SUCCESS;
-		}
 		ActionResult common = Trains.carInteract(this, player, hand);
 		if (common != ActionResult.PASS) {
 			return common;
 		}
-		if (aimed != null && aimed.kind == Building.Kind.DOORWAY) {
-			if (!getWorld().isClient) {
-				aimed.open = !aimed.open;
-				changed();
-				boolean metal = aimed.material == Building.Material.METAL || aimed.material == Building.Material.STONE;
-				getWorld().playSound(null, getBlockPos(), aimed.open ? metal ? SoundEvents.BLOCK_IRON_DOOR_OPEN : SoundEvents.BLOCK_WOODEN_DOOR_OPEN
-						: metal ? SoundEvents.BLOCK_IRON_DOOR_CLOSE : SoundEvents.BLOCK_WOODEN_DOOR_CLOSE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+		VoxelGrid.Hit hit = VoxelBuild.aim(this, player, 1.0F);
+		if (hit == null) {
+			return ActionResult.PASS;
+		}
+		if (hand == Hand.MAIN_HAND && hit.index() >= 0 && !player.isSneaking() && VoxelBuild.usable(grid(), hit.index(), stack)) {
+			if (!world.isClient) {
+				VoxelBuild.use(this, player, hit.index(), stack);
 			}
-			return ActionResult.SUCCESS;
+			return ActionResult.success(world.isClient);
+		}
+		if (VoxelBuild.blockOf(stack) != null) {
+			VoxelBuild.Placement plan = VoxelBuild.plan(grid(), hit, stack, VoxelBuild.lookLocal(this, player, 1.0F));
+			if (plan == null) {
+				if (!world.isClient && hand == Hand.MAIN_HAND) {
+					player.sendMessage(Text.translatable("message.evolvedwarfare.build.cant").formatted(Formatting.RED), true);
+				}
+				return ActionResult.FAIL;
+			}
+			if (!world.isClient) {
+				VoxelBuild.apply(this, plan);
+				stack.decrementUnlessCreative(1, player);
+				var g = plan.states()[0].getSoundGroup();
+				Vec3d at = gridToWorld(grid().center(plan.cells()[0]));
+				world.playSound(null, at.x, at.y, at.z, g.getPlaceSound(), SoundCategory.BLOCKS, (g.getVolume() + 1.0F) / 2.0F, g.getPitch() * 0.8F);
+			}
+			return ActionResult.success(world.isClient);
 		}
 		return ActionResult.PASS;
 	}
 
-	/** Golpes: le quitan vida a la pieza a la que se apunta (más con hachas y picos); al acabarse, se rompe (sin soltar nada). */
+	/** Golpes: al bloque al que se apunta (se va rompiendo, como picar). La plataforma no se rompe a golpes. */
 	@Override
 	public boolean handleAttack(Entity attacker) {
-		if (!(attacker instanceof PlayerEntity player) || getWorld().isClient) {
-			return true;
-		}
-		Building.Placed p = aimed(player);
-		if (p == null) {
-			return true;
-		}
-		ItemStack tool = player.getMainHandStack();
-		float dmg = (float) player.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
-		if (tool.getItem() instanceof AxeItem || tool.getItem() instanceof PickaxeItem) {
-			dmg *= 2.0F;
-		}
-		dmg *= Math.max(0.2F, player.getAttackCooldownProgress(0.5F));
-		if (player.getAbilities().creativeMode) {
-			dmg = p.hp + 1;
-		}
-		p.hp -= dmg;
-		BlockSoundGroup g = sound(p.material);
-		if (p.hp <= 0) {
-			remove(p);
-			getWorld().playSound(null, getBlockPos(), g.getBreakSound(), SoundCategory.BLOCKS, 1.0F, g.getPitch() * 0.8F);
-		} else {
-			getWorld().playSound(null, getBlockPos(), g.getHitSound(), SoundCategory.BLOCKS, 1.0F, g.getPitch() * 0.6F);
-			player.sendMessage(Text.translatable("message.evolvedwarfare.build.hp", Math.round(p.hp), Math.round(p.maxHp())).formatted(Formatting.GRAY), true);
-			changed();
+		if (attacker instanceof PlayerEntity player && !getWorld().isClient) {
+			VoxelGrid.Hit hit = VoxelBuild.aim(this, player, 1.0F);
+			if (hit != null && hit.index() >= 0) {
+				VoxelBuild.hit(this, player, hit.index(), blockDamage);
+			}
 		}
 		return true;
 	}
 
-	/** Al recogerla: suelta las piezas y los bloques que lleve (con lo que tengan dentro). */
+	/** Al recogerla: suelta todo lo construido (con lo que tenga dentro). */
 	public void dropContents() {
-		for (Building.Placed p : pieces) {
-			dropStack(new ItemStack(Trains.pieceItem(p.kind, p.material)));
-		}
-		for (TrainBlocks.Placed b : blocks) {
-			TrainBlocks.drop(this, b, null);
-		}
-		pieces.clear();
-		blocks.clear();
-		changed();
-	}
-
-	// ------------------------------------------------------------------ bloques (cofres, hornos, fogatas, mesa)
-
-	/** Dónde iría un bloque si se apunta ahí (punto y mirada del mundo): {columna, fila, planta}, o null. */
-	@Nullable
-	public int[] blockSlotFor(Vec3d hitWorld, Vec3d lookWorld) {
-		Vec3d hit = toLocal(hitWorld);
-		Vec3d look = toLocal(getPos().add(lookWorld)).subtract(toLocal(getPos()));
-		Vec3d q = hit.subtract(look.multiply(0.05));
-		int level = MathHelper.floor((q.y - Building.DECK + 0.2) / Building.LEVEL);
-		int x = MathHelper.floor(q.x + TrainBlocks.COLS / 2.0), z = MathHelper.floor(q.z + TrainBlocks.ROWS / 2.0);
-		if (level < 0 || level >= Building.LEVELS || x < 0 || x >= TrainBlocks.COLS || z < 0 || z >= TrainBlocks.ROWS) {
-			return null;
-		}
-		return new int[] {x, z, level, Building.rotFor(new Vec3d(-look.x, 0, -look.z))};
-	}
-
-	/** ¿Cabe un bloque ahí? (libre, sin chocar con paredes ni escaleras, y en la planta de arriba, sobre un techo). */
-	public boolean canPlaceBlock(int[] at) {
-		for (TrainBlocks.Placed b : blocks) {
-			if (b.x == at[0] && b.z == at[1] && b.level == at[2]) {
-				return false;
-			}
-		}
-		TrainBlocks.Placed probe = new TrainBlocks.Placed(TrainBlocks.Kind.CHEST, at[0], at[1], at[2], Direction.NORTH);
-		Box box = probe.box().contract(0.02);
-		for (Building.Placed p : pieces) {
-			for (Building.Part part : Building.parts(p)) {
-				if (part.solid() && part.box().intersects(box)) {
-					return false;
+		VoxelGrid g = grid();
+		for (int i = 0; i < g.size(); i++) {
+			if (!g.isEmpty(i)) {
+				Vec3d at = gridToWorld(g.center(i));
+				for (ItemStack item : VoxelBuild.remove(this, i, true)) {
+					VoxelBuild.drop(getWorld(), at, item);
 				}
 			}
 		}
-		if (at[2] > 0) {
-			double cx = box.getCenter().x, cz = box.getCenter().z;
-			boolean floor = false;
-			for (Building.Placed p : pieces) {
-				if (p.kind == Building.Kind.CEILING && p.level == at[2] - 1) {
-					Box b = Building.bounds(p);
-					floor |= cx > b.minX && cx < b.maxX && cz > b.minZ && cz < b.maxZ;
-				}
-			}
-			return floor;
-		}
-		return true;
 	}
 
-	/** Pone un bloque (si cabe); para las pruebas y para quien lo necesite. */
-	public boolean addBlock(TrainBlocks.Kind kind, int[] at) {
-		if (!canPlaceBlock(at)) {
-			return false;
-		}
-		placeBlock(kind, at, null);
-		return true;
-	}
-
-	private void placeBlock(TrainBlocks.Kind kind, int[] at, @Nullable PlayerEntity player) {
-		Direction facing = switch (at[3]) {
-			case 0 -> Direction.SOUTH;
-			case 1 -> Direction.EAST;
-			case 2 -> Direction.NORTH;
-			default -> Direction.WEST;
-		};
-		blocks.add(new TrainBlocks.Placed(kind, at[0], at[1], at[2], facing));
-		changed();
-	}
-
-	/** El bloque al que se apunta (si está más cerca que cualquier pieza), o null. */
-	@Nullable
-	public TrainBlocks.Placed aimedBlock(PlayerEntity player) {
-		double reach = player.getEntityInteractionRange() + 1.0;
-		Vec3d eye = player.getEyePos();
-		Vec3d lf = toLocal(eye), lt = toLocal(eye.add(player.getRotationVec(1.0F).multiply(reach)));
-		TrainBlocks.Placed best = null;
-		double bestD = Double.MAX_VALUE;
-		for (TrainBlocks.Placed b : blocks) {
-			var hit = b.box().expand(0.01).raycast(lf, lt);
-			if (hit.isPresent() && hit.get().squaredDistanceTo(lf) < bestD) {
-				bestD = hit.get().squaredDistanceTo(lf);
-				best = b;
-			}
-		}
-		if (best == null) {
-			return null;
-		}
-		for (Building.Placed p : pieces) {
-			for (Building.Part part : Building.parts(p)) {
-				var hit = part.box().raycast(lf, lt);
-				if (hit.isPresent() && hit.get().squaredDistanceTo(lf) < bestD - 1e-4) {
-					return null;
-				}
-			}
-		}
-		return best;
-	}
-
-	/** Lo que se calienta cerca (para el clima): cada fogata u horno encendido, con su centro en el mundo. */
-	public void heat(java.util.function.BiConsumer<Vec3d, Float> out) {
-		for (TrainBlocks.Placed b : blocks) {
-			float w = TrainBlocks.warmth(b);
-			if (w > 0) {
-				Vec3d c = b.box().getCenter();
-				out.accept(toWorld(c.x, c.y, c.z), w);
-			}
-		}
-	}
+	// ------------------------------------------------------------------ hornos, fogatas, humo y calor
 
 	@Override
 	public void tick() {
 		super.tick();
-		if (blocks.isEmpty()) {
-			return;
-		}
 		if (getWorld().isClient) {
-			for (TrainBlocks.Placed b : blocks) {
-				if (b.lit && (b.kind.campfire() ? random.nextInt(3) == 0 : random.nextInt(12) == 0)) {
-					Box box = b.box();
-					Vec3d c = toWorld(box.getCenter().x + (random.nextDouble() - 0.5) * 0.4, box.maxY, box.getCenter().z + (random.nextDouble() - 0.5) * 0.4);
-					getWorld().addParticle(b.kind.campfire() ? net.minecraft.particle.ParticleTypes.CAMPFIRE_COSY_SMOKE : net.minecraft.particle.ParticleTypes.SMOKE,
-							c.x, c.y, c.z, 0.0, b.kind.campfire() ? 0.07 : 0.02, 0.0);
-				}
-			}
+			particles();
 			return;
 		}
+		VoxelGrid g = grid();
 		boolean sync = false;
-		int[] slot = new int[1];
-		for (TrainBlocks.Placed b : blocks) {
-			if (b.kind.furnace()) {
-				sync |= b.tickFurnace(getWorld());
-			} else if (b.kind.campfire()) {
-				ItemStack done = b.tickCampfire(getWorld(), slot);
+		for (int i = 0; i < g.size(); i++) {
+			VoxelMachine m = g.machine(i);
+			if (m == null) {
+				continue;
+			}
+			if (m.kind.furnace()) {
+				if (m.tickFurnace(getWorld()) && g.get(i).contains(Properties.LIT)) {
+					g.set(i, g.get(i).with(Properties.LIT, m.lit()));
+					sync = true;
+				}
+			} else if (m.kind == VoxelMachine.Kind.CAMPFIRE && g.get(i).get(Properties.LIT)) {
+				ItemStack done = m.tickCampfire(getWorld());
 				if (!done.isEmpty()) {
-					Box box = b.box();
-					Vec3d c = toWorld(box.getCenter().x, box.maxY + 0.2, box.getCenter().z);
-					net.minecraft.entity.ItemEntity item = new net.minecraft.entity.ItemEntity(getWorld(), c.x, c.y, c.z, done);
+					Vec3d at = gridToWorld(g.corner(i).add(0.5, 0.6, 0.5));
+					ItemEntity item = new ItemEntity(getWorld(), at.x, at.y, at.z, done);
 					item.setVelocity(Vec3d.ZERO);
 					getWorld().spawnEntity(item);
 					sync = true;
@@ -512,60 +259,139 @@ public class PlatformEntity extends TrainCarEntity {
 			}
 		}
 		if (sync) {
-			changed();
+			gridChanged();
+		}
+	}
+
+	private void particles() {
+		VoxelGrid g = grid();
+		for (int i = 0; i < g.size(); i++) {
+			BlockState s = g.get(i);
+			if (s.isAir()) {
+				continue;
+			}
+			Block b = s.getBlock();
+			boolean lit = s.contains(Properties.LIT) && s.get(Properties.LIT);
+			Vec3d c = g.corner(i);
+			if (b instanceof CampfireBlock && lit && random.nextInt(3) == 0) {
+				Vec3d at = toWorld(c.x + 0.5 + (random.nextDouble() - 0.5) * 0.4, c.y + 0.5, c.z + 0.5 + (random.nextDouble() - 0.5) * 0.4);
+				getWorld().addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, at.x, at.y, at.z, 0.0, 0.07, 0.0);
+			} else if (b instanceof AbstractFurnaceBlock && lit && random.nextInt(12) == 0) {
+				Vec3d at = toWorld(c.x + 0.5, c.y + 1.0, c.z + 0.5);
+				getWorld().addParticle(ParticleTypes.SMOKE, at.x, at.y, at.z, 0.0, 0.02, 0.0);
+			} else if ((b == Blocks.TORCH || b == Blocks.SOUL_TORCH) && random.nextInt(4) == 0) {
+				Vec3d at = toWorld(c.x + 0.5, c.y + 0.7, c.z + 0.5);
+				getWorld().addParticle(b == Blocks.TORCH ? ParticleTypes.FLAME : ParticleTypes.SOUL_FIRE_FLAME, at.x, at.y, at.z, 0.0, 0.0, 0.0);
+			}
+		}
+	}
+
+	/** Lo que calienta (para el clima): cada fogata u horno encendido, con su sitio en el mundo. */
+	public void heat(java.util.function.BiConsumer<Vec3d, Float> out) {
+		VoxelGrid g = grid();
+		for (int i = 0; i < g.size(); i++) {
+			VoxelMachine m = g.machine(i);
+			if (m != null) {
+				float w = m.warmth(g.get(i));
+				if (w > 0.0F) {
+					out.accept(gridToWorld(g.center(i)), w);
+				}
+			}
 		}
 	}
 
 	// ------------------------------------------------------------------ guardar
 
-	/** Lo que se guarda (full) o se manda al cliente (sin lo de dentro de los bloques). */
-	private NbtCompound write(boolean full) {
-		NbtCompound nbt = new NbtCompound();
-		NbtList list = new NbtList();
-		for (Building.Placed p : pieces) {
-			list.add(p.write());
-		}
-		nbt.put("List", list);
-		NbtList bl = new NbtList();
-		for (TrainBlocks.Placed b : blocks) {
-			bl.add(b.write(getRegistryManager(), full));
-		}
-		nbt.put("Blocks", bl);
-		return nbt;
-	}
-
-	private NbtCompound write() {
-		return write(false);
-	}
-
-	private void read(NbtCompound nbt) {
-		pieces.clear();
-		for (NbtElement e : nbt.getList("List", NbtElement.COMPOUND_TYPE)) {
-			Building.Placed p = Building.Placed.read((NbtCompound) e);
-			if (p != null) {
-				pieces.add(p);
-			}
-		}
-		blocks.clear();
-		for (NbtElement e : nbt.getList("Blocks", NbtElement.COMPOUND_TYPE)) {
-			TrainBlocks.Placed b = TrainBlocks.Placed.read((NbtCompound) e, getRegistryManager());
-			if (b != null) {
-				blocks.add(b);
-			}
-		}
-		rebuild();
-	}
-
 	@Override
 	protected void readCustomDataFromNbt(NbtCompound nbt) {
-		read(nbt.getCompound("Pieces"));
-		dataTracker.set(PIECES, write(false));
+		if (nbt.contains("Grid")) {
+			grid().read(nbt.getCompound("Grid"), getRegistryManager());
+		} else if (nbt.contains("Pieces")) {
+			migrate(nbt.getCompound("Pieces"));
+		}
 		readLink(nbt);
+		gridChanged();
 	}
 
 	@Override
 	protected void writeCustomDataToNbt(NbtCompound nbt) {
-		nbt.put("Pieces", write(true));
+		nbt.put("Grid", grid().write(getRegistryManager(), true));
 		writeLink(nbt);
+	}
+
+	/**
+	 * Las plataformas de antes (3 x 6, con piezas de ARK y bloques sueltos): los cofres, hornos, fogatas y mesas pasan a
+	 * bloques en el centro de la nueva (la planta de arriba, dos bloques más arriba), con lo que tenían dentro; las piezas
+	 * (paredes, techos...) se devuelven como su material principal, en el suelo junto a la plataforma.
+	 */
+	private void migrate(NbtCompound old) {
+		Block[] kinds = {Blocks.CHEST, Blocks.BARREL, Blocks.FURNACE, Blocks.SMOKER, Blocks.BLAST_FURNACE, Blocks.CAMPFIRE, Blocks.SOUL_CAMPFIRE,
+				Blocks.CRAFTING_TABLE};
+		VoxelGrid g = grid();
+		NbtList blocks = old.getList("Blocks", NbtElement.COMPOUND_TYPE);
+		for (int k = 0; k < blocks.size(); k++) {
+			NbtCompound b = blocks.getCompound(k);
+			int kind = b.getByte("K");
+			if (kind < 0 || kind >= kinds.length) {
+				continue;
+			}
+			int x = b.getByte("X") + 1, z = b.getByte("Z") + 2, y = b.getByte("L") > 0 ? 2 : 0;
+			if (!g.inside(x, y, z) || !g.isEmpty(g.index(x, y, z))) {
+				continue;
+			}
+			int i = g.index(x, y, z);
+			BlockState s = kinds[kind].getDefaultState();
+			if (s.contains(Properties.HORIZONTAL_FACING)) {
+				s = s.with(Properties.HORIZONTAL_FACING, Direction.fromHorizontal(b.getByte("F")));
+			}
+			if (s.contains(Properties.LIT)) {
+				s = s.with(Properties.LIT, b.getBoolean("Lit"));
+			}
+			g.set(i, s);
+			VoxelMachine.Kind mk = VoxelMachine.Kind.of(s.getBlock());
+			if (mk != null) {
+				VoxelMachine m = new VoxelMachine(mk);
+				if (b.contains("Inv")) {
+					Inventories.readNbt(b.getCompound("Inv"), m.inventory.getHeldStacks(), getRegistryManager());
+				}
+				int[] f = b.getIntArray("Furnace");
+				if (f.length == 4) {
+					m.burn = f[0];
+					m.burnTotal = f[1];
+					m.cook = f[2];
+					m.cookTotal = Math.max(1, f[3]);
+				}
+				g.setMachine(i, m);
+			}
+		}
+		// las piezas: su material principal
+		Item[] material = {Items.WHEAT, Items.OAK_PLANKS, Items.COBBLESTONE, Items.IRON_INGOT};
+		int[] amount = {6, 6, 6, 4};
+		NbtList pieces = old.getList("List", NbtElement.COMPOUND_TYPE);
+		for (int k = 0; k < pieces.size(); k++) {
+			int m = pieces.getCompound(k).getByte("M");
+			if (m >= 0 && m < material.length && !getWorld().isClient) {
+				refund.add(new ItemStack(material[m], amount[m]));
+			}
+		}
+	}
+
+	/** Lo que se devuelve de las piezas de antes (se suelta en cuanto la plataforma está en el mundo). */
+	private final List<ItemStack> refund = new ArrayList<>();
+
+	@Override
+	public void baseTick() {
+		super.baseTick();
+		if (!refund.isEmpty() && !getWorld().isClient) {
+			for (ItemStack s : refund) {
+				dropStack(s, 1.5F);
+			}
+			refund.clear();
+		}
+	}
+
+	@Nullable
+	public VoxelGrid.Hit aim(PlayerEntity player) {
+		return VoxelBuild.aim(this, player, 1.0F);
 	}
 }

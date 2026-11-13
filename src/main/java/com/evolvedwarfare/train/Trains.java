@@ -92,7 +92,7 @@ public final class Trains {
 			EntityType.Builder.<TenderEntity>create(TenderEntity::new, SpawnGroup.MISC).dimensions(2.6F, 3.0F).maxTrackingRange(12).trackingTickInterval(1)
 					.makeFireImmune().build("coal_tender"));
 	public static final EntityType<PlatformEntity> PLATFORM = Registry.register(Registries.ENTITY_TYPE, EvolvedWarfare.id("flatcar"),
-			EntityType.Builder.<PlatformEntity>create(PlatformEntity::new, SpawnGroup.MISC).dimensions(3.0F, 1.0F).maxTrackingRange(12)
+			EntityType.Builder.<PlatformEntity>create(PlatformEntity::new, SpawnGroup.MISC).dimensions(5.0F, 1.0F).maxTrackingRange(12)
 					.trackingTickInterval(1).makeFireImmune().build("flatcar"));
 	public static final ScreenHandlerType<LocomotiveScreenHandler> LOCOMOTIVE_SCREEN = Registry.register(Registries.SCREEN_HANDLER,
 			EvolvedWarfare.id("steam_locomotive"),
@@ -103,20 +103,6 @@ public final class Trains {
 
 	// ------------------------------------------------------------------ construir
 	public static final Item BUILD_HAMMER = item("building_hammer", new HammerItem(new Item.Settings().maxCount(1)));
-	private static final Map<Building.Kind, Map<Building.Material, Item>> PIECES = new EnumMap<>(Building.Kind.class);
-
-	static {
-		for (Building.Material m : Building.Material.values()) {
-			for (Building.Kind k : Building.Kind.values()) {
-				PIECES.computeIfAbsent(k, x -> new EnumMap<>(Building.Material.class))
-						.put(m, item(m.id + "_" + k.id, new PieceItem(k, m, new Item.Settings().maxCount(16))));
-			}
-		}
-	}
-
-	/** Para que el cliente abra el menú de construcción (lo pone el cliente). */
-	public static Runnable openBuildMenu = () -> {
-	};
 
 	private Trains() {
 	}
@@ -124,10 +110,6 @@ public final class Trains {
 	private static Item item(String name, Item item) {
 		ITEMS.add(Registry.register(Registries.ITEM, EvolvedWarfare.id(name), item));
 		return item;
-	}
-
-	public static Item pieceItem(Building.Kind kind, Building.Material material) {
-		return PIECES.get(kind).get(material);
 	}
 
 	public static Item trackItem(Track.Shape shape, boolean left) {
@@ -139,52 +121,13 @@ public final class Trains {
 		};
 	}
 
-	// ------------------------------------------------------------------ fabricar piezas (desde el menú del martillo)
-
-	public record CraftPiecePayload(int kind, int material, int count) implements CustomPayload {
-		public static final Id<CraftPiecePayload> ID = new Id<>(EvolvedWarfare.id("craft_piece"));
-		public static final PacketCodec<RegistryByteBuf, CraftPiecePayload> CODEC = PacketCodec.tuple(PacketCodecs.VAR_INT, CraftPiecePayload::kind,
-				PacketCodecs.VAR_INT, CraftPiecePayload::material, PacketCodecs.VAR_INT, CraftPiecePayload::count, CraftPiecePayload::new);
-
-		@Override
-		public Id<? extends CustomPayload> getId() {
-			return ID;
-		}
-	}
-
 	public static void register() {
-		PayloadTypeRegistry.playC2S().register(CraftPiecePayload.ID, CraftPiecePayload.CODEC);
-		ServerPlayNetworking.registerGlobalReceiver(CraftPiecePayload.ID, (payload, context) -> craft(context.player(), payload));
-	}
-
-	static void craft(ServerPlayerEntity player, CraftPiecePayload p) {
-		if (p.kind() < 0 || p.kind() >= Building.Kind.values().length || p.material() < 0 || p.material() >= Building.Material.values().length) {
-			return;
-		}
-		Building.Kind kind = Building.Kind.values()[p.kind()];
-		Building.Material material = Building.Material.values()[p.material()];
-		int made = 0;
-		for (int i = 0; i < Math.min(64, Math.max(1, p.count())); i++) {
-			if (!player.getAbilities().creativeMode && !Building.pay(player.getInventory(), kind, material)) {
-				break;
-			}
-			ItemStack s = new ItemStack(pieceItem(kind, material));
-			if (!player.giveItemStack(s)) {
-				player.dropItem(s, false);
-			}
-			made++;
-		}
-		if (made > 0) {
-			player.getWorld().playSound(null, player.getBlockPos(), SoundEvents.BLOCK_SMITHING_TABLE_USE, SoundCategory.PLAYERS, 0.6F, 1.1F);
-			player.currentScreenHandler.sendContentUpdates();
-			player.playerScreenHandler.sendContentUpdates();
-		}
 	}
 
 	// ------------------------------------------------------------------ montar el tren en la mesa
 
 	/** Lo que se monta en la mesa de ensamblaje: qué sale y qué hace falta. */
-	public record Assembly(Item result, List<Building.Cost> needs) {
+	public record Assembly(Item result, List<Costs.Cost> needs) {
 	}
 
 	private static List<Assembly> assemblies;
@@ -195,14 +138,14 @@ public final class Trains {
 			a.add(new Assembly(LOCOMOTIVE_ITEM, List.of(need(CHASSIS, 1), need(WHEELS, 3), need(BOILER, 1), need(CAB, 1))));
 			a.add(new Assembly(TENDER_ITEM, List.of(need(CHASSIS, 1), need(WHEELS, 2), need(BUNKER, 1))));
 			a.add(new Assembly(PLATFORM_ITEM, List.of(need(CHASSIS, 1), need(WHEELS, 2),
-					new Building.Cost(Ingredient.fromTag(ItemTags.PLANKS), 12, Items.OAK_PLANKS))));
+					new Costs.Cost(Ingredient.fromTag(ItemTags.PLANKS), 12, Items.OAK_PLANKS))));
 			assemblies = a;
 		}
 		return assemblies;
 	}
 
-	private static Building.Cost need(Item item, int n) {
-		return new Building.Cost(Ingredient.ofItems(item), n, item);
+	private static Costs.Cost need(Item item, int n) {
+		return new Costs.Cost(Ingredient.ofItems(item), n, item);
 	}
 
 	// ------------------------------------------------------------------ los objetos
@@ -219,18 +162,10 @@ public final class Trains {
 		}
 	}
 
-	/** El martillo de construcción: abre el menú de piezas; agachado + clic derecho en una pieza o un coche, lo recoge. */
+	/** El martillo del tren: agachado + clic derecho en un coche, lo desengancha (o lo recoge). Se construye bloque a bloque. */
 	public static class HammerItem extends Item {
 		public HammerItem(Settings settings) {
 			super(settings);
-		}
-
-		@Override
-		public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-			if (world.isClient) {
-				openBuildMenu.run();
-			}
-			return TypedActionResult.success(player.getStackInHand(hand), world.isClient);
 		}
 
 		@Override
@@ -352,7 +287,7 @@ public final class Trains {
 		List<TrainCarEntity> wagons = loco.loadedWagons();
 		if (!wagons.isEmpty()) {
 			TrainCarEntity last = wagons.get(wagons.size() - 1);
-			if (last instanceof PlatformEntity p && (!p.pieces().isEmpty() || !p.blocks().isEmpty())) {
+			if (last instanceof PlatformEntity p && !p.grid().isEmpty()) {
 				player.sendMessage(Text.translatable("message.evolvedwarfare.train.not_empty").formatted(Formatting.RED), true);
 				return ActionResult.FAIL;
 			}
@@ -438,7 +373,7 @@ public final class Trains {
 		}
 		float[] heat = {0.0F};
 		net.minecraft.util.math.Vec3d c = net.minecraft.util.math.Vec3d.ofCenter(center);
-		for (PlatformEntity p : world.getEntitiesByClass(PlatformEntity.class, near.expand(4.0), x -> !x.blocks().isEmpty())) {
+		for (PlatformEntity p : world.getEntitiesByClass(PlatformEntity.class, near.expand(4.0), x -> !x.grid().isEmpty())) {
 			p.heat((pos, w) -> heat[0] += (float) (w * Math.max(0.0, 1.0 - pos.distanceTo(c) / 6.0)));
 		}
 		for (com.evolvedwarfare.cart.CartEntity cart : world.getEntitiesByClass(com.evolvedwarfare.cart.CartEntity.class, near.expand(4.0), x -> true)) {

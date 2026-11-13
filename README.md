@@ -2154,6 +2154,16 @@ Los NPCs del pueblo (los vecinos, los guardias del cuartel y los vigías de las 
 - Se quedan los edificios añadidos (mercado, taberna, granero, torre) y las decoraciones. Como siempre, no se toca el agua ni lo de debajo de las casas.
 - Solo en las aldeas que se generen a partir de ahora.
 
+## Fase 63 — La plataforma del tren se construye bloque a bloque (5 x 10)
+
+- La plataforma del tren ahora mide **5 bloques de ancho y 10 de largo** (antes 3 x 6) y se construye **bloque a bloque**, como la carreta (estilo Scrap Mechanic), hasta **4 de alto**. Se acabaron las piezas de ARK (paredes, techos, tejados... de paja, madera, piedra y metal) y el menú del martillo.
+- Con un bloque en la mano, clic derecho en la tabla o en otro bloque de la plataforma: se pone al lado, con la vista previa en verde (roja si no cabe). Valen los mismos bloques que en la carreta: casi todos, y los funcionales (cofre, barril, hornos, fogatas, mesa de crafteo, cama). Puertas, trampillas y puertas de valla se abren; cofres y hornos se usan; agachado, se pone el bloque en vez de usarlo.
+- Los bloques se quitan **a golpes** (según su dureza y la herramienta) y sueltan el bloque y lo que tengan dentro. La plataforma no se rompe a golpes.
+- Lo construido va con el tren: se choca con ello, se anda por encima y lo que va de pie encima viaja con él. Los hornos funden y las fogatas cocinan en marcha y dan calor.
+- El **martillo del tren** se queda solo para desenganchar (agachado + clic derecho en un coche). Para desenganchar una plataforma hay que vaciarla antes; al recogerla suelta todo lo construido.
+- La plataforma tiene un modelo nuevo más grande (tablero, largueros, topes y dos bogies). Necesita más vía detrás de la locomotora para engancharse.
+- **Plataformas de antes**: sus cofres, hornos, fogatas y mesas pasan a bloques en el centro de la nueva (con lo que tenían dentro) y cada pieza de ARK se devuelve como su material principal (6 de trigo, tablones o piedra, o 4 lingotes de hierro). Los objetos de pieza que hubiera en inventarios desaparecen.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

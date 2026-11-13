@@ -2,8 +2,6 @@ package com.evolvedwarfare.client.train;
 
 import com.evolvedwarfare.EvolvedWarfare;
 import com.evolvedwarfare.client.hell.BossModel;
-import com.evolvedwarfare.train.Building;
-import com.evolvedwarfare.train.PieceItem;
 import com.evolvedwarfare.train.PlatformEntity;
 import com.evolvedwarfare.train.TrackItem;
 import com.evolvedwarfare.train.TrainCarEntity;
@@ -49,8 +47,8 @@ import net.minecraft.util.math.Vec3d;
 
 /**
  * El tren en el cliente: los modelos de la locomotora, el ténder y la plataforma (con sus ruedas girando y lo construido
- * encima), las vías grandes, las pantallas (caldera, mesa de ensamblaje y menú de construcción) y las vistas previas:
- * la pieza con la que se va a construir en la plataforma (verde si cabe, roja si no) y el trozo de vía que se va a poner.
+ * encima, bloque a bloque), las vías grandes, las pantallas (caldera y mesa de ensamblaje) y la vista previa del trozo de
+ * vía que se va a poner (la de los bloques de la plataforma es la de {@link VoxelRenderer}).
  */
 public final class TrainRenderers {
 	static final int GOOD = 0x7040FF50, BAD = 0x70FF4040;
@@ -58,28 +56,13 @@ public final class TrainRenderers {
 	private TrainRenderers() {
 	}
 
-	/** Para la precarga: las vías y las piezas de construcción, ya calculadas. */
+	/** Para la precarga: las vías, ya calculadas. */
 	public static void warm() {
 		TrackRenderer.warm();
-		for (Building.Kind k : Building.Kind.values()) {
-			for (int level = 0; level < Building.LEVELS; level++) {
-				for (int a = 0; a <= Building.NX; a++) {
-					for (int b = 0; b <= Building.NZ; b++) {
-						for (int rot = 0; rot < 4; rot++) {
-							Building.parts(k, level, a, b, rot, false);
-							if (k == Building.Kind.DOORWAY) {
-								Building.parts(k, level, a, b, rot, true);
-							}
-						}
-					}
-				}
-			}
-		}
 	}
 
 	public static void register() {
 		TrainCarEntity.ClientAccess.set(() -> MinecraftClient.getInstance().player);
-		Trains.openBuildMenu = () -> MinecraftClient.getInstance().setScreen(new BuildScreen());
 		car(Trains.LOCOMOTIVE, "steam_locomotive", 2.5F);
 		car(Trains.TENDER, "coal_tender", 2.5F);
 		car(Trains.PLATFORM, "flatcar", 2.0F);
@@ -93,87 +76,6 @@ public final class TrainRenderers {
 		EntityModelLayer layer = new EntityModelLayer(EvolvedWarfare.id(id), "main");
 		EntityModelLayerRegistry.registerModelLayer(layer, () -> BossModel.texturedModelData(id));
 		EntityRendererRegistry.register(type, ctx -> new CarRenderer<>(ctx, layer, id, scale));
-	}
-
-	/** Las texturas de cada material: el material, el remate, el cristal, la puerta y el tejado. */
-	static String tex(Building.Material m, Building.Tex t) {
-		return switch (t) {
-			case GLASS, NONE -> "block/glass";
-			case MAIN -> switch (m) {
-				case STRAW -> "block/hay_block_side";
-				case WOOD -> "block/oak_planks";
-				case STONE -> "block/stone_bricks";
-				case METAL -> "block/iron_block";
-			};
-			case TRIM -> switch (m) {
-				case STRAW -> "block/bamboo_block";
-				case WOOD -> "block/stripped_spruce_log";
-				case STONE -> "block/smooth_stone";
-				case METAL -> "block/smooth_basalt";
-			};
-			case DOOR -> switch (m) {
-				case STRAW -> "block/bamboo_planks";
-				case WOOD -> "block/spruce_planks";
-				case STONE -> "block/dark_oak_planks";
-				case METAL -> "block/iron_trapdoor";
-			};
-			case ROOF -> switch (m) {
-				case STRAW -> "block/hay_block_top";
-				case WOOD -> "block/spruce_planks";
-				case STONE -> "block/deepslate_tiles";
-				case METAL -> "block/iron_block";
-			};
-		};
-	}
-
-	/** Dibuja una pieza (en coordenadas de la plataforma); tint -1 = sus colores. */
-	static void drawPiece(MatrixStack matrices, VertexConsumer vc, List<Building.Part> parts, Building.Material m, int light, int tint) {
-		MatrixStack.Entry e = matrices.peek();
-		for (Building.Part part : parts) {
-			if (part.tex() == Building.Tex.NONE) {
-				// la caja de choque de las barandillas no se ve
-				continue;
-			}
-			int color = tint;
-			if (color == -1) {
-				color = m == Building.Material.METAL && part.tex() == Building.Tex.MAIN ? 0xFFB8BCC4 : 0xFFFFFFFF;
-			}
-			Cubes.box(e, vc, part.box(), Cubes.sprite(tex(m, part.tex())), color, light);
-		}
-	}
-
-	/** Los bloques de la plataforma (cofres, hornos, fogatas con lo que cocinan, la mesa). */
-	static void drawBlocks(PlatformEntity flat, MatrixStack matrices, VertexConsumerProvider consumers, int light) {
-		MinecraftClient client = MinecraftClient.getInstance();
-		for (com.evolvedwarfare.train.TrainBlocks.Placed b : flat.blocks()) {
-			var box = b.box();
-			var state = b.state();
-			matrices.push();
-			matrices.translate(box.minX, box.minY, box.minZ);
-			if (state.getRenderType() == net.minecraft.block.BlockRenderType.ENTITYBLOCK_ANIMATED) {
-				// los cofres se dibujan como objeto: se giran a mano
-				matrices.translate(0.5, 0, 0.5);
-				matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0F - b.facing.asRotation()));
-				matrices.translate(-0.5, 0, -0.5);
-			}
-			client.getBlockRenderManager().renderBlockAsEntity(state, matrices, consumers, light, OverlayTexture.DEFAULT_UV);
-			if (b.kind.campfire()) {
-				for (int i = 0; i < 4; i++) {
-					ItemStack s = b.inventory.getStack(i);
-					if (s.isEmpty()) {
-						continue;
-					}
-					matrices.push();
-					matrices.translate(0.3 + (i % 2) * 0.4, 0.44, 0.3 + (i / 2) * 0.4);
-					matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90.0F));
-					matrices.scale(0.375F, 0.375F, 0.375F);
-					client.getItemRenderer().renderItem(s, net.minecraft.client.render.model.json.ModelTransformationMode.FIXED, light, OverlayTexture.DEFAULT_UV,
-							matrices, consumers, flat.getWorld(), flat.getId() * 4 + i);
-					matrices.pop();
-				}
-			}
-			matrices.pop();
-		}
 	}
 
 	static class CarRenderer<T extends TrainCarEntity> extends EntityRenderer<T> {
@@ -235,14 +137,9 @@ public final class TrainRenderers {
 			root.render(matrices, consumers.getBuffer(RenderLayer.getEntityCutoutNoCull(texture)), light, OverlayTexture.DEFAULT_UV);
 			root.render(matrices, consumers.getBuffer(RenderLayer.getEyes(glow)), LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
 			matrices.pop();
-			if (car instanceof PlatformEntity flat && !flat.pieces().isEmpty()) {
-				VertexConsumer vc = consumers.getBuffer(RenderLayer.getEntityCutoutNoCull(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE));
-				for (Building.Placed p : flat.pieces()) {
-					drawPiece(matrices, vc, Building.parts(p), p.material, light, -1);
-				}
-			}
-			if (car instanceof PlatformEntity flat && !flat.blocks().isEmpty()) {
-				drawBlocks(flat, matrices, consumers, light);
+			if (car instanceof PlatformEntity flat && !flat.grid().isEmpty()) {
+				// lo construido encima (bloque a bloque)
+				VoxelRenderer.draw(flat.grid(), matrices, consumers, light, flat.getWorld(), flat.getId() * 64);
 			}
 			matrices.pop();
 			super.render(car, yaw, tickDelta, matrices, consumers, light);
@@ -263,44 +160,7 @@ public final class TrainRenderers {
 		float tickDelta = ctx.tickCounter().getTickDelta(true);
 		VertexConsumer vc = ctx.consumers().getBuffer(RenderLayer.getEntityTranslucent(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE));
 		int light = LightmapTextureManager.MAX_LIGHT_COORDINATE;
-		if (stack.getItem() instanceof PieceItem piece && client.crosshairTarget instanceof EntityHitResult eh && eh.getEntity() instanceof PlatformEntity flat) {
-			Building.Slot slot = flat.slotFor(piece.kind, eh.getPos(), player.getRotationVec(tickDelta));
-			if (slot == null) {
-				return;
-			}
-			boolean ok = flat.canPlace(slot);
-			double x = MathHelper.lerp(tickDelta, flat.prevX, flat.getX()), y = MathHelper.lerp(tickDelta, flat.prevY, flat.getY()),
-					z = MathHelper.lerp(tickDelta, flat.prevZ, flat.getZ());
-			m.push();
-			m.translate(x - cam.x, y - cam.y, z - cam.z);
-			m.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-MathHelper.lerpAngleDegrees(tickDelta, flat.prevYaw, flat.getYaw())));
-			m.multiply(RotationAxis.POSITIVE_X.rotationDegrees(MathHelper.lerp(tickDelta, flat.prevPitch, flat.getPitch())));
-			List<Building.Part> parts = Building.parts(slot.kind(), slot.level(), slot.a(), slot.b(), slot.rot(), false);
-			List<Building.Part> grown = new ArrayList<>();
-			for (Building.Part p : parts) {
-				grown.add(new Building.Part(p.box().expand(0.01), p.tex(), p.solid()));
-			}
-			drawPiece(m, vc, grown, piece.material, light, ok ? GOOD : BAD);
-			m.pop();
-		} else if (com.evolvedwarfare.train.TrainBlocks.Kind.of(stack.getItem()) != null && client.crosshairTarget instanceof EntityHitResult eh
-				&& eh.getEntity() instanceof PlatformEntity flat) {
-			int[] at = flat.blockSlotFor(eh.getPos(), player.getRotationVec(tickDelta));
-			if (at == null) {
-				return;
-			}
-			boolean ok = flat.canPlaceBlock(at);
-			var kind = com.evolvedwarfare.train.TrainBlocks.Kind.of(stack.getItem());
-			var probe = new com.evolvedwarfare.train.TrainBlocks.Placed(kind, at[0], at[1], at[2], net.minecraft.util.math.Direction.NORTH);
-			double x = MathHelper.lerp(tickDelta, flat.prevX, flat.getX()), y = MathHelper.lerp(tickDelta, flat.prevY, flat.getY()),
-					z = MathHelper.lerp(tickDelta, flat.prevZ, flat.getZ());
-			m.push();
-			m.translate(x - cam.x, y - cam.y, z - cam.z);
-			m.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-MathHelper.lerpAngleDegrees(tickDelta, flat.prevYaw, flat.getYaw())));
-			m.multiply(RotationAxis.POSITIVE_X.rotationDegrees(MathHelper.lerp(tickDelta, flat.prevPitch, flat.getPitch())));
-			var sprite = client.getBlockRenderManager().getModels().getModelParticleSprite(kind.block.getDefaultState());
-			Cubes.box(m.peek(), vc, probe.box().expand(0.01), sprite, ok ? GOOD : BAD, light);
-			m.pop();
-		} else if (stack.getItem() instanceof TrackItem track && client.crosshairTarget instanceof BlockHitResult bh
+		if (stack.getItem() instanceof TrackItem track && client.crosshairTarget instanceof BlockHitResult bh
 				&& bh.getType() == HitResult.Type.BLOCK) {
 			BlockPos target = new ItemPlacementContext(player, Hand.MAIN_HAND, stack, bh).getBlockPos();
 			TrackItem.Plan plan = track.plan(client.world, player, target);
