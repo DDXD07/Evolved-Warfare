@@ -36,6 +36,8 @@ public final class NpcProfile {
 	public int range;
 	/** Hasta cuándo (hora del mundo) hay peligro cerca (no se guarda). */
 	public long dangerUntil;
+	/** Cuándo miró por última vez si hay peligro (no se guarda). */
+	public long dangerScan = -100L;
 	/** Cuándo buscó sitio de trabajo por última vez (no se guarda). */
 	public long workSearched = -100000L;
 	/** Su pueblo (la clave de la ciudad; 0: ninguno) y su casa (los que comparten casa son familia). */

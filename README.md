@@ -2131,6 +2131,7 @@ Los NPCs del pueblo (los vecinos, los guardias del cuartel y los vigías de las 
 
 - Para que la pantalla no se llene de conversaciones, los bocadillos de una charla **solo se ven si estás a 5 bloques o menos** de uno de los dos que hablan **y miras a uno de ellos**: entonces se ven **los bocadillos de los dos**, aunque solo mires a uno. Si dejas de mirar o te alejas, se desvanecen (y vuelven si los miras otra vez mientras sigan hablando).
 - Los saludos que te dicen a ti se ven si estás a 5 bloques o menos, sin tener que mirarles.
+- Arreglado: a veces un vecino no veía un monstruo cercano mientras seguía su rutina (miraba si había peligro en tics que no tocaban); ahora lo mira cada segundo.
 
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):

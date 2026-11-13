@@ -95,7 +95,8 @@ public final class Routine {
 	public static boolean danger(AbstractNpcEntity npc, ServerWorld world) {
 		NpcProfile p = npc.ewProfile();
 		long now = world.getTime();
-		if ((npc.age + npc.getId()) % 20 == 0) {
+		if (now - p.dangerScan >= 20L) {
+			p.dangerScan = now;
 			double r = switch (p.personality) {
 				case FEARFUL -> 18.0;
 				case BRAVE -> 7.0;
