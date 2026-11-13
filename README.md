@@ -2133,6 +2133,19 @@ Los NPCs del pueblo (los vecinos, los guardias del cuartel y los vigías de las 
 - Los saludos que te dicen a ti se ven si estás a 5 bloques o menos, sin tener que mirarles.
 - Arreglado: a veces un vecino no veía un monstruo cercano mientras seguía su rutina (miraba si había peligro en tics que no tocaban); ahora lo mira cada segundo.
 
+## Fase 61 — Hablar con los NPCs
+
+- **Clic derecho** en un vecino, recluta, guardia de la ciudad o en tus NPCs abre una **pantalla para hablar** (a los mercaderes, **agachado + clic derecho**; con clic normal siguen abriendo su tienda). Con tus NPCs, agachado + clic derecho va directo a su equipo y paga, como antes.
+- **Qué se ve**: su retrato (te sigue con la mirada), su nombre, su oficio y carácter, **lo que piensa de ti** (te aprecia mucho, le caes bien, le eres indiferente, le caes mal, no te soporta) y **lo que está haciendo** (trabajando, de ronda, en la plaza, te sigue...). Arriba, lo que te contesta; debajo, lo que le puedes decir.
+- **Lo que le puedes decir**:
+  - **¿Qué tal estás?**: según su carácter, si está herido, si ha pasado miedo, si tiene hambre o si le caes mal («¿Y a ti qué te importa?»).
+  - **¿Qué haces ahora?**: lo que le toca en su rutina (si trabaja, algo de su oficio).
+  - **Háblame de ti**: su nombre y oficio, cómo es, para quién trabaja, con quién vive (su familia, por su nombre), su mejor amigo y a quién no soporta.
+  - **¿Qué se cuenta por aquí?**: un cotilleo sobre alguien del pueblo, si ha habido monstruos cerca o cuántos son en el pueblo.
+  - **¿Trabajarías para mí?** y **Contratar**: te dice qué cuesta (un contrato; los guardias, un contrato y 15 Glory Coins; los mercaderes, 25) y lo contratas ahí mismo con un contrato que lleves en el inventario (no hace falta tenerlo en la mano).
+  - Si es tuyo: **Sígueme**, **Espera aquí**, **Vive aquí** y **Equipo y paga** (su menú de siempre). Si es mercader: **Ver la tienda**.
+- **Lo que piensa de ti cambia**: hablar con él (un poco, una vez al día), **regalarle comida** (clic derecho con comida en la mano a un vecino libre: le gusta, sobre todo a los amables y alegres; uno cada minuto como mucho), contratarlo (le gusta) y **pegarle** (le cae fatal). Si le caes muy mal, **no trabaja para ti** ni con contrato.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

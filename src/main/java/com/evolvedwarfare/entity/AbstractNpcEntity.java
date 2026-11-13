@@ -501,17 +501,26 @@ public abstract class AbstractNpcEntity extends PathAwareEntity implements com.e
 				if (isSleeping() && !(held.getItem() instanceof RecruitmentContractItem)) {
 					player.sendMessage(Text.translatable("message.evolvedwarfare.trader.sleeping", getDisplayName()), true);
 				} else if (held.getItem() instanceof RecruitmentContractItem) {
-					held.decrementUnlessCreative(1, player);
-				signContract(player);
-				} else {
-					player.sendMessage(Text.translatable("message.evolvedwarfare.for_hire", getName(), com.evolvedwarfare.town.NpcProfile.describe(ewProfileBits())), true);
+					if (com.evolvedwarfare.town.Dialogue.mood(this, player) < -20) {
+						// no trabaja para quien le cae fatal
+						player.sendMessage(Text.translatable("dialogue.evolvedwarfare.hire.refuse.1"), true);
+					} else {
+						held.decrementUnlessCreative(1, player);
+						signContract(player);
+						com.evolvedwarfare.town.Dialogue.like(this, player, 10);
+					}
+				} else if (player instanceof ServerPlayerEntity sp && com.evolvedwarfare.town.Dialogue.gift(this, sp, held)) {
+					// un regalo de comida
+				} else if (player instanceof ServerPlayerEntity sp) {
+					com.evolvedwarfare.town.Dialogue.open(sp, this);
 				}
 			}
 			return ActionResult.success(world.isClient);
 		}
 		if (!isOwner(player)) {
-			if (!world.isClient) {
-				player.sendMessage(Text.translatable("message.evolvedwarfare.not_yours", getName()), true);
+			// de otro: se puede hablar con él, nada más
+			if (!world.isClient && player instanceof ServerPlayerEntity sp) {
+				com.evolvedwarfare.town.Dialogue.open(sp, this);
 			}
 			return ActionResult.success(world.isClient);
 		}
@@ -532,9 +541,19 @@ public abstract class AbstractNpcEntity extends PathAwareEntity implements com.e
 			return ActionResult.success(world.isClient);
 		}
 		if (!world.isClient && player instanceof ServerPlayerEntity serverPlayer) {
-			openMenu(serverPlayer);
+			// agachado, directamente a su equipo y paga; si no, a hablar (desde ahí también se llega)
+			if (player.isSneaking()) {
+				openMenu(serverPlayer);
+			} else {
+				com.evolvedwarfare.town.Dialogue.open(serverPlayer, this);
+			}
 		}
 		return ActionResult.success(world.isClient);
+	}
+
+	/** Su menú de equipo, paga y órdenes. */
+	public void openGearMenu(ServerPlayerEntity player) {
+		openMenu(player);
 	}
 
 	/** Firma el contrato (ya cobrado): pasa a servir al jugador y lo sigue. Deja su cama del pueblo. */
@@ -586,6 +605,10 @@ public abstract class AbstractNpcEntity extends PathAwareEntity implements com.e
 		// Su dueño no puede herirlo por accidente.
 		if (source.getAttacker() instanceof PlayerEntity player && isOwner(player)) {
 			return false;
+		}
+		if (!getWorld().isClient && source.getAttacker() instanceof PlayerEntity player && !isInvulnerableTo(source)) {
+			// quien le pega le cae mal
+			profile.like(player.getUuid(), -25);
 		}
 		return super.damage(source, amount);
 	}

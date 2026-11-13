@@ -411,6 +411,13 @@ public class TraderEntity extends MerchantEntity implements com.evolvedwarfare.t
 			}
 			return ActionResult.success(getWorld().isClient);
 		}
+		if (player.isSneaking() && player instanceof ServerPlayerEntity sp) {
+			// agachado: hablar con él (desde ahí también se ve la tienda)
+			com.evolvedwarfare.town.Dialogue.open(sp, this);
+			return ActionResult.SUCCESS;
+		} else if (player.isSneaking()) {
+			return ActionResult.success(true);
+		}
 		if (hand == Hand.MAIN_HAND) {
 			player.incrementStat(Stats.TALKED_TO_VILLAGER);
 		}

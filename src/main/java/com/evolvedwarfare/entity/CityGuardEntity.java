@@ -102,8 +102,11 @@ public class CityGuardEntity extends SoldierEntity {
 			return ActionResult.success(getWorld().isClient);
 		}
 		if (!getWorld().isClient) {
-			player.sendMessage(Text.translatable(CityLaw.wanted(getWorld(), cityKey, player) ? "message.evolvedwarfare.city_guard.angry"
-					: "message.evolvedwarfare.city_guard.hello"), true);
+			if (CityLaw.wanted(getWorld(), cityKey, player)) {
+				player.sendMessage(Text.translatable("message.evolvedwarfare.city_guard.angry"), true);
+			} else if (player instanceof net.minecraft.server.network.ServerPlayerEntity sp) {
+				com.evolvedwarfare.town.Dialogue.open(sp, this);
+			}
 		}
 		return ActionResult.success(getWorld().isClient);
 	}

@@ -166,6 +166,7 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 				com.evolvedwarfare.client.render.CartEntityRenderer::new);
 		com.evolvedwarfare.client.train.VoxelRenderer.register();
 		com.evolvedwarfare.client.town.SpeechBubbles.register();
+		com.evolvedwarfare.client.town.DialogueScreen.register();
 		// rastrillo y puente levadizo moviéndose
 		net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(com.evolvedwarfare.registry.ModEntities.GATE_MOVER,
 				com.evolvedwarfare.client.render.GateMoverRenderer::new);

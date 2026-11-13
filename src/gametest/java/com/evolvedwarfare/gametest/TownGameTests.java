@@ -420,4 +420,70 @@ public class TownGameTests implements FabricGameTest {
 			ctx.complete();
 		});
 	}
+
+	// ------------------------------------------------------------------ fase 4: hablar con ellos
+
+	/** Todos los textos del diálogo existen. */
+	@GameTest(templateName = EMPTY_STRUCTURE)
+	public void dialogueTextsExist(TestContext ctx) {
+		net.minecraft.util.Language lang = net.minecraft.util.Language.getInstance();
+		for (String key : com.evolvedwarfare.town.Dialogue.allKeys()) {
+			check(lang.hasTranslation(key), "Falta el texto " + key);
+		}
+		ctx.complete();
+	}
+
+	/** Hablar: contesta cómo está, qué hace, quién es (con su familia), qué se cuenta; regalos, golpes y contratar desde ahí. */
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "town_dialogue")
+	public void talkingToAResident(TestContext ctx) {
+		floor(ctx);
+		ServerWorld world = ctx.getWorld();
+		RecruitEntity r = resident(ctx, 2, 2, com.evolvedwarfare.town.Personality.KIND, null);
+		RecruitEntity sister = resident(ctx, 3, 2, com.evolvedwarfare.town.Personality.CHEERFUL, null);
+		r.ewProfile().community = 99L;
+		r.ewProfile().addFamily(sister.getUuid());
+		ServerPlayerEntity player = player(ctx, 0);
+		player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
+		player.getInventory().insertStack(new ItemStack(ModItems.RECRUITMENT_CONTRACT));
+		java.util.function.Function<com.evolvedwarfare.town.Dialogue.Option, String> ask = o -> {
+			net.minecraft.text.Text t = com.evolvedwarfare.town.Dialogue.reply(player, r, o);
+			String str = t == null ? "" : t.getString();
+			check(!str.contains("dialogue.evolvedwarfare") && !str.contains("chat.evolvedwarfare"), "Respuesta sin traducir a " + o + ": " + str);
+			return str;
+		};
+		String how = ask.apply(com.evolvedwarfare.town.Dialogue.Option.HOW);
+		String doing = ask.apply(com.evolvedwarfare.town.Dialogue.Option.DOING);
+		String about = ask.apply(com.evolvedwarfare.town.Dialogue.Option.ABOUT);
+		String news = ask.apply(com.evolvedwarfare.town.Dialogue.Option.NEWS);
+		LOG.info("[EW-GAMETEST] diálogo: «{}» «{}» «{}» «{}»", how, doing, about, news);
+		check(about.contains(r.getName().getString()) && about.contains(sister.getName().getString()), "No dice quién es ni con quién vive: " + about);
+		// un regalo le gusta; otro enseguida, no tanto
+		int before = com.evolvedwarfare.town.Dialogue.mood(r, player);
+		ItemStack bread = new ItemStack(Items.BREAD, 2);
+		com.evolvedwarfare.town.Dialogue.gift(r, player, bread);
+		int afterGift = com.evolvedwarfare.town.Dialogue.mood(r, player);
+		com.evolvedwarfare.town.Dialogue.gift(r, player, bread);
+		check(afterGift > before && com.evolvedwarfare.town.Dialogue.mood(r, player) == afterGift && bread.getCount() == 1,
+				"Los regalos no van bien: " + before + " -> " + afterGift + " -> " + com.evolvedwarfare.town.Dialogue.mood(r, player));
+		// si le pegas, no quiere trabajar para ti
+		r.damage(world.getDamageSources().playerAttack(player), 0.5F);
+		r.timeUntilRegen = 0;
+		r.damage(world.getDamageSources().playerAttack(player), 0.5F);
+		int angry = com.evolvedwarfare.town.Dialogue.mood(r, player);
+		com.evolvedwarfare.town.Dialogue.reply(player, r, com.evolvedwarfare.town.Dialogue.Option.HIRE_YES);
+		check(angry < -20 && r.isForHire(), "Contrata aunque le hayas pegado (le caes " + angry + ")");
+		// se le pasa (regalos y charlas) y te sigue: con el contrato del inventario
+		r.ewProfile().setAffinity(player.getUuid(), 5);
+		com.evolvedwarfare.town.Dialogue.reply(player, r, com.evolvedwarfare.town.Dialogue.Option.HIRE_YES);
+		check(r.isOwner(player), "No se le contrata desde el diálogo");
+		check(player.getInventory().count(ModItems.RECRUITMENT_CONTRACT) == 0, "No gasta el contrato del inventario");
+		// órdenes
+		com.evolvedwarfare.town.Dialogue.reply(player, r, com.evolvedwarfare.town.Dialogue.Option.LIVE);
+		boolean lives = r.getOrder() == com.evolvedwarfare.entity.NpcOrder.HOME && r.getHome() != null;
+		com.evolvedwarfare.town.Dialogue.reply(player, r, com.evolvedwarfare.town.Dialogue.Option.FOLLOW);
+		check(lives && r.getOrder() == com.evolvedwarfare.entity.NpcOrder.FOLLOW, "Las órdenes del diálogo no van");
+		r.discard();
+		sister.discard();
+		ctx.complete();
+	}
 }
