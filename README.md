@@ -2242,6 +2242,7 @@ Los NPCs del pueblo (los vecinos, los guardias del cuartel y los vigías de las 
 - La **piedra** y la **piedra labrada** ya no sueltan el bloque al picarlas: sueltan **de 1 a 4 guijarros** (con toque de seda, el bloque de siempre).
 - **4 guijarros en cuadro (2x2)** = **1 piedra labrada** (se puede hacer en el inventario, sin mesa).
 - La tuneladora junta sola los guijarros que excava en piedra labrada (4 por bloque) dentro de su depósito.
+- (0.98.1) La textura del guijarro tiene más detalle: motas claras y oscuras como la piedra labrada, cada piedra con su tono, alguna grieta, brillos y un poco de musgo.
 
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
