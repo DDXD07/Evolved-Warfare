@@ -2233,6 +2233,10 @@ Los NPCs del pueblo (los vecinos, los guardias del cuartel y los vigías de las 
 - También vale con madera descortezada (los bloques de 6 caras) y con los tallos del Nether. La losa de palos para la primera hacha sigue igual.
 - Los troncos lo explican en su descripción.
 
+## Fase 70.1 — Los árboles aplastan al caer
+
+- Cualquier ser vivo (jugadores incluidos, salvo en creativo o espectador) que esté en el **camino del tronco mientras cae** recibe **9 corazones de daño**, una sola vez por árbol (como un bloque que cae: el casco y la armadura protegen algo). Antes solo hacía daño al tocar el suelo y bastante menos.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

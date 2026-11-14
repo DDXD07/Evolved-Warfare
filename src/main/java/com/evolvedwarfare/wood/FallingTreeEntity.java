@@ -44,6 +44,10 @@ public class FallingTreeEntity extends Entity {
 	private int duration = 20;
 	private int logs;
 	private boolean landed;
+	/** Los que ya ha golpeado (una vez por árbol). */
+	private final Set<java.util.UUID> struck = new HashSet<>();
+	/** El daño de que te caiga encima un árbol: 9 corazones. */
+	public static final float CRUSH = 18.0F;
 
 	public FallingTreeEntity(EntityType<? extends FallingTreeEntity> type, World world) {
 		super(type, world);
@@ -179,10 +183,37 @@ public class FallingTreeEntity extends Entity {
 	public void tick() {
 		super.tick();
 		ensureRead();
-		if (getWorld() instanceof ServerWorld world && !landed && age >= duration()) {
-			landed = true;
-			land(world);
-			discard();
+		if (getWorld() instanceof ServerWorld world && !landed) {
+			// lo que pille el tronco por el camino
+			sweep(world, angle(age, duration()));
+			if (age >= duration()) {
+				landed = true;
+				land(world);
+				discard();
+			}
+		}
+	}
+
+	/** Golpea a los seres vivos que toque el tronco en esta inclinación (cada uno, una sola vez). */
+	private void sweep(ServerWorld world, float degrees) {
+		if (degrees < 8.0F) {
+			return;
+		}
+		DamageSource source = world.getDamageSources().fallingBlock(this);
+		for (int i = 0; i < states.length; i++) {
+			if (!Block.getStateFromRawId(states[i]).isIn(BlockTags.LOGS)) {
+				continue;
+			}
+			Vec3d at = rotated(origin, dir, rel[i], degrees);
+			Box box = new Box(at.subtract(0.6, 0.6, 0.6), at.add(0.6, 0.6, 0.6));
+			for (LivingEntity e : world.getEntitiesByClass(LivingEntity.class, box, LivingEntity::isAlive)) {
+				if (e instanceof net.minecraft.entity.player.PlayerEntity p && (p.isCreative() || p.isSpectator())) {
+					continue;
+				}
+				if (struck.add(e.getUuid())) {
+					e.damage(source, CRUSH);
+				}
+			}
 		}
 	}
 
@@ -208,7 +239,9 @@ public class FallingTreeEntity extends Entity {
 		}
 		DamageSource source = world.getDamageSources().fallingBlock(this);
 		for (LivingEntity e : hit) {
-			e.damage(source, Math.min(10.0F, 3.0F + logs * 0.5F));
+			if (struck.add(e.getUuid())) {
+				e.damage(source, CRUSH);
+			}
 		}
 		Vec3d mid = rotated(origin, dir, pack(0, Math.max(1, logs / 2), 0), 90.0F);
 		world.playSound(null, mid.x, mid.y, mid.z, SoundEvents.ENTITY_GENERIC_BIG_FALL, SoundCategory.BLOCKS, 2.0F, 0.6F);

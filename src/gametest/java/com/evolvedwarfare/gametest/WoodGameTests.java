@@ -233,4 +233,28 @@ public class WoodGameTests implements FabricGameTest {
 			ctx.complete();
 		});
 	}
+
+	/** Lo que pille el tronco al caer recibe 9 corazones (una vez); lo de al lado, nada. */
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "tree_crush", tickLimit = 200)
+	public void fallingTreeCrushes(TestContext ctx) {
+		oak(ctx);
+		ServerWorld world = ctx.getWorld();
+		var golem = ctx.spawnEntity(net.minecraft.entity.EntityType.IRON_GOLEM, 5, 1, 2);
+		golem.setAiDisabled(true);
+		var cow = ctx.spawnEntity(net.minecraft.entity.EntityType.COW, 2, 1, 6);
+		cow.setAiDisabled(true);
+		float before = golem.getHealth();
+		ctx.setBlockState(2, 1, 2, Blocks.AIR);
+		FallingTreeEntity tree = Woodcutting.fell(world, ctx.getAbsolutePos(new BlockPos(2, 1, 2)), Direction.EAST);
+		check(tree != null, "El árbol no cae");
+		ctx.waitAndRun(tree.duration() + 10, () -> {
+			float lost = before - golem.getHealth();
+			LOG.info("[EW-GAMETEST] árbol que aplasta: gólem pierde {}, vaca {}/{}", lost, cow.getHealth(), cow.getMaxHealth());
+			world.getEntitiesByClass(ItemEntity.class, new Box(ctx.getAbsolutePos(BlockPos.ORIGIN)).expand(12), e -> true).forEach(ItemEntity::discard);
+			golem.discard();
+			cow.discard();
+			check(Math.abs(lost - FallingTreeEntity.CRUSH) < 0.01 && cow.getHealth() == cow.getMaxHealth(), "El árbol no aplasta como debe");
+			ctx.complete();
+		});
+	}
 }
