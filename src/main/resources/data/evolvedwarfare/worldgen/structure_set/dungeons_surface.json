@@ -1,0 +1,26 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 66601,
+    "spacing": 40,
+    "separation": 16,
+    "exclusion_zone": {
+      "other_set": "minecraft:villages",
+      "chunk_count": 5
+    }
+  },
+  "structures": [
+    {
+      "structure": "evolvedwarfare:dungeon_forgotten_mausoleum",
+      "weight": 1
+    },
+    {
+      "structure": "evolvedwarfare:dungeon_mad_mage_spire",
+      "weight": 1
+    },
+    {
+      "structure": "evolvedwarfare:dungeon_pharaoh_tomb",
+      "weight": 1
+    }
+  ]
+}

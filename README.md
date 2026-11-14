@@ -2179,6 +2179,18 @@ Los NPCs del pueblo (los vecinos, los guardias del cuartel y los vigías de las 
 - **A la izquierda**, el **hogar** con su cartel **CALDERA** y la puerta encendida: clic derecho y se abre la caldera; con carbón (u otro combustible) en la mano, se echa directamente.
 - Clic derecho en cualquier otro sitio de la tuneladora: subirse, como siempre.
 
+## Fase 66 — Mazmorras (1.ª tanda: 5 de 20)
+
+- **Mazmorras** grandes, raras (una de cada tipo cada 600-700 bloques más o menos), en la superficie y bajo tierra. Cada una sale de una plantilla diseñada por `tools/ew_dungeons.py` con **3 variantes** (laberintos, salas y ruinas distintas) y el juego elige una y la gira. Todas tienen **generadores de monstruos**, cofres con botín propio, trampas, una **sala secreta** tras un muro agrietado y, al fondo, el **Corazón de la mazmorra**.
+- **El Corazón**: cuando alguien se acerca (10 bloques) despierta al **mini jefe** (un monstruo vanilla potenciado: más vida, más grande, con equipo y nombre), **cierra las rejas** de la arena y lleva la pelea: barra de vida, un **poder** cada pocos segundos y **furia** a media vida (más fuerte y rápido, y llama a sus secuaces). Si todos se van o mueren, el jefe se va y las rejas se abren. Cuando cae: rejas abiertas, mucha experiencia y el Corazón se convierte en el **cofre del jefe** (con una **reliquia** encantada con nombre, diamantes, esmeraldas, Glory Coins, equipo de diamante encantado, libros y, con suerte, una manzana de Notch, un tótem o restos de netherita).
+- Las cinco primeras:
+  - **Mausoleo del Rey Olvidado** (superficie, llanuras y bosques): un panteón en un cementerio; debajo, **catacumbas en laberinto** con nichos de huesos, osarios, criptas, capillas y trampas de flechas. Jefe: **el Rey Olvidado** (esqueleto wither: secuaces, aura de marchitamiento, salto y onda de choque). Reliquia: la Corona del Rey Olvidado.
+  - **Torre del Hechicero Loco** (superficie, bosques): torre redonda de 5 o 6 plantas (biblioteca, laboratorio, celdas, círculo de invocación, estudio, almacén) con una **escalera de caracol**; arriba, el observatorio. Jefe: **el Archimago Demente** (evocador: teletransporte, rayos, levitación, bolas de fuego y vexes). Reliquia: el Grimorio del Archimago.
+  - **Tumba del Faraón Maldito** (desierto): una **pirámide escalonada** con un laberinto estrecho dentro (trampas, suelos de magma, momias) y una escalera de caracol a la cámara funeraria. Jefe: **el Faraón Maldito** (husk: tormenta de arena, maldición, momias y salto). Reliquia: el Cetro del Faraón.
+  - **Forja Enana Olvidada** (bajo tierra): unas ruinas con un pozo y una escalera de caracol de 28 bloques bajan a un **gran salón de columnas con un río de lava**; a los lados, cuatro cámaras (tesoro, mina con vetas de mineral, barracones, fundición o almacén) y al fondo la **Gran Forja**. Jefe: **el Capataz de la Forja** (bruto piglin: anillo de fuego, bolas de fuego, onda de choque y cubos de magma). Reliquia: el Pico del Capataz.
+  - **Nido de la Reina Araña** (bajo tierra): una dolina baja por un túnel a una red de **cuevas** con telarañas, huevos, liquen y restos de aventureros. Jefe: **la Reina Madre** (araña gigante: telarañas, nubes de veneno, arañas de cueva y salto). Reliquia: el Colmillo de la Reina.
+- El Corazón y las rejas no se pueden romper. Las rejas abiertas son invisibles y no estorban.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

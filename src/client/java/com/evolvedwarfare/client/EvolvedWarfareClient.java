@@ -40,6 +40,7 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		com.evolvedwarfare.perf.Preload.start();
 		com.evolvedwarfare.client.atlas.AtlasClient.register();
 		com.evolvedwarfare.client.hunting.HuntingRenderers.register();
+		BlockRenderLayerMap.INSTANCE.putBlock(com.evolvedwarfare.world.dungeon.Dungeons.GATE, RenderLayer.getCutout());
 		net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.registerGlobalReceiver(
 				com.evolvedwarfare.inventory.StackLimit.StackLimitPayload.ID,
 				(payload, context) -> com.evolvedwarfare.inventory.StackLimit.setFromServer(payload.limit()));

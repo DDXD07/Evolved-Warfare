@@ -1,0 +1,29 @@
+{
+  "type": "evolvedwarfare:dungeon",
+  "biomes": "#evolvedwarfare:has_structure/dungeon/spider_nest",
+  "step": "underground_structures",
+  "terrain_adaptation": "none",
+  "spawn_overrides": {},
+  "templates": [
+    {
+      "id": "evolvedwarfare:dungeon/spider_nest_0",
+      "x": 41,
+      "y": 28,
+      "z": 6
+    },
+    {
+      "id": "evolvedwarfare:dungeon/spider_nest_1",
+      "x": 39,
+      "y": 28,
+      "z": 6
+    },
+    {
+      "id": "evolvedwarfare:dungeon/spider_nest_2",
+      "x": 38,
+      "y": 23,
+      "z": 6
+    }
+  ],
+  "underground": true,
+  "max_slope": 6
+}

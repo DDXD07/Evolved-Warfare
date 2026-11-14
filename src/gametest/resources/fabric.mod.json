@@ -51,7 +51,8 @@
 			"com.evolvedwarfare.gametest.BackpackGameTests",
 			"com.evolvedwarfare.gametest.TrainGameTests",
 			"com.evolvedwarfare.gametest.AtlasGameTests",
-			"com.evolvedwarfare.gametest.VillageGameTests"
+			"com.evolvedwarfare.gametest.VillageGameTests",
+			"com.evolvedwarfare.gametest.DungeonGameTests"
 		]
 	},
 	"depends": {

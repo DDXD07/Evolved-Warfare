@@ -1,0 +1,29 @@
+{
+  "type": "evolvedwarfare:dungeon",
+  "biomes": "#evolvedwarfare:has_structure/dungeon/pharaoh_tomb",
+  "step": "surface_structures",
+  "terrain_adaptation": "none",
+  "spawn_overrides": {},
+  "templates": [
+    {
+      "id": "evolvedwarfare:dungeon/pharaoh_tomb_0",
+      "x": 20,
+      "y": 12,
+      "z": 24
+    },
+    {
+      "id": "evolvedwarfare:dungeon/pharaoh_tomb_1",
+      "x": 20,
+      "y": 12,
+      "z": 24
+    },
+    {
+      "id": "evolvedwarfare:dungeon/pharaoh_tomb_2",
+      "x": 20,
+      "y": 12,
+      "z": 24
+    }
+  ],
+  "underground": false,
+  "max_slope": 6
+}

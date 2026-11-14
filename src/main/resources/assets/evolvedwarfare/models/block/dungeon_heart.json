@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "evolvedwarfare:block/dungeon_heart_top",
+    "side": "evolvedwarfare:block/dungeon_heart_side"
+  }
+}

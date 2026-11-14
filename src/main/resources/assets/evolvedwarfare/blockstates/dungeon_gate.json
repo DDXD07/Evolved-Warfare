@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "closed=false": {
+      "model": "evolvedwarfare:block/dungeon_gate"
+    },
+    "closed=true": {
+      "model": "evolvedwarfare:block/dungeon_gate"
+    }
+  }
+}

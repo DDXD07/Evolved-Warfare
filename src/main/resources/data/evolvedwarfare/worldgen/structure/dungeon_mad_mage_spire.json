@@ -1,0 +1,29 @@
+{
+  "type": "evolvedwarfare:dungeon",
+  "biomes": "#evolvedwarfare:has_structure/dungeon/mad_mage_spire",
+  "step": "surface_structures",
+  "terrain_adaptation": "none",
+  "spawn_overrides": {},
+  "templates": [
+    {
+      "id": "evolvedwarfare:dungeon/mad_mage_spire_0",
+      "x": 15,
+      "y": 4,
+      "z": 15
+    },
+    {
+      "id": "evolvedwarfare:dungeon/mad_mage_spire_1",
+      "x": 15,
+      "y": 4,
+      "z": 15
+    },
+    {
+      "id": "evolvedwarfare:dungeon/mad_mage_spire_2",
+      "x": 15,
+      "y": 4,
+      "z": 15
+    }
+  ],
+  "underground": false,
+  "max_slope": 6
+}

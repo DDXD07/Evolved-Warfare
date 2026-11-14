@@ -1,0 +1,22 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 66602,
+    "spacing": 40,
+    "separation": 16,
+    "exclusion_zone": {
+      "other_set": "minecraft:villages",
+      "chunk_count": 5
+    }
+  },
+  "structures": [
+    {
+      "structure": "evolvedwarfare:dungeon_dwarven_forge",
+      "weight": 1
+    },
+    {
+      "structure": "evolvedwarfare:dungeon_spider_nest",
+      "weight": 1
+    }
+  ]
+}
