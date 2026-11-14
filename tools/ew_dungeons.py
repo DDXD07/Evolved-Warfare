@@ -123,17 +123,18 @@ class B:
     def air(self, x0, y0, z0, x1, y1, z1):
         self.fill(x0, y0, z0, x1, y1, z1, AIR)
 
-    def room(self, x0, y0, z0, x1, y1, z1, wall, floor=None, ceil=None):
-        """Caja con muros (blandos) y el hueco (duro): (x0..x1, y0..y1, z0..z1) es el HUECO; los muros van alrededor."""
+    def room(self, x0, y0, z0, x1, y1, z1, wall, floor=None, ceil=None, hard=False):
+        """Caja con muros (blandos, o duros si hard) y el hueco (duro): (x0..x1, y0..y1, z0..z1) es el HUECO."""
         floor = floor or wall
         ceil = ceil or wall
+        put = self.put if hard else self.soft
         for x in range(x0 - 1, x1 + 2):
             for z in range(z0 - 1, z1 + 2):
-                self.soft(x, y0 - 1, z, floor)
-                self.soft(x, y1 + 1, z, ceil)
+                put(x, y0 - 1, z, floor)
+                put(x, y1 + 1, z, ceil)
                 for y in range(y0, y1 + 1):
                     if x in (x0 - 1, x1 + 1) or z in (z0 - 1, z1 + 1):
-                        self.soft(x, y, z, wall)
+                        put(x, y, z, wall)
         self.air(x0, y0, z0, x1, y1, z1)
 
     def corridor(self, a, b, y, wall, width=3, height=4, floor=None, ceil=None):
@@ -2894,6 +2895,544 @@ def vault(seed):
     return b
 
 
+# ---------------------------------------------------------------------------------------------- 16. el aquelarre del pantano
+SWAMPWOOD = Pal(("spruce_planks", 3), ("mangrove_planks", 2), ("dark_oak_planks", 1))
+
+
+def coven(seed):
+    """El Aquelarre del Pantano: un poblado de chozas sobre pilotes unidas por pasarelas (herbolario, destilería, jaula,
+    despensa, tótem) alrededor de la gran casa del aquelarre, donde espera la Bruja Ahogada."""
+    b = B(seed, "witch_coven")
+    r = b.rnd
+    W = SWAMPWOOD
+    LOG = S("dark_oak_log", axis="y")
+    b.start = (0, 0, -12)
+    for x in range(-24, 25):
+        for z in range(-12, 48):
+            b.clear(x, 0, z, x, 14, z)
+    # el acceso desde tierra y las pasarelas (a y 2)
+
+    def walk_x(x0, x1, z):
+        for x in range(min(x0, x1), max(x0, x1) + 1):
+            for dz in (-1, 0, 1):
+                b.put(x, 2, z + dz, W)
+            if x % 4 == 0:
+                for dz in (-1, 1):
+                    b.fill(x, -6, z + dz, x, 1, z + dz, LOG)
+            if r.random() < 0.6:
+                b.put(x, 3, z + 2, S("spruce_fence"))
+
+    def walk_z(z0, z1, x):
+        for z in range(min(z0, z1), max(z0, z1) + 1):
+            for dx in (-1, 0, 1):
+                b.put(x + dx, 2, z, W)
+            if z % 4 == 0:
+                for dx in (-1, 1):
+                    b.fill(x + dx, -6, z, x + dx, 1, z, LOG)
+            if r.random() < 0.6:
+                b.put(x - 2, 3, z, S("spruce_fence"))
+
+    for k, z in enumerate((-9, -8, -7)):
+        b.fill(-1, 0, z, 1, k, z, W)
+        b.fill(-1, k, z, 1, k, z, stairs("spruce", "south"))
+    walk_z(-6, 15, 0)
+    # la casa del aquelarre (la arena): x -7..7, z 17..31, y 3..9
+    b.fill(-9, 2, 15, 9, 2, 33, W)
+    for x in (-9, -4, 0, 4, 9):
+        for z in (15, 20, 25, 30, 33):
+            b.fill(x, -6, z, x, 1, z, LOG)
+    b.room(-7, 3, 17, 7, 9, 31, W, floor=W, ceil=S("dark_oak_planks"))
+    for x in (-8, 8):
+        for z in (16, 32):
+            b.fill(x, 3, z, x, 10, z, LOG)
+    for k in range(9):
+        for x in range(-9 + k, 10 - k):
+            for z in (15 + k, 33 - k):
+                b.put(x, 11 + k // 2, z, S("dark_oak_planks") if k % 2 else stairs("dark_oak", "south" if z < 24 else "north"))
+            for z in range(15 + k, 34 - k):
+                if x in (-9 + k, 9 - k):
+                    b.put(x, 11 + k // 2, z, S("dark_oak_planks") if k % 2 else stairs("dark_oak", "east" if x < 0 else "west"))
+    b.air(-1, 3, 16, 1, 5, 16)
+    for x in range(-1, 2):
+        for y in range(3, 6):
+            b.gate(x, y, 16)
+    windows(b, -8, 8, 16, 32, (5, 6), 4, "iron_bars")
+    b.heart(0, 3, 28)
+    for x, z in ((-1, 25), (1, 25), (-2, 26), (2, 26), (-1, 27), (1, 27)):
+        b.put(x, 3, z, S("water_cauldron", level=3))
+    for x in (-6, 6):
+        for z in range(19, 31, 2):
+            if r.random() < 0.5:
+                b.put(x, 3, z, S("bookshelf"))
+            else:
+                b.put(x, 3, z, S("barrel", facing="up", open="false"), {"id": "minecraft:barrel"})
+        b.candles(x, 4, 24, "purple", 4)
+    for x in (-4, 0, 4):
+        b.put(x, 9, 22, S("chain", axis="y"))
+        b.lantern(x, 8, 22, soul=True)
+    b.chest(6, 3, 30, "west", "chest")
+    b.webs(-7, 3, 17, 7, 9, 31, 0.05)
+    # las chozas
+    huts = [(-15, 6, "brewery"), (15, 6, "herbs"), (-16, 26, "cage"), (16, 26, "pantry"), (0, 41, "totem")]
+    kinds = [h[2] for h in huts]
+    r.shuffle(kinds)
+    for (cx, cz, _), kind in zip(huts, kinds):
+        b.fill(cx - 3, 2, cz - 3, cx + 3, 2, cz + 3, W)
+        for x in (cx - 3, cx + 3):
+            for z in (cz - 3, cz + 3):
+                b.fill(x, -6, z, x, 1, z, LOG)
+        b.room(cx - 2, 3, cz - 2, cx + 2, 6, cz + 2, W, floor=W, ceil=S("dark_oak_slab", type="bottom", waterlogged="false"))
+        if cz < 20 and abs(cx) > 0:
+            walk_x(cx + (4 if cx < 0 else -4), 0 - (2 if cx < 0 else -2), cz)
+            b.air(cx + (3 if cx < 0 else -3), 3, cz, cx + (3 if cx < 0 else -3), 4, cz)
+        elif cz > 20 and abs(cx) > 0:
+            walk_x(cx + (4 if cx < 0 else -4), -10 if cx < 0 else 10, cz)
+            b.air(cx + (3 if cx < 0 else -3), 3, cz, cx + (3 if cx < 0 else -3), 4, cz)
+        else:
+            walk_z(34, cz - 4, 0)
+            b.air(0, 3, cz - 3, 0, 4, cz - 3)
+        if kind == "brewery":
+            b.put(cx - 1, 3, cz + 2, S("brewing_stand", has_bottle_0="true", has_bottle_1="true", has_bottle_2="false"))
+            b.put(cx + 1, 3, cz + 2, S("water_cauldron", level=2))
+            b.spawner(cx, 3, cz, "minecraft:witch")
+            b.chest(cx - 2, 3, cz - 2, "east", "chest", "barrel")
+        elif kind == "herbs":
+            b.put(cx - 2, 3, cz + 2, S("hay_block", axis="y"))
+            b.put(cx + 2, 3, cz + 2, S("composter", level=4))
+            for x in range(cx - 1, cx + 2):
+                b.put(x, 5, cz, S("brown_mushroom_block", up="true", down="true", north="true", south="true", east="true", west="true"))
+            b.chest(cx + 2, 3, cz - 2, "west", "chest")
+        elif kind == "cage":
+            for x in range(cx - 1, cx + 2):
+                for z in range(cz - 1, cz + 2):
+                    if max(abs(x - cx), abs(z - cz)) == 1:
+                        b.fill(x, 3, z, x, 5, z, S("iron_bars"))
+            b.spawner(cx, 3, cz, "minecraft:slime", count=2)
+        elif kind == "pantry":
+            for z in (cz - 2, cz, cz + 2):
+                b.put(cx + 2, 3, z, S("barrel", facing="up", open="false"), {"id": "minecraft:barrel"})
+            b.chest(cx - 2, 3, cz + 2, "east", "chest")
+            b.spawner(cx, 3, cz - 1, "minecraft:zombie")
+        else:
+            for x, z in ((cx - 2, cz - 2), (cx + 2, cz - 2), (cx - 2, cz + 2), (cx + 2, cz + 2)):
+                b.put(x, 3, z, S("spruce_fence"))
+                b.skull(x, 4, z)
+            b.candles(cx, 3, cz, "black", 4)
+            b.spawner(cx, 3, cz + 1, "minecraft:spider")
+        b.lantern(cx, 6, cz)
+    b.spawner(4, 0, 8, "minecraft:drowned")
+    return b
+
+
+# ---------------------------------------------------------------------------------------------- 17. el coliseo en ruinas
+def colosseum(seed):
+    """El Coliseo en Ruinas: un anfiteatro ovalado con gradas, una galería en arcos alrededor y, bajo la arena, el hipogeo
+    (celdas, fieras, armería y cuarteles); los túneles de las puertas llevan a la arena, donde espera el Campeón Eterno."""
+    b = B(seed, "colosseum")
+    r = b.rnd
+    W = Pal(("stone_bricks", 3), ("cracked_stone_bricks", 2), ("smooth_sandstone", 1), ("cut_sandstone", 1), ("mossy_stone_bricks", 1))
+    C = 26
+    b.start = (0, 0, -6)
+
+    def ring(x, z, a, c):
+        return (x / a) ** 2 + ((z - C) / c) ** 2
+
+    for x in range(-28, 29):
+        for z in range(C - 24, C + 25):
+            b.dirt(x, -1, z, Pal(("grass_block", 3), ("coarse_dirt", 2), ("sand", 1)))
+            for y in range(-4, -1):
+                b.soft(x, y, z, S("dirt"))
+            b.clear(x, 0, z, x, 16, z)
+    A, Bz = 12, 9
+    for x in range(-27, 28):
+        for z in range(C - 22, C + 23):
+            e = ring(x, z, A, Bz)
+            if e <= 1:
+                b.put(x, -1, z, S("sand"))
+                b.put(x, -2, z, S("sandstone"))
+                continue
+            if ring(x, z, A + 1.6, Bz + 1.6) <= 1:
+                b.fill(x, 0, z, x, 4, z, W)
+                b.fill(x, 5, z, x, 8, z, S("iron_bars"))
+                continue
+            for k in range(1, 8):
+                if ring(x, z, A + 1.6 + 1.6 * k, Bz + 1.6 + 1.3 * k) <= 1:
+                    if k == 7:
+                        top = 13 if r.random() < 0.7 else r.randint(8, 12)
+                        b.fill(x, 0, z, x, top, z, W)
+                    elif k == 6:
+                        b.fill(x, 4, z, x, 4 + k, z, W)
+                        b.fill(x, 0, z, x, 3, z, AIR)
+                        b.put(x, -1, z, S("stone_bricks"))
+                    else:
+                        b.fill(x, 0, z, x, 4 + k, z, W)
+                    break
+    # arcos en el muro de fuera (entradas a la galería) y ventanas arriba
+    for a in range(0, 360, 15):
+        t = math.radians(a)
+        for rr in (A + 1.6 + 1.6 * 7 - 0.6, A + 1.6 + 1.6 * 7 - 1.4):
+            x = int(round(rr * math.cos(t)))
+            z = C + int(round((Bz + 1.6 + 1.3 * 7 - (A + 1.6 + 1.6 * 7 - rr)) * math.sin(t)))
+            if a % 30 == 0:
+                b.air(x, 0, z, x, 3, z)
+            else:
+                b.air(x, 7, z, x, 9, z)
+    # los túneles de las puertas (este y oeste) hasta la arena, con sus rejas
+    for side in (-1, 1):
+        for x in range(side * 13, side * 25, side):
+            for z in range(C - 1, C + 2):
+                for y in range(0, 4):
+                    if ring(x, z, A, Bz) > 1:
+                        b.put(x, y, z, AIR)
+        for x in (side * 13, side * 14):
+            for z in range(C - 1, C + 2):
+                if ring(x, z, A, Bz) > 1 and ring(x, z, A + 1.6, Bz + 1.6) <= 1:
+                    for y in range(0, 4):
+                        b.gate(x, y, z)
+    b.heart(0, 0, C)
+    for x, z in ((-6, C - 4), (6, C + 4), (-6, C + 4), (6, C - 4)):
+        b.put(x, 0, z, S("chiseled_stone_bricks"))
+        b.put(x, 1, z, S("campfire", facing="north", lit="true", signal_fire="false", waterlogged="false"))
+    # el hipogeo (bajo la arena): bajada desde la galería norte
+    Y = -8
+    gz = C + 17
+    for i in range(7):
+        z = gz - i
+        for x in (-1, 0, 1):
+            b.put(x, -1 - i, z, stairs("stone_brick", "south"))
+            for yy in range(-i, 1):
+                b.put(x, yy, z, AIR)
+        for x in (-2, 2):
+            for yy in range(-9, 0):
+                b.soft(x, yy, z, STONE_BRICK)
+    b.room(-1, Y, gz - 9, 1, Y + 3, gz - 7, STONE_BRICK)
+    b.corridor((0, gz - 8), (0, C), Y, STONE_BRICK)
+    b.corridor((-16, C), (16, C), Y, STONE_BRICK)
+    rooms = [(-10, C - 6, "armory"), (10, C - 6, "beasts"), (-10, C + 6, "quarters"), (10, C + 6, "cells")]
+    kinds = [k for _, _, k in rooms]
+    r.shuffle(kinds)
+    for (cx, cz, _), kind in zip(rooms, kinds):
+        b.corridor((cx, C), (cx, cz + (2 if cz < C else -2)), Y, STONE_BRICK)
+        b.room(cx - 3, Y, cz - 2, cx + 3, Y + 3, cz + 2, STONE_BRICK)
+        if kind == "armory":
+            for x in range(cx - 3, cx + 4, 2):
+                b.put(x, Y, cz - 2 if cz < C else cz + 2, S("barrel", facing="up", open="false"), {"id": "minecraft:barrel"})
+            b.chest(cx, Y, cz - 2 if cz < C else cz + 2, "south" if cz < C else "north", "chest")
+            b.put(cx + 3, Y, cz, S("grindstone", face="floor", facing="north"))
+        elif kind == "beasts":
+            for x in range(cx - 3, cx + 4):
+                b.fill(x, Y, cz, x, Y + 3, cz, S("iron_bars")) if x != cx else None
+            b.spawner(cx - 2, Y, cz - 2 if cz < C else cz + 2, "minecraft:spider")
+        elif kind == "quarters":
+            for x in (cx - 2, cx + 2):
+                b.put(x, Y, cz - 1, S("brown_bed", facing="north", occupied="false", part="head"))
+                b.put(x, Y, cz, S("brown_bed", facing="north", occupied="false", part="foot"))
+            b.spawner(cx, Y, cz + 1, "minecraft:zombie")
+            b.chest(cx + 3, Y, cz + 2 if cz > C else cz - 2, "west", "chest")
+        else:
+            b.spawner(cx - 2, Y, cz, "minecraft:skeleton")
+            b.spawner(cx + 2, Y, cz, "minecraft:husk")
+            for x in (cx - 1, cx + 1):
+                b.fill(x, Y, cz - 2, x, Y + 3, cz + 2, S("iron_bars"))
+    for x in (-14, 14):
+        b.put(x, Y + 3, C, S("chain", axis="y"))
+        b.lantern(x, Y + 2, C)
+    place_traps(b, 2, Y)
+    secret_room(b, STONE_BRICK, y=Y)
+    b.webs(-17, Y, C - 10, 17, Y + 3, gz, 0.06)
+    return b
+
+
+# ---------------------------------------------------------------------------------------------- 18. la geoda de cristal
+def geode(b, cx, cy, cz, R, floor):
+    """Una geoda hueca: basalto liso, calcita y amatista (con amatista germinante), con el suelo plano."""
+    r = b.rnd
+    for x in range(int(cx - R - 1), int(cx + R + 2)):
+        for z in range(int(cz - R - 1), int(cz + R + 2)):
+            for y in range(int(cy - R - 1), int(cy + R + 2)):
+                d = math.sqrt((x - cx) ** 2 + (y - cy) ** 2 + (z - cz) ** 2)
+                if d < R - 3:
+                    if y >= floor:
+                        b.put(x, y, z, AIR)
+                    elif y == floor - 1:
+                        b.put(x, y, z, S("calcite") if r.random() < 0.7 else S("amethyst_block"))
+                elif d < R - 2:
+                    b.soft(x, y, z, S("budding_amethyst") if r.random() < 0.08 else S("amethyst_block"))
+                elif d < R - 1:
+                    b.soft(x, y, z, S("calcite"))
+                elif d < R:
+                    b.soft(x, y, z, S("smooth_basalt"))
+
+
+def crystals(b, chance):
+    """Racimos de amatista en el aire pegado a la amatista (mirando hacia fuera del bloque)."""
+    for (x, y, z), (st, be) in list(b.blocks.items()):
+        if short(st) != "air" or b.rnd.random() > chance:
+            continue
+        for (dx, dy, dz), facing in (((0, -1, 0), "up"), ((0, 1, 0), "down"), ((1, 0, 0), "west"), ((-1, 0, 0), "east"),
+                                     ((0, 0, 1), "north"), ((0, 0, -1), "south")):
+            n = b.get(x + dx, y + dy, z + dz)
+            if n is not None and short(n) in ("amethyst_block", "budding_amethyst", "calcite"):
+                b.put(x, y, z, S(b.rnd.choice(["amethyst_cluster", "large_amethyst_bud", "medium_amethyst_bud"]), facing=facing,
+                                 waterlogged="false"))
+                break
+
+
+def crystal_geode(seed):
+    """La Geoda de Cristal: unas rocas en la superficie esconden un túnel que baja a una geoda gigante de amatista, con
+    otras más pequeñas alrededor; en la más honda flota el Espíritu del Cristal."""
+    b = B(seed, "crystal_geode")
+    r = b.rnd
+    b.start = (0, 0, -8)
+    for _ in range(9):
+        x, z = r.randint(-5, 5), r.randint(-5, 5)
+        for y in range(0, r.randint(1, 3)):
+            b.put(x, y, z, S(r.choice(["tuff", "calcite", "smooth_basalt", "amethyst_block"])))
+    tunnel(b, [(0, -1, -3), (5, -5, 3), (1, -10, 9), (-4, -15, 14), (0, -20, 20)], rad=2.1)
+    main = (0, -16, 38)
+    mf = -22
+    geode(b, main[0], main[1], main[2], 15, mf)
+    tunnel(b, [(0, -20, 20), (0, -21, 25), (0, mf, 28)], rad=2.1)
+    sides = []
+    for a in r.sample([200, 250, 300, 60, 110, 160], 3):
+        c = (int(round(22 * math.sin(math.radians(a)))), -16 - r.randint(0, 4), main[2] + int(round(22 * math.cos(math.radians(a)))))
+        if c[2] < 22:
+            c = (c[0], c[1], 22)
+        sides.append(c)
+        geode(b, c[0], c[1] + 2, c[2], 8, c[1] - 1)
+        tunnel(b, [(main[0], mf, main[2]), ((main[0] + c[0]) // 2, (mf + c[1]) // 2 - 1, (main[2] + c[2]) // 2), (c[0], c[1] - 1, c[2])],
+               rad=2.0)
+    boss = (r.randint(-5, 5), -20, main[2] + 32)
+    bf = boss[1] - 5
+    geode(b, boss[0], boss[1], boss[2], 15, bf)
+    tunnel(b, [(main[0], mf, main[2] + 9), (boss[0], bf, main[2] + 18), (boss[0], bf, boss[2] - 9)], rad=2.2)
+    shell(b, Pal(("stone", 4), ("tuff", 2), ("deepslate", 1)))
+    for c in (main, boss):
+        for _ in range(4):
+            a = r.random() * 2 * math.pi
+            x, z = int(round(c[0] + 6 * math.cos(a))), int(round(c[2] + 6 * math.sin(a)))
+            fy = mf if c is main else bf
+            h = r.randint(3, 6)
+            if b.is_air(x, fy, z):
+                b.fill(x, fy, z, x, fy + h, z, S("amethyst_block"))
+    crystals(b, 0.12)
+    # la reja: anillo alrededor de la geoda del Espíritu
+    for (x, y, z), (st, be) in list(b.blocks.items()):
+        if (short(st) == "air" or "amethyst" in short(st) and not is_full(st)) and bf - 3 <= y <= bf + 8 \
+                and 12.3 <= math.hypot(x - boss[0], z - boss[2]) < 14.3:
+            b.gate(x, y, z)
+    b.fill(boss[0] - 1, bf, boss[2] - 1, boss[0] + 1, bf, boss[2] + 1, S("calcite"))
+    b.heart(boss[0], bf + 1, boss[2])
+    for x, z in ((boss[0] + 2, boss[2]), (boss[0] - 2, boss[2])):
+        b.put(x, bf, z, S("ochre_froglight", axis="y"))
+    b.spawner(main[0] + 3, mf, main[2] + 3, "minecraft:skeleton")
+    mobs = ["minecraft:silverfish", "minecraft:cave_spider", "minecraft:zombie"]
+    for k, c in enumerate(sides):
+        if True:
+            b.spawner(c[0], c[1], c[2], mobs[k])
+            b.chest(c[0] + 2, c[1], c[2], "west", "chest")
+    for _ in range(6):
+        x, z = main[0] + r.randint(-8, 8), main[2] + r.randint(-8, 8)
+        if b.is_air(x, mf + 6, z):
+            b.put(x, mf + 6, z, S("pearlescent_froglight", axis="y"))
+    secret_room(b, CAVE, levels=[mf])
+    return b
+
+
+# ---------------------------------------------------------------------------------------------- 19. la necrópolis
+def necropolis(seed):
+    """La Necrópolis: bajo un mausoleo en ruinas, un pozo baja a una caverna enorme con una ciudad de tumbas, calles
+    empedradas y braseros de almas; al fondo, el templo donde reina el Liche."""
+    b = B(seed, "necropolis")
+    r = b.rnd
+    W = DEEP_BRICK
+    D = 26
+    Y = -D
+    b.start = (0, 0, -8)
+    for x in range(-5, 6):
+        for z in range(-5, 6):
+            b.dirt(x, -1, z, Pal(("cobbled_deepslate", 2), ("gravel", 1), ("coarse_dirt", 1)))
+            b.clear(x, 0, z, x, 6, z)
+    for x in range(-4, 5):
+        for z in range(-4, 5):
+            if max(abs(x), abs(z)) == 4 and not (abs(x) <= 1 and z == -4) and r.random() < 0.75:
+                b.fill(x, 0, z, x, r.randint(1, 4), z, STONE_BRICK)
+    spiral_down(b, D, W, "deepslate_brick", (0, 2), core=S("polished_deepslate"))
+    b.room(-1, Y, 3, 1, Y + 3, 5, W)
+    # la caverna
+    cz = 42
+    blob(b, 0, Y + 6, cz, 26, 11, 26, floor=Y, noise=0.12)
+    b.corridor((0, 5), (0, 17), Y, W)
+    shell(b, Pal(("deepslate", 4), ("tuff", 2), ("cobbled_deepslate", 1)))
+    for (x, y, z), (st, be) in list(b.blocks.items()):
+        if y == Y - 1 and b.is_air(x, Y, z):
+            b.put(x, y, z, Pal(("deepslate", 3), ("cobbled_deepslate", 2), ("gravel", 1), ("soul_soil", 1)))
+    for z in range(17, 50):
+        for x in (-1, 0, 1):
+            if b.is_air(x, Y, z):
+                b.put(x, Y - 1, z, S("polished_deepslate"))
+    for x in range(-22, 23):
+        for z in (cz - 1, cz, cz + 1):
+            if b.is_air(x, Y, z):
+                b.put(x, Y - 1, z, S("polished_deepslate"))
+    # las tumbas
+    spots = [(x, z) for x in (-18, -11, 11, 18) for z in (24, 33, 51)] + [(-6, 24), (6, 24), (-6, 33), (6, 33)]
+    spots = [p for p in spots if math.hypot(p[0] / 24, (p[1] - cz) / 24) <= 0.85]
+    r.shuffle(spots)
+    plan = ["spawner", "spawner", "spawner", "spawner", "chest", "chest", "chest", "bones", "coffin", "coffin", "bones", "coffin"]
+    mobs = ["minecraft:zombie", "minecraft:skeleton", "minecraft:zombie", "minecraft:husk"]
+    for (tx, tz), kind in zip(spots, plan):
+        if math.hypot(tx / 24, (tz - cz) / 24) > 0.85:
+            continue
+        b.room(tx - 2, Y, tz - 2, tx + 2, Y + 3, tz + 2, W, hard=True)
+        for k in range(3):
+            for x in range(tx - 3 + k, tx + 4 - k):
+                for z in range(tz - 3 + k, tz + 4 - k):
+                    b.put(x, Y + 4 + k, z, S("deepslate_tiles"))
+        door = (tx, tz + 3) if tz < cz else (tx, tz - 3)
+        if abs(tx) > 8:
+            door = (tx - 3 if tx > 0 else tx + 3, tz)
+        b.air(door[0], Y, door[1], door[0], Y + 2, door[1])
+        if kind == "spawner":
+            b.spawner(tx, Y, tz, mobs.pop())
+        elif kind == "chest":
+            b.chest(tx, Y, tz, "north", "chest")
+            b.candles(tx + 1, Y, tz, "white")
+        elif kind == "coffin":
+            b.put(tx, Y, tz - 1, S("polished_deepslate"))
+            b.put(tx, Y, tz, S("polished_deepslate"))
+            b.candles(tx, Y + 1, tz - 1, "black")
+        else:
+            b.put(tx, Y, tz, S("bone_block", axis="y"))
+            b.skull(tx + 1, Y, tz)
+    for x, z in ((-4, 20), (4, 20), (-4, 46), (4, 46), (-14, cz + 3), (14, cz - 3)):
+        if b.is_air(x, Y, z):
+            b.put(x, Y, z, S("polished_blackstone_bricks"))
+            b.put(x, Y + 1, z, S("soul_campfire", facing="north", lit="true", signal_fire="false", waterlogged="false"))
+    # el templo del Liche (la arena)
+    b.room(-10, Y, 52, 10, Y + 10, 72, W, floor=Pal(("polished_deepslate", 2), ("deepslate_tiles", 2), ("chiseled_deepslate", 0.3)), hard=True)
+    for k in range(4):
+        for x in range(-11 + k, 12 - k):
+            for z in range(51 + k, 74 - k):
+                if b.get(x, Y + 11 + k, z) is None:
+                    b.put(x, Y + 11 + k, z, S("deepslate_tiles"))
+    b.air(-1, Y, 50, 1, Y + 3, 51)
+    for x in range(-1, 2):
+        for y in range(Y, Y + 4):
+            b.gate(x, y, 51)
+    for x in (-3, 3):
+        b.fill(x, Y, 49, x, Y + 6, 49, S("polished_deepslate"))
+        b.put(x, Y + 7, 49, S("soul_lantern", hanging="false", waterlogged="false"))
+    for px in (-6, 6):
+        for pz in (56, 62, 68):
+            b.fill(px, Y, pz, px, Y + 10, pz, S("polished_deepslate"))
+    b.fill(-2, Y, 64, 2, Y, 68, S("chiseled_deepslate"))
+    b.heart(0, Y + 1, 64)
+    for x in (-8, 8):
+        for z in range(55, 71, 3):
+            b.put(x, Y, z, S("polished_deepslate"))
+            b.candles(x, Y + 1, z, "black")
+    for z in (58, 66):
+        b.put(0, Y + 10, z, S("chain", axis="y"))
+        b.lantern(0, Y + 9, z, soul=True)
+    b.webs(-26, Y, 17, 26, Y + 8, 72, 0.03)
+    secret_room(b, W, y=Y)
+    return b
+
+
+# ---------------------------------------------------------------------------------------------- 20. el abismo sculk
+def sculk_depths(seed):
+    """El Abismo Silencioso: un pozo de 34 bloques baja a una caverna profunda invadida por el sculk, con ruinas de
+    pizarra, archivos y almacenes, y al fondo la cámara del portal antiguo donde acecha la Sombra de las Profundidades."""
+    b = B(seed, "sculk_depths")
+    r = b.rnd
+    W = DEEP_BRICK
+    D = 34
+    Y = -D
+    b.start = (0, 0, -8)
+    for x in range(-4, 5):
+        for z in range(-4, 5):
+            b.dirt(x, -1, z, Pal(("cobbled_deepslate", 2), ("sculk", 1), ("tuff", 1)))
+            b.clear(x, 0, z, x, 4, z)
+    for a in range(0, 360, 45):
+        x, z = int(round(4 * math.cos(math.radians(a)))), int(round(4 * math.sin(math.radians(a))))
+        if not (abs(x) <= 1 and z < 0):
+            b.fill(x, 0, z, x, r.randint(0, 2), z, S("deepslate_tiles"))
+    spiral_down(b, D, W, "deepslate_tile", (0, 2), core=S("chiseled_deepslate"))
+    b.room(-1, Y, 3, 1, Y + 3, 5, W)
+    cz = 36
+    blob(b, 0, Y + 7, cz, 22, 11, 24, floor=Y, noise=0.15)
+    b.corridor((0, 5), (0, 14), Y, W)
+    shell(b, Pal(("deepslate", 4), ("sculk", 2), ("tuff", 1)))
+    for (x, y, z), (st, be) in list(b.blocks.items()):
+        if y == Y - 1 and b.is_air(x, Y, z):
+            b.put(x, y, z, S("sculk") if r.random() < 0.45 else Pal(("deepslate_tiles", 2), ("cracked_deepslate_tiles", 1), ("deepslate", 1)))
+            if r.random() < 0.025:
+                b.put(x, Y, z, S("sculk_sensor", sculk_sensor_phase="inactive", power=0, waterlogged="false"))
+            elif r.random() < 0.01:
+                b.put(x, Y, z, S("sculk_catalyst", bloom="false"))
+    for z in range(14, 60):
+        for x in (-1, 0, 1):
+            if b.is_air(x, Y, z):
+                b.put(x, Y - 1, z, S("deepslate_tiles"))
+    # ruinas: muros rotos, archivos y almacenes
+    rooms = [(-12, 24, "archive"), (12, 24, "store"), (-12, 44, "store"), (12, 44, "shrine")]
+    mobs = ["minecraft:skeleton", "minecraft:zombie", "minecraft:cave_spider", "minecraft:silverfish"]
+    for n, (rx, rz, kind) in enumerate(rooms):
+        b.room(rx - 3, Y, rz - 3, rx + 3, Y + 4, rz + 3, W, hard=True)
+        door = rx + (4 if rx < 0 else -4)
+        b.air(door, Y, rz - 1, door, Y + 2, rz + 1)
+        for _ in range(6):
+            x, y, z = rx + r.randint(-4, 4), Y + 4, rz + r.randint(-4, 4)
+            b.put(x, y, z, AIR) if b.get(x, y + 1, z) is None else None
+        b.spawner(rx + (-2 if rx < 0 else 2), Y, rz + 2, mobs[n])
+        if kind == "archive":
+            for z in range(rz - 3, rz + 4):
+                b.fill(rx - 3, Y, z, rx - 3, Y + 2, z, S("bookshelf"))
+            b.chest(rx - 2, Y, rz - 3, "east", "chest")
+        elif kind == "store":
+            b.chest(rx, Y, rz - 3, "south", "chest")
+            for x in (rx - 3, rx + 3):
+                b.put(x, Y, rz, S("barrel", facing="up", open="false"), {"id": "minecraft:barrel"})
+        else:
+            b.candles(rx, Y, rz, "light_blue", 4)
+            b.put(rx, Y + 4, rz, S("chain", axis="y"))
+            b.lantern(rx, Y + 3, rz, soul=True)
+    for _ in range(10):
+        x, z = r.randint(-16, 16), r.randint(18, 54)
+        if abs(x) > 3 and b.is_air(x, Y, z):
+            for y in range(Y, Y + r.randint(1, 4)):
+                if b.is_air(x, y, z):
+                    b.put(x, y, z, Pal(("deepslate_bricks", 2), ("cracked_deepslate_bricks", 2), ("deepslate_tiles", 1)))
+    for z in range(18, 58, 8):
+        for x in (-3, 3):
+            if b.is_air(x, Y, z):
+                b.put(x, Y, z, S("deepslate_brick_wall", up="true"))
+                b.put(x, Y + 1, z, S("soul_lantern", hanging="false", waterlogged="false"))
+    # la cámara del portal (la arena)
+    b.corridor((0, 56), (0, 62), Y, W)
+    b.room(-11, Y, 64, 11, Y + 12, 84, W, floor=Pal(("deepslate_tiles", 3), ("sculk", 1), ("polished_deepslate", 1)), hard=True)
+    b.air(-1, Y, 63, 1, Y + 3, 63)
+    for x in range(-1, 2):
+        for y in range(Y, Y + 4):
+            b.gate(x, y, 63)
+    for x in range(-5, 6):
+        for y in range(Y, Y + 7):
+            if x in (-5, 5) or y in (Y, Y + 6):
+                b.put(x, y, 84, S("reinforced_deepslate"))
+            else:
+                b.put(x, y, 84, S("sculk"))
+    b.fill(-2, Y, 73, 2, Y, 77, S("polished_deepslate"))
+    b.heart(0, Y + 1, 75)
+    for x in (-8, 8):
+        for z in (68, 76):
+            b.fill(x, Y, z, x, Y + 12, z, S("deepslate_tiles"))
+            b.put(x, Y + 6, z - 1, S("soul_wall_torch", facing="north"))
+    b.webs(-22, Y, 14, 22, Y + 6, 60, 0.03)
+    secret_room(b, W, y=Y)
+    return b
+
+
 # ---------------------------------------------------------------------------------------------- el catálogo
 LAND = ["plains", "sunflower_plains", "forest", "flower_forest", "birch_forest", "old_growth_birch_forest", "dark_forest", "taiga",
         "old_growth_pine_taiga", "old_growth_spruce_taiga", "snowy_taiga", "snowy_plains", "meadow", "cherry_grove", "savanna",
@@ -2969,6 +3508,23 @@ DUNGEONS = collections.OrderedDict([
                        ("minecraft:diamond_helmet", "Yelmo del Guardián", "Guardian's Helm",
                         {"minecraft:protection": 4, "minecraft:respiration": 3, "minecraft:aqua_affinity": 1, "minecraft:unbreaking": 3,
                          "minecraft:mending": 1}))),
+    ("witch_coven", (coven, False, ["swamp", "mangrove_swamp"], "Aquelarre del Pantano", "Swamp Coven", "la Bruja Ahogada",
+                     "the Drowned Witch",
+                     ("minecraft:trident", "Tridente de la Ciénaga", "Bog Trident",
+                      {"minecraft:riptide": 3, "minecraft:impaling": 5, "minecraft:unbreaking": 3, "minecraft:mending": 1}))),
+    ("colosseum", (colosseum, False, ["savanna", "savanna_plateau", "plains", "sunflower_plains", "badlands", "meadow"],
+                   "Coliseo en Ruinas", "Ruined Colosseum", "el Campeón Eterno", "the Eternal Champion",
+                   ("minecraft:netherite_sword", "Gladius del Campeón", "Champion's Gladius",
+                    {"minecraft:sharpness": 4, "minecraft:sweeping_edge": 3, "minecraft:unbreaking": 3}))),
+    ("crystal_geode", (crystal_geode, True, LAND, "Geoda de Cristal", "Crystal Geode", "el Espíritu del Cristal", "the Crystal Spirit",
+                       ("minecraft:diamond_boots", "Botas del Viento", "Windwalker Boots",
+                        {"minecraft:feather_falling": 4, "minecraft:soul_speed": 3, "minecraft:protection": 4, "minecraft:unbreaking": 3}))),
+    ("necropolis", (necropolis, True, LAND, "Necrópolis", "Necropolis", "el Liche", "the Lich",
+                    ("minecraft:bow", "Arco del Liche", "Lich's Bow",
+                     {"minecraft:power": 5, "minecraft:flame": 1, "minecraft:punch": 2, "minecraft:unbreaking": 3, "minecraft:mending": 1}))),
+    ("sculk_depths", (sculk_depths, True, LAND, "Abismo Silencioso", "Silent Depths", "la Sombra de las Profundidades", "the Shade of the Deep",
+                      ("minecraft:netherite_chestplate", "Coraza de la Sombra", "Shade's Cuirass",
+                       {"minecraft:protection": 4, "minecraft:unbreaking": 3}))),
 ])
 THEME = {
     "forgotten_mausoleum": [("minecraft:bone", 2, 8, 6), ("minecraft:rotten_flesh", 2, 6, 4), ("minecraft:candle", 1, 4, 3),
@@ -3001,6 +3557,16 @@ THEME = {
                         ("minecraft:arrow", 4, 12, 4), ("minecraft:iron_ingot", 1, 4, 3), ("minecraft:emerald", 1, 3, 3)],
     "ancient_vault": [("minecraft:copper_ingot", 4, 12, 6), ("minecraft:gold_ingot", 2, 6, 5), ("minecraft:raw_gold", 2, 6, 4),
                       ("minecraft:iron_ingot", 2, 8, 4), ("minecraft:emerald", 2, 5, 3), ("minecraft:diamond", 1, 2, 1)],
+    "witch_coven": [("minecraft:glowstone_dust", 2, 6, 4), ("minecraft:redstone", 2, 8, 4), ("minecraft:sugar", 2, 6, 3),
+                    ("minecraft:spider_eye", 1, 4, 3), ("minecraft:slime_ball", 2, 6, 4), ("minecraft:emerald", 1, 4, 3)],
+    "colosseum": [("minecraft:iron_ingot", 3, 8, 6), ("minecraft:gold_ingot", 2, 6, 5), ("minecraft:shield", 1, 1, 2),
+                  ("minecraft:iron_sword", 1, 1, 2), ("minecraft:leather", 2, 6, 3), ("minecraft:emerald", 2, 5, 4)],
+    "crystal_geode": [("minecraft:amethyst_shard", 4, 12, 7), ("minecraft:lapis_lazuli", 3, 10, 4), ("minecraft:emerald", 2, 5, 4),
+                      ("minecraft:spyglass", 1, 1, 1), ("minecraft:wind_charge", 2, 8, 3), ("minecraft:gold_ingot", 2, 5, 3)],
+    "necropolis": [("minecraft:bone", 3, 10, 6), ("minecraft:gold_ingot", 2, 6, 5), ("minecraft:candle", 1, 4, 3),
+                   ("minecraft:soul_lantern", 1, 2, 3), ("minecraft:emerald", 2, 5, 4), ("minecraft:experience_bottle", 2, 6, 3)],
+    "sculk_depths": [("minecraft:sculk", 2, 8, 4), ("minecraft:echo_shard", 1, 3, 4), ("minecraft:amethyst_shard", 2, 6, 3),
+                     ("minecraft:gold_ingot", 2, 6, 4), ("minecraft:disc_fragment_5", 1, 2, 2), ("minecraft:diamond", 1, 2, 1)],
     "spider_nest": [("minecraft:string", 3, 12, 7), ("minecraft:spider_eye", 1, 4, 5), ("minecraft:bone", 2, 6, 4),
                     ("minecraft:iron_ingot", 1, 4, 3), ("minecraft:gold_ingot", 1, 3, 3), ("minecraft:cobweb", 1, 3, 2)],
 }
@@ -3175,7 +3741,7 @@ def main():
         write_json(os.path.join(DATA, "worldgen/structure", f"dungeon_{did}.json"), {
             "type": f"{NS}:dungeon", "biomes": f"#{NS}:has_structure/dungeon/{did}",
             "step": "underground_structures" if under else "surface_structures", "terrain_adaptation": "none", "spawn_overrides": {},
-            "templates": entries, "underground": under, "max_slope": 6})
+            "templates": entries, "underground": under, "max_slope": 6, "allow_water": did == "witch_coven"})
         write_json(os.path.join(tag_dir, did + ".json"), {"values": ["minecraft:" + x for x in biomes]})
         for k, table in loots(did).items():
             write_json(os.path.join(DATA, "loot_table/chests/dungeon", did, k + ".json"), table)

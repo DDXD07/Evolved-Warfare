@@ -2211,6 +2211,18 @@ Los NPCs del pueblo (los vecinos, los guardias del cuartel y los vigías de las 
   - **Gruta de los Hongos** (bajo tierra): un corro de setas esconde un túnel a una gran caverna con **hongos gigantes**, micelio, liquen y cuevas alrededor. Jefe: **el Rey Micelio** (bogged gigante: esporas, veneno, lluvia de flechas y bogged). Reliquia: el Arco Micelio.
   - **Bóveda de los Antiguos** (bajo tierra): un círculo de piedras y un pozo de 30 bloques bajan a una **rejilla de salas de toba y cobre** unidas de otra forma en cada una (tesoro, taller, archivo, foso de lava, armería, jardín de musgo, trampas) con la sala de las **estatuas de guardianes** en el centro. Jefe: **el Guardián de la Bóveda** (gólem de hierro despertado: onda de choque, salto, cadenas y lepismas). Reliquia: el Yelmo del Guardián.
 
+## Fase 69 — Mazmorras (4.ª tanda: las 20)
+
+- El Corazón ahora solo despierta si el jugador está **a la altura de la arena** (de 2,5 bloques por debajo a 4 por encima): así no salta desde debajo del suelo ni desde una escalera antes de pasar la reja.
+- Un poder nuevo: **oscuridad** (el efecto del sculk, y cuesta moverse).
+- Las cinco últimas:
+  - **Aquelarre del Pantano** (superficie, pantanos; puede salir sobre el agua): un poblado de **chozas sobre pilotes** unidas por pasarelas (destilería, herbolario, jaula de limos, despensa, tótem de calaveras) alrededor de la **casa del aquelarre** con su caldero. Jefa: **la Bruja Ahogada** (ahogada con tridente: veneno, maldición, cadenas y limos). Reliquia: el Tridente de la Ciénaga.
+  - **Coliseo en Ruinas** (superficie, sabanas y llanuras): un **anfiteatro ovalado** con gradas, galería de arcos y muro roto; los túneles de las puertas llevan a la **arena** (enrejada), y debajo está el **hipogeo** con armería, fieras, cuarteles y celdas. Jefe: **el Campeón Eterno** (zombi gigante con armadura de hierro, espada y escudo: salto, onda de choque, cadenas y gladiadores esqueleto). Reliquia: el Gladius del Campeón (espada de netherita).
+  - **Geoda de Cristal** (bajo tierra): un túnel baja a una **geoda gigante de amatista** (basalto, calcita, racimos que brillan) con geodas pequeñas alrededor. Jefe: **el Espíritu del Cristal** (breeze: levitación, teletransporte, onda de choque, escarcha y endermites). Reliquia: las Botas del Viento.
+  - **Necrópolis** (bajo tierra): bajo un mausoleo en ruinas, una **caverna enorme con una ciudad de tumbas**, calles empedradas y braseros de almas; al fondo, el **templo del Liche**. Jefe: **el Liche** (esqueleto gigante: marchitamiento, escarcha, teletransporte, lluvia de flechas y zombis). Reliquia: el Arco del Liche.
+  - **Abismo Silencioso** (bajo tierra, a 34 bloques): una caverna profunda **invadida por el sculk** (sensores, catalizadores) con ruinas de pizarra, archivos y almacenes, y la **cámara del portal antiguo**. Jefe: **la Sombra de las Profundidades** (fantasma gigante: oscuridad, levitación, maldición y fantasmas). Reliquia: la Coraza de la Sombra (netherita).
+- Con esta tanda hay **20 mazmorras** (10 de superficie y 10 subterráneas), cada una con 3 variantes.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

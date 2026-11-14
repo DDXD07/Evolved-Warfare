@@ -37,6 +37,18 @@
     {
       "structure": "evolvedwarfare:dungeon_ancient_vault",
       "weight": 1
+    },
+    {
+      "structure": "evolvedwarfare:dungeon_crystal_geode",
+      "weight": 1
+    },
+    {
+      "structure": "evolvedwarfare:dungeon_necropolis",
+      "weight": 1
+    },
+    {
+      "structure": "evolvedwarfare:dungeon_sculk_depths",
+      "weight": 1
     }
   ]
 }

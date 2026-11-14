@@ -88,7 +88,7 @@ public class DungeonHeartBlockEntity extends BlockEntity {
 			return;
 		}
 		if (heart.stage == 0) {
-			if ((world.getTime() + pos.asLong()) % 10 == 0 && !heart.near(sw, WAKE_RANGE, 4).isEmpty()) {
+			if ((world.getTime() + pos.asLong()) % 10 == 0 && heart.someoneInArena(sw)) {
 				heart.start(sw);
 			}
 		} else if (heart.stage == 1) {
@@ -107,6 +107,17 @@ public class DungeonHeartBlockEntity extends BlockEntity {
 			}
 		}
 		return out;
+	}
+
+	/** ¿Hay alguien ya dentro de la arena? (a 10 bloques y a la altura del suelo del Corazón: de 2,5 por debajo a 4 por encima). */
+	public boolean someoneInArena(ServerWorld world) {
+		for (ServerPlayerEntity p : near(world, WAKE_RANGE, 6)) {
+			double dy = p.getY() - pos.getY();
+			if (dy >= -2.5 && dy <= 4) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/** Despierta al jefe y cierra las rejas. */

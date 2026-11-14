@@ -1,0 +1,30 @@
+{
+  "type": "evolvedwarfare:dungeon",
+  "biomes": "#evolvedwarfare:has_structure/dungeon/sculk_depths",
+  "step": "underground_structures",
+  "terrain_adaptation": "none",
+  "spawn_overrides": {},
+  "templates": [
+    {
+      "id": "evolvedwarfare:dungeon/sculk_depths_0",
+      "x": 23,
+      "y": 35,
+      "z": 4
+    },
+    {
+      "id": "evolvedwarfare:dungeon/sculk_depths_1",
+      "x": 23,
+      "y": 35,
+      "z": 4
+    },
+    {
+      "id": "evolvedwarfare:dungeon/sculk_depths_2",
+      "x": 23,
+      "y": 35,
+      "z": 4
+    }
+  ],
+  "underground": true,
+  "max_slope": 6,
+  "allow_water": false
+}

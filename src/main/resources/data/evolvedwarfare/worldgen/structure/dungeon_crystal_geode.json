@@ -1,0 +1,30 @@
+{
+  "type": "evolvedwarfare:dungeon",
+  "biomes": "#evolvedwarfare:has_structure/dungeon/crystal_geode",
+  "step": "underground_structures",
+  "terrain_adaptation": "none",
+  "spawn_overrides": {},
+  "templates": [
+    {
+      "id": "evolvedwarfare:dungeon/crystal_geode_0",
+      "x": 26,
+      "y": 34,
+      "z": 5
+    },
+    {
+      "id": "evolvedwarfare:dungeon/crystal_geode_1",
+      "x": 28,
+      "y": 34,
+      "z": 5
+    },
+    {
+      "id": "evolvedwarfare:dungeon/crystal_geode_2",
+      "x": 28,
+      "y": 34,
+      "z": 5
+    }
+  ],
+  "underground": true,
+  "max_slope": 6,
+  "allow_water": false
+}

@@ -1,0 +1,30 @@
+{
+  "type": "evolvedwarfare:dungeon",
+  "biomes": "#evolvedwarfare:has_structure/dungeon/necropolis",
+  "step": "underground_structures",
+  "terrain_adaptation": "none",
+  "spawn_overrides": {},
+  "templates": [
+    {
+      "id": "evolvedwarfare:dungeon/necropolis_0",
+      "x": 27,
+      "y": 27,
+      "z": 5
+    },
+    {
+      "id": "evolvedwarfare:dungeon/necropolis_1",
+      "x": 27,
+      "y": 27,
+      "z": 5
+    },
+    {
+      "id": "evolvedwarfare:dungeon/necropolis_2",
+      "x": 27,
+      "y": 27,
+      "z": 5
+    }
+  ],
+  "underground": true,
+  "max_slope": 6,
+  "allow_water": false
+}

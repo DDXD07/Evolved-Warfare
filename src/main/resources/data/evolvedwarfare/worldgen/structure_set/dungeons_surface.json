@@ -41,6 +41,14 @@
     {
       "structure": "evolvedwarfare:dungeon_monastery",
       "weight": 1
+    },
+    {
+      "structure": "evolvedwarfare:dungeon_witch_coven",
+      "weight": 1
+    },
+    {
+      "structure": "evolvedwarfare:dungeon_colosseum",
+      "weight": 1
     }
   ]
 }

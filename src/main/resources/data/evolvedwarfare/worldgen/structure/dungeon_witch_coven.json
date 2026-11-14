@@ -1,0 +1,30 @@
+{
+  "type": "evolvedwarfare:dungeon",
+  "biomes": "#evolvedwarfare:has_structure/dungeon/witch_coven",
+  "step": "surface_structures",
+  "terrain_adaptation": "none",
+  "spawn_overrides": {},
+  "templates": [
+    {
+      "id": "evolvedwarfare:dungeon/witch_coven_0",
+      "x": 24,
+      "y": 6,
+      "z": 12
+    },
+    {
+      "id": "evolvedwarfare:dungeon/witch_coven_1",
+      "x": 24,
+      "y": 6,
+      "z": 12
+    },
+    {
+      "id": "evolvedwarfare:dungeon/witch_coven_2",
+      "x": 24,
+      "y": 6,
+      "z": 12
+    }
+  ],
+  "underground": false,
+  "max_slope": 6,
+  "allow_water": true
+}

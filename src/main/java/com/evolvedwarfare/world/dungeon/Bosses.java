@@ -85,7 +85,9 @@ public final class Bosses {
 		/** Cadenas: arrastra al objetivo hacia el jefe. */
 		PULL,
 		/** Esporas: mareo, ceguera breve y veneno alrededor. */
-		SPORES;
+		SPORES,
+		/** Oscuridad: la vista se apaga y cuesta moverse. */
+		DARKNESS;
 
 		public void use(ServerWorld world, MobEntity boss, @Nullable LivingEntity target, Boss spec, @Nullable DungeonHeartBlockEntity heart) {
 			Vec3d at = boss.getPos();
@@ -300,6 +302,14 @@ public final class Bosses {
 					world.spawnParticles(ParticleTypes.MYCELIUM, at.x, at.y + 1, at.z, 120, 5, 1, 5, 0.02);
 					world.playSound(null, boss.getBlockPos(), SoundEvents.BLOCK_FUNGUS_BREAK, SoundCategory.HOSTILE, 1.5F, 0.5F);
 				}
+				case DARKNESS -> {
+					for (PlayerEntity p : players(world, at, 14.0)) {
+						p.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 160, 0), boss);
+						p.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 100, 0), boss);
+					}
+					world.spawnParticles(ParticleTypes.SCULK_SOUL, at.x, at.y + 1, at.z, 80, 4, 1.5, 4, 0.03);
+					world.playSound(null, boss.getBlockPos(), SoundEvents.BLOCK_SCULK_SHRIEKER_SHRIEK, SoundCategory.HOSTILE, 1.5F, 0.7F);
+				}
 				default -> {
 				}
 			}
@@ -389,6 +399,27 @@ public final class Bosses {
 	}
 
 	private static final Map<String, Boss> BY_DUNGEON = Map.ofEntries(
+			Map.entry("witch_coven", new Boss(EntityType.DROWNED, 230, 9, 8, 0.30, 1.5,
+					gear(Items.TURTLE_HELMET, null, null, null, Items.TRIDENT, Enchantments.IMPALING, 3),
+					List.of(Power.POISON_CLOUD, Power.CURSE, Power.PULL, Power.SUMMON), EntityType.SLIME, 3)),
+			Map.entry("colosseum", new Boss(EntityType.ZOMBIE, 270, 12, 14, 0.32, 1.6,
+					m -> {
+						gear(Items.IRON_HELMET, Items.IRON_CHESTPLATE, Items.IRON_LEGGINGS, Items.IRON_BOOTS, Items.IRON_SWORD, Enchantments.SHARPNESS, 3)
+								.accept(m);
+						m.equipStack(EquipmentSlot.OFFHAND, new ItemStack(Items.SHIELD));
+					},
+					List.of(Power.LEAP, Power.SHOCKWAVE, Power.PULL, Power.SUMMON), EntityType.SKELETON, 2)),
+			Map.entry("crystal_geode", new Boss(EntityType.BREEZE, 200, 8, 6, 0.6, 1.6,
+					m -> {
+					},
+					List.of(Power.LEVITATE, Power.BLINK, Power.SHOCKWAVE, Power.FROST), EntityType.ENDERMITE, 3)),
+			Map.entry("necropolis", new Boss(EntityType.SKELETON, 230, 8, 8, 0.30, 1.8,
+					gear(Items.GOLDEN_HELMET, Items.CHAINMAIL_CHESTPLATE, null, null, Items.BOW, Enchantments.POWER, 3),
+					List.of(Power.WITHER_AURA, Power.SUMMON, Power.FROST, Power.BLINK, Power.ARROW_VOLLEY), EntityType.ZOMBIE, 3)),
+			Map.entry("sculk_depths", new Boss(EntityType.PHANTOM, 220, 10, 6, 0.7, 2.5,
+					m -> {
+					},
+					List.of(Power.DARKNESS, Power.LEVITATE, Power.SUMMON, Power.CURSE), EntityType.PHANTOM, 2)),
 			Map.entry("haunted_manor", new Boss(EntityType.ENDERMAN, 200, 10, 6, 0.33, 1.25,
 					m -> {
 					},

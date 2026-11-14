@@ -25,5 +25,6 @@
     }
   ],
   "underground": false,
-  "max_slope": 6
+  "max_slope": 6,
+  "allow_water": false
 }

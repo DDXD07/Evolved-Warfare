@@ -35,17 +35,20 @@ public class DungeonStructure extends Structure {
 			configCodecBuilder(i),
 			Variant.CODEC.listOf().fieldOf("templates").forGetter(s -> s.variants),
 			Codec.BOOL.fieldOf("underground").forGetter(s -> s.underground),
-			Codec.INT.optionalFieldOf("max_slope", 6).forGetter(s -> s.maxSlope)).apply(i, DungeonStructure::new));
+			Codec.INT.optionalFieldOf("max_slope", 6).forGetter(s -> s.maxSlope),
+			Codec.BOOL.optionalFieldOf("allow_water", false).forGetter(s -> s.allowWater)).apply(i, DungeonStructure::new));
 
 	private final List<Variant> variants;
 	private final boolean underground;
 	private final int maxSlope;
+	private final boolean allowWater;
 
-	public DungeonStructure(Config config, List<Variant> variants, boolean underground, int maxSlope) {
+	public DungeonStructure(Config config, List<Variant> variants, boolean underground, int maxSlope, boolean allowWater) {
 		super(config);
 		this.variants = variants;
 		this.underground = underground;
 		this.maxSlope = maxSlope;
+		this.allowWater = allowWater;
 	}
 
 	public List<Variant> variants() {
@@ -67,7 +70,7 @@ public class DungeonStructure extends Structure {
 			BlockRotation rotation = BlockRotation.random(context.random());
 			int ground = height(context, x, z);
 			VerticalBlockSample column = context.chunkGenerator().getColumnSample(x, z, context.world(), context.noiseConfig());
-			if (!column.getState(ground - 1).getFluidState().isEmpty() || !column.getState(ground).getFluidState().isEmpty()) {
+			if (!allowWater && (!column.getState(ground - 1).getFluidState().isEmpty() || !column.getState(ground).getFluidState().isEmpty())) {
 				return Optional.empty();
 			}
 			if (!underground) {
