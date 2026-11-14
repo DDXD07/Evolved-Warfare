@@ -295,6 +295,7 @@ public class BorerEntity extends LocomotiveEntity {
 			}
 			world.setBlockState(p, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL);
 		}
+		compactPebbles();
 		for (BlockPos p : job.floor()) {
 			BlockState s = world.getBlockState(p);
 			if (s.isReplaceable() || !s.getFluidState().isEmpty()) {
@@ -415,6 +416,32 @@ public class BorerEntity extends LocomotiveEntity {
 			}
 		}
 		return null;
+	}
+
+	/** Junta los guijarros del depósito en piedra labrada (4 por bloque), como en la mesa de crafteo. */
+	private void compactPebbles() {
+		int pebbles = 0;
+		for (int i = 0; i < storage.size(); i++) {
+			if (storage.getStack(i).isOf(com.evolvedwarfare.registry.ModItems.PEBBLE)) {
+				pebbles += storage.getStack(i).getCount();
+				storage.setStack(i, ItemStack.EMPTY);
+			}
+		}
+		int blocks = pebbles / 4;
+		while (blocks > 0) {
+			int n = Math.min(64, blocks);
+			blocks -= n;
+			ItemStack rest = storage.addStack(new ItemStack(net.minecraft.item.Items.COBBLESTONE, n));
+			if (!rest.isEmpty()) {
+				dropStack(rest, 1.0F);
+			}
+		}
+		if (pebbles % 4 > 0) {
+			ItemStack rest = storage.addStack(new ItemStack(com.evolvedwarfare.registry.ModItems.PEBBLE, pebbles % 4));
+			if (!rest.isEmpty()) {
+				dropStack(rest, 1.0F);
+			}
+		}
 	}
 
 	/** Guarda lo excavado; lo que no cabe, cae junto a la tuneladora. */

@@ -2237,6 +2237,12 @@ Los NPCs del pueblo (los vecinos, los guardias del cuartel y los vigías de las 
 
 - Cualquier ser vivo (jugadores incluidos, salvo en creativo o espectador) que esté en el **camino del tronco mientras cae** recibe **9 corazones de daño**, una sola vez por árbol (como un bloque que cae: el casco y la armadura protegen algo). Antes solo hacía daño al tocar el suelo y bastante menos.
 
+## Fase 71 — Guijarros
+
+- La **piedra** y la **piedra labrada** ya no sueltan el bloque al picarlas: sueltan **de 1 a 4 guijarros** (con toque de seda, el bloque de siempre).
+- **4 guijarros en cuadro (2x2)** = **1 piedra labrada** (se puede hacer en el inventario, sin mesa).
+- La tuneladora junta sola los guijarros que excava en piedra labrada (4 por bloque) dentro de su depósito.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

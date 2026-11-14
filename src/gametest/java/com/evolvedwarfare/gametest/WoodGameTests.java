@@ -257,4 +257,32 @@ public class WoodGameTests implements FabricGameTest {
 			ctx.complete();
 		});
 	}
+
+	/** La piedra suelta de 1 a 4 guijarros (con toque de seda, la piedra); 4 guijarros hacen piedra labrada. */
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "pebbles")
+	public void stoneDropsPebbles(TestContext ctx) {
+		ServerWorld world = ctx.getWorld();
+		BlockPos pos = ctx.getAbsolutePos(new BlockPos(1, 1, 1));
+		ItemStack pick = new ItemStack(Items.STONE_PICKAXE);
+		int min = 99, max = 0;
+		boolean onlyPebbles = true;
+		for (int i = 0; i < 60; i++) {
+			for (net.minecraft.block.Block block : new net.minecraft.block.Block[] {Blocks.STONE, Blocks.COBBLESTONE}) {
+				List<ItemStack> drops = net.minecraft.block.Block.getDroppedStacks(block.getDefaultState(), world, pos, null, null, pick);
+				int n = drops.stream().filter(s -> s.isOf(com.evolvedwarfare.registry.ModItems.PEBBLE)).mapToInt(ItemStack::getCount).sum();
+				onlyPebbles &= drops.stream().allMatch(s -> s.isOf(com.evolvedwarfare.registry.ModItems.PEBBLE));
+				min = Math.min(min, n);
+				max = Math.max(max, n);
+			}
+		}
+		ItemStack silk = new ItemStack(Items.DIAMOND_PICKAXE);
+		world.getRegistryManager().get(net.minecraft.registry.RegistryKeys.ENCHANTMENT).getEntry(net.minecraft.enchantment.Enchantments.SILK_TOUCH)
+				.ifPresent(e -> silk.addEnchantment(e, 1));
+		List<ItemStack> silky = net.minecraft.block.Block.getDroppedStacks(Blocks.STONE.getDefaultState(), world, pos, null, null, silk);
+		boolean stone = silky.size() == 1 && silky.get(0).isOf(Items.STONE);
+		boolean recipe = world.getServer().getRecipeManager().get(com.evolvedwarfare.EvolvedWarfare.id("cobblestone_from_pebbles")).isPresent();
+		LOG.info("[EW-GAMETEST] guijarros: de {} a {}, solo guijarros {}, con seda piedra {}, receta {}", min, max, onlyPebbles, stone, recipe);
+		check(min == 1 && max == 4 && onlyPebbles && stone && recipe, "La piedra no suelta guijarros como debe");
+		ctx.complete();
+	}
 }
