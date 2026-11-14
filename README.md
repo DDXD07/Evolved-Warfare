@@ -2223,6 +2223,16 @@ Los NPCs del pueblo (los vecinos, los guardias del cuartel y los vigías de las 
   - **Abismo Silencioso** (bajo tierra, a 34 bloques): una caverna profunda **invadida por el sculk** (sensores, catalizadores) con ruinas de pizarra, archivos y almacenes, y la **cámara del portal antiguo**. Jefe: **la Sombra de las Profundidades** (fantasma gigante: oscuridad, levitación, maldición y fantasmas). Reliquia: la Coraza de la Sombra (netherita).
 - Con esta tanda hay **20 mazmorras** (10 de superficie y 10 subterráneas), cada una con 3 variantes.
 
+## Fase 70 — Tablones a hachazos
+
+- Ya **no hay receta** de tronco a tablones en la mesa de crafteo (roble, abeto, abedul, jungla, acacia, roble oscuro, mangle, cerezo, carmesí y distorsionado). Para sacar tablones:
+  1. Pon el tronco en el suelo.
+  2. **Clic derecho con un hacha** lo descorteza (como siempre en vanilla).
+  3. **Tres hachazos más** (clic derecho) sobre el tronco descortezado lo **parten en tablones**, con astillas y sonido.
+- Cuántos tablones salen depende del hacha: **sílex o madera 2**, **piedra u oro 3**, **hierro, diamante o netherita 4**. El hacha se gasta un uso por tronco.
+- También vale con madera descortezada (los bloques de 6 caras) y con los tallos del Nether. La losa de palos para la primera hacha sigue igual.
+- Los troncos lo explican en su descripción.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

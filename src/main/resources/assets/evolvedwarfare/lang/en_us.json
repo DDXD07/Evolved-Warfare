@@ -2587,5 +2587,7 @@
   "dungeon.evolvedwarfare.sculk_depths": "Silent Depths",
   "boss.evolvedwarfare.sculk_depths": "The Shade of the Deep",
   "item.evolvedwarfare.relic.sculk_depths": "Shade's Cuirass",
-  "item.evolvedwarfare.relic.sculk_depths.lore": "Taken from the Shade of the Deep"
+  "item.evolvedwarfare.relic.sculk_depths.lore": "Taken from the Shade of the Deep",
+  "message.evolvedwarfare.wood.splitting": "Splitting the log: %s/%s",
+  "tooltip.evolvedwarfare.wood.split": "Place the log, strip it with an axe (right click) and split it with more chops to get planks"
 }

@@ -2587,5 +2587,7 @@
   "dungeon.evolvedwarfare.sculk_depths": "Abismo Silencioso",
   "boss.evolvedwarfare.sculk_depths": "La Sombra de las Profundidades",
   "item.evolvedwarfare.relic.sculk_depths": "Coraza de la Sombra",
-  "item.evolvedwarfare.relic.sculk_depths.lore": "Botín de la Sombra de las Profundidades"
+  "item.evolvedwarfare.relic.sculk_depths.lore": "Botín de la Sombra de las Profundidades",
+  "message.evolvedwarfare.wood.splitting": "Partiendo el tronco: %s/%s",
+  "tooltip.evolvedwarfare.wood.split": "Pon el tronco, descortézalo con un hacha (clic derecho) y pártelo a hachazos para sacar tablones"
 }

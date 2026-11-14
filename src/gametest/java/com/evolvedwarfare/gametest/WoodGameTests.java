@@ -189,4 +189,48 @@ public class WoodGameTests implements FabricGameTest {
 		check(grown == kinds.length, "Un brote no da su árbol: " + what);
 		ctx.complete();
 	}
+
+	/** Los tablones salen a hachazos de un tronco descortezado (cuántos, según el hacha); la receta de la mesa ya no está. */
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "wood_split", tickLimit = 60)
+	public void logsSplitIntoPlanksWithAnAxe(TestContext ctx) {
+		ServerWorld world = ctx.getWorld();
+		net.minecraft.server.network.ServerPlayerEntity player = (net.minecraft.server.network.ServerPlayerEntity) ctx.createMockCreativeServerPlayerInWorld();
+		player.changeGameMode(net.minecraft.world.GameMode.SURVIVAL);
+		BlockPos a = ctx.getAbsolutePos(new BlockPos(1, 1, 1));
+		BlockPos b = ctx.getAbsolutePos(new BlockPos(3, 1, 1));
+		BlockPos c = ctx.getAbsolutePos(new BlockPos(1, 1, 3));
+		world.setBlockState(a, Blocks.STRIPPED_OAK_LOG.getDefaultState());
+		world.setBlockState(b, Blocks.STRIPPED_SPRUCE_LOG.getDefaultState());
+		world.setBlockState(c, Blocks.OAK_LOG.getDefaultState());
+		boolean[] split = new boolean[3];
+		for (int i = 0; i < Woodcutting.SPLIT_HITS; i++) {
+			int k = i;
+			ctx.runAtTick(1 + i * 6, () -> {
+				player.setStackInHand(net.minecraft.util.Hand.MAIN_HAND, new ItemStack(Items.IRON_AXE));
+				split[0] = Woodcutting.split(world, player, a);
+				player.setStackInHand(net.minecraft.util.Hand.MAIN_HAND, new ItemStack(Items.WOODEN_AXE));
+				split[1] = Woodcutting.split(world, player, b);
+				split[2] |= Woodcutting.split(world, player, c);
+			});
+		}
+		ctx.runAtTick(30, () -> {
+			int oak = 0, spruce = 0;
+			for (ItemEntity e : world.getEntitiesByClass(ItemEntity.class, new Box(a).expand(6), x -> true)) {
+				if (e.getStack().isOf(Items.OAK_PLANKS)) {
+					oak += e.getStack().getCount();
+				} else if (e.getStack().isOf(Items.SPRUCE_PLANKS)) {
+					spruce += e.getStack().getCount();
+				}
+			}
+			boolean recipeGone = world.getServer().getRecipeManager().get(Identifier.of("minecraft", "oak_planks")).isEmpty();
+			boolean plain = world.getBlockState(c).isOf(Blocks.OAK_LOG);
+			LOG.info("[EW-GAMETEST] partir troncos: roble {} (hierro), abeto {} (madera), tronco sin descortezar intacto {}, receta quitada {}",
+					oak, spruce, plain, recipeGone);
+			if (!(split[0] && split[1] && !split[2] && oak == 4 && spruce == 2 && plain && recipeGone
+					&& world.getBlockState(a).isAir())) {
+				throw new GameTestException("Los troncos no se parten bien en tablones");
+			}
+			ctx.complete();
+		});
+	}
 }

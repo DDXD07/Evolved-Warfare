@@ -41,6 +41,13 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		com.evolvedwarfare.client.atlas.AtlasClient.register();
 		com.evolvedwarfare.client.hunting.HuntingRenderers.register();
 		BlockRenderLayerMap.INSTANCE.putBlock(com.evolvedwarfare.world.dungeon.Dungeons.GATE, RenderLayer.getCutout());
+		// los troncos: cómo se sacan los tablones (a hachazos)
+		net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback.EVENT.register((stack, context, type, lines) -> {
+			if (stack.isIn(net.minecraft.registry.tag.ItemTags.LOGS)) {
+				lines.add(net.minecraft.text.Text.translatable("tooltip.evolvedwarfare.wood.split")
+						.formatted(net.minecraft.util.Formatting.DARK_GRAY, net.minecraft.util.Formatting.ITALIC));
+			}
+		});
 		net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.registerGlobalReceiver(
 				com.evolvedwarfare.inventory.StackLimit.StackLimitPayload.ID,
 				(payload, context) -> com.evolvedwarfare.inventory.StackLimit.setFromServer(payload.limit()));

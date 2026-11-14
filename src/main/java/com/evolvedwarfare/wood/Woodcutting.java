@@ -87,6 +87,21 @@ public final class Woodcutting {
 	}
 
 	public static void register() {
+		// partir un tronco descortezado en tablones, a hachazos (clic derecho)
+		net.fabricmc.fabric.api.event.player.UseBlockCallback.EVENT.register((player, world, hand, hit) -> {
+			if (hand != net.minecraft.util.Hand.MAIN_HAND || player.isSpectator()) {
+				return ActionResult.PASS;
+			}
+			ItemStack tool = player.getMainHandStack();
+			BlockPos pos = hit.getBlockPos();
+			if (!tool.isIn(ItemTags.AXES) || planksFor(world.getBlockState(pos)) == null) {
+				return ActionResult.PASS;
+			}
+			if (world instanceof ServerWorld sw) {
+				split(sw, player, pos);
+			}
+			return ActionResult.SUCCESS;
+		});
 		AttackBlockCallback.EVENT.register((player, world, hand, pos, direction) -> {
 			if (!world.isClient && needsAxe(player.isCreative(), world.getBlockState(pos), player.getMainHandStack())) {
 				player.sendMessage(Text.translatable("message.evolvedwarfare.wood.need_axe").formatted(Formatting.GOLD), true);
@@ -109,6 +124,74 @@ public final class Woodcutting {
 				}
 			}
 		});
+	}
+
+	/** Hachazos para partir un tronco descortezado. */
+	public static final int SPLIT_HITS = 3;
+	private static final java.util.Map<String, int[]> SPLITTING = new java.util.HashMap<>();
+
+	/** Los tablones que salen de un tronco (o madera) descortezado, o null si no lo es. */
+	@Nullable
+	public static net.minecraft.item.Item planksFor(BlockState state) {
+		net.minecraft.util.Identifier id = net.minecraft.registry.Registries.BLOCK.getId(state.getBlock());
+		String path = id.getPath();
+		if (!path.startsWith("stripped_") || !state.isIn(BlockTags.LOGS)) {
+			return null;
+		}
+		String wood = path.substring("stripped_".length()).replaceAll("_(log|wood|stem|hyphae)$", "");
+		net.minecraft.util.Identifier planks = net.minecraft.util.Identifier.of(id.getNamespace(), wood + "_planks");
+		return net.minecraft.registry.Registries.ITEM.containsId(planks) ? net.minecraft.registry.Registries.ITEM.get(planks) : null;
+	}
+
+	/** Cuántos tablones da un tronco según el hacha: sílex o madera 2, piedra u oro 3, hierro o mejor 4. */
+	public static int planksPerLog(ItemStack axe) {
+		if (axe.getItem() instanceof net.minecraft.item.ToolItem tool) {
+			ToolMaterial m = tool.getMaterial();
+			if (m == FLINT || m == net.minecraft.item.ToolMaterials.WOOD) {
+				return 2;
+			}
+			if (m == net.minecraft.item.ToolMaterials.STONE || m == net.minecraft.item.ToolMaterials.GOLD) {
+				return 3;
+			}
+		}
+		return 4;
+	}
+
+	/**
+	 * Un hachazo a un tronco descortezado: a los {@link #SPLIT_HITS} se parte en tablones (cuántos, según el hacha) y el
+	 * hacha se gasta un uso. Devuelve true si se ha partido.
+	 */
+	public static boolean split(ServerWorld world, PlayerEntity player, BlockPos pos) {
+		BlockState state = world.getBlockState(pos);
+		net.minecraft.item.Item planks = planksFor(state);
+		ItemStack tool = player.getMainHandStack();
+		if (planks == null || !tool.isIn(ItemTags.AXES)) {
+			return false;
+		}
+		String key = world.getRegistryKey().getValue() + "@" + pos.asLong();
+		long now = world.getTime();
+		SPLITTING.values().removeIf(v -> now - v[1] > 60);
+		int[] p = SPLITTING.computeIfAbsent(key, k -> new int[] {0, (int) now});
+		if (now - p[1] < 4 && p[0] > 0) {
+			return false;
+		}
+		p[0]++;
+		p[1] = (int) now;
+		world.spawnParticles(new net.minecraft.particle.BlockStateParticleEffect(net.minecraft.particle.ParticleTypes.BLOCK, state),
+				pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, 12, 0.3, 0.1, 0.3, 0.1);
+		world.playSound(null, pos, SoundEvents.ITEM_AXE_STRIP, SoundCategory.BLOCKS, 1.0F, 0.8F + 0.15F * p[0]);
+		if (p[0] < SPLIT_HITS) {
+			player.sendMessage(Text.translatable("message.evolvedwarfare.wood.splitting", p[0], SPLIT_HITS).formatted(Formatting.GOLD), true);
+			return false;
+		}
+		SPLITTING.remove(key);
+		world.breakBlock(pos, false);
+		Block.dropStack(world, pos, new ItemStack(planks, planksPerLog(tool)));
+		world.playSound(null, pos, SoundEvents.BLOCK_WOOD_BREAK, SoundCategory.BLOCKS, 1.0F, 0.9F);
+		if (!player.isCreative()) {
+			tool.damage(1, player, EquipmentSlot.MAINHAND);
+		}
+		return true;
 	}
 
 	/** ¿Hace falta un hacha (y no la lleva)? */
