@@ -1,9 +1,11 @@
 package com.evolvedwarfare.gametest;
 
+import com.evolvedwarfare.train.BorerEntity;
 import com.evolvedwarfare.train.LocomotiveEntity;
 import com.evolvedwarfare.train.PlatformEntity;
 import com.evolvedwarfare.train.TenderEntity;
 import com.evolvedwarfare.train.Track;
+import com.evolvedwarfare.train.TrackBlock;
 import com.evolvedwarfare.train.TrackItem;
 import com.evolvedwarfare.train.TrainCarEntity;
 import com.evolvedwarfare.train.Trains;
@@ -270,5 +272,86 @@ public class TrainGameTests implements FabricGameTest {
 			}
 			ctx.complete();
 		});
+	}
+
+	/**
+	 * La tuneladora: al final de la vía, contra una pared de piedra, excava un túnel de 6 x 6 sobre la vía, guarda lo que
+	 * saca, quema el carbón de su depósito y pone las vías que lleva; en modo «sube», pone cuestas.
+	 */
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "steam_borer", tickLimit = 700)
+	public void steamBorerDigsAndLaysTrack(TestContext ctx) {
+		ServerWorld world = ctx.getWorld();
+		BlockPos o = ctx.getAbsolutePos(new BlockPos(0, 1, 0)).add(0, 0, 520);
+		List<ChunkPos> forced = force(world, o, 48, 16);
+		clear(world, o, 40, 0);
+		int y = o.getY();
+		double[] at = {o.getX() - 8, o.getZ()};
+		for (int i = 0; i < 4; i++) {
+			at = lay(world, Track.Shape.STRAIGHT, false, Direction.EAST, at[0], at[1], y);
+		}
+		// la pared: piedra maciza desde el final de la vía
+		for (BlockPos p : BlockPos.iterate(o.add(0, 0, -6), o.add(40, 9, 6))) {
+			world.setBlockState(p, Blocks.STONE.getDefaultState());
+		}
+		BorerEntity borer = Trains.BORER.create(world);
+		borer.setTrack(Track.start(world, BlockPos.ofFloored(o.getX() - 3.5, y, o.getZ() + 0.5), Direction.EAST));
+		world.spawnEntity(borer);
+		boolean placed = borer.place();
+		borer.storage.setStack(0, new ItemStack(Items.COAL, 16));
+		borer.storage.setStack(1, new ItemStack(Trains.TRACK_STRAIGHT, 6));
+		borer.storage.setStack(2, new ItemStack(Trains.TRACK_SLOPE, 2));
+		borer.setThrottle(LocomotiveEntity.MAX_NOTCH);
+		double startX = borer.getX();
+		int[] flat = new int[4];
+		ctx.runAtTick(330, () -> {
+			flat[0] = borer.countRails(Trains.TRACK_STRAIGHT);
+			flat[1] = count(borer.storage, Items.COBBLESTONE);
+			flat[2] = tunnel(world, o.add(1, 0, 0)) ? 1 : 0;
+			flat[3] = (int) Math.round(borer.getX() - startX);
+			LOG.info("[EW-GAMETEST] tuneladora (recto): colocada {}, rectas {}, piedra {}, túnel {}, avance {}, carbón {}", placed, flat[0], flat[1],
+					flat[2], borer.getX() - startX, count(borer.storage, Items.COAL));
+			borer.setMode(1);
+		});
+		ctx.runAtTick(660, () -> {
+			int slopes = borer.countRails(Trains.TRACK_SLOPE);
+			LOG.info("[EW-GAMETEST] tuneladora (sube): cuestas {}, altura {}", slopes, borer.getY() - y);
+			boolean ok = placed && flat[0] < 6 && flat[1] > 20 && flat[2] == 1 && flat[3] > 1 && slopes < 2;
+			int straights = flat[0], stone = flat[1], hole = flat[2], moved = flat[3];
+			borer.discard();
+			forced.forEach(c -> world.setChunkForced(c.x, c.z, false));
+			if (!ok) {
+				throw new GameTestException("La tuneladora no excava bien: colocada " + placed + ", rectas " + straights + ", piedra " + stone + ", túnel "
+						+ hole + ", avance " + moved + ", cuestas " + slopes);
+			}
+			ctx.complete();
+		});
+	}
+
+	private static int count(net.minecraft.inventory.Inventory inv, net.minecraft.item.Item item) {
+		int n = 0;
+		for (int i = 0; i < inv.size(); i++) {
+			if (inv.getStack(i).isOf(item)) {
+				n += inv.getStack(i).getCount();
+			}
+		}
+		return n;
+	}
+
+	/** El primer tramo del túnel: hueco de 6 de ancho y 6 de alto, con la vía puesta. */
+	private static boolean tunnel(ServerWorld world, BlockPos at) {
+		if (!(world.getBlockState(at).getBlock() instanceof TrackBlock) && !(world.getBlockState(at.north()).getBlock() instanceof TrackBlock)) {
+			LOG.info("[EW-GAMETEST] tuneladora: sin vía en {}: {}", at, world.getBlockState(at));
+			return false;
+		}
+		for (int dz = -3; dz <= 2; dz++) {
+			for (int dy = 1; dy <= 5; dy++) {
+				BlockPos p = at.add(0, dy, dz);
+				if (!world.getBlockState(p).isAir() && !(world.getBlockState(p).getBlock() instanceof TrackBlock)) {
+					LOG.info("[EW-GAMETEST] tuneladora: queda {} en {}", world.getBlockState(p), p);
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 }

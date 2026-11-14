@@ -2488,5 +2488,16 @@
   "dialogue.evolvedwarfare.activity.patrol": "Now: on patrol",
   "dialogue.evolvedwarfare.activity.order.follow": "Now: following you",
   "dialogue.evolvedwarfare.activity.order.stay": "Now: waiting",
-  "dialogue.evolvedwarfare.activity.order.home": "Now: at home"
+  "dialogue.evolvedwarfare.activity.order.home": "Now: at home",
+  "entity.evolvedwarfare.steam_borer": "Steam Tunnel Borer",
+  "item.evolvedwarfare.steam_borer": "Steam Tunnel Borer",
+  "item.evolvedwarfare.steam_borer.desc": "Place it on a big track. Ride it: W and S, the throttle; A slopes down, D slopes up. Bores a 6 x 6 tunnel and lays its own track. Sneak + right click: the firebox; holding something, the hopper (track, coal and spoil).",
+  "container.evolvedwarfare.steam_borer": "Borer Hopper",
+  "message.evolvedwarfare.borer.dash": "%s · %s · track: %s",
+  "message.evolvedwarfare.borer.mode.up": "Climbing",
+  "message.evolvedwarfare.borer.mode.down": "Descending",
+  "message.evolvedwarfare.borer.mode.flat": "Level",
+  "message.evolvedwarfare.borer.no_rails": "No track in the hopper or the tender: %s",
+  "message.evolvedwarfare.borer.blocked": "The borer can't get through that (unbreakable rock or the world limit)",
+  "item.evolvedwarfare.drill_head": "Drill Head"
 }

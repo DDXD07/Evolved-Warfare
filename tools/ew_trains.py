@@ -87,17 +87,18 @@ def frame_and_bogies(a, half=14, bogie_x=9, wz=5):
     return frame
 
 
-def locomotive():
-    a = W.Animal("steam_locomotive")
+def locomotive(name="steam_locomotive", front=True):
+    a = W.Animal(name)
     frame = a.part("frame", None, (0, 0, 0), role="body")
     frame.cube((-14, 1, -6), (28, 2, 12), **C(IRON, rings=((70, 68, 72), 1)))
     frame.cube((-15, -1, -7), (1, 4, 14), **C(RED, low=(DARK, 1)))                              # la viga delantera
     frame.cube((14, 0, -7), (1, 3, 14), **C(RED, low=(DARK, 1)))
     for z in (-6, 4):
-        frame.cube((-16, 0, z), (1, 2, 2), **C(STEEL))
+        if front:
+            frame.cube((-16, 0, z), (1, 2, 2), **C(STEEL))
         frame.cube((15, 1, z), (1, 2, 2), **C(STEEL))
     frame.cube((15, 1, -1), (1, 1, 2), **C(DARK))
-    for k in range(3):                                                                          # el quitapiedras, en escalones
+    for k in range(3 if front else 0):                                                          # el quitapiedras, en escalones
         frame.cube((-16 - k, 3 + k, -6 + k), (1, 1, 12 - 2 * k), **C(RED, rings=(DARK, 1)))
     frame.cube((-14, 0, -8), (18, 1, 2), **C(BLACK))                                            # los estribos
     frame.cube((-14, 0, 6), (18, 1, 2), **C(BLACK))
@@ -116,10 +117,11 @@ def locomotive():
     for x in (-10, -5, 0):
         boiler.cube((x, -10, -6), (1, 10, 12), **C(BRASS, high=((236, 204, 120), 1)))                      # los aros de latón (sobresalen)
     boiler.cube((-15, -9, -5), (2, 9, 10), **C((36, 36, 40), rings=(STEEL, 3)))                           # la caja de humos
-    boiler.cube((-16, -7, -3), (1, 6, 6), **C((48, 48, 54), high=(STEEL, 1)))                             # su puerta
-    boiler.cube((-17, -5, -1), (1, 2, 2), **C(STEEL))                                                     # el tirador
-    boiler.cube((-16, -11, -2), (2, 2, 4), **C(DARK))                                                     # el farol
-    boiler.cube((-17, -11, -1), (1, 2, 2), **C(LAMP))
+    if front:
+        boiler.cube((-16, -7, -3), (1, 6, 6), **C((48, 48, 54), high=(STEEL, 1)))                         # su puerta
+        boiler.cube((-17, -5, -1), (1, 2, 2), **C(STEEL))                                                 # el tirador
+        boiler.cube((-16, -11, -2), (2, 2, 4), **C(DARK))                                                 # el farol
+        boiler.cube((-17, -11, -1), (1, 2, 2), **C(LAMP))
     boiler.cube((-13, -15, -2), (3, 6, 3), **C(BLACK, high=((60, 60, 66), 1)))                            # la chimenea
     boiler.cube((-14, -17, -3), (5, 2, 5), **C(BLACK, rings=(COPPER, 1)))                                 # su boca, ensanchada
     boiler.cube((-6, -12, -2), (4, 3, 4), **C(BRASS, high=((240, 214, 130), 1)))                          # el domo de vapor
@@ -151,6 +153,48 @@ def locomotive():
     cab.cube((6, -11, -3), (1, 2, 2), **C(BRASS))                                              # los manómetros
     cab.cube((6, -11, 1), (1, 2, 2), **C(BRASS))
     cab.cube((11, -2, -6), (3, 2, 12), **C(COAL, spots=((70, 66, 70), 0.3)))                   # el carbón del fogonero
+    return a
+
+
+def borer():
+    """La tuneladora de vapor (fase 64): la locomotora sin quitapiedras, con un mamparo y una cabeza perforadora de casi
+    todo el túnel delante (la parte «cutter», que gira sobre el eje de la vía mientras excava)."""
+    import math
+    a = locomotive("steam_borer", front=False)
+    frame = a.parts[0]
+    # el mamparo (sostiene la cabeza) y sus tirantes hasta la caldera
+    frame.cube((-17, -26, -14), (2, 30, 28), **C(DARK, rings=((70, 68, 72), 2), spots=((84, 80, 86), 0.05)))
+    for z in (-13, 11):
+        frame.cube((-15, -24, z), (9, 2, 2), **C(IRON, high=((80, 78, 84), 1)))
+        frame.cube((-15, 0, z), (9, 2, 2), **C(IRON, high=((80, 78, 84), 1)))
+    frame.cube((-15, -26, -10), (6, 2, 20), **C(IRON))
+    for z in (-10, 8):
+        frame.cube((-14, -3, z), (4, 4, 2), **C(BRASS, rings=((150, 110, 40), 1)))                # los pistones del empuje
+    frame.cube((-12, -24, -2), (2, 7, 4), **C(LAMP))                                           # el farol de arriba
+    # la cabeza, con el pivote en el eje
+    cut = a.part("cutter", "frame", (-18, -12, 0), role="none")
+    R = 16
+    for y in range(-R, R, 2):
+        h = math.sqrt(max(0.0, R * R - (y + 1) ** 2))
+        w = int(round(h)) * 2
+        if w >= 2:
+            cut.cube((-1, y, -w // 2), (2, 2, w), **C((92, 88, 84), rings=((60, 58, 56), 1), spots=((120, 116, 110), 0.06)))
+    for k in range(-R + 2, R - 1, 4):                                                          # los brazos, en cruz
+        cut.cube((-2, k, -1), (1, 2, 2), **C(STEEL))
+        cut.cube((-2, -1, k), (1, 2, 2), **C(STEEL))
+    for ang in range(0, 360, 30):                                                              # los dientes del borde
+        r = R - 2
+        y = int(round(r * math.sin(math.radians(ang)))) - 1
+        z = int(round(r * math.cos(math.radians(ang)))) - 1
+        cut.cube((-3, y, z), (2, 2, 2), **C(STEEL, high=((200, 200, 210), 1)))
+    for ang in range(15, 360, 45):                                                             # y los de dentro
+        r = 8
+        y = int(round(r * math.sin(math.radians(ang)))) - 1
+        z = int(round(r * math.cos(math.radians(ang)))) - 1
+        cut.cube((-3, y, z), (2, 2, 2), **C(STEEL, high=((200, 200, 210), 1)))
+    cut.cube((-3, -3, -3), (2, 6, 6), **C(BRASS, rings=((150, 110, 40), 1)))                   # el cubo
+    cut.cube((-5, -2, -2), (2, 4, 4), **C(STEEL, high=((200, 200, 210), 1)))                   # la punta
+    cut.cube((-6, -1, -1), (1, 2, 2), **C((200, 200, 210)))
     return a
 
 
@@ -206,7 +250,7 @@ def flatcar():
     return a
 
 
-MODELS = collections.OrderedDict([("steam_locomotive", locomotive), ("coal_tender", tender), ("flatcar", flatcar)])
+MODELS = collections.OrderedDict([("steam_locomotive", locomotive), ("coal_tender", tender), ("flatcar", flatcar), ("steam_borer", borer)])
 
 TRACKS = [("track_straight", "Vía recta", "Straight Track", "Dos de ancho y dos de largo. Se engancha sola a la punta de vía más cercana.",
            "Two wide, two long. Snaps to the nearest loose track end."),
@@ -218,7 +262,8 @@ TRACKS = [("track_straight", "Vía recta", "Straight Track", "Dos de ancho y dos
           ("track_switch_left", "Desvío a la izquierda", "Left Switch", "Recta y curva a la izquierda; clic derecho en él para cambiarlo.",
            "Straight and left curve; right click it to throw it.")]
 PARTS = [("train_chassis", "Chasis de tren", "Train Chassis"), ("train_wheels", "Juego de ruedas", "Wheel Set"),
-         ("steam_boiler", "Caldera de vapor", "Steam Boiler"), ("train_cab", "Cabina", "Driver's Cab"), ("coal_bunker", "Carbonera", "Coal Bunker")]
+         ("steam_boiler", "Caldera de vapor", "Steam Boiler"), ("train_cab", "Cabina", "Driver's Cab"), ("coal_bunker", "Carbonera", "Coal Bunker"),
+         ("drill_head", "Cabeza perforadora", "Drill Head")]
 
 TEXTS = {
     "entity.evolvedwarfare.steam_locomotive": ("Locomotora de vapor", "Steam Locomotive"),
@@ -233,6 +278,20 @@ TEXTS = {
     "item.evolvedwarfare.flatcar": ("Plataforma", "Flatcar"),
     "item.evolvedwarfare.flatcar.desc": ("Clic derecho en un coche del tren para engancharla detrás. 5 x 10: construye encima bloque a bloque.",
                                          "Right click a train car to couple it at the back. 5 x 10: build on it block by block."),
+    "entity.evolvedwarfare.steam_borer": ("Tuneladora de vapor", "Steam Tunnel Borer"),
+    "item.evolvedwarfare.steam_borer": ("Tuneladora de vapor", "Steam Tunnel Borer"),
+    "item.evolvedwarfare.steam_borer.desc": ("Ponla en una vía grande. Súbete: W y S, el regulador; A, baja en cuesta; D, sube. Abre un túnel de 6 x 6 "
+                                             "y pone las vías sola. Agachado + clic derecho: la caldera; con algo en la mano, el depósito (vías, carbón y lo excavado).",
+                                             "Place it on a big track. Ride it: W and S, the throttle; A slopes down, D slopes up. Bores a 6 x 6 tunnel "
+                                             "and lays its own track. Sneak + right click: the firebox; holding something, the hopper (track, coal and spoil)."),
+    "container.evolvedwarfare.steam_borer": ("Depósito de la tuneladora", "Borer Hopper"),
+    "message.evolvedwarfare.borer.dash": ("%s · %s · vías: %s", "%s · %s · track: %s"),
+    "message.evolvedwarfare.borer.mode.up": ("Subiendo", "Climbing"),
+    "message.evolvedwarfare.borer.mode.down": ("Bajando", "Descending"),
+    "message.evolvedwarfare.borer.mode.flat": ("Recto", "Level"),
+    "message.evolvedwarfare.borer.no_rails": ("Sin vías en el depósito ni en el ténder: %s", "No track in the hopper or the tender: %s"),
+    "message.evolvedwarfare.borer.blocked": ("La tuneladora no puede con eso (roca irrompible o el límite del mundo)",
+                                             "The borer can't get through that (unbreakable rock or the world limit)"),
     "item.evolvedwarfare.train_part.desc": ("Se monta en la mesa de ensamblaje del tren.", "Assembled at the train assembly table."),
     "item.evolvedwarfare.building_hammer": ("Martillo del tren", "Train Hammer"),
     "item.evolvedwarfare.building_hammer.desc": ("Agachado + clic derecho en un coche: desengancharlo (o recogerlo).",
@@ -416,7 +475,24 @@ def part_icon(pid):
             put(x, y, (80, 76, 80))
         rect(1, 10, 14, 10, BRASS)
         rect(5, 11, 9, 13, RED)
-    return icon({"train_chassis": chassis, "train_wheels": wheels, "steam_boiler": boiler, "train_cab": cab, "coal_bunker": bunker}[pid])
+
+    def drill(put, rect):
+        import math
+        for y in range(16):
+            for x in range(16):
+                d = math.hypot(x + 0.5 - 8, y + 0.5 - 8)
+                if d < 7.3:
+                    put(x, y, STEEL if d > 6.2 else (92, 88, 84) if d > 2.4 else BRASS)
+        for ang in range(0, 360, 45):
+            x = int(round(8 + 6.6 * math.cos(math.radians(ang)))) - 1
+            y = int(round(8 + 6.6 * math.sin(math.radians(ang)))) - 1
+            rect(max(0, x), max(0, y), min(15, x + 1), min(15, y + 1), (200, 200, 210))
+        rect(3, 7, 12, 8, (70, 68, 72))
+        rect(7, 3, 8, 12, (70, 68, 72))
+        rect(6, 6, 9, 9, BRASS)
+        rect(7, 7, 8, 8, (240, 214, 130))
+    return icon({"train_chassis": chassis, "train_wheels": wheels, "steam_boiler": boiler, "train_cab": cab, "coal_bunker": bunker,
+                 "drill_head": drill}[pid])
 
 
 def hammer_icon():
@@ -596,6 +672,8 @@ def main():
     shaped("steam_boiler", ["CIC", "IFI", "CIC"], {"C": {"item": "minecraft:copper_ingot"}, "I": I, "F": {"item": "minecraft:furnace"}})
     shaped("train_cab", ["PGP", "P P", "III"], {"P": P, "G": {"item": "minecraft:glass_pane"}, "I": I})
     shaped("coal_bunker", ["I I", "ICI", "III"], {"I": I, "C": {"item": "minecraft:chest"}})
+    shaped("drill_head", ["DBD", "BFB", "DBD"], {"D": {"item": "minecraft:diamond"}, "B": {"item": "minecraft:iron_block"},
+                                                 "F": {"item": "minecraft:piston"}})
     shaped("building_hammer", ["II ", "IS ", "  S"], {"I": I, "S": {"item": "minecraft:stick"}})
     shaped("train_assembly_table", ["III", "CTC", "PPP"], {"I": I, "C": {"item": "minecraft:copper_ingot"}, "T": {"item": "minecraft:crafting_table"},
                                                            "P": P})
@@ -611,15 +689,15 @@ def main():
         write_json(path, lang)
     if PREVIEW:
         os.makedirs(PREVIEW, exist_ok=True)
-        sheet = Image.new("RGB", (1200, 400), (70, 74, 80))
+        sheet = Image.new("RGB", (1600, 400), (70, 74, 80))
         for k, (mid, parts, img) in enumerate(previews):
             sheet.paste(render_entity(parts, img, size=400, yaw=35.0, pitch=15.0, center="auto"), (k * 400, 0))
         sheet.save(os.path.join(PREVIEW, "trains.png"))
-        icons = Image.new("RGBA", (16 * 14, 16), (60, 64, 70, 255))
+        icons = Image.new("RGBA", (16 * 15, 16), (60, 64, 70, 255))
         for k, n in enumerate([t[0] for t in TRACKS] + [p[0] for p in PARTS] + ["building_hammer"]):
             ic = Image.open(os.path.join(item_dir, n + ".png")).convert("RGBA")
             icons.alpha_composite(ic, (k * 16, 0))
-        icons.resize((16 * 14 * 6, 16 * 6), Image.NEAREST).save(os.path.join(PREVIEW, "train_icons.png"))
+        icons.resize((16 * 15 * 6, 16 * 6), Image.NEAREST).save(os.path.join(PREVIEW, "train_icons.png"))
     print("el tren grande: locomotora, ténder y plataforma; vías, partes, mesa y martillo")
 
 

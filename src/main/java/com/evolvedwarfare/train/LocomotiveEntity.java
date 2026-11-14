@@ -304,6 +304,7 @@ public class LocomotiveEntity extends TrainCarEntity {
 				world.playSound(null, getBlockPos(), SoundEvents.ENTITY_GHAST_SCREAM, SoundCategory.NEUTRAL, 0.4F, 2.0F);
 				whistleCooldown = 30;
 			}
+			driverInput(world, driver);
 			if (age % 10 == 0) {
 				driver.sendMessage(dash(), true);
 			}
@@ -328,6 +329,10 @@ public class LocomotiveEntity extends TrainCarEntity {
 			speed -= Math.signum(speed) * Math.min(Math.abs(speed), 0.006);
 		}
 		dataTracker.set(BURNING, burning);
+		// lo de delante (la tuneladora excava y pone vía antes de seguir)
+		if (speed > 0 && !clearAhead(world, burning)) {
+			speed = 0;
+		}
 		if (Math.abs(speed) > 1e-5) {
 			Track.Walk w = Track.walk(world, track, speed);
 			Track.Pos old = track;
@@ -346,9 +351,27 @@ public class LocomotiveEntity extends TrainCarEntity {
 		dataTracker.set(SPEED, (float) speed);
 	}
 
+	/** Lo que hace el maquinista además del regulador y el silbato (la tuneladora: subir o bajar). */
+	protected void driverInput(ServerWorld world, ServerPlayerEntity driver) {
+	}
+
+	/** ¿Puede seguir hacia delante? (la tuneladora, mientras excava y pone la vía siguiente, no). */
+	protected boolean clearAhead(ServerWorld world, boolean burning) {
+		return true;
+	}
+
+	/** Otro sitio de donde coger combustible antes que los ténderes (el depósito de la tuneladora). */
+	@Nullable
+	protected Inventory extraFuel() {
+		return null;
+	}
+
 	/** Coge más combustible: el de su caldera y, si no hay, el de los ténderes de su tren. */
 	private boolean refuel(ServerWorld world) {
 		if (takeFuel(firebox)) {
+			return true;
+		}
+		if (extraFuel() != null && takeFuel(extraFuel())) {
 			return true;
 		}
 		for (TrainCarEntity car : loadedWagons()) {
@@ -359,7 +382,7 @@ public class LocomotiveEntity extends TrainCarEntity {
 		return false;
 	}
 
-	private boolean takeFuel(Inventory inv) {
+	protected boolean takeFuel(Inventory inv) {
 		for (int i = 0; i < inv.size(); i++) {
 			ItemStack s = inv.getStack(i);
 			int t = fuelTime(s);

@@ -2164,6 +2164,14 @@ Los NPCs del pueblo (los vecinos, los guardias del cuartel y los vigías de las 
 - La plataforma tiene un modelo nuevo más grande (tablero, largueros, topes y dos bogies). Necesita más vía detrás de la locomotora para engancharse.
 - **Plataformas de antes**: sus cofres, hornos, fogatas y mesas pasan a bloques en el centro de la nueva (con lo que tenían dentro) y cada pieza de ARK se devuelve como su material principal (6 de trigo, tablones o piedra, o 4 lingotes de hierro). Los objetos de pieza que hubiera en inventarios desaparecen.
 
+## Fase 64 — Tuneladora de vapor
+
+- Nueva locomotora: la **tuneladora de vapor**. Se monta en la mesa de ensamblaje con chasis, 3 juegos de ruedas, caldera, cabina y una **cabeza perforadora** (nueva parte: 4 diamantes, 4 bloques de hierro y un pistón).
+- Cuando llega al final de la vía con el fuego encendido y el regulador abierto, la cabeza gira y **abre un túnel de 6 de ancho y 6 de alto** delante (la vía va entre dos bloques, así que 6 de ancho deja 2,5 a cada lado: caben plataformas de 5). Cuanto más abierto el regulador y más blanda la roca, más deprisa. Después **pone sola la vía** y sigue.
+- Gasta las vías de su **depósito** (agachado + clic derecho con algo en la mano; con la mano vacía, la caldera) o de un ténder enganchado. El carbón del depósito también le sirve de combustible.
+- Lo que excava se guarda en el depósito como si fuera con un pico de diamante; si se llena, cae al suelo. Rellena con esos bloques los huecos bajo los raíles y tapa el agua y la lava que asomen en las paredes, el techo o el suelo.
+- Montado: W y S, el regulador; **A, baja en cuesta; D, sube** (la contraria vuelve a recto). Las cuestas gastan vías en cuesta. No puede con la roca irrompible ni pasar del límite del mundo.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

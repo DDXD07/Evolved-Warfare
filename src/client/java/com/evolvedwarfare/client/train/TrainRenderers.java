@@ -66,6 +66,7 @@ public final class TrainRenderers {
 		car(Trains.LOCOMOTIVE, "steam_locomotive", 2.5F);
 		car(Trains.TENDER, "coal_tender", 2.5F);
 		car(Trains.PLATFORM, "flatcar", 2.0F);
+		car(Trains.BORER, "steam_borer", 2.5F);
 		BlockEntityRendererFactories.register(Trains.TRACK_ENTITY, ctx -> new TrackRenderer());
 		HandledScreens.register(Trains.LOCOMOTIVE_SCREEN, LocomotiveScreen::new);
 		HandledScreens.register(Trains.ASSEMBLY_SCREEN, AssemblyScreen::new);
@@ -107,7 +108,11 @@ public final class TrainRenderers {
 			} catch (Exception ignored) {
 				// sin ruedas que giren
 			}
+			// la cabeza de la tuneladora (gira sobre el eje de la vía)
+			cutter = root.hasChild("frame") && root.getChild("frame").hasChild("cutter") ? root.getChild("frame").getChild("cutter") : null;
 		}
+
+		private final ModelPart cutter;
 
 		@Override
 		public Identifier getTexture(T entity) {
@@ -129,6 +134,11 @@ public final class TrainRenderers {
 			float angle = MathHelper.lerp(tickDelta, car.lastWheelAngle, car.wheelAngle);
 			for (ModelPart w : wheels) {
 				w.roll = -angle;
+			}
+			if (cutter != null && car instanceof com.evolvedwarfare.train.BorerEntity borer) {
+				// gira mientras excava (y un poco al andar)
+				float spin = borer.digging() ? (car.age + tickDelta) * 0.12F : angle * 0.3F;
+				cutter.pitch = spin;
 			}
 			matrices.push();
 			matrices.translate(0.0F, 6.0F / 16.0F * scale, 0.0F);

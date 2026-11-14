@@ -77,6 +77,7 @@ public final class Trains {
 	public static final Item BOILER = item("steam_boiler", new PartItem(new Item.Settings()));
 	public static final Item CAB = item("train_cab", new PartItem(new Item.Settings()));
 	public static final Item BUNKER = item("coal_bunker", new PartItem(new Item.Settings()));
+	public static final Item DRILL_HEAD = item("drill_head", new PartItem(new Item.Settings()));
 	public static final AssemblyTableBlock ASSEMBLY_TABLE = Registry.register(Registries.BLOCK, EvolvedWarfare.id("train_assembly_table"),
 			new AssemblyTableBlock(AbstractBlock.Settings.create().strength(2.5F).sounds(BlockSoundGroup.METAL).requiresTool()));
 	public static final Item ASSEMBLY_TABLE_ITEM = item("train_assembly_table", new BlockItem(ASSEMBLY_TABLE, new Item.Settings()));
@@ -94,12 +95,16 @@ public final class Trains {
 	public static final EntityType<PlatformEntity> PLATFORM = Registry.register(Registries.ENTITY_TYPE, EvolvedWarfare.id("flatcar"),
 			EntityType.Builder.<PlatformEntity>create(PlatformEntity::new, SpawnGroup.MISC).dimensions(5.0F, 1.0F).maxTrackingRange(12)
 					.trackingTickInterval(1).makeFireImmune().build("flatcar"));
+	public static final EntityType<BorerEntity> BORER = Registry.register(Registries.ENTITY_TYPE, EvolvedWarfare.id("steam_borer"),
+			EntityType.Builder.<BorerEntity>create(BorerEntity::new, SpawnGroup.MISC).dimensions(4.8F, 5.4F).maxTrackingRange(12)
+					.trackingTickInterval(1).makeFireImmune().build("steam_borer"));
 	public static final ScreenHandlerType<LocomotiveScreenHandler> LOCOMOTIVE_SCREEN = Registry.register(Registries.SCREEN_HANDLER,
 			EvolvedWarfare.id("steam_locomotive"),
 			new ScreenHandlerType<>(LocomotiveScreenHandler::new, net.minecraft.resource.featuretoggle.FeatureFlags.VANILLA_FEATURES));
 	public static final Item LOCOMOTIVE_ITEM = item("steam_locomotive", new CarItem(0, new Item.Settings().maxCount(1).rarity(Rarity.UNCOMMON)));
 	public static final Item TENDER_ITEM = item("coal_tender", new CarItem(1, new Item.Settings().maxCount(1)));
 	public static final Item PLATFORM_ITEM = item("flatcar", new CarItem(2, new Item.Settings().maxCount(1)));
+	public static final Item BORER_ITEM = item("steam_borer", new CarItem(3, new Item.Settings().maxCount(1).rarity(Rarity.RARE)));
 
 	// ------------------------------------------------------------------ construir
 	public static final Item BUILD_HAMMER = item("building_hammer", new HammerItem(new Item.Settings().maxCount(1)));
@@ -137,6 +142,7 @@ public final class Trains {
 			List<Assembly> a = new ArrayList<>();
 			a.add(new Assembly(LOCOMOTIVE_ITEM, List.of(need(CHASSIS, 1), need(WHEELS, 3), need(BOILER, 1), need(CAB, 1))));
 			a.add(new Assembly(TENDER_ITEM, List.of(need(CHASSIS, 1), need(WHEELS, 2), need(BUNKER, 1))));
+			a.add(new Assembly(BORER_ITEM, List.of(need(CHASSIS, 1), need(WHEELS, 3), need(BOILER, 1), need(CAB, 1), need(DRILL_HEAD, 1))));
 			a.add(new Assembly(PLATFORM_ITEM, List.of(need(CHASSIS, 1), need(WHEELS, 2),
 					new Costs.Cost(Ingredient.fromTag(ItemTags.PLANKS), 12, Items.OAK_PLANKS))));
 			assemblies = a;
@@ -176,7 +182,7 @@ public final class Trains {
 
 	/** La locomotora se pone en una vía; el ténder y la plataforma, con clic derecho en un coche del tren (se enganchan detrás). */
 	public static class CarItem extends Item {
-		/** 0 locomotora, 1 ténder, 2 plataforma. */
+		/** 0 locomotora, 1 ténder, 2 plataforma, 3 tuneladora. */
 		public final int kind;
 
 		public CarItem(int kind, Settings settings) {
@@ -185,7 +191,12 @@ public final class Trains {
 		}
 
 		public EntityType<? extends TrainCarEntity> type() {
-			return kind == 0 ? LOCOMOTIVE : kind == 1 ? TENDER : PLATFORM;
+			return kind == 0 ? LOCOMOTIVE : kind == 1 ? TENDER : kind == 3 ? BORER : PLATFORM;
+		}
+
+		/** ¿Es una locomotora (se pone en la vía, no se engancha)? */
+		public boolean engine() {
+			return kind == 0 || kind == 3;
 		}
 
 		@Override
@@ -195,7 +206,7 @@ public final class Trains {
 				return ActionResult.PASS;
 			}
 			PlayerEntity player = context.getPlayer();
-			if (kind != 0) {
+			if (!engine()) {
 				if (!world.isClient && player != null) {
 					player.sendMessage(Text.translatable("message.evolvedwarfare.train.couple_hint").formatted(Formatting.GRAY), true);
 				}
@@ -204,7 +215,7 @@ public final class Trains {
 			if (world instanceof ServerWorld sw) {
 				Direction facing = player != null ? player.getHorizontalFacing() : context.getHorizontalPlayerFacing();
 				Track.Pos start = Track.start(sw, context.getBlockPos(), facing);
-				LocomotiveEntity loco = LOCOMOTIVE.create(sw);
+				LocomotiveEntity loco = (kind == 3 ? BORER : LOCOMOTIVE).create(sw);
 				if (start == null || loco == null) {
 					return ActionResult.FAIL;
 				}
@@ -227,7 +238,7 @@ public final class Trains {
 	/** Lo común a todos los coches: un vagón en la mano lo engancha; el martillo, agachado, desengancha o recoge. */
 	public static ActionResult carInteract(TrainCarEntity car, PlayerEntity player, Hand hand) {
 		ItemStack stack = player.getStackInHand(hand);
-		if (stack.getItem() instanceof CarItem ci && ci.kind != 0) {
+		if (stack.getItem() instanceof CarItem ci && !ci.engine()) {
 			return couple(car, player, stack, ci);
 		}
 		if (stack.isOf(BUILD_HAMMER) && player.isSneaking()) {
@@ -306,7 +317,10 @@ public final class Trains {
 
 	private static void pickUp(TrainCarEntity car, PlayerEntity player) {
 		Item item;
-		if (car instanceof LocomotiveEntity l) {
+		if (car instanceof BorerEntity b) {
+			b.dropContents();
+			item = BORER_ITEM;
+		} else if (car instanceof LocomotiveEntity l) {
 			l.dropContents();
 			item = LOCOMOTIVE_ITEM;
 		} else if (car instanceof TenderEntity t) {
