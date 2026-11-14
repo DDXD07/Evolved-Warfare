@@ -19,6 +19,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.LightmapTextureManager;
@@ -35,6 +36,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -147,12 +149,32 @@ public final class TrainRenderers {
 			root.render(matrices, consumers.getBuffer(RenderLayer.getEntityCutoutNoCull(texture)), light, OverlayTexture.DEFAULT_UV);
 			root.render(matrices, consumers.getBuffer(RenderLayer.getEyes(glow)), LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
 			matrices.pop();
+			if (car instanceof com.evolvedwarfare.train.BorerEntity) {
+				// los carteles del depósito (a la derecha) y de la caldera (a la izquierda), sobre sus tablas
+				sign(matrices, consumers, Text.translatable("sign.evolvedwarfare.borer.deposit"), -12 * K - 0.01, 14 * K, 5 * K, -90.0F, 2.0F, light);
+				sign(matrices, consumers, Text.translatable("sign.evolvedwarfare.borer.firebox"), 12 * K + 0.01, 14.5 * K, 1 * K, 90.0F, 1.4F, light);
+			}
 			if (car instanceof PlatformEntity flat && !flat.grid().isEmpty()) {
 				// lo construido encima (bloque a bloque)
 				VoxelRenderer.draw(flat.grid(), matrices, consumers, light, flat.getWorld(), flat.getId() * 64);
 			}
 			matrices.pop();
 			super.render(car, yaw, tickDelta, matrices, consumers, light);
+		}
+
+		private static final double K = 2.5 / 16.0;
+
+		/** Un texto pintado en un costado (mirando hacia fuera), de ese ancho como mucho. */
+		private void sign(MatrixStack m, VertexConsumerProvider consumers, Text text, double x, double y, double z, float rot, float width, int light) {
+			TextRenderer tr = getTextRenderer();
+			int w = tr.getWidth(text);
+			float size = Math.min(0.045F, width / Math.max(1, w));
+			m.push();
+			m.translate(x, y, z);
+			m.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rot));
+			m.scale(size, -size, size);
+			tr.draw(text, -w / 2.0F, -3.5F, 0xFFF4E4C0, false, m.peek().getPositionMatrix(), consumers, TextRenderer.TextLayerType.POLYGON_OFFSET, 0, light);
+			m.pop();
 		}
 	}
 

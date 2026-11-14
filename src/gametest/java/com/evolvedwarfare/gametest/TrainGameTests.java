@@ -297,6 +297,13 @@ public class TrainGameTests implements FabricGameTest {
 		borer.setTrack(Track.start(world, BlockPos.ofFloored(o.getX() - 3.5, y, o.getZ() + 0.5), Direction.EAST));
 		world.spawnEntity(borer);
 		boolean placed = borer.place();
+		// las puertas: la compuerta del depósito a la derecha y la de la caldera a la izquierda (mirando de lado)
+		Vec3d side = borer.toWorld(1, 0, 0).subtract(borer.getPos());
+		BorerEntity.Hatch right = borer.hatchAt(borer.toWorld(-3.5, 1.7, 0.8), side);
+		BorerEntity.Hatch left = borer.hatchAt(borer.toWorld(3.5, 1.9, 0.2), side.negate());
+		BorerEntity.Hatch front = borer.hatchAt(borer.toWorld(0, 1.5, -6), borer.toWorld(0, 0, 1).subtract(borer.getPos()));
+		LOG.info("[EW-GAMETEST] tuneladora: puertas {} / {} / {}", right, left, front);
+		boolean doors = right == BorerEntity.Hatch.DEPOSIT && left == BorerEntity.Hatch.FIREBOX && front == null;
 		borer.storage.setStack(0, new ItemStack(Items.COAL, 16));
 		borer.storage.setStack(1, new ItemStack(Trains.TRACK_STRAIGHT, 6));
 		borer.storage.setStack(2, new ItemStack(Trains.TRACK_SLOPE, 2));
@@ -315,12 +322,12 @@ public class TrainGameTests implements FabricGameTest {
 		ctx.runAtTick(660, () -> {
 			int slopes = borer.countRails(Trains.TRACK_SLOPE);
 			LOG.info("[EW-GAMETEST] tuneladora (sube): cuestas {}, altura {}", slopes, borer.getY() - y);
-			boolean ok = placed && flat[0] < 6 && flat[1] > 20 && flat[2] == 1 && flat[3] > 1 && slopes < 2;
+			boolean ok = placed && doors && flat[0] < 6 && flat[1] > 20 && flat[2] == 1 && flat[3] > 1 && slopes < 2;
 			int straights = flat[0], stone = flat[1], hole = flat[2], moved = flat[3];
 			borer.discard();
 			forced.forEach(c -> world.setChunkForced(c.x, c.z, false));
 			if (!ok) {
-				throw new GameTestException("La tuneladora no excava bien: colocada " + placed + ", rectas " + straights + ", piedra " + stone + ", túnel "
+				throw new GameTestException("La tuneladora no excava bien: colocada " + placed + ", puertas " + doors + ", rectas " + straights + ", piedra " + stone + ", túnel "
 						+ hole + ", avance " + moved + ", cuestas " + slopes);
 			}
 			ctx.complete();

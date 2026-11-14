@@ -107,6 +107,9 @@ public class BorerEntity extends LocomotiveEntity {
 			List<Box> b = new ArrayList<>(super.localBoxes());
 			// la cabeza: un disco de casi todo el túnel, delante
 			b.addAll(split(new Box(-2.4, 0.3, 15 * K, 2.4, 5.4, 18 * K)));
+			// el depósito (a la derecha) y el hogar (a la izquierda), con sus puertas
+			b.addAll(split(new Box(-13 * K, 6 * K, -3 * K, -8 * K, 17 * K, 12 * K)));
+			b.addAll(split(new Box(6 * K, 6 * K, -4 * K, 13 * K, 17 * K, 6 * K)));
 			boxes = b;
 		}
 		return boxes;
@@ -424,18 +427,55 @@ public class BorerEntity extends LocomotiveEntity {
 
 	// ------------------------------------------------------------------ clic derecho
 
-	/** Agachado y sin combustible en la mano: el depósito (vías, combustible y lo excavado). */
+	/** Las dos puertas de fuera: la compuerta del depósito (a la derecha) y la de la caldera (a la izquierda). */
+	public enum Hatch { DEPOSIT, FIREBOX }
+
+	/** La puerta a la que apunta un rayo (desde el ojo, en esa dirección), o null. */
+	@Nullable
+	public Hatch hatchAt(Vec3d eye, Vec3d look) {
+		Vec3d hit = raycast(eye, eye.add(look.normalize().multiply(6.0)));
+		if (hit == null) {
+			return null;
+		}
+		Vec3d l = toLocal(hit);
+		if (l.y < 6 * K - 0.05 || l.y > 17 * K + 0.05) {
+			return null;
+		}
+		if (l.x < -8 * K + 0.01 && l.z > -3 * K - 0.05 && l.z < 12 * K + 0.05) {
+			return Hatch.DEPOSIT;
+		}
+		if (l.x > 7.5 * K && l.z > -4 * K - 0.05 && l.z < 6 * K + 0.05) {
+			return Hatch.FIREBOX;
+		}
+		return null;
+	}
+
+	/** Clic derecho en la compuerta del depósito o en la puerta de la caldera; en lo demás, como una locomotora (sin agacharse). */
 	@Override
 	public ActionResult interact(PlayerEntity player, Hand hand) {
-		ItemStack stack = player.getStackInHand(hand);
-		if (hand == Hand.MAIN_HAND && player.isSneaking() && fuelTime(stack) <= 0 && !stack.isOf(Trains.BUILD_HAMMER)
-				&& !(stack.getItem() instanceof Trains.CarItem)) {
-			if (!getWorld().isClient) {
-				player.openHandledScreen(new SimpleNamedScreenHandlerFactory(
-						(syncId, inv, p) -> GenericContainerScreenHandler.createGeneric9x3(syncId, inv, storage),
-						Text.translatable("container.evolvedwarfare.steam_borer")));
+		ActionResult common = Trains.carInteract(this, player, hand);
+		if (common != ActionResult.PASS) {
+			return common;
+		}
+		if (hand != Hand.MAIN_HAND) {
+			return ActionResult.PASS;
+		}
+		Hatch hatch = hatchAt(player.getCameraPosVec(1.0F), player.getRotationVec(1.0F));
+		if (hatch != null) {
+			if (getWorld().isClient) {
+				return ActionResult.SUCCESS;
 			}
-			return ActionResult.success(getWorld().isClient);
+			if (hatch == Hatch.FIREBOX) {
+				return openFirebox(player, hand);
+			}
+			getWorld().playSound(null, getBlockPos(), SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, SoundCategory.NEUTRAL, 0.8F, 0.9F);
+			player.openHandledScreen(new SimpleNamedScreenHandlerFactory(
+					(syncId, inv, p) -> GenericContainerScreenHandler.createGeneric9x3(syncId, inv, storage),
+					Text.translatable("container.evolvedwarfare.steam_borer")));
+			return ActionResult.CONSUME;
+		}
+		if (player.isSneaking()) {
+			return ActionResult.PASS;
 		}
 		return super.interact(player, hand);
 	}

@@ -2172,6 +2172,13 @@ Los NPCs del pueblo (los vecinos, los guardias del cuartel y los vigías de las 
 - Lo que excava se guarda en el depósito como si fuera con un pico de diamante; si se llena, cae al suelo. Rellena con esos bloques los huecos bajo los raíles y tapa el agua y la lava que asomen en las paredes, el techo o el suelo.
 - Montado: W y S, el regulador; **A, baja en cuesta; D, sube** (la contraria vuelve a recto). Las cuestas gastan vías en cuesta. No puede con la roca irrompible ni pasar del límite del mundo.
 
+## Fase 65 — Las puertas de la tuneladora
+
+- El depósito y la caldera de la tuneladora ya no se abren agachándose: ahora tienen **puertas por fuera**.
+- **A la derecha** (mirando hacia delante), una tolva roja con un cartel que dice **DEPÓSITO** y, debajo, una **compuerta** de hierro: clic derecho en ella y se abre el depósito (vías, carbón y lo excavado).
+- **A la izquierda**, el **hogar** con su cartel **CALDERA** y la puerta encendida: clic derecho y se abre la caldera; con carbón (u otro combustible) en la mano, se echa directamente.
+- Clic derecho en cualquier otro sitio de la tuneladora: subirse, como siempre.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

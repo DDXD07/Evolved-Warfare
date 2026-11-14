@@ -2491,7 +2491,7 @@
   "dialogue.evolvedwarfare.activity.order.home": "Ahora: en su casa",
   "entity.evolvedwarfare.steam_borer": "Tuneladora de vapor",
   "item.evolvedwarfare.steam_borer": "Tuneladora de vapor",
-  "item.evolvedwarfare.steam_borer.desc": "Ponla en una vía grande. Súbete: W y S, el regulador; A, baja en cuesta; D, sube. Abre un túnel de 6 x 6 y pone las vías sola. Agachado + clic derecho: la caldera; con algo en la mano, el depósito (vías, carbón y lo excavado).",
+  "item.evolvedwarfare.steam_borer.desc": "Ponla en una vía grande. Súbete: W y S, el regulador; A, baja en cuesta; D, sube. Abre un túnel de 6 x 6 y pone las vías sola. Clic derecho en la compuerta del depósito (a la derecha): vías, carbón y lo excavado; en la puerta de la caldera (a la izquierda): el fuego.",
   "container.evolvedwarfare.steam_borer": "Depósito de la tuneladora",
   "message.evolvedwarfare.borer.dash": "%s · %s · vías: %s",
   "message.evolvedwarfare.borer.mode.up": "Subiendo",
@@ -2499,5 +2499,7 @@
   "message.evolvedwarfare.borer.mode.flat": "Recto",
   "message.evolvedwarfare.borer.no_rails": "Sin vías en el depósito ni en el ténder: %s",
   "message.evolvedwarfare.borer.blocked": "La tuneladora no puede con eso (roca irrompible o el límite del mundo)",
-  "item.evolvedwarfare.drill_head": "Cabeza perforadora"
+  "item.evolvedwarfare.drill_head": "Cabeza perforadora",
+  "sign.evolvedwarfare.borer.deposit": "DEPÓSITO",
+  "sign.evolvedwarfare.borer.firebox": "CALDERA"
 }

@@ -171,6 +171,20 @@ def borer():
     for z in (-10, 8):
         frame.cube((-14, -3, z), (4, 4, 2), **C(BRASS, rings=((150, 110, 40), 1)))                # los pistones del empuje
     frame.cube((-12, -24, -2), (2, 7, 4), **C(LAMP))                                           # el farol de arriba
+    # a la derecha (z +), el depósito: una tolva con su cartel arriba y la compuerta abajo
+    frame.cube((-12, -10, 8), (15, 10, 3), **C(RED, low=((96, 20, 18), 1), spots=((110, 22, 20), 0.04)))
+    frame.cube((-12, -11, 8), (15, 1, 3), **C(BLACK))                                          # su borde
+    frame.cube((-12, -10, 11), (14, 4, 1), **C(WOOD, rings=((70, 46, 26), 1)))                  # el cartel
+    frame.cube((-9, -5, 11), (8, 4, 1), **C(IRON, rings=(STEEL, 1)))                            # la compuerta
+    frame.cube((-6, -4, 12), (2, 1, 1), **C(BRASS))                                             # su tirador
+    for x in (-9, -2):
+        frame.cube((x, -5, 12), (1, 1, 1), **C(STEEL))                                          # las bisagras
+    # a la izquierda (z -), la caldera: el hogar con su puerta encendida y su cartel
+    frame.cube((-6, -11, -11), (10, 11, 5), **C(BLACK, high=((54, 54, 60), 1), rings=(BRASS, 1)))
+    frame.cube((-6, -10, -12), (10, 3, 1), **C(WOOD, rings=((70, 46, 26), 1)))                  # el cartel
+    frame.cube((-3, -6, -12), (4, 4, 1), **C(BLACK, rings=(BRASS, 1)))                          # el marco de la puerta
+    frame.cube((-2, -5, -13), (2, 2, 1), **C(FIRE, high=((255, 210, 120), 1)))                  # la puerta, encendida
+    frame.cube((-6, -1, -12), (10, 1, 1), **C(DARK))                                            # el cenicero
     # la cabeza, con el pivote en el eje
     cut = a.part("cutter", "frame", (-18, -12, 0), role="none")
     R = 16
@@ -281,10 +295,12 @@ TEXTS = {
     "entity.evolvedwarfare.steam_borer": ("Tuneladora de vapor", "Steam Tunnel Borer"),
     "item.evolvedwarfare.steam_borer": ("Tuneladora de vapor", "Steam Tunnel Borer"),
     "item.evolvedwarfare.steam_borer.desc": ("Ponla en una vía grande. Súbete: W y S, el regulador; A, baja en cuesta; D, sube. Abre un túnel de 6 x 6 "
-                                             "y pone las vías sola. Agachado + clic derecho: la caldera; con algo en la mano, el depósito (vías, carbón y lo excavado).",
+                                             "y pone las vías sola. Clic derecho en la compuerta del depósito (a la derecha): vías, carbón y lo excavado; en la puerta de la caldera (a la izquierda): el fuego.",
                                              "Place it on a big track. Ride it: W and S, the throttle; A slopes down, D slopes up. Bores a 6 x 6 tunnel "
-                                             "and lays its own track. Sneak + right click: the firebox; holding something, the hopper (track, coal and spoil)."),
+                                             "and lays its own track. Right click the hopper hatch (right side): track, coal and spoil; the firebox door (left side): the fire."),
     "container.evolvedwarfare.steam_borer": ("Depósito de la tuneladora", "Borer Hopper"),
+    "sign.evolvedwarfare.borer.deposit": ("DEPÓSITO", "DEPOSIT"),
+    "sign.evolvedwarfare.borer.firebox": ("CALDERA", "FIREBOX"),
     "message.evolvedwarfare.borer.dash": ("%s · %s · vías: %s", "%s · %s · track: %s"),
     "message.evolvedwarfare.borer.mode.up": ("Subiendo", "Climbing"),
     "message.evolvedwarfare.borer.mode.down": ("Bajando", "Descending"),

@@ -427,6 +427,24 @@ public class LocomotiveEntity extends TrainCarEntity {
 
 	// ------------------------------------------------------------------ subir, la caldera, enganchar
 
+	/** La caldera (en el servidor): con un combustible en la mano, se mete directamente; si no, se abre. */
+	protected ActionResult openFirebox(PlayerEntity player, Hand hand) {
+		ItemStack stack = player.getStackInHand(hand);
+		if (fuelTime(stack) > 0) {
+			ItemStack rest = firebox.addStack(stack.copy());
+			if (rest.getCount() != stack.getCount()) {
+				if (!player.getAbilities().creativeMode) {
+					player.setStackInHand(hand, rest);
+				}
+				getWorld().playSound(null, getBlockPos(), SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.NEUTRAL, 1.0F, 1.0F);
+				return ActionResult.CONSUME;
+			}
+		}
+		player.openHandledScreen(new SimpleNamedScreenHandlerFactory((syncId, inv, p) -> new LocomotiveScreenHandler(syncId, inv, firebox, properties, this),
+				Text.translatable("container.evolvedwarfare.steam_locomotive")));
+		return ActionResult.CONSUME;
+	}
+
 	@Override
 	public ActionResult interact(PlayerEntity player, Hand hand) {
 		ItemStack stack = player.getStackInHand(hand);
@@ -441,20 +459,8 @@ public class LocomotiveEntity extends TrainCarEntity {
 			if (getWorld().isClient) {
 				return ActionResult.SUCCESS;
 			}
-			// agachado: la caldera (con un combustible en la mano, se mete directamente)
-			if (fuelTime(stack) > 0) {
-				ItemStack rest = firebox.addStack(stack.copy());
-				if (rest.getCount() != stack.getCount()) {
-					if (!player.getAbilities().creativeMode) {
-						player.setStackInHand(hand, rest);
-					}
-					getWorld().playSound(null, getBlockPos(), SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.NEUTRAL, 1.0F, 1.0F);
-					return ActionResult.CONSUME;
-				}
-			}
-			player.openHandledScreen(new SimpleNamedScreenHandlerFactory((syncId, inv, p) -> new LocomotiveScreenHandler(syncId, inv, firebox, properties, this),
-					Text.translatable("container.evolvedwarfare.steam_locomotive")));
-			return ActionResult.CONSUME;
+			// agachado: la caldera
+			return openFirebox(player, hand);
 		}
 		if (!hasPassengers()) {
 			if (!getWorld().isClient) {
