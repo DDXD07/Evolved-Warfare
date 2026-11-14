@@ -2244,6 +2244,12 @@ Los NPCs del pueblo (los vecinos, los guardias del cuartel y los vigías de las 
 - La tuneladora junta sola los guijarros que excava en piedra labrada (4 por bloque) dentro de su depósito.
 - (0.98.1) La textura del guijarro tiene más detalle: motas claras y oscuras como la piedra labrada, cada piedra con su tono, alguna grieta, brillos y un poco de musgo.
 
+## Fase 71.1 — Arreglos del tren
+
+- **La tuneladora ya no frena en seco**: empieza a excavar un poco antes de llegar al final de la vía y, mientras excava, avanza despacio, al paso al que va abriendo el túnel (más deprisa cuanto más abierto el regulador); solo se para si la roca es muy dura y la alcanza. Al llegar a lo que le dejan, frena poco a poco.
+- **La cabeza de la tuneladora gira sin saltos**: acelera hasta girar deprisa al excavar y se frena sola, sin reiniciar el giro.
+- **Lo que alumbra encima de las plataformas y las carretas da luz de verdad** (antorchas, faroles, hogueras, lámparas de cobre, piedra luminosa...): se ponen bloques de luz invisibles donde va cada cosa y se mueven con el tren; se quitan al romper el vagón.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

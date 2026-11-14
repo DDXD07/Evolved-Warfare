@@ -361,4 +361,32 @@ public class TrainGameTests implements FabricGameTest {
 		}
 		return true;
 	}
+
+	/** Lo que alumbra encima de una plataforma da luz de verdad (bloques de luz que se quitan al irse). */
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "voxel_lights", tickLimit = 60)
+	public void platformLampsLightTheWorld(TestContext ctx) {
+		ServerWorld world = ctx.getWorld();
+		BlockPos o = ctx.getAbsolutePos(new BlockPos(4, 2, 4));
+		com.evolvedwarfare.train.PlatformEntity flat = Trains.PLATFORM.create(world);
+		flat.refreshPositionAndAngles(o.getX() + 0.5, o.getY(), o.getZ() + 0.5, 0.0F, 0.0F);
+		world.spawnEntity(flat);
+		int i = flat.grid().index(2, 0, 5);
+		flat.grid().set(i, Blocks.LANTERN.getDefaultState());
+		flat.gridChanged();
+		BlockPos at = BlockPos.ofFloored(flat.gridToWorld(flat.grid().center(i)));
+		boolean[] lit = new boolean[1];
+		ctx.runAtTick(6, () -> {
+			lit[0] = world.getBlockState(at).isOf(Blocks.LIGHT) && world.getBlockState(at).get(net.minecraft.block.LightBlock.LEVEL_15) == 15
+					&& world.getLightLevel(net.minecraft.world.LightType.BLOCK, at.up()) >= 13;
+			flat.discard();
+		});
+		ctx.runAtTick(12, () -> {
+			boolean gone = !world.getBlockState(at).isOf(Blocks.LIGHT);
+			LOG.info("[EW-GAMETEST] luces de la plataforma: encendida {}, quitada al irse {}", lit[0], gone);
+			if (!(lit[0] && gone)) {
+				throw new GameTestException("Lo que alumbra en la plataforma no da luz (o la deja al irse)");
+			}
+			ctx.complete();
+		});
+	}
 }

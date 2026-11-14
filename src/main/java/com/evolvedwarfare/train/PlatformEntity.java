@@ -304,6 +304,7 @@ public class PlatformEntity extends TrainCarEntity implements VoxelHost {
 
 	@Override
 	protected void readCustomDataFromNbt(NbtCompound nbt) {
+		lights.read(nbt);
 		if (nbt.contains("Grid")) {
 			grid().read(nbt.getCompound("Grid"), getRegistryManager());
 		} else if (nbt.contains("Pieces")) {
@@ -316,6 +317,7 @@ public class PlatformEntity extends TrainCarEntity implements VoxelHost {
 	@Override
 	protected void writeCustomDataToNbt(NbtCompound nbt) {
 		nbt.put("Grid", grid().write(getRegistryManager(), true));
+		lights.write(nbt);
 		writeLink(nbt);
 	}
 

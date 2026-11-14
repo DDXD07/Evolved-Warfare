@@ -339,11 +339,25 @@ public abstract class TrainCarEntity extends Entity {
 		setBoundingBox(calculateBoundingBox());
 	}
 
+	/** La luz de lo que lleva encima (si lleva vóxeles). */
+	public final com.evolvedwarfare.voxel.VoxelLights lights = new com.evolvedwarfare.voxel.VoxelLights();
+
+	@Override
+	public void remove(RemovalReason reason) {
+		if (reason.shouldDestroy() && getWorld() instanceof net.minecraft.server.world.ServerWorld sw) {
+			lights.clear(sw);
+		}
+		super.remove(reason);
+	}
+
 	@Override
 	public void tick() {
 		cars(getWorld()).add(this);
 		super.tick();
 		World world = getWorld();
+		if (world instanceof net.minecraft.server.world.ServerWorld sw && this instanceof com.evolvedwarfare.voxel.VoxelHost host && age % 2 == 0) {
+			lights.update(sw, host);
+		}
 		if (world.isClient) {
 			stepLerp();
 		}

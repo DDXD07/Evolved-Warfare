@@ -139,8 +139,7 @@ public final class TrainRenderers {
 			}
 			if (cutter != null && car instanceof com.evolvedwarfare.train.BorerEntity borer) {
 				// gira mientras excava (y un poco al andar)
-				float spin = borer.digging() ? (car.age + tickDelta) * 0.12F : angle * 0.3F;
-				cutter.pitch = spin;
+				cutter.pitch = MathHelper.lerp(tickDelta, borer.prevCutterAngle, borer.cutterAngle);
 			}
 			matrices.push();
 			matrices.translate(0.0F, 6.0F / 16.0F * scale, 0.0F);

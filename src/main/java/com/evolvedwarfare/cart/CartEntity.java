@@ -782,6 +782,7 @@ public class CartEntity extends TrainCarEntity implements VoxelHost {
 	@Override
 	protected void writeCustomDataToNbt(NbtCompound nbt) {
 		nbt.put("Grid", grid().write(getRegistryManager(), true));
+		lights.write(nbt);
 		if (pullerUuid != null) {
 			nbt.putUuid("Puller", pullerUuid);
 		}
@@ -800,6 +801,7 @@ public class CartEntity extends TrainCarEntity implements VoxelHost {
 
 	@Override
 	protected void readCustomDataFromNbt(NbtCompound nbt) {
+		lights.read(nbt);
 		if (nbt.contains("Grid")) {
 			grid().read(nbt.getCompound("Grid"), getRegistryManager());
 		} else {

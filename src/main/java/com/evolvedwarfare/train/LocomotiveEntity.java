@@ -330,8 +330,12 @@ public class LocomotiveEntity extends TrainCarEntity {
 		}
 		dataTracker.set(BURNING, burning);
 		// lo de delante (la tuneladora excava y pone vía antes de seguir)
-		if (speed > 0 && !clearAhead(world, burning)) {
-			speed = 0;
+		if (speed > 0) {
+			double limit = speedLimit(world, burning);
+			if (speed > limit) {
+				// frena poco a poco hasta lo que le dejan (la tuneladora, a lo que da excavando)
+				speed = Math.max(limit, speed - 0.02);
+			}
 		}
 		if (Math.abs(speed) > 1e-5) {
 			Track.Walk w = Track.walk(world, track, speed);
@@ -355,9 +359,9 @@ public class LocomotiveEntity extends TrainCarEntity {
 	protected void driverInput(ServerWorld world, ServerPlayerEntity driver) {
 	}
 
-	/** ¿Puede seguir hacia delante? (la tuneladora, mientras excava y pone la vía siguiente, no). */
-	protected boolean clearAhead(ServerWorld world, boolean burning) {
-		return true;
+	/** Lo más deprisa que puede ir hacia delante ahora (la tuneladora, mientras excava, a paso de excavar). */
+	protected double speedLimit(ServerWorld world, boolean burning) {
+		return Double.MAX_VALUE;
 	}
 
 	/** Otro sitio de donde coger combustible antes que los ténderes (el depósito de la tuneladora). */

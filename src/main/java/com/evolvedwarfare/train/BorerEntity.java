@@ -97,6 +97,10 @@ public class BorerEntity extends LocomotiveEntity {
 	}
 
 	/** ¿Está excavando? (la cabeza gira y echa polvo). */
+	/** El giro de la cabeza (solo en el cliente, para dibujarla). */
+	public float cutterAngle, prevCutterAngle;
+	private float cutterSpin;
+
 	public boolean digging() {
 		return dataTracker.get(DIGGING);
 	}
@@ -157,39 +161,44 @@ public class BorerEntity extends LocomotiveEntity {
 
 	// ------------------------------------------------------------------ excavar y poner vía
 
+	/** Hasta dónde mira para empezar a excavar, y dónde tiene que estar ya parada si no ha acabado. */
+	public static final double FAR = HALF_LENGTH + 4.0, NEAR = HALF_LENGTH + 1.0;
+
 	@Override
-	protected boolean clearAhead(ServerWorld world, boolean burning) {
+	protected double speedLimit(ServerWorld world, boolean burning) {
 		Track.Pos pos = track();
 		if (pos == null) {
-			return true;
+			return Double.MAX_VALUE;
 		}
-		Track.Walk ahead = Track.walk(world, pos, LOOKAHEAD);
-		if (!ahead.blocked()) {
+		Track.Walk far = Track.walk(world, pos, FAR);
+		if (!far.blocked()) {
 			job = null;
 			dataTracker.set(DIGGING, false);
-			return true;
+			return Double.MAX_VALUE;
 		}
+		boolean near = Track.walk(world, pos, NEAR).blocked();
 		if (!burning) {
 			dataTracker.set(DIGGING, false);
-			return false;
+			return near ? 0.0 : Double.MAX_VALUE;
 		}
 		if (job == null) {
-			job = plan(world, ahead.pos());
+			job = plan(world, far.pos());
 			if (job == null) {
 				dataTracker.set(DIGGING, false);
-				return false;
+				return near ? 0.0 : Double.MAX_VALUE;
 			}
 		}
 		dataTracker.set(DIGGING, true);
-		// cuanto más abierto el regulador, más deprisa
-		job.done()[0] += 1.0F + 0.5F * Math.max(0, throttle());
+		// cuanto más abierto el regulador, más deprisa excava (y avanza a ese paso, sin pararse)
+		float rate = 1.0F + 0.5F * Math.max(0, throttle());
+		job.done()[0] += rate;
 		effects(world);
-		if (job.done()[0] < job.cost()) {
-			return false;
+		double crawl = 0.9 * job.piece().length(0) * rate / job.cost();
+		if (job.done()[0] >= job.cost()) {
+			finish(world, job);
+			job = null;
 		}
-		finish(world, job);
-		job = null;
-		return false;
+		return near ? 0.0 : crawl;
 	}
 
 	/** El trozo de vía que va después de esa punta (recto o en cuesta) y lo que hay que excavar, rellenar y tapar. */
@@ -346,6 +355,13 @@ public class BorerEntity extends LocomotiveEntity {
 			warnCooldown--;
 		}
 		super.tick();
+		if (getWorld().isClient) {
+			// la cabeza gira sin saltos: acelera hasta girar deprisa al excavar y, si no, va con las ruedas
+			prevCutterAngle = cutterAngle;
+			float target = digging() ? 0.35F : Math.abs(wheelAngle - lastWheelAngle) * 0.3F;
+			cutterSpin += (target - cutterSpin) * 0.08F;
+			cutterAngle += cutterSpin;
+		}
 		if (getWorld().isClient && digging()) {
 			Vec3d head = toWorld((random.nextDouble() - 0.5) * 4.0, 0.5 + random.nextDouble() * 4.5, 19 * K);
 			getWorld().addParticle(ParticleTypes.CLOUD, head.x, head.y, head.z, 0.0, 0.02, 0.0);
