@@ -21,6 +21,14 @@
     {
       "structure": "evolvedwarfare:dungeon_pharaoh_tomb",
       "weight": 1
+    },
+    {
+      "structure": "evolvedwarfare:dungeon_frozen_keep",
+      "weight": 1
+    },
+    {
+      "structure": "evolvedwarfare:dungeon_serpent_temple",
+      "weight": 1
     }
   ]
 }

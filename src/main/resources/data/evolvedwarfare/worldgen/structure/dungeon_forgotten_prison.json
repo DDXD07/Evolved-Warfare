@@ -1,0 +1,29 @@
+{
+  "type": "evolvedwarfare:dungeon",
+  "biomes": "#evolvedwarfare:has_structure/dungeon/forgotten_prison",
+  "step": "underground_structures",
+  "terrain_adaptation": "none",
+  "spawn_overrides": {},
+  "templates": [
+    {
+      "id": "evolvedwarfare:dungeon/forgotten_prison_0",
+      "x": 21,
+      "y": 23,
+      "z": 6
+    },
+    {
+      "id": "evolvedwarfare:dungeon/forgotten_prison_1",
+      "x": 21,
+      "y": 23,
+      "z": 6
+    },
+    {
+      "id": "evolvedwarfare:dungeon/forgotten_prison_2",
+      "x": 21,
+      "y": 23,
+      "z": 6
+    }
+  ],
+  "underground": true,
+  "max_slope": 6
+}

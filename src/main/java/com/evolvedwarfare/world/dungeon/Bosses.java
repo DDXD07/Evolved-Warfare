@@ -22,6 +22,8 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.SlimeEntity;
 import net.minecraft.entity.mob.VexEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ArrowEntity;
+import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.SmallFireballEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -75,7 +77,13 @@ public final class Bosses {
 		/** Telarañas a los pies del objetivo. */
 		WEB,
 		/** Nube de veneno. */
-		POISON_CLOUD;
+		POISON_CLOUD,
+		/** Escarcha: congela y ralentiza alrededor. */
+		FROST,
+		/** Lluvia de flechas en abanico. */
+		ARROW_VOLLEY,
+		/** Cadenas: arrastra al objetivo hacia el jefe. */
+		PULL;
 
 		public void use(ServerWorld world, MobEntity boss, @Nullable LivingEntity target, Boss spec, @Nullable DungeonHeartBlockEntity heart) {
 			Vec3d at = boss.getPos();
@@ -242,6 +250,44 @@ public final class Bosses {
 					world.spawnEntity(cloud);
 					world.playSound(null, target.getBlockPos(), SoundEvents.ENTITY_SPIDER_HURT, SoundCategory.HOSTILE, 1.0F, 0.5F);
 				}
+				case FROST -> {
+					for (PlayerEntity p : players(world, at, 8.0)) {
+						p.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 80, 2), boss);
+						p.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 80, 1), boss);
+						p.setFrozenTicks(Math.max(p.getFrozenTicks(), 220));
+						p.damage(boss.getDamageSources().freeze(), 2.0F);
+					}
+					world.spawnParticles(ParticleTypes.SNOWFLAKE, at.x, at.y + 1, at.z, 160, 4, 1.2, 4, 0.05);
+					world.playSound(null, boss.getBlockPos(), SoundEvents.ENTITY_PLAYER_HURT_FREEZE, SoundCategory.HOSTILE, 1.5F, 0.6F);
+				}
+				case ARROW_VOLLEY -> {
+					if (target == null) {
+						return;
+					}
+					Vec3d d = target.getEyePos().subtract(boss.getEyePos());
+					for (int i = -3; i <= 3; i++) {
+						ArrowEntity arrow = new ArrowEntity(world, boss, new ItemStack(Items.ARROW), null);
+						arrow.setPosition(boss.getX(), boss.getEyeY() - 0.1, boss.getZ());
+						double a = Math.toRadians(i * 7.0);
+						double vx = d.x * Math.cos(a) - d.z * Math.sin(a);
+						double vz = d.x * Math.sin(a) + d.z * Math.cos(a);
+						arrow.setVelocity(vx, d.y + Math.sqrt(vx * vx + vz * vz) * 0.12, vz, 1.7F, 2.0F);
+						arrow.pickupType = PersistentProjectileEntity.PickupPermission.DISALLOWED;
+						world.spawnEntity(arrow);
+					}
+					world.playSound(null, boss.getBlockPos(), SoundEvents.ENTITY_SKELETON_SHOOT, SoundCategory.HOSTILE, 1.5F, 0.7F);
+				}
+				case PULL -> {
+					if (target == null || target.squaredDistanceTo(boss) > 18 * 18) {
+						return;
+					}
+					Vec3d v = boss.getPos().subtract(target.getPos()).normalize().multiply(1.5);
+					target.setVelocity(v.x, 0.45, v.z);
+					target.velocityModified = true;
+					target.damage(boss.getDamageSources().mobAttack(boss), 3.0F);
+					world.spawnParticles(ParticleTypes.CRIT, target.getX(), target.getY() + 1, target.getZ(), 20, 0.3, 0.5, 0.3, 0.2);
+					world.playSound(null, target.getBlockPos(), SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.HOSTILE, 1.5F, 0.6F);
+				}
 				default -> {
 				}
 			}
@@ -265,6 +311,7 @@ public final class Bosses {
 			}
 			m.refreshPositionAndAngles(at.getX() + 0.5, at.getY(), at.getZ() + 0.5, world.random.nextFloat() * 360, 0);
 			m.initialize(world, world.getLocalDifficulty(at), SpawnReason.EVENT, null);
+			outfit.accept(m);
 			set(m, EntityAttributes.GENERIC_MAX_HEALTH, health);
 			set(m, EntityAttributes.GENERIC_ATTACK_DAMAGE, damage);
 			set(m, EntityAttributes.GENERIC_ARMOR, armor);
@@ -275,7 +322,6 @@ public final class Bosses {
 			set(m, EntityAttributes.GENERIC_FOLLOW_RANGE, 40);
 			set(m, EntityAttributes.GENERIC_STEP_HEIGHT, 1.5);
 			m.setHealth(m.getMaxHealth());
-			outfit.accept(m);
 			for (EquipmentSlot slot : EquipmentSlot.values()) {
 				m.setEquipmentDropChance(slot, 0.0F);
 			}
@@ -330,26 +376,47 @@ public final class Bosses {
 		};
 	}
 
-	private static final Map<String, Boss> BY_DUNGEON = Map.of(
-			"forgotten_mausoleum", new Boss(EntityType.WITHER_SKELETON, 220, 11, 10, 0.30, 1.45,
+	private static final Map<String, Boss> BY_DUNGEON = Map.ofEntries(
+			Map.entry("frozen_keep", new Boss(EntityType.STRAY, 220, 8, 8, 0.30, 1.5,
+					gear(Items.DIAMOND_HELMET, Items.CHAINMAIL_CHESTPLATE, null, null, Items.BOW, Enchantments.POWER, 3),
+					List.of(Power.FROST, Power.ARROW_VOLLEY, Power.SUMMON, Power.LEAP), EntityType.STRAY, 2)),
+			Map.entry("serpent_temple", new Boss(EntityType.WITCH, 190, 6, 6, 0.32, 1.4,
+					m -> {
+					},
+					List.of(Power.POISON_CLOUD, Power.CURSE, Power.BLINK, Power.SUMMON, Power.LEVITATE), EntityType.CAVE_SPIDER, 3)),
+			Map.entry("forgotten_prison", new Boss(EntityType.VINDICATOR, 260, 12, 10, 0.36, 1.6,
+					gear(Items.IRON_HELMET, Items.CHAINMAIL_CHESTPLATE, null, null, Items.IRON_AXE, Enchantments.SHARPNESS, 3),
+					List.of(Power.PULL, Power.SHOCKWAVE, Power.LEAP, Power.SUMMON), EntityType.PILLAGER, 2)),
+			Map.entry("forgotten_sewers", new Boss(EntityType.SLIME, 240, 8, 4, 0.35, 1.0,
+					m -> {
+						if (m instanceof SlimeEntity slime) {
+							slime.setSize(6, true);
+						}
+					},
+					List.of(Power.POISON_CLOUD, Power.LEAP, Power.SUMMON, Power.SHOCKWAVE), EntityType.SLIME, 3)),
+			Map.entry("soul_shrine", new Boss(EntityType.BLAZE, 200, 8, 6, 0.30, 1.6,
+					m -> {
+					},
+					List.of(Power.FIRE_RING, Power.FIREBALL, Power.LEVITATE, Power.WITHER_AURA, Power.SUMMON), EntityType.SKELETON, 3)),
+			Map.entry("forgotten_mausoleum", new Boss(EntityType.WITHER_SKELETON, 220, 11, 10, 0.30, 1.45,
 					gear(Items.GOLDEN_HELMET, Items.CHAINMAIL_CHESTPLATE, null, null, Items.NETHERITE_SWORD, Enchantments.SHARPNESS, 2),
-					List.of(Power.SUMMON, Power.WITHER_AURA, Power.LEAP, Power.SHOCKWAVE), EntityType.SKELETON, 3),
-			"mad_mage_spire", new Boss(EntityType.EVOKER, 170, 7, 6, 0.42, 1.3,
+					List.of(Power.SUMMON, Power.WITHER_AURA, Power.LEAP, Power.SHOCKWAVE), EntityType.SKELETON, 3)),
+			Map.entry("mad_mage_spire", new Boss(EntityType.EVOKER, 170, 7, 6, 0.42, 1.3,
 					gear(null, null, null, null, null, null, 0),
-					List.of(Power.BLINK, Power.LIGHTNING, Power.LEVITATE, Power.SUMMON, Power.FIREBALL), EntityType.VEX, 2),
-			"pharaoh_tomb", new Boss(EntityType.HUSK, 240, 10, 8, 0.28, 1.6,
+					List.of(Power.BLINK, Power.LIGHTNING, Power.LEVITATE, Power.SUMMON, Power.FIREBALL), EntityType.VEX, 2)),
+			Map.entry("pharaoh_tomb", new Boss(EntityType.HUSK, 240, 10, 8, 0.28, 1.6,
 					gear(Items.GOLDEN_HELMET, Items.GOLDEN_CHESTPLATE, null, null, Items.GOLDEN_SWORD, Enchantments.SHARPNESS, 3),
-					List.of(Power.SANDSTORM, Power.SUMMON, Power.CURSE, Power.LEAP), EntityType.HUSK, 3),
-			"dwarven_forge", new Boss(EntityType.PIGLIN_BRUTE, 260, 13, 12, 0.36, 1.5,
+					List.of(Power.SANDSTORM, Power.SUMMON, Power.CURSE, Power.LEAP), EntityType.HUSK, 3)),
+			Map.entry("dwarven_forge", new Boss(EntityType.PIGLIN_BRUTE, 260, 13, 12, 0.36, 1.5,
 					m -> {
 						gear(Items.NETHERITE_HELMET, Items.IRON_CHESTPLATE, null, null, Items.GOLDEN_AXE, Enchantments.SHARPNESS, 3).accept(m);
 						m.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, -1, 0));
 					},
-					List.of(Power.FIRE_RING, Power.SHOCKWAVE, Power.LEAP, Power.FIREBALL, Power.SUMMON), EntityType.MAGMA_CUBE, 2),
-			"spider_nest", new Boss(EntityType.SPIDER, 200, 9, 6, 0.34, 3.0,
+					List.of(Power.FIRE_RING, Power.SHOCKWAVE, Power.LEAP, Power.FIREBALL, Power.SUMMON), EntityType.MAGMA_CUBE, 2)),
+			Map.entry("spider_nest", new Boss(EntityType.SPIDER, 200, 9, 6, 0.34, 3.0,
 					m -> {
 					},
-					List.of(Power.WEB, Power.POISON_CLOUD, Power.SUMMON, Power.LEAP), EntityType.CAVE_SPIDER, 4));
+					List.of(Power.WEB, Power.POISON_CLOUD, Power.SUMMON, Power.LEAP), EntityType.CAVE_SPIDER, 4)));
 
 	@Nullable
 	public static Boss of(String dungeon) {

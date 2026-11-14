@@ -17,6 +17,18 @@
     {
       "structure": "evolvedwarfare:dungeon_spider_nest",
       "weight": 1
+    },
+    {
+      "structure": "evolvedwarfare:dungeon_forgotten_prison",
+      "weight": 1
+    },
+    {
+      "structure": "evolvedwarfare:dungeon_forgotten_sewers",
+      "weight": 1
+    },
+    {
+      "structure": "evolvedwarfare:dungeon_soul_shrine",
+      "weight": 1
     }
   ]
 }

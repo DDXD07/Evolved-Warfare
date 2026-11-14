@@ -1,0 +1,29 @@
+{
+  "type": "evolvedwarfare:dungeon",
+  "biomes": "#evolvedwarfare:has_structure/dungeon/soul_shrine",
+  "step": "underground_structures",
+  "terrain_adaptation": "none",
+  "spawn_overrides": {},
+  "templates": [
+    {
+      "id": "evolvedwarfare:dungeon/soul_shrine_0",
+      "x": 12,
+      "y": 39,
+      "z": 8
+    },
+    {
+      "id": "evolvedwarfare:dungeon/soul_shrine_1",
+      "x": 17,
+      "y": 39,
+      "z": 8
+    },
+    {
+      "id": "evolvedwarfare:dungeon/soul_shrine_2",
+      "x": 16,
+      "y": 39,
+      "z": 8
+    }
+  ],
+  "underground": true,
+  "max_slope": 6
+}

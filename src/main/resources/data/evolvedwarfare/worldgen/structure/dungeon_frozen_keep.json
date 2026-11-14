@@ -1,0 +1,29 @@
+{
+  "type": "evolvedwarfare:dungeon",
+  "biomes": "#evolvedwarfare:has_structure/dungeon/frozen_keep",
+  "step": "surface_structures",
+  "terrain_adaptation": "none",
+  "spawn_overrides": {},
+  "templates": [
+    {
+      "id": "evolvedwarfare:dungeon/frozen_keep_0",
+      "x": 21,
+      "y": 8,
+      "z": 7
+    },
+    {
+      "id": "evolvedwarfare:dungeon/frozen_keep_1",
+      "x": 21,
+      "y": 8,
+      "z": 7
+    },
+    {
+      "id": "evolvedwarfare:dungeon/frozen_keep_2",
+      "x": 21,
+      "y": 8,
+      "z": 7
+    }
+  ],
+  "underground": false,
+  "max_slope": 6
+}

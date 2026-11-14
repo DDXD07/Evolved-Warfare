@@ -2191,6 +2191,15 @@ Los NPCs del pueblo (los vecinos, los guardias del cuartel y los vigías de las 
   - **Nido de la Reina Araña** (bajo tierra): una dolina baja por un túnel a una red de **cuevas** con telarañas, huevos, liquen y restos de aventureros. Jefe: **la Reina Madre** (araña gigante: telarañas, nubes de veneno, arañas de cueva y salto). Reliquia: el Colmillo de la Reina.
 - El Corazón y las rejas no se pueden romper. Las rejas abiertas son invisibles y no estorban.
 
+## Fase 67 — Mazmorras (2.ª tanda: 10 de 20)
+
+- Cinco mazmorras más (3 variantes cada una, como las primeras), con tres poderes nuevos para los jefes: **escarcha** (congela, ralentiza y cansa), **lluvia de flechas** (siete en abanico) y **cadenas** (arrastra al jugador hasta el jefe).
+  - **Fortaleza Helada** (superficie, nieve): muralla de hielo almenada con cuatro torres (generadores o cofres), un patio con una fuente congelada y el torreón: gran salón abajo, **bodega** con celdas, almacén y cripta helada (trampas y sala secreta) y, arriba, el **salón del trono**. Jefe: **el Señor del Invierno** (stray: escarcha, lluvia de flechas, strays y salto). Reliquia: el Arco del Invierno.
+  - **Templo de la Serpiente** (selva): pirámide de piedra musgosa con una **escalinata** hasta un santuario arriba, un salón de columnas con lianas y ofrendas, una escalera de caracol a unos pasillos con **canales de agua** y salas de enterramiento, y el **cenote**: un anillo de agua con cuatro puentes y la isla del Corazón. Jefa: **la Sacerdotisa Serpiente** (bruja: veneno, maldición, teletransporte, levitación y arañas de cueva). Reliquia: el Colmillo de la Serpiente (tridente).
+  - **Prisión Olvidada** (bajo tierra): una caseta de guardia sobre un pozo de 22 bloques; abajo, una galería de **celdas** (algunas abiertas, con presos que vuelven a la vida), sala de guardia, armería, sala de tortura y despacho del alcaide, y al fondo el **patio de ejecuciones** con horcas. Jefe: **el Carcelero** (vindicador: cadenas, onda de choque, salto y saqueadores). Reliquia: el Hacha del Carcelero.
+  - **Cloacas Olvidadas** (bajo tierra): un desagüe en la superficie baja a un **laberinto de túneles de ladrillo con canales de agua** (distinto en cada una), con fosos de limos, nidos de lepismas, almacenes y rejillas; al fondo, la **Gran Cisterna**. Jefe: **el Rey Baboso** (un limo enorme que se parte al morir: veneno, salto, limos y onda de choque). Reliquia: las Botas del Rey Baboso.
+  - **Santuario de las Almas** (bajo tierra): un anillo de obeliscos con farolillos de almas guarda un pozo de 24 bloques; abajo, una **nave de columnas** con hogueras de almas y diez capillas, un **puente sobre una sima de fuego de almas** y la **cúpula del altar**. Jefe: **el Heraldo de las Almas** (blaze: anillo de fuego, bolas de fuego, levitación, marchitamiento y esqueletos). Reliquia: la Coraza del Heraldo.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

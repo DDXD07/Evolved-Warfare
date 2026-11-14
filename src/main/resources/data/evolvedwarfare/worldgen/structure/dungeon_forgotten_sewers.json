@@ -1,0 +1,29 @@
+{
+  "type": "evolvedwarfare:dungeon",
+  "biomes": "#evolvedwarfare:has_structure/dungeon/forgotten_sewers",
+  "step": "underground_structures",
+  "terrain_adaptation": "none",
+  "spawn_overrides": {},
+  "templates": [
+    {
+      "id": "evolvedwarfare:dungeon/forgotten_sewers_0",
+      "x": 19,
+      "y": 20,
+      "z": 4
+    },
+    {
+      "id": "evolvedwarfare:dungeon/forgotten_sewers_1",
+      "x": 28,
+      "y": 20,
+      "z": 4
+    },
+    {
+      "id": "evolvedwarfare:dungeon/forgotten_sewers_2",
+      "x": 19,
+      "y": 20,
+      "z": 4
+    }
+  ],
+  "underground": true,
+  "max_slope": 6
+}
