@@ -405,6 +405,8 @@ def place_traps(b, n, y, avoid=()):
             # el muro al lado, roca detrás, y el pasillo sigue a lo largo (no es una esquina)
             px, pz = -dz, dx
             behind = b.get(x + 2 * dx, y, z + 2 * dz)
+            if b.blocks.get((x + dx, y, z + dz), (None, None))[1] is not None:
+                continue
             if (is_full(b.get(x + dx, y, z + dz)) and (behind is None or is_full(behind)) and b.is_air(x - dx, y, z - dz)
                     and b.is_air(x + px, y, z + pz) and b.is_air(x - px, y, z - pz)):
                 cands.append((x, z, OPP[d]))
@@ -2360,6 +2362,8 @@ def block_assets():
 
 
 def good(b):
+    for k, kinds in (("spawner", ("spawner",)), ("chest", ("chest", "barrel")), ("heart", ("dungeon_heart",))):
+        b.marks[k] = [p for p in b.marks[k] if b.get(*p) is not None and short(b.get(*p)) in kinds]
     return (walk(b, b.start, b.marks["heart"], ground=0) and not walk(b, b.start, b.marks["heart"], ground=0, sealed=True)
             and len(b.marks["heart"]) == 1 and len(b.marks["spawner"]) >= 4 and len(b.marks["chest"]) >= 2 and 0 < len(b.marks["gate"]) <= 60)
 
