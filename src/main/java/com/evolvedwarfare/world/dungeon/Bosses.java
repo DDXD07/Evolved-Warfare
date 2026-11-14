@@ -303,7 +303,8 @@ public final class Bosses {
 		for (int i = 0; i + 1 < pairs.length; i += 2) {
 			@SuppressWarnings("unchecked")
 			RegistryKey<Enchantment> key = (RegistryKey<Enchantment>) pairs[i];
-			reg.getEntry(key).ifPresent(e -> s.addEnchantment(e, (Integer) pairs[i + 1]));
+			int level = (Integer) pairs[i + 1];
+			reg.getEntry(key).ifPresent(e -> s.addEnchantment(e, level));
 		}
 		return s;
 	}
