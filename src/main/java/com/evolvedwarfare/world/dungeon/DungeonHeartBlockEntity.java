@@ -88,7 +88,7 @@ public class DungeonHeartBlockEntity extends BlockEntity {
 			return;
 		}
 		if (heart.stage == 0) {
-			if ((world.getTime() + pos.asLong()) % 10 == 0 && !heart.near(sw, WAKE_RANGE, 6).isEmpty()) {
+			if ((world.getTime() + pos.asLong()) % 10 == 0 && !heart.near(sw, WAKE_RANGE, 4).isEmpty()) {
 				heart.start(sw);
 			}
 		} else if (heart.stage == 1) {

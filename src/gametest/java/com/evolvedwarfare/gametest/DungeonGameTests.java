@@ -202,7 +202,7 @@ public class DungeonGameTests implements FabricGameTest {
 				world.setChunkForced(c.x, c.z, true);
 			}
 		}
-		BlockPos at = o.add(0, -t.getSize().getY() + 10, 0);
+		BlockPos at = o.add(0, 30, 0);
 		var data = DungeonPiece.placement(BlockRotation.CLOCKWISE_90, new BlockPos(t.getSize().getX() / 2, 0, t.getSize().getZ() / 2));
 		t.place(world, at, at, data, Random.create(3), 2);
 		var hearts = t.getInfosForBlock(at, data, Dungeons.HEART);

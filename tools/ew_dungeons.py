@@ -845,9 +845,11 @@ def spire(seed):
                 for yy in range(k * H, y):
                     b.put(x, yy, z, W)
                 for yy in range(y + 1, y + 4):
-                    b.put(x, yy, z, AIR if yy != (k + 1) * H - 1 or k + 1 < F else GATE)
-                    if yy == (k + 1) * H - 1 and k + 1 == F:
-                        b.marks["gate"].append((x, yy, z))
+                    # la reja: encima del primer peldaño del último tramo (al despertar al Archimago ya se ha pasado)
+                    if k == F - 1 and i == 0:
+                        b.gate(x, yy, z)
+                    else:
+                        b.put(x, yy, z, AIR)
     # --- las plantas
     themes = ["library", "lab", "cells", "summoning", "study", "storage"]
     r.shuffle(themes)
@@ -1183,25 +1185,30 @@ def forge(seed):
     # --- el gran salón
     z0, z1 = 6, 32
     b.room(-16, Y, z0, 16, Y + 10, z1, W, floor=Pal(("polished_deepslate", 3), ("deepslate_tiles", 2), ("cracked_deepslate_tiles", 1)))
-    for px in (-11, -5, 4, 10):
-        for pz in (11, 19, 27):
+    LZ = r.choice([16, 17, 22, 23])
+    pxs = r.choice([(-11, -5, 4, 10), (-12, -7, 6, 11), (-10, -3, 2, 9)])
+    pzs = r.choice([(11, 19, 27), (10, 18, 26), (12, 26)])
+    for px in pxs:
+        for pz in pzs:
+            if pz <= LZ <= pz + 1:
+                continue
             b.fill(px, Y, pz, px + 1, Y + 10, pz + 1, S("deepslate_tiles"))
             b.fill(px, Y + 8, pz, px + 1, Y + 8, pz + 1, S("chiseled_deepslate"))
             b.lantern(px - 1, Y + 7, pz, hanging=False) if r.random() < 0.4 else None
     # el río de lava (de lado a lado) con tres puentes
     for x in range(-16, 17):
         if x in (-8, -7, 0, 1, 7, 8):
-            b.put(x, Y - 1, 21, S("smooth_basalt"))
+            b.put(x, Y - 1, LZ, S("smooth_basalt"))
             continue
-        b.put(x, Y - 1, 21, S("lava", level=0))
-        b.put(x, Y - 2, 21, S("magma_block"))
-        b.soft(x, Y - 2, 20, W)
-        b.soft(x, Y - 2, 22, W)
+        b.put(x, Y - 1, LZ, S("lava", level=0))
+        b.put(x, Y - 2, LZ, S("magma_block"))
+        b.soft(x, Y - 2, LZ - 1, W)
+        b.soft(x, Y - 2, LZ + 1, W)
     # fraguas en las paredes
     for side in (-1, 1):
         x = side * 15
         for z in range(8, 31, 4):
-            if z in (20, 21, 22):
+            if abs(z - LZ) <= 1:
                 continue
             kind = r.choice(["anvil", "blast", "smith", "cauldron", "grind", "campfire"])
             if kind == "anvil":
@@ -1220,12 +1227,17 @@ def forge(seed):
         for z in range(9, 31, 6):
             b.put(x + side, Y + 6, z, S("chain", axis="y"))
     b.chest(-14, Y, 30, "east", "chest")
-    b.spawner(-6, Y, 15, "minecraft:zombie")
-    b.spawner(7, Y, 25, "minecraft:skeleton")
+    for mob in ("minecraft:zombie", "minecraft:skeleton"):
+        while True:
+            x, z = r.randint(-13, 13), r.randint(8, 30)
+            if b.is_air(x, Y, z) and abs(z - LZ) > 2 and abs(x) > 2:
+                b.spawner(x, Y, z, mob)
+                break
     # --- las cámaras de los lados
     kinds = ["vault", "mine", "barracks", "smeltery", "storage"]
     r.shuffle(kinds)
-    spots = [(-1, 12), (1, 12), (-1, 26), (1, 26)]
+    rows = r.choice([(10, 24), (12, 26), (14, 28), (9, 27)])
+    spots = [(-1, rows[0]), (1, rows[0]), (-1, rows[1]), (1, rows[1])]
     for (side, cz), kind in zip(spots, kinds):
         cx = side * 27
         b.corridor((side * 15, cz), (side * 21, cz), Y, W)
@@ -1272,7 +1284,9 @@ def forge(seed):
         else:
             for x in range(cx - 4, cx + 5):
                 for z in (cz - 4, cz + 4):
-                    if r.random() < 0.6:
+                    if r.random() < 0.15:
+                        b.chest(x, Y, z, "north", "chest", "barrel")
+                    elif r.random() < 0.6:
                         b.put(x, Y, z, S("barrel", facing="up", open="false"), {"id": "minecraft:barrel"})
                         if r.random() < 0.4:
                             b.put(x, Y + 1, z, S("barrel", facing="up", open="false"), {"id": "minecraft:barrel"})
