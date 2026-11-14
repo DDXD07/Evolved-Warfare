@@ -29,7 +29,8 @@ public final class Dungeons {
 	public static final String MINION_TAG = "ew_dungeon_minion";
 	public static final String HEART_TAG = "ew_heart:";
 	public static final List<String> IDS = List.of("forgotten_mausoleum", "mad_mage_spire", "pharaoh_tomb", "dwarven_forge", "spider_nest",
-			"frozen_keep", "serpent_temple", "forgotten_prison", "forgotten_sewers", "soul_shrine");
+			"frozen_keep", "serpent_temple", "forgotten_prison", "forgotten_sewers", "soul_shrine",
+			"haunted_manor", "raider_fort", "monastery", "mushroom_grotto", "ancient_vault");
 	public static final List<Item> CREATIVE = new ArrayList<>();
 
 	private static AbstractBlock.Settings sealed() {

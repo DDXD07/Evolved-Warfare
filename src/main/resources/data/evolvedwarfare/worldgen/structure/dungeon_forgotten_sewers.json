@@ -7,19 +7,19 @@
   "templates": [
     {
       "id": "evolvedwarfare:dungeon/forgotten_sewers_0",
-      "x": 19,
-      "y": 20,
-      "z": 4
-    },
-    {
-      "id": "evolvedwarfare:dungeon/forgotten_sewers_1",
       "x": 28,
       "y": 20,
       "z": 4
     },
     {
-      "id": "evolvedwarfare:dungeon/forgotten_sewers_2",
+      "id": "evolvedwarfare:dungeon/forgotten_sewers_1",
       "x": 19,
+      "y": 20,
+      "z": 4
+    },
+    {
+      "id": "evolvedwarfare:dungeon/forgotten_sewers_2",
+      "x": 20,
       "y": 20,
       "z": 4
     }

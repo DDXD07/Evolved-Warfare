@@ -29,6 +29,14 @@
     {
       "structure": "evolvedwarfare:dungeon_soul_shrine",
       "weight": 1
+    },
+    {
+      "structure": "evolvedwarfare:dungeon_mushroom_grotto",
+      "weight": 1
+    },
+    {
+      "structure": "evolvedwarfare:dungeon_ancient_vault",
+      "weight": 1
     }
   ]
 }

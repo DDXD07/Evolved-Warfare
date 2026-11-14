@@ -83,7 +83,9 @@ public final class Bosses {
 		/** Lluvia de flechas en abanico. */
 		ARROW_VOLLEY,
 		/** Cadenas: arrastra al objetivo hacia el jefe. */
-		PULL;
+		PULL,
+		/** Esporas: mareo, ceguera breve y veneno alrededor. */
+		SPORES;
 
 		public void use(ServerWorld world, MobEntity boss, @Nullable LivingEntity target, Boss spec, @Nullable DungeonHeartBlockEntity heart) {
 			Vec3d at = boss.getPos();
@@ -288,6 +290,16 @@ public final class Bosses {
 					world.spawnParticles(ParticleTypes.CRIT, target.getX(), target.getY() + 1, target.getZ(), 20, 0.3, 0.5, 0.3, 0.2);
 					world.playSound(null, target.getBlockPos(), SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.HOSTILE, 1.5F, 0.6F);
 				}
+				case SPORES -> {
+					for (PlayerEntity p : players(world, at, 9.0)) {
+						p.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 140, 0), boss);
+						p.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 30, 0), boss);
+						p.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 60, 0), boss);
+					}
+					world.spawnParticles(ParticleTypes.SPORE_BLOSSOM_AIR, at.x, at.y + 1.5, at.z, 200, 5, 1.5, 5, 0.02);
+					world.spawnParticles(ParticleTypes.MYCELIUM, at.x, at.y + 1, at.z, 120, 5, 1, 5, 0.02);
+					world.playSound(null, boss.getBlockPos(), SoundEvents.BLOCK_FUNGUS_BREAK, SoundCategory.HOSTILE, 1.5F, 0.5F);
+				}
 				default -> {
 				}
 			}
@@ -377,6 +389,24 @@ public final class Bosses {
 	}
 
 	private static final Map<String, Boss> BY_DUNGEON = Map.ofEntries(
+			Map.entry("haunted_manor", new Boss(EntityType.ENDERMAN, 200, 10, 6, 0.33, 1.25,
+					m -> {
+					},
+					List.of(Power.BLINK, Power.LEVITATE, Power.CURSE, Power.SUMMON, Power.SHOCKWAVE), EntityType.VEX, 3)),
+			Map.entry("raider_fort", new Boss(EntityType.RAVAGER, 320, 14, 10, 0.32, 1.25,
+					m -> {
+					},
+					List.of(Power.SHOCKWAVE, Power.LEAP, Power.SUMMON, Power.PULL), EntityType.VINDICATOR, 2)),
+			Map.entry("monastery", new Boss(EntityType.ILLUSIONER, 190, 6, 6, 0.40, 1.3,
+					gear(null, null, null, null, Items.BOW, Enchantments.POWER, 2),
+					List.of(Power.BLINK, Power.ARROW_VOLLEY, Power.LEVITATE, Power.SUMMON, Power.CURSE), EntityType.VEX, 2)),
+			Map.entry("mushroom_grotto", new Boss(EntityType.BOGGED, 210, 7, 8, 0.30, 1.7,
+					gear(Items.IRON_HELMET, null, null, null, Items.BOW, Enchantments.POWER, 2),
+					List.of(Power.SPORES, Power.POISON_CLOUD, Power.ARROW_VOLLEY, Power.SUMMON), EntityType.BOGGED, 2)),
+			Map.entry("ancient_vault", new Boss(EntityType.IRON_GOLEM, 340, 14, 12, 0.30, 1.3,
+					m -> {
+					},
+					List.of(Power.SHOCKWAVE, Power.LEAP, Power.PULL, Power.SUMMON), EntityType.SILVERFISH, 4)),
 			Map.entry("frozen_keep", new Boss(EntityType.STRAY, 220, 8, 8, 0.30, 1.5,
 					gear(Items.DIAMOND_HELMET, Items.CHAINMAIL_CHESTPLATE, null, null, Items.BOW, Enchantments.POWER, 3),
 					List.of(Power.FROST, Power.ARROW_VOLLEY, Power.SUMMON, Power.LEAP), EntityType.STRAY, 2)),

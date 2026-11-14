@@ -1,0 +1,29 @@
+{
+  "type": "evolvedwarfare:dungeon",
+  "biomes": "#evolvedwarfare:has_structure/dungeon/haunted_manor",
+  "step": "surface_structures",
+  "terrain_adaptation": "none",
+  "spawn_overrides": {},
+  "templates": [
+    {
+      "id": "evolvedwarfare:dungeon/haunted_manor_0",
+      "x": 16,
+      "y": 8,
+      "z": 10
+    },
+    {
+      "id": "evolvedwarfare:dungeon/haunted_manor_1",
+      "x": 16,
+      "y": 8,
+      "z": 10
+    },
+    {
+      "id": "evolvedwarfare:dungeon/haunted_manor_2",
+      "x": 16,
+      "y": 8,
+      "z": 10
+    }
+  ],
+  "underground": false,
+  "max_slope": 6
+}

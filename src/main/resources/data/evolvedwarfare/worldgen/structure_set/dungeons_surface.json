@@ -29,6 +29,18 @@
     {
       "structure": "evolvedwarfare:dungeon_serpent_temple",
       "weight": 1
+    },
+    {
+      "structure": "evolvedwarfare:dungeon_haunted_manor",
+      "weight": 1
+    },
+    {
+      "structure": "evolvedwarfare:dungeon_raider_fort",
+      "weight": 1
+    },
+    {
+      "structure": "evolvedwarfare:dungeon_monastery",
+      "weight": 1
     }
   ]
 }

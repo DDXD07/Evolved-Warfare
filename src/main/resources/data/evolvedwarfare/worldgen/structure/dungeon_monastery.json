@@ -1,0 +1,29 @@
+{
+  "type": "evolvedwarfare:dungeon",
+  "biomes": "#evolvedwarfare:has_structure/dungeon/monastery",
+  "step": "surface_structures",
+  "terrain_adaptation": "none",
+  "spawn_overrides": {},
+  "templates": [
+    {
+      "id": "evolvedwarfare:dungeon/monastery_0",
+      "x": 17,
+      "y": 9,
+      "z": 5
+    },
+    {
+      "id": "evolvedwarfare:dungeon/monastery_1",
+      "x": 17,
+      "y": 9,
+      "z": 5
+    },
+    {
+      "id": "evolvedwarfare:dungeon/monastery_2",
+      "x": 17,
+      "y": 9,
+      "z": 5
+    }
+  ],
+  "underground": false,
+  "max_slope": 6
+}

@@ -1,0 +1,29 @@
+{
+  "type": "evolvedwarfare:dungeon",
+  "biomes": "#evolvedwarfare:has_structure/dungeon/ancient_vault",
+  "step": "underground_structures",
+  "terrain_adaptation": "none",
+  "spawn_overrides": {},
+  "templates": [
+    {
+      "id": "evolvedwarfare:dungeon/ancient_vault_0",
+      "x": 28,
+      "y": 32,
+      "z": 6
+    },
+    {
+      "id": "evolvedwarfare:dungeon/ancient_vault_1",
+      "x": 28,
+      "y": 32,
+      "z": 6
+    },
+    {
+      "id": "evolvedwarfare:dungeon/ancient_vault_2",
+      "x": 28,
+      "y": 32,
+      "z": 6
+    }
+  ],
+  "underground": true,
+  "max_slope": 6
+}

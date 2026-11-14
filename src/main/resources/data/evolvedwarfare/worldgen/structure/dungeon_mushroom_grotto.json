@@ -1,0 +1,29 @@
+{
+  "type": "evolvedwarfare:dungeon",
+  "biomes": "#evolvedwarfare:has_structure/dungeon/mushroom_grotto",
+  "step": "underground_structures",
+  "terrain_adaptation": "none",
+  "spawn_overrides": {},
+  "templates": [
+    {
+      "id": "evolvedwarfare:dungeon/mushroom_grotto_0",
+      "x": 26,
+      "y": 23,
+      "z": 5
+    },
+    {
+      "id": "evolvedwarfare:dungeon/mushroom_grotto_1",
+      "x": 27,
+      "y": 23,
+      "z": 5
+    },
+    {
+      "id": "evolvedwarfare:dungeon/mushroom_grotto_2",
+      "x": 25,
+      "y": 23,
+      "z": 5
+    }
+  ],
+  "underground": true,
+  "max_slope": 6
+}

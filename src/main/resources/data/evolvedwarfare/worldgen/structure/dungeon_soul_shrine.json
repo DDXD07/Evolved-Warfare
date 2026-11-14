@@ -7,13 +7,13 @@
   "templates": [
     {
       "id": "evolvedwarfare:dungeon/soul_shrine_0",
-      "x": 12,
+      "x": 16,
       "y": 39,
       "z": 8
     },
     {
       "id": "evolvedwarfare:dungeon/soul_shrine_1",
-      "x": 17,
+      "x": 12,
       "y": 39,
       "z": 8
     },
