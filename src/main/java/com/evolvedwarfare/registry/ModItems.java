@@ -95,8 +95,8 @@ public final class ModItems {
 	public static final Item BALLISTA_BOLT = register("ballista_bolt", new Item(new Item.Settings()));
 	public static final Item FIRE_POT = register("fire_pot", new Item(new Item.Settings().maxCount(16)));
 
-	/** Armas medievales (fase 8): cada tipo en hierro, diamante y netherita. */
-	public static final String[] WEAPON_MATERIALS = {"iron", "diamond", "netherite"};
+	/** Armas medievales (fase 8): cada tipo en hierro, diamante y netherita; y en acero (fase 80, solo forjadas). */
+	public static final String[] WEAPON_MATERIALS = {"iron", "diamond", "netherite", "steel"};
 	public static final Map<WeaponType, List<Item>> WEAPONS = new EnumMap<>(WeaponType.class);
 
 	static {
@@ -106,6 +106,7 @@ public final class ModItems {
 				ToolMaterial tool = switch (material) {
 					case "diamond" -> ToolMaterials.DIAMOND;
 					case "netherite" -> ToolMaterials.NETHERITE;
+					case "steel" -> com.evolvedwarfare.engineering.SteelTier.INSTANCE;
 					default -> ToolMaterials.IRON;
 				};
 				Item.Settings settings = new Item.Settings();

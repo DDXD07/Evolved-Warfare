@@ -2332,7 +2332,7 @@ Las máquinas gastan la fuerza de la red **por cada rpm** (más deprisa = trabaj
 - **Placas de metal**: tira lingotes de **hierro, cobre, oro o acero** al **yunque** que golpea el **martinete**: cada **4 golpes** uno se aplana en una **placa** (salta al lado). Son el material de las armaduras de placas, los escudos reforzados y las máquinas de hierro y acero (siguientes fases).
 - **Anillas de hierro**: una placa de hierro en la mesa da **2 anillas**. Con ellas, por fin, **la cota de malla se fabrica**: con la forma de casco, peto, grebas o botas de siempre.
 - **Acero**: funde hierro en el **crisol** al fuego hasta que esté **todo fundido**, pon un **fuelle** en marcha **soplando al crisol o a su fuego**, y echa **carbón o carbón vegetal** (clic derecho): **un carbón por lingote** y el hierro se hace **acero**. Sin fuelle no prende.
-  - Con el acero fundido se **vierte en los moldes** como el hierro y salen **piezas de acero** (azuladas), que se afilan en el yunque (o con el martinete) y se montan igual: dan **las herramientas y armas de hierro hechas de acero** — **«Espada de acero», «Alabarda de acero»**... — con **+50 % de durabilidad, +1 de daño y +10 % al picar** (además de la calidad de la forja).
+  - Con el acero fundido se **vierte en los moldes** como el hierro y salen **piezas de acero** (azuladas), que se afilan en el yunque (o con el martinete) y se montan igual: dan **herramientas y armas de acero** (ver fase 80).
   - **Lingotes de acero**: deja enfriar el acero en el crisol y, **agachado y con la mano vacía, clic derecho** al crisol: salen los lingotes (sirve con cualquier metal frío). Un lingote de acero al **alto horno** sale **al rojo**, para volver a fundirlo.
 - El martinete sigue afilando las piezas en bruto (las de acero también).
 
@@ -2356,6 +2356,12 @@ Las máquinas gastan la fuerza de la red **por cada rpm** (más deprisa = trabaj
 - **Límite de velocidad**: la **madera ya no aguanta cualquier cosa**: si algo de madera de la red (ejes, engranajes, cajas de engranajes, embragues, inversores) pasaría de **64 rpm**, la red **se para** («¡Demasiado rápido!»). Las máquinas aguantan 256.
 - **Ejes y engranajes de hierro** (hasta **256 rpm**) y **de acero** (hasta **1024 rpm**): engranan igual que los de madera (y entre sí), con su color. Recetas: eje = 2 placas en columna (4 ejes); engranaje pequeño = eje rodeado de 4 placas; grande = engranaje pequeño con placas en las esquinas y pepitas (o placas de acero) en los lados.
 - **Afiladora** (gasta 2 por rpm; el eje por los lados): una **muela de piedra** que gira en vertical. Clic derecho con un **arma o herramienta gastada**: la **repara hasta el 80 %** (una muela no hace milagros) y la deja **afilada: +1,5 de daño durante 40 golpes** (sale en la descripción). Con la mano vacía la recoges. Receta: muela de afilar de vanilla arriba, palo, eje, palo, y 3 tablones.
+
+## Fase 80 — El acero, con su aspecto; ballestas mecánicas animadas
+
+- **Herramientas y armas de acero propias**: espada, pico, hacha, pala y azada **de acero**, y las siete armas medievales de acero (daga, lanza, espada larga, alabarda, martillo de guerra, mangual y hacha de batalla). Tienen **su propio dibujo**, de un **acero azulado** con mango de madera oscura (y el modelo 3D de las armas medievales, en acero), así que ya no se confunden con las de hierro. Salen de forjar piezas de acero (como antes) y valen: **375 de durabilidad** (hierro 250), **+1 de daño** y **un 10 % más rápidas al picar** que las de hierro; se reparan con lingotes de acero.
+- **El acero no se mejora a netherita**: en la mesa de herrería solo se mejoran las de diamante, como siempre.
+- **Ballestas mecánicas animadas**: la ballesta pesada y la de repetición ahora se **cogen, se tensan y se apuntan como la ballesta del juego**, en primera persona (la mano tira de la cuerda poco a poco, al ritmo de su carga, que es más lenta) y en tercera persona (cargadas, se apuntan con las dos manos).
 
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):

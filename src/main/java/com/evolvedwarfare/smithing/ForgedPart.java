@@ -53,8 +53,8 @@ public enum ForgedPart {
 	@Nullable
 	public Item result(ForgeMaterial material) {
 		if (material == ForgeMaterial.STEEL) {
-			// el acero da la herramienta o el arma de hierro, mejorada (ver Metalwork.steel)
-			material = ForgeMaterial.IRON;
+			// el acero tiene sus propias herramientas y armas (fase 80)
+			return vanillaTool != null ? com.evolvedwarfare.engineering.Metalwork.steelTool(vanillaTool) : ModItems.weapon(weapon, "steel");
 		}
 		if (vanillaTool != null) {
 			String prefix = material == ForgeMaterial.GOLD ? "golden" : material.id;

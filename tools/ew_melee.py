@@ -26,7 +26,7 @@ PREVIEW = sys.argv[2] if len(sys.argv) > 2 else None
 NS = "evolvedwarfare"
 
 WEAPONS = ("dagger", "spear", "longsword", "halberd", "warhammer", "flail", "battle_axe")
-MATERIALS = ("iron", "diamond", "netherite")
+MATERIALS = ("iron", "diamond", "netherite", "steel")
 # donde la mano de vanilla agarra un objeto "handheld" (píxeles del objeto) y el giro de la diagonal
 GRIP = (3.0, 3.0, 8.0)
 DIAGONAL = -45.0
@@ -56,6 +56,8 @@ PALETTES = {
              "grip": hexc("#6E4A2A"), "wood": hexc("#7A5530"), "chain": hexc("#5C5E64")},
     "diamond": {"metal": hexc("#5FE6D6"), "edge": hexc("#D6FFF8"), "fit": hexc("#26A89A"), "dark": hexc("#2FB8A8"),
                 "grip": hexc("#6E4A2A"), "wood": hexc("#7A5530"), "chain": hexc("#5C5E64")},
+    "steel": {"metal": hexc("#8EA2BC"), "edge": hexc("#D2DEEE"), "fit": hexc("#3E4A5E"), "dark": hexc("#5E6E88"),
+              "grip": hexc("#2E2A2C"), "wood": hexc("#5A4030"), "chain": hexc("#4A5466")},
     "netherite": {"metal": hexc("#4D4249"), "edge": hexc("#8A7E88"), "fit": hexc("#E8B830"), "dark": hexc("#332B31"),
                   "grip": hexc("#3A2E3A"), "wood": hexc("#4A3A40"), "chain": hexc("#3A3438")},
 }

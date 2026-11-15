@@ -65,6 +65,31 @@ public final class Metalwork {
 	public static final Item REINFORCED_SHIELD = item("reinforced_shield", new MetalShieldItem(false));
 	public static final Item PAVISE = item("pavise", new MetalShieldItem(true));
 
+	// fase 80: las herramientas de acero (se forjan; no se mejoran a netherita)
+	public static final Item STEEL_SWORD = item("steel_sword", new net.minecraft.item.SwordItem(SteelTier.INSTANCE, new Item.Settings()
+			.attributeModifiers(net.minecraft.item.SwordItem.createAttributeModifiers(SteelTier.INSTANCE, 3, -2.4F))));
+	public static final Item STEEL_PICKAXE = item("steel_pickaxe", new net.minecraft.item.PickaxeItem(SteelTier.INSTANCE, new Item.Settings()
+			.attributeModifiers(net.minecraft.item.MiningToolItem.createAttributeModifiers(SteelTier.INSTANCE, 1.0F, -2.8F))));
+	public static final Item STEEL_AXE = item("steel_axe", new net.minecraft.item.AxeItem(SteelTier.INSTANCE, new Item.Settings()
+			.attributeModifiers(net.minecraft.item.MiningToolItem.createAttributeModifiers(SteelTier.INSTANCE, 6.0F, -3.1F))));
+	public static final Item STEEL_SHOVEL = item("steel_shovel", new net.minecraft.item.ShovelItem(SteelTier.INSTANCE, new Item.Settings()
+			.attributeModifiers(net.minecraft.item.MiningToolItem.createAttributeModifiers(SteelTier.INSTANCE, 1.5F, -3.0F))));
+	public static final Item STEEL_HOE = item("steel_hoe", new net.minecraft.item.HoeItem(SteelTier.INSTANCE, new Item.Settings()
+			.attributeModifiers(net.minecraft.item.MiningToolItem.createAttributeModifiers(SteelTier.INSTANCE, -2.0F, -1.0F))));
+
+	/** La herramienta de acero de ese tipo ("sword", "pickaxe"...), o null. */
+	@Nullable
+	public static Item steelTool(String kind) {
+		return switch (kind) {
+			case "sword" -> STEEL_SWORD;
+			case "pickaxe" -> STEEL_PICKAXE;
+			case "axe" -> STEEL_AXE;
+			case "shovel" -> STEEL_SHOVEL;
+			case "hoe" -> STEEL_HOE;
+			default -> null;
+		};
+	}
+
 	// fase 79: las ballestas mecánicas
 	public static final Item ARBALEST = item("arbalest", new MechanicalCrossbowItem(false, new Item.Settings().maxCount(1).maxDamage(700)));
 	public static final Item REPEATING_CROSSBOW = item("repeating_crossbow", new MechanicalCrossbowItem(true,
@@ -110,27 +135,6 @@ public final class Metalwork {
 			case "steel" -> STEEL_INGOT;
 			default -> null;
 		};
-	}
-
-	/** Lo de acero: la herramienta o el arma de hierro, mejorada y con su nombre. */
-	public static ItemStack steel(ItemStack stack) {
-		stack.set(STEEL, true);
-		Integer max = stack.get(DataComponentTypes.MAX_DAMAGE);
-		if (max != null) {
-			stack.set(DataComponentTypes.MAX_DAMAGE, Math.round(max * 1.5F));
-		}
-		AttributeModifiersComponent mods = stack.getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS,
-				stack.getItem().getComponents().getOrDefault(DataComponentTypes.ATTRIBUTE_MODIFIERS, AttributeModifiersComponent.DEFAULT));
-		mods = mods.with(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(EvolvedWarfare.id("steel_damage"), 1.0,
-				EntityAttributeModifier.Operation.ADD_VALUE), AttributeModifierSlot.MAINHAND);
-		mods = mods.with(EntityAttributes.PLAYER_BLOCK_BREAK_SPEED, new EntityAttributeModifier(EvolvedWarfare.id("steel_speed"), 0.1,
-				EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL), AttributeModifierSlot.MAINHAND);
-		stack.set(DataComponentTypes.ATTRIBUTE_MODIFIERS, mods);
-		String path = Registries.ITEM.getId(stack.getItem()).getPath();
-		if (path.startsWith("iron_")) {
-			stack.set(DataComponentTypes.ITEM_NAME, Text.translatable("item.evolvedwarfare.steel." + path.substring("iron_".length())));
-		}
-		return stack;
 	}
 
 	/** ¿Sopla un fuelle en marcha al crisol (o a su fuego)? */

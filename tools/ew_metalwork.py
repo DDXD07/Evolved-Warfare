@@ -117,6 +117,109 @@ def crossbow(kind, state):
     return im
 
 
+# ------------------------------------------------------------------ fase 80: herramientas y armas de acero
+
+STEEL_PAL = ((214, 226, 240), (142, 162, 188), (94, 110, 136), (34, 40, 54))   # claro, medio, oscuro, contorno
+HANDLE = ((84, 62, 44), (58, 42, 30), (40, 28, 20))                         # mango de madera oscura con cuero
+
+
+def _shade_fill(mask, pal):
+    """Pinta una forma (conjunto de píxeles) con luz arriba a la izquierda y sombra abajo a la derecha."""
+    out = {}
+    for (x, y) in mask:
+        up = (x, y - 1) in mask
+        left = (x - 1, y) in mask
+        down = (x, y + 1) in mask
+        right = (x + 1, y) in mask
+        if not up or not left:
+            out[(x, y)] = pal[0]
+        elif not down or not right:
+            out[(x, y)] = pal[2]
+        else:
+            out[(x, y)] = pal[1]
+    return out
+
+
+def _tool(head, handle_len=9):
+    im = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    # el mango, en diagonal desde abajo a la izquierda
+    for i in range(handle_len):
+        x, y = 2 + i, 13 - i
+        im.putpixel((x, y), (HANDLE[1] if i % 2 else HANDLE[0]) + (255,))
+        if i < 3:
+            im.putpixel((x, y), (HANDLE[2] if i % 2 else HANDLE[1]) + (255,))
+    for (x, y), c in _shade_fill(set(head), STEEL_PAL).items():
+        if 0 <= x < 16 and 0 <= y < 16:
+            im.putpixel((x, y), c + (255,))
+    # contorno
+    src = im.copy()
+    for y in range(16):
+        for x in range(16):
+            if src.getpixel((x, y))[3] == 0:
+                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nx, ny = x + dx, y + dy
+                    if 0 <= nx < 16 and 0 <= ny < 16 and src.getpixel((nx, ny))[3] > 0:
+                        im.putpixel((x, y), STEEL_PAL[3] + (255,))
+                        break
+    return im
+
+
+def steel_sword():
+    head = []
+    for i in range(9):
+        x, y = 5 + i, 10 - i
+        head += [(x, y), (x + 1, y), (x, y - 1)]
+    head += [(14, 1), (14, 0)]
+    im = _tool(head, handle_len=0)
+    # guarda y empuñadura
+    guard = (70, 76, 90)
+    for (x, y) in ((3, 9), (4, 10), (5, 11), (6, 12), (4, 9), (6, 11)):
+        im.putpixel((x, y), guard + (255,))
+    for i in range(3):
+        im.putpixel((2 + i - 0, 13 - i + 0), (HANDLE[0] if i % 2 else HANDLE[1]) + (255,))
+    im.putpixel((1, 14), (150, 162, 180, 255))
+    return im
+
+
+def steel_pickaxe():
+    head = set()
+    import math
+    for a in range(0, 121):
+        f = a / 120.0
+        t = math.radians(-88 + f * 86)
+        radii = (10.4, 11.2, 12.0) if 0.25 < f < 0.75 else (10.8, 11.6)
+        for r in radii:
+            head.add((int(round(2 + r * math.cos(t))), int(round(13 + r * math.sin(t)))))
+    head = {(x, y) for (x, y) in head if 0 <= x < 16 and 0 <= y < 16}
+    return _tool(sorted(head), handle_len=10)
+
+
+def _poly(points):
+    im = Image.new("L", (16, 16), 0)
+    ImageDraw.Draw(im).polygon(points, fill=255)
+    return [(x, y) for x in range(16) for y in range(16) if im.getpixel((x, y))]
+
+
+def steel_axe():
+    head = _poly([(5, 1), (9, 1), (11, 3), (11, 5), (9, 7), (6, 7), (4, 5), (4, 2)])
+    head = [(x, y) for (x, y) in head if not (x >= 9 and y >= 6)]
+    return _tool(head, handle_len=10)
+
+
+def steel_shovel():
+    head = [(x, y) for x in range(9, 15) for y in range(1, 7) if abs((x - 12) + (y - 4)) + abs((x - 12) - (y - 4)) <= 5]
+    return _tool(head, handle_len=8)
+
+
+def steel_hoe():
+    head = [(8, 2), (9, 2), (10, 2), (11, 2), (12, 2), (8, 3), (9, 3), (12, 3), (13, 3), (13, 4), (12, 4)]
+    return _tool(head, handle_len=11)
+
+
+STEEL_TOOLS = {"sword": steel_sword, "pickaxe": steel_pickaxe, "axe": steel_axe, "shovel": steel_shovel, "hoe": steel_hoe}
+STEEL_WEAPONS = ("dagger", "spear", "longsword", "halberd", "warhammer", "flail", "battle_axe")
+
+
 ITEMS = collections.OrderedDict([
     ("steel_ingot", ("Lingote de acero", "Steel Ingot",
                      "Sale del crisol: hierro fundido con carbón y un fuelle soplando. Más duro que el hierro.",
@@ -211,6 +314,28 @@ def main():
     for name in [n for n in ITEMS if n not in ("arbalest", "repeating_crossbow")]:
         write_json(os.path.join(ASSETS, "models/item/%s.json" % name),
                    {"parent": "minecraft:item/generated", "textures": {"layer0": "%s:item/%s" % (NS, name)}})
+    # herramientas de acero (iconos propios) y armas medievales de acero (los iconos con los dibujos de ew_weapons)
+    for kind, painter in STEEL_TOOLS.items():
+        painter().save(os.path.join(item_dir, "steel_%s.png" % kind))
+        write_json(os.path.join(ASSETS, "models/item/steel_%s.json" % kind),
+                   {"parent": "minecraft:item/handheld", "textures": {"layer0": "%s:item/steel_%s" % (NS, kind)}})
+    saved = sys.argv[:]
+    sys.argv = [sys.argv[0], os.path.join(ROOT, "src/main/resources"), "/tmp/ew_weapons_preview"]
+    import ew_weapons as WP
+    sys.argv = saved
+    WP.METALS["steel"] = tuple(WP.hexc("#%02X%02X%02X" % c) for c in STEEL_PAL)
+    for w in STEEL_WEAPONS:
+        WP.SHAPES[w]("steel").save(os.path.join(item_dir, "steel_%s.png" % w))
+    tags = {"swords": ["%s:steel_sword" % NS] + ["%s:steel_%s" % (NS, w) for w in STEEL_WEAPONS if w != "battle_axe"],
+            "axes": ["%s:steel_axe" % NS, "%s:steel_battle_axe" % NS], "pickaxes": ["%s:steel_pickaxe" % NS],
+            "shovels": ["%s:steel_shovel" % NS], "hoes": ["%s:steel_hoe" % NS]}
+    for tag, values in tags.items():
+        path = os.path.join(ROOT, "src/main/resources/data/minecraft/tags/item", tag + ".json")
+        old = []
+        if os.path.exists(path):
+            with open(path, encoding="utf-8") as fh:
+                old = json.load(fh).get("values", [])
+        write_json(path, {"replace": False, "values": [v for v in old if v not in values] + values})
     recipes()
     for path in sorted(glob.glob(os.path.join(ASSETS, "lang", "*.json"))):
         english = path.endswith("en_us.json")
@@ -220,7 +345,8 @@ def main():
             data["item.%s.%s" % (NS, key)] = en if english else es
             data["item.%s.%s.desc" % (NS, key)] = den if english else des
         for key, (es, en) in STEEL_NAMES.items():
-            data["item.%s.steel.%s" % (NS, key)] = en if english else es
+            data.pop("item.%s.steel.%s" % (NS, key), None)
+            data["item.%s.steel_%s" % (NS, key)] = en if english else es
         for key, (es, en) in TEXTS.items():
             data[key] = en if english else es
         write_json(path, data)

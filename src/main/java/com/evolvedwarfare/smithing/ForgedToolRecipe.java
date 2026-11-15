@@ -67,8 +67,7 @@ public class ForgedToolRecipe extends SpecialCraftingRecipe {
 		if (item == null) {
 			return null;
 		}
-		ItemStack out = ForgeQuality.apply(new ItemStack(item), data.quality());
-		return material == ForgeMaterial.STEEL ? com.evolvedwarfare.engineering.Metalwork.steel(out) : out;
+		return ForgeQuality.apply(new ItemStack(item), data.quality());
 	}
 
 	@Override

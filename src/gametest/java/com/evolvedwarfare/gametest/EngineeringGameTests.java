@@ -612,9 +612,19 @@ public class EngineeringGameTests implements FabricGameTest {
 		var sword = recipe.matches(input, world) ? recipe.craft(input, world.getRegistryManager()) : net.minecraft.item.ItemStack.EMPTY;
 		int max = sword.getOrDefault(net.minecraft.component.DataComponentTypes.MAX_DAMAGE, 0);
 		String name = sword.getName().getString();
-		LOG.info("[EW-GAMETEST] acero: {} «{}», durabilidad {}, acero {}", sword.getItem(), name, max,
-				sword.get(com.evolvedwarfare.engineering.Metalwork.STEEL));
-		if (!sword.isOf(net.minecraft.item.Items.IRON_SWORD) || max != 375 || !Boolean.TRUE.equals(sword.get(com.evolvedwarfare.engineering.Metalwork.STEEL))) {
+		LOG.info("[EW-GAMETEST] acero: {} «{}», durabilidad {}", sword.getItem(), name, max);
+		// una alabarda de acero sale de su pieza; y nada de acero se mejora a netherita en la mesa de herrería
+		var halberd = com.evolvedwarfare.smithing.ForgedPart.HALBERD_HEAD.result(com.evolvedwarfare.smithing.ForgeMaterial.STEEL);
+		boolean netherite = false;
+		for (var r : world.getRecipeManager().listAllOfType(net.minecraft.recipe.RecipeType.SMITHING)) {
+			for (var steel : new net.minecraft.item.Item[] {com.evolvedwarfare.engineering.Metalwork.STEEL_SWORD, com.evolvedwarfare.engineering.Metalwork.STEEL_PICKAXE,
+					com.evolvedwarfare.registry.ModItems.weapon(com.evolvedwarfare.weapon.WeaponType.HALBERD, "steel")}) {
+				netherite |= r.value().testBase(new net.minecraft.item.ItemStack(steel));
+			}
+		}
+		LOG.info("[EW-GAMETEST] acero: alabarda {}, se mejora a netherita {}", halberd, netherite);
+		if (!sword.isOf(com.evolvedwarfare.engineering.Metalwork.STEEL_SWORD) || max != 375 || halberd == null
+				|| !net.minecraft.registry.Registries.ITEM.getId(halberd).getPath().equals("steel_halberd") || netherite) {
 			throw new GameTestException("La hoja de acero no da una espada de acero");
 		}
 		ctx.complete();
