@@ -35,6 +35,10 @@ public class KineticBlockEntity extends BlockEntity {
 		super(Engineering.KINETIC_ENTITY, pos, state);
 	}
 
+	protected KineticBlockEntity(net.minecraft.block.entity.BlockEntityType<?> type, BlockPos pos, BlockState state) {
+		super(type, pos, state);
+	}
+
 	public float speed() {
 		return speed;
 	}

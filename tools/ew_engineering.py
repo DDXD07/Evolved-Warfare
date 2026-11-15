@@ -150,17 +150,109 @@ def needle():
     return a
 
 
+# ------------------------------------------------------------------ fase 2: las máquinas
+# Convención de las máquinas: y hacia abajo (como las entidades; el juego les da la vuelta), +x es el frente (hacia donde
+# mira la máquina) y el eje de fuerza va por z (las dos caras de los lados); el molino gira en vertical.
+STONE = (132, 132, 132)
+STONE_DARK = (92, 92, 96)
+LEATHER = (124, 80, 46)
+LEATHER_DARK = (92, 58, 32)
+
+
+def millstone():
+    a = W.Animal("machine_millstone")
+    base = a.part("base", None, (0, 0, 0))
+    base.cube((-8, 4, -8), (16, 4, 16), **C(OAK_DARK, rings=(OAK, 4)))
+    base.cube((-7, 1, -7), (14, 3, 14), **C(STONE, spots=(STONE_DARK, 0.15)))
+    b45 = a.part("base45", None, (0, 0, 0), rot=(0, 45, 0))
+    b45.cube((-5.5, 2, -5.5), (11, 2, 11), **C(STONE, spots=(STONE_DARK, 0.15)))
+    r = rotor(a)
+    r.cube((-5.5, -3, -5.5), (11, 4, 11), **C(STONE, spots=(STONE_DARK, 0.2), rings=(STONE_DARK, 2)))
+    r45 = a.part("rotor45", "rotor", (0, 0, 0), rot=(0, 45, 0))
+    r45.cube((-5.5, -3, -5.5), (11, 4, 11), **C(STONE, spots=(STONE_DARK, 0.2), rings=(STONE_DARK, 2)))
+    r.cube((-1, -8, -1), (2, 5, 2), **C(IRON_DARK, high=(IRON, 1)))
+    r.cube((-7, -6, -1), (14, 2, 2), **C(OAK, rings=(OAK_DARK, 4)))
+    r.cube((5, -8, -1), (2, 2, 2), **C(OAK_DARK))
+    return a
+
+
+def sawmill():
+    a = W.Animal("machine_sawmill")
+    f = a.part("frame", None, (0, 0, 0))
+    for x in (-8, 6):
+        for z in (-8, 6):
+            f.cube((x, -2, z), (2, 10, 2), **C(OAK_DARK, rings=(OAK, 5)))
+    f.cube((-8, -4, -8), (16, 2, 7), **C(OAK, rings=(OAK_DARK, 3)))
+    f.cube((-8, -4, 1), (16, 2, 7), **C(OAK, rings=(OAK_DARK, 3)))
+    f.cube((-8, 4, -7), (16, 2, 1), **C(OAK_DARK))
+    f.cube((-8, 4, 6), (16, 2, 1), **C(OAK_DARK))
+    f.cube((-2, -2, -8), (4, 4, 2), **C(IRON_DARK, high=(IRON, 1)))
+    f.cube((-2, -2, 6), (4, 4, 2), **C(IRON_DARK, high=(IRON, 1)))
+    r = rotor(a)
+    r.cube((-1, -1, -8), (2, 2, 16), **C(IRON_DARK, high=(IRON, 1)))
+    for k in range(8):
+        s = a.part("blade%d" % k, "rotor", (0, 0, 0), rot=(0, 0, 22.5 * k))
+        s.cube((-2, -5, -0.5), (4, 10, 1), **C((170, 172, 180), high=((210, 212, 220), 1)))
+    for k in range(12):
+        t = a.part("tooth%d" % k, "rotor", (0, 0, 0), rot=(0, 0, 30 * k))
+        t.cube((-1, -6, -0.5), (2, 1, 1), **C((200, 202, 210)))
+    return a
+
+
+def trip_hammer():
+    a = W.Animal("machine_trip_hammer")
+    f = a.part("frame", None, (0, 0, 0))
+    f.cube((-8, 6, -8), (16, 2, 16), **C(OAK_DARK, rings=(OAK, 4)))
+    for z in (-7, 5):
+        f.cube((-8, -8, z), (3, 14, 2), **C(OAK, rings=(OAK_DARK, 5)))
+    f.cube((-8, -8, -5), (3, 1, 10), **C(OAK_DARK))
+    f.cube((-2, -2, -8), (4, 4, 1), **C(IRON_DARK, high=(IRON, 1)))
+    f.cube((-2, -2, 7), (4, 4, 1), **C(IRON_DARK, high=(IRON, 1)))
+    r = rotor(a)
+    r.cube((-1, -1, -8), (2, 2, 16), **C(STRIPPED, rings=(OAK_DARK, 4)))
+    for k in range(4):
+        lug = a.part("lug%d" % k, "rotor", (0, 0, 0), rot=(0, 0, 90 * k))
+        lug.cube((-1, -4, -1), (2, 3, 2), **C(OAK_DARK, high=(OAK, 1)))
+    arm = a.part("arm", None, (-6, -6, 0))
+    arm.cube((-1, -1, -1), (26, 2, 2), **C(OAK, rings=(OAK_DARK, 6)))
+    head = a.part("head", "arm", (22, 0, 0))
+    head.cube((-3, -2, -3), (6, 13, 6), **C(IRON_DARK, high=(IRON, 1), rings=((40, 40, 46), 4)))
+    return a
+
+
+def bellows():
+    a = W.Animal("machine_bellows")
+    f = a.part("frame", None, (0, 0, 0))
+    f.cube((-7, 6, -6), (13, 2, 12), **C(OAK, rings=(OAK_DARK, 3)))
+    f.cube((-8, -2, -6), (2, 10, 12), **C(OAK_DARK, rings=(IRON_DARK, 4)))
+    f.cube((-6, 0, -5), (11, 6, 10), **C(LEATHER, rings=(LEATHER_DARK, 2), spots=(LEATHER_DARK, 0.06)))
+    f.cube((5, 2, -2), (3, 4, 4), **C(OAK_DARK))
+    f.cube((8, 3, -1), (2, 2, 2), **C(IRON_DARK, high=(IRON, 1)))
+    lid = a.part("lid", None, (-6, -1, 0))
+    lid.cube((0, -1, -6), (13, 2, 12), **C(OAK, rings=(OAK_DARK, 3)))
+    lid.cube((10, -3, -1), (2, 2, 2), **C(OAK_DARK))
+    r = rotor(a)
+    for z in (-8, 6):
+        r.cube((-1, -1, z), (2, 2, 2), **C(IRON_DARK, high=(IRON, 1)))
+    for z in (-8, 7):
+        r.cube((-1, -4, z), (2, 4, 1), **C(OAK_DARK))
+    return a
+
+
 MODELS = collections.OrderedDict([
     ("kinetic_shaft", shaft), ("kinetic_small_gear", small_gear), ("kinetic_large_gear", large_gear), ("kinetic_crank", crank),
     ("kinetic_gauge_needle", needle)]
     + [("water_wheel_" + s, (lambda s=s: water_wheel(s))) for s in WATER_WHEELS]
-    + [("windmill_" + s, (lambda s=s: windmill(s))) for s in WINDMILLS])
+    + [("windmill_" + s, (lambda s=s: windmill(s))) for s in WINDMILLS]
+    + [("machine_millstone", millstone), ("machine_sawmill", sawmill), ("machine_trip_hammer", trip_hammer), ("machine_bellows", bellows)])
 
 ITEM_OF = {"kinetic_shaft": "shaft", "kinetic_small_gear": "small_gear", "kinetic_large_gear": "large_gear", "kinetic_crank": "hand_crank"}
 for s in WATER_WHEELS:
     ITEM_OF["water_wheel_" + s] = "water_wheel_" + s
 for s in WINDMILLS:
     ITEM_OF["windmill_" + s] = "windmill_" + s
+for s in ("millstone", "sawmill", "trip_hammer", "bellows"):
+    ITEM_OF["machine_" + s] = s
 
 # id: (es, en, descripción es, descripción en)
 NAMES = collections.OrderedDict([
@@ -193,6 +285,22 @@ NAMES = collections.OrderedDict([
     ("speed_gauge", ("Velocímetro", "Speedometer", "Marca la velocidad del eje que pasa por él.", "Shows the speed of the shaft through it.")),
     ("stress_gauge", ("Medidor de fuerza", "Force Gauge", "Marca cuánta fuerza se gasta de la que hay en la red.",
                       "Shows how much of the network's force is being used.")),
+    ("millstone", ("Muela de molino", "Millstone",
+                   "Eje por abajo o por arriba. Muele: trigo en harina, piedra en grava, grava en arena, huesos, caña y mineral en bruto (a veces sale de más).",
+                   "Shaft from below or above. Grinds wheat into flour, cobblestone into gravel, gravel into sand, bones, sugar cane and raw ore (sometimes extra).")),
+    ("sawmill", ("Aserradero", "Sawmill",
+                 "Eje por los lados. Sierra troncos en 6 tablones y tablones en palos, y los echa por delante. ¡No te subas!",
+                 "Shaft from the sides. Saws logs into 6 planks and planks into sticks, and pushes them out the front. Don't stand on it!")),
+    ("trip_hammer", ("Martinete", "Trip Hammer",
+                     "Eje por los lados. Golpea el yunque de delante (un bloque más abajo): afila solas las piezas forjadas en bruto que dejes encima.",
+                     "Shaft from the sides. Pounds the anvil in front (one block lower): sharpens rough forged parts left on it by itself.")),
+    ("bellows", ("Fuelle", "Bellows",
+                 "Eje por los lados. Sopla al horno, alto horno, ahumador o crisol de delante: van más deprisa (el doble a 16 rpm).",
+                 "Shaft from the sides. Blows into the furnace, blast furnace, smoker or crucible in front: they work faster (double at 16 rpm).")),
+])
+ITEMS = collections.OrderedDict([
+    ("flour", ("Harina", "Flour", "Se cuece en el horno: un pan por cada puñado (sale más pan que del trigo en la mesa).",
+               "Bake it in a furnace: one bread each (more bread than crafting wheat).")),
 ])
 TEXTS = {
     "message.evolvedwarfare.kinetic.info": ("%s rpm · fuerza %s/%s", "%s rpm · force %s/%s"),
@@ -203,6 +311,7 @@ TEXTS = {
     "message.evolvedwarfare.kinetic.no_water": ("No le corre agua", "No water is running through it"),
     "message.evolvedwarfare.kinetic.still": ("Parado", "Not turning"),
     "itemGroup.evolvedwarfare.engineering": ("Ingeniería medieval", "Medieval Engineering"),
+    "message.evolvedwarfare.machine.contents": ("Dentro: %s · %s%%", "Inside: %s · %s%%"),
 }
 
 
@@ -253,6 +362,22 @@ def block_textures():
     return out
 
 
+def flour_texture():
+    """Un saquito de tela abierto, lleno de harina."""
+    im = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    dr = ImageDraw.Draw(im)
+    sack, sack_dark = (198, 170, 120), (150, 124, 82)
+    dr.polygon([(3, 6), (12, 6), (14, 14), (1, 14)], fill=sack + (255,), outline=sack_dark + (255,))
+    dr.line([(2, 12), (13, 12)], fill=sack_dark + (255,))
+    dr.ellipse((2, 3, 13, 8), fill=(244, 240, 228, 255), outline=(214, 208, 192, 255))
+    for (x, y) in ((5, 4), (8, 5), (10, 4), (6, 6)):
+        im.putpixel((x, y), (255, 255, 252, 255))
+    dr.line([(3, 7), (12, 7)], fill=(120, 96, 60, 255))
+    for (x, y) in ((4, 9), (9, 10), (11, 9), (6, 13)):
+        im.putpixel((x, y), (214, 188, 140, 255))
+    return im
+
+
 def shaped(name, pattern, key, count=1, result=None):
     write_json(os.path.join(DATA, "recipe", name + ".json"), {
         "type": "minecraft:crafting_shaped", "category": "redstone", "pattern": pattern,
@@ -276,6 +401,14 @@ def recipes():
     shaped("windmill_large", ["WIW", "IMI", "WIW"], {"W": "minecraft:white_wool", "I": I, "M": NS + ":windmill_medium"})
     shaped("speed_gauge", ["PCP", "PHP"], {"P": P, "C": "minecraft:compass", "H": H})
     shaped("stress_gauge", ["PCP", "PHP"], {"P": P, "C": "minecraft:clock", "H": H})
+    shaped("millstone", [" H ", "SSS", "PPP"], {"H": H, "S": "minecraft:smooth_stone", "P": P})
+    shaped("sawmill", ["IBI", "PHP", "P P"], {"I": "minecraft:iron_nugget", "B": "minecraft:iron_ingot", "P": P, "H": H})
+    shaped("trip_hammer", ["III", "LHI", "LPP"], {"I": I, "L": L, "H": H, "P": P})
+    shaped("bellows", ["PPP", "EEN", "PHP"], {"P": P, "E": "minecraft:leather", "N": "minecraft:iron_nugget", "H": H})
+    for kind, typ in (("smelting", "minecraft:smelting"), ("smoking", "minecraft:smoking")):
+        write_json(os.path.join(DATA, "recipe", "bread_from_flour_%s.json" % kind), {
+            "type": typ, "category": "food", "ingredient": {"item": NS + ":flour"}, "result": {"id": "minecraft:bread"},
+            "experience": 0.35, "cookingtime": 200 if kind == "smelting" else 100})
 
 
 def main():
@@ -344,6 +477,12 @@ def main():
         write_json(os.path.join(DATA, "loot_table/blocks/%s.json" % name), {"type": "minecraft:block", "pools": [
             {"rolls": 1, "entries": [{"type": "minecraft:item", "name": "%s:%s" % (NS, name)}],
              "conditions": [{"condition": "minecraft:survives_explosion"}]}]})
+    write_json(os.path.join(ASSETS, "blockstates/millstone.json"), {"variants": {"": {"model": "%s:block/kinetic_particles_stone" % NS}}})
+    write_json(os.path.join(ASSETS, "models/block/kinetic_particles_stone.json"), {"textures": {"particle": "minecraft:block/smooth_stone"}})
+    flour_texture().save(os.path.join(item_dir, "flour.png"))
+    for name in ITEMS:
+        write_json(os.path.join(ASSETS, "models/item/%s.json" % name),
+                   {"parent": "minecraft:item/generated", "textures": {"layer0": "%s:item/%s" % (NS, name)}})
     recipes()
     for path in sorted(glob.glob(os.path.join(ASSETS, "lang", "*.json"))):
         english = path.endswith("en_us.json")
@@ -352,6 +491,9 @@ def main():
         for key, (es, en, des, den) in NAMES.items():
             data["block.%s.%s" % (NS, key)] = en if english else es
             data["block.%s.%s.desc" % (NS, key)] = den if english else des
+        for key, (es, en, des, den) in ITEMS.items():
+            data["item.%s.%s" % (NS, key)] = en if english else es
+            data["item.%s.%s.desc" % (NS, key)] = den if english else des
         for key, (es, en) in TEXTS.items():
             data[key] = en if english else es
         write_json(path, data)

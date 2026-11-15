@@ -20,7 +20,8 @@ import net.minecraft.text.Text;
 
 /**
  * La ingeniería medieval (fase 72): la red de fuerza mecánica con velocidad y par. Fase 1: el eje, los engranajes, la caja
- * de engranajes, la manivela, las ruedas hidráulicas y los molinos de viento (tres tamaños), y los medidores.
+ * de engranajes, la manivela, las ruedas hidráulicas y los molinos de viento (tres tamaños), y los medidores. Fase 2 (73):
+ * las máquinas que gastan esa fuerza: la muela, el aserradero, el martinete y el fuelle.
  */
 public final class Engineering {
 	public static final List<Block> BLOCKS = new ArrayList<>();
@@ -50,6 +51,17 @@ public final class Engineering {
 	public static final BlockEntityType<KineticBlockEntity> KINETIC_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
 			EvolvedWarfare.id("kinetic"), BlockEntityType.Builder.create(KineticBlockEntity::new, BLOCKS.toArray(new Block[0])).build(null));
 
+	// fase 73: las máquinas
+	private static final List<Block> MACHINES = new ArrayList<>();
+	public static final Block MILLSTONE = machine("millstone", new MillstoneBlock(AbstractBlock.Settings.create().mapColor(MapColor.STONE_GRAY)
+			.strength(2.5F).sounds(BlockSoundGroup.STONE).nonOpaque()));
+	public static final Block SAWMILL = machine("sawmill", new SawmillBlock(wood().strength(2.5F)));
+	public static final Block TRIP_HAMMER = machine("trip_hammer", new TripHammerBlock(wood().strength(3.0F)));
+	public static final Block BELLOWS = machine("bellows", new BellowsBlock(wood()));
+	public static final Item FLOUR = item("flour", new DescribedItem(new Item.Settings()));
+	public static final BlockEntityType<MachineBlockEntity> MACHINE_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
+			EvolvedWarfare.id("machine"), BlockEntityType.Builder.create(MachineBlockEntity::new, MACHINES.toArray(new Block[0])).build(null));
+
 	public static final ItemGroup GROUP = Registry.register(Registries.ITEM_GROUP, EvolvedWarfare.id("engineering"), FabricItemGroup.builder()
 			.icon(() -> new ItemStack(LARGE_GEAR)).displayName(Text.translatable("itemGroup.evolvedwarfare.engineering"))
 			.entries((ctx, entries) -> ITEMS.forEach(entries::add)).build());
@@ -62,6 +74,30 @@ public final class Engineering {
 		BLOCKS.add(block);
 		ITEMS.add(Registry.register(Registries.ITEM, EvolvedWarfare.id(name), new BlockItem(block, new Item.Settings())));
 		return block;
+	}
+
+	private static Block machine(String name, Block block) {
+		Registry.register(Registries.BLOCK, EvolvedWarfare.id(name), block);
+		MACHINES.add(block);
+		ITEMS.add(Registry.register(Registries.ITEM, EvolvedWarfare.id(name), new BlockItem(block, new Item.Settings())));
+		return block;
+	}
+
+	private static Item item(String name, Item item) {
+		ITEMS.add(Registry.register(Registries.ITEM, EvolvedWarfare.id(name), item));
+		return item;
+	}
+
+	/** Un objeto con su descripción debajo del nombre. */
+	static class DescribedItem extends Item {
+		DescribedItem(Settings settings) {
+			super(settings);
+		}
+
+		@Override
+		public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, net.minecraft.item.tooltip.TooltipType type) {
+			tooltip.add(Text.translatable(getTranslationKey() + ".desc").formatted(net.minecraft.util.Formatting.GRAY));
+		}
 	}
 
 	public static void register() {

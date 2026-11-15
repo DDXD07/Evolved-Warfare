@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:smoking",
+  "category": "food",
+  "ingredient": {
+    "item": "evolvedwarfare:flour"
+  },
+  "result": {
+    "id": "minecraft:bread"
+  },
+  "experience": 0.35,
+  "cookingtime": 100
+}

@@ -2623,5 +2623,16 @@
   "message.evolvedwarfare.kinetic.blocked": "Algo estorba al giro",
   "message.evolvedwarfare.kinetic.no_water": "No le corre agua",
   "message.evolvedwarfare.kinetic.still": "Parado",
-  "itemGroup.evolvedwarfare.engineering": "Ingeniería medieval"
+  "itemGroup.evolvedwarfare.engineering": "Ingeniería medieval",
+  "block.evolvedwarfare.millstone": "Muela de molino",
+  "block.evolvedwarfare.millstone.desc": "Eje por abajo o por arriba. Muele: trigo en harina, piedra en grava, grava en arena, huesos, caña y mineral en bruto (a veces sale de más).",
+  "block.evolvedwarfare.sawmill": "Aserradero",
+  "block.evolvedwarfare.sawmill.desc": "Eje por los lados. Sierra troncos en 6 tablones y tablones en palos, y los echa por delante. ¡No te subas!",
+  "block.evolvedwarfare.trip_hammer": "Martinete",
+  "block.evolvedwarfare.trip_hammer.desc": "Eje por los lados. Golpea el yunque de delante (un bloque más abajo): afila solas las piezas forjadas en bruto que dejes encima.",
+  "block.evolvedwarfare.bellows": "Fuelle",
+  "block.evolvedwarfare.bellows.desc": "Eje por los lados. Sopla al horno, alto horno, ahumador o crisol de delante: van más deprisa (el doble a 16 rpm).",
+  "item.evolvedwarfare.flour": "Harina",
+  "item.evolvedwarfare.flour.desc": "Se cuece en el horno: un pan por cada puñado (sale más pan que del trigo en la mesa).",
+  "message.evolvedwarfare.machine.contents": "Dentro: %s · %s%%"
 }

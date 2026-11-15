@@ -2277,6 +2277,22 @@ Los NPCs del pueblo (los vecinos, los guardias del cuartel y los vigías de las 
 | Molino mediano / grande | el anterior con lana y troncos / lana y lingotes de hierro |
 | Velocímetro / medidor de fuerza | eje, 4 tablones y una brújula / un reloj |
 
+## Fase 73 — Ingeniería medieval (2): las máquinas
+
+Las máquinas gastan la fuerza de la red **por cada rpm** (más deprisa = trabajan antes, pero gastan más). Las que guardan cosas (muela y aserradero) se cargan con **clic derecho** con lo que se quiere trabajar, **tirándolo encima** o con **tolvas** (por arriba o los lados), y lo hecho se saca con **clic derecho con la mano vacía** o con una tolva **por debajo**. Agachado + clic derecho: velocidad, fuerza, lo que tiene dentro y cuánto le falta.
+
+- **Muela de molino** (gasta 2 por rpm; el eje por abajo o por arriba, y deja pasar el giro): trigo → **harina** (que se cuece en el horno o el ahumador en **pan**: sale tres veces más pan que haciendo pan con trigo en la mesa), piedra → grava, grava → arena (a veces pedernal), hueso → 5 de polvo de hueso, caña → 2 de azúcar, y **mineral en bruto** de hierro, cobre y oro (35 % de sacar uno de más). Con la manivela basta para moler a mano.
+- **Aserradero** (gasta 3 por rpm; el eje por los lados): una mesa con una **sierra circular**. Troncos (con o sin corteza) → **6 tablones**, tablones → 3 palos. Lo echa **por delante**: a un cofre o tolva si lo hay, si no al suelo. Se ve el tronco sobre la mesa. **Corta a quien se suba** mientras gira.
+- **Martinete** (gasta 3 por rpm; el eje por los lados): las levas del eje levantan un mazo de hierro y lo dejan caer **cuatro veces por vuelta** sobre el bloque de delante. Pon un **yunque** delante, un bloque más abajo, y deja encima (tíralo) una **pieza forjada en bruto**: tras sus golpes sale **afilada sola**, con una nota media (60 % en el afilado; a mano, con buen pulso, sale mejor). Aplasta a quien se ponga debajo.
+- **Fuelle** (gasta 1 por rpm; el eje por los lados): sopla al **horno, alto horno o ahumador** de delante, o a un **crisol** (delante, o encima del fuego de delante), y lo hace ir **más deprisa**: el doble a 16 rpm, el triple a 32 (el horno quema el combustible igual de deprisa).
+
+| Máquina | Receta |
+|---|---|
+| Muela de molino | eje arriba, 3 de piedra lisa, 3 tablones |
+| Aserradero | pepita, lingote y pepita de hierro; tablón, eje, tablón; dos tablones de patas |
+| Martinete | 3 lingotes de hierro arriba, troncos, eje y tablones |
+| Fuelle | 3 tablones, 2 de cuero y una pepita de hierro, tablón, eje, tablón |
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

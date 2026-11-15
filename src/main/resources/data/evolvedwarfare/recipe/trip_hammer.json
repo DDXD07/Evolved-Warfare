@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "III",
+    "LHI",
+    "LPP"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "L": {
+      "tag": "minecraft:logs"
+    },
+    "H": {
+      "item": "evolvedwarfare:shaft"
+    },
+    "P": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:trip_hammer",
+    "count": 1
+  }
+}

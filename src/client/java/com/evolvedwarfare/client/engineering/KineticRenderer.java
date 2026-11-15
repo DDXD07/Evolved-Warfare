@@ -9,6 +9,12 @@ import com.evolvedwarfare.engineering.KineticBlockEntity;
 import com.evolvedwarfare.engineering.ShaftBlock;
 import com.evolvedwarfare.engineering.WaterWheelBlock;
 import com.evolvedwarfare.engineering.WindmillBlock;
+import com.evolvedwarfare.engineering.BellowsBlock;
+import com.evolvedwarfare.engineering.MachineBlockEntity;
+import com.evolvedwarfare.engineering.MillstoneBlock;
+import com.evolvedwarfare.engineering.SawmillBlock;
+import com.evolvedwarfare.engineering.SideShaftMachineBlock;
+import com.evolvedwarfare.engineering.TripHammerBlock;
 import java.util.HashMap;
 import java.util.Map;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
@@ -35,7 +41,7 @@ import net.minecraft.util.math.RotationAxis;
  */
 public class KineticRenderer implements BlockEntityRenderer<KineticBlockEntity> {
 	private static final String[] MODELS = {"kinetic_shaft", "kinetic_small_gear", "kinetic_large_gear", "kinetic_crank", "kinetic_gauge_needle",
-			"water_wheel_small", "water_wheel_medium", "water_wheel_large", "windmill_small", "windmill_medium", "windmill_large"};
+			"water_wheel_small", "water_wheel_medium", "water_wheel_large", "windmill_small", "windmill_medium", "windmill_large", "machine_millstone", "machine_sawmill", "machine_trip_hammer", "machine_bellows"};
 	private static final Map<String, EntityModelLayer> LAYERS = new HashMap<>();
 	private final Map<String, ModelPart> parts = new HashMap<>();
 
@@ -46,9 +52,13 @@ public class KineticRenderer implements BlockEntityRenderer<KineticBlockEntity> 
 			EntityModelLayerRegistry.registerModelLayer(layer, () -> BossModel.texturedModelData(id));
 		}
 		BlockEntityRendererFactories.register(Engineering.KINETIC_ENTITY, KineticRenderer::new);
+		BlockEntityRendererFactories.register(Engineering.MACHINE_ENTITY, KineticRenderer::new);
 	}
 
+	private final net.minecraft.client.render.item.ItemRenderer items;
+
 	public KineticRenderer(BlockEntityRendererFactory.Context ctx) {
+		items = ctx.getItemRenderer();
 		for (String id : MODELS) {
 			parts.put(id, ctx.getLayerModelPart(LAYERS.get(id)));
 		}
@@ -72,6 +82,7 @@ public class KineticRenderer implements BlockEntityRenderer<KineticBlockEntity> 
 			angle = be.angle;
 		}
 		BlockPos pos = be.getPos();
+		final float spin = angle;
 		if (state.getBlock() instanceof ShaftBlock shaft) {
 			int gear = shaft.gear(state);
 			String id = gear == 0 ? "kinetic_shaft" : gear == 1 ? "kinetic_small_gear" : "kinetic_large_gear";
@@ -87,6 +98,43 @@ public class KineticRenderer implements BlockEntityRenderer<KineticBlockEntity> 
 			String id = "windmill_" + (mill.diameter() <= 5 ? "small" : mill.diameter() <= 9 ? "medium" : "large");
 			Direction back = state.get(Properties.HORIZONTAL_FACING).getOpposite();
 			draw(m, consumers, light, id, back, angle * back.getDirection().offset());
+		} else if (state.getBlock() instanceof MillstoneBlock) {
+			machine(m, consumers, light, "machine_millstone", Direction.EAST, part -> {
+				part.getChild("rotor").yaw = spin * MathHelper.RADIANS_PER_DEGREE;
+			});
+		} else if (state.getBlock() instanceof SawmillBlock) {
+			Direction f = SideShaftMachineBlock.facing(state);
+			machine(m, consumers, light, "machine_sawmill", f, part -> part.getChild("rotor").roll = -spin * 2.0F * MathHelper.RADIANS_PER_DEGREE);
+			if (be instanceof MachineBlockEntity mb && !mb.input().isEmpty()) {
+				// lo que se sierra, tumbado en la mesa
+				m.push();
+				m.translate(0.5, 0.8, 0.5);
+				m.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-f.asRotation()));
+				m.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90));
+				m.scale(0.6F, 0.6F, 0.6F);
+				items.renderItem(mb.input(), net.minecraft.client.render.model.json.ModelTransformationMode.FIXED, light, OverlayTexture.DEFAULT_UV, m,
+						consumers, be.getWorld(), 0);
+				m.pop();
+			}
+		} else if (state.getBlock() instanceof TripHammerBlock) {
+			Direction f = SideShaftMachineBlock.facing(state);
+			// cuatro levas por vuelta: sube despacio y cae de golpe
+			float t = ((spin % TripHammerBlock.CAM) + TripHammerBlock.CAM) % TripHammerBlock.CAM / TripHammerBlock.CAM;
+			if (be.speed() < 0) {
+				t = 1.0F - t;
+			}
+			float lift = t < 0.85F ? t / 0.85F : 1.0F - (t - 0.85F) / 0.15F;
+			machine(m, consumers, light, "machine_trip_hammer", f, part -> {
+				part.getChild("rotor").roll = -spin * MathHelper.RADIANS_PER_DEGREE;
+				part.getChild("arm").roll = -lift * 22.0F * MathHelper.RADIANS_PER_DEGREE;
+			});
+		} else if (state.getBlock() instanceof BellowsBlock) {
+			Direction f = SideShaftMachineBlock.facing(state);
+			float open = (1.0F - MathHelper.cos(spin * 2.0F * MathHelper.RADIANS_PER_DEGREE)) * 0.5F;
+			machine(m, consumers, light, "machine_bellows", f, part -> {
+				part.getChild("rotor").roll = -spin * 2.0F * MathHelper.RADIANS_PER_DEGREE;
+				part.getChild("lid").roll = -open * 16.0F * MathHelper.RADIANS_PER_DEGREE;
+			});
 		} else if (state.getBlock() instanceof GaugeBlock gauge) {
 			// la aguja, arriba: de −90° (nada) a +90° (al máximo)
 			float value = gauge.measuresStress() ? (be.capacity() > 0 ? be.stress() / be.capacity() : 0.0F) : Math.abs(be.speed()) / 32.0F;
@@ -119,6 +167,26 @@ public class KineticRenderer implements BlockEntityRenderer<KineticBlockEntity> 
 		}
 		m.multiply(RotationAxis.POSITIVE_X.rotationDegrees(angle));
 		render(m, consumers, light, id);
+		m.pop();
+	}
+
+	/** Una máquina: su frente (+x del modelo) hacia 'front', con las piezas movidas por 'pose' (y luego vueltas a su sitio). */
+	private void machine(MatrixStack m, VertexConsumerProvider consumers, int light, String id, Direction front,
+			java.util.function.Consumer<ModelPart> pose) {
+		ModelPart root = parts.get(id);
+		m.push();
+		m.translate(0.5, 0.5, 0.5);
+		switch (front) {
+			case WEST -> m.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180));
+			case SOUTH -> m.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-90));
+			case NORTH -> m.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90));
+			default -> {
+			}
+		}
+		m.scale(1.0F, -1.0F, 1.0F);
+		pose.accept(root);
+		render(m, consumers, light, id);
+		root.traverse().forEach(ModelPart::resetTransform);
 		m.pop();
 	}
 

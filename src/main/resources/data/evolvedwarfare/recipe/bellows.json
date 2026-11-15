@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "PPP",
+    "EEN",
+    "PHP"
+  ],
+  "key": {
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "E": {
+      "item": "minecraft:leather"
+    },
+    "N": {
+      "item": "minecraft:iron_nugget"
+    },
+    "H": {
+      "item": "evolvedwarfare:shaft"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:bellows",
+    "count": 1
+  }
+}

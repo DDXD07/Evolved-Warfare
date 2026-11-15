@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "IBI",
+    "PHP",
+    "P P"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_nugget"
+    },
+    "B": {
+      "item": "minecraft:iron_ingot"
+    },
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "H": {
+      "item": "evolvedwarfare:shaft"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:sawmill",
+    "count": 1
+  }
+}

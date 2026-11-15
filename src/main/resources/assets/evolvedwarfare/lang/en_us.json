@@ -2623,5 +2623,16 @@
   "message.evolvedwarfare.kinetic.blocked": "Something is in the way",
   "message.evolvedwarfare.kinetic.no_water": "No water is running through it",
   "message.evolvedwarfare.kinetic.still": "Not turning",
-  "itemGroup.evolvedwarfare.engineering": "Medieval Engineering"
+  "itemGroup.evolvedwarfare.engineering": "Medieval Engineering",
+  "block.evolvedwarfare.millstone": "Millstone",
+  "block.evolvedwarfare.millstone.desc": "Shaft from below or above. Grinds wheat into flour, cobblestone into gravel, gravel into sand, bones, sugar cane and raw ore (sometimes extra).",
+  "block.evolvedwarfare.sawmill": "Sawmill",
+  "block.evolvedwarfare.sawmill.desc": "Shaft from the sides. Saws logs into 6 planks and planks into sticks, and pushes them out the front. Don't stand on it!",
+  "block.evolvedwarfare.trip_hammer": "Trip Hammer",
+  "block.evolvedwarfare.trip_hammer.desc": "Shaft from the sides. Pounds the anvil in front (one block lower): sharpens rough forged parts left on it by itself.",
+  "block.evolvedwarfare.bellows": "Bellows",
+  "block.evolvedwarfare.bellows.desc": "Shaft from the sides. Blows into the furnace, blast furnace, smoker or crucible in front: they work faster (double at 16 rpm).",
+  "item.evolvedwarfare.flour": "Flour",
+  "item.evolvedwarfare.flour.desc": "Bake it in a furnace: one bread each (more bread than crafting wheat).",
+  "message.evolvedwarfare.machine.contents": "Inside: %s · %s%%"
 }
