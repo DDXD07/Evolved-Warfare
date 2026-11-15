@@ -2323,6 +2323,10 @@ Las máquinas gastan la fuerza de la red **por cada rpm** (más deprisa = trabaj
 | Rastrillo (4) | lingotes de hierro en dos columnas con barrotes de hierro en medio |
 | Reloj de torre | tablón, oro, tablón; reloj, eje, reloj; tablón, oro, tablón |
 
+## Fase 76 — El engranaje pequeño, redondo
+
+- El **engranaje pequeño** tiene un modelo nuevo: ya no es un cuadrado con dientes, sino una **rueda dentada redonda** como el grande (aro de 12 piezas, cuatro radios y cubo de hierro) con sus **8 dientes**. Mismo tamaño y mismo engrane que antes; también cambia su icono.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

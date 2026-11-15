@@ -60,11 +60,19 @@ def shaft():
 
 
 def small_gear():
+    """Una rueda dentada de verdad: aro redondo, cuatro radios, cubo de hierro y 8 dientes (los que engranan)."""
     a = W.Animal("kinetic_small_gear")
     r = rotor(a)
     r.cube((-8, -2, -2), (16, 4, 4), **C(STRIPPED, rings=(OAK_DARK, 4)))
-    r.cube((-2, -6, -6), (4, 12, 12), **C(OAK, rings=(OAK_DARK, 2), spots=((170, 128, 78), 0.05)))
-    r.cube((-3, -3, -3), (6, 6, 6), **C(IRON_DARK, high=(IRON, 1)))
+    r.cube((-3, -2, -2), (6, 4, 4), **C(IRON_DARK, high=(IRON, 1)))
+    hub = a.part("hub45", "rotor", (0, 0, 0), rot=(45, 0, 0))
+    hub.cube((-3, -2, -2), (6, 4, 4), **C(IRON_DARK, high=(IRON, 1)))
+    for k in range(12):
+        s = a.part("rim%d" % k, "rotor", (0, 0, 0), rot=(30 * k, 0, 0))
+        s.cube((-2, -6, -1.5), (4, 2, 3), **C(OAK, rings=(OAK_DARK, 2)))
+    for k in range(4):
+        s = a.part("spoke%d" % k, "rotor", (0, 0, 0), rot=(90 * k + 45, 0, 0))
+        s.cube((-1, -5, -1), (2, 3, 2), **C(OAK_DARK))
     for k in range(8):
         t = a.part("tooth%d" % k, "rotor", (0, 0, 0), rot=(45 * k, 0, 0))
         t.cube((-2, -8, -1), (4, 2, 2), **C(OAK_DARK, high=(OAK, 1)))
