@@ -522,4 +522,101 @@ public class EngineeringGameTests implements FabricGameTest {
 			ctx.complete();
 		});
 	}
+
+	// ------------------------------------------------------------------ fase 77: placas, anillas y acero
+
+	/** El martinete aplana en placas los lingotes que hay en el yunque (cuatro golpes cada una). */
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "metal_plates", tickLimit = 300)
+	public void tripHammerFlattensPlates(TestContext ctx) {
+		ctx.setBlockState(1, 2, 2, Engineering.TRIP_HAMMER.getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.EAST));
+		ctx.setBlockState(1, 2, 1, Engineering.HAND_CRANK.getDefaultState().with(Properties.FACING, Direction.NORTH));
+		ctx.setBlockState(2, 0, 2, Blocks.STONE);
+		ctx.setBlockState(2, 1, 2, Blocks.ANVIL);
+		ctx.runAtTick(2, () -> {
+			BlockPos a = ctx.getAbsolutePos(new BlockPos(2, 1, 2));
+			var e = new net.minecraft.entity.ItemEntity(ctx.getWorld(), a.getX() + 0.5, a.getY() + 1.05, a.getZ() + 0.5,
+					new net.minecraft.item.ItemStack(net.minecraft.item.Items.IRON_INGOT, 2), 0, 0, 0);
+			e.setPickupDelayInfinite();
+			ctx.getWorld().spawnEntity(e);
+		});
+		keepCranking(ctx, 1, 2, 1, 260);
+		ctx.runAtTick(250, () -> {
+			BlockPos a = ctx.getAbsolutePos(new BlockPos(2, 1, 2));
+			int plates = 0, ingots = 0;
+			for (var e : ctx.getWorld().getEntitiesByClass(net.minecraft.entity.ItemEntity.class, new net.minecraft.util.math.Box(a).expand(2), x -> true)) {
+				if (e.getStack().isOf(com.evolvedwarfare.engineering.Metalwork.IRON_PLATE)) {
+					plates += e.getStack().getCount();
+				} else if (e.getStack().isOf(net.minecraft.item.Items.IRON_INGOT)) {
+					ingots += e.getStack().getCount();
+				}
+			}
+			LOG.info("[EW-GAMETEST] martinete: placas {}, lingotes que quedan {}", plates, ingots);
+			if (plates != 2 || ingots != 0) {
+				throw new GameTestException("El martinete no aplana los lingotes en placas");
+			}
+			ctx.complete();
+		});
+	}
+
+	/** Hierro fundido + carbón en el crisol, con el fuelle soplando: acero. Sin fuelle, no. Y frío, salen lingotes de acero. */
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "metal_steel", tickLimit = 120)
+	public void bellowsAndCoalMakeSteel(TestContext ctx) {
+		ctx.setBlockState(2, 1, 2, Blocks.MAGMA_BLOCK);
+		ctx.setBlockState(2, 2, 2, com.evolvedwarfare.registry.ModBlocks.CRUCIBLE);
+		ctx.setBlockState(1, 2, 2, Engineering.BELLOWS.getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.EAST));
+		ctx.setBlockState(1, 2, 1, Engineering.HAND_CRANK.getDefaultState().with(Properties.FACING, Direction.NORTH));
+		ctx.setBlockState(5, 1, 2, Blocks.MAGMA_BLOCK);
+		ctx.setBlockState(5, 2, 2, com.evolvedwarfare.registry.ModBlocks.CRUCIBLE);
+		keepCranking(ctx, 1, 2, 1, 100);
+		ctx.runAtTick(5, () -> {
+			for (int x : new int[] {2, 5}) {
+				var c = (com.evolvedwarfare.smithing.CrucibleBlockEntity) ctx.getWorld().getBlockEntity(ctx.getAbsolutePos(new BlockPos(x, 2, 2)));
+				c.setContents(new com.evolvedwarfare.smithing.CrucibleContents("iron", 0, 2.0F, 0L));
+			}
+		});
+		ctx.runAtTick(30, () -> {
+			var world = ctx.getWorld();
+			var coal = new net.minecraft.item.ItemStack(net.minecraft.item.Items.COAL, 3);
+			boolean noBellows = com.evolvedwarfare.engineering.Metalwork.carburize(world, ctx.getAbsolutePos(new BlockPos(5, 2, 2)), coal, null);
+			boolean steel = com.evolvedwarfare.engineering.Metalwork.carburize(world, ctx.getAbsolutePos(new BlockPos(2, 2, 2)), coal, null);
+			var c = (com.evolvedwarfare.smithing.CrucibleBlockEntity) world.getBlockEntity(ctx.getAbsolutePos(new BlockPos(2, 2, 2)));
+			LOG.info("[EW-GAMETEST] acero: sin fuelle {}, con fuelle {}, crisol {}, carbón que queda {}", noBellows, steel, c.contents(), coal.getCount());
+			if (noBellows || !steel || !"steel".equals(c.contents().metal()) || coal.getCount() != 1) {
+				throw new GameTestException("El crisol no hace acero con carbón y fuelle");
+			}
+			// ya frío: los lingotes
+			c.setContents(new com.evolvedwarfare.smithing.CrucibleContents("steel", 2, 0.0F, 0L));
+			var player = ctx.createMockPlayer(net.minecraft.world.GameMode.SURVIVAL);
+			boolean took = com.evolvedwarfare.engineering.Metalwork.takeIngots(world, ctx.getAbsolutePos(new BlockPos(2, 2, 2)), player);
+			int ingots = player.getInventory().count(com.evolvedwarfare.engineering.Metalwork.STEEL_INGOT);
+			LOG.info("[EW-GAMETEST] acero: lingotes sacados {} ({})", ingots, took);
+			if (!took || ingots != 2) {
+				throw new GameTestException("No salen los lingotes de acero del crisol");
+			}
+			ctx.complete();
+		});
+	}
+
+	/** Una hoja de espada de acero da una espada de hierro mejorada (más durabilidad, más daño) que se llama de acero. */
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "metal_steel_tools")
+	public void steelPartsMakeBetterTools(TestContext ctx) {
+		var world = ctx.getWorld();
+		var recipe = new com.evolvedwarfare.smithing.ForgedToolRecipe(net.minecraft.recipe.book.CraftingRecipeCategory.EQUIPMENT);
+		java.util.List<net.minecraft.item.ItemStack> grid = new java.util.ArrayList<>(java.util.List.of(
+				com.evolvedwarfare.smithing.Smithing.part(com.evolvedwarfare.smithing.ForgedPart.SWORD_BLADE, com.evolvedwarfare.smithing.ForgeMaterial.STEEL, 2),
+				new net.minecraft.item.ItemStack(net.minecraft.item.Items.STICK), new net.minecraft.item.ItemStack(net.minecraft.item.Items.LEATHER)));
+		while (grid.size() < 9) {
+			grid.add(net.minecraft.item.ItemStack.EMPTY);
+		}
+		var input = net.minecraft.recipe.input.CraftingRecipeInput.create(3, 3, grid);
+		var sword = recipe.matches(input, world) ? recipe.craft(input, world.getRegistryManager()) : net.minecraft.item.ItemStack.EMPTY;
+		int max = sword.getOrDefault(net.minecraft.component.DataComponentTypes.MAX_DAMAGE, 0);
+		String name = sword.getName().getString();
+		LOG.info("[EW-GAMETEST] acero: {} «{}», durabilidad {}, acero {}", sword.getItem(), name, max,
+				sword.get(com.evolvedwarfare.engineering.Metalwork.STEEL));
+		if (!sword.isOf(net.minecraft.item.Items.IRON_SWORD) || max != 375 || !Boolean.TRUE.equals(sword.get(com.evolvedwarfare.engineering.Metalwork.STEEL))) {
+			throw new GameTestException("La hoja de acero no da una espada de acero");
+		}
+		ctx.complete();
+	}
 }

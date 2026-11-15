@@ -2327,6 +2327,15 @@ Las máquinas gastan la fuerza de la red **por cada rpm** (más deprisa = trabaj
 
 - El **engranaje pequeño** tiene un modelo nuevo: ya no es un cuadrado con dientes, sino una **rueda dentada redonda** como el grande (aro de 12 piezas, cuatro radios y cubo de hierro) con sus **8 dientes**. Mismo tamaño y mismo engrane que antes; también cambia su icono.
 
+## Fase 77 — Metalurgia (1): placas, anillas y acero
+
+- **Placas de metal**: tira lingotes de **hierro, cobre, oro o acero** al **yunque** que golpea el **martinete**: cada **4 golpes** uno se aplana en una **placa** (salta al lado). Son el material de las armaduras de placas, los escudos reforzados y las máquinas de hierro y acero (siguientes fases).
+- **Anillas de hierro**: una placa de hierro en la mesa da **2 anillas**. Con ellas, por fin, **la cota de malla se fabrica**: con la forma de casco, peto, grebas o botas de siempre.
+- **Acero**: funde hierro en el **crisol** al fuego hasta que esté **todo fundido**, pon un **fuelle** en marcha **soplando al crisol o a su fuego**, y echa **carbón o carbón vegetal** (clic derecho): **un carbón por lingote** y el hierro se hace **acero**. Sin fuelle no prende.
+  - Con el acero fundido se **vierte en los moldes** como el hierro y salen **piezas de acero** (azuladas), que se afilan en el yunque (o con el martinete) y se montan igual: dan **las herramientas y armas de hierro hechas de acero** — **«Espada de acero», «Alabarda de acero»**... — con **+50 % de durabilidad, +1 de daño y +10 % al picar** (además de la calidad de la forja).
+  - **Lingotes de acero**: deja enfriar el acero en el crisol y, **agachado y con la mano vacía, clic derecho** al crisol: salen los lingotes (sirve con cualquier metal frío). Un lingote de acero al **alto horno** sale **al rojo**, para volver a fundirlo.
+- El martinete sigue afilando las piezas en bruto (las de acero también).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

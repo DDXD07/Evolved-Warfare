@@ -52,6 +52,10 @@ public enum ForgedPart {
 	/** La herramienta o el arma que sale con este metal (null si no existe: no hay armas medievales de oro). */
 	@Nullable
 	public Item result(ForgeMaterial material) {
+		if (material == ForgeMaterial.STEEL) {
+			// el acero da la herramienta o el arma de hierro, mejorada (ver Metalwork.steel)
+			material = ForgeMaterial.IRON;
+		}
 		if (vanillaTool != null) {
 			String prefix = material == ForgeMaterial.GOLD ? "golden" : material.id;
 			return switch (prefix + "_" + vanillaTool) {

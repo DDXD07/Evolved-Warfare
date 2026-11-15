@@ -88,6 +88,36 @@ public class TripHammerBlock extends SideShaftMachineBlock {
 			}
 		}
 		if (work == null) {
+			// un lingote: se aplana en una placa
+			for (ItemEntity e : world.getEntitiesByClass(ItemEntity.class, box, ItemEntity::isAlive)) {
+				net.minecraft.item.Item plate = Metalwork.plateOf(e.getStack());
+				if (plate == null) {
+					continue;
+				}
+				if (e.getId() != be.target) {
+					be.target = e.getId();
+					be.hits = 0;
+				}
+				be.hits++;
+				if (be.hits >= Metalwork.PLATE_STRIKES) {
+					be.hits = 0;
+					ItemStack s = e.getStack();
+					s.decrement(1);
+					if (s.isEmpty()) {
+						e.discard();
+						be.target = -1;
+					} else {
+						e.setStack(s);
+					}
+					ItemEntity out = new ItemEntity(world, e.getX(), e.getY() + 0.1, e.getZ(), new ItemStack(plate));
+					out.setVelocity(0.0, 0.1, 0.0);
+					world.spawnEntity(out);
+					world.playSound(null, at, SoundEvents.BLOCK_ANVIL_USE, SoundCategory.BLOCKS, 0.7F, 1.3F);
+				} else {
+					world.playSound(null, at, SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.BLOCKS, 0.5F, 1.4F + world.random.nextFloat() * 0.2F);
+				}
+				return;
+			}
 			be.target = -1;
 			be.hits = 0;
 			world.playSound(null, at, SoundEvents.BLOCK_ANVIL_LAND, SoundCategory.BLOCKS, 0.25F, 1.5F);

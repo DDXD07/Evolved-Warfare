@@ -138,6 +138,7 @@ public final class Engineering {
 	}
 
 	public static void register() {
+		Metalwork.register();
 		ServerTickEvents.END_WORLD_TICK.register(KineticNetwork::flush);
 	}
 }

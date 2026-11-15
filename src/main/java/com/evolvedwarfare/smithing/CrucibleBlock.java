@@ -83,6 +83,12 @@ public class CrucibleBlock extends BlockWithEntity {
 	@Override
 	protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand,
 			BlockHitResult hit) {
+		if (stack.isOf(net.minecraft.item.Items.COAL) || stack.isOf(net.minecraft.item.Items.CHARCOAL)) {
+			if (!world.isClient) {
+				com.evolvedwarfare.engineering.Metalwork.carburize((net.minecraft.server.world.ServerWorld) world, pos, stack, player);
+			}
+			return ItemActionResult.SUCCESS;
+		}
 		if (!(stack.getItem() instanceof HotIngotItem hot)) {
 			if (stack.isOf(net.minecraft.item.Items.IRON_INGOT) || stack.isOf(net.minecraft.item.Items.GOLD_INGOT)) {
 				if (!world.isClient) {
@@ -116,6 +122,15 @@ public class CrucibleBlock extends BlockWithEntity {
 	protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
 		if (!player.getMainHandStack().isEmpty()) {
 			return ActionResult.PASS;
+		}
+		if (player.isSneaking()) {
+			// agachado: saca los lingotes del metal ya frío
+			if (!world.isClient && com.evolvedwarfare.engineering.Metalwork.takeIngots(world, pos, player)) {
+				return ActionResult.SUCCESS;
+			}
+			if (world.isClient) {
+				return ActionResult.SUCCESS;
+			}
 		}
 		if (!world.isClient) {
 			pickUp(world, pos, player);

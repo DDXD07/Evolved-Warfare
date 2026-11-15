@@ -61,6 +61,12 @@ public class KineticRenderer implements BlockEntityRenderer<KineticBlockEntity> 
 		net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(Engineering.LIFT_PLATFORM_ENTITY, HoistRenderer::new);
 		net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(Engineering.CRANE_HOOK, HoistRenderer::new);
 		net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap.INSTANCE.putBlock(Engineering.PORTCULLIS, RenderLayer.getCutout());
+		net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback.EVENT.register((stack, context, type, lines) -> {
+			if (stack.getOrDefault(com.evolvedwarfare.engineering.Metalwork.STEEL, false)) {
+				lines.add(Math.min(1, lines.size()), net.minecraft.text.Text.translatable("tooltip.evolvedwarfare.steel")
+						.formatted(net.minecraft.util.Formatting.AQUA));
+			}
+		});
 	}
 
 	static EntityModelLayer layer(String id) {
