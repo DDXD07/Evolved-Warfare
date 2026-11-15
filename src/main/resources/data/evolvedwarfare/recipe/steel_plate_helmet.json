@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "XXX",
+    "X X"
+  ],
+  "key": {
+    "X": {
+      "item": "evolvedwarfare:steel_plate"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:steel_plate_helmet",
+    "count": 1
+  }
+}

@@ -50,6 +50,21 @@ public final class Metalwork {
 	public static final Item STEEL_PLATE = item("steel_plate", new Engineering.DescribedItem(new Item.Settings()));
 	public static final Item IRON_RINGS = item("iron_rings", new Engineering.DescribedItem(new Item.Settings()));
 
+	// fase 78: armaduras de placas y escudos reforzados
+	public static final java.util.List<Item> PLATE_ARMOR = new java.util.ArrayList<>();
+
+	static {
+		for (PlateArmorItem.Kind kind : PlateArmorItem.Kind.values()) {
+			for (net.minecraft.item.ArmorItem.Type type : new net.minecraft.item.ArmorItem.Type[] {net.minecraft.item.ArmorItem.Type.HELMET,
+					net.minecraft.item.ArmorItem.Type.CHESTPLATE, net.minecraft.item.ArmorItem.Type.LEGGINGS, net.minecraft.item.ArmorItem.Type.BOOTS}) {
+				PLATE_ARMOR.add(item(kind.id + "_" + type.getName(), new PlateArmorItem(kind, type)));
+			}
+		}
+	}
+
+	public static final Item REINFORCED_SHIELD = item("reinforced_shield", new MetalShieldItem(false));
+	public static final Item PAVISE = item("pavise", new MetalShieldItem(true));
+
 	private Metalwork() {
 	}
 

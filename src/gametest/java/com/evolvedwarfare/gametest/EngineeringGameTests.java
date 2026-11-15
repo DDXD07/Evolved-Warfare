@@ -619,4 +619,42 @@ public class EngineeringGameTests implements FabricGameTest {
 		}
 		ctx.complete();
 	}
+
+	// ------------------------------------------------------------------ fase 78: armaduras de placas y escudos
+
+	private static double sum(net.minecraft.item.ItemStack stack, net.minecraft.registry.entry.RegistryEntry<net.minecraft.entity.attribute.EntityAttribute> attr) {
+		double total = 0;
+		var mods = stack.getOrDefault(net.minecraft.component.DataComponentTypes.ATTRIBUTE_MODIFIERS,
+				net.minecraft.component.type.AttributeModifiersComponent.DEFAULT);
+		for (var e : mods.modifiers()) {
+			if (e.attribute().equals(attr)) {
+				total += e.modifier().value();
+			}
+		}
+		return total;
+	}
+
+	/** Las armaduras de placas protegen más que las de su metal pero pesan; los escudos aguantan más y se reparan con placas. */
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "metal_armor")
+	public void plateArmorAndShields(TestContext ctx) {
+		double[] armor = new double[2], speed = new double[2], tough = new double[2];
+		int k = 0;
+		for (var item : com.evolvedwarfare.engineering.Metalwork.PLATE_ARMOR) {
+			var stack = new net.minecraft.item.ItemStack(item);
+			int set = k++ / 4;
+			armor[set] += sum(stack, net.minecraft.entity.attribute.EntityAttributes.GENERIC_ARMOR);
+			tough[set] += sum(stack, net.minecraft.entity.attribute.EntityAttributes.GENERIC_ARMOR_TOUGHNESS);
+			speed[set] += sum(stack, net.minecraft.entity.attribute.EntityAttributes.GENERIC_MOVEMENT_SPEED);
+		}
+		var shield = new net.minecraft.item.ItemStack(com.evolvedwarfare.engineering.Metalwork.REINFORCED_SHIELD);
+		var pavise = new net.minecraft.item.ItemStack(com.evolvedwarfare.engineering.Metalwork.PAVISE);
+		int shieldMax = shield.getMaxDamage(), paviseMax = pavise.getMaxDamage();
+		boolean repair = shield.getItem().canRepair(shield, new net.minecraft.item.ItemStack(com.evolvedwarfare.engineering.Metalwork.IRON_PLATE));
+		LOG.info("[EW-GAMETEST] placas: hierro armadura {} dureza {} velocidad {}; acero armadura {} dureza {} velocidad {}; escudo {} pavés {} (repara {})",
+				armor[0], tough[0], speed[0], armor[1], tough[1], speed[1], shieldMax, paviseMax, repair);
+		if (armor[0] != 19 || armor[1] != 21 || Math.abs(speed[1] + 0.12) > 1e-6 || tough[1] != 10 || shieldMax != 672 || paviseMax != 1008 || !repair) {
+			throw new GameTestException("Las armaduras de placas o los escudos no tienen sus números");
+		}
+		ctx.complete();
+	}
 }

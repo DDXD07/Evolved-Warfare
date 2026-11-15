@@ -2695,5 +2695,18 @@
   "message.evolvedwarfare.steel.need_molten": "The crucible needs fully molten iron, on the fire",
   "message.evolvedwarfare.steel.need_bellows": "A bellows must be blowing into the crucible (or its fire)",
   "message.evolvedwarfare.steel.need_coal": "One coal per molten ingot is needed (%s)",
-  "message.evolvedwarfare.crucible.ingots": "You take %s ingots out of the crucible"
+  "message.evolvedwarfare.crucible.ingots": "You take %s ingots out of the crucible",
+  "item.evolvedwarfare.iron_plate_helmet": "Iron Plate Helm",
+  "item.evolvedwarfare.iron_plate_chestplate": "Iron Plate Cuirass",
+  "item.evolvedwarfare.iron_plate_leggings": "Iron Plate Cuisses",
+  "item.evolvedwarfare.iron_plate_boots": "Iron Plate Sabatons",
+  "item.evolvedwarfare.steel_plate_helmet": "Steel Plate Helm",
+  "item.evolvedwarfare.steel_plate_chestplate": "Steel Plate Cuirass",
+  "item.evolvedwarfare.steel_plate_leggings": "Steel Plate Cuisses",
+  "item.evolvedwarfare.steel_plate_boots": "Steel Plate Sabatons",
+  "armor.evolvedwarfare.plate.weight": "Heavy: −3%% movement speed per piece",
+  "item.evolvedwarfare.reinforced_shield": "Reinforced Shield",
+  "item.evolvedwarfare.reinforced_shield.desc": "Planks with iron edges and bands: twice as tough, and axes can't knock it down.",
+  "item.evolvedwarfare.pavise": "Pavise",
+  "item.evolvedwarfare.pavise.desc": "A tall full-body shield: very tough, axes can't knock it down and you can't be pushed while it's raised. Heavy: slower to walk with."
 }

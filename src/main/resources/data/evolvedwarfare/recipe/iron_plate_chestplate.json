@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "X X",
+    "XXX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "evolvedwarfare:iron_plate"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:iron_plate_chestplate",
+    "count": 1
+  }
+}

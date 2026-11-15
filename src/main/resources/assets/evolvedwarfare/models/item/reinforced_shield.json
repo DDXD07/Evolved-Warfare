@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/shield",
+  "textures": {
+    "particle": "evolvedwarfare:item/reinforced_shield"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "minecraft:blocking": 1
+      },
+      "model": "evolvedwarfare:item/reinforced_shield_blocking"
+    }
+  ]
+}

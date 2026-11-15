@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/shield_blocking",
+  "textures": {
+    "particle": "evolvedwarfare:item/reinforced_shield"
+  }
+}

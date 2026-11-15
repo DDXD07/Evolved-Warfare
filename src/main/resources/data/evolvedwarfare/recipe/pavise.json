@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "SPS",
+    "PRP",
+    "SPS"
+  ],
+  "key": {
+    "S": {
+      "item": "evolvedwarfare:steel_plate"
+    },
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "R": {
+      "item": "evolvedwarfare:reinforced_shield"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:pavise",
+    "count": 1
+  }
+}

@@ -80,6 +80,14 @@
     "evolvedwarfare:musketeer_netherite_helmet",
     "evolvedwarfare:musketeer_netherite_chestplate",
     "evolvedwarfare:musketeer_netherite_leggings",
-    "evolvedwarfare:musketeer_netherite_boots"
+    "evolvedwarfare:musketeer_netherite_boots",
+    "evolvedwarfare:iron_plate_helmet",
+    "evolvedwarfare:iron_plate_chestplate",
+    "evolvedwarfare:iron_plate_leggings",
+    "evolvedwarfare:iron_plate_boots",
+    "evolvedwarfare:steel_plate_helmet",
+    "evolvedwarfare:steel_plate_chestplate",
+    "evolvedwarfare:steel_plate_leggings",
+    "evolvedwarfare:steel_plate_boots"
   ]
 }

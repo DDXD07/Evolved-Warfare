@@ -2695,5 +2695,18 @@
   "message.evolvedwarfare.steel.need_molten": "Hace falta hierro fundido del todo en el crisol, al fuego",
   "message.evolvedwarfare.steel.need_bellows": "Hace falta un fuelle soplando al crisol (o a su fuego)",
   "message.evolvedwarfare.steel.need_coal": "Hace falta un carbón por cada lingote fundido (%s)",
-  "message.evolvedwarfare.crucible.ingots": "Sacas %s lingotes del crisol"
+  "message.evolvedwarfare.crucible.ingots": "Sacas %s lingotes del crisol",
+  "item.evolvedwarfare.iron_plate_helmet": "Yelmo de placas de hierro",
+  "item.evolvedwarfare.iron_plate_chestplate": "Coraza de placas de hierro",
+  "item.evolvedwarfare.iron_plate_leggings": "Quijotes de placas de hierro",
+  "item.evolvedwarfare.iron_plate_boots": "Escarpes de placas de hierro",
+  "item.evolvedwarfare.steel_plate_helmet": "Yelmo de placas de acero",
+  "item.evolvedwarfare.steel_plate_chestplate": "Coraza de placas de acero",
+  "item.evolvedwarfare.steel_plate_leggings": "Quijotes de placas de acero",
+  "item.evolvedwarfare.steel_plate_boots": "Escarpes de placas de acero",
+  "armor.evolvedwarfare.plate.weight": "Pesada: −3 %% de velocidad por pieza",
+  "item.evolvedwarfare.reinforced_shield": "Escudo reforzado",
+  "item.evolvedwarfare.reinforced_shield.desc": "Tablas con cantos y bandas de hierro: aguanta el doble y las hachas no lo bajan.",
+  "item.evolvedwarfare.pavise": "Pavés",
+  "item.evolvedwarfare.pavise.desc": "Un escudo alto de cuerpo entero: aguanta muchísimo, las hachas no lo bajan y con él en alto no te empujan. Pesa: vas más lento con él en la mano."
 }

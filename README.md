@@ -2336,6 +2336,19 @@ Las máquinas gastan la fuerza de la red **por cada rpm** (más deprisa = trabaj
   - **Lingotes de acero**: deja enfriar el acero en el crisol y, **agachado y con la mano vacía, clic derecho** al crisol: salen los lingotes (sirve con cualquier metal frío). Un lingote de acero al **alto horno** sale **al rojo**, para volver a fundirlo.
 - El martinete sigue afilando las piezas en bruto (las de acero también).
 
+## Fase 78 — Metalurgia (2): armaduras de placas y escudos reforzados
+
+- **Armadura de placas**, de **hierro** o de **acero** (yelmo cerrado con visera, coraza con arista, hombreras, faldón y escarpes; la de acero, azulada con remates dorados). Se hace con **placas** del martinete con la forma de siempre (5, 8, 7 y 4 placas) y se repara con ellas. Acepta adornos y encantamientos.
+
+| | Armadura (yelmo/coraza/quijotes/escarpes) | Total | Dureza | Resistencia al empuje | Peso |
+|---|---|---|---|---|---|
+| Placas de hierro | 3 / 7 / 6 / 3 | 19 (hierro: 15) | 1 por pieza | 5 % por pieza | −3 % de velocidad por pieza |
+| Placas de acero | 3 / 8 / 7 / 3 | 21 (diamante: 20) | 2,5 por pieza | 10 % por pieza | −3 % de velocidad por pieza |
+
+- **Escudo reforzado**: un escudo con **cantos, bandas y umbo de hierro**. Aguanta **el doble** (672) y **las hachas no lo bajan**. Receta: el escudo de siempre en el centro, 4 placas de hierro en las esquinas y 4 tablones.
+- **Pavés**: escudo alto **de cuerpo entero** (más grande en la mano), pintado a franjas. Aguanta **el triple** (1008), las hachas no lo bajan y **con él en alto no te empujan**. Pesa: **−10 % de velocidad** mientras lo llevas en la mano. Receta: el escudo reforzado en el centro, 4 placas de acero en las esquinas y 4 tablones.
+- Los dos se reparan con placas (hierro el reforzado, acero el pavés) y **se desgastan** al parar golpes como el de vanilla.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

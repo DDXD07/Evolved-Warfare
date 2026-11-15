@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/shield",
+  "textures": {
+    "particle": "evolvedwarfare:item/pavise"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "minecraft:blocking": 1
+      },
+      "model": "evolvedwarfare:item/pavise_blocking"
+    }
+  ]
+}
