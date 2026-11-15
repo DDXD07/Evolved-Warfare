@@ -58,6 +58,10 @@ public class MachineBlockEntity extends KineticBlockEntity implements SidedInven
 		return progress;
 	}
 
+	public float phase() {
+		return phase;
+	}
+
 	public int hits() {
 		return hits;
 	}

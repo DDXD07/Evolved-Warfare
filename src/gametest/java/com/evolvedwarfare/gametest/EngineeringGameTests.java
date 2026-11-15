@@ -205,6 +205,15 @@ public class EngineeringGameTests implements FabricGameTest {
 			ctx.getWorld().spawnEntity(item[0]);
 		});
 		keepCranking(ctx, 1, 2, 1, 260);
+		for (int t = 20; t <= 120; t += 20) {
+			ctx.runAtTick(t, () -> {
+				BlockPos at = ctx.getAbsolutePos(new BlockPos(2, 2, 2));
+				LOG.info("[EW-GAMETEST] martinete: fase {}, golpes {}, yunque {}, objeto en {}, en la caja {}", machine(ctx, 1, 2, 2).phase(),
+						machine(ctx, 1, 2, 2).hits(), ctx.getWorld().getBlockState(at.down()), item[0].getPos(),
+						ctx.getWorld().getEntitiesByClass(net.minecraft.entity.ItemEntity.class, new net.minecraft.util.math.Box(at.getX(), at.getY() - 0.2,
+								at.getZ(), at.getX() + 1, at.getY() + 0.6, at.getZ() + 1), e -> true).size());
+			});
+		}
 		ctx.runAtTick(250, () -> {
 			var data = item[0].getStack().get(com.evolvedwarfare.registry.ModComponents.FORGED_PART);
 			LOG.info("[EW-GAMETEST] martinete: gira {}, golpes {}, pieza {}, vivo {}", be(ctx, 1, 2, 2).speed(), machine(ctx, 1, 2, 2).hits(), data,
