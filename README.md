@@ -2258,7 +2258,7 @@ Los NPCs del pueblo (los vecinos, los guardias del cuartel y los vigías de las 
 - **Caja de engranajes**: pasa el giro a sus seis caras, para doblar esquinas.
 - **Fuentes** (de tres tamaños las grandes; cuanto más grandes, más lentas pero con mucha más fuerza):
   - **Manivela**: mantén clic derecho para darle vueltas (16 rpm, 48 de fuerza; cansa un poco).
-  - **Rueda hidráulica** pequeña (3 de diámetro, 16 rpm, 256), mediana (5, 12 rpm, 768) y grande (7, 8 rpm, 1536): gira con el **agua que corre o cae** por ella, hacia donde la empuja y más fuerte cuanta más agua la mueve.
+  - **Rueda hidráulica** pequeña (3 de diámetro, 16 rpm, 256), mediana (5, 12 rpm, 768) y grande (7, 8 rpm, 1536): gira con el **agua que corre o cae** por ella, hacia donde la empuja y más fuerte cuanta más agua la mueve. En un **río** (o el mar) la corriente empuja la mitad de abajo: pon la rueda con el eje a ras del agua.
   - **Molino de viento** pequeño (aspas de 5, 16 rpm, 256), mediano (9, 12 rpm, 1024) y grande (13, 8 rpm, 2048): necesita **aire libre** donde barren las aspas; da más fuerza **cuanto más alto** (de ×0,4 junto al mar a ×1,3) y con **lluvia (×1,25) o tormenta (×1,5)**. El eje sale por detrás.
 - **Velocímetro** y **medidor de fuerza**: un eje pasa por dentro y la aguja de arriba marca la velocidad (hasta 32 rpm) o cuánta fuerza se gasta.
 - Si dos fuentes giran a distinta velocidad o al revés, la red **se atasca**; si las máquinas piden más fuerza de la que hay, **se sobrecarga** y se para todo.
