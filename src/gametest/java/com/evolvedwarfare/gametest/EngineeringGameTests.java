@@ -70,21 +70,29 @@ public class EngineeringGameTests implements FabricGameTest {
 		});
 	}
 
-	/** El agua que cae por un lado mueve la rueda hidráulica. */
+	/** El agua que cae por un lado mueve la rueda hidráulica (y sin agua que se mueva, se para). */
 	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "kinetic_water", tickLimit = 120)
 	public void waterTurnsTheWheel(TestContext ctx) {
 		ctx.setBlockState(3, 3, 3, Engineering.WATER_WHEEL_SMALL.getDefaultState().with(Properties.HORIZONTAL_AXIS, Direction.Axis.X));
-		ctx.setBlockState(3, 3, 1, Engineering.SHAFT.getDefaultState().with(Properties.AXIS, Direction.Axis.X));
-		ctx.setBlockState(3, 6, 4, Blocks.WATER.getDefaultState());
-		ctx.runAtTick(70, () -> {
+		ctx.setBlockState(2, 3, 3, Engineering.SHAFT.getDefaultState().with(Properties.AXIS, Direction.Axis.X));
+		ctx.runAtTick(10, () -> {
 			KineticBlockEntity w = be(ctx, 3, 3, 3);
-			for (int y = 1; y <= 6; y++) {
-				net.minecraft.util.math.BlockPos q = ctx.getAbsolutePos(new net.minecraft.util.math.BlockPos(3, y, 4));
-				LOG.info("[EW-GAMETEST] columna y{}: {} vel {}", y, ctx.getWorld().getBlockState(q), ctx.getWorld().getFluidState(q).getVelocity(ctx.getWorld(), q));
+			w.refreshSource();
+			if (w.generated() != 0 || w.problem() != 2) {
+				throw new GameTestException("La rueda gira sin agua");
 			}
-			LOG.info("[EW-GAMETEST] rueda en {}: {}", ctx.getAbsolutePos(new net.minecraft.util.math.BlockPos(3, 3, 3)), ctx.getWorld().getBlockState(ctx.getAbsolutePos(new net.minecraft.util.math.BlockPos(3, 3, 3))));
-			LOG.info("[EW-GAMETEST] rueda hidráulica: da {}, gira {}, fuerza {}, problema {}", w.generated(), w.speed(), w.capacity(), w.problem());
-			if (Math.abs(w.speed()) < 1 || w.capacity() <= 0) {
+			// una cascada por un lado (el agua es finita: se pone y se mide en el mismo tic)
+			for (int y = 2; y <= 4; y++) {
+				ctx.getWorld().setBlockState(ctx.getAbsolutePos(new net.minecraft.util.math.BlockPos(3, y, 4)),
+						net.minecraft.fluid.Fluids.FLOWING_WATER.getFlowing(8, true).getBlockState(), net.minecraft.block.Block.NOTIFY_LISTENERS);
+			}
+			w.refreshSource();
+		});
+		ctx.runAtTick(12, () -> {
+			KineticBlockEntity w = be(ctx, 3, 3, 3);
+			KineticBlockEntity shaft = be(ctx, 2, 3, 3);
+			LOG.info("[EW-GAMETEST] rueda hidráulica: da {}, gira {}, fuerza {}, problema {}; eje {}", w.generated(), w.speed(), w.capacity(), w.problem(), shaft.speed());
+			if (Math.abs(w.speed()) < 1 || w.capacity() <= 0 || shaft.speed() != w.speed()) {
 				throw new GameTestException("El agua no mueve la rueda");
 			}
 			ctx.complete();

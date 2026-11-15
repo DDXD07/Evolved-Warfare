@@ -103,6 +103,10 @@ public class WaterWheelBlock extends KineticBlock {
 						// el agua que cae empuja hacia abajo
 						flow = flow.add(0.0, -1.0, 0.0);
 					}
+					if (flow.lengthSquared() <= 1e-4 && a < 0 && com.evolvedwarfare.fluid.FiniteFluids.isInfinite(world, p, net.minecraft.fluid.Fluids.WATER)) {
+						// la corriente de un río (o el mar) empuja la mitad de abajo de la rueda
+						flow = new Vec3d(v.getOffsetX(), 0.0, v.getOffsetZ());
+					}
 					if (flow.lengthSquared() > 1e-4) {
 						Vec3d rel = new Vec3d(p.getX() - pos.getX(), p.getY() - pos.getY(), p.getZ() - pos.getZ());
 						torque += rel.crossProduct(flow).dotProduct(ax);
