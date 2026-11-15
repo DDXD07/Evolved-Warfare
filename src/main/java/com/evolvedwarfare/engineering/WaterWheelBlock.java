@@ -99,6 +99,10 @@ public class WaterWheelBlock extends KineticBlock {
 				}
 				if (f.isIn(FluidTags.WATER)) {
 					Vec3d flow = f.getVelocity(world, p);
+					if (f.contains(net.minecraft.fluid.FlowableFluid.FALLING) && f.get(net.minecraft.fluid.FlowableFluid.FALLING)) {
+						// el agua que cae empuja hacia abajo
+						flow = flow.add(0.0, -1.0, 0.0);
+					}
 					if (flow.lengthSquared() > 1e-4) {
 						Vec3d rel = new Vec3d(p.getX() - pos.getX(), p.getY() - pos.getY(), p.getZ() - pos.getZ());
 						torque += rel.crossProduct(flow).dotProduct(ax);
