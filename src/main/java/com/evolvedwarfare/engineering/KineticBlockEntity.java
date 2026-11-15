@@ -16,7 +16,7 @@ import net.minecraft.world.World;
  * atascada o sobrecargada, y (las fuentes) lo que dan. En el cliente lleva el ángulo para dibujarlo girando sin saltos.
  */
 public class KineticBlockEntity extends BlockEntity {
-	public static final int OK = 0, JAMMED = 1, OVERSTRESSED = 2;
+	public static final int OK = 0, JAMMED = 1, OVERSTRESSED = 2, OVERSPEED = 3;
 	/** La velocidad de este bloque (rpm, con signo según su eje). */
 	float speed;
 	float capacity, stress;
@@ -61,6 +61,15 @@ public class KineticBlockEntity extends BlockEntity {
 
 	public int problem() {
 		return problem;
+	}
+
+	/** Para pruebas y modo creativo: hace de fuente con esas rpm y esa fuerza (solo en bloques que no son fuente). */
+	public void debugGenerate(float rpm, float force) {
+		generated = rpm;
+		generatedCapacity = force;
+		if (world instanceof ServerWorld sw) {
+			KineticNetwork.markDirty(sw, pos);
+		}
 	}
 
 	public void setExtraImpact(float impact) {

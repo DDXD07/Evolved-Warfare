@@ -657,4 +657,79 @@ public class EngineeringGameTests implements FabricGameTest {
 		}
 		ctx.complete();
 	}
+
+	// ------------------------------------------------------------------ fase 79: máquinas mejoradas y ballestas
+
+	/** La madera no aguanta más de 64 rpm (la red se para); el hierro, sí. */
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "metal_overspeed", tickLimit = 40)
+	public void woodCantTakeTheSpeed(TestContext ctx) {
+		ctx.setBlockState(1, 2, 1, Engineering.SHAFT.getDefaultState().with(Properties.AXIS, Direction.Axis.X));
+		ctx.setBlockState(1, 2, 3, Engineering.IRON_SHAFT.getDefaultState().with(Properties.AXIS, Direction.Axis.X));
+		ctx.runAtTick(2, () -> {
+			be(ctx, 1, 2, 1).debugGenerate(128, 1000);
+			be(ctx, 1, 2, 3).debugGenerate(128, 1000);
+		});
+		ctx.runAtTick(6, () -> {
+			var wood = be(ctx, 1, 2, 1);
+			var iron = be(ctx, 1, 2, 3);
+			LOG.info("[EW-GAMETEST] velocidad: madera {} (estado {}), hierro {} (estado {})", wood.speed(), wood.networkState(), iron.speed(),
+					iron.networkState());
+			if (wood.networkState() != KineticBlockEntity.OVERSPEED || wood.speed() != 0 || iron.networkState() != KineticBlockEntity.OK
+					|| iron.speed() != 128) {
+				throw new GameTestException("Los límites de velocidad no van");
+			}
+			ctx.complete();
+		});
+	}
+
+	/** La afiladora repara una espada casi rota hasta el 80 % y la deja afilada. */
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "metal_sharpener", tickLimit = 220)
+	public void sharpenerRepairsAndSharpens(TestContext ctx) {
+		ctx.setBlockState(2, 1, 2, Engineering.SHARPENER.getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.EAST));
+		ctx.setBlockState(2, 1, 1, Engineering.HAND_CRANK.getDefaultState().with(Properties.FACING, Direction.NORTH));
+		ctx.runAtTick(1, () -> {
+			var sword = new net.minecraft.item.ItemStack(net.minecraft.item.Items.IRON_SWORD);
+			sword.setDamage(240);
+			if (machine(ctx, 2, 1, 2).insert(sword) != 1) {
+				throw new GameTestException("La afiladora no coge la espada");
+			}
+		});
+		keepCranking(ctx, 2, 1, 1, 200);
+		ctx.runAtTick(190, () -> {
+			var m = machine(ctx, 2, 1, 2);
+			var out = m.getStack(1);
+			LOG.info("[EW-GAMETEST] afiladora: {} gastada {} de {}, filo {}", out.getItem(), out.getDamage(), out.getMaxDamage(),
+					com.evolvedwarfare.engineering.Sharpening.hitsLeft(out));
+			if (!out.isOf(net.minecraft.item.Items.IRON_SWORD) || out.getDamage() != 50 || com.evolvedwarfare.engineering.Sharpening.hitsLeft(out) != 40) {
+				throw new GameTestException("La afiladora no repara ni afila");
+			}
+			ctx.complete();
+		});
+	}
+
+	/** La ballesta de repetición dispara una flecha de su cargador cada vez; la pesada tarda más en cargar. */
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "metal_crossbows")
+	public void mechanicalCrossbows(TestContext ctx) {
+		var world = ctx.getWorld();
+		var player = ctx.createMockPlayer(net.minecraft.world.GameMode.SURVIVAL);
+		BlockPos at = ctx.getAbsolutePos(new BlockPos(2, 2, 2));
+		player.refreshPositionAndAngles(at.getX() + 0.5, at.getY(), at.getZ() + 0.5, 0, 0);
+		var arbalest = new net.minecraft.item.ItemStack(com.evolvedwarfare.engineering.Metalwork.ARBALEST);
+		int pull = net.minecraft.item.CrossbowItem.getPullTime(arbalest, player);
+		int vanilla = net.minecraft.item.CrossbowItem.getPullTime(new net.minecraft.item.ItemStack(net.minecraft.item.Items.CROSSBOW), player);
+		var repeater = new net.minecraft.item.ItemStack(com.evolvedwarfare.engineering.Metalwork.REPEATING_CROSSBOW);
+		repeater.set(net.minecraft.component.DataComponentTypes.CHARGED_PROJECTILES, net.minecraft.component.type.ChargedProjectilesComponent.of(
+				java.util.List.of(new net.minecraft.item.ItemStack(net.minecraft.item.Items.ARROW), new net.minecraft.item.ItemStack(net.minecraft.item.Items.ARROW),
+						new net.minecraft.item.ItemStack(net.minecraft.item.Items.ARROW))));
+		player.setStackInHand(net.minecraft.util.Hand.MAIN_HAND, repeater);
+		repeater.getItem().use(world, player, net.minecraft.util.Hand.MAIN_HAND);
+		int left = repeater.get(net.minecraft.component.DataComponentTypes.CHARGED_PROJECTILES).getProjectiles().size();
+		int arrows = world.getEntitiesByClass(net.minecraft.entity.projectile.ArrowEntity.class, new net.minecraft.util.math.Box(at).expand(4), e -> true).size();
+		LOG.info("[EW-GAMETEST] ballestas: carga de la pesada {} (normal {}), a la de repetición le quedan {}, flechas en el aire {}", pull, vanilla, left,
+				arrows);
+		if (pull != Math.round(vanilla * 2.4F) || left != 2 || arrows != 1) {
+			throw new GameTestException("Las ballestas mecánicas no van");
+		}
+		ctx.complete();
+	}
 }

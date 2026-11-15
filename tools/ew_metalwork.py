@@ -68,6 +68,55 @@ def rings():
     return im
 
 
+# ------------------------------------------------------------------ fase 79: las ballestas mecánicas
+
+WOOD, WOOD_DARK = (138, 98, 56), (92, 62, 34)
+STRING = (230, 226, 210)
+
+
+def _line(im, a, b, color, width=1):
+    dr = ImageDraw.Draw(im)
+    dr.line([a, b], fill=color + (255,), width=width)
+
+
+def crossbow(kind, state):
+    """state: standby, pulling_0..2, arrow, firework."""
+    im = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    dr = ImageDraw.Draw(im)
+    pull = {"standby": 1, "pulling_0": 2, "pulling_1": 3, "pulling_2": 4, "arrow": 4, "firework": 4}[state]
+    # la culata, de abajo a la izquierda hacia arriba a la derecha
+    _line(im, (2, 14), (11, 5), WOOD_DARK, 2)
+    _line(im, (3, 13), (11, 5), WOOD)
+    prod = (150, 166, 188) if kind == "arbalest" else (120, 84, 48)
+    prod_dark = (84, 96, 116) if kind == "arbalest" else (80, 54, 30)
+    # el arco (se dobla hacia atrás al tensarlo)
+    bend = (pull - 1) * 0.5
+    t1 = (int(round(7 - bend)), int(round(1 + bend)))
+    t2 = (int(round(15 - bend)), int(round(9 + bend)))
+    # la cuerda (detrás del arco)
+    nut = (11 - pull, 5 + pull)
+    dr.line([t1, nut, t2], fill=STRING + (255,), width=1)
+    dr.line([t1, (12, 4), t2], fill=prod + (255,), width=1)
+    dr.line([(t1[0] + 1, t1[1]), (12, 3), (t2[0], t2[1] - 1)], fill=prod_dark + (255,), width=1)
+    if state == "arrow":
+        _line(im, (nut[0] - 1, nut[1] + 1), (13, 3), (110, 86, 54))
+        im.putpixel((13, 3), (200, 200, 206, 255))
+        im.putpixel((14, 2), (230, 230, 236, 255))
+    elif state == "firework":
+        _line(im, (nut[0] - 1, nut[1] + 1), (13, 3), (190, 40, 40), 2)
+        im.putpixel((14, 2), (230, 200, 80, 255))
+    if kind == "arbalest":
+        # el torno de manivela en la culata
+        dr.ellipse((1, 11, 5, 15), outline=(84, 96, 116, 255), fill=(150, 166, 188, 255))
+        im.putpixel((3, 13), (60, 60, 66, 255))
+        _line(im, (4, 15), (6, 15), (60, 60, 66))
+    else:
+        # el cargador encima de la culata
+        dr.polygon([(5, 7), (8, 4), (10, 6), (7, 9)], fill=(110, 76, 42, 255), outline=(70, 48, 26, 255))
+        im.putpixel((7, 6), (170, 170, 178, 255))
+    return im
+
+
 ITEMS = collections.OrderedDict([
     ("steel_ingot", ("Lingote de acero", "Steel Ingot",
                      "Sale del crisol: hierro fundido con carbón y un fuelle soplando. Más duro que el hierro.",
@@ -82,6 +131,12 @@ ITEMS = collections.OrderedDict([
                     "An ingot flattened by the trip hammer on the anvil.")),
     ("steel_plate", ("Placa de acero", "Steel Plate", "Un lingote de acero aplanado por el martinete sobre el yunque.",
                      "A steel ingot flattened by the trip hammer on the anvil.")),
+    ("arbalest", ("Ballesta pesada", "Arbalest",
+                  "Arco de acero que se tensa con un torno de manivela: tarda el triple en cargar, pero el virote sale mucho más rápido, hace más del doble de daño y atraviesa a uno.",
+                  "Steel prod spanned with a crank windlass: three times slower to load, but the bolt flies much faster, deals over twice the damage and pierces one target.")),
+    ("repeating_crossbow", ("Ballesta de repetición", "Repeating Crossbow",
+                            "Con cargador: al tensarla carga hasta 5 flechas, y luego cada clic dispara una (algo menos de daño).",
+                            "With a magazine: spanning it loads up to 5 arrows, then each click shoots one (a bit less damage).")),
     ("iron_rings", ("Anillas de hierro", "Iron Rings", "Para la cota de malla. Salen de cortar una placa de hierro.",
                     "For chainmail. Cut from an iron plate.")),
 ])
@@ -101,6 +156,7 @@ TEXTS = {
     "message.evolvedwarfare.steel.need_molten": ("Hace falta hierro fundido del todo en el crisol, al fuego", "The crucible needs fully molten iron, on the fire"),
     "message.evolvedwarfare.steel.need_bellows": ("Hace falta un fuelle soplando al crisol (o a su fuego)", "A bellows must be blowing into the crucible (or its fire)"),
     "message.evolvedwarfare.steel.need_coal": ("Hace falta un carbón por cada lingote fundido (%s)", "One coal per molten ingot is needed (%s)"),
+    "tooltip.evolvedwarfare.crossbow.loaded": ("Cargadas: %s", "Loaded: %s"),
     "message.evolvedwarfare.crucible.ingots": ("Sacas %s lingotes del crisol", "You take %s ingots out of the crucible"),
 }
 
@@ -120,6 +176,10 @@ def recipes():
     shaped("chainmail_chestplate", ["R R", "RRR", "RRR"], {"R": R}, "minecraft:chainmail_chestplate")
     shaped("chainmail_leggings", ["RRR", "R R", "R R"], {"R": R}, "minecraft:chainmail_leggings")
     shaped("chainmail_boots", ["R R", "R R"], {"R": R}, "minecraft:chainmail_boots")
+    shaped("arbalest", ["SSS", "GCG", " T "], {"S": NS + ":steel_plate", "G": NS + ":iron_small_gear", "C": "minecraft:crossbow",
+                                                 "T": "minecraft:tripwire_hook"}, NS + ":arbalest")
+    shaped("repeating_crossbow", ["PIP", "GCG", " T "], {"P": "#minecraft:planks", "I": NS + ":iron_plate", "G": NS + ":small_gear",
+                                                       "C": "minecraft:crossbow", "T": "minecraft:tripwire_hook"}, NS + ":repeating_crossbow")
     for kind, typ, t in (("blasting", "minecraft:blasting", 100), ("smelting", "minecraft:smelting", 200)):
         write_json(os.path.join(DATA, "recipe", "hot_steel_ingot_from_%s.json" % kind), {
             "type": typ, "category": "misc", "ingredient": {"item": NS + ":steel_ingot"},
@@ -133,7 +193,22 @@ def main():
     for m in ("iron", "copper", "gold", "steel"):
         plate(m).save(os.path.join(item_dir, "%s_plate.png" % m))
     rings().save(os.path.join(item_dir, "iron_rings.png"))
-    for name in ITEMS:
+    for name in ("arbalest", "repeating_crossbow"):
+        kind = "arbalest" if name == "arbalest" else "repeater"
+        for st in ("standby", "pulling_0", "pulling_1", "pulling_2", "arrow", "firework"):
+            crossbow(kind, st).save(os.path.join(item_dir, "%s_%s.png" % (name, st)))
+            if st != "standby":
+                write_json(os.path.join(ASSETS, "models/item/%s_%s.json" % (name, st)),
+                           {"parent": "minecraft:item/crossbow", "textures": {"layer0": "%s:item/%s_%s" % (NS, name, st)}})
+        write_json(os.path.join(ASSETS, "models/item/%s.json" % name), {
+            "parent": "minecraft:item/crossbow", "textures": {"layer0": "%s:item/%s_standby" % (NS, name)},
+            "overrides": [
+                {"predicate": {"pulling": 1}, "model": "%s:item/%s_pulling_0" % (NS, name)},
+                {"predicate": {"pulling": 1, "pull": 0.58}, "model": "%s:item/%s_pulling_1" % (NS, name)},
+                {"predicate": {"pulling": 1, "pull": 1.0}, "model": "%s:item/%s_pulling_2" % (NS, name)},
+                {"predicate": {"charged": 1}, "model": "%s:item/%s_arrow" % (NS, name)},
+                {"predicate": {"charged": 1, "firework": 1}, "model": "%s:item/%s_firework" % (NS, name)}]})
+    for name in [n for n in ITEMS if n not in ("arbalest", "repeating_crossbow")]:
         write_json(os.path.join(ASSETS, "models/item/%s.json" % name),
                    {"parent": "minecraft:item/generated", "textures": {"layer0": "%s:item/%s" % (NS, name)}})
     recipes()

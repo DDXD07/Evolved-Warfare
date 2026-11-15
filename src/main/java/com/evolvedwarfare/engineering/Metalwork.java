@@ -65,6 +65,11 @@ public final class Metalwork {
 	public static final Item REINFORCED_SHIELD = item("reinforced_shield", new MetalShieldItem(false));
 	public static final Item PAVISE = item("pavise", new MetalShieldItem(true));
 
+	// fase 79: las ballestas mecánicas
+	public static final Item ARBALEST = item("arbalest", new MechanicalCrossbowItem(false, new Item.Settings().maxCount(1).maxDamage(700)));
+	public static final Item REPEATING_CROSSBOW = item("repeating_crossbow", new MechanicalCrossbowItem(true,
+			new Item.Settings().maxCount(1).maxDamage(600)));
+
 	private Metalwork() {
 	}
 
@@ -75,6 +80,7 @@ public final class Metalwork {
 
 	public static void register() {
 		// carga la clase (los objetos se registran arriba)
+		Sharpening.register();
 	}
 
 	/** La placa que sale de aplanar ese lingote, o null. */

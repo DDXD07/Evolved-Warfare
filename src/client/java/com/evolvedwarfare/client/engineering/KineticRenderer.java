@@ -46,7 +46,9 @@ public class KineticRenderer implements BlockEntityRenderer<KineticBlockEntity> 
 	private static final String[] MODELS = {"kinetic_shaft", "kinetic_small_gear", "kinetic_large_gear", "kinetic_crank", "kinetic_gauge_needle",
 			"water_wheel_small", "water_wheel_medium", "water_wheel_large", "windmill_small", "windmill_medium", "windmill_large", "machine_millstone", "machine_sawmill", "machine_trip_hammer", "machine_bellows",
 			"machine_screw", "machine_pulley", "machine_crane", "hoist_platform", "hoist_hook", "hoist_rope",
-			"kinetic_cam", "machine_winch", "clock_hand_hour", "clock_hand_minute"};
+			"kinetic_cam", "machine_winch", "clock_hand_hour", "clock_hand_minute",
+			"kinetic_shaft_iron", "kinetic_small_gear_iron", "kinetic_large_gear_iron", "kinetic_shaft_steel", "kinetic_small_gear_steel",
+			"kinetic_large_gear_steel", "machine_sharpener"};
 	private static final Map<String, EntityModelLayer> LAYERS = new HashMap<>();
 	private final Map<String, ModelPart> parts = new HashMap<>();
 
@@ -62,7 +64,26 @@ public class KineticRenderer implements BlockEntityRenderer<KineticBlockEntity> 
 		net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(Engineering.CRANE_HOOK, HoistRenderer::new);
 		net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap.INSTANCE.putBlock(Engineering.PORTCULLIS, RenderLayer.getCutout());
 		MetalShieldRenderer.register();
+		for (net.minecraft.item.Item bow : new net.minecraft.item.Item[] {com.evolvedwarfare.engineering.Metalwork.ARBALEST,
+				com.evolvedwarfare.engineering.Metalwork.REPEATING_CROSSBOW}) {
+			net.minecraft.client.item.ModelPredicateProviderRegistry.register(bow, Identifier.ofVanilla("pull"), (stack, world, entity, seed) ->
+					entity == null || net.minecraft.item.CrossbowItem.isCharged(stack) ? 0.0F
+							: (stack.getMaxUseTime(entity) - entity.getItemUseTimeLeft()) / (float) net.minecraft.item.CrossbowItem.getPullTime(stack, entity));
+			net.minecraft.client.item.ModelPredicateProviderRegistry.register(bow, Identifier.ofVanilla("pulling"), (stack, world, entity, seed) ->
+					entity != null && entity.isUsingItem() && entity.getActiveItem() == stack && !net.minecraft.item.CrossbowItem.isCharged(stack) ? 1.0F : 0.0F);
+			net.minecraft.client.item.ModelPredicateProviderRegistry.register(bow, Identifier.ofVanilla("charged"), (stack, world, entity, seed) ->
+					net.minecraft.item.CrossbowItem.isCharged(stack) ? 1.0F : 0.0F);
+			net.minecraft.client.item.ModelPredicateProviderRegistry.register(bow, Identifier.ofVanilla("firework"), (stack, world, entity, seed) -> {
+				var c = stack.get(net.minecraft.component.DataComponentTypes.CHARGED_PROJECTILES);
+				return c != null && c.contains(net.minecraft.item.Items.FIREWORK_ROCKET) ? 1.0F : 0.0F;
+			});
+		}
 		net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback.EVENT.register((stack, context, type, lines) -> {
+			int sharp = com.evolvedwarfare.engineering.Sharpening.hitsLeft(stack);
+			if (sharp > 0) {
+				lines.add(Math.min(1, lines.size()), net.minecraft.text.Text.translatable("tooltip.evolvedwarfare.sharpened", sharp)
+						.formatted(net.minecraft.util.Formatting.YELLOW));
+			}
 			if (stack.getOrDefault(com.evolvedwarfare.engineering.Metalwork.STEEL, false)) {
 				lines.add(Math.min(1, lines.size()), net.minecraft.text.Text.translatable("tooltip.evolvedwarfare.steel")
 						.formatted(net.minecraft.util.Formatting.AQUA));
@@ -104,7 +125,8 @@ public class KineticRenderer implements BlockEntityRenderer<KineticBlockEntity> 
 		final float spin = angle;
 		if (state.getBlock() instanceof ShaftBlock shaft) {
 			int gear = shaft.gear(state);
-			String id = gear == 0 ? "kinetic_shaft" : gear == 1 ? "kinetic_small_gear" : "kinetic_large_gear";
+			String id = (gear == 0 ? "kinetic_shaft" : gear == 1 ? "kinetic_small_gear" : "kinetic_large_gear")
+					+ (shaft.tier() == 1 ? "_iron" : shaft.tier() == 2 ? "_steel" : "");
 			float offset = gear == 1 && ((pos.getX() + pos.getY() + pos.getZ()) & 1) == 1 ? 22.5F : 0.0F;
 			draw(m, consumers, light, id, axisDir(state.get(Properties.AXIS)), angle + offset);
 		} else if (state.getBlock() instanceof CrankBlock) {
@@ -175,6 +197,9 @@ public class KineticRenderer implements BlockEntityRenderer<KineticBlockEntity> 
 			Direction face = state.get(Properties.HORIZONTAL_FACING);
 			draw(m, consumers, light, "clock_hand_hour", face, -hours / 12.0F * 360.0F);
 			draw(m, consumers, light, "clock_hand_minute", face, -minutes * 360.0F);
+		} else if (state.getBlock() instanceof com.evolvedwarfare.engineering.SharpenerBlock) {
+			machine(m, consumers, light, "machine_sharpener", SideShaftMachineBlock.facing(state),
+					part -> part.getChild("rotor").roll = -spin * 2.0F * MathHelper.RADIANS_PER_DEGREE);
 		} else if (state.getBlock() instanceof GaugeBlock gauge) {
 			// la aguja, arriba: de −90° (nada) a +90° (al máximo)
 			float value = gauge.measuresStress() ? (be.capacity() > 0 ? be.stress() / be.capacity() : 0.0F) : Math.abs(be.speed()) / 32.0F;

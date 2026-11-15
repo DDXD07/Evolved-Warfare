@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "PIP",
+    "GCG",
+    " T "
+  ],
+  "key": {
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "I": {
+      "item": "evolvedwarfare:iron_plate"
+    },
+    "G": {
+      "item": "evolvedwarfare:small_gear"
+    },
+    "C": {
+      "item": "minecraft:crossbow"
+    },
+    "T": {
+      "item": "minecraft:tripwire_hook"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:repeating_crossbow",
+    "count": 1
+  }
+}

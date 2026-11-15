@@ -84,6 +84,9 @@ public abstract class KineticBlock extends BlockWithEntity implements Kinetic {
 		if (be.networkState() == KineticBlockEntity.JAMMED) {
 			return Text.translatable("message.evolvedwarfare.kinetic.jammed").formatted(Formatting.RED);
 		}
+		if (be.networkState() == KineticBlockEntity.OVERSPEED) {
+			return Text.translatable("message.evolvedwarfare.kinetic.overspeed").formatted(Formatting.RED);
+		}
 		if (be.networkState() == KineticBlockEntity.OVERSTRESSED) {
 			return Text.translatable("message.evolvedwarfare.kinetic.overstressed", Math.round(be.stress()), Math.round(be.capacity()))
 					.formatted(Formatting.RED);

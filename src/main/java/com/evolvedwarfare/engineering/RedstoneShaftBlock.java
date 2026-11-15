@@ -47,4 +47,9 @@ public abstract class RedstoneShaftBlock extends KineticBlock {
 			KineticNetwork.markDirty(sw, pos);
 		}
 	}
+
+	@Override
+	public float maxSpeed(BlockState state) {
+		return Kinetic.WOOD_MAX;
+	}
 }

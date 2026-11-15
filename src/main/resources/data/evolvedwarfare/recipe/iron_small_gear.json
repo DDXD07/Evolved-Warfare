@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    " P ",
+    "PHP",
+    " P "
+  ],
+  "key": {
+    "P": {
+      "item": "evolvedwarfare:iron_plate"
+    },
+    "H": {
+      "item": "evolvedwarfare:iron_shaft"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:iron_small_gear",
+    "count": 1
+  }
+}

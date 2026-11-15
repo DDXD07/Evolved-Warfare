@@ -2349,6 +2349,14 @@ Las máquinas gastan la fuerza de la red **por cada rpm** (más deprisa = trabaj
 - **Pavés**: escudo alto **de cuerpo entero** (más grande en la mano), pintado a franjas. Aguanta **el triple** (1008), las hachas no lo bajan y **con él en alto no te empujan**. Pesa: **−10 % de velocidad** mientras lo llevas en la mano. Receta: el escudo reforzado en el centro, 4 placas de acero en las esquinas y 4 tablones.
 - Los dos se reparan con placas (hierro el reforzado, acero el pavés) y **se desgastan** al parar golpes como el de vanilla.
 
+## Fase 79 — Metalurgia (3): ballestas mecánicas y máquinas mejoradas
+
+- **Ballesta pesada** (arbalesta): un **arco de acero** que se tensa con un **torno de manivela**. Tarda **2,4 veces más** en cargar, pero el virote sale **un 45 % más rápido**, más recto, y hace **2,2 veces el daño**. Receta: 3 placas de acero arriba, engranaje pequeño de hierro, ballesta, engranaje pequeño de hierro, y un gancho de cuerda abajo. Se repara con placas de acero.
+- **Ballesta de repetición**: con **cargador**. Al tensarla (el doble de lo normal) carga **hasta 5 flechas** de una vez, y luego **cada clic dispara una** (con un respiro de 6 tics), con algo menos de daño (×0,8) y menos precisión. Receta: tablón, placa de hierro, tablón; engranaje pequeño, ballesta, engranaje pequeño; gancho de cuerda. Se repara con placas de hierro.
+- **Límite de velocidad**: la **madera ya no aguanta cualquier cosa**: si algo de madera de la red (ejes, engranajes, cajas de engranajes, embragues, inversores) pasaría de **64 rpm**, la red **se para** («¡Demasiado rápido!»). Las máquinas aguantan 256.
+- **Ejes y engranajes de hierro** (hasta **256 rpm**) y **de acero** (hasta **1024 rpm**): engranan igual que los de madera (y entre sí), con su color. Recetas: eje = 2 placas en columna (4 ejes); engranaje pequeño = eje rodeado de 4 placas; grande = engranaje pequeño con placas en las esquinas y pepitas (o placas de acero) en los lados.
+- **Afiladora** (gasta 2 por rpm; el eje por los lados): una **muela de piedra** que gira en vertical. Clic derecho con un **arma o herramienta gastada**: la **repara hasta el 80 %** (una muela no hace milagros) y la deja **afilada: +1,5 de daño durante 40 golpes** (sale en la descripción). Con la mano vacía la recoges. Receta: muela de afilar de vanilla arriba, palo, eje, palo, y 3 tablones.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

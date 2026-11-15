@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "P",
+    "P"
+  ],
+  "key": {
+    "P": {
+      "item": "evolvedwarfare:steel_plate"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:steel_shaft",
+    "count": 4
+  }
+}

@@ -32,4 +32,9 @@ public class GearboxBlock extends KineticBlock {
 	public Direction.Axis axis(BlockState state) {
 		return null;
 	}
+
+	@Override
+	public float maxSpeed(BlockState state) {
+		return Kinetic.WOOD_MAX;
+	}
 }

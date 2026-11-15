@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "SSS",
+    "GCG",
+    " T "
+  ],
+  "key": {
+    "S": {
+      "item": "evolvedwarfare:steel_plate"
+    },
+    "G": {
+      "item": "evolvedwarfare:iron_small_gear"
+    },
+    "C": {
+      "item": "minecraft:crossbow"
+    },
+    "T": {
+      "item": "minecraft:tripwire_hook"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:arbalest",
+    "count": 1
+  }
+}

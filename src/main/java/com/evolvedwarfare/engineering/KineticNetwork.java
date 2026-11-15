@@ -158,7 +158,16 @@ public final class KineticNetwork {
 			}
 			stress += impact * Math.abs(rootSpeed * e.getValue());
 		}
-		int state = jammed ? KineticBlockEntity.JAMMED : stress > capacity + 1e-3F ? KineticBlockEntity.OVERSTRESSED : KineticBlockEntity.OK;
+		boolean overspeed = false;
+		for (Map.Entry<BlockPos, Float> e : factor.entrySet()) {
+			BlockState s = world.getBlockState(e.getKey());
+			if (s.getBlock() instanceof Kinetic k && Math.abs(rootSpeed * e.getValue()) > k.maxSpeed(s) + 0.01F) {
+				overspeed = true;
+				break;
+			}
+		}
+		int state = jammed ? KineticBlockEntity.JAMMED : overspeed ? KineticBlockEntity.OVERSPEED
+				: stress > capacity + 1e-3F ? KineticBlockEntity.OVERSTRESSED : KineticBlockEntity.OK;
 		if (state != KineticBlockEntity.OK) {
 			rootSpeed = 0.0F;
 		}

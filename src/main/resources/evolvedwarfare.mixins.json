@@ -5,6 +5,7 @@
 	"mixins": [
 		"BiomeSeasonMixin",
 		"MetalShieldMixin",
+		"CrossbowPullTimeMixin",
 		"PaviseKnockbackMixin",
 		"VillagerShopMixin",
 		"EntityTrainCollisionMixin",

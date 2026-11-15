@@ -19,10 +19,17 @@ import net.minecraft.world.BlockView;
 public class ShaftBlock extends KineticBlock {
 	public static final MapCodec<ShaftBlock> CODEC = createCodec(s -> new ShaftBlock(s, 0));
 	private final int gear;
+	/** 0 madera (hasta 64 rpm), 1 hierro (256), 2 acero (1024). */
+	private final int tier;
 
 	public ShaftBlock(Settings settings, int gear) {
+		this(settings, gear, 0);
+	}
+
+	public ShaftBlock(Settings settings, int gear, int tier) {
 		super(settings);
 		this.gear = gear;
+		this.tier = tier;
 		setDefaultState(getStateManager().getDefaultState().with(Properties.AXIS, Direction.Axis.Y));
 	}
 
@@ -44,6 +51,15 @@ public class ShaftBlock extends KineticBlock {
 	@Override
 	protected BlockState rotate(BlockState state, net.minecraft.util.BlockRotation rotation) {
 		return PillarBlock.changeRotation(state, rotation);
+	}
+
+	public int tier() {
+		return tier;
+	}
+
+	@Override
+	public float maxSpeed(BlockState state) {
+		return tier == 0 ? Kinetic.WOOD_MAX : tier == 1 ? Kinetic.IRON_MAX : Kinetic.STEEL_MAX;
 	}
 
 	@Override

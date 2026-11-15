@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "PNP",
+    "NGN",
+    "PNP"
+  ],
+  "key": {
+    "P": {
+      "item": "evolvedwarfare:steel_plate"
+    },
+    "N": {
+      "item": "evolvedwarfare:steel_plate"
+    },
+    "G": {
+      "item": "evolvedwarfare:steel_small_gear"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:steel_large_gear",
+    "count": 1
+  }
+}

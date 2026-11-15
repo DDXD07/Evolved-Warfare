@@ -50,47 +50,57 @@ def rotor(a):
     return a.part("rotor", None, (0, 0, 0))
 
 
-def shaft():
-    a = W.Animal("kinetic_shaft")
+PALETTES = {
+    "wood": (OAK, OAK_DARK, STRIPPED),
+    "iron": ((176, 176, 184), (104, 104, 112), (200, 200, 206)),
+    "steel": ((140, 156, 178), (80, 92, 112), (176, 190, 210)),
+}
+
+
+def shaft(metal="wood"):
+    a = W.Animal("kinetic_shaft" + ("" if metal == "wood" else "_" + metal))
+    oak, oak_dark, stripped = PALETTES[metal]
     r = rotor(a)
-    r.cube((-8, -2, -2), (16, 4, 4), **C(STRIPPED, rings=(OAK_DARK, 4)))
+    r.cube((-8, -2, -2), (16, 4, 4), **C(stripped, rings=(oak_dark, 4)))
     r.cube((-7, -3, -3), (2, 6, 6), **C(IRON_DARK, high=(IRON, 1)))
     r.cube((5, -3, -3), (2, 6, 6), **C(IRON_DARK, high=(IRON, 1)))
     return a
 
 
-def small_gear():
+def small_gear(metal="wood"):
     """Una rueda dentada de verdad: aro redondo, cuatro radios, cubo de hierro y 8 dientes (los que engranan)."""
-    a = W.Animal("kinetic_small_gear")
+    a = W.Animal("kinetic_small_gear" + ("" if metal == "wood" else "_" + metal))
+    oak, oak_dark, stripped = PALETTES[metal]
     r = rotor(a)
-    r.cube((-8, -2, -2), (16, 4, 4), **C(STRIPPED, rings=(OAK_DARK, 4)))
+    r.cube((-8, -2, -2), (16, 4, 4), **C(stripped, rings=(oak_dark, 4)))
     r.cube((-3, -2, -2), (6, 4, 4), **C(IRON_DARK, high=(IRON, 1)))
     hub = a.part("hub45", "rotor", (0, 0, 0), rot=(45, 0, 0))
     hub.cube((-3, -2, -2), (6, 4, 4), **C(IRON_DARK, high=(IRON, 1)))
     for k in range(12):
         s = a.part("rim%d" % k, "rotor", (0, 0, 0), rot=(30 * k, 0, 0))
-        s.cube((-2, -6, -1.5), (4, 2, 3), **C(OAK, rings=(OAK_DARK, 2)))
+        s.cube((-2, -6, -1.5), (4, 2, 3), **C(oak, rings=(oak_dark, 2)))
     for k in range(4):
         s = a.part("spoke%d" % k, "rotor", (0, 0, 0), rot=(90 * k + 45, 0, 0))
-        s.cube((-1, -5, -1), (2, 3, 2), **C(OAK_DARK))
+        s.cube((-1, -5, -1), (2, 3, 2), **C(oak_dark))
     for k in range(8):
         t = a.part("tooth%d" % k, "rotor", (0, 0, 0), rot=(45 * k, 0, 0))
-        t.cube((-2, -8, -1), (4, 2, 2), **C(OAK_DARK, high=(OAK, 1)))
+        t.cube((-2, -8, -1), (4, 2, 2), **C(oak_dark, high=(oak, 1)))
     return a
 
 
-def large_gear():
-    a = W.Animal("kinetic_large_gear")
+def large_gear(metal="wood"):
+    a = W.Animal("kinetic_large_gear" + ("" if metal == "wood" else "_" + metal))
+    oak, oak_dark, stripped = PALETTES[metal]
     r = rotor(a)
-    r.cube((-8, -2, -2), (16, 4, 4), **C(STRIPPED, rings=(OAK_DARK, 4)))
+    r.cube((-8, -2, -2), (16, 4, 4), **C(stripped, rings=(oak_dark, 4)))
     r.cube((-3, -4, -4), (6, 8, 8), **C(IRON_DARK, high=(IRON, 1)))
     for k in range(16):
         s = a.part("rim%d" % k, "rotor", (0, 0, 0), rot=(22.5 * k, 0, 0))
-        s.cube((-2, -14, -3), (4, 3, 6), **C(OAK, rings=(OAK_DARK, 3)))
-        s.cube((-2, -16, -1), (4, 2, 2), **C(OAK_DARK, high=(OAK, 1)))
+        s.cube((-2, -14, -3), (4, 3, 6), **C(oak, rings=(oak_dark, 3)))
+        s.cube((-2, -16, -1), (4, 2, 2), **C(oak_dark, high=(oak, 1)))
     for k in range(4):
         s = a.part("spoke%d" % k, "rotor", (0, 0, 0), rot=(90 * k + 45, 0, 0))
-        s.cube((-1, -12, -1), (2, 8, 2), **C(OAK_DARK))
+        s.cube((-1, -12, -1), (2, 8, 2), **C(oak_dark))
     return a
 
 
@@ -383,16 +393,40 @@ def clock_hand(kind):
     return a
 
 
+
+def sharpener():
+    """La afiladora: una muela de piedra que gira en vertical sobre un bastidor con su pila de agua."""
+    a = W.Animal("machine_sharpener")
+    f = a.part("frame", None, (0, 0, 0))
+    for x in (-7, 5):
+        f.cube((x, -2, -7), (2, 10, 2), **C(OAK_DARK, rings=(OAK, 5)))
+        f.cube((x, -2, 5), (2, 10, 2), **C(OAK_DARK, rings=(OAK, 5)))
+    f.cube((-7, 6, -7), (14, 2, 14), **C(OAK, rings=(OAK_DARK, 3)))
+    f.cube((-5, 2, -4), (10, 4, 8), **C(OAK_DARK, rings=(OAK, 2)))
+    f.cube((-4, 2, -3), (8, 1, 6), **C((60, 90, 140)))
+    for z in (-8, 6):
+        f.cube((-2, -2, z), (4, 4, 2), **C(IRON_DARK, high=(IRON, 1)))
+    r = rotor(a)
+    r.cube((-1, -1, -8), (2, 2, 16), **C(IRON_DARK, high=(IRON, 1)))
+    for k in range(8):
+        w = a.part("wheel%d" % k, "rotor", (0, 0, 0), rot=(0, 0, 22.5 * k))
+        w.cube((-2.5, -7, -2), (5, 14, 4), **C((150, 146, 136), spots=((112, 108, 100), 0.25)))
+    return a
+
+
 MODELS = collections.OrderedDict([
     ("kinetic_shaft", shaft), ("kinetic_small_gear", small_gear), ("kinetic_large_gear", large_gear), ("kinetic_crank", crank),
     ("kinetic_gauge_needle", needle)]
+    + [("kinetic_%s_%s" % (k, m), (lambda k=k, m=m: {"shaft": shaft, "small_gear": small_gear, "large_gear": large_gear}[k](m)))
+       for m in ("iron", "steel") for k in ("shaft", "small_gear", "large_gear")]
     + [("water_wheel_" + s, (lambda s=s: water_wheel(s))) for s in WATER_WHEELS]
     + [("windmill_" + s, (lambda s=s: windmill(s))) for s in WINDMILLS]
     + [("machine_millstone", millstone), ("machine_sawmill", sawmill), ("machine_trip_hammer", trip_hammer), ("machine_bellows", bellows)]
     + [("machine_screw", screw), ("machine_pulley", pulley), ("machine_crane", crane), ("hoist_platform", platform), ("hoist_hook", hook),
        ("hoist_rope", rope)]
     + [("kinetic_cam", cam), ("machine_winch", winch), ("clock_hand_hour", lambda: clock_hand("hour")),
-       ("clock_hand_minute", lambda: clock_hand("minute"))])
+       ("clock_hand_minute", lambda: clock_hand("minute"))]
+    + [("machine_sharpener", sharpener)])
 
 ITEM_OF = {"kinetic_shaft": "shaft", "kinetic_small_gear": "small_gear", "kinetic_large_gear": "large_gear", "kinetic_crank": "hand_crank"}
 for s in WATER_WHEELS:
@@ -402,8 +436,12 @@ for s in WINDMILLS:
 for s in ("millstone", "sawmill", "trip_hammer", "bellows", "screw", "pulley", "crane"):
     ITEM_OF["machine_" + s] = s
 ITEM_OF["hoist_platform"] = "lift_platform"
+for _m in ("iron", "steel"):
+    for _k in ("shaft", "small_gear", "large_gear"):
+        ITEM_OF["kinetic_%s_%s" % (_k, _m)] = "%s_%s" % (_m, _k)
 ITEM_OF["kinetic_cam"] = "redstone_cam"
 ITEM_OF["machine_winch"] = "portcullis_winch"
+ITEM_OF["machine_sharpener"] = "sharpener"
 
 # id: (es, en, descripción es, descripción en)
 NAMES = collections.OrderedDict([
@@ -472,6 +510,20 @@ NAMES = collections.OrderedDict([
     ("tower_clock", ("Reloj de torre", "Tower Clock",
                      "Eje por detrás o por abajo. Mientras gira marca la hora del día y da las campanadas a cada hora (con un pulso de redstone).",
                      "Shaft from behind or below. While turning it shows the time of day and strikes the hours (with a redstone pulse).")),
+    ("iron_shaft", ("Eje de hierro", "Iron Shaft", "Como el de madera, pero aguanta hasta 256 rpm (el de madera, 64).",
+                    "Like the wooden one, but holds up to 256 rpm (wood: 64).")),
+    ("iron_small_gear", ("Engranaje pequeño de hierro", "Iron Small Gear", "Engrana como el de madera y aguanta hasta 256 rpm.",
+                         "Meshes like the wooden one and holds up to 256 rpm.")),
+    ("iron_large_gear", ("Engranaje grande de hierro", "Iron Large Gear", "Engrana como el de madera y aguanta hasta 256 rpm.",
+                         "Meshes like the wooden one and holds up to 256 rpm.")),
+    ("steel_shaft", ("Eje de acero", "Steel Shaft", "Aguanta hasta 1024 rpm.", "Holds up to 1024 rpm.")),
+    ("steel_small_gear", ("Engranaje pequeño de acero", "Steel Small Gear", "Engrana como los demás y aguanta hasta 1024 rpm.",
+                          "Meshes like the others and holds up to 1024 rpm.")),
+    ("steel_large_gear", ("Engranaje grande de acero", "Steel Large Gear", "Engrana como los demás y aguanta hasta 1024 rpm.",
+                          "Meshes like the others and holds up to 1024 rpm.")),
+    ("sharpener", ("Afiladora", "Sharpener",
+                   "Eje por los lados. Mete un arma o herramienta gastada (clic derecho): la repara hasta el 80 % y la deja afilada (+1,5 de daño durante 40 golpes). Con la mano vacía la recoges.",
+                   "Shaft from the sides. Put in a worn weapon or tool (right click): repairs it up to 80% and sharpens it (+1.5 damage for 40 hits). Take it back with an empty hand.")),
 ])
 ITEMS = collections.OrderedDict([
     ("lift_platform", ("Plataforma de elevador", "Lift Platform",
@@ -487,6 +539,9 @@ TEXTS = {
     "message.evolvedwarfare.kinetic.overstressed": ("¡Sobrecargado! Hace falta más fuerza (%s/%s)", "Overstressed! More force is needed (%s/%s)"),
     "message.evolvedwarfare.kinetic.blocked": ("Algo estorba al giro", "Something is in the way"),
     "message.evolvedwarfare.kinetic.no_water": ("No le corre agua", "No water is running through it"),
+    "message.evolvedwarfare.kinetic.overspeed": ("¡Demasiado rápido! Algo no aguanta tanta velocidad (madera: 64 rpm, hierro: 256, acero: 1024)",
+                                                 "Too fast! Something can't take that speed (wood: 64 rpm, iron: 256, steel: 1024)"),
+    "tooltip.evolvedwarfare.sharpened": ("Afilada: +1,5 de daño (quedan %s golpes)", "Sharpened: +1.5 damage (%s hits left)"),
     "message.evolvedwarfare.kinetic.still": ("Parado", "Not turning"),
     "itemGroup.evolvedwarfare.engineering": ("Ingeniería medieval", "Medieval Engineering"),
     "message.evolvedwarfare.hoist.up": ("Sube", "Going up"),
@@ -636,6 +691,11 @@ def recipes():
     shaped("portcullis_winch", ["PCP", "IHI", "PCP"], {"P": P, "C": "minecraft:chain", "I": I, "H": H})
     shaped("portcullis", ["I I", "IBI", "I I"], {"I": I, "B": "minecraft:iron_bars"}, 4)
     shaped("tower_clock", ["PGP", "CHC", "PGP"], {"P": P, "G": "minecraft:gold_ingot", "C": "minecraft:clock", "H": H})
+    for m, plate, nug in (("iron", NS + ":iron_plate", "minecraft:iron_nugget"), ("steel", NS + ":steel_plate", NS + ":steel_plate")):
+        shaped("%s_shaft" % m, ["P", "P"], {"P": plate}, 4)
+        shaped("%s_small_gear" % m, [" P ", "PHP", " P "], {"P": plate, "H": NS + ":%s_shaft" % m})
+        shaped("%s_large_gear" % m, ["PNP", "NGN", "PNP"], {"P": plate, "N": nug, "G": NS + ":%s_small_gear" % m})
+    shaped("sharpener", [" W ", "SHS", "PPP"], {"W": "minecraft:grindstone", "S": "minecraft:stick", "H": H, "P": P})
     shaped("bellows", ["PPP", "EEN", "PHP"], {"P": P, "E": "minecraft:leather", "N": "minecraft:iron_nugget", "H": H})
     for kind, typ in (("smelting", "minecraft:smelting"), ("smoking", "minecraft:smoking")):
         write_json(os.path.join(DATA, "recipe", "bread_from_flour_%s.json" % kind), {

@@ -12,6 +12,14 @@ import org.jetbrains.annotations.Nullable;
  * diagonal la reparten a la mitad o al doble.
  */
 public interface Kinetic {
+	/** Lo más rápido que aguanta cada material (rpm). */
+	float WOOD_MAX = 64.0F, IRON_MAX = 256.0F, STEEL_MAX = 1024.0F;
+
+	/** Lo más rápido que aguanta este bloque: si la red va más deprisa, se para (fase 79). Las máquinas, 256. */
+	default float maxSpeed(BlockState state) {
+		return IRON_MAX;
+	}
+
 	/** ¿Tiene eje (o una salida) por esa cara? */
 	boolean hasAxle(BlockState state, Direction face);
 

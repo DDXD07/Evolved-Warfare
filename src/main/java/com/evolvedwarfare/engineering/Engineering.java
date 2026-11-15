@@ -31,6 +31,10 @@ public final class Engineering {
 	public static final List<Block> BLOCKS = new ArrayList<>();
 	public static final List<Item> ITEMS = new ArrayList<>();
 
+	private static AbstractBlock.Settings metal() {
+		return AbstractBlock.Settings.create().mapColor(MapColor.IRON_GRAY).strength(3.0F, 6.0F).sounds(BlockSoundGroup.METAL).nonOpaque();
+	}
+
 	private static AbstractBlock.Settings wood() {
 		return AbstractBlock.Settings.create().mapColor(MapColor.OAK_TAN).strength(1.5F).sounds(BlockSoundGroup.WOOD).nonOpaque();
 	}
@@ -38,6 +42,12 @@ public final class Engineering {
 	public static final Block SHAFT = block("shaft", new ShaftBlock(wood(), 0));
 	public static final Block SMALL_GEAR = block("small_gear", new ShaftBlock(wood(), 1));
 	public static final Block LARGE_GEAR = block("large_gear", new ShaftBlock(wood(), 2));
+	public static final Block IRON_SHAFT = block("iron_shaft", new ShaftBlock(metal(), 0, 1));
+	public static final Block IRON_SMALL_GEAR = block("iron_small_gear", new ShaftBlock(metal(), 1, 1));
+	public static final Block IRON_LARGE_GEAR = block("iron_large_gear", new ShaftBlock(metal(), 2, 1));
+	public static final Block STEEL_SHAFT = block("steel_shaft", new ShaftBlock(metal(), 0, 2));
+	public static final Block STEEL_SMALL_GEAR = block("steel_small_gear", new ShaftBlock(metal(), 1, 2));
+	public static final Block STEEL_LARGE_GEAR = block("steel_large_gear", new ShaftBlock(metal(), 2, 2));
 	public static final Block GEARBOX = block("gearbox", new GearboxBlock(AbstractBlock.Settings.create().mapColor(MapColor.OAK_TAN).strength(2.0F)
 			.sounds(BlockSoundGroup.WOOD)));
 	public static final Block HAND_CRANK = block("hand_crank", new CrankBlock(wood()));
@@ -72,6 +82,7 @@ public final class Engineering {
 	public static final Block PULLEY = machine("pulley", new PulleyBlock(wood().strength(2.5F)));
 	public static final Block CRANE = machine("crane", new CraneBlock(wood().strength(3.0F)));
 	// fase 75: la automatización
+	public static final Block SHARPENER = machine("sharpener", new SharpenerBlock(wood().strength(2.5F)));
 	public static final Block REDSTONE_CAM = machine("redstone_cam", new RedstoneCamBlock(wood()));
 	public static final Block PORTCULLIS_WINCH = machine("portcullis_winch", new PortcullisWinchBlock(wood().strength(3.0F)));
 	public static final Block TOWER_CLOCK = machine("tower_clock", new TowerClockBlock(AbstractBlock.Settings.create().mapColor(MapColor.OAK_TAN)
