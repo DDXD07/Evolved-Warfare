@@ -78,6 +78,11 @@ public class EngineeringGameTests implements FabricGameTest {
 		ctx.setBlockState(3, 6, 4, Blocks.WATER.getDefaultState());
 		ctx.runAtTick(70, () -> {
 			KineticBlockEntity w = be(ctx, 3, 3, 3);
+			for (int y = 1; y <= 6; y++) {
+				net.minecraft.util.math.BlockPos q = ctx.getAbsolutePos(new net.minecraft.util.math.BlockPos(3, y, 4));
+				LOG.info("[EW-GAMETEST] columna y{}: {} vel {}", y, ctx.getWorld().getBlockState(q), ctx.getWorld().getFluidState(q).getVelocity(ctx.getWorld(), q));
+			}
+			LOG.info("[EW-GAMETEST] rueda en {}: {}", ctx.getAbsolutePos(new net.minecraft.util.math.BlockPos(3, 3, 3)), ctx.getWorld().getBlockState(ctx.getAbsolutePos(new net.minecraft.util.math.BlockPos(3, 3, 3))));
 			LOG.info("[EW-GAMETEST] rueda hidráulica: da {}, gira {}, fuerza {}, problema {}", w.generated(), w.speed(), w.capacity(), w.problem());
 			if (Math.abs(w.speed()) < 1 || w.capacity() <= 0) {
 				throw new GameTestException("El agua no mueve la rueda");
