@@ -39,6 +39,11 @@ public interface Kinetic {
 		return 0.0F;
 	}
 
+	/** Cómo pasa el giro por esa cara (1 igual; −1 al revés, el inversor). */
+	default float axleRatio(BlockState state, Direction face) {
+		return 1.0F;
+	}
+
 	/** Cada cuántos tics mira si su fuente ha cambiado (0: no es fuente). */
 	default int sourceInterval() {
 		return 0;

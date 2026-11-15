@@ -1,21 +1,21 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
+  "category": "redstone",
   "pattern": [
-    "BIB",
+    "I I",
     "IBI",
-    "BIB"
+    "I I"
   ],
   "key": {
-    "B": {
-      "item": "minecraft:iron_bars"
-    },
     "I": {
       "item": "minecraft:iron_ingot"
+    },
+    "B": {
+      "item": "minecraft:iron_bars"
     }
   },
   "result": {
     "id": "evolvedwarfare:portcullis",
-    "count": 8
+    "count": 4
   }
 }

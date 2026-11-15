@@ -72,7 +72,7 @@ public final class KineticNetwork {
 			BlockPos n = pos.offset(d);
 			BlockState ns = world.getBlockState(n);
 			if (ns.getBlock() instanceof Kinetic nk && nk.hasAxle(ns, d.getOpposite())) {
-				out.add(new Link(n, 1.0F));
+				out.add(new Link(n, k.axleRatio(state, d) * nk.axleRatio(ns, d.getOpposite())));
 			}
 		}
 		int gear = k.gear(state);

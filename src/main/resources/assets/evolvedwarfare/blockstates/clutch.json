@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "evolvedwarfare:block/clutch"
+    },
+    "powered=true": {
+      "model": "evolvedwarfare:block/clutch_on"
+    }
+  }
+}

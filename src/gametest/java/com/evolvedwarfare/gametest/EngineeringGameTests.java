@@ -375,4 +375,149 @@ public class EngineeringGameTests implements FabricGameTest {
 			ctx.complete();
 		});
 	}
+
+	// ------------------------------------------------------------------ fase 75: la automatización
+
+	/** El embrague corta el giro con señal de redstone y lo devuelve sin ella; el inversor da la vuelta al lado positivo. */
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "machine_clutch", tickLimit = 120)
+	public void clutchAndGearshift(TestContext ctx) {
+		ctx.setBlockState(1, 2, 1, Engineering.HAND_CRANK.getDefaultState().with(Properties.FACING, Direction.WEST));
+		ctx.setBlockState(2, 2, 1, Engineering.CLUTCH.getDefaultState().with(Properties.AXIS, Direction.Axis.X));
+		ctx.setBlockState(3, 2, 1, Engineering.GEARSHIFT.getDefaultState().with(Properties.AXIS, Direction.Axis.X));
+		ctx.setBlockState(4, 2, 1, Engineering.SHAFT.getDefaultState().with(Properties.AXIS, Direction.Axis.X));
+		keepCranking(ctx, 1, 2, 1, 110);
+		float[] before = new float[2];
+		ctx.runAtTick(20, () -> {
+			before[0] = be(ctx, 3, 2, 1).speed();
+			before[1] = be(ctx, 4, 2, 1).speed();
+			LOG.info("[EW-GAMETEST] embrague suelto: inversor {}, eje {}", before[0], before[1]);
+			if (Math.abs(before[1]) < 1 || before[0] != before[1]) {
+				throw new GameTestException("El giro no pasa por el embrague y el inversor");
+			}
+			ctx.setBlockState(3, 3, 1, Blocks.REDSTONE_BLOCK);
+		});
+		ctx.runAtTick(40, () -> {
+			float g = be(ctx, 3, 2, 1).speed(), sh = be(ctx, 4, 2, 1).speed();
+			LOG.info("[EW-GAMETEST] inversor con señal: inversor {}, eje {}", g, sh);
+			if (Math.abs(g) < 1 || sh != -g) {
+				throw new GameTestException("El inversor no invierte el giro");
+			}
+			ctx.setBlockState(3, 3, 1, Blocks.AIR);
+			ctx.setBlockState(2, 3, 1, Blocks.REDSTONE_BLOCK);
+		});
+		ctx.runAtTick(60, () -> {
+			float sh = be(ctx, 4, 2, 1).speed(), c = be(ctx, 1, 2, 1).speed();
+			LOG.info("[EW-GAMETEST] embrague con señal: manivela {}, eje {}", c, sh);
+			if (sh != 0 || Math.abs(c) < 1) {
+				throw new GameTestException("El embrague no corta el giro");
+			}
+			ctx.setBlockState(2, 3, 1, Blocks.AIR);
+		});
+		ctx.runAtTick(80, () -> {
+			float sh = be(ctx, 4, 2, 1).speed();
+			if (sh != before[1]) {
+				throw new GameTestException("El embrague no vuelve a pasar el giro");
+			}
+			ctx.complete();
+		});
+	}
+
+	/** La leva da pulsos de redstone mientras gira: cuatro por vuelta. */
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "machine_cam", tickLimit = 120)
+	public void camPulsesRedstone(TestContext ctx) {
+		ctx.setBlockState(1, 2, 1, Engineering.HAND_CRANK.getDefaultState().with(Properties.FACING, Direction.WEST));
+		ctx.setBlockState(2, 2, 1, Engineering.REDSTONE_CAM.getDefaultState().with(Properties.AXIS, Direction.Axis.X));
+		ctx.setBlockState(2, 3, 1, Blocks.REDSTONE_LAMP);
+		keepCranking(ctx, 1, 2, 1, 100);
+		int[] changes = {0, 0};
+		boolean[] last = {false};
+		for (int t = 5; t <= 95; t++) {
+			ctx.runAtTick(t, () -> {
+				boolean on = ctx.getBlockState(new BlockPos(2, 2, 1)).get(Properties.POWERED);
+				if (on != last[0]) {
+					changes[0]++;
+					last[0] = on;
+				}
+				if (ctx.getBlockState(new BlockPos(2, 3, 1)).get(Properties.LIT)) {
+					changes[1]++;
+				}
+			});
+		}
+		ctx.runAtTick(100, () -> {
+			LOG.info("[EW-GAMETEST] leva: {} cambios de señal, lámpara encendida {} tics", changes[0], changes[1]);
+			if (changes[0] < 6 || changes[1] < 10) {
+				throw new GameTestException("La leva no da pulsos de redstone");
+			}
+			ctx.complete();
+		});
+	}
+
+	/** El torno abre el rastrillo con señal de redstone (lo recoge) y lo cierra sin ella (lo baja hasta el suelo). */
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "machine_portcullis", tickLimit = 200)
+	public void winchOpensAndClosesThePortcullis(TestContext ctx) {
+		for (int z = 1; z <= 3; z++) {
+			ctx.setBlockState(2, 1, z, Blocks.STONE);
+			for (int y = 2; y <= 5; y++) {
+				ctx.setBlockState(2, y, z, Engineering.PORTCULLIS);
+			}
+		}
+		ctx.setBlockState(2, 6, 2, Engineering.PORTCULLIS_WINCH.getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.EAST));
+		ctx.setBlockState(2, 6, 1, Engineering.HAND_CRANK.getDefaultState().with(Properties.FACING, Direction.NORTH));
+		keepCranking(ctx, 2, 6, 1, 190);
+		ctx.runAtTick(5, () -> ctx.setBlockState(3, 6, 2, Blocks.REDSTONE_BLOCK));
+		ctx.runAtTick(80, () -> {
+			boolean open = true;
+			for (int z = 1; z <= 3; z++) {
+				open &= ctx.getBlockState(new BlockPos(2, 2, z)).isAir() && ctx.getBlockState(new BlockPos(2, 4, z)).isAir()
+						&& ctx.getBlockState(new BlockPos(2, 5, z)).isOf(Engineering.PORTCULLIS);
+			}
+			LOG.info("[EW-GAMETEST] rastrillo abierto {}, filas recogidas {}", open, machine(ctx, 2, 6, 2).stored());
+			if (!open || machine(ctx, 2, 6, 2).stored() != 9) {
+				throw new GameTestException("El torno no abre el rastrillo");
+			}
+			ctx.setBlockState(3, 6, 2, Blocks.AIR);
+		});
+		ctx.runAtTick(160, () -> {
+			boolean closed = true;
+			for (int z = 1; z <= 3; z++) {
+				for (int y = 2; y <= 5; y++) {
+					closed &= ctx.getBlockState(new BlockPos(2, y, z)).isOf(Engineering.PORTCULLIS);
+				}
+			}
+			LOG.info("[EW-GAMETEST] rastrillo cerrado {}, filas recogidas {}", closed, machine(ctx, 2, 6, 2).stored());
+			if (!closed || machine(ctx, 2, 6, 2).stored() != 0) {
+				throw new GameTestException("El torno no cierra el rastrillo");
+			}
+			ctx.complete();
+		});
+	}
+
+	/** El reloj de torre: la hora de cada momento, las campanadas de cada hora, y la señal mientras suenan. */
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "machine_clock", tickLimit = 200)
+	public void towerClockStrikesTheHours(TestContext ctx) {
+		if (com.evolvedwarfare.engineering.TowerClockBlock.hourOf(0) != 6 || com.evolvedwarfare.engineering.TowerClockBlock.hourOf(18000) != 0
+				|| com.evolvedwarfare.engineering.TowerClockBlock.strokes(0) != 12 || com.evolvedwarfare.engineering.TowerClockBlock.strokes(15) != 3) {
+			throw new GameTestException("Las horas del reloj no cuadran");
+		}
+		ctx.setBlockState(2, 2, 2, Engineering.TOWER_CLOCK.getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.SOUTH));
+		ctx.setBlockState(2, 1, 2, Engineering.HAND_CRANK.getDefaultState().with(Properties.FACING, Direction.DOWN));
+		keepCranking(ctx, 2, 1, 2, 190);
+		ctx.runAtTick(20, () -> com.evolvedwarfare.engineering.TowerClockBlock.chime(machine(ctx, 2, 2, 2), 3));
+		ctx.runAtTick(30, () -> {
+			if (!ctx.getBlockState(new BlockPos(2, 2, 2)).get(Properties.POWERED)) {
+				throw new GameTestException("El reloj no da señal mientras suena");
+			}
+		});
+		ctx.runAtTick(140, () -> {
+			var clock = machine(ctx, 2, 2, 2);
+			long time = Math.floorMod(ctx.getWorld().getTimeOfDay(), 24000L);
+			LOG.info("[EW-GAMETEST] reloj: gira {}, marca {}, hora del mundo {}, campanadas que quedan {}, señal {}", clock.speed(), clock.phase(), time,
+					clock.hits(), ctx.getBlockState(new BlockPos(2, 2, 2)).get(Properties.POWERED));
+			if (Math.abs(clock.speed()) < 1 || Math.abs(clock.phase() - time) > 2 || clock.hits() != 0
+					|| ctx.getBlockState(new BlockPos(2, 2, 2)).get(Properties.POWERED)) {
+				throw new GameTestException("El reloj no marca la hora o no termina las campanadas");
+			}
+			ctx.complete();
+		});
+	}
 }

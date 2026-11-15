@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "front": "evolvedwarfare:block/tower_clock_front",
+    "side": "evolvedwarfare:block/tower_clock_side",
+    "top": "evolvedwarfare:block/tower_clock_side"
+  }
+}

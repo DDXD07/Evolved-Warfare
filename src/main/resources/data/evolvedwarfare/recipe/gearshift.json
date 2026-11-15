@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "PRP",
+    "HGH",
+    "PRP"
+  ],
+  "key": {
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "H": {
+      "item": "evolvedwarfare:shaft"
+    },
+    "G": {
+      "item": "evolvedwarfare:small_gear"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:gearshift",
+    "count": 1
+  }
+}

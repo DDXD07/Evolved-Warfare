@@ -2306,6 +2306,23 @@ Las máquinas gastan la fuerza de la red **por cada rpm** (más deprisa = trabaj
 | Grúa | 3 troncos; eje y rienda; tablón, engranaje grande, tablón |
 | Plataforma de elevador | 3 losas de madera, 3 tablones, 2 riendas |
 
+## Fase 75 — Ingeniería medieval (4): la automatización
+
+- **Embrague**: una caja que pasa el giro como un eje; **con señal de redstone se suelta** y lo corta (la lucecita roja se enciende). Para parar una parte de la red sin pararla entera.
+- **Inversor**: como un eje, pero **con señal de redstone** lo que hay por su lado positivo (este, sur o arriba) **gira al revés**. Para subir y bajar cosas con una palanca, o cambiar el sentido de una máquina.
+- **Leva de redstone** (gasta 0,5 por rpm): un eje con **cuatro levas** que da **un pulso de redstone con cada una** a su alrededor (cuatro por vuelta: a 16 rpm, uno cada 19 tics; más deprisa con engranajes, más seguidos). Un reloj de redstone movido por agua o viento.
+- **Rastrillo** y **torno de rastrillo** (gasta 3 por rpm; el eje por los lados): haz la reja de rastrillo que quieras (hasta 33 de ancho) y pon el torno **encima del centro de la fila de arriba**, con el eje a lo largo de ella. Mientras gira, **con señal de redstone recoge el rastrillo fila a fila** (lo abre; la fila de arriba se queda) y **sin señal lo vuelve a bajar** hasta el suelo (lo cierra), una fila cada 10 tics a 16 rpm. Solo baja las filas que había recogido (no hace rejas de la nada), y **aplasta** (3 corazones) a quien pille debajo, sin cerrar ahí hasta que se quite. Si se rompe el torno, suelta las filas recogidas.
+- **Reloj de torre** (gasta 0,5 por rpm; el eje **por detrás o por abajo**; la esfera mira hacia quien lo pone): mientras gira, las **agujas marcan la hora del día**; parado, se quedan en la hora en que se paró. A cada **hora en punto** da tantas **campanadas** como la hora (de 1 a 12), que se oyen de lejos, y **da señal de redstone mientras suenan**.
+
+| Pieza | Receta |
+|---|---|
+| Embrague | tablón, pepita, tablón; eje, redstone, eje; tablón, pepita, tablón |
+| Inversor | tablón, redstone, tablón; eje, engranaje pequeño, eje; tablón, redstone, tablón |
+| Leva de redstone | redstone, eje, redstone |
+| Torno de rastrillo | tablón, cadena, tablón; hierro, eje, hierro; tablón, cadena, tablón |
+| Rastrillo (4) | lingotes de hierro en dos columnas con barrotes de hierro en medio |
+| Reloj de torre | tablón, oro, tablón; reloj, eje, reloj; tablón, oro, tablón |
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

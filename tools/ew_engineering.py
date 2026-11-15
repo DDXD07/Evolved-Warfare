@@ -330,6 +330,51 @@ def rope():
     return a
 
 
+
+# ------------------------------------------------------------------ fase 4: la automatización
+
+
+def cam():
+    """La leva de redstone: un eje con cuatro lóbulos (gira sobre x, como los ejes)."""
+    a = W.Animal("kinetic_cam")
+    r = rotor(a)
+    r.cube((-8, -2, -2), (16, 4, 4), **C(STRIPPED, rings=(OAK_DARK, 4)))
+    r.cube((-3, -4, -4), (6, 8, 8), **C(IRON_DARK, high=(IRON, 1)))
+    for k in range(4):
+        lobe = a.part("lobe%d" % k, "rotor", (0, 0, 0), rot=(90 * k, 0, 0))
+        lobe.cube((-2, -7, -2), (4, 3, 4), **C(RED, high=((210, 70, 50), 1)))
+    return a
+
+
+def winch():
+    a = W.Animal("machine_winch")
+    f = a.part("frame", None, (0, 0, 0))
+    f.cube((-8, 6, -8), (16, 2, 16), **C(OAK_DARK, rings=(OAK, 4)))
+    for z in (-8, 6):
+        f.cube((-6, -6, z), (12, 12, 2), **C(OAK, rings=(OAK_DARK, 3)))
+    r = rotor(a)
+    r.cube((-1, -1, -8), (2, 2, 16), **C(IRON_DARK, high=(IRON, 1)))
+    r.cube((-4, -4, -5), (8, 8, 10), **C((80, 80, 88), rings=((50, 50, 56), 1), spots=((120, 120, 128), 0.1)))
+    r45 = a.part("drum45", "rotor", (0, 0, 0), rot=(0, 0, 45))
+    r45.cube((-4, -4, -5), (8, 8, 10), **C((80, 80, 88), rings=((50, 50, 56), 1), spots=((120, 120, 128), 0.1)))
+    for k in range(6):
+        sp = a.part("spoke%d" % k, "rotor", (0, 0, 0), rot=(0, 0, 60 * k))
+        sp.cube((-1, -7, -6), (2, 3, 1), **C(OAK_DARK))
+        sp.cube((-1, -7, 5), (2, 3, 1), **C(OAK_DARK))
+    return a
+
+
+def clock_hand(kind):
+    a = W.Animal("clock_hand_" + kind)
+    h = a.part("hand", None, (0, 0, 0))
+    if kind == "hour":
+        h.cube((8, -1, -1), (1, 5, 2), **C((30, 28, 26)))
+    else:
+        h.cube((8.4, -1, -0.5), (1, 7, 1), **C((30, 28, 26)))
+        h.cube((8.4, -1, -1), (1, 2, 2), **C(BRASS))
+    return a
+
+
 MODELS = collections.OrderedDict([
     ("kinetic_shaft", shaft), ("kinetic_small_gear", small_gear), ("kinetic_large_gear", large_gear), ("kinetic_crank", crank),
     ("kinetic_gauge_needle", needle)]
@@ -337,7 +382,9 @@ MODELS = collections.OrderedDict([
     + [("windmill_" + s, (lambda s=s: windmill(s))) for s in WINDMILLS]
     + [("machine_millstone", millstone), ("machine_sawmill", sawmill), ("machine_trip_hammer", trip_hammer), ("machine_bellows", bellows)]
     + [("machine_screw", screw), ("machine_pulley", pulley), ("machine_crane", crane), ("hoist_platform", platform), ("hoist_hook", hook),
-       ("hoist_rope", rope)])
+       ("hoist_rope", rope)]
+    + [("kinetic_cam", cam), ("machine_winch", winch), ("clock_hand_hour", lambda: clock_hand("hour")),
+       ("clock_hand_minute", lambda: clock_hand("minute"))])
 
 ITEM_OF = {"kinetic_shaft": "shaft", "kinetic_small_gear": "small_gear", "kinetic_large_gear": "large_gear", "kinetic_crank": "hand_crank"}
 for s in WATER_WHEELS:
@@ -347,6 +394,8 @@ for s in WINDMILLS:
 for s in ("millstone", "sawmill", "trip_hammer", "bellows", "screw", "pulley", "crane"):
     ITEM_OF["machine_" + s] = s
 ITEM_OF["hoist_platform"] = "lift_platform"
+ITEM_OF["kinetic_cam"] = "redstone_cam"
+ITEM_OF["machine_winch"] = "portcullis_winch"
 
 # id: (es, en, descripción es, descripción en)
 NAMES = collections.OrderedDict([
@@ -400,6 +449,21 @@ NAMES = collections.OrderedDict([
     ("crane", ("Grúa", "Crane",
                "Eje por abajo. Pluma de 3 bloques con un gancho: clic derecho, subir o bajar; agachado, gira la pluma. Clic derecho al gancho apoyado: coge o suelta el bloque.",
                "Shaft from below. 3-block jib with a hook: right click, up or down; sneaking, turn the jib. Right click the resting hook: pick up or drop the block.")),
+    ("clutch", ("Embrague", "Clutch", "Como un eje, pero con señal de redstone se suelta y corta el giro.",
+                "Like a shaft, but a redstone signal disengages it and cuts the rotation.")),
+    ("gearshift", ("Inversor", "Gearshift", "Como un eje; con señal de redstone, el lado positivo gira al revés.",
+                   "Like a shaft; with a redstone signal, the positive side turns the other way.")),
+    ("redstone_cam", ("Leva de redstone", "Redstone Cam",
+                      "Un eje con cuatro levas: da un pulso de redstone a su alrededor con cada una (cuatro por vuelta; más rápido, más pulsos).",
+                      "A shaft with four cams: gives a redstone pulse around it with each one (four per turn; faster means more pulses).")),
+    ("portcullis_winch", ("Torno de rastrillo", "Portcullis Winch",
+                          "Eje por los lados. Ponlo encima de la fila de arriba de un rastrillo: con señal de redstone lo sube (abre), sin ella lo baja (cierra). Necesita girar.",
+                          "Shaft from the sides. Put it above the top row of a portcullis: a redstone signal raises it (open), no signal lowers it (close). It must be turning.")),
+    ("portcullis", ("Rastrillo", "Portcullis", "Reja de hierro para puertas de castillo; la mueve un torno de rastrillo. Aplasta a quien pille debajo.",
+                    "Iron grate for castle gates; moved by a portcullis winch. Crushes whoever is caught under it.")),
+    ("tower_clock", ("Reloj de torre", "Tower Clock",
+                     "Eje por detrás o por abajo. Mientras gira marca la hora del día y da las campanadas a cada hora (con un pulso de redstone).",
+                     "Shaft from behind or below. While turning it shows the time of day and strikes the hours (with a redstone pulse).")),
 ])
 ITEMS = collections.OrderedDict([
     ("lift_platform", ("Plataforma de elevador", "Lift Platform",
@@ -461,6 +525,41 @@ def block_textures():
     dr.ellipse((4, 4, 11, 11), fill=IRON_DARK + (255,))
     dr.ellipse((6, 6, 9, 9), fill=STRIPPED + (255,))
     out["gearbox"] = gb
+    for name, mark in (("clutch", "plates"), ("gearshift", "arrows")):
+        for on in (False, True):
+            im = frame(planks(3 if name == "clutch" else 4))
+            dr = ImageDraw.Draw(im)
+            if mark == "plates":
+                dr.rectangle((5, 3, 6, 12), fill=IRON + (255,))
+                dr.rectangle((9, 3, 10, 12), fill=IRON + (255,))
+            else:
+                dr.polygon([(3, 7), (7, 4), (7, 10)], fill=IRON + (255,))
+                dr.polygon([(12, 8), (8, 5), (8, 11)], fill=IRON + (255,))
+            lamp = (230, 60, 40) if on else (90, 30, 26)
+            dr.rectangle((7, 1, 8, 2), fill=lamp + (255,))
+            dr.rectangle((7, 13, 8, 14), fill=lamp + (255,))
+            out[name + ("_on" if on else "")] = im
+    grate = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    dr = ImageDraw.Draw(grate)
+    for x in (1, 6, 11):
+        dr.rectangle((x, 0, x + 2, 15), fill=(70, 70, 78, 255))
+        dr.line([(x, 0), (x, 15)], fill=(110, 110, 120, 255))
+    for y in (2, 9):
+        dr.rectangle((0, y, 15, y + 2), fill=(56, 56, 62, 255))
+        dr.line([(0, y), (15, y)], fill=(100, 100, 110, 255))
+    for x in (2, 7, 12):
+        grate.putpixel((x, 15), (150, 150, 160, 255))
+    out["portcullis"] = grate
+    face = frame(planks(5))
+    dr = ImageDraw.Draw(face)
+    dr.ellipse((1, 1, 14, 14), fill=(236, 226, 200, 255), outline=BRASS + (255,))
+    import math as _m
+    for k in range(12):
+        ang = _m.radians(k * 30)
+        x, y = 7.5 + 5.6 * _m.sin(ang), 7.5 - 5.6 * _m.cos(ang)
+        face.putpixel((int(round(x)), int(round(y))), (40, 36, 30, 255))
+    out["tower_clock_front"] = face
+    out["tower_clock_side"] = frame(planks(6))
     for kind, arc in (("speed_gauge", [(46, 140, 60), (210, 190, 50), (200, 60, 40)]), ("stress_gauge", [(60, 120, 200), (210, 190, 50), (200, 60, 40)])):
         top = frame(planks(1))
         dr = ImageDraw.Draw(top)
@@ -523,6 +622,12 @@ def recipes():
     shaped("pulley", ["PPP", "IHI", "PRP"], {"P": P, "I": "minecraft:iron_ingot", "H": H, "R": "minecraft:lead"})
     shaped("crane", ["LLL", " HR", "PGP"], {"L": L, "H": H, "R": "minecraft:lead", "P": P, "G": NS + ":large_gear"})
     shaped("lift_platform", ["SSS", "PPP", "R R"], {"S": "#minecraft:wooden_slabs", "P": P, "R": "minecraft:lead"})
+    shaped("clutch", ["PNP", "HRH", "PNP"], {"P": P, "N": "minecraft:iron_nugget", "H": H, "R": "minecraft:redstone"})
+    shaped("gearshift", ["PRP", "HGH", "PRP"], {"P": P, "R": "minecraft:redstone", "H": H, "G": NS + ":small_gear"})
+    shaped("redstone_cam", ["RHR"], {"R": "minecraft:redstone", "H": H})
+    shaped("portcullis_winch", ["PCP", "IHI", "PCP"], {"P": P, "C": "minecraft:chain", "I": I, "H": H})
+    shaped("portcullis", ["I I", "IBI", "I I"], {"I": I, "B": "minecraft:iron_bars"}, 4)
+    shaped("tower_clock", ["PGP", "CHC", "PGP"], {"P": P, "G": "minecraft:gold_ingot", "C": "minecraft:clock", "H": H})
     shaped("bellows", ["PPP", "EEN", "PHP"], {"P": P, "E": "minecraft:leather", "N": "minecraft:iron_nugget", "H": H})
     for kind, typ in (("smelting", "minecraft:smelting"), ("smoking", "minecraft:smoking")):
         write_json(os.path.join(DATA, "recipe", "bread_from_flour_%s.json" % kind), {
@@ -596,6 +701,22 @@ def main():
         write_json(os.path.join(DATA, "loot_table/blocks/%s.json" % name), {"type": "minecraft:block", "pools": [
             {"rolls": 1, "entries": [{"type": "minecraft:item", "name": "%s:%s" % (NS, name)}],
              "conditions": [{"condition": "minecraft:survives_explosion"}]}]})
+    for name in ("clutch", "gearshift"):
+        write_json(os.path.join(ASSETS, "blockstates/%s.json" % name), {"variants": {
+            "powered=false": {"model": "%s:block/%s" % (NS, name)}, "powered=true": {"model": "%s:block/%s_on" % (NS, name)}}})
+        for suf in ("", "_on"):
+            write_json(os.path.join(ASSETS, "models/block/%s%s.json" % (name, suf)),
+                       {"parent": "minecraft:block/cube_all", "textures": {"all": "%s:block/%s%s" % (NS, name, suf)}})
+        write_json(os.path.join(ASSETS, "models/item/%s.json" % name), {"parent": "%s:block/%s" % (NS, name)})
+    write_json(os.path.join(ASSETS, "blockstates/portcullis.json"), {"variants": {"": {"model": "%s:block/portcullis" % NS}}})
+    write_json(os.path.join(ASSETS, "models/block/portcullis.json"), {"parent": "minecraft:block/cube_all", "render_type": "cutout",
+                                                                      "textures": {"all": "%s:block/portcullis" % NS}})
+    write_json(os.path.join(ASSETS, "models/item/portcullis.json"), {"parent": "%s:block/portcullis" % NS})
+    write_json(os.path.join(ASSETS, "blockstates/tower_clock.json"), {"variants": {
+        "facing=%s" % f: {"model": "%s:block/tower_clock" % NS, "y": r} for f, r in (("north", 0), ("east", 90), ("south", 180), ("west", 270))}})
+    write_json(os.path.join(ASSETS, "models/block/tower_clock.json"), {"parent": "minecraft:block/orientable", "textures": {
+        "front": "%s:block/tower_clock_front" % NS, "side": "%s:block/tower_clock_side" % NS, "top": "%s:block/tower_clock_side" % NS}})
+    write_json(os.path.join(ASSETS, "models/item/tower_clock.json"), {"parent": "%s:block/tower_clock" % NS})
     write_json(os.path.join(ASSETS, "blockstates/millstone.json"), {"variants": {"": {"model": "%s:block/kinetic_particles_stone" % NS}}})
     write_json(os.path.join(ASSETS, "models/block/kinetic_particles_stone.json"), {"textures": {"particle": "minecraft:block/smooth_stone"}})
     flour_texture().save(os.path.join(item_dir, "flour.png"))

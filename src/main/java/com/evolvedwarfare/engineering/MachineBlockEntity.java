@@ -37,6 +37,9 @@ public class MachineBlockEntity extends KineticBlockEntity implements SidedInven
 	java.util.UUID hoist;
 	boolean lifting;
 	int lost;
+	/** El torno: las filas de rastrillo recogidas (las que puede volver a bajar). El reloj: si iba en marcha. */
+	int stored;
+	boolean running;
 
 	public MachineBlockEntity(BlockPos pos, BlockState state) {
 		super(Engineering.MACHINE_ENTITY, pos, state);
@@ -79,6 +82,10 @@ public class MachineBlockEntity extends KineticBlockEntity implements SidedInven
 	@Nullable
 	public java.util.UUID hoistId() {
 		return hoist;
+	}
+
+	public int stored() {
+		return stored;
 	}
 
 	public int hits() {
@@ -293,6 +300,9 @@ public class MachineBlockEntity extends KineticBlockEntity implements SidedInven
 		hits = nbt.getInt("Hits");
 		hoist = nbt.containsUuid("Hoist") ? nbt.getUuid("Hoist") : null;
 		lifting = nbt.getBoolean("Lifting");
+		stored = nbt.getInt("Stored");
+		running = nbt.getBoolean("Running");
+		target = nbt.contains("Target") ? nbt.getInt("Target") : -1;
 	}
 
 	@Override
@@ -306,5 +316,8 @@ public class MachineBlockEntity extends KineticBlockEntity implements SidedInven
 			nbt.putUuid("Hoist", hoist);
 		}
 		nbt.putBoolean("Lifting", lifting);
+		nbt.putInt("Stored", stored);
+		nbt.putBoolean("Running", running);
+		nbt.putInt("Target", target);
 	}
 }

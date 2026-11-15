@@ -2651,5 +2651,16 @@
   "message.evolvedwarfare.hoist.cant_grab": "El gancho tiene que estar apoyado en un bloque que se pueda coger",
   "message.evolvedwarfare.hoist.cant_drop": "No hay sitio para soltarlo",
   "entity.evolvedwarfare.lift_platform": "Plataforma de elevador",
-  "entity.evolvedwarfare.crane_hook": "Gancho de grúa"
+  "entity.evolvedwarfare.crane_hook": "Gancho de grúa",
+  "block.evolvedwarfare.clutch": "Embrague",
+  "block.evolvedwarfare.clutch.desc": "Como un eje, pero con señal de redstone se suelta y corta el giro.",
+  "block.evolvedwarfare.gearshift": "Inversor",
+  "block.evolvedwarfare.gearshift.desc": "Como un eje; con señal de redstone, el lado positivo gira al revés.",
+  "block.evolvedwarfare.redstone_cam": "Leva de redstone",
+  "block.evolvedwarfare.redstone_cam.desc": "Un eje con cuatro levas: da un pulso de redstone a su alrededor con cada una (cuatro por vuelta; más rápido, más pulsos).",
+  "block.evolvedwarfare.portcullis_winch": "Torno de rastrillo",
+  "block.evolvedwarfare.portcullis_winch.desc": "Eje por los lados. Ponlo encima de la fila de arriba de un rastrillo: con señal de redstone lo sube (abre), sin ella lo baja (cierra). Necesita girar.",
+  "block.evolvedwarfare.portcullis.desc": "Reja de hierro para puertas de castillo; la mueve un torno de rastrillo. Aplasta a quien pille debajo.",
+  "block.evolvedwarfare.tower_clock": "Reloj de torre",
+  "block.evolvedwarfare.tower_clock.desc": "Eje por detrás o por abajo. Mientras gira marca la hora del día y da las campanadas a cada hora (con un pulso de redstone)."
 }

@@ -45,7 +45,8 @@ import net.minecraft.util.math.RotationAxis;
 public class KineticRenderer implements BlockEntityRenderer<KineticBlockEntity> {
 	private static final String[] MODELS = {"kinetic_shaft", "kinetic_small_gear", "kinetic_large_gear", "kinetic_crank", "kinetic_gauge_needle",
 			"water_wheel_small", "water_wheel_medium", "water_wheel_large", "windmill_small", "windmill_medium", "windmill_large", "machine_millstone", "machine_sawmill", "machine_trip_hammer", "machine_bellows",
-			"machine_screw", "machine_pulley", "machine_crane", "hoist_platform", "hoist_hook", "hoist_rope"};
+			"machine_screw", "machine_pulley", "machine_crane", "hoist_platform", "hoist_hook", "hoist_rope",
+			"kinetic_cam", "machine_winch", "clock_hand_hour", "clock_hand_minute"};
 	private static final Map<String, EntityModelLayer> LAYERS = new HashMap<>();
 	private final Map<String, ModelPart> parts = new HashMap<>();
 
@@ -59,6 +60,7 @@ public class KineticRenderer implements BlockEntityRenderer<KineticBlockEntity> 
 		BlockEntityRendererFactories.register(Engineering.MACHINE_ENTITY, KineticRenderer::new);
 		net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(Engineering.LIFT_PLATFORM_ENTITY, HoistRenderer::new);
 		net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(Engineering.CRANE_HOOK, HoistRenderer::new);
+		net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap.INSTANCE.putBlock(Engineering.PORTCULLIS, RenderLayer.getCutout());
 	}
 
 	static EntityModelLayer layer(String id) {
@@ -153,6 +155,19 @@ public class KineticRenderer implements BlockEntityRenderer<KineticBlockEntity> 
 		} else if (state.getBlock() instanceof CraneBlock) {
 			machine(m, consumers, light, "machine_crane", state.get(Properties.HORIZONTAL_FACING),
 					part -> part.getChild("rotor").yaw = spin * MathHelper.RADIANS_PER_DEGREE);
+		} else if (state.getBlock() instanceof com.evolvedwarfare.engineering.RedstoneCamBlock) {
+			draw(m, consumers, light, "kinetic_cam", axisDir(state.get(Properties.AXIS)), spin);
+		} else if (state.getBlock() instanceof com.evolvedwarfare.engineering.PortcullisWinchBlock) {
+			machine(m, consumers, light, "machine_winch", SideShaftMachineBlock.facing(state),
+					part -> part.getChild("rotor").roll = -spin * MathHelper.RADIANS_PER_DEGREE);
+		} else if (state.getBlock() instanceof com.evolvedwarfare.engineering.TowerClockBlock && be instanceof MachineBlockEntity clock) {
+			// las agujas: con el reloj en marcha, la hora del mundo; parado, la hora en que se paró
+			float time = Math.abs(be.speed()) > 0.01F && be.getWorld() != null ? (be.getWorld().getTimeOfDay() % 24000L) + tickDelta : clock.phase();
+			float hours = (time / 1000.0F + 6.0F) % 12.0F;
+			float minutes = (time % 1000.0F) / 1000.0F;
+			Direction face = state.get(Properties.HORIZONTAL_FACING);
+			draw(m, consumers, light, "clock_hand_hour", face, -hours / 12.0F * 360.0F);
+			draw(m, consumers, light, "clock_hand_minute", face, -minutes * 360.0F);
 		} else if (state.getBlock() instanceof GaugeBlock gauge) {
 			// la aguja, arriba: de −90° (nada) a +90° (al máximo)
 			float value = gauge.measuresStress() ? (be.capacity() > 0 ? be.stress() / be.capacity() : 0.0F) : Math.abs(be.speed()) / 32.0F;

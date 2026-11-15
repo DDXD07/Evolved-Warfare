@@ -24,7 +24,8 @@ import net.minecraft.text.Text;
  * La ingeniería medieval (fase 72): la red de fuerza mecánica con velocidad y par. Fase 1: el eje, los engranajes, la caja
  * de engranajes, la manivela, las ruedas hidráulicas y los molinos de viento (tres tamaños), y los medidores. Fase 2 (73):
  * las máquinas que gastan esa fuerza: la muela, el aserradero, el martinete y el fuelle. Fase 3 (74): el transporte: el
- * tornillo de Arquímedes, la polea con su plataforma de elevador y la grúa.
+ * tornillo de Arquímedes, la polea con su plataforma de elevador y la grúa. Fase 4 (75): la automatización: el embrague,
+ * el inversor, la leva de redstone, el torno del rastrillo y el reloj de torre.
  */
 public final class Engineering {
 	public static final List<Block> BLOCKS = new ArrayList<>();
@@ -46,6 +47,10 @@ public final class Engineering {
 	public static final Block WINDMILL_SMALL = block("windmill_small", new WindmillBlock(wood().strength(2.0F), 5));
 	public static final Block WINDMILL_MEDIUM = block("windmill_medium", new WindmillBlock(wood().strength(2.5F), 9));
 	public static final Block WINDMILL_LARGE = block("windmill_large", new WindmillBlock(wood().strength(3.0F), 13));
+	public static final Block CLUTCH = block("clutch", new ClutchBlock(AbstractBlock.Settings.create().mapColor(MapColor.OAK_TAN).strength(2.0F)
+			.sounds(BlockSoundGroup.WOOD)));
+	public static final Block GEARSHIFT = block("gearshift", new GearshiftBlock(AbstractBlock.Settings.create().mapColor(MapColor.OAK_TAN)
+			.strength(2.0F).sounds(BlockSoundGroup.WOOD)));
 	public static final Block SPEED_GAUGE = block("speed_gauge", new GaugeBlock(AbstractBlock.Settings.create().mapColor(MapColor.OAK_TAN)
 			.strength(1.5F).sounds(BlockSoundGroup.WOOD), false));
 	public static final Block STRESS_GAUGE = block("stress_gauge", new GaugeBlock(AbstractBlock.Settings.create().mapColor(MapColor.OAK_TAN)
@@ -66,6 +71,13 @@ public final class Engineering {
 	public static final Block SCREW = machine("screw", new ArchimedesScrewBlock(wood()));
 	public static final Block PULLEY = machine("pulley", new PulleyBlock(wood().strength(2.5F)));
 	public static final Block CRANE = machine("crane", new CraneBlock(wood().strength(3.0F)));
+	// fase 75: la automatización
+	public static final Block REDSTONE_CAM = machine("redstone_cam", new RedstoneCamBlock(wood()));
+	public static final Block PORTCULLIS_WINCH = machine("portcullis_winch", new PortcullisWinchBlock(wood().strength(3.0F)));
+	public static final Block TOWER_CLOCK = machine("tower_clock", new TowerClockBlock(AbstractBlock.Settings.create().mapColor(MapColor.OAK_TAN)
+			.strength(2.0F).sounds(BlockSoundGroup.WOOD)));
+	public static final Block PORTCULLIS = plain("portcullis", new Block(AbstractBlock.Settings.create().mapColor(MapColor.IRON_GRAY)
+			.strength(5.0F, 6.0F).sounds(BlockSoundGroup.CHAIN).nonOpaque()));
 	public static final Item LIFT_PLATFORM = item("lift_platform", new DescribedItem(new Item.Settings().maxCount(16)));
 	public static final EntityType<HoistEntity> LIFT_PLATFORM_ENTITY = Registry.register(Registries.ENTITY_TYPE, EvolvedWarfare.id("lift_platform"),
 			EntityType.Builder.<HoistEntity>create(HoistEntity::new, SpawnGroup.MISC).dimensions(1.8F, 0.25F).maxTrackingRange(10)
@@ -94,6 +106,17 @@ public final class Engineering {
 		Registry.register(Registries.BLOCK, EvolvedWarfare.id(name), block);
 		MACHINES.add(block);
 		ITEMS.add(Registry.register(Registries.ITEM, EvolvedWarfare.id(name), new BlockItem(block, new Item.Settings())));
+		return block;
+	}
+
+	private static Block plain(String name, Block block) {
+		Registry.register(Registries.BLOCK, EvolvedWarfare.id(name), block);
+		ITEMS.add(Registry.register(Registries.ITEM, EvolvedWarfare.id(name), new BlockItem(block, new Item.Settings()) {
+			@Override
+			public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, net.minecraft.item.tooltip.TooltipType type) {
+				tooltip.add(Text.translatable(getTranslationKey() + ".desc").formatted(net.minecraft.util.Formatting.GRAY));
+			}
+		}));
 		return block;
 	}
 
