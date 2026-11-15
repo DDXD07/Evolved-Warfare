@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "LLL",
+    " HR",
+    "PGP"
+  ],
+  "key": {
+    "L": {
+      "tag": "minecraft:logs"
+    },
+    "H": {
+      "item": "evolvedwarfare:shaft"
+    },
+    "R": {
+      "item": "minecraft:lead"
+    },
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "G": {
+      "item": "evolvedwarfare:large_gear"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:crane",
+    "count": 1
+  }
+}

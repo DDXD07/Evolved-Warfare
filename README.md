@@ -2293,6 +2293,19 @@ Las máquinas gastan la fuerza de la red **por cada rpm** (más deprisa = trabaj
 | Martinete | 3 lingotes de hierro arriba, troncos, eje y tablones |
 | Fuelle | 3 tablones, 2 de cuero y una pepita de hierro, tablón, eje, tablón |
 
+## Fase 74 — Ingeniería medieval (3): el transporte
+
+- **Tornillo de Arquímedes** (gasta 1 por rpm cada uno; el eje por abajo o por arriba, y se apilan en **columna**, hasta 64): sube del pie a lo alto del todo **el agua** (de debajo del pie o de los cuatro lados del de abajo: un cubo cada 10 tics a 16 rpm; con el agua realista, sale del estanque de verdad), **los objetos sueltos** que haya alrededor del pie y, de uno en uno, **lo que haya en un cofre o tolva debajo**. Lo echa encima del de arriba: a un cofre si lo hay; el agua, si cabe.
+- **Polea de elevador** (gasta 2 por rpm; el eje por los lados): con **clic derecho con una plataforma de elevador** se cuelga una debajo. La plataforma **sube o baja** según gira la polea (**clic derecho a la polea** cambia entre subir y bajar), a **2 bloques por segundo a 16 rpm** (más deprisa con engranajes), con hasta **64 bloques de cuerda**. Se para al tocar algo y, si lleva gente, deja sitio para su cabeza. **Clic derecho a la plataforma para subirte** (caben 4; agáchate para bajarte). A golpes se recoge. Si se rompe la polea, la plataforma se suelta (cae como objeto).
+- **Grúa** (gasta 3 por rpm; el eje **por abajo**): un mástil con una **pluma de 3 bloques** y un **gancho** con cuerda. Clic derecho: el gancho **sube o baja**; **agachado + clic derecho: gira la pluma** un cuarto de vuelta (con lo que lleve colgado, si cabe). **Clic derecho al gancho** cuando está apoyado en un bloque: **lo coge** (cualquiera que se pueda romper y no guarde cosas: piedra, troncos, minerales...); con un bloque colgado, **lo suelta** debajo. Para mover bloques grandes de sitio sin romperlos.
+
+| Pieza | Receta |
+|---|---|
+| Tornillo de Arquímedes (2) | tablón, losa de madera y tablón ×2 alrededor de un eje |
+| Polea de elevador | 3 tablones, hierro-eje-hierro, tablón-rienda-tablón |
+| Grúa | 3 troncos; eje y rienda; tablón, engranaje grande, tablón |
+| Plataforma de elevador | 3 losas de madera, 3 tablones, 2 riendas |
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

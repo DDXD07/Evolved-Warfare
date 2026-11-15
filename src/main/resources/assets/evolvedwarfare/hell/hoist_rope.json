@@ -1,0 +1,1 @@
+{"texture": [256, 32], "parts": [{"name": "rope", "parent": null, "pivot": [0.0, 0.0, 0.0], "rotation": [0, 0, 0], "role": {}, "cubes": [{"uv": [0, 0], "origin": [-0.5, -16.0, -0.5], "size": [1, 16, 1]}]}]}

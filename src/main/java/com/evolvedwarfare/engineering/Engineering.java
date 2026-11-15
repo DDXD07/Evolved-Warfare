@@ -9,6 +9,8 @@ import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.MapColor;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnGroup;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -21,7 +23,8 @@ import net.minecraft.text.Text;
 /**
  * La ingeniería medieval (fase 72): la red de fuerza mecánica con velocidad y par. Fase 1: el eje, los engranajes, la caja
  * de engranajes, la manivela, las ruedas hidráulicas y los molinos de viento (tres tamaños), y los medidores. Fase 2 (73):
- * las máquinas que gastan esa fuerza: la muela, el aserradero, el martinete y el fuelle.
+ * las máquinas que gastan esa fuerza: la muela, el aserradero, el martinete y el fuelle. Fase 3 (74): el transporte: el
+ * tornillo de Arquímedes, la polea con su plataforma de elevador y la grúa.
  */
 public final class Engineering {
 	public static final List<Block> BLOCKS = new ArrayList<>();
@@ -59,6 +62,17 @@ public final class Engineering {
 	public static final Block TRIP_HAMMER = machine("trip_hammer", new TripHammerBlock(wood().strength(3.0F)));
 	public static final Block BELLOWS = machine("bellows", new BellowsBlock(wood()));
 	public static final Item FLOUR = item("flour", new DescribedItem(new Item.Settings()));
+	// fase 74: el transporte
+	public static final Block SCREW = machine("screw", new ArchimedesScrewBlock(wood()));
+	public static final Block PULLEY = machine("pulley", new PulleyBlock(wood().strength(2.5F)));
+	public static final Block CRANE = machine("crane", new CraneBlock(wood().strength(3.0F)));
+	public static final Item LIFT_PLATFORM = item("lift_platform", new DescribedItem(new Item.Settings().maxCount(16)));
+	public static final EntityType<HoistEntity> LIFT_PLATFORM_ENTITY = Registry.register(Registries.ENTITY_TYPE, EvolvedWarfare.id("lift_platform"),
+			EntityType.Builder.<HoistEntity>create(HoistEntity::new, SpawnGroup.MISC).dimensions(1.8F, 0.25F).maxTrackingRange(10)
+					.trackingTickInterval(1).build("lift_platform"));
+	public static final EntityType<HoistEntity> CRANE_HOOK = Registry.register(Registries.ENTITY_TYPE, EvolvedWarfare.id("crane_hook"),
+			EntityType.Builder.<HoistEntity>create(HoistEntity::new, SpawnGroup.MISC).dimensions(0.5F, 0.5F).maxTrackingRange(10)
+					.trackingTickInterval(1).build("crane_hook"));
 	public static final BlockEntityType<MachineBlockEntity> MACHINE_ENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE,
 			EvolvedWarfare.id("machine"), BlockEntityType.Builder.create(MachineBlockEntity::new, MACHINES.toArray(new Block[0])).build(null));
 

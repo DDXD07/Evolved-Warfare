@@ -2634,5 +2634,22 @@
   "block.evolvedwarfare.bellows.desc": "Shaft from the sides. Blows into the furnace, blast furnace, smoker or crucible in front: they work faster (double at 16 rpm).",
   "item.evolvedwarfare.flour": "Flour",
   "item.evolvedwarfare.flour.desc": "Bake it in a furnace: one bread each (more bread than crafting wheat).",
-  "message.evolvedwarfare.machine.contents": "Inside: %s · %s%%"
+  "message.evolvedwarfare.machine.contents": "Inside: %s · %s%%",
+  "block.evolvedwarfare.screw": "Archimedes Screw",
+  "block.evolvedwarfare.screw.desc": "Stack them in a column (shaft from below or above). Lifts water, loose items and chest contents from the bottom (or beside it) to the top.",
+  "block.evolvedwarfare.pulley": "Lift Pulley",
+  "block.evolvedwarfare.pulley.desc": "Shaft from the sides. Hang a lift platform under it (right click with it). Right click: up or down.",
+  "block.evolvedwarfare.crane": "Crane",
+  "block.evolvedwarfare.crane.desc": "Shaft from below. 3-block jib with a hook: right click, up or down; sneaking, turn the jib. Right click the resting hook: pick up or drop the block.",
+  "item.evolvedwarfare.lift_platform": "Lift Platform",
+  "item.evolvedwarfare.lift_platform.desc": "Right click a pulley to hang it below. Right click the platform to ride it (sneak to get off).",
+  "message.evolvedwarfare.hoist.up": "Going up",
+  "message.evolvedwarfare.hoist.down": "Going down",
+  "message.evolvedwarfare.hoist.has_platform": "This pulley already has a platform",
+  "message.evolvedwarfare.hoist.no_room": "There is no room below",
+  "message.evolvedwarfare.hoist.jib_blocked": "The jib can't turn: the hook would hit something",
+  "message.evolvedwarfare.hoist.cant_grab": "The hook must rest on a block it can pick up",
+  "message.evolvedwarfare.hoist.cant_drop": "There is no room to drop it",
+  "entity.evolvedwarfare.lift_platform": "Lift Platform",
+  "entity.evolvedwarfare.crane_hook": "Crane Hook"
 }

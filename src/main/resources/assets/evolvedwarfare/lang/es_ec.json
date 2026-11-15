@@ -2634,5 +2634,22 @@
   "block.evolvedwarfare.bellows.desc": "Eje por los lados. Sopla al horno, alto horno, ahumador o crisol de delante: van más deprisa (el doble a 16 rpm).",
   "item.evolvedwarfare.flour": "Harina",
   "item.evolvedwarfare.flour.desc": "Se cuece en el horno: un pan por cada puñado (sale más pan que del trigo en la mesa).",
-  "message.evolvedwarfare.machine.contents": "Dentro: %s · %s%%"
+  "message.evolvedwarfare.machine.contents": "Dentro: %s · %s%%",
+  "block.evolvedwarfare.screw": "Tornillo de Arquímedes",
+  "block.evolvedwarfare.screw.desc": "Se apilan en columna (el eje por abajo o por arriba). Sube agua, objetos sueltos y lo de un cofre, de abajo (o de al lado del de abajo) a arriba del todo.",
+  "block.evolvedwarfare.pulley": "Polea de elevador",
+  "block.evolvedwarfare.pulley.desc": "Eje por los lados. Ponle debajo una plataforma de elevador (clic derecho con ella). Clic derecho: subir o bajar.",
+  "block.evolvedwarfare.crane": "Grúa",
+  "block.evolvedwarfare.crane.desc": "Eje por abajo. Pluma de 3 bloques con un gancho: clic derecho, subir o bajar; agachado, gira la pluma. Clic derecho al gancho apoyado: coge o suelta el bloque.",
+  "item.evolvedwarfare.lift_platform": "Plataforma de elevador",
+  "item.evolvedwarfare.lift_platform.desc": "Clic derecho a una polea para colgarla debajo. Clic derecho a la plataforma para subirte (agáchate para bajarte).",
+  "message.evolvedwarfare.hoist.up": "Sube",
+  "message.evolvedwarfare.hoist.down": "Baja",
+  "message.evolvedwarfare.hoist.has_platform": "Esta polea ya tiene plataforma",
+  "message.evolvedwarfare.hoist.no_room": "No cabe ahí debajo",
+  "message.evolvedwarfare.hoist.jib_blocked": "La pluma no puede girar: el gancho se choca",
+  "message.evolvedwarfare.hoist.cant_grab": "El gancho tiene que estar apoyado en un bloque que se pueda coger",
+  "message.evolvedwarfare.hoist.cant_drop": "No hay sitio para soltarlo",
+  "entity.evolvedwarfare.lift_platform": "Plataforma de elevador",
+  "entity.evolvedwarfare.crane_hook": "Gancho de grúa"
 }

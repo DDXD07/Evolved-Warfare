@@ -32,6 +32,11 @@ public class MachineBlockEntity extends KineticBlockEntity implements SidedInven
 	int target = -1, hits;
 	/** El fuelle: los tics de más que le debe a lo que sopla. */
 	float boost;
+	/** La polea y la grúa: lo que cuelga de ellas, si sube (o baja), y cuánto hace que no lo encuentran. */
+	@Nullable
+	java.util.UUID hoist;
+	boolean lifting;
+	int lost;
 
 	public MachineBlockEntity(BlockPos pos, BlockState state) {
 		super(Engineering.MACHINE_ENTITY, pos, state);
@@ -60,6 +65,20 @@ public class MachineBlockEntity extends KineticBlockEntity implements SidedInven
 
 	public float phase() {
 		return phase;
+	}
+
+	public boolean lifting() {
+		return lifting;
+	}
+
+	public void setLifting(boolean up) {
+		lifting = up;
+		markDirty();
+	}
+
+	@Nullable
+	public java.util.UUID hoistId() {
+		return hoist;
 	}
 
 	public int hits() {
@@ -272,6 +291,8 @@ public class MachineBlockEntity extends KineticBlockEntity implements SidedInven
 		progress = nbt.getFloat("Progress");
 		phase = nbt.getFloat("Phase");
 		hits = nbt.getInt("Hits");
+		hoist = nbt.containsUuid("Hoist") ? nbt.getUuid("Hoist") : null;
+		lifting = nbt.getBoolean("Lifting");
 	}
 
 	@Override
@@ -281,5 +302,9 @@ public class MachineBlockEntity extends KineticBlockEntity implements SidedInven
 		nbt.putFloat("Progress", progress);
 		nbt.putFloat("Phase", phase);
 		nbt.putInt("Hits", hits);
+		if (hoist != null) {
+			nbt.putUuid("Hoist", hoist);
+		}
+		nbt.putBoolean("Lifting", lifting);
 	}
 }

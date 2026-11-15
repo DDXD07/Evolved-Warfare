@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "PSP",
+    "PHP",
+    "PSP"
+  ],
+  "key": {
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "S": {
+      "tag": "minecraft:wooden_slabs"
+    },
+    "H": {
+      "item": "evolvedwarfare:shaft"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:screw",
+    "count": 2
+  }
+}

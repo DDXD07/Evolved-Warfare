@@ -243,4 +243,136 @@ public class EngineeringGameTests implements FabricGameTest {
 			ctx.complete();
 		});
 	}
+
+	// ------------------------------------------------------------------ fase 74: el transporte
+
+	/** Dos tornillos movidos por la manivela de debajo suben el agua del lado del pie a lo alto, y un objeto suelto también. */
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "machine_screw", tickLimit = 200)
+	public void screwLiftsWaterAndItems(TestContext ctx) {
+		ctx.setBlockState(2, 1, 2, Engineering.HAND_CRANK.getDefaultState().with(Properties.FACING, Direction.DOWN));
+		ctx.setBlockState(2, 2, 2, Engineering.SCREW);
+		ctx.setBlockState(2, 3, 2, Engineering.SCREW);
+		// un estanque de un bloque al lado del pie
+		for (int[] c : new int[][] {{0, 2, 2}, {1, 2, 1}, {1, 2, 3}, {1, 1, 2}}) {
+			ctx.setBlockState(c[0], c[1], c[2], Blocks.STONE);
+		}
+		ctx.setBlockState(1, 2, 2, Blocks.WATER);
+		// arriba, un cuenco cerrado para el agua
+		for (int[] c : new int[][] {{1, 4, 2}, {3, 4, 2}, {2, 4, 1}, {2, 4, 3}}) {
+			ctx.setBlockState(c[0], c[1], c[2], Blocks.STONE);
+		}
+		ctx.runAtTick(2, () -> {
+			BlockPos at = ctx.getAbsolutePos(new BlockPos(3, 3, 2));
+			ctx.getWorld().spawnEntity(new net.minecraft.entity.ItemEntity(ctx.getWorld(), at.getX() + 0.5, at.getY() - 0.9, at.getZ() + 0.5,
+					new net.minecraft.item.ItemStack(net.minecraft.item.Items.APPLE), 0, 0, 0));
+			ctx.setBlockState(3, 1, 2, Blocks.STONE);
+		});
+		keepCranking(ctx, 2, 1, 2, 120);
+		ctx.runAtTick(110, () -> {
+			BlockPos out = ctx.getAbsolutePos(new BlockPos(2, 4, 2));
+			var world = ctx.getWorld();
+			boolean water = world.getFluidState(out).isIn(net.minecraft.registry.tag.FluidTags.WATER);
+			int apples = 0;
+			for (var e : world.getEntitiesByClass(net.minecraft.entity.ItemEntity.class, new net.minecraft.util.math.Box(out).expand(2), x -> true)) {
+				if (e.getStack().isOf(net.minecraft.item.Items.APPLE) && e.getY() >= out.getY()) {
+					apples++;
+				}
+			}
+			LOG.info("[EW-GAMETEST] tornillo: gira {}, agua arriba {} ({}), manzanas arriba {}", be(ctx, 2, 2, 2).speed(), water,
+					world.getFluidState(out), apples);
+			if (!water || apples != 1) {
+				throw new GameTestException("El tornillo no sube el agua o los objetos");
+			}
+			ctx.complete();
+		});
+	}
+
+	/** La polea baja su plataforma hasta el suelo y, al cambiarla, la sube. */
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "machine_pulley", tickLimit = 200)
+	public void pulleyMovesThePlatform(TestContext ctx) {
+		for (int x = 1; x <= 3; x++) {
+			for (int z = 1; z <= 3; z++) {
+				ctx.setBlockState(x, 1, z, Blocks.STONE);
+			}
+		}
+		ctx.setBlockState(2, 8, 2, Engineering.PULLEY.getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.EAST));
+		ctx.setBlockState(2, 8, 1, Engineering.HAND_CRANK.getDefaultState().with(Properties.FACING, Direction.NORTH));
+		com.evolvedwarfare.engineering.HoistEntity[] h = new com.evolvedwarfare.engineering.HoistEntity[1];
+		ctx.runAtTick(2, () -> {
+			BlockPos p = ctx.getAbsolutePos(new BlockPos(2, 8, 2));
+			if (!com.evolvedwarfare.engineering.PulleyBlock.attachPlatform(ctx.getWorld(), p, null)) {
+				throw new GameTestException("No se cuelga la plataforma");
+			}
+			h[0] = (com.evolvedwarfare.engineering.HoistEntity) ctx.getWorld().getEntity(machine(ctx, 2, 8, 2).hoistId());
+		});
+		keepCranking(ctx, 2, 8, 1, 180);
+		double base = ctx.getAbsolutePos(BlockPos.ORIGIN).getY();
+		ctx.runAtTick(90, () -> {
+			double y = h[0].getY() - base;
+			LOG.info("[EW-GAMETEST] polea: plataforma abajo a {}", y);
+			if (Math.abs(y - 2.0) > 0.06) {
+				throw new GameTestException("La plataforma no baja hasta el suelo");
+			}
+			machine(ctx, 2, 8, 2).setLifting(true);
+		});
+		ctx.runAtTick(150, () -> {
+			double y = h[0].getY() - base;
+			LOG.info("[EW-GAMETEST] polea: plataforma arriba a {}", y);
+			if (y < 5.5 || y > 7.76) {
+				throw new GameTestException("La plataforma no sube");
+			}
+			ctx.complete();
+		});
+	}
+
+	/** La grúa baja el gancho, coge un tronco, lo sube, gira la pluma y lo suelta en otro sitio. */
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "machine_crane", tickLimit = 260)
+	public void craneMovesABlock(TestContext ctx) {
+		ctx.setBlockState(1, 1, 1, Engineering.CRANE.getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.EAST));
+		ctx.setBlockState(1, 0, 1, Engineering.HAND_CRANK.getDefaultState().with(Properties.FACING, Direction.DOWN));
+		ctx.setBlockState(4, 0, 1, Blocks.STONE);
+		ctx.setBlockState(4, 1, 1, Blocks.OAK_LOG);
+		ctx.setBlockState(1, 0, 4, Blocks.STONE);
+		keepCranking(ctx, 1, 0, 1, 240);
+		java.util.function.Supplier<com.evolvedwarfare.engineering.HoistEntity> hook = () -> {
+			var id = machine(ctx, 1, 1, 1).hoistId();
+			if (id == null || !(ctx.getWorld().getEntity(id) instanceof com.evolvedwarfare.engineering.HoistEntity e)) {
+				throw new GameTestException("La grúa no tiene gancho");
+			}
+			return e;
+		};
+		ctx.runAtTick(60, () -> {
+			var e = hook.get();
+			LOG.info("[EW-GAMETEST] grúa: gancho en {}", e.getPos());
+			if (!e.grabOrRelease(null)) {
+				throw new GameTestException("El gancho no coge el tronco");
+			}
+			machine(ctx, 1, 1, 1).setLifting(true);
+		});
+		ctx.runAtTick(100, () -> {
+			var e = hook.get();
+			if (!ctx.getBlockState(new BlockPos(4, 1, 1)).isAir() || e.carried().isEmpty()) {
+				throw new GameTestException("El tronco no va colgado");
+			}
+			if (!com.evolvedwarfare.engineering.CraneBlock.turnJib(ctx.getWorld(), ctx.getAbsolutePos(new BlockPos(1, 1, 1)), null)) {
+				throw new GameTestException("La pluma no gira");
+			}
+			machine(ctx, 1, 1, 1).setLifting(false);
+		});
+		ctx.runAtTick(150, () -> {
+			var e = hook.get();
+			LOG.info("[EW-GAMETEST] grúa: gancho girado en {}, lleva {}", e.getPos(), e.carried());
+			if (!e.grabOrRelease(null)) {
+				throw new GameTestException("El gancho no suelta el tronco");
+			}
+		});
+		ctx.runAtTick(155, () -> {
+			boolean placed = ctx.getBlockState(new BlockPos(1, 1, 4)).isOf(Blocks.OAK_LOG);
+			LOG.info("[EW-GAMETEST] grúa: tronco puesto en su sitio nuevo {}", placed);
+			if (!placed) {
+				throw new GameTestException("El tronco no queda en el sitio nuevo");
+			}
+			ctx.complete();
+		});
+	}
 }

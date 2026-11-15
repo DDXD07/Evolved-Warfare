@@ -239,20 +239,114 @@ def bellows():
     return a
 
 
+
+# ------------------------------------------------------------------ fase 3: el transporte
+ROPE = (176, 150, 104)
+ROPE_DARK = (130, 106, 70)
+
+
+def screw():
+    a = W.Animal("machine_screw")
+    f = a.part("frame", None, (0, 0, 0))
+    for x in (-8, 6):
+        for z in (-8, 6):
+            f.cube((x, -8, z), (2, 16, 2), **C(OAK_DARK, rings=(OAK, 6)))
+    r = rotor(a)
+    r.cube((-1.5, -8, -1.5), (3, 16, 3), **C(STRIPPED, rings=(OAK_DARK, 3)))
+    for k in range(8):
+        b = a.part("flight%d" % k, "rotor", (0, 0, 0), rot=(0, 45 * k, 0))
+        b.cube((1, 6 - 2 * k - 1, -1), (5, 1, 3), **C(OAK, high=(STRIPPED, 1)))
+    return a
+
+
+def pulley():
+    a = W.Animal("machine_pulley")
+    f = a.part("frame", None, (0, 0, 0))
+    f.cube((-8, -8, -8), (16, 2, 16), **C(OAK_DARK, rings=(OAK, 4)))
+    for z in (-8, 6):
+        f.cube((-6, -6, z), (12, 12, 2), **C(OAK, rings=(OAK_DARK, 3)))
+    f.cube((-2, 6, -2), (4, 2, 4), **C(IRON_DARK, high=(IRON, 1)))
+    r = rotor(a)
+    r.cube((-1, -1, -8), (2, 2, 16), **C(IRON_DARK, high=(IRON, 1)))
+    r.cube((-4, -4, -5), (8, 8, 10), **C(ROPE, rings=(ROPE_DARK, 1)))
+    r45 = a.part("drum45", "rotor", (0, 0, 0), rot=(0, 0, 45))
+    r45.cube((-4, -4, -5), (8, 8, 10), **C(ROPE, rings=(ROPE_DARK, 1)))
+    for z in (-6, 5):
+        r.cube((-5, -5, z), (10, 10, 1), **C(OAK_DARK))
+    return a
+
+
+def crane():
+    """La grúa: el mástil (dos bloques) y la pluma de 3 bloques hacia +x; la base gira (rotor) con el eje de abajo."""
+    a = W.Animal("machine_crane")
+    r = rotor(a)
+    r.cube((-7, 5, -7), (14, 3, 14), **C(OAK_DARK, rings=(IRON_DARK, 3)))
+    for k in range(8):
+        t = a.part("cog%d" % k, "rotor", (0, 0, 0), rot=(0, 45 * k, 0))
+        t.cube((6, 5, -1), (2, 3, 2), **C(IRON_DARK))
+    f = a.part("frame", None, (0, 0, 0))
+    f.cube((-3, -24, -3), (6, 29, 6), **C(OAK, rings=(OAK_DARK, 8)))
+    f.cube((-4, -32, -4), (8, 8, 8), **C(OAK_DARK, rings=(IRON_DARK, 3)))
+    f.cube((4, -30, -2), (48, 4, 4), **C(OAK, rings=(OAK_DARK, 8)))
+    f.cube((-14, -30, -2), (10, 4, 4), **C(OAK, rings=(OAK_DARK, 4)))
+    f.cube((-16, -31, -4), (6, 7, 8), **C((120, 120, 124), spots=(STONE_DARK, 0.2)))
+    f.cube((44, -27, -3), (8, 3, 6), **C(IRON_DARK, high=(IRON, 1)))
+    f.cube((0, -20, -1), (2, 2, 2), **C(OAK_DARK))
+    stay = a.part("stay", None, (2, -20, 0), rot=(0, 0, -29))
+    stay.cube((0, -1, -1), (24, 2, 2), **C(OAK_DARK))
+    return a
+
+
+def platform():
+    a = W.Animal("hoist_platform")
+    f = a.part("base", None, (0, 0, 0))
+    f.cube((-14, -4, -14), (28, 4, 28), **C(OAK, rings=(OAK_DARK, 4), spots=((170, 128, 78), 0.04)))
+    for x in (-14, 12):
+        for z in (-14, 12):
+            f.cube((x, -10, z), (2, 6, 2), **C(OAK_DARK))
+    f.cube((-14, -10, -14), (28, 1, 2), **C(OAK_DARK))
+    f.cube((-14, -10, 12), (28, 1, 2), **C(OAK_DARK))
+    f.cube((-14, -10, -12), (2, 1, 24), **C(OAK_DARK))
+    f.cube((12, -10, -12), (2, 1, 24), **C(OAK_DARK))
+    f.cube((-2, -6, -2), (4, 2, 4), **C(IRON_DARK, high=(IRON, 1)))
+    return a
+
+
+def hook():
+    a = W.Animal("hoist_hook")
+    f = a.part("hook", None, (0, 0, 0))
+    f.cube((-3, -4, -3), (6, 4, 6), **C(OAK_DARK, rings=(IRON_DARK, 2)))
+    f.cube((-1, 0, -1), (2, 3, 2), **C(IRON_DARK, high=(IRON, 1)))
+    f.cube((-3, 3, -1), (6, 1, 2), **C(IRON_DARK, high=(IRON, 1)))
+    f.cube((-4, 1, -1), (1, 3, 2), **C(IRON_DARK, high=(IRON, 1)))
+    f.cube((3, 1, -1), (1, 3, 2), **C(IRON_DARK, high=(IRON, 1)))
+    return a
+
+
+def rope():
+    a = W.Animal("hoist_rope")
+    f = a.part("rope", None, (0, 0, 0))
+    f.cube((-0.5, -16, -0.5), (1, 16, 1), **C(ROPE, rings=(ROPE_DARK, 2)))
+    return a
+
+
 MODELS = collections.OrderedDict([
     ("kinetic_shaft", shaft), ("kinetic_small_gear", small_gear), ("kinetic_large_gear", large_gear), ("kinetic_crank", crank),
     ("kinetic_gauge_needle", needle)]
     + [("water_wheel_" + s, (lambda s=s: water_wheel(s))) for s in WATER_WHEELS]
     + [("windmill_" + s, (lambda s=s: windmill(s))) for s in WINDMILLS]
-    + [("machine_millstone", millstone), ("machine_sawmill", sawmill), ("machine_trip_hammer", trip_hammer), ("machine_bellows", bellows)])
+    + [("machine_millstone", millstone), ("machine_sawmill", sawmill), ("machine_trip_hammer", trip_hammer), ("machine_bellows", bellows)]
+    + [("machine_screw", screw), ("machine_pulley", pulley), ("machine_crane", crane), ("hoist_platform", platform), ("hoist_hook", hook),
+       ("hoist_rope", rope)])
 
 ITEM_OF = {"kinetic_shaft": "shaft", "kinetic_small_gear": "small_gear", "kinetic_large_gear": "large_gear", "kinetic_crank": "hand_crank"}
 for s in WATER_WHEELS:
     ITEM_OF["water_wheel_" + s] = "water_wheel_" + s
 for s in WINDMILLS:
     ITEM_OF["windmill_" + s] = "windmill_" + s
-for s in ("millstone", "sawmill", "trip_hammer", "bellows"):
+for s in ("millstone", "sawmill", "trip_hammer", "bellows", "screw", "pulley", "crane"):
     ITEM_OF["machine_" + s] = s
+ITEM_OF["hoist_platform"] = "lift_platform"
 
 # id: (es, en, descripción es, descripción en)
 NAMES = collections.OrderedDict([
@@ -297,8 +391,20 @@ NAMES = collections.OrderedDict([
     ("bellows", ("Fuelle", "Bellows",
                  "Eje por los lados. Sopla al horno, alto horno, ahumador o crisol de delante: van más deprisa (el doble a 16 rpm).",
                  "Shaft from the sides. Blows into the furnace, blast furnace, smoker or crucible in front: they work faster (double at 16 rpm).")),
+    ("screw", ("Tornillo de Arquímedes", "Archimedes Screw",
+               "Se apilan en columna (el eje por abajo o por arriba). Sube agua, objetos sueltos y lo de un cofre, de abajo (o de al lado del de abajo) a arriba del todo.",
+               "Stack them in a column (shaft from below or above). Lifts water, loose items and chest contents from the bottom (or beside it) to the top.")),
+    ("pulley", ("Polea de elevador", "Lift Pulley",
+                "Eje por los lados. Ponle debajo una plataforma de elevador (clic derecho con ella). Clic derecho: subir o bajar.",
+                "Shaft from the sides. Hang a lift platform under it (right click with it). Right click: up or down.")),
+    ("crane", ("Grúa", "Crane",
+               "Eje por abajo. Pluma de 3 bloques con un gancho: clic derecho, subir o bajar; agachado, gira la pluma. Clic derecho al gancho apoyado: coge o suelta el bloque.",
+               "Shaft from below. 3-block jib with a hook: right click, up or down; sneaking, turn the jib. Right click the resting hook: pick up or drop the block.")),
 ])
 ITEMS = collections.OrderedDict([
+    ("lift_platform", ("Plataforma de elevador", "Lift Platform",
+                       "Clic derecho a una polea para colgarla debajo. Clic derecho a la plataforma para subirte (agáchate para bajarte).",
+                       "Right click a pulley to hang it below. Right click the platform to ride it (sneak to get off).")),
     ("flour", ("Harina", "Flour", "Se cuece en el horno: un pan por cada puñado (sale más pan que del trigo en la mesa).",
                "Bake it in a furnace: one bread each (more bread than crafting wheat).")),
 ])
@@ -311,6 +417,15 @@ TEXTS = {
     "message.evolvedwarfare.kinetic.no_water": ("No le corre agua", "No water is running through it"),
     "message.evolvedwarfare.kinetic.still": ("Parado", "Not turning"),
     "itemGroup.evolvedwarfare.engineering": ("Ingeniería medieval", "Medieval Engineering"),
+    "message.evolvedwarfare.hoist.up": ("Sube", "Going up"),
+    "message.evolvedwarfare.hoist.down": ("Baja", "Going down"),
+    "message.evolvedwarfare.hoist.has_platform": ("Esta polea ya tiene plataforma", "This pulley already has a platform"),
+    "message.evolvedwarfare.hoist.no_room": ("No cabe ahí debajo", "There is no room below"),
+    "message.evolvedwarfare.hoist.jib_blocked": ("La pluma no puede girar: el gancho se choca", "The jib can't turn: the hook would hit something"),
+    "message.evolvedwarfare.hoist.cant_grab": ("El gancho tiene que estar apoyado en un bloque que se pueda coger", "The hook must rest on a block it can pick up"),
+    "message.evolvedwarfare.hoist.cant_drop": ("No hay sitio para soltarlo", "There is no room to drop it"),
+    "entity.evolvedwarfare.lift_platform": ("Plataforma de elevador", "Lift Platform"),
+    "entity.evolvedwarfare.crane_hook": ("Gancho de grúa", "Crane Hook"),
     "message.evolvedwarfare.machine.contents": ("Dentro: %s · %s%%", "Inside: %s · %s%%"),
 }
 
@@ -404,6 +519,10 @@ def recipes():
     shaped("millstone", [" H ", "SSS", "PPP"], {"H": H, "S": "minecraft:smooth_stone", "P": P})
     shaped("sawmill", ["IBI", "PHP", "P P"], {"I": "minecraft:iron_nugget", "B": "minecraft:iron_ingot", "P": P, "H": H})
     shaped("trip_hammer", ["III", "LHI", "LPP"], {"I": I, "L": L, "H": H, "P": P})
+    shaped("screw", ["PSP", "PHP", "PSP"], {"P": P, "S": "#minecraft:wooden_slabs", "H": H}, 2)
+    shaped("pulley", ["PPP", "IHI", "PRP"], {"P": P, "I": "minecraft:iron_ingot", "H": H, "R": "minecraft:lead"})
+    shaped("crane", ["LLL", " HR", "PGP"], {"L": L, "H": H, "R": "minecraft:lead", "P": P, "G": NS + ":large_gear"})
+    shaped("lift_platform", ["SSS", "PPP", "R R"], {"S": "#minecraft:wooden_slabs", "P": P, "R": "minecraft:lead"})
     shaped("bellows", ["PPP", "EEN", "PHP"], {"P": P, "E": "minecraft:leather", "N": "minecraft:iron_nugget", "H": H})
     for kind, typ in (("smelting", "minecraft:smelting"), ("smoking", "minecraft:smoking")):
         write_json(os.path.join(DATA, "recipe", "bread_from_flour_%s.json" % kind), {
@@ -470,7 +589,7 @@ def main():
         write_json(os.path.join(ASSETS, "models/block/%s.json" % g), {"parent": "minecraft:block/cube_bottom_top", "textures": {
             "top": "%s:block/%s_top" % (NS, g), "side": "%s:block/%s_side" % (NS, g), "bottom": "minecraft:block/oak_planks"}})
         write_json(os.path.join(ASSETS, "models/item/%s.json" % g), {"parent": "%s:block/%s" % (NS, g)})
-    for name in ITEM_OF.values():
+    for name in [n for n in ITEM_OF.values() if n not in ITEMS]:
         write_json(os.path.join(ASSETS, "blockstates/%s.json" % name), {"variants": {"": {"model": "%s:block/kinetic_particles" % NS}}})
     write_json(os.path.join(ASSETS, "models/block/kinetic_particles.json"), {"textures": {"particle": "minecraft:block/stripped_oak_log"}})
     for name in NAMES:

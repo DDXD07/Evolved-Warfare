@@ -10,6 +10,9 @@ import com.evolvedwarfare.engineering.ShaftBlock;
 import com.evolvedwarfare.engineering.WaterWheelBlock;
 import com.evolvedwarfare.engineering.WindmillBlock;
 import com.evolvedwarfare.engineering.BellowsBlock;
+import com.evolvedwarfare.engineering.ArchimedesScrewBlock;
+import com.evolvedwarfare.engineering.CraneBlock;
+import com.evolvedwarfare.engineering.PulleyBlock;
 import com.evolvedwarfare.engineering.MachineBlockEntity;
 import com.evolvedwarfare.engineering.MillstoneBlock;
 import com.evolvedwarfare.engineering.SawmillBlock;
@@ -41,7 +44,8 @@ import net.minecraft.util.math.RotationAxis;
  */
 public class KineticRenderer implements BlockEntityRenderer<KineticBlockEntity> {
 	private static final String[] MODELS = {"kinetic_shaft", "kinetic_small_gear", "kinetic_large_gear", "kinetic_crank", "kinetic_gauge_needle",
-			"water_wheel_small", "water_wheel_medium", "water_wheel_large", "windmill_small", "windmill_medium", "windmill_large", "machine_millstone", "machine_sawmill", "machine_trip_hammer", "machine_bellows"};
+			"water_wheel_small", "water_wheel_medium", "water_wheel_large", "windmill_small", "windmill_medium", "windmill_large", "machine_millstone", "machine_sawmill", "machine_trip_hammer", "machine_bellows",
+			"machine_screw", "machine_pulley", "machine_crane", "hoist_platform", "hoist_hook", "hoist_rope"};
 	private static final Map<String, EntityModelLayer> LAYERS = new HashMap<>();
 	private final Map<String, ModelPart> parts = new HashMap<>();
 
@@ -53,6 +57,12 @@ public class KineticRenderer implements BlockEntityRenderer<KineticBlockEntity> 
 		}
 		BlockEntityRendererFactories.register(Engineering.KINETIC_ENTITY, KineticRenderer::new);
 		BlockEntityRendererFactories.register(Engineering.MACHINE_ENTITY, KineticRenderer::new);
+		net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(Engineering.LIFT_PLATFORM_ENTITY, HoistRenderer::new);
+		net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry.register(Engineering.CRANE_HOOK, HoistRenderer::new);
+	}
+
+	static EntityModelLayer layer(String id) {
+		return LAYERS.get(id);
 	}
 
 	private final net.minecraft.client.render.item.ItemRenderer items;
@@ -135,6 +145,14 @@ public class KineticRenderer implements BlockEntityRenderer<KineticBlockEntity> 
 				part.getChild("rotor").roll = -spin * 2.0F * MathHelper.RADIANS_PER_DEGREE;
 				part.getChild("lid").roll = -open * 16.0F * MathHelper.RADIANS_PER_DEGREE;
 			});
+		} else if (state.getBlock() instanceof ArchimedesScrewBlock) {
+			machine(m, consumers, light, "machine_screw", Direction.EAST, part -> part.getChild("rotor").yaw = spin * MathHelper.RADIANS_PER_DEGREE);
+		} else if (state.getBlock() instanceof PulleyBlock) {
+			machine(m, consumers, light, "machine_pulley", SideShaftMachineBlock.facing(state),
+					part -> part.getChild("rotor").roll = -spin * MathHelper.RADIANS_PER_DEGREE);
+		} else if (state.getBlock() instanceof CraneBlock) {
+			machine(m, consumers, light, "machine_crane", state.get(Properties.HORIZONTAL_FACING),
+					part -> part.getChild("rotor").yaw = spin * MathHelper.RADIANS_PER_DEGREE);
 		} else if (state.getBlock() instanceof GaugeBlock gauge) {
 			// la aguja, arriba: de −90° (nada) a +90° (al máximo)
 			float value = gauge.measuresStress() ? (be.capacity() > 0 ? be.stress() / be.capacity() : 0.0F) : Math.abs(be.speed()) / 32.0F;

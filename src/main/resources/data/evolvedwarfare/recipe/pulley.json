@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "PPP",
+    "IHI",
+    "PRP"
+  ],
+  "key": {
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "H": {
+      "item": "evolvedwarfare:shaft"
+    },
+    "R": {
+      "item": "minecraft:lead"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:pulley",
+    "count": 1
+  }
+}
