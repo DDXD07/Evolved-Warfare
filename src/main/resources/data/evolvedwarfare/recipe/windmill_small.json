@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "WSW",
+    "SHS",
+    "WSW"
+  ],
+  "key": {
+    "W": {
+      "item": "minecraft:white_wool"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "H": {
+      "item": "evolvedwarfare:shaft"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:windmill_small",
+    "count": 1
+  }
+}

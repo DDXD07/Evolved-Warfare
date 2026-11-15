@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "PSP",
+    "SGS",
+    "PSP"
+  ],
+  "key": {
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "G": {
+      "item": "evolvedwarfare:small_gear"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:large_gear",
+    "count": 1
+  }
+}

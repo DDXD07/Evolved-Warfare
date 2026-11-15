@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "LPL",
+    "PWP",
+    "LPL"
+  ],
+  "key": {
+    "L": {
+      "tag": "minecraft:logs"
+    },
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "W": {
+      "item": "evolvedwarfare:water_wheel_small"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:water_wheel_medium",
+    "count": 1
+  }
+}

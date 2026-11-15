@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    " P ",
+    "PHP",
+    " P "
+  ],
+  "key": {
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "H": {
+      "item": "evolvedwarfare:shaft"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:small_gear",
+    "count": 1
+  }
+}

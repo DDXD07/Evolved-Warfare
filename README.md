@@ -2250,6 +2250,33 @@ Los NPCs del pueblo (los vecinos, los guardias del cuartel y los vigías de las 
 - **La cabeza de la tuneladora gira sin saltos**: acelera hasta girar deprisa al excavar y se frena sola, sin reiniciar el giro.
 - **Lo que alumbra encima de las plataformas y las carretas da luz de verdad** (antorchas, faroles, hogueras, lámparas de cobre, piedra luminosa...): se ponen bloques de luz invisibles donde va cada cosa y se mueven con el tren; se quitan al romper el vagón.
 
+## Fase 72 — Ingeniería medieval (1): la fuerza
+
+- Una **red de fuerza mecánica** con **velocidad y par**: las fuentes hacen girar los ejes y engranajes que tocan, y las máquinas (en la fase 2) gastan fuerza **según lo deprisa que giran**. Agachado + clic derecho con la mano vacía en cualquier pieza: su velocidad y la fuerza de la red.
+- **Eje** (como un tronco: según la cara donde se pone) lleva el giro en línea recta.
+- **Engranaje pequeño** y **engranaje grande**: dos pequeños juntos giran al revés a la misma velocidad; un pequeño con un grande **en diagonal** (en el mismo plano) cambian la velocidad: el grande va **a la mitad** (con el doble de par) o el pequeño **al doble**. Ir más deprisa cuesta más fuerza.
+- **Caja de engranajes**: pasa el giro a sus seis caras, para doblar esquinas.
+- **Fuentes** (de tres tamaños las grandes; cuanto más grandes, más lentas pero con mucha más fuerza):
+  - **Manivela**: mantén clic derecho para darle vueltas (16 rpm, 48 de fuerza; cansa un poco).
+  - **Rueda hidráulica** pequeña (3 de diámetro, 16 rpm, 256), mediana (5, 12 rpm, 768) y grande (7, 8 rpm, 1536): gira con el **agua que corre o cae** por ella, hacia donde la empuja y más fuerte cuanta más agua la mueve.
+  - **Molino de viento** pequeño (aspas de 5, 16 rpm, 256), mediano (9, 12 rpm, 1024) y grande (13, 8 rpm, 2048): necesita **aire libre** donde barren las aspas; da más fuerza **cuanto más alto** (de ×0,4 junto al mar a ×1,3) y con **lluvia (×1,25) o tormenta (×1,5)**. El eje sale por detrás.
+- **Velocímetro** y **medidor de fuerza**: un eje pasa por dentro y la aguja de arriba marca la velocidad (hasta 32 rpm) o cuánta fuerza se gasta.
+- Si dos fuentes giran a distinta velocidad o al revés, la red **se atasca**; si las máquinas piden más fuerza de la que hay, **se sobrecarga** y se para todo.
+- Todo con **modelos 3D que giran**, y su pestaña en el modo creativo: *Ingeniería medieval*.
+
+| Pieza | Receta |
+|---|---|
+| Eje ×4 | 2 troncos en vertical |
+| Engranaje pequeño | eje en el centro y 4 tablones en cruz |
+| Engranaje grande | engranaje pequeño, 4 tablones en las esquinas y 4 palos |
+| Caja de engranajes | engranaje pequeño, 4 tablones en las esquinas y 4 pepitas de hierro |
+| Manivela | 3 palos y un tablón debajo a la izquierda |
+| Rueda hidráulica pequeña | eje rodeado de 8 tablones |
+| Rueda mediana / grande | la anterior rodeada de troncos y tablones / troncos y lingotes de hierro |
+| Molino pequeño | eje, 4 palos y 4 lanas blancas |
+| Molino mediano / grande | el anterior con lana y troncos / lana y lingotes de hierro |
+| Velocímetro / medidor de fuerza | eje, 4 tablones y una brújula / un reloj |
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

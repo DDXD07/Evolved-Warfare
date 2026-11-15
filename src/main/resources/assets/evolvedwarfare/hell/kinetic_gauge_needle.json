@@ -1,0 +1,1 @@
+{"texture": [256, 32], "parts": [{"name": "needle", "parent": null, "pivot": [0.0, -8.0, 0.0], "rotation": [0, 0, 0], "role": {}, "cubes": [{"uv": [0, 0], "origin": [-1.0, -1.0, -1.0], "size": [7, 1, 2]}, {"uv": [18, 0], "origin": [-1.0, -2.0, -1.0], "size": [2, 1, 2]}]}]}

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "LIL",
+    "IWI",
+    "LIL"
+  ],
+  "key": {
+    "L": {
+      "tag": "minecraft:logs"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "W": {
+      "item": "evolvedwarfare:water_wheel_medium"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:water_wheel_large",
+    "count": 1
+  }
+}

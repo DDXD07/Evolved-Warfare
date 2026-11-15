@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "PNP",
+    "NGN",
+    "PNP"
+  ],
+  "key": {
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "N": {
+      "item": "minecraft:iron_nugget"
+    },
+    "G": {
+      "item": "evolvedwarfare:small_gear"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:gearbox",
+    "count": 1
+  }
+}

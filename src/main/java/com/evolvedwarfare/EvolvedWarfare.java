@@ -90,6 +90,7 @@ public class EvolvedWarfare implements ModInitializer {
 		com.evolvedwarfare.orchard.Orchards.register();
 		com.evolvedwarfare.hell.Hell.register();
 		com.evolvedwarfare.world.dungeon.Dungeons.register();
+		com.evolvedwarfare.engineering.Engineering.register();
 		com.evolvedwarfare.fishing.Fishing.register();
 		com.evolvedwarfare.smithing.Smithing.register();
 		com.evolvedwarfare.wildlife.Wildlife.registerSpawns();

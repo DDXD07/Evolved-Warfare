@@ -41,6 +41,7 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		com.evolvedwarfare.client.atlas.AtlasClient.register();
 		com.evolvedwarfare.client.hunting.HuntingRenderers.register();
 		BlockRenderLayerMap.INSTANCE.putBlock(com.evolvedwarfare.world.dungeon.Dungeons.GATE, RenderLayer.getCutout());
+		com.evolvedwarfare.client.engineering.KineticRenderer.register();
 		// los troncos: cómo se sacan los tablones (a hachazos)
 		net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback.EVENT.register((stack, context, type, lines) -> {
 			if (stack.isIn(net.minecraft.registry.tag.ItemTags.LOGS)) {
