@@ -378,45 +378,59 @@ public class EngineeringGameTests implements FabricGameTest {
 
 	// ------------------------------------------------------------------ fase 75: la automatización
 
-	/** El embrague corta el giro con señal de redstone y lo devuelve sin ella; el inversor da la vuelta al lado positivo. */
+	/** El embrague en T: el giro entra por un lado y sale por los dos de los lados; con redstone se cortan las dos salidas. */
 	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "machine_clutch", tickLimit = 120)
-	public void clutchAndGearshift(TestContext ctx) {
-		ctx.setBlockState(1, 2, 1, Engineering.HAND_CRANK.getDefaultState().with(Properties.FACING, Direction.WEST));
-		ctx.setBlockState(2, 2, 1, Engineering.CLUTCH.getDefaultState().with(Properties.AXIS, Direction.Axis.X));
-		ctx.setBlockState(3, 2, 1, Engineering.GEARSHIFT.getDefaultState().with(Properties.AXIS, Direction.Axis.X));
-		ctx.setBlockState(4, 2, 1, Engineering.SHAFT.getDefaultState().with(Properties.AXIS, Direction.Axis.X));
-		keepCranking(ctx, 1, 2, 1, 110);
-		float[] before = new float[2];
+	public void clutchSplitsAndCuts(TestContext ctx) {
+		ctx.setBlockState(1, 2, 2, Engineering.HAND_CRANK.getDefaultState().with(Properties.FACING, Direction.WEST));
+		ctx.setBlockState(2, 2, 2, Engineering.CLUTCH.getDefaultState().with(Properties.FACING, Direction.WEST));
+		ctx.setBlockState(2, 2, 1, Engineering.SHAFT.getDefaultState().with(Properties.AXIS, Direction.Axis.Z));
+		ctx.setBlockState(2, 2, 3, Engineering.SHAFT.getDefaultState().with(Properties.AXIS, Direction.Axis.Z));
+		ctx.setBlockState(3, 2, 2, Engineering.SHAFT.getDefaultState().with(Properties.AXIS, Direction.Axis.X));
+		keepCranking(ctx, 1, 2, 2, 110);
+		float[] before = new float[1];
 		ctx.runAtTick(20, () -> {
-			before[0] = be(ctx, 3, 2, 1).speed();
-			before[1] = be(ctx, 4, 2, 1).speed();
-			LOG.info("[EW-GAMETEST] embrague suelto: inversor {}, eje {}", before[0], before[1]);
-			if (Math.abs(before[1]) < 1 || before[0] != before[1]) {
-				throw new GameTestException("El giro no pasa por el embrague y el inversor");
+			float a = be(ctx, 2, 2, 1).speed(), b = be(ctx, 2, 2, 3).speed(), back = be(ctx, 3, 2, 2).speed();
+			before[0] = a;
+			LOG.info("[EW-GAMETEST] embrague en T: salidas {} y {}, detrás {}", a, b, back);
+			if (Math.abs(a) < 1 || a != b || back != 0) {
+				throw new GameTestException("El embrague en T no reparte el giro por sus dos salidas");
 			}
-			ctx.setBlockState(3, 3, 1, Blocks.REDSTONE_BLOCK);
+			ctx.setBlockState(2, 3, 2, Blocks.REDSTONE_BLOCK);
 		});
 		ctx.runAtTick(40, () -> {
-			float g = be(ctx, 3, 2, 1).speed(), sh = be(ctx, 4, 2, 1).speed();
+			float a = be(ctx, 2, 2, 1).speed(), b = be(ctx, 2, 2, 3).speed(), in = be(ctx, 2, 2, 2).speed();
+			LOG.info("[EW-GAMETEST] embrague en T con señal: entrada {}, salidas {} y {}", in, a, b);
+			if (a != 0 || b != 0 || Math.abs(in) < 1) {
+				throw new GameTestException("El embrague en T no corta las salidas");
+			}
+			ctx.setBlockState(2, 3, 2, Blocks.AIR);
+		});
+		ctx.runAtTick(60, () -> {
+			if (be(ctx, 2, 2, 1).speed() != before[0] || be(ctx, 2, 2, 3).speed() != before[0]) {
+				throw new GameTestException("El embrague en T no vuelve a dar el giro");
+			}
+			ctx.complete();
+		});
+	}
+
+	/** El inversor da la vuelta al giro de su lado positivo con señal de redstone. */
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "machine_gearshift", tickLimit = 80)
+	public void gearshiftReverses(TestContext ctx) {
+		ctx.setBlockState(1, 2, 1, Engineering.HAND_CRANK.getDefaultState().with(Properties.FACING, Direction.WEST));
+		ctx.setBlockState(2, 2, 1, Engineering.GEARSHIFT.getDefaultState().with(Properties.AXIS, Direction.Axis.X));
+		ctx.setBlockState(3, 2, 1, Engineering.SHAFT.getDefaultState().with(Properties.AXIS, Direction.Axis.X));
+		keepCranking(ctx, 1, 2, 1, 70);
+		ctx.runAtTick(20, () -> {
+			if (Math.abs(be(ctx, 3, 2, 1).speed()) < 1 || be(ctx, 3, 2, 1).speed() != be(ctx, 2, 2, 1).speed()) {
+				throw new GameTestException("El giro no pasa por el inversor");
+			}
+			ctx.setBlockState(2, 3, 1, Blocks.REDSTONE_BLOCK);
+		});
+		ctx.runAtTick(40, () -> {
+			float g = be(ctx, 2, 2, 1).speed(), sh = be(ctx, 3, 2, 1).speed();
 			LOG.info("[EW-GAMETEST] inversor con señal: inversor {}, eje {}", g, sh);
 			if (Math.abs(g) < 1 || sh != -g) {
 				throw new GameTestException("El inversor no invierte el giro");
-			}
-			ctx.setBlockState(3, 3, 1, Blocks.AIR);
-			ctx.setBlockState(2, 3, 1, Blocks.REDSTONE_BLOCK);
-		});
-		ctx.runAtTick(60, () -> {
-			float sh = be(ctx, 4, 2, 1).speed(), c = be(ctx, 1, 2, 1).speed();
-			LOG.info("[EW-GAMETEST] embrague con señal: manivela {}, eje {}", c, sh);
-			if (sh != 0 || Math.abs(c) < 1) {
-				throw new GameTestException("El embrague no corta el giro");
-			}
-			ctx.setBlockState(2, 3, 1, Blocks.AIR);
-		});
-		ctx.runAtTick(80, () -> {
-			float sh = be(ctx, 4, 2, 1).speed();
-			if (sh != before[1]) {
-				throw new GameTestException("El embrague no vuelve a pasar el giro");
 			}
 			ctx.complete();
 		});

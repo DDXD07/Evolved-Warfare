@@ -48,7 +48,7 @@ public class KineticRenderer implements BlockEntityRenderer<KineticBlockEntity> 
 			"machine_screw", "machine_pulley", "machine_crane", "hoist_platform", "hoist_hook", "hoist_rope",
 			"kinetic_cam", "machine_winch", "clock_hand_hour", "clock_hand_minute",
 			"kinetic_shaft_iron", "kinetic_small_gear_iron", "kinetic_large_gear_iron", "kinetic_shaft_steel", "kinetic_small_gear_steel",
-			"kinetic_large_gear_steel", "machine_sharpener"};
+			"kinetic_large_gear_steel", "machine_sharpener", "kinetic_half_shaft"};
 	private static final Map<String, EntityModelLayer> LAYERS = new HashMap<>();
 	private final Map<String, ModelPart> parts = new HashMap<>();
 
@@ -200,6 +200,14 @@ public class KineticRenderer implements BlockEntityRenderer<KineticBlockEntity> 
 		} else if (state.getBlock() instanceof com.evolvedwarfare.engineering.SharpenerBlock) {
 			machine(m, consumers, light, "machine_sharpener", SideShaftMachineBlock.facing(state),
 					part -> part.getChild("rotor").roll = -spin * 2.0F * MathHelper.RADIANS_PER_DEGREE);
+		} else if (state.getBlock() instanceof com.evolvedwarfare.engineering.ClutchBlock) {
+			// el embrague en T: el eje que entra gira siempre; los dos que salen, solo con el embrague puesto
+			Direction in = com.evolvedwarfare.engineering.ClutchBlock.input(state);
+			draw(m, consumers, light, "kinetic_half_shaft", in, sign(in) * spin);
+			boolean engaged = com.evolvedwarfare.engineering.ClutchBlock.engaged(state);
+			for (Direction out : com.evolvedwarfare.engineering.ClutchBlock.outputs(state)) {
+				draw(m, consumers, light, "kinetic_half_shaft", out, engaged ? sign(out) * spin : 0.0F);
+			}
 		} else if (state.getBlock() instanceof GaugeBlock gauge) {
 			// la aguja, arriba: de −90° (nada) a +90° (al máximo)
 			float value = gauge.measuresStress() ? (be.capacity() > 0 ? be.stress() / be.capacity() : 0.0F) : Math.abs(be.speed()) / 32.0F;
@@ -233,6 +241,10 @@ public class KineticRenderer implements BlockEntityRenderer<KineticBlockEntity> 
 		m.multiply(RotationAxis.POSITIVE_X.rotationDegrees(angle));
 		render(m, consumers, light, id);
 		m.pop();
+	}
+
+	private static float sign(Direction d) {
+		return d.getDirection() == Direction.AxisDirection.POSITIVE ? 1.0F : -1.0F;
 	}
 
 	/** Una máquina: su frente (+x del modelo) hacia 'front', con las piezas movidas por 'pose' (y luego vueltas a su sitio). */

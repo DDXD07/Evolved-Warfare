@@ -1,10 +1,104 @@
 {
   "variants": {
-    "powered=false": {
+    "facing=north,horizontal_axis=x,powered=false": {
       "model": "evolvedwarfare:block/clutch"
     },
-    "powered=true": {
+    "facing=north,horizontal_axis=x,powered=true": {
       "model": "evolvedwarfare:block/clutch_on"
+    },
+    "facing=north,horizontal_axis=z,powered=false": {
+      "model": "evolvedwarfare:block/clutch"
+    },
+    "facing=north,horizontal_axis=z,powered=true": {
+      "model": "evolvedwarfare:block/clutch_on"
+    },
+    "facing=east,horizontal_axis=x,powered=false": {
+      "model": "evolvedwarfare:block/clutch",
+      "y": 90
+    },
+    "facing=east,horizontal_axis=x,powered=true": {
+      "model": "evolvedwarfare:block/clutch_on",
+      "y": 90
+    },
+    "facing=east,horizontal_axis=z,powered=false": {
+      "model": "evolvedwarfare:block/clutch",
+      "y": 90
+    },
+    "facing=east,horizontal_axis=z,powered=true": {
+      "model": "evolvedwarfare:block/clutch_on",
+      "y": 90
+    },
+    "facing=south,horizontal_axis=x,powered=false": {
+      "model": "evolvedwarfare:block/clutch",
+      "y": 180
+    },
+    "facing=south,horizontal_axis=x,powered=true": {
+      "model": "evolvedwarfare:block/clutch_on",
+      "y": 180
+    },
+    "facing=south,horizontal_axis=z,powered=false": {
+      "model": "evolvedwarfare:block/clutch",
+      "y": 180
+    },
+    "facing=south,horizontal_axis=z,powered=true": {
+      "model": "evolvedwarfare:block/clutch_on",
+      "y": 180
+    },
+    "facing=west,horizontal_axis=x,powered=false": {
+      "model": "evolvedwarfare:block/clutch",
+      "y": 270
+    },
+    "facing=west,horizontal_axis=x,powered=true": {
+      "model": "evolvedwarfare:block/clutch_on",
+      "y": 270
+    },
+    "facing=west,horizontal_axis=z,powered=false": {
+      "model": "evolvedwarfare:block/clutch",
+      "y": 270
+    },
+    "facing=west,horizontal_axis=z,powered=true": {
+      "model": "evolvedwarfare:block/clutch_on",
+      "y": 270
+    },
+    "facing=up,horizontal_axis=x,powered=false": {
+      "model": "evolvedwarfare:block/clutch",
+      "x": 270,
+      "y": 0
+    },
+    "facing=up,horizontal_axis=x,powered=true": {
+      "model": "evolvedwarfare:block/clutch_on",
+      "x": 270,
+      "y": 0
+    },
+    "facing=up,horizontal_axis=z,powered=false": {
+      "model": "evolvedwarfare:block/clutch",
+      "x": 270,
+      "y": 90
+    },
+    "facing=up,horizontal_axis=z,powered=true": {
+      "model": "evolvedwarfare:block/clutch_on",
+      "x": 270,
+      "y": 90
+    },
+    "facing=down,horizontal_axis=x,powered=false": {
+      "model": "evolvedwarfare:block/clutch",
+      "x": 90,
+      "y": 0
+    },
+    "facing=down,horizontal_axis=x,powered=true": {
+      "model": "evolvedwarfare:block/clutch_on",
+      "x": 90,
+      "y": 0
+    },
+    "facing=down,horizontal_axis=z,powered=false": {
+      "model": "evolvedwarfare:block/clutch",
+      "x": 90,
+      "y": 90
+    },
+    "facing=down,horizontal_axis=z,powered=true": {
+      "model": "evolvedwarfare:block/clutch_on",
+      "x": 90,
+      "y": 90
     }
   }
 }

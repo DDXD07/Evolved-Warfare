@@ -2308,7 +2308,7 @@ Las máquinas gastan la fuerza de la red **por cada rpm** (más deprisa = trabaj
 
 ## Fase 75 — Ingeniería medieval (4): la automatización
 
-- **Embrague**: una caja que pasa el giro como un eje; **con señal de redstone se suelta** y lo corta (la lucecita roja se enciende). Para parar una parte de la red sin pararla entera.
+- **Embrague**: (desde la fase 81, embrague en T) **con señal de redstone se suelta** y corta el giro. Para parar una parte de la red sin pararla entera.
 - **Inversor**: como un eje, pero **con señal de redstone** lo que hay por su lado positivo (este, sur o arriba) **gira al revés**. Para subir y bajar cosas con una palanca, o cambiar el sentido de una máquina.
 - **Leva de redstone** (gasta 0,5 por rpm): un eje con **cuatro levas** que da **un pulso de redstone con cada una** a su alrededor (cuatro por vuelta: a 16 rpm, uno cada 19 tics; más deprisa con engranajes, más seguidos). Un reloj de redstone movido por agua o viento.
 - **Rastrillo** y **torno de rastrillo** (gasta 3 por rpm; el eje por los lados): haz la reja de rastrillo que quieras (hasta 33 de ancho) y pon el torno **encima del centro de la fila de arriba**, con el eje a lo largo de ella. Mientras gira, **con señal de redstone recoge el rastrillo fila a fila** (lo abre; la fila de arriba se queda) y **sin señal lo vuelve a bajar** hasta el suelo (lo cierra), una fila cada 10 tics a 16 rpm. Solo baja las filas que había recogido (no hace rejas de la nada), y **aplasta** (3 corazones) a quien pille debajo, sin cerrar ahí hasta que se quite. Si se rompe el torno, suelta las filas recogidas.
@@ -2362,6 +2362,12 @@ Las máquinas gastan la fuerza de la red **por cada rpm** (más deprisa = trabaj
 - **Herramientas y armas de acero propias**: espada, pico, hacha, pala y azada **de acero**, y las siete armas medievales de acero (daga, lanza, espada larga, alabarda, martillo de guerra, mangual y hacha de batalla). Tienen **su propio dibujo**, de un **acero azulado** con mango de madera oscura (y el modelo 3D de las armas medievales, en acero), así que ya no se confunden con las de hierro. Salen de forjar piezas de acero (como antes) y valen: **375 de durabilidad** (hierro 250), **+1 de daño** y **un 10 % más rápidas al picar** que las de hierro; se reparan con lingotes de acero.
 - **El acero no se mejora a netherita**: en la mesa de herrería solo se mejoran las de diamante, como siempre.
 - **Ballestas mecánicas animadas**: la ballesta pesada y la de repetición ahora se **cogen, se tensan y se apuntan como la ballesta del juego**, en primera persona (la mano tira de la cuerda poco a poco, al ritmo de su carga, que es más lenta) y en tercera persona (cargadas, se apuntan con las dos manos).
+
+## Fase 81 — El embrague en T
+
+- El **embrague** ya no es una caja que hace de eje: ahora es un **embrague en T** con **una entrada y dos salidas**. Es una caja pequeña de la que **asoman tres medios ejes**: el giro **entra por la cara que pones contra el eje** que lo mueve (la del anillo dorado) y **sale por los dos lados** (izquierda y derecha; puesto en el suelo o en el techo, a tu izquierda y tu derecha). La cara de detrás no da giro.
+- **Con señal de redstone corta las dos salidas** (se encienden las luces rojas de la caja y los ejes de salida se quedan quietos); la entrada sigue girando. Sin señal, vuelve a dar el giro.
+- La receta es la misma. Los embragues que ya estuvieran puestos se quedan con la entrada al norte: rómpelos y vuelve a ponerlos para elegirla.
 
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):

@@ -414,6 +414,15 @@ def sharpener():
     return a
 
 
+def half_shaft():
+    """Medio eje (de 0 a +8 en x) con su anillo: los que asoman del embrague en T."""
+    a = W.Animal("kinetic_half_shaft")
+    r = rotor(a)
+    r.cube((3, -2, -2), (5, 4, 4), **C(STRIPPED, rings=(OAK_DARK, 4)))
+    r.cube((4, -2.5, -2.5), (1, 5, 5), **C(IRON_DARK, high=(IRON, 1)))
+    return a
+
+
 MODELS = collections.OrderedDict([
     ("kinetic_shaft", shaft), ("kinetic_small_gear", small_gear), ("kinetic_large_gear", large_gear), ("kinetic_crank", crank),
     ("kinetic_gauge_needle", needle)]
@@ -426,7 +435,7 @@ MODELS = collections.OrderedDict([
        ("hoist_rope", rope)]
     + [("kinetic_cam", cam), ("machine_winch", winch), ("clock_hand_hour", lambda: clock_hand("hour")),
        ("clock_hand_minute", lambda: clock_hand("minute"))]
-    + [("machine_sharpener", sharpener)])
+    + [("machine_sharpener", sharpener), ("kinetic_half_shaft", half_shaft)])
 
 ITEM_OF = {"kinetic_shaft": "shaft", "kinetic_small_gear": "small_gear", "kinetic_large_gear": "large_gear", "kinetic_crank": "hand_crank"}
 for s in WATER_WHEELS:
@@ -495,8 +504,9 @@ NAMES = collections.OrderedDict([
     ("crane", ("Grúa", "Crane",
                "Eje por abajo. Pluma de 3 bloques con un gancho: clic derecho, subir o bajar; agachado, gira la pluma. Clic derecho al gancho apoyado: coge o suelta el bloque.",
                "Shaft from below. 3-block jib with a hook: right click, up or down; sneaking, turn the jib. Right click the resting hook: pick up or drop the block.")),
-    ("clutch", ("Embrague", "Clutch", "Como un eje, pero con señal de redstone se suelta y corta el giro.",
-                "Like a shaft, but a redstone signal disengages it and cuts the rotation.")),
+    ("clutch", ("Embrague en T", "T Clutch",
+                "Una entrada y dos salidas: el giro entra por la cara que pones contra el eje y sale por los dos lados. Con señal de redstone corta las dos salidas.",
+                "One input, two outputs: rotation comes in through the face you place against the shaft and leaves through both sides. A redstone signal cuts both outputs.")),
     ("gearshift", ("Inversor", "Gearshift", "Como un eje; con señal de redstone, el lado positivo gira al revés.",
                    "Like a shaft; with a redstone signal, the positive side turns the other way.")),
     ("redstone_cam", ("Leva de redstone", "Redstone Cam",
@@ -588,7 +598,24 @@ def block_textures():
     dr.ellipse((4, 4, 11, 11), fill=IRON_DARK + (255,))
     dr.ellipse((6, 6, 9, 9), fill=STRIPPED + (255,))
     out["gearbox"] = gb
-    for name, mark in (("clutch", "plates"), ("gearshift", "arrows")):
+    # el embrague en T (fase 81): una caja pequeña con un eje que entra y dos que salen
+    for kind in ("in", "out"):
+        im = frame(planks(3))
+        dr = ImageDraw.Draw(im)
+        dr.ellipse((4, 4, 11, 11), fill=IRON_DARK + (255,))
+        if kind == "in":
+            dr.ellipse((3, 3, 12, 12), outline=BRASS + (255,))
+        dr.ellipse((6, 6, 9, 9), fill=STRIPPED + (255,))
+        out["clutch_" + kind] = im
+    for on in (False, True):
+        im = frame(planks(3))
+        dr = ImageDraw.Draw(im)
+        dr.rectangle((5, 4, 6, 11), fill=IRON + (255,))
+        dr.rectangle((9, 4, 10, 11), fill=IRON + (255,))
+        lamp = (230, 60, 40) if on else (90, 30, 26)
+        dr.rectangle((7, 6, 8, 9), fill=lamp + (255,))
+        out["clutch_side" + ("_on" if on else "")] = im
+    for name, mark in (("gearshift", "arrows"),):
         for on in (False, True):
             im = frame(planks(3 if name == "clutch" else 4))
             dr = ImageDraw.Draw(im)
@@ -769,7 +796,29 @@ def main():
         write_json(os.path.join(DATA, "loot_table/blocks/%s.json" % name), {"type": "minecraft:block", "pools": [
             {"rolls": 1, "entries": [{"type": "minecraft:item", "name": "%s:%s" % (NS, name)}],
              "conditions": [{"condition": "minecraft:survives_explosion"}]}]})
-    for name in ("clutch", "gearshift"):
+    variants = {}
+    for facing, rot in (("north", {}), ("east", {"y": 90}), ("south", {"y": 180}), ("west", {"y": 270})):
+        for axis in ("x", "z"):
+            for powered in ("false", "true"):
+                variants["facing=%s,horizontal_axis=%s,powered=%s" % (facing, axis, powered)] = dict(
+                    {"model": "%s:block/clutch%s" % (NS, "_on" if powered == "true" else "")}, **rot)
+    for facing, x in (("up", 270), ("down", 90)):
+        for axis, y in (("x", 0), ("z", 90)):
+            for powered in ("false", "true"):
+                variants["facing=%s,horizontal_axis=%s,powered=%s" % (facing, axis, powered)] = {
+                    "model": "%s:block/clutch%s" % (NS, "_on" if powered == "true" else ""), "x": x, "y": y}
+    write_json(os.path.join(ASSETS, "blockstates/clutch.json"), {"variants": variants})
+    for suf in ("", "_on"):
+        side = "%s:block/clutch_side%s" % (NS, suf)
+        face = lambda t: {"uv": [3, 3, 13, 13], "texture": t}
+        write_json(os.path.join(ASSETS, "models/block/clutch%s.json" % suf), {
+            "parent": "minecraft:block/block",
+            "textures": {"particle": side, "side": side, "in": "%s:block/clutch_in" % NS, "out": "%s:block/clutch_out" % NS},
+            "elements": [{"from": [3, 3, 3], "to": [13, 13, 13], "faces": {
+                "north": face("#in"), "east": face("#out"), "west": face("#out"), "south": face("#side"), "up": face("#side"),
+                "down": face("#side")}}]})
+    write_json(os.path.join(ASSETS, "models/item/clutch.json"), {"parent": "%s:block/clutch" % NS})
+    for name in ("gearshift",):
         write_json(os.path.join(ASSETS, "blockstates/%s.json" % name), {"variants": {
             "powered=false": {"model": "%s:block/%s" % (NS, name)}, "powered=true": {"model": "%s:block/%s_on" % (NS, name)}}})
         for suf in ("", "_on"):
