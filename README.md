@@ -2369,6 +2369,19 @@ Las máquinas gastan la fuerza de la red **por cada rpm** (más deprisa = trabaj
 - **Con señal de redstone corta las dos salidas** (se encienden las luces rojas de la caja y los ejes de salida se quedan quietos); la entrada sigue girando. Sin señal, vuelve a dar el giro.
 - La receta es la misma. Los embragues que ya estuvieran puestos se quedan con la entrada al norte: rómpelos y vuelve a ponerlos para elegirla.
 
+## Fase 82 — Animaciones (1): el jugador
+
+El cuerpo del jugador se mueve de forma más natural (en tercera persona, y así ven los demás a cada jugador). Todo pasa de una postura a otra poco a poco:
+
+- **Andar**: el cuerpo **sube y baja un poco a cada paso**, el **tronco gira contra las piernas** (la cabeza se queda mirando al frente) y los brazos se abren algo al balancearse.
+- **Correr**: se **inclina hacia delante**, con la cabeza al frente, **zancadas y braceo más largos** y el bote más marcado.
+- **Saltar**: al subir, **una rodilla adelante y la otra atrás**, y los brazos hacia delante y arriba.
+- **Caer** (una caída de verdad, no un saltito): **brazos arriba y abiertos agitándose**, piernas sueltas y abiertas, mirando abajo.
+- **Trepar** escaleras y enredaderas: **las manos suben una tras otra y los pies pisan los peldaños**, al ritmo de lo que subes o bajas (quieto en la escalera, quieto).
+- **Nadar**: en el agua sin nadar a crol, **se mantiene a flote** moviendo los brazos a los lados, pataleando y subiendo y bajando; nadando a crol, **patada de piernas**.
+
+Los brazos no se tocan cuando sujetan o usan algo de forma especial (arco, escudo, ballesta, comer...) o están golpeando, y las demás animaciones del mod (armas, cajas, beber, envainar...) van por encima.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
