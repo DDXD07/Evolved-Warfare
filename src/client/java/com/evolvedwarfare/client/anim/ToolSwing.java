@@ -19,7 +19,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RotationAxis;
 
 /**
- * Las hachas de siempre (fase 84) tienen dos golpes distintos, en primera y en tercera persona:
+ * Las hachas y los picos de siempre tienen dos golpes distintos cada uno, en primera y en tercera persona (fases 84 y 85).
+ * Picos: <b>picar</b> (contra piedra, minerales... todo lo que se pica): el pico sube detrás del hombro y baja clavando la
+ * punta delante, con un pequeño rebote al dar; y <b>atacar</b>: un golpe de arriba abajo en diagonal, de fuera hacia
+ * dentro, como un martillazo. Hachas:
  * <ul>
  * <li><b>Talar</b> (cuando el golpe va contra madera: troncos, tablones, todo lo que se corta con hacha): el hacha sube
  * por encima del hombro y baja de golpe, de arriba abajo, con las dos manos si la otra va libre.</li>
@@ -27,15 +30,50 @@ import net.minecraft.util.math.RotationAxis;
  * </ul>
  * Se decide al empezar cada golpe mirando a qué apunta (y no cambia a medio golpe).
  */
-public final class AxeSwing {
+public final class ToolSwing {
 	private static final class Swing {
 		float last = 2.0F;
-		boolean chop;
+		boolean work;
+	}
+
+	/** El tipo de herramienta: hacha o pico (null si no es ninguna de las de siempre). */
+	public enum Tool {
+		AXE, PICKAXE
 	}
 
 	private static final Map<Integer, Swing> SWINGS = new HashMap<>();
 
 	// {progreso, dx, dy, dz, pitch, yaw, roll}: primera persona, en bloques y grados
+	private static final float[][] DIG_FP = {
+			{0F, 0F, 0F, 0F, 0F, 0F, 0F},
+			{0.28F, 0.06F, 0.2F, 0.12F, 55F, -8F, 10F},
+			{0.5F, -0.02F, -0.1F, -0.22F, -80F, 6F, -4F},
+			{0.6F, -0.02F, -0.06F, -0.18F, -66F, 4F, -2F},
+			{0.72F, -0.02F, -0.09F, -0.2F, -74F, 4F, -2F},
+			{1F, 0F, 0F, 0F, 0F, 0F, 0F},
+	};
+	private static final float[][] PICK_ATTACK_FP = {
+			{0F, 0F, 0F, 0F, 0F, 0F, 0F},
+			{0.3F, 0.22F, 0.22F, 0.06F, 40F, 35F, 30F},
+			{0.55F, -0.22F, -0.18F, -0.16F, -70F, -35F, -20F},
+			{0.75F, -0.16F, -0.12F, -0.1F, -50F, -25F, -12F},
+			{1F, 0F, 0F, 0F, 0F, 0F, 0F},
+	};
+	private static final float[][] DIG_TP = {
+			{0F, -18F, 0F, 0F, 0F, 0F},
+			{0.28F, -165F, 18F, 10F, -4F, 6F},
+			{0.5F, -55F, -4F, 0F, 12F, 0F},
+			{0.6F, -66F, -2F, 0F, 9F, 0F},
+			{0.72F, -58F, -2F, 0F, 11F, 0F},
+			{1F, -18F, 0F, 0F, 0F, 0F},
+	};
+	private static final float[][] PICK_ATTACK_TP = {
+			{0F, -18F, 0F, 0F, 0F, 0F},
+			{0.3F, -160F, 40F, -15F, -4F, 18F},
+			{0.55F, -45F, -35F, 0F, 10F, -20F},
+			{0.75F, -40F, -25F, 0F, 6F, -12F},
+			{1F, -18F, 0F, 0F, 0F, 0F},
+	};
 	private static final float[][] CHOP_FP = {
 			{0F, 0F, 0F, 0F, 0F, 0F, 0F},
 			{0.3F, 0.02F, 0.16F, 0.08F, 38F, 4F, -6F},
@@ -66,11 +104,22 @@ public final class AxeSwing {
 			{1F, -18F, 0F, 0F, 0F, 0F},
 	};
 
-	private AxeSwing() {
+	private ToolSwing() {
 	}
 
-	public static boolean isAxe(LivingEntity entity, Hand hand) {
-		return isPlainAxe(entity.getStackInHand(hand));
+	public static Tool tool(LivingEntity entity, Hand hand) {
+		return tool(entity.getStackInHand(hand));
+	}
+
+	/** Hacha o pico de los de siempre (las armas del mod tienen sus golpes). */
+	public static Tool tool(net.minecraft.item.ItemStack stack) {
+		if (isPlainAxe(stack)) {
+			return Tool.AXE;
+		}
+		if (stack.getItem() instanceof net.minecraft.item.PickaxeItem && com.evolvedwarfare.weapon.MedievalWeapons.typeOf(stack) == null) {
+			return Tool.PICKAXE;
+		}
+		return null;
 	}
 
 	/** Un hacha de las de siempre (no el hacha de batalla, que tiene sus golpes de arma). */
@@ -78,20 +127,20 @@ public final class AxeSwing {
 		return stack.getItem() instanceof AxeItem && com.evolvedwarfare.weapon.MedievalWeapons.typeOf(stack) == null;
 	}
 
-	/** ¿Este golpe es para talar? (se decide al empezar el golpe) */
-	public static boolean chopping(LivingEntity entity, float progress) {
+	/** ¿Este golpe es de trabajo (talar o picar) o de ataque? (se decide al empezar el golpe) */
+	public static boolean working(LivingEntity entity, Tool tool, float progress) {
 		if (SWINGS.size() > 256) {
 			SWINGS.clear();
 		}
 		Swing s = SWINGS.computeIfAbsent(entity.getId(), id -> new Swing());
 		if (progress < s.last) {
-			s.chop = aimsAtWood(entity);
+			s.work = aimsAtWork(entity, tool);
 		}
 		s.last = progress;
-		return s.chop;
+		return s.work;
 	}
 
-	private static boolean aimsAtWood(LivingEntity entity) {
+	private static boolean aimsAtWork(LivingEntity entity, Tool tool) {
 		MinecraftClient client = MinecraftClient.getInstance();
 		if (entity == client.player && client.crosshairTarget != null && client.crosshairTarget.getType() == HitResult.Type.ENTITY) {
 			return false;
@@ -102,7 +151,7 @@ public final class AxeSwing {
 			return false;
 		}
 		BlockState state = entity.getWorld().getBlockState(bh.getBlockPos());
-		return state.isIn(BlockTags.AXE_MINEABLE) || state.isIn(BlockTags.LOGS);
+		return tool == Tool.AXE ? state.isIn(BlockTags.AXE_MINEABLE) || state.isIn(BlockTags.LOGS) : state.isIn(BlockTags.PICKAXE_MINEABLE);
 	}
 
 	private static float[] sample(float[][] keys, float t) {
@@ -128,9 +177,10 @@ public final class AxeSwing {
 	}
 
 	/** Primera persona: en vez del golpe de siempre (lo llama HeldItemRendererAxeMixin). */
-	public static void firstPerson(MatrixStack m, LivingEntity entity, Arm arm, float progress) {
+	public static void firstPerson(MatrixStack m, LivingEntity entity, Tool tool, Arm arm, float progress) {
 		int side = arm == Arm.RIGHT ? 1 : -1;
-		float[] k = sample(chopping(entity, progress) ? CHOP_FP : ATTACK_FP, progress);
+		boolean work = working(entity, tool, progress);
+		float[] k = sample(tool == Tool.AXE ? (work ? CHOP_FP : ATTACK_FP) : (work ? DIG_FP : PICK_ATTACK_FP), progress);
 		m.translate(side * k[0], k[1], k[2]);
 		m.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(side * 45.0F));
 		m.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(side * k[4]));
@@ -146,11 +196,12 @@ public final class AxeSwing {
 			return;
 		}
 		Hand hand = entity.preferredHand == null ? Hand.MAIN_HAND : entity.preferredHand;
-		if (!isAxe(entity, hand)) {
+		Tool tool = tool(entity, hand);
+		if (tool == null) {
 			return;
 		}
-		boolean chop = chopping(entity, progress);
-		float[] k = sample(chop ? CHOP_TP : ATTACK_TP, progress);
+		boolean chop = working(entity, tool, progress);
+		float[] k = sample(tool == Tool.AXE ? (chop ? CHOP_TP : ATTACK_TP) : (chop ? DIG_TP : PICK_ATTACK_TP), progress);
 		Arm arm = hand == Hand.MAIN_HAND ? entity.getMainArm() : entity.getMainArm().getOpposite();
 		float side = arm == Arm.RIGHT ? 1.0F : -1.0F;
 		ModelPart main = arm == Arm.RIGHT ? model.rightArm : model.leftArm;
@@ -169,7 +220,7 @@ public final class AxeSwing {
 		main.yaw = k[1] * side * r + bodyYaw;
 		main.roll = k[2] * side * r;
 		if (chop && entity.getStackInHand(otherHand).isEmpty() && !entity.isUsingItem()) {
-			// talando, con las dos manos en el mango
+			// talando o picando, con las dos manos en el mango
 			off.pitch = main.pitch;
 			off.yaw = main.yaw - 0.45F * side;
 			off.roll = -main.roll;

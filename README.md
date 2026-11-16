@@ -2396,6 +2396,13 @@ Las **hachas de siempre** (madera, piedra, sílex, hierro, oro, diamante, nether
 
 El hacha de batalla sigue con sus golpes de arma.
 
+## Fase 85 — Animaciones (4): los picos, picar y atacar
+
+Los **picos de siempre** (madera, piedra, hierro, oro, diamante, netherita y acero) también tienen **dos golpes**, en primera y en tercera persona, elegidos al empezar cada golpe según a qué apuntas:
+
+- **Picar**: contra **piedra, minerales y todo lo que se pica**: el pico **sube por detrás del hombro y baja clavando la punta** delante, con un **pequeño rebote** al dar contra la roca; en tercera persona, con las dos manos si la otra va libre y el cuerpo echado adelante.
+- **Atacar**: contra un bicho o al aire: un **golpe en diagonal de arriba abajo**, de fuera hacia dentro, como un martillazo, girando el cuerpo.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

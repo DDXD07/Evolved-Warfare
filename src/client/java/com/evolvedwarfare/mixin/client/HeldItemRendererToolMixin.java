@@ -1,6 +1,6 @@
 package com.evolvedwarfare.mixin.client;
 
-import com.evolvedwarfare.client.anim.AxeSwing;
+import com.evolvedwarfare.client.anim.ToolSwing;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.HeldItemRenderer;
@@ -16,9 +16,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/** En primera persona, las hachas de siempre (fase 84) golpean distinto al talar y al atacar ({@link AxeSwing}). */
+/** En primera persona, las hachas y los picos de siempre golpean distinto al trabajar y al atacar ({@link ToolSwing}). */
 @Mixin(HeldItemRenderer.class)
-public abstract class HeldItemRendererAxeMixin {
+public abstract class HeldItemRendererToolMixin {
 	@Shadow
 	protected abstract void applySwingOffset(MatrixStack matrices, Arm arm, float swingProgress);
 
@@ -38,8 +38,9 @@ public abstract class HeldItemRendererAxeMixin {
 			target = "Lnet/minecraft/client/render/item/HeldItemRenderer;applySwingOffset(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/util/Arm;F)V"),
 			require = 0)
 	private void evolvedwarfare$axeSwing(HeldItemRenderer self, MatrixStack matrices, Arm arm, float swingProgress) {
-		if (AxeSwing.isPlainAxe(evolvedwarfare$axeItem) && evolvedwarfare$axePlayer != null && swingProgress > 0.0F) {
-			AxeSwing.firstPerson(matrices, evolvedwarfare$axePlayer, arm, swingProgress);
+		ToolSwing.Tool tool = ToolSwing.tool(evolvedwarfare$axeItem);
+		if (tool != null && evolvedwarfare$axePlayer != null && swingProgress > 0.0F) {
+			ToolSwing.firstPerson(matrices, evolvedwarfare$axePlayer, tool, arm, swingProgress);
 		} else {
 			applySwingOffset(matrices, arm, swingProgress);
 		}
