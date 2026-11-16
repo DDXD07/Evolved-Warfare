@@ -2414,6 +2414,14 @@ Los **zombis** (también los del desierto, los ahogados fuera del agua y los ald
 
 Los ahogados en el agua y con tridente siguen con sus movimientos de siempre.
 
+## Fase 87 — Animaciones (6): los esqueletos
+
+Los **esqueletos** (normales, de las nieves, wither y del pantano) se mueven **rígidos, como huesos sin músculos**, pero sin tirones:
+
+- **Andar**: las **piernas van tiesas** y se quedan un instante en cada extremo del paso, como palancas; el **tronco no se balancea** (solo un **traqueteo** al pisar); los **brazos cuelgan rectos** y apenas se mueven; la **cabeza gira a saltitos** de vez en cuando y se queda mirando. Y todo **tiembla un poquito**, como huesos sueltos.
+- **Atacar** (sin arco, p. ej. el esqueleto wither con su espada): el **brazo, recto como un palo**, sube hasta arriba y **cae de golpe**, con el tronco girando **en bloque**. Con un arma en la mano, la llevan recta por delante.
+- **Cargar el arco**: mientras tensa, el brazo de la cuerda **se lleva la mano a la cara poco a poco**, el tronco **se pone de lado** y la **cabeza se ladea** para apuntar; al soltar, vuelve.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
