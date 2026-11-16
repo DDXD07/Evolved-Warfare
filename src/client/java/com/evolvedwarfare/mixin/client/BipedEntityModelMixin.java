@@ -17,6 +17,7 @@ public abstract class BipedEntityModelMixin {
 			float headYaw, float headPitch, CallbackInfo ci) {
 		com.evolvedwarfare.client.anim.LocomotionPoses.apply((BipedEntityModel<?>) (Object) this, entity, limbAngle, limbDistance, animationProgress, headYaw);
 		MeleeArmPoses.apply((BipedEntityModel<?>) (Object) this, entity, animationProgress);
+		com.evolvedwarfare.client.anim.AxeSwing.pose((BipedEntityModel<?>) (Object) this, entity);
 		CrateCarry.pose((BipedEntityModel<?>) (Object) this, entity, limbAngle, limbDistance, animationProgress);
 		com.evolvedwarfare.client.render.CartPullPose.apply((BipedEntityModel<?>) (Object) this, entity);
 		com.evolvedwarfare.client.catalog.CatalogRemote.pose((BipedEntityModel<?>) (Object) this, entity);

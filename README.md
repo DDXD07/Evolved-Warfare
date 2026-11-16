@@ -2387,6 +2387,15 @@ Los brazos no se tocan cuando sujetan o usan algo de forma especial (arco, escud
 - **Agacharse** ya no es de golpe: el cuerpo **baja y se levanta poco a poco**. Agachado se anda **con cuidado**, a **pasos cortos** y con **los brazos un poco adelantados**.
 - Si pasas **mucho rato agachado (unos 30 segundos)**, **te empiezan a temblar las piernas**: primero poco y, durante unos 20 segundos más, cada vez algo más, a rachas (y el cuerpo tiembla un pelín con ellas). Al levantarte se pasa.
 
+## Fase 84 — Animaciones (3): las hachas, talar y atacar
+
+Las **hachas de siempre** (madera, piedra, sílex, hierro, oro, diamante, netherita y acero) tienen **dos golpes distintos**, en primera y en tercera persona. El juego decide cuál al empezar cada golpe, según a qué apuntas:
+
+- **Talar**: si el golpe va contra **madera** (troncos, tablones y todo lo que se corta con hacha, también al partir troncos en tablones): el hacha **sube por encima del hombro y baja de golpe**, de arriba abajo; en tercera persona, **con las dos manos** en el mango si la otra va libre, y el cuerpo se echa adelante al dar.
+- **Atacar**: contra un bicho, o al aire: un **tajo de lado**, de fuera hacia dentro, **girando el cuerpo** con el golpe.
+
+El hacha de batalla sigue con sus golpes de arma.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

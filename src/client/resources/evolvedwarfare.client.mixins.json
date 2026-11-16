@@ -5,6 +5,7 @@
 	"client": [
 		"AbstractClientPlayerEntityMixin",
 		"MechanicalCrossbowHeldMixin",
+		"HeldItemRendererAxeMixin",
 		"MechanicalCrossbowPoseMixin",
 		"InventoryScreenBackpackMixin",
 		"HandledScreenAccessor",
