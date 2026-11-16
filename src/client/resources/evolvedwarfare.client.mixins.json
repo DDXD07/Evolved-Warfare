@@ -6,6 +6,8 @@
 		"AbstractClientPlayerEntityMixin",
 		"MechanicalCrossbowHeldMixin",
 		"HeldItemRendererToolMixin",
+		"ZombieModelMixin",
+		"ZombieVillagerModelMixin",
 		"MechanicalCrossbowPoseMixin",
 		"InventoryScreenBackpackMixin",
 		"HandledScreenAccessor",

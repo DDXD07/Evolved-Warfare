@@ -2403,6 +2403,17 @@ Los **picos de siempre** (madera, piedra, hierro, oro, diamante, netherita y ace
 - **Picar**: contra **piedra, minerales y todo lo que se pica**: el pico **sube por detrás del hombro y baja clavando la punta** delante, con un **pequeño rebote** al dar contra la roca; en tercera persona, con las dos manos si la otra va libre y el cuerpo echado adelante.
 - **Atacar**: contra un bicho o al aire: un **golpe en diagonal de arriba abajo**, de fuera hacia dentro, como un martillazo, girando el cuerpo.
 
+## Fase 86 — Animaciones (5): los zombis
+
+Los **zombis** (también los del desierto, los ahogados fuera del agua y los aldeanos zombi) se mueven como **muertos vivientes**, poco a poco de una postura a otra y cada uno con su propio ritmo:
+
+- **Andando se arrastran**: una pierna va normal y la otra **arrastra**; el cuerpo va **caído hacia delante** y se **balancea de lado** a cada paso, dando tumbos; la **cabeza ladeada y colgando**, con algún **tirón de cuello** de vez en cuando; y los **brazos tendidos al frente**, caídos y **descompasados**, bajando algo con cada paso.
+- **Cuando se te echan encima**: más inclinados, con los brazos más altos, buscándote.
+- **Atacando con las manos**: echan los **brazos atrás y arriba, abiertos**, y se **lanzan sobre ti cerrándolos**, con el cuerpo tirado adelante y un **mordisco** al final.
+- **Con un arma o herramienta en la mano**: la llevan **baja, colgando**, con el otro brazo tendido; y **al atacarte con ella**, un golpe torpe: con **espada** (o arma del mod), un **tajo en diagonal**; con lo demás (hacha, pala, pico...), un **mazazo de arriba abajo**, girando el cuerpo.
+
+Los ahogados en el agua y con tridente siguen con sus movimientos de siempre.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
