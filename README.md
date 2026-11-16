@@ -2382,6 +2382,11 @@ El cuerpo del jugador se mueve de forma más natural (en tercera persona, y así
 
 Los brazos no se tocan cuando sujetan o usan algo de forma especial (arco, escudo, ballesta, comer...) o están golpeando, y las demás animaciones del mod (armas, cajas, beber, envainar...) van por encima.
 
+## Fase 83 — Animaciones (2): agacharse
+
+- **Agacharse** ya no es de golpe: el cuerpo **baja y se levanta poco a poco**. Agachado se anda **con cuidado**, a **pasos cortos** y con **los brazos un poco adelantados**.
+- Si pasas **mucho rato agachado (unos 30 segundos)**, **te empiezan a temblar las piernas**: primero poco y, durante unos 20 segundos más, cada vez algo más, a rachas (y el cuerpo tiembla un pelín con ellas). Al levantarte se pasa.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

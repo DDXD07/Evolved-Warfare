@@ -19,6 +19,9 @@ import net.minecraft.util.math.MathHelper;
  * <li><b>Caer</b> (de verdad, no un saltito): brazos arriba y abiertos agitándose, piernas sueltas.</li>
  * <li><b>Trepar</b> (escaleras, enredaderas): las manos van subiendo una tras otra y los pies pisan peldaños, al ritmo de
  * lo que sube o baja (quieto en la escalera, quieto).</li>
+ * <li><b>Agacharse</b>: baja y se levanta poco a poco (no de golpe); agachado anda con cuidado, a pasos cortos, con
+ * los brazos un poco adelantados. Si pasa mucho rato agachado (unos 30 segundos), le empiezan a temblar las piernas, cada
+ * vez algo más.</li>
  * <li><b>Nadar</b>: en el agua sin nadar a crol, se mantiene a flote moviendo los brazos a los lados y pataleando; a crol,
  * patada de piernas.</li>
  * </ul>
@@ -29,16 +32,26 @@ public final class LocomotionPoses {
 	private static final class State {
 		float lastProgress = -1.0F;
 		float run, jump, fall, climb, tread;
+		/** Lo agachado (0 de pie, 1 agachado del todo) y desde cuándo está agachado (para que le tiemblen las piernas). */
+		float crouch;
+		float crouchSince = -1.0F;
 	}
 
 	private static final Map<Integer, State> STATES = new HashMap<>();
 	private static final float PI = (float) Math.PI;
+	/** A partir de cuántos tics agachado empiezan a temblar las piernas (30 segundos). */
+	public static final float SHAKE_AFTER = 600.0F;
 
 	private LocomotionPoses() {
 	}
 
 	private static float approach(float w, float target, float dt, float rate) {
 		return w + (target - w) * (1.0F - (float) Math.exp(-dt * rate));
+	}
+
+	/** El temblor va a rachas: más fuerte a ratos. */
+	private static float k(float held) {
+		return 0.5F + 0.5F * MathHelper.sin(held * 0.05F);
 	}
 
 	private static boolean armFree(BipedEntityModel.ArmPose pose) {
@@ -90,6 +103,34 @@ public final class LocomotionPoses {
 		s.climb = approach(s.climb, climbing ? 1 : 0, dt, 0.35F);
 		s.tread = approach(s.tread, water && !ground && !swimming ? 1 : 0, dt, 0.25F);
 
+		// --- agacharse: el juego pone la postura de golpe; aquí se va pasando poco a poco
+		s.crouch = approach(s.crouch, sneaking ? 1 : 0, dt, 0.35F);
+		float undo = sneaking ? 1.0F - s.crouch : -s.crouch;
+		if (Math.abs(undo) > 0.005F) {
+			model.body.pitch -= 0.5F * undo;
+			model.body.pivotY -= 3.2F * undo;
+			model.head.pivotY -= 4.2F * undo;
+			model.rightArm.pivotY -= 3.2F * undo;
+			model.leftArm.pivotY -= 3.2F * undo;
+			model.rightLeg.pivotZ -= 4.0F * undo;
+			model.leftLeg.pivotZ -= 4.0F * undo;
+			model.rightLeg.pivotY -= 0.2F * undo;
+			model.leftLeg.pivotY -= 0.2F * undo;
+			if (armFree(model.rightArmPose) && model.handSwingProgress <= 0.0F) {
+				model.rightArm.pitch -= 0.4F * undo;
+			}
+			if (armFree(model.leftArmPose) && model.handSwingProgress <= 0.0F) {
+				model.leftArm.pitch -= 0.4F * undo;
+			}
+		}
+		if (sneaking) {
+			if (s.crouchSince < 0 || reset) {
+				s.crouchSince = progress;
+			}
+		} else {
+			s.crouchSince = -1.0F;
+		}
+
 		boolean armsFree = armFree(model.rightArmPose) && armFree(model.leftArmPose) && model.handSwingProgress <= 0.0F && !player.isUsingItem();
 		float phase = limbAngle * 0.6662F;
 		float amp = Math.min(limbDistance, 1.0F);
@@ -124,6 +165,33 @@ public final class LocomotionPoses {
 				if (armsFree) {
 					model.rightArm.pitch += MathHelper.cos(phase + PI) * 0.45F * amp * r - 0.25F * r;
 					model.leftArm.pitch += MathHelper.cos(phase) * 0.45F * amp * r - 0.25F * r;
+				}
+			}
+		}
+
+		// --- agachado: pasos cortos y con cuidado; y, con el rato, el temblor de las piernas
+		if (sneaking && !swimming && onFoot > 0.01F) {
+			float c = s.crouch * onFoot;
+			model.rightLeg.pitch *= 1.0F - 0.35F * c;
+			model.leftLeg.pitch *= 1.0F - 0.35F * c;
+			if (armsFree) {
+				model.rightArm.pitch -= 0.15F * c;
+				model.leftArm.pitch -= 0.15F * c;
+				model.rightArm.pitch *= 1.0F - 0.3F * c * amp;
+				model.leftArm.pitch *= 1.0F - 0.3F * c * amp;
+			}
+			float held = s.crouchSince < 0 ? 0 : progress - s.crouchSince;
+			if (held > SHAKE_AFTER) {
+				float shake = Math.min((held - SHAKE_AFTER) / 400.0F, 1.0F) * (0.6F + 0.4F * k(held)) * c;
+				float a = MathHelper.sin(progress * 2.9F) * 0.6F + MathHelper.sin(progress * 4.7F + 1.3F) * 0.4F;
+				float b = MathHelper.sin(progress * 3.3F + 2.1F) * 0.6F + MathHelper.sin(progress * 5.1F) * 0.4F;
+				model.rightLeg.pitch += a * 0.035F * shake;
+				model.leftLeg.pitch += b * 0.035F * shake;
+				model.rightLeg.roll += b * 0.02F * shake;
+				model.leftLeg.roll -= a * 0.02F * shake;
+				float jitter = (a + b) * 0.12F * shake;
+				for (ModelPart p : new ModelPart[] {model.head, model.body, model.rightArm, model.leftArm}) {
+					p.pivotY += jitter;
 				}
 			}
 		}
