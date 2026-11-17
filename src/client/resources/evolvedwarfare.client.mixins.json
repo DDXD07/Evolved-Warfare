@@ -13,6 +13,8 @@
 		"JointsPlayerModelMixin",
 		"JointsArmorModelMixin",
 		"JointsSkeletonModelMixin",
+		"JointsPartDataMixin",
+		"JointsDrownedModelMixin",
 		"ZombieVillagerModelMixin",
 		"MechanicalCrossbowPoseMixin",
 		"InventoryScreenBackpackMixin",
