@@ -2470,6 +2470,28 @@ configuración):
 - **El muñeco**: a la derecha de la barra de objetos, cuando hay algo herido, sale un muñeco con cada parte de su color
   (verde, amarilla, roja; negra sin vida), los huesos rotos rayados, los entablillados con marco, y el aviso de que sangras.
 
+## Fase 93 — Dificultad (2): la medicina
+
+La segunda parte de la dificultad al estilo RLCraft (en la categoría **Salud** de la configuración):
+
+- **Heridas que se infectan**: una herida que sangra sin desinfectar se puede infectar (un 30 % por minuto sangrando).
+  Y una infección sin tratar (la de una herida o la del mordisco de un zombi) **empeora** cada 5 minutos, hasta el
+  peor grado.
+- **Veneno fuerte**: las arañas pueden envenenar al morder (un 30 %); la de cueva, siempre y más fuerte. A diferencia del
+  veneno normal, **sí mata**. Quien muere así «murió envenenado».
+- **La leche ya no lo cura todo**: no quita ni la infección ni el veneno fuerte (los parásitos y lo demás, sí).
+- **Remedios** (pestaña «Supervivencia»):
+  - **Mosto fermentado**: frasco + 2 de trigo + azúcar. Se **destila en el horno** y sale **aguardiente**.
+  - **Aguardiente**: desinfecta las heridas 3 minutos (no se infectan ni empeoran) y baja un grado la infección. Marea un
+    poco.
+  - **Medicina**: aguardiente + champiñón marrón + champiñón rojo + panal. Cura la infección y los parásitos.
+  - **Antídoto**: frasco + ojo de araña + carbón vegetal + bayas dulces. Cura el veneno fuerte y el normal.
+  - **Botiquín**: cuero, 2 vendas, aguardiente, medicina y entablillado. Lo cura todo a la vez: corta la sangre, cura cada
+    parte, entablilla los huesos rotos, quita la infección y los venenos y desinfecta. No se gasta si no hay nada que curar.
+  - Los que se beben devuelven el frasco.
+- **En los cofres**: vendas, entablillados, aguardiente, antídotos, medicina y algún botiquín en los cofres de las
+  mazmorras, las aldeas, las minas abandonadas, las mazmorras de vanilla, los barcos hundidos y los iglús.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

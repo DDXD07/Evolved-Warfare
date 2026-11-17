@@ -294,6 +294,7 @@ public final class Health {
 			}
 		}
 		WoundData after = m.done();
+		Medicine.second(player, after.bleeding() > 0, second);
 		if (!after.equals(before)) {
 			player.setAttached(WOUNDS, after);
 		}
@@ -475,6 +476,22 @@ public final class Health {
 		m.bleeding = 0;
 		set(player, m.done());
 		player.heal(6.0F);
+	}
+
+	/** Un botiquín: corta la sangre, cura cada parte sana {@code amount} y entablilla los huesos rotos. */
+	public static void treatAll(PlayerEntity player, float amount) {
+		WoundData.Mutable m = get(player).edit();
+		for (BodyPart part : BodyPart.values()) {
+			int k = part.ordinal();
+			if ((m.broken & part.bit()) == 0) {
+				m.points[k] = Math.min(part.max, m.points[k] + amount);
+			} else if (m.splint[k] <= 0) {
+				m.splint[k] = SPLINT_SECONDS;
+			}
+		}
+		m.bleeding = 0;
+		set(player, m.done());
+		applyEffects(player);
 	}
 
 	/** Abre una herida que sangra (para pruebas y para lo que corta). */

@@ -68,6 +68,8 @@ public abstract class LivingEntityDamageMixin {
 			if (cir.getReturnValueZ() && lost > 0.0F && self instanceof net.minecraft.entity.player.PlayerEntity) {
 				// heridas por partes (fase 92)
 				com.evolvedwarfare.health.Health.onHurt(self, source, zone, point, lost);
+				// venenos (fase 93)
+				com.evolvedwarfare.health.Medicine.onHurt(self, source, lost);
 			}
 		}
 		if (zone == HitZone.HEAD && cir.getReturnValueZ()) {

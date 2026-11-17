@@ -17,6 +17,21 @@ public final class HealthLoot {
 	public static void register() {
 		LootTableEvents.MODIFY.register((key, builder, source, registries) -> {
 			String id = key.getValue().toString();
+			// remedios (fase 93): en los cofres de las mazmorras, las aldeas, las minas y las mazmorras de vanilla
+			if ((id.startsWith("evolvedwarfare:chests/dungeon/") && !id.endsWith("/boss")) || id.startsWith("minecraft:chests/village/")
+					|| id.equals("minecraft:chests/simple_dungeon") || id.equals("minecraft:chests/abandoned_mineshaft")
+					|| id.equals("minecraft:chests/shipwreck_supply") || id.equals("minecraft:chests/igloo_chest")) {
+				builder.pool(LootPool.builder().rolls(ConstantLootNumberProvider.create(1))
+						.conditionally(RandomChanceLootCondition.builder(0.35F))
+						.with(ItemEntry.builder(HealthItems.BANDAGE).weight(6)
+								.apply(net.minecraft.loot.function.SetCountLootFunction.builder(
+										net.minecraft.loot.provider.number.UniformLootNumberProvider.create(1, 3))))
+						.with(ItemEntry.builder(HealthItems.SPLINT).weight(3))
+						.with(ItemEntry.builder(HealthItems.ALCOHOL).weight(3))
+						.with(ItemEntry.builder(HealthItems.ANTIDOTE).weight(2))
+						.with(ItemEntry.builder(HealthItems.MEDICINE).weight(2))
+						.with(ItemEntry.builder(HealthItems.MEDKIT).weight(1)));
+			}
 			float chance;
 			if (id.startsWith("evolvedwarfare:chests/dungeon/") && id.endsWith("/boss")) {
 				chance = 1.0F;

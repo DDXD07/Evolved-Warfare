@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -23,7 +24,7 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.world.World;
 
-/** Lo de curarse (fase 92): vendas, entablillados y cristales de corazón. */
+/** Lo de curarse: vendas, entablillados y cristales de corazón (fase 92); aguardiente, medicina, antídoto y botiquín (fase 93). */
 public final class HealthItems {
 	public static final List<Item> ITEMS = new ArrayList<>();
 
@@ -32,12 +33,19 @@ public final class HealthItems {
 		private final int ticks;
 		private final java.util.function.Predicate<PlayerEntity> effect;
 		private final SoundEvent sound;
+		/** Si se bebe (y deja el frasco). */
+		private boolean drink;
 
 		public MedicalItem(Settings settings, int ticks, SoundEvent sound, java.util.function.Predicate<PlayerEntity> effect) {
 			super(settings);
 			this.ticks = ticks;
 			this.effect = effect;
 			this.sound = sound;
+		}
+
+		public MedicalItem drink() {
+			drink = true;
+			return this;
 		}
 
 		@Override
@@ -47,7 +55,7 @@ public final class HealthItems {
 
 		@Override
 		public UseAction getUseAction(ItemStack stack) {
-			return UseAction.NONE;
+			return drink ? UseAction.DRINK : UseAction.NONE;
 		}
 
 		@Override
@@ -58,7 +66,7 @@ public final class HealthItems {
 
 		@Override
 		public void usageTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks) {
-			if (!world.isClient && remainingUseTicks % 10 == 0) {
+			if (!drink && !world.isClient && remainingUseTicks % 10 == 0) {
 				world.playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.ITEM_ARMOR_EQUIP_LEATHER.value(), SoundCategory.PLAYERS, 0.5F,
 						1.3F);
 			}
@@ -70,6 +78,14 @@ public final class HealthItems {
 				world.playSound(null, user.getX(), user.getY(), user.getZ(), sound, SoundCategory.PLAYERS, 0.8F, 1.0F);
 				if (!player.getAbilities().creativeMode) {
 					stack.decrement(1);
+					if (drink) {
+						if (stack.isEmpty()) {
+							return new ItemStack(Items.GLASS_BOTTLE);
+						}
+						if (!player.getInventory().insertStack(new ItemStack(Items.GLASS_BOTTLE))) {
+							player.dropItem(new ItemStack(Items.GLASS_BOTTLE), false);
+						}
+					}
 				}
 			}
 			return stack;
@@ -112,6 +128,22 @@ public final class HealthItems {
 			tooltip.add(Text.translatable(getTranslationKey() + ".desc").formatted(Formatting.GRAY));
 		}
 	});
+
+	// ------------------------------------------------------------------ medicina (fase 93)
+	public static final Item FERMENTED_MASH = item("fermented_mash", new Item(new Item.Settings().maxCount(16)) {
+		@Override
+		public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+			tooltip.add(Text.translatable(getTranslationKey() + ".desc").formatted(Formatting.GRAY));
+		}
+	});
+	public static final Item ALCOHOL = item("alcohol", new MedicalItem(new Item.Settings().maxCount(16), 32, SoundEvents.ENTITY_GENERIC_DRINK,
+			Medicine::alcohol).drink());
+	public static final Item MEDICINE = item("medicine", new MedicalItem(new Item.Settings().maxCount(16).rarity(Rarity.UNCOMMON), 32,
+			SoundEvents.ENTITY_GENERIC_DRINK, Medicine::medicine).drink());
+	public static final Item ANTIDOTE = item("antidote", new MedicalItem(new Item.Settings().maxCount(16).rarity(Rarity.UNCOMMON), 32,
+			SoundEvents.ENTITY_GENERIC_DRINK, Medicine::antidote).drink());
+	public static final Item MEDKIT = item("medkit", new MedicalItem(new Item.Settings().maxCount(4).rarity(Rarity.RARE), 60,
+			SoundEvents.ITEM_ARMOR_EQUIP_LEATHER.value(), Medicine::medkit));
 
 	public static final ItemGroup GROUP = Registry.register(Registries.ITEM_GROUP, EvolvedWarfare.id("survival"), FabricItemGroup.builder()
 			.icon(() -> new ItemStack(BANDAGE))

@@ -116,6 +116,12 @@ public final class EwConfig {
 	public double regenRate = 0.35;
 	/** Probabilidad de romperse una pierna en una caída fuerte (x). */
 	public double boneBreakChance = 1.0;
+	/** Medicina: las heridas se infectan, las arañas envenenan y la leche ya no cura la infección ni el veneno fuerte. */
+	public boolean medicineEnabled = true;
+	/** Probabilidad (%) por minuto de que se infecte una herida que sangra sin desinfectar. */
+	public int woundInfectionChance = 30;
+	/** Probabilidad (%) de que una araña envenene al morder (la de cueva, siempre). */
+	public int venomChance = 30;
 
 	// ------------------------------------------------------------------ asentamientos
 	/** Vida y daño extra por cada nivel del asentamiento por encima del 1. */
@@ -254,6 +260,9 @@ public final class EwConfig {
 			new Option("maxHearts", "health", 1, 50, 1),
 			new Option("regenRate", "health", 0.0, 1.0, 0.05),
 			new Option("boneBreakChance", "health", 0.0, 5.0, 0.1),
+			new Option("medicineEnabled", "health", 0, 1, 1),
+			new Option("woundInfectionChance", "health", 0, 100, 5),
+			new Option("venomChance", "health", 0, 100, 5),
 			new Option("settlementBonusPerLevel", "settlements", 0.0, 1.0, 0.01),
 			new Option("settlementBlocksPerLevel", "settlements", 100, 100000, 50),
 			new Option("settlementMaxLevel", "settlements", 1, 10, 1),

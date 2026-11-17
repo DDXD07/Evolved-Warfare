@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "LBL",
+    "AMS",
+    "LBL"
+  ],
+  "key": {
+    "L": {
+      "item": "minecraft:leather"
+    },
+    "B": {
+      "item": "evolvedwarfare:bandage"
+    },
+    "A": {
+      "item": "evolvedwarfare:alcohol"
+    },
+    "M": {
+      "item": "evolvedwarfare:medicine"
+    },
+    "S": {
+      "item": "evolvedwarfare:splint"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:medkit",
+    "count": 1
+  }
+}

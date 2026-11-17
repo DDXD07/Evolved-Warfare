@@ -37,6 +37,14 @@ public final class ModEffects {
 	public static final RegistryEntry<StatusEffect> SCORCHED = Registry.registerReference(Registries.STATUS_EFFECT, EvolvedWarfare.id("scorched"),
 			new com.evolvedwarfare.hell.ScorchedEffect());
 
+	/** Veneno fuerte: el de las arañas (mata; solo lo cura el antídoto). */
+	public static final RegistryEntry<StatusEffect> VENOM = Registry.registerReference(Registries.STATUS_EFFECT, EvolvedWarfare.id("venom"),
+			new com.evolvedwarfare.health.VenomEffect());
+	/** Desinfectado: tras el aguardiente o un botiquín, las heridas no se infectan ni la infección empeora. */
+	public static final RegistryEntry<StatusEffect> DISINFECTED = Registry.registerReference(Registries.STATUS_EFFECT,
+			EvolvedWarfare.id("disinfected"), new StatusEffect(net.minecraft.entity.effect.StatusEffectCategory.BENEFICIAL, 0xE8D8A0) {
+			});
+
 	private ModEffects() {
 	}
 

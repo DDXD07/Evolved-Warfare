@@ -1,5 +1,5 @@
-"""La salud al estilo RLCraft (fase 92): vendas, entablillados y cristales de corazón (iconos, modelos, recetas), el tipo
-de daño de sangrar y los textos.
+"""La salud al estilo RLCraft: vendas, entablillados y cristales de corazón (fase 92); mosto, aguardiente, medicina,
+antídoto y botiquín, el veneno fuerte y el desinfectado (fase 93). Iconos, modelos, recetas, tipos de daño y textos.
 
 Uso: python3 tools/ew_health.py [raíz]
 """
@@ -93,6 +93,90 @@ PAL_SPLINT = {"o": (70, 48, 26, 255), "b": (166, 124, 72, 255), "w": (232, 226, 
 PAL_HEART = {"o": (70, 10, 40, 255), "L": (255, 170, 220, 255), "w": (255, 255, 255, 255), "P": (226, 50, 120, 255),
              "d": (150, 20, 80, 255)}
 
+ALCOHOL = [
+    "................",
+    "......oo........",
+    "......cc........",
+    "......oo........",
+    ".....oaao.......",
+    ".....oaao.......",
+    "....oaaaao......",
+    "...oaaaaaao.....",
+    "...oalaaaao.....",
+    "...oallllao.....",
+    "...oallllao.....",
+    "...oalllllo.....",
+    "...oallllao.....",
+    "....oaaaao......",
+    ".....oooo.......",
+    "................",
+]
+MASH = [
+    "................",
+    "................",
+    "......oo........",
+    "......cc........",
+    "......oo........",
+    ".....oaao.......",
+    "....oaaaao......",
+    "...oaaaaaao.....",
+    "...oammmmao.....",
+    "...omymmymo.....",
+    "...ommymmmo.....",
+    "...omymmmyo.....",
+    "...ommmmmmo.....",
+    "....ommmmo......",
+    ".....oooo.......",
+    "................",
+]
+MEDKIT = [
+    "................",
+    "................",
+    "......oooo......",
+    ".....o....o.....",
+    "..oooooooooooo..",
+    ".orrrrrrrrrrrro.",
+    ".orrrrrwwrrrrro.",
+    ".orrrrrwwrrrrro.",
+    ".orrrwwwwwwrrro.",
+    ".orrrwwwwwwrrro.",
+    ".orrrrrwwrrrrro.",
+    ".orrrrrwwrrrrro.",
+    ".odddddddddddddo",
+    "..oooooooooooo..",
+    "................",
+    "................",
+]
+PAL_BOTTLE = {"o": (40, 40, 52, 255), "c": (150, 110, 70, 255), "a": (200, 225, 235, 200)}
+PAL_ALCOHOL = dict(PAL_BOTTLE, l=(236, 200, 120, 255))
+PAL_MEDICINE = dict(PAL_BOTTLE, l=(220, 70, 70, 255))
+PAL_ANTIDOTE = dict(PAL_BOTTLE, l=(120, 210, 90, 255))
+PAL_MASH = dict(PAL_BOTTLE, m=(176, 140, 72, 255), y=(230, 210, 140, 255))
+PAL_MEDKIT = {"o": (50, 20, 20, 255), "r": (196, 40, 40, 255), "d": (130, 24, 24, 255), "w": (245, 245, 245, 255)}
+
+
+def effect_icon(kind):
+    img = Image.new("RGBA", (18, 18), (0, 0, 0, 0))
+    if kind == "venom":
+        # una gota verde con una calavera clara
+        for y in range(2, 17):
+            for x in range(2, 16):
+                dx, dy = x - 8.5, y - 11
+                inside = (dx * dx + dy * dy <= 25) or (y < 11 and abs(dx) <= (y - 2) * 0.6)
+                if inside:
+                    img.putpixel((x, y), (60, 150, 40, 255) if dx < 1 else (40, 110, 30, 255))
+        for x, y in ((7, 10), (10, 10), (8, 13), (9, 13)):
+            img.putpixel((x, y), (20, 40, 10, 255))
+    else:
+        # una cruz blanca con borde dorado
+        for y in range(2, 16):
+            for x in range(2, 16):
+                if 6 <= x <= 11 or 6 <= y <= 11:
+                    edge = x in (6, 11) and not 6 <= y <= 11 or y in (6, 11) and not 6 <= x <= 11 or x in (2, 15) or y in (2, 15)
+                    img.putpixel((x, y), (200, 160, 70, 255) if edge else (250, 248, 236, 255))
+    return img
+
+
 ITEMS = {
     "bandage": ("Venda", "Bandage",
                 "Corta la sangre y cura la parte del cuerpo más herida (que no esté rota). Mantén pulsado para ponerla.",
@@ -103,6 +187,19 @@ ITEMS = {
     "heart_crystal": ("Cristal de corazón", "Heart Crystal",
                       "Un corazón más para siempre. Lo guardan los jefes de las mazmorras y los tesoros más difíciles.",
                       "One more heart, for good. Dungeon bosses and the hardest treasures keep them."),
+    "fermented_mash": ("Mosto fermentado", "Fermented Mash",
+                       "Trigo y azúcar fermentando. Destílalo en un horno para sacar aguardiente.",
+                       "Wheat and sugar, fermenting. Distil it in a furnace to make spirits."),
+    "alcohol": ("Aguardiente", "Spirits",
+                "Desinfecta las heridas (3 minutos sin infectarse) y baja un grado la infección. Marea un poco.",
+                "Disinfects your wounds (3 minutes without infection) and lowers infection by one level. Makes you a bit dizzy."),
+    "medicine": ("Medicina", "Medicine",
+                 "Cura la infección y los parásitos.", "Cures infection and parasites."),
+    "antidote": ("Antídoto", "Antidote",
+                 "Cura el veneno (el de las arañas también; la leche ya no).", "Cures poison (spider venom too; milk no longer does)."),
+    "medkit": ("Botiquín", "Medkit",
+               "Lo cura todo: corta la sangre, cura cada parte, entablilla los huesos rotos y quita la infección y los venenos.",
+               "Treats everything: stops bleeding, heals every part, splints broken bones and removes infection and venom."),
 }
 
 TEXTS = {
@@ -125,6 +222,36 @@ TEXTS = {
     "hud.evolvedwarfare.health.bleeding": ("Sangrando", "Bleeding"),
     "death.attack.evolvedwarfare.bleeding": ("%1$s se desangró", "%1$s bled out"),
     "death.attack.evolvedwarfare.bleeding.player": ("%1$s se desangró huyendo de %2$s", "%1$s bled out while fighting %2$s"),
+    "effect.evolvedwarfare.venom": ("Veneno fuerte", "Venom"),
+    "effect.evolvedwarfare.disinfected": ("Desinfectado", "Disinfected"),
+    "death.attack.evolvedwarfare.venom": ("%1$s murió envenenado", "%1$s succumbed to venom"),
+    "death.attack.evolvedwarfare.venom.player": ("%1$s murió envenenado huyendo de %2$s", "%1$s succumbed to venom whilst fighting %2$s"),
+    "message.evolvedwarfare.medicine.venom": ("¡Te han envenenado! Bebe un antídoto (la leche no sirve).",
+                                              "You have been envenomed! Drink an antidote (milk won't help)."),
+    "message.evolvedwarfare.medicine.wound_infected": ("La herida se ha infectado: aguardiente para bajarla, medicina para curarla.",
+                                                       "Your wound got infected: spirits to ease it, medicine to cure it."),
+    "message.evolvedwarfare.medicine.worse": ("La infección empeora sin tratar: necesitas medicina.",
+                                              "The untreated infection gets worse: you need medicine."),
+    "message.evolvedwarfare.medicine.alcohol": ("Te arde la garganta... pero las heridas quedan limpias.",
+                                                "It burns going down... but your wounds are clean."),
+    "message.evolvedwarfare.medicine.medicine": ("La medicina hace efecto.", "The medicine takes effect."),
+    "message.evolvedwarfare.medicine.antidote": ("El antídoto corta el veneno.", "The antidote neutralises the venom."),
+    "message.evolvedwarfare.medicine.medkit": ("Te has curado con el botiquín.", "You patched yourself up with the medkit."),
+    "message.evolvedwarfare.medicine.nothing": ("No tienes nada que curar.", "You have nothing to treat."),
+    "message.evolvedwarfare.infection": ("Te ha mordido un zombi: estás infectado (aguardiente o medicina)",
+                                         "A zombie bit you: you are infected (spirits or medicine)"),
+    "message.evolvedwarfare.infection.worse": ("Otro mordisco: la infección empeora (necesitas medicina)",
+                                               "Another bite: the infection gets worse (you need medicine)"),
+    "config.evolvedwarfare.medicineEnabled": ("Medicina", "Medicine"),
+    "config.evolvedwarfare.medicineEnabled.tip": (
+        "Las heridas se infectan, las arañas envenenan y la leche ya no cura la infección ni el veneno fuerte.",
+        "Wounds get infected, spiders envenom and milk no longer cures infection or venom."),
+    "config.evolvedwarfare.woundInfectionChance": ("Infección de heridas (%)", "Wound infection (%)"),
+    "config.evolvedwarfare.woundInfectionChance.tip": ("Probabilidad por minuto de que se infecte una herida que sangra sin desinfectar.",
+                                                       "Chance per minute that an undisinfected bleeding wound gets infected."),
+    "config.evolvedwarfare.venomChance": ("Veneno de araña (%)", "Spider venom (%)"),
+    "config.evolvedwarfare.venomChance.tip": ("Probabilidad de que una araña envenene al morder (la de cueva, siempre).",
+                                              "Chance that a spider bite envenoms (cave spiders always do)."),
     "config.evolvedwarfare.category.health": ("Salud", "Health"),
     "config.evolvedwarfare.woundsEnabled": ("Heridas por partes", "Body-part wounds"),
     "config.evolvedwarfare.woundsEnabled.tip": (
@@ -150,6 +277,24 @@ RECIPES = {
     "splint": {"type": "minecraft:crafting_shaped", "category": "misc", "pattern": ["S S", "SBS", "S S"],
                "key": {"S": {"item": "minecraft:stick"}, "B": {"item": "%s:bandage" % NS}},
                "result": {"id": "%s:splint" % NS, "count": 2}},
+    "fermented_mash": {"type": "minecraft:crafting_shapeless", "category": "misc",
+                       "ingredients": [{"item": "minecraft:glass_bottle"}, {"item": "minecraft:wheat"}, {"item": "minecraft:wheat"},
+                                       {"item": "minecraft:sugar"}],
+                       "result": {"id": "%s:fermented_mash" % NS, "count": 1}},
+    "alcohol": {"type": "minecraft:smelting", "category": "misc", "ingredient": {"item": "%s:fermented_mash" % NS},
+                "result": {"id": "%s:alcohol" % NS}, "experience": 0.2, "cookingtime": 300},
+    "medicine": {"type": "minecraft:crafting_shapeless", "category": "misc",
+                 "ingredients": [{"item": "%s:alcohol" % NS}, {"item": "minecraft:brown_mushroom"}, {"item": "minecraft:red_mushroom"},
+                                 {"item": "minecraft:honeycomb"}],
+                 "result": {"id": "%s:medicine" % NS, "count": 1}},
+    "antidote": {"type": "minecraft:crafting_shapeless", "category": "misc",
+                 "ingredients": [{"item": "minecraft:glass_bottle"}, {"item": "minecraft:spider_eye"}, {"item": "minecraft:charcoal"},
+                                 {"item": "minecraft:sweet_berries"}],
+                 "result": {"id": "%s:antidote" % NS, "count": 1}},
+    "medkit": {"type": "minecraft:crafting_shaped", "category": "misc", "pattern": ["LBL", "AMS", "LBL"],
+               "key": {"L": {"item": "minecraft:leather"}, "B": {"item": "%s:bandage" % NS}, "A": {"item": "%s:alcohol" % NS},
+                       "M": {"item": "%s:medicine" % NS}, "S": {"item": "%s:splint" % NS}},
+               "result": {"id": "%s:medkit" % NS, "count": 1}},
 }
 
 
@@ -159,19 +304,28 @@ def main():
     sprite(BANDAGE, PAL_BANDAGE).save(os.path.join(item_dir, "bandage.png"))
     sprite(SPLINT, PAL_SPLINT).save(os.path.join(item_dir, "splint.png"))
     sprite(HEART, PAL_HEART).save(os.path.join(item_dir, "heart_crystal.png"))
+    sprite(MASH, PAL_MASH).save(os.path.join(item_dir, "fermented_mash.png"))
+    sprite(ALCOHOL, PAL_ALCOHOL).save(os.path.join(item_dir, "alcohol.png"))
+    sprite(ALCOHOL, PAL_MEDICINE).save(os.path.join(item_dir, "medicine.png"))
+    sprite(ALCOHOL, PAL_ANTIDOTE).save(os.path.join(item_dir, "antidote.png"))
+    sprite(MEDKIT, PAL_MEDKIT).save(os.path.join(item_dir, "medkit.png"))
+    for kind in ("venom", "disinfected"):
+        effect_icon(kind).save(os.path.join(ASSETS, "textures/mob_effect/%s.png" % kind))
     for name in ITEMS:
         write_json(os.path.join(ASSETS, "models/item/%s.json" % name),
                    {"parent": "minecraft:item/generated", "textures": {"layer0": "%s:item/%s" % (NS, name)}})
     for name, recipe in RECIPES.items():
         write_json(os.path.join(DATA, "recipe/%s.json" % name), recipe)
-    write_json(os.path.join(DATA, "damage_type/bleeding.json"),
-               {"exhaustion": 0.0, "message_id": "evolvedwarfare.bleeding", "scaling": "never"})
+    for dt in ("bleeding", "venom"):
+        write_json(os.path.join(DATA, "damage_type/%s.json" % dt),
+                   {"exhaustion": 0.0, "message_id": "evolvedwarfare.%s" % dt, "scaling": "never"})
     for tag in ("bypasses_armor", "no_knockback"):
         path = os.path.join(MC_DATA, "tags/damage_type/%s.json" % tag)
         with open(path, encoding="utf-8") as fh:
             data = json.load(fh, object_pairs_hook=collections.OrderedDict)
-        if "%s:bleeding" % NS not in data["values"]:
-            data["values"].append("%s:bleeding" % NS)
+        for dt in ("bleeding", "venom"):
+            if "%s:%s" % (NS, dt) not in data["values"]:
+                data["values"].append("%s:%s" % (NS, dt))
         write_json(path, data)
     for path in sorted(glob.glob(os.path.join(ASSETS, "lang", "*.json"))):
         english = path.endswith("en_us.json")

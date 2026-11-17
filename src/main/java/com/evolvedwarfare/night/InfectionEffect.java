@@ -10,8 +10,9 @@ import net.minecraft.server.world.ServerWorld;
 
 /**
  * Infección (de un mordisco de zombi): da hambre y quita medio corazón cada 6 segundos (cada vez más a menudo según
- * empeora), con debilidad y, en el peor grado, lentitud y náuseas. No mata sola (se para con medio corazón). Se cura con
- * leche o una manzana de oro; si no, se pasa con el tiempo.
+ * empeora), con debilidad y, en el peor grado, lentitud y náuseas. No mata sola (se para con medio corazón). Desde la fase
+ * 93 la leche no la cura: el aguardiente la baja un grado y la medicina o el botiquín la quitan; sin tratar, empeora
+ * ({@link com.evolvedwarfare.health.Medicine}).
  */
 public class InfectionEffect extends StatusEffect {
 	public InfectionEffect() {
