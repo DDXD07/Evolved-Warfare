@@ -100,9 +100,9 @@ public class SmartMobsGameTests implements FabricGameTest {
 
 	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "smartmobs")
 	public void spidersSpitWebs(TestContext ctx) {
-		floor(ctx, 10);
+		floor(ctx, 7);
 		SpiderEntity spider = ctx.spawnEntity(EntityType.SPIDER, 1, 1, 1);
-		VillagerEntity villager = ctx.spawnEntity(EntityType.VILLAGER, 8, 1, 8);
+		VillagerEntity villager = ctx.spawnEntity(EntityType.VILLAGER, 5, 1, 5);
 		spider.setAiDisabled(true);
 		villager.setAiDisabled(true);
 		boolean fired = SpiderWebGoal.fire(spider, villager);
