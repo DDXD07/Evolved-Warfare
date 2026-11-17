@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "evolvedwarfare:pirate"
+    "evolvedwarfare:pirate",
+    "evolvedwarfare:sea_serpent"
   ]
 }

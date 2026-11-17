@@ -163,7 +163,7 @@ public class LegendaryGameTests implements FabricGameTest {
 		}
 		com.evolvedwarfare.legendary.SeaSerpentEntity serpent = ctx.spawnEntity(Legendaries.SEA_SERPENT, 3, 2, 3);
 		serpent.setAiDisabled(true);
-		net.minecraft.entity.vehicle.BoatEntity boat = ctx.spawnEntity(EntityType.OAK_BOAT, 5, 5, 5);
+		net.minecraft.entity.vehicle.BoatEntity boat = ctx.spawnEntity(EntityType.BOAT, 5, 5, 5);
 		boolean smashed = serpent.capsize(boat);
 		ServerPlayerEntity player = (ServerPlayerEntity) ctx.createMockCreativeServerPlayerInWorld();
 		player.changeGameMode(GameMode.SURVIVAL);
