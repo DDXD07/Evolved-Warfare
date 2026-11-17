@@ -2963,5 +2963,19 @@
   "item.evolvedwarfare.giant_pelt": "Giant's Pelt",
   "item.evolvedwarfare.giant_pelt.desc": "Thick and warm. For coats (coming later).",
   "message.evolvedwarfare.legendary.roar.frost_giant": "The ground trembles under huge footsteps: a frost giant is near...",
-  "message.evolvedwarfare.legendary.blizzard": "The giant's blizzard freezes you to the bone!"
+  "message.evolvedwarfare.legendary.blizzard": "The giant's blizzard freezes you to the bone!",
+  "entity.evolvedwarfare.sea_serpent": "Sea Serpent",
+  "item.evolvedwarfare.sea_serpent_spawn_egg": "Sea Serpent Spawn Egg",
+  "item.evolvedwarfare.sea_serpent_scale": "Sea Serpent Scale",
+  "item.evolvedwarfare.sea_serpent_scale.desc": "It shines like the sea. For tide armour.",
+  "item.evolvedwarfare.serpent_fang": "Sea Serpent Fang",
+  "item.evolvedwarfare.serpent_fang.desc": "Long and curved. A trophy... and something more later.",
+  "armor.evolvedwarfare.dragon.sea": "Each piece: −25%% drowning damage. Full set: water breathing and you swim like a dolphin.",
+  "message.evolvedwarfare.legendary.roar.sea_serpent": "The sea churns and something huge moves beneath the waves: a sea serpent...",
+  "message.evolvedwarfare.legendary.capsize": "The serpent has smashed your boat!",
+  "message.evolvedwarfare.legendary.whirlpool": "A whirlpool drags you down!",
+  "item.evolvedwarfare.sea_serpent_scale_helmet": "Tide Helmet",
+  "item.evolvedwarfare.sea_serpent_scale_chestplate": "Tide Chestplate",
+  "item.evolvedwarfare.sea_serpent_scale_leggings": "Tide Leggings",
+  "item.evolvedwarfare.sea_serpent_scale_boots": "Tide Boots"
 }

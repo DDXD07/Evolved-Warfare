@@ -2653,6 +2653,19 @@ Lo que se hace con lo que sueltan los dragones (pestaña «Legendarios»):
 - **Su botín**: el **garrote del gigante** (un arma enorme y lenta que pega muchísimo, empuja lejos y hiela), piel de
   gigante (para abrigos, más adelante), hielo compacto, diamantes, esmeraldas y un cristal de corazón.
 
+## Fase 104 — Criaturas legendarias (4): la serpiente marina
+
+- **La serpiente marina**: catorce bloques de escamas verdeazuladas que **ondulan** bajo el agua (ocho trozos y la cola en
+  abanico), cabeza de dragón con aletas y cuernos y ojos verdes. **450 de vida**. Aparece en el **océano** cuando estás en
+  el agua o en barca (en las zonas peligrosas, como los demás legendarios), bajo el agua, y el mar se agita para avisar.
+- **Cómo pelea**: caza a los que están en el agua o en barca: nada hacia ellos y **muerde** (y deja cansado). **Parte las
+  barcas** (los que van dentro caen al agua), abre un **remolino** que te arrastra hacia ella y hacia el fondo y, muy herida,
+  llama a los **rayos**. Fuera del agua se seca y se debilita.
+- **Su botín**: escamas de serpiente marina, colmillos, fragmentos de prismarina, conchas de nautilo, a veces un
+  **tridente** y un cristal de corazón.
+- **La armadura de las mareas** (con las escamas): como la de diamante; cada pieza quita un 25 % del daño al ahogarte y el
+  **juego completo** te deja **respirar bajo el agua** y **nadar como un delfín**.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

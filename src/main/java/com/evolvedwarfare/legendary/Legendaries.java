@@ -58,6 +58,10 @@ public final class Legendaries {
 			EntityType.Builder.create(FrostGiantEntity::new, SpawnGroup.MONSTER).dimensions(2.6F, 8.0F).eyeHeight(7.2F).maxTrackingRange(16),
 			0x92ACC4, 0xE8E6DE);
 
+	public static final EntityType<SeaSerpentEntity> SEA_SERPENT = type("sea_serpent",
+			EntityType.Builder.create(SeaSerpentEntity::new, SpawnGroup.MONSTER).dimensions(3.5F, 2.2F).eyeHeight(1.6F).maxTrackingRange(16),
+			0x2C7880, 0x96D2BE);
+
 	public static final Item FIRE_DRAGON_SCALE = item("fire_dragon_scale", new Described(new Item.Settings().rarity(Rarity.RARE).fireproof()));
 	public static final Item ICE_DRAGON_SCALE = item("ice_dragon_scale", new Described(new Item.Settings().rarity(Rarity.RARE)));
 	public static final Item DRAGON_BONE = item("dragon_bone", new Described(new Item.Settings().rarity(Rarity.RARE)));
@@ -68,7 +72,7 @@ public final class Legendaries {
 	public static final List<Item> DRAGON_ARMOR = new ArrayList<>();
 
 	static {
-		for (DragonGear.Element element : DragonGear.Element.values()) {
+		for (DragonGear.Element element : new DragonGear.Element[] {DragonGear.Element.FIRE, DragonGear.Element.ICE}) {
 			String set = element == DragonGear.Element.FIRE ? "fire_dragon_scale" : "ice_dragon_scale";
 			for (net.minecraft.item.ArmorItem.Type type : new net.minecraft.item.ArmorItem.Type[] {net.minecraft.item.ArmorItem.Type.HELMET,
 					net.minecraft.item.ArmorItem.Type.CHESTPLATE, net.minecraft.item.ArmorItem.Type.LEGGINGS, net.minecraft.item.ArmorItem.Type.BOOTS}) {
@@ -84,6 +88,17 @@ public final class Legendaries {
 	// el gigante de hielo (fase 103)
 	public static final Item GIANT_CLUB = item("giant_club", new DragonGear.GiantClubItem());
 	public static final Item GIANT_PELT = item("giant_pelt", new Described(new Item.Settings().rarity(Rarity.RARE)));
+	// la serpiente marina (fase 104)
+	public static final Item SEA_SERPENT_SCALE = item("sea_serpent_scale", new Described(new Item.Settings().rarity(Rarity.RARE)));
+	public static final Item SERPENT_FANG = item("serpent_fang", new Described(new Item.Settings().rarity(Rarity.RARE)));
+	public static final List<Item> TIDE_ARMOR = new ArrayList<>();
+
+	static {
+		for (net.minecraft.item.ArmorItem.Type type : new net.minecraft.item.ArmorItem.Type[] {net.minecraft.item.ArmorItem.Type.HELMET,
+				net.minecraft.item.ArmorItem.Type.CHESTPLATE, net.minecraft.item.ArmorItem.Type.LEGGINGS, net.minecraft.item.ArmorItem.Type.BOOTS}) {
+			TIDE_ARMOR.add(item("sea_serpent_scale_" + type.getName(), new DragonGear.DragonArmorItem(DragonGear.Element.SEA, type)));
+		}
+	}
 
 	public static final ItemGroup GROUP = Registry.register(Registries.ITEM_GROUP, EvolvedWarfare.id("legendary"), FabricItemGroup.builder()
 			.icon(() -> new ItemStack(FIRE_DRAGON_SCALE))
@@ -105,7 +120,7 @@ public final class Legendaries {
 
 	/** Qué legendario le va a un sitio, o ninguno. */
 	public enum Kind {
-		FIRE_DRAGON, ICE_DRAGON, FROST_GIANT
+		FIRE_DRAGON, ICE_DRAGON, FROST_GIANT, SEA_SERPENT
 	}
 
 	private Legendaries() {
@@ -126,6 +141,7 @@ public final class Legendaries {
 		FabricDefaultAttributeRegistry.register(FIRE_DRAGON, DragonEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(ICE_DRAGON, DragonEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(FROST_GIANT, FrostGiantEntity.createAttributes());
+		FabricDefaultAttributeRegistry.register(SEA_SERPENT, SeaSerpentEntity.createAttributes());
 		ServerTickEvents.END_SERVER_TICK.register(Legendaries::tick);
 		DragonGear.register();
 	}
@@ -159,7 +175,10 @@ public final class Legendaries {
 					|| world.random.nextDouble() >= EwConfig.get().legendaryChance) {
 				continue;
 			}
-			Kind kind = kindFor(world.getBiome(player.getBlockPos()).value().getTemperature());
+			var biome = world.getBiome(player.getBlockPos());
+			Kind kind = biome.isIn(net.minecraft.registry.tag.BiomeTags.IS_OCEAN)
+					? (player.isTouchingWater() || player.getVehicle() instanceof net.minecraft.entity.vehicle.BoatEntity ? Kind.SEA_SERPENT : null)
+					: kindFor(biome.value().getTemperature());
 			if (kind == Kind.ICE_DRAGON && world.random.nextBoolean()) {
 				kind = Kind.FROST_GIANT;
 			}
@@ -185,6 +204,7 @@ public final class Legendaries {
 			case FIRE_DRAGON -> FIRE_DRAGON.create(world);
 			case ICE_DRAGON -> ICE_DRAGON.create(world);
 			case FROST_GIANT -> FROST_GIANT.create(world);
+			case SEA_SERPENT -> SEA_SERPENT.create(world);
 		};
 		if (mob == null) {
 			return null;
@@ -193,6 +213,14 @@ public final class Legendaries {
 		if (kind == Kind.FROST_GIANT && world.getBlockState(new BlockPos(x, ground - 1, z)).getFluidState().isStill()) {
 			return null; // no en el agua
 		}
+		if (kind == Kind.SEA_SERPENT) {
+			// bajo el agua, a unos bloques de profundidad
+			y = world.getSeaLevel() - 4;
+			if (!world.getFluidState(new BlockPos(x, y, z)).isIn(net.minecraft.registry.tag.FluidTags.WATER)
+					|| !world.getFluidState(new BlockPos(x, y + 2, z)).isIn(net.minecraft.registry.tag.FluidTags.WATER)) {
+				return null;
+			}
+		}
 		mob.refreshPositionAndAngles(x + 0.5, y, z + 0.5, world.random.nextFloat() * 360, 0);
 		if (mob instanceof DragonEntity dragon) {
 			dragon.setHome(new BlockPos(x, ground, z));
@@ -200,10 +228,11 @@ public final class Legendaries {
 		world.spawnEntity(mob);
 		String id = kind.name().toLowerCase(java.util.Locale.ROOT);
 		boolean cold = kind != Kind.FIRE_DRAGON;
+		final net.minecraft.sound.SoundEvent sound = kind == Kind.SEA_SERPENT ? SoundEvents.ENTITY_ELDER_GUARDIAN_CURSE
+				: kind == Kind.FROST_GIANT ? SoundEvents.ENTITY_RAVAGER_ROAR : SoundEvents.ENTITY_ENDER_DRAGON_GROWL;
 		for (ServerPlayerEntity p : world.getPlayers(p -> p.squaredDistanceTo(mob) < 200 * 200)) {
-			p.playSoundToPlayer(kind == Kind.FROST_GIANT ? SoundEvents.ENTITY_RAVAGER_ROAR : SoundEvents.ENTITY_ENDER_DRAGON_GROWL, SoundCategory.HOSTILE,
-					1.0F, kind == Kind.FROST_GIANT ? 0.4F : cold ? 1.3F : 0.8F);
-			p.sendMessage(Text.translatable("message.evolvedwarfare.legendary.roar." + id).formatted(cold ? Formatting.AQUA : Formatting.RED,
+			p.playSoundToPlayer(sound, SoundCategory.HOSTILE, 1.0F, kind == Kind.FROST_GIANT ? 0.4F : kind == Kind.SEA_SERPENT ? 0.6F : cold ? 1.3F : 0.8F);
+			p.sendMessage(Text.translatable("message.evolvedwarfare.legendary.roar." + id).formatted(cold ? (kind == Kind.SEA_SERPENT ? Formatting.DARK_AQUA : Formatting.AQUA) : Formatting.RED,
 					Formatting.ITALIC), false);
 		}
 		return mob;

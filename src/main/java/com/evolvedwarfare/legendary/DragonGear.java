@@ -42,7 +42,7 @@ import net.minecraft.util.Rarity;
  */
 public final class DragonGear {
 	public enum Element {
-		FIRE, ICE
+		FIRE, ICE, SEA
 	}
 
 	// ------------------------------------------------------------------ las armaduras
@@ -51,14 +51,14 @@ public final class DragonGear {
 
 	static RegistryEntry<ArmorMaterial> material(Element element) {
 		return MATERIALS.computeIfAbsent(element, e -> {
-			String id = e == Element.FIRE ? "fire_dragon_scale" : "ice_dragon_scale";
+			String id = e == Element.FIRE ? "fire_dragon_scale" : e == Element.ICE ? "ice_dragon_scale" : "sea_serpent_scale";
 			Map<ArmorItem.Type, Integer> defense = new EnumMap<>(ArmorItem.Type.class);
 			defense.put(ArmorItem.Type.HELMET, 3);
 			defense.put(ArmorItem.Type.CHESTPLATE, 8);
 			defense.put(ArmorItem.Type.LEGGINGS, 6);
 			defense.put(ArmorItem.Type.BOOTS, 3);
 			defense.put(ArmorItem.Type.BODY, 11);
-			Item scale = e == Element.FIRE ? Legendaries.FIRE_DRAGON_SCALE : Legendaries.ICE_DRAGON_SCALE;
+			Item scale = e == Element.FIRE ? Legendaries.FIRE_DRAGON_SCALE : e == Element.ICE ? Legendaries.ICE_DRAGON_SCALE : Legendaries.SEA_SERPENT_SCALE;
 			return Registry.registerReference(Registries.ARMOR_MATERIAL, EvolvedWarfare.id(id), new ArmorMaterial(defense, 18,
 					SoundEvents.ITEM_ARMOR_EQUIP_NETHERITE, () -> Ingredient.ofItems(scale), List.of(new ArmorMaterial.Layer(EvolvedWarfare.id(id))),
 					3.5F, 0.1F));
@@ -80,8 +80,8 @@ public final class DragonGear {
 		@Override
 		public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
 			super.appendTooltip(stack, context, tooltip, type);
-			tooltip.add(Text.translatable("armor.evolvedwarfare.dragon." + (element == Element.FIRE ? "fire" : "ice"))
-					.formatted(element == Element.FIRE ? Formatting.GOLD : Formatting.AQUA));
+			tooltip.add(Text.translatable("armor.evolvedwarfare.dragon." + element.name().toLowerCase(java.util.Locale.ROOT))
+					.formatted(element == Element.FIRE ? Formatting.GOLD : element == Element.ICE ? Formatting.AQUA : Formatting.DARK_AQUA));
 		}
 	}
 
@@ -111,6 +111,9 @@ public final class DragonGear {
 			int n = pieces(entity, Element.ICE);
 			return n >= 4 ? 0.0F : amount * (1.0F - 0.15F * n);
 		}
+		if (source.isIn(DamageTypeTags.IS_DROWNING)) {
+			return amount * (1.0F - 0.25F * pieces(entity, Element.SEA));
+		}
 		return amount;
 	}
 
@@ -133,6 +136,10 @@ public final class DragonGear {
 			}
 			if (pieces(player, Element.ICE) >= 4) {
 				player.setFrozenTicks(0);
+			}
+			if (pieces(player, Element.SEA) >= 4 && player.isTouchingWater()) {
+				player.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 60, 0, true, false, true));
+				player.addStatusEffect(new StatusEffectInstance(StatusEffects.DOLPHINS_GRACE, 60, 0, true, false, true));
 			}
 		}
 	}

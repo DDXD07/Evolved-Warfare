@@ -150,4 +150,35 @@ public class LegendaryGameTests implements FabricGameTest {
 		giant.discard();
 		ctx.complete();
 	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "legendary", tickLimit = 100)
+	public void seaSerpentSmashesBoats(TestContext ctx) {
+		for (int x = 0; x < 8; x++) {
+			for (int z = 0; z < 8; z++) {
+				ctx.setBlockState(x, 0, z, Blocks.STONE);
+				for (int y = 1; y <= 4; y++) {
+					ctx.setBlockState(x, y, z, Blocks.WATER);
+				}
+			}
+		}
+		com.evolvedwarfare.legendary.SeaSerpentEntity serpent = ctx.spawnEntity(Legendaries.SEA_SERPENT, 3, 2, 3);
+		serpent.setAiDisabled(true);
+		net.minecraft.entity.vehicle.BoatEntity boat = ctx.spawnEntity(EntityType.OAK_BOAT, 5, 5, 5);
+		boolean smashed = serpent.capsize(boat);
+		ServerPlayerEntity player = (ServerPlayerEntity) ctx.createMockCreativeServerPlayerInWorld();
+		player.changeGameMode(GameMode.SURVIVAL);
+		var drown = player.getDamageSources().drown();
+		for (int k = 0; k < 4; k++) {
+			player.equipStack(new net.minecraft.entity.EquipmentSlot[] {net.minecraft.entity.EquipmentSlot.HEAD, net.minecraft.entity.EquipmentSlot.CHEST,
+					net.minecraft.entity.EquipmentSlot.LEGS, net.minecraft.entity.EquipmentSlot.FEET}[k], new net.minecraft.item.ItemStack(Legendaries.TIDE_ARMOR.get(k)));
+		}
+		float drowning = com.evolvedwarfare.legendary.DragonGear.modifyIncoming(player, drown, 10.0F);
+		LOG.info("[EW-GAMETEST] serpiente: vida {}, respira en el agua {}, parte la barca {} (quitada {}); mareas: ahogarse 10 -> {}", serpent.getMaxHealth(),
+				serpent.canBreatheInWater(), smashed, boat.isRemoved(), drowning);
+		check(serpent.getMaxHealth() >= 450.0F && serpent.canBreatheInWater(), "La serpiente no es de leyenda o se ahoga");
+		check(smashed && boat.isRemoved(), "La serpiente no parte la barca");
+		check(drowning == 0.0F, "La armadura de las mareas no protege del agua");
+		serpent.discard();
+		ctx.complete();
+	}
 }

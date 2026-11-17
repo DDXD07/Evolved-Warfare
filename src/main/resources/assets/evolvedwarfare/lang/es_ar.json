@@ -2963,5 +2963,19 @@
   "item.evolvedwarfare.giant_pelt": "Piel de gigante",
   "item.evolvedwarfare.giant_pelt.desc": "Gruesa y cálida. Para abrigos (más adelante).",
   "message.evolvedwarfare.legendary.roar.frost_giant": "La tierra tiembla bajo unos pasos enormes: un gigante de hielo anda cerca...",
-  "message.evolvedwarfare.legendary.blizzard": "¡La ventisca del gigante te hiela hasta los huesos!"
+  "message.evolvedwarfare.legendary.blizzard": "¡La ventisca del gigante te hiela hasta los huesos!",
+  "entity.evolvedwarfare.sea_serpent": "Serpiente marina",
+  "item.evolvedwarfare.sea_serpent_spawn_egg": "Huevo generador de serpiente marina",
+  "item.evolvedwarfare.sea_serpent_scale": "Escama de serpiente marina",
+  "item.evolvedwarfare.sea_serpent_scale.desc": "Brilla como el mar. Para la armadura de las mareas.",
+  "item.evolvedwarfare.serpent_fang": "Colmillo de serpiente marina",
+  "item.evolvedwarfare.serpent_fang.desc": "Largo y curvo. Un trofeo... y más adelante, algo más.",
+  "armor.evolvedwarfare.dragon.sea": "Cada pieza: −25 %% de daño al ahogarte. Completa: respiras bajo el agua y nadas como un delfín.",
+  "message.evolvedwarfare.legendary.roar.sea_serpent": "El mar se agita y algo enorme se mueve bajo las olas: una serpiente marina...",
+  "message.evolvedwarfare.legendary.capsize": "¡La serpiente ha partido tu barca!",
+  "message.evolvedwarfare.legendary.whirlpool": "¡Un remolino te arrastra hacia el fondo!",
+  "item.evolvedwarfare.sea_serpent_scale_helmet": "Yelmo de las mareas",
+  "item.evolvedwarfare.sea_serpent_scale_chestplate": "Peto de las mareas",
+  "item.evolvedwarfare.sea_serpent_scale_leggings": "Grebas de las mareas",
+  "item.evolvedwarfare.sea_serpent_scale_boots": "Botas de las mareas"
 }

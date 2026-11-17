@@ -146,10 +146,40 @@ def frost_giant():
     return a
 
 
+# ------------------------------------------------------------------ tanda 4: la serpiente marina
+
+def sea_serpent():
+    """La serpiente marina: cabeza de dragón con aletas a los lados y cuernos hacia atrás, mandíbula, ojos verdes; un cuerpo
+    de ocho trozos (cada vez más fino) con aleta en el lomo y la cola en abanico. Los trozos ondulan uno tras otro."""
+    a = W.Animal("sea_serpent")
+    scale_, back, belly, fin = (40, 112, 122), (22, 70, 82), (150, 202, 180), (64, 164, 150)
+    eye = (150, 255, 120)
+    head = a.part("head", None, (0, 19, -24), role="head")
+    head.cube((-5, -4, -10), (10, 7, 10), **C(scale_, eyes=("side", 2, eye), glow_eyes=True, top=back))
+    head.cube((-3.5, -2, -17), (7, 4, 7), **C(scale_, nose=back, top=back))
+    for side in (-1, 1):
+        head.cube((side * 5.5 - 0.5, -7, -5), (1, 6, 7), **C(fin, bands=(shade(fin, 0.75), 2)))        # las aletas de la cabeza
+        head.cube((side * 3 - 0.5, -6, -1), (1, 2, 5), **C((210, 216, 196), tip=((240, 240, 230), 1)))  # los cuernos
+    jaw = a.part("jaw", "head", (0, 3, -9), role="jaw")
+    jaw.cube((-3, 0, -8), (6, 2, 8), **C(belly, top=(160, 50, 50)))
+    prev = "head"
+    widths = [9, 9, 8, 8, 7, 6, 5, 4]
+    for k, w in enumerate(widths):
+        h = w - 1
+        seg = a.part("seg_%d" % k, prev, (0, 0, 0 if k == 0 else 10), role="segment", phase=k + 1)
+        seg.cube((-w / 2, -h / 2, 0), (w, h, 10), **C(scale_, belly=(belly, 2), top=back, spots=(back, 0.08)))
+        seg.cube((-0.5, -h / 2 - 3, 1), (1, 3, 8), **C(fin, bands=(shade(fin, 0.75), 1)))
+        prev = "seg_%d" % k
+    tail = a.part("tail_fin", prev, (0, 0, 10), role="segment", phase=len(widths) + 1)
+    tail.cube((-0.5, -6, 0), (1, 12, 7), **C(fin, bands=(shade(fin, 0.7), 2)))
+    return a
+
+
 MODELS = collections.OrderedDict([("fire_dragon", lambda: dragon("fire_dragon")), ("ice_dragon", lambda: dragon("ice_dragon")),
-                                  ("frost_giant", frost_giant)])
+                                  ("frost_giant", frost_giant), ("sea_serpent", sea_serpent)])
 
 NAMES = {
+    "sea_serpent": ("Serpiente marina", "Sea Serpent"),
     "frost_giant": ("Gigante de hielo", "Frost Giant"),
     "fire_dragon": ("Dragón de fuego", "Fire Dragon"),
     "ice_dragon": ("Dragón de hielo", "Ice Dragon"),
@@ -168,6 +198,8 @@ def count(item, lo, hi, chance=None):
 
 
 LOOT = {
+    "sea_serpent": [count(n("sea_serpent_scale"), 10, 18), count(n("serpent_fang"), 2, 4), count("minecraft:prismarine_shard", 6, 14),
+                    count("minecraft:nautilus_shell", 1, 3), count("minecraft:trident", 1, 1, 0.3), count(n("heart_crystal"), 1, 1)],
     "frost_giant": [count(n("giant_club"), 1, 1), count(n("giant_pelt"), 2, 4), count("minecraft:packed_ice", 6, 16), count("minecraft:diamond", 2, 5),
                     count("minecraft:emerald", 4, 10), count(n("heart_crystal"), 1, 1)],
     "fire_dragon": [count(n("fire_dragon_scale"), 10, 18), count(n("dragon_bone"), 5, 10), count(n("fire_dragon_heart"), 1, 1),
@@ -177,6 +209,10 @@ LOOT = {
 }
 
 ITEMS = {
+    "sea_serpent_scale": ("Escama de serpiente marina", "Sea Serpent Scale", "Brilla como el mar. Para la armadura de las mareas.",
+                          "It shines like the sea. For tide armour."),
+    "serpent_fang": ("Colmillo de serpiente marina", "Sea Serpent Fang", "Largo y curvo. Un trofeo... y más adelante, algo más.",
+                     "Long and curved. A trophy... and something more later."),
     "giant_club": ("Garrote del gigante", "Giant's Club",
                    "Enorme y lento: pega muchísimo, empuja lejos y deja helado a lo que golpea.",
                    "Huge and slow: hits extremely hard, knocks far back and leaves what it hits frozen."),
@@ -201,6 +237,12 @@ TEXTS = {
                                          "Each piece: −15%% fire damage. Full set: immune to fire."),
     "armor.evolvedwarfare.dragon.ice": ("Cada pieza: −15 %% de daño de frío. Completa: no te congelas y ralentizas a quien te pega.",
                                         "Each piece: −15%% cold damage. Full set: you can't freeze and you slow whoever hits you."),
+    "armor.evolvedwarfare.dragon.sea": ("Cada pieza: −25 %% de daño al ahogarte. Completa: respiras bajo el agua y nadas como un delfín.",
+                                        "Each piece: −25%% drowning damage. Full set: water breathing and you swim like a dolphin."),
+    "message.evolvedwarfare.legendary.roar.sea_serpent": ("El mar se agita y algo enorme se mueve bajo las olas: una serpiente marina...",
+                                                          "The sea churns and something huge moves beneath the waves: a sea serpent..."),
+    "message.evolvedwarfare.legendary.capsize": ("¡La serpiente ha partido tu barca!", "The serpent has smashed your boat!"),
+    "message.evolvedwarfare.legendary.whirlpool": ("¡Un remolino te arrastra hacia el fondo!", "A whirlpool drags you down!"),
     "itemGroup.evolvedwarfare.legendary": ("Evolved Warfare: Legendarios", "Evolved Warfare: Legendary"),
     "message.evolvedwarfare.legendary.roar.fire_dragon": ("Un rugido estremece la tierra y el cielo se tiñe de rojo: un dragón de fuego anda cerca...",
                                                           "A roar shakes the earth and the sky turns red: a fire dragon is near..."),
@@ -232,6 +274,9 @@ TEXTS = {
 # ------------------------------------------------------------------ tanda 2: armaduras de escamas y espadas de hueso
 
 ARMOR = {
+    "sea_serpent_scale": {"base": (44, 120, 128), "dark": (22, 70, 82), "trim": (150, 210, 190), "item": n("sea_serpent_scale"),
+                          "es": ["Yelmo de las mareas", "Peto de las mareas", "Grebas de las mareas", "Botas de las mareas"],
+                          "en": ["Tide Helmet", "Tide Chestplate", "Tide Leggings", "Tide Boots"]},
     "fire_dragon_scale": {"base": (156, 36, 28), "dark": (96, 20, 16), "trim": (220, 160, 60), "item": n("fire_dragon_scale"),
                           "es": ["Yelmo de escamas de dragón de fuego", "Peto de escamas de dragón de fuego",
                                  "Grebas de escamas de dragón de fuego", "Botas de escamas de dragón de fuego"],
@@ -360,6 +405,17 @@ def pelt_icon():
     return img
 
 
+def fang_icon():
+    img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    ivory, dark = (236, 230, 206), (150, 140, 116)
+    pts = [(4, 2), (5, 3), (6, 4), (7, 5), (8, 6), (9, 7), (10, 8), (10, 9), (11, 10), (11, 11), (11, 12), (10, 13)]
+    for k, (x, y) in enumerate(pts):
+        w = max(1, 3 - k // 4)
+        for dx in range(w):
+            img.putpixel((x - dx, y), (dark if dx == w - 1 else ivory) + (255,))
+    return img
+
+
 def bone_icon():
     img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
     bone, dark = (226, 218, 196), (150, 140, 120)
@@ -415,6 +471,8 @@ def main():
     bone_icon().save(os.path.join(item_dir, "dragon_bone.png"))
     club_icon().save(os.path.join(item_dir, "giant_club.png"))
     pelt_icon().save(os.path.join(item_dir, "giant_pelt.png"))
+    scale_icon((44, 120, 128)).save(os.path.join(item_dir, "sea_serpent_scale.png"))
+    fang_icon().save(os.path.join(item_dir, "serpent_fang.png"))
     heart_icon((150, 30, 30), (255, 160, 40)).save(os.path.join(item_dir, "fire_dragon_heart.png"))
     heart_icon((70, 120, 170), (180, 240, 255)).save(os.path.join(item_dir, "ice_dragon_heart.png"))
     for name in ITEMS:
