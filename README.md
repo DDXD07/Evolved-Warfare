@@ -2722,6 +2722,19 @@ Un modelo nuevo y mucho más trabajado para **el Coco** (más de 60 piezas), par
 - **Brazos larguísimos** de dos tramos que le llegan al suelo, con **dedos como agujas** abiertos en abanico.
 - A la espalda, **el saco**... con una **manita pálida** que asoma.
 
+## Fase 109 — El ent, de verdad
+
+Un modelo nuevo y mucho más trabajado para **el ent** (77 piezas), más árbol y más de miedo:
+
+- Un **tronco retorcido y encorvado** de corteza agrietada, con la corteza del pecho levantada, una grieta, nudos en el
+  lomo, **musgo**, **setas rojas** en los hombros y **lianas** que le cuelgan. Más alto: casi cuatro bloques.
+- Las **piernas son raíces** gruesas que se abren en **raíces finas** al pisar.
+- Los **brazos son ramas nudosas** de dos tramos, con una **rama con hojas** que les sale de lado y **dedos de ramitas
+  puntiagudas**.
+- La **cara tallada en la corteza**: cuencas hondas con un **brillo verde enfermizo** que se ve en la oscuridad, **cejas
+  fruncidas**, una nariz de nudo y una **boca de nudo** con **astillas por dientes**; la mandíbula se abre al atacar.
+- Encima, una **copa rota** de hojas con **ramas muertas** que asoman como cuernos.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

@@ -178,27 +178,86 @@ def sea_serpent():
 # ------------------------------------------------------------------ fase 105: el ent (sale al talar)
 
 def treant():
-    """El ent: piernas de tronco con raíces, un tronco de corteza con musgo, brazos de rama con ramitas, una cara tallada
-    con ojos amarillos que brillan y una copa de hojas."""
+    """El ent: un árbol viejo que se ha arrancado del suelo. Un tronco retorcido y encorvado, de corteza agrietada con
+    musgo, setas en los hombros y lianas colgando; las piernas son raíces gruesas que se abren en raíces más finas; los
+    brazos, ramas nudosas con ramas que salen y dedos de ramitas puntiagudas. La cara, tallada en la corteza: cuencas
+    hondas con un brillo verde enfermizo, unas cejas de corteza fruncidas y una boca de nudo abierta con astillas por
+    dientes. Encima, una copa rota de hojas con ramas muertas que asoman como cuernos."""
     a = W.Animal("treant")
-    bark, bark_dark = (104, 80, 52), (70, 52, 32)
-    moss = (86, 120, 52)
-    leaves, leaves_dark = (64, 116, 40), (40, 84, 28)
+    bark, bark_dark, bark_deep = (98, 74, 48), (64, 46, 28), (34, 24, 14)
+    moss, moss_dark = (88, 122, 50), (56, 84, 32)
+    leaves, leaves_dark, dead = (58, 104, 36), (34, 70, 22), (120, 96, 66)
+    glow = (150, 255, 90)
+    shroom, shroom_spot = (176, 52, 40), (236, 226, 210)
+    # las piernas: raíces gruesas, con raíces finas que se abren en el pie
     for side, name, phase in ((-1, "leg_r", 0), (1, "leg_l", 1)):
-        leg = a.part(name, None, (side * 2.5, 12, 0), role="leg", phase=phase)
-        leg.cube((-2, 0, -2), (4, 12, 4), **C(bark, rings=(bark_dark, 3), low=(bark_dark, 2)))
-        leg.cube((-3, 10, -3), (6, 2, 6), **C(bark_dark))                                   # las raíces
-    body = a.part("body", None, (0, 12, 0), role="body")
-    body.cube((-5, -13, -3), (10, 13, 6), **C(bark, rings=(bark_dark, 3), spots=(moss, 0.12)))
-    head = a.part("head", "body", (0, -13, 0), role="head")
-    head.cube((-4, -8, -4), (8, 8, 8), **C(bark, eyes=("front", 4, (250, 220, 70)), glow_eyes=True, mouth=(40, 28, 16), spots=(moss, 0.1)))
-    head.cube((-7, -15, -6), (14, 8, 12), **C(leaves, spots=(leaves_dark, 0.3)))             # la copa
-    head.cube((-5, -18, -4), (10, 3, 8), **C(leaves, spots=(leaves_dark, 0.3)))
+        leg = a.part(name, None, (side * 3, 8, 0), (0, 0, side * -4), role="leg", phase=phase)
+        leg.cube((-2.5, 0, -2.5), (5, 10, 5), **C(bark, rings=(bark_dark, 3), spots=(moss, 0.1)))
+        shin = a.part(name + "_shin", name, (0, 10, 0), (6, 0, 0))
+        shin.cube((-2, 0, -2), (4, 5, 4), **C(bark, rings=(bark_dark, 2)))
+        for k, (rx, rz, yaw) in enumerate(((-1, -1, -30), (1, -1, 30), (0, 1, 180), (side * 1.5, 0, side * 90))):
+            root = a.part("%s_root_%d" % (name, k), name + "_shin", (rx, 4, rz), (35, yaw, 0))
+            root.cube((-0.5, 0, -0.5), (1, 1, 5), **C(bark_dark, tip=(bark_deep, 1)))
+    # el tronco, encorvado y retorcido
+    body = a.part("body", None, (0, 8, 0), (18, 0, 0), role="body")
+    body.cube((-5, -14, -3.5), (10, 14, 7), **C(bark, rings=(bark_dark, 3), spots=(moss, 0.14)))
+    body.cube((-4, -6, -4.5), (8, 6, 1), **C(bark_dark, spots=(bark_deep, 0.3)))         # la corteza levantada del pecho
+    body.cube((-0.5, -12, -4.2), (1, 9, 1), **C(bark_deep))                               # una grieta
+    body.cube((-5.5, -10, -1), (1, 7, 3), **C(moss, spots=(moss_dark, 0.4)))               # musgo de los costados
+    body.cube((4.5, -8, 0), (1, 6, 3), **C(moss, spots=(moss_dark, 0.4)))
+    for k, (x, z) in enumerate(((-2, 3.5), (1, 3.5), (3, 3.5))):
+        body.cube((x, -12 + k * 3, z), (1, 2, 1), **C(bark_dark))                          # nudos del lomo
+    # setas en los hombros
+    for x, z in ((-5, -1), (4, 0), (3.5, -2)):
+        body.cube((x, -15.5, z), (2, 1, 2), **C(shroom, spots=(shroom_spot, 0.3)))
+        body.cube((x + 0.5, -14.5, z + 0.5), (1, 1, 1), **C(shroom_spot))
+    # lianas que cuelgan
+    for x, z, h in ((-4.5, -3.8, 9), (3.5, -3.8, 7), (-2, 3.6, 10), (2.5, 3.6, 8)):
+        body.cube((x, -14, z), (1, h, 1), **C(leaves, low=(leaves_dark, 3)))
+    # la cabeza: la cara tallada en la corteza
+    head = a.part("head", "body", (0, -14, -1), (-14, 0, 0), role="head")
+    head.cube((-4, -8, -4), (8, 8, 8), **C(bark, rings=(bark_dark, 2), spots=(moss, 0.08)))
+    head.cube((-3.2, -6, -4.2), (2, 2, 1), **C(bark_deep))                                  # las cuencas
+    head.cube((1.2, -6, -4.2), (2, 2, 1), **C(bark_deep))
+    head.cube((-2.7, -5.5, -4.4), (1, 1, 1), **C(glow, glow_all=True))                     # el brillo de los ojos
+    head.cube((1.7, -5.5, -4.4), (1, 1, 1), **C(glow, glow_all=True))
+    head.cube((-3.6, -7.2, -4.6), (3, 1, 1), **C(bark_dark))                                # las cejas fruncidas
+    head.cube((0.6, -7.2, -4.6), (3, 1, 1), **C(bark_dark))
+    head.cube((-0.5, -4.5, -4.6), (1, 2, 1), **C(bark_dark))                               # la nariz de nudo
+    head.cube((-2.5, -2.5, -4.2), (5, 2, 1), **C(bark_deep))                               # la boca de nudo
+    for k in range(4):
+        head.cube((-2 + k * 1.3, -2.5, -4.5), (1, 1, 1), **C((214, 196, 150)))             # astillas por dientes
+    jaw = a.part("jaw", "head", (0, -0.5, -2), role="jaw")
+    jaw.cube((-3, 0, -2.4), (6, 2, 5), **C(bark, rings=(bark_dark, 1)))
+    for k in range(3):
+        jaw.cube((-1.5 + k * 1.3, -1, -2.6), (1, 1, 1), **C((214, 196, 150)))
+    # la copa rota y las ramas muertas como cuernos
+    head.cube((-6, -14, -5), (12, 6, 10), **C(leaves, spots=(leaves_dark, 0.35)))
+    head.cube((-4, -17, -3), (8, 3, 7), **C(leaves, spots=(leaves_dark, 0.35)))
+    head.cube((-7, -11, -2), (2, 4, 6), **C(leaves_dark, spots=(leaves, 0.3)))
+    head.cube((5, -12, -3), (2, 4, 5), **C(leaves_dark, spots=(leaves, 0.3)))
+    for side in (-1, 1):
+        b1 = a.part("crown_%d" % (side + 1), "head", (side * 3, -9, 1), (-20, 0, side * 40))
+        b1.cube((-0.5, -6, -0.5), (1, 6, 1), **C(dead))
+        b2 = a.part("crown_tip_%d" % (side + 1), "crown_%d" % (side + 1), (0, -6, 0), (0, 0, side * -45))
+        b2.cube((-0.5, -4, -0.5), (1, 4, 1), **C(dead, tip=(bark_dark, 1)))
+        b3 = a.part("crown_twig_%d" % (side + 1), "crown_%d" % (side + 1), (0, -3, 0), (0, 0, side * 60))
+        b3.cube((-0.5, -3, -0.5), (1, 3, 1), **C(dead))
+    # los brazos: ramas nudosas, con una rama que sale y dedos de ramitas
     for side, name in ((-1, "arm_r"), (1, "arm_l")):
-        arm = a.part(name, "body", (side * 6.5, -11, 0), role="arm", side=side)
-        arm.cube((-1.5, -1, -1.5), (3, 14, 3), **C(bark, rings=(bark_dark, 2)))
-        arm.cube((side * 1 - 0.5, 4, -3), (1, 1, 3), **C(bark_dark))                       # ramitas
-        arm.cube((-1.5, 12, -1.5), (3, 3, 3), **C(leaves, spots=(leaves_dark, 0.3)))
+        arm = a.part(name, "body", (side * 6, -12, 0), (-20, 0, side * -8), role="arm", side=side)
+        arm.cube((-1.5, -1, -1.5), (3, 11, 3), **C(bark, rings=(bark_dark, 2), spots=(moss, 0.1)))
+        arm.cube((side * 1.2 - 0.5, 3, -2), (1, 2, 1), **C(bark_dark))                    # un nudo
+        side_branch = a.part(name + "_branch", name, (side * 1.5, 5, 0), (0, 0, side * -50))
+        side_branch.cube((-0.5, 0, -0.5), (1, 6, 1), **C(bark_dark))
+        side_branch.cube((-1.5, 5, -1.5), (3, 2, 3), **C(leaves, spots=(leaves_dark, 0.4)))
+        fore = a.part(name + "_fore", name, (0, 10, 0), (-25, 0, 0))
+        fore.cube((-1.2, 0, -1.2), (2, 10, 2), **C(bark, rings=(bark_dark, 2)))
+        hand = a.part(name + "_hand", name + "_fore", (0, 10, 0))
+        hand.cube((-1.5, 0, -1.5), (3, 2, 3), **C(bark_dark))
+        for k in range(4):
+            twig = a.part("%s_twig_%d" % (name, k), name + "_hand", (-1 + k * 0.7, 2, 0), (10 * (k - 1.5), 0, 12 * (k - 1.5)))
+            twig.cube((-0.5, 0, -0.5), (1, 5, 1), **C(bark_dark, tip=(bark_deep, 1)))
     return a
 
 

@@ -63,7 +63,7 @@ public final class Legendaries {
 			0x2C7880, 0x96D2BE);
 
 	public static final EntityType<TreantEntity> TREANT = type("treant",
-			EntityType.Builder.create(TreantEntity::new, SpawnGroup.MONSTER).dimensions(1.0F, 2.6F).eyeHeight(2.1F).maxTrackingRange(10),
+			EntityType.Builder.create(TreantEntity::new, SpawnGroup.MONSTER).dimensions(1.2F, 3.3F).eyeHeight(2.6F).maxTrackingRange(10),
 			0x68502E, 0x40742A);
 
 	public static final EntityType<CocoEntity> COCO = type("coco",
