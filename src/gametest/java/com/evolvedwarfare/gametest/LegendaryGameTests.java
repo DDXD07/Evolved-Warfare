@@ -1,0 +1,105 @@
+package com.evolvedwarfare.gametest;
+
+import com.evolvedwarfare.legendary.DragonEntity;
+import com.evolvedwarfare.legendary.Legendaries;
+import java.util.List;
+import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.passive.VillagerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.test.GameTest;
+import net.minecraft.test.GameTestException;
+import net.minecraft.test.TestContext;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.world.GameMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/** Las criaturas legendarias (fase 101): los dragones de fuego y de hielo. */
+public class LegendaryGameTests implements FabricGameTest {
+	private static final Logger LOG = LoggerFactory.getLogger("ew-gametest");
+
+	private static void check(boolean ok, String message) {
+		if (!ok) {
+			throw new GameTestException(message);
+		}
+	}
+
+	private static void floor(TestContext ctx) {
+		for (int x = 0; x < 8; x++) {
+			for (int z = 0; z < 8; z++) {
+				ctx.setBlockState(x, 0, z, Blocks.STONE);
+			}
+		}
+	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "legendary")
+	public void dragonsAreLegendary(TestContext ctx) {
+		floor(ctx);
+		DragonEntity fire = ctx.spawnEntity(Legendaries.FIRE_DRAGON, 2, 3, 2);
+		DragonEntity ice = ctx.spawnEntity(Legendaries.ICE_DRAGON, 6, 3, 6);
+		fire.setAiDisabled(true);
+		ice.setAiDisabled(true);
+		LOG.info("[EW-GAMETEST] dragones: vida {} / {}, fuego inmune {} / {}, vuelan {}, hielo se congela {}", fire.getMaxHealth(), ice.getMaxHealth(),
+				fire.isFireImmune(), ice.isFireImmune(), fire.hasNoGravity(), ice.canFreeze());
+		check(fire.getMaxHealth() >= 500.0F && ice.getMaxHealth() >= 500.0F, "Los dragones no tienen vida de leyenda");
+		check(fire.isFireImmune() && !ice.isFireImmune(), "El de fuego se quema (o el de hielo no)");
+		check(!ice.canFreeze() && fire.hasNoGravity() && ice.ice() && !fire.ice(), "No son cada uno de lo suyo");
+		check(Legendaries.kindFor(0.0F) == Legendaries.Kind.ICE_DRAGON && Legendaries.kindFor(2.0F) == Legendaries.Kind.FIRE_DRAGON
+				&& Legendaries.kindFor(0.7F) == null, "No sale cada dragón en su clima");
+		fire.discard();
+		ice.discard();
+		ctx.complete();
+	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "legendary", tickLimit = 200)
+	public void breathBurnsAndFreezes(TestContext ctx) {
+		floor(ctx);
+		DragonEntity fire = ctx.spawnEntity(Legendaries.FIRE_DRAGON, 1, 2, 1);
+		fire.setAiDisabled(true);
+		VillagerEntity burnt = ctx.spawnEntity(EntityType.VILLAGER, 6, 1, 6);
+		burnt.setAiDisabled(true);
+		float before = burnt.getHealth();
+		for (int k = 0; k < 5; k++) {
+			fire.age = k * 5;
+			fire.breathTick(ctx.getWorld(), burnt);
+		}
+		float afterFire = burnt.getHealth();
+		boolean onFire = burnt.isOnFire();
+		fire.discard();
+		DragonEntity ice = ctx.spawnEntity(Legendaries.ICE_DRAGON, 1, 2, 1);
+		ice.setAiDisabled(true);
+		VillagerEntity frozen = ctx.spawnEntity(EntityType.VILLAGER, 6, 1, 2);
+		frozen.setAiDisabled(true);
+		ice.age = 0;
+		ice.breathTick(ctx.getWorld(), frozen);
+		LOG.info("[EW-GAMETEST] aliento: fuego {} -> {} (ardiendo {}), hielo congelado {} lento {}", before, afterFire, onFire, frozen.getFrozenTicks(),
+				frozen.hasStatusEffect(net.minecraft.entity.effect.StatusEffects.SLOWNESS));
+		check(afterFire < before && onFire, "El aliento de fuego no quema");
+		check(frozen.getFrozenTicks() > 0, "El aliento de hielo no congela");
+		ice.discard();
+		ctx.complete();
+	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "legendary", tickLimit = 100)
+	public void dragonsDropTheirScales(TestContext ctx) {
+		floor(ctx);
+		ServerPlayerEntity player = (ServerPlayerEntity) ctx.createMockCreativeServerPlayerInWorld();
+		player.changeGameMode(GameMode.SURVIVAL);
+		DragonEntity dragon = ctx.spawnEntity(Legendaries.ICE_DRAGON, 3, 2, 3);
+		dragon.setAiDisabled(true);
+		BlockPos at = dragon.getBlockPos();
+		dragon.damage(player.getDamageSources().playerAttack(player), 100000.0F);
+		ctx.waitAndRun(30, () -> {
+			List<ItemEntity> drops = ctx.getWorld().getEntitiesByClass(ItemEntity.class, new Box(at).expand(6), e -> true);
+			boolean scales = drops.stream().anyMatch(e -> e.getStack().isOf(Legendaries.ICE_DRAGON_SCALE));
+			boolean heart = drops.stream().anyMatch(e -> e.getStack().isOf(Legendaries.ICE_DRAGON_HEART));
+			LOG.info("[EW-GAMETEST] botín del dragón: {}", drops.stream().map(e -> e.getStack().toString()).toList());
+			check(scales && heart, "El dragón no suelta sus escamas y su corazón");
+			ctx.complete();
+		});
+	}
+}

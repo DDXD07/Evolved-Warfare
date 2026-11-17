@@ -2607,6 +2607,28 @@ La séptima parte de la dificultad al estilo RLCraft (en la categoría **Dificul
 - Todo se ajusta: encantar más difícil sí/no, lo que se multiplican los niveles y el lapislázuli de la mesa, la
   probabilidad de maldición y los niveles del yunque (la reparación, no: va en los datos del juego).
 
+## Fase 101 — Dificultad (8): criaturas legendarias (1), los dragones
+
+La última parte de la dificultad al estilo RLCraft llega en tandas. La primera: los **dragones de fuego y de hielo**
+(en la nueva categoría **Criaturas legendarias** de la configuración).
+
+- **Dónde y cuándo**: llegan solos, lejos del punto de aparición (en las zonas con nivel de peligro 4 o más): cada minuto,
+  por cada jugador en una de esas zonas, hay un 1 % de que llegue uno (si no hay ya otro en 300 bloques). De **hielo** en los
+  sitios fríos (nieve, taiga fría, picos) y de **fuego** en los cálidos y secos (desiertos, sabanas, mesetas). Se anuncian
+  con un rugido que se oye desde muy lejos. Si nadie se les acerca en 5 minutos, se van.
+- **Cómo son**: unos diez bloques de largo, con cuatro patas, cuello largo, cuernos, mandíbula, alas de dos tramos que
+  baten, cola con púas y espinas en el lomo. **500 de vida**, mucha armadura, barra de jefe (roja o azul).
+- **Cómo pelean**: rondan su territorio en lo alto; cuando te ven, te rodean por el aire, caen en **picado a morderte** y,
+  cada poco, se quedan flotando y te echan el **aliento**: un chorro de 16 bloques que **quema** (el de fuego, y prende
+  fuego donde da) o **congela** (el de hielo: te ralentiza y te hiela; congela el agua, convierte la lava en obsidiana y
+  nieva). Con menos de un 60 % de vida también **rugen** (te empujan y te aturden); con menos de un 30 %, el aliento llega
+  mucho más a menudo. El de fuego no se quema; el de hielo no se congela.
+- **El botín**: escamas de dragón (10-18), huesos de dragón (5-10), su **corazón**, un cristal de corazón, oro, diamantes
+  y mucha experiencia. Las escamas, los huesos y los corazones son para las armaduras y armas de dragón, en la siguiente
+  tanda.
+- Hay huevos generadores en la pestaña «Legendarios». Que el aliento queme y congele se puede apagar (y respeta
+  `mobGriefing`).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

@@ -167,6 +167,16 @@ public final class EwConfig {
 	/** Uno de cada cuántos libros encantados al azar (cofres, pesca, bibliotecarios) es de reparación (0 = como siempre). */
 	public int mendingBookChance = 5000;
 
+	// ------------------------------------------------------------------ criaturas legendarias
+	/** Dragones (y más adelante otras) que aparecen lejos y en las zonas peligrosas. */
+	public boolean legendaryEnabled = true;
+	/** Desde qué nivel de peligro pueden aparecer. */
+	public int legendaryMinLevel = 4;
+	/** Probabilidad, cada minuto y por jugador, de que aparezca una cerca (si el sitio vale). */
+	public double legendaryChance = 0.01;
+	/** El aliento de los dragones prende fuego y congela (con mobGriefing). */
+	public boolean dragonGriefing = true;
+
 	// ------------------------------------------------------------------ asentamientos
 	/** Vida y daño extra por cada nivel del asentamiento por encima del 1. */
 	public double settlementBonusPerLevel = 0.10;
@@ -329,6 +339,10 @@ public final class EwConfig {
 			new Option("enchantCurseChance", "difficulty", 0.0, 1.0, 0.01),
 			new Option("anvilCostMultiplier", "difficulty", 1.0, 5.0, 0.1),
 			new Option("mendingBookChance", "difficulty", 0, 100000, 100),
+			new Option("legendaryEnabled", "legendary", 0, 1, 1),
+			new Option("legendaryMinLevel", "legendary", 0, 100, 1),
+			new Option("legendaryChance", "legendary", 0.0, 1.0, 0.005),
+			new Option("dragonGriefing", "legendary", 0, 1, 1),
 			new Option("settlementBonusPerLevel", "settlements", 0.0, 1.0, 0.01),
 			new Option("settlementBlocksPerLevel", "settlements", 100, 100000, 50),
 			new Option("settlementMaxLevel", "settlements", 1, 10, 1),

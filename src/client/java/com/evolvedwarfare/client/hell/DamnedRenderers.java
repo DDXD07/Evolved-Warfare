@@ -50,5 +50,8 @@ public final class DamnedRenderers {
 		simple(com.evolvedwarfare.hell.Apocalypse.ABYSS_ANGEL, "abyss_angel", layer("abyss_angel"), 0.8F, 1.0F, false);
 		simple(com.evolvedwarfare.hell.Apocalypse.FALSE_PROPHET, "false_prophet", layer("false_prophet"), 0.6F, 1.0F, false);
 		simple(com.evolvedwarfare.hell.Apocalypse.GREATER_BEAST, "greater_beast", layer("greater_beast"), 2.0F, 1.9F, false);
+		// las criaturas legendarias (tools/ew_legendary.py)
+		simple(com.evolvedwarfare.legendary.Legendaries.FIRE_DRAGON, "fire_dragon", layer("fire_dragon"), 2.5F, 2.2F, false);
+		simple(com.evolvedwarfare.legendary.Legendaries.ICE_DRAGON, "ice_dragon", layer("ice_dragon"), 2.5F, 2.2F, false);
 	}
 }
