@@ -2492,6 +2492,20 @@ La segunda parte de la dificultad al estilo RLCraft (en la categoría **Salud** 
 - **En los cofres**: vendas, entablillados, aguardiente, antídotos, medicina y algún botiquín en los cofres de las
   mazmorras, las aldeas, las minas abandonadas, las mazmorras de vanilla, los barcos hundidos y los iglús.
 
+## Fase 94 — La pantalla de la salud (tecla H)
+
+Con la tecla **H** (se puede cambiar en Controles) se abre en cualquier momento la pantalla de la salud, sin pausar el
+juego (se ve cambiar en directo). Se cierra con H o Esc.
+
+- **Tu personaje** (mira al ratón) y un **muñeco grande** con cada parte de su color (verde, amarilla, roja; negra sin
+  vida), oscurecido desde arriba lo que le falta, los huesos rotos rayados y los entablillados con marco dorado.
+- **Cada parte**: su nombre, una barra con la vida que le queda («6.5 / 8») y cómo está: sana, rasguños, herida, grave,
+  sin vida, **hueso roto** o **entablillado** con el tiempo que le queda para soldar. Al pasar el ratón por una parte (en el
+  muñeco o en la lista) se resalta en los dos sitios.
+- **Cómo estás**: los corazones (los que tienes y el máximo), los segundos que te quedan sangrando, la infección y el
+  veneno fuerte (con su grado y lo que les queda), el veneno normal, los parásitos, el desinfectado y si te regeneras o no.
+- **Qué hacer**: lo que te hace falta según lo que tengas (vendarte, entablillar tal parte, medicina, antídoto...).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

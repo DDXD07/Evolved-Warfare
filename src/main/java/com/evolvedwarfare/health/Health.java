@@ -133,14 +133,13 @@ public final class Health {
 		}
 		WoundData d = get(player);
 		List<Float> fractions = new ArrayList<>();
-		int splinted = 0;
+		List<Integer> splints = new ArrayList<>();
 		for (BodyPart part : BodyPart.values()) {
 			fractions.add(d.fraction(part));
-			if (d.isSplinted(part)) {
-				splinted |= part.bit();
-			}
+			splints.add(d.isBroken(part) ? d.splintLeft(part) : 0);
 		}
-		ServerPlayNetworking.send(player, new WoundsPayload(fractions, d.broken(), splinted, d.bleeding() > 0, enabled()));
+		ServerPlayNetworking.send(player, new WoundsPayload(fractions, splints, d.broken(), d.bleeding(),
+				hearts(player) | EwConfig.get().maxHearts << 8, enabled()));
 	}
 
 	// ------------------------------------------------------------------ los golpes
@@ -407,6 +406,9 @@ public final class Health {
 		}
 		player.setAttached(HEARTS, crystals(player) + 1);
 		applyMaxHealth(player);
+		if (player instanceof ServerPlayerEntity sp) {
+			sync(sp);
+		}
 		player.heal(2.0F);
 		player.sendMessage(Text.translatable("message.evolvedwarfare.health.heart", hearts(player)).formatted(Formatting.LIGHT_PURPLE), true);
 		return true;
