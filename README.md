@@ -2436,6 +2436,10 @@ Los **esqueletos** (normales, de las nieves, wither y del pantano) se mueven **r
 - **Zombis**: arreglado el fallo de que **el tronco se salía de las piernas** (ahora se inclina desde la cadera). Además, la pierna buena **dobla la rodilla** al dar el paso y la que arrastra va casi tiesa, los **antebrazos cuelgan muertos** y se mecen, al atacar con las manos **doblan los codos** como garras y los estiran al tirarse encima, y con un arma el **codo se dobla atrás** al levantarla.
 - **Esqueletos**: **rodillas de bisagra** (se doblan secas al levantar el pie y se bloquean al pisar), el **codo como una bisagra** al golpear, y al tensar el arco **el codo se dobla de lado y lleva la mano a la cara**.
 
+## Fase 90 — Arreglo: la cabeza y el tronco se iban del cuerpo
+
+- Algunas animaciones movían **de lado o hacia delante** la cabeza y el tronco (la inclinación del zombi desde la cadera, el paso del peso de un pie a otro, la carrera), y el juego no los devuelve a su sitio en cada fotograma: se **iban sumando** y, al rato, **la cabeza y el tronco se salían del cuerpo** (zombis sin cabeza ni tronco, el jugador sin cabeza). Ahora todo vuelve a su sitio antes de cada fotograma.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

@@ -89,8 +89,25 @@ public final class Joints {
 		return f == null ? 0.0F : -f.pitch;
 	}
 
-	/** Todo recto (al empezar cada fotograma). */
+	/**
+	 * Al empezar cada fotograma: las rodillas y codos rectos, y devuelve a su sitio lo que el juego no vuelve a poner (el
+	 * sitio de lado y de frente de la cabeza, el tronco, los brazos y las piernas, y lo ladeados que van la cabeza y el
+	 * tronco). Si no, las animaciones que los mueven se iban sumando de un fotograma a otro y la cabeza o el tronco
+	 * acababan yéndose del cuerpo.
+	 */
 	public static void reset(BipedEntityModel<?> model) {
+		for (ModelPart p : new ModelPart[] {model.head, model.body, model.rightArm, model.leftArm, model.rightLeg, model.leftLeg}) {
+			var d = p.getDefaultTransform();
+			p.pivotX = d.pivotX;
+			p.pivotZ = d.pivotZ;
+		}
+		model.head.roll = 0.0F;
+		model.body.roll = 0.0F;
+		model.body.pitch = 0.0F;
+		model.rightLeg.roll = 0.0F;
+		model.leftLeg.roll = 0.0F;
+		model.rightLeg.yaw = 0.0F;
+		model.leftLeg.yaw = 0.0F;
 		for (ModelPart p : new ModelPart[] {model.rightArm, model.leftArm, model.rightLeg, model.leftLeg}) {
 			ModelPart l = lower(p);
 			if (l != null) {
