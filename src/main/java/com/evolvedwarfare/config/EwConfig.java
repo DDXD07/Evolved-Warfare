@@ -164,6 +164,8 @@ public final class EwConfig {
 	public double enchantCurseChance = 0.08;
 	/** Niveles que cuesta el yunque (x). */
 	public double anvilCostMultiplier = 1.5;
+	/** Uno de cada cuántos libros encantados al azar (cofres, pesca, bibliotecarios) es de reparación (0 = como siempre). */
+	public int mendingBookChance = 5000;
 
 	// ------------------------------------------------------------------ asentamientos
 	/** Vida y daño extra por cada nivel del asentamiento por encima del 1. */
@@ -326,6 +328,7 @@ public final class EwConfig {
 			new Option("enchantLapisMultiplier", "difficulty", 1.0, 5.0, 0.5),
 			new Option("enchantCurseChance", "difficulty", 0.0, 1.0, 0.01),
 			new Option("anvilCostMultiplier", "difficulty", 1.0, 5.0, 0.1),
+			new Option("mendingBookChance", "difficulty", 0, 100000, 100),
 			new Option("settlementBonusPerLevel", "settlements", 0.0, 1.0, 0.01),
 			new Option("settlementBlocksPerLevel", "settlements", 100, 100000, 50),
 			new Option("settlementMaxLevel", "settlements", 1, 10, 1),

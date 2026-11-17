@@ -472,6 +472,10 @@ TEXTS = {
     "config.evolvedwarfare.anvilCostMultiplier": ("Niveles del yunque (x)", "Anvil levels (x)"),
     "config.evolvedwarfare.anvilCostMultiplier.tip": ("Lo que se multiplican los niveles que cuesta el yunque (con 40 o más, demasiado caro).",
                                                       "Multiplies the anvil's level cost (40 or more is too expensive)."),
+    "config.evolvedwarfare.mendingBookChance": ("Libros de reparación (1 de cada)", "Mending books (1 in)"),
+    "config.evolvedwarfare.mendingBookChance.tip": (
+        "Uno de cada cuántos libros encantados al azar (cofres, pesca, bibliotecarios) es de reparación (0 = como siempre).",
+        "One in how many random enchanted books (chests, fishing, librarians) is Mending (0 = vanilla)."),
     "config.evolvedwarfare.category.health": ("Salud", "Health"),
     "config.evolvedwarfare.woundsEnabled": ("Heridas por partes", "Body-part wounds"),
     "config.evolvedwarfare.woundsEnabled.tip": (

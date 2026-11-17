@@ -2906,5 +2906,7 @@
   "config.evolvedwarfare.enchantCurseChance": "Curse chance",
   "config.evolvedwarfare.enchantCurseChance.tip": "Curse chance with the first option (the third, twice as much).",
   "config.evolvedwarfare.anvilCostMultiplier": "Anvil levels (x)",
-  "config.evolvedwarfare.anvilCostMultiplier.tip": "Multiplies the anvil's level cost (40 or more is too expensive)."
+  "config.evolvedwarfare.anvilCostMultiplier.tip": "Multiplies the anvil's level cost (40 or more is too expensive).",
+  "config.evolvedwarfare.mendingBookChance": "Mending books (1 in)",
+  "config.evolvedwarfare.mendingBookChance.tip": "One in how many random enchanted books (chests, fishing, librarians) is Mending (0 = vanilla)."
 }

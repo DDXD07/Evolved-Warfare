@@ -94,4 +94,34 @@ public class EnchantingGameTests implements FabricGameTest {
 		check(repair == 10, "La reparación no repara la mitad: " + repair);
 		ctx.complete();
 	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "enchanting")
+	public void mendingBooksAreRare(TestContext ctx) {
+		var registries = ctx.getWorld().getRegistryManager();
+		var enchantments = registries.get(RegistryKeys.ENCHANTMENT);
+		ItemStack mendingBook = com.evolvedwarfare.difficulty.MendingRarity.mendingBook(registries, 1);
+		ItemStack sharpBook = EnchantmentHelper.getEnchantedBookWith(new net.minecraft.enchantment.EnchantmentLevelEntry(
+				enchantments.getEntry(Enchantments.SHARPNESS).orElseThrow(), 3));
+		EwConfig c = EwConfig.get();
+		int was = c.mendingBookChance;
+		try {
+			c.mendingBookChance = 1_000_000;
+			ItemStack rerolled = com.evolvedwarfare.difficulty.MendingRarity.filter(mendingBook.copy(), new ItemStack(Items.BOOK),
+					net.minecraft.util.math.random.Random.create(7), registries, original -> sharpBook.copy());
+			ItemStack stripped = com.evolvedwarfare.difficulty.MendingRarity.filter(mendingBook.copy(), new ItemStack(Items.BOOK),
+					net.minecraft.util.math.random.Random.create(7), registries, original -> mendingBook.copy());
+			c.mendingBookChance = 1;
+			ItemStack lucky = com.evolvedwarfare.difficulty.MendingRarity.filter(sharpBook.copy(), new ItemStack(Items.BOOK),
+					net.minecraft.util.math.random.Random.create(7), registries, original -> sharpBook.copy());
+			LOG.info("[EW-GAMETEST] reparación rara: se vuelve a tirar {}, se le quita {}, con suerte {}",
+					com.evolvedwarfare.difficulty.MendingRarity.hasMending(rerolled), com.evolvedwarfare.difficulty.MendingRarity.hasMending(stripped),
+					com.evolvedwarfare.difficulty.MendingRarity.hasMending(lucky));
+			check(!com.evolvedwarfare.difficulty.MendingRarity.hasMending(rerolled), "El libro al azar sigue trayendo reparación");
+			check(!com.evolvedwarfare.difficulty.MendingRarity.hasMending(stripped), "No se le quita la reparación");
+			check(com.evolvedwarfare.difficulty.MendingRarity.hasMending(lucky), "Nunca sale el libro de reparación");
+		} finally {
+			c.mendingBookChance = was;
+		}
+		ctx.complete();
+	}
 }

@@ -2906,5 +2906,7 @@
   "config.evolvedwarfare.enchantCurseChance": "Maldición al encantar",
   "config.evolvedwarfare.enchantCurseChance.tip": "Probabilidad de maldición con la primera opción (la tercera, el doble).",
   "config.evolvedwarfare.anvilCostMultiplier": "Niveles del yunque (x)",
-  "config.evolvedwarfare.anvilCostMultiplier.tip": "Lo que se multiplican los niveles que cuesta el yunque (con 40 o más, demasiado caro)."
+  "config.evolvedwarfare.anvilCostMultiplier.tip": "Lo que se multiplican los niveles que cuesta el yunque (con 40 o más, demasiado caro).",
+  "config.evolvedwarfare.mendingBookChance": "Libros de reparación (1 de cada)",
+  "config.evolvedwarfare.mendingBookChance.tip": "Uno de cada cuántos libros encantados al azar (cofres, pesca, bibliotecarios) es de reparación (0 = como siempre)."
 }

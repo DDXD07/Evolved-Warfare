@@ -2600,6 +2600,10 @@ La séptima parte de la dificultad al estilo RLCraft (en la categoría **Dificul
   armadura, de ligamiento): un 8 % con la primera opción, un 12 % con la segunda y un 16 % con la tercera.
 - **El yunque** cuesta un **50 % más** de niveles, así que se llega antes a «¡Demasiado caro!» (40).
 - **La reparación** (Mending) repara la **mitad** con cada punto de experiencia.
+- **Libros de reparación rarísimos**: los libros (y objetos) encantados al azar de los cofres, la pesca y los
+  bibliotecarios ya no la traen (se vuelve a tirar el encantamiento); en su lugar, **uno de cada 5000 libros** encantados
+  es un libro de reparación (se ajusta: «Libros de reparación (1 de cada)»; 0 = como siempre). Las reliquias de los jefes
+  de las mazmorras la siguen llevando.
 - Todo se ajusta: encantar más difícil sí/no, lo que se multiplican los niveles y el lapislázuli de la mesa, la
   probabilidad de maldición y los niveles del yunque (la reparación, no: va en los datos del juego).
 

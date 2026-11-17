@@ -12,6 +12,8 @@
 		"FurnaceSmokeMixin",
 		"EnchantmentTableMixin",
 		"AnvilCostMixin",
+		"EnchantRandomlyMendingMixin",
+		"LibrarianMendingMixin",
 		"MetalShieldMixin",
 		"CrossbowPullTimeMixin",
 		"PaviseKnockbackMixin",
