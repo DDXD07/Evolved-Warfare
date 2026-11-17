@@ -29,12 +29,19 @@ public abstract class LivingEntityDamageMixin {
 	private float evolvedwarfare$lifeBefore = -1.0F;
 	@Unique
 	private int evolvedwarfare$depth;
+	/** El tick (edad) en que empezó el golpe de fuera: si otro mod cancela el daño antes del RETURN, no se queda colgado. */
+	@Unique
+	private int evolvedwarfare$depthAge = -1;
 
 	@Inject(method = "damage", at = @At("HEAD"))
 	private void evolvedwarfare$lifeBefore(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
 		LivingEntity self = (LivingEntity) (Object) this;
+		if (evolvedwarfare$depth > 0 && evolvedwarfare$depthAge != self.age) {
+			evolvedwarfare$depth = 0;
+		}
 		if (evolvedwarfare$depth++ == 0) {
 			evolvedwarfare$lifeBefore = self.getHealth() + self.getAbsorptionAmount();
+			evolvedwarfare$depthAge = self.age;
 		}
 	}
 

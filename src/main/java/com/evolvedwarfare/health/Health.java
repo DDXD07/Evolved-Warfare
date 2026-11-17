@@ -63,7 +63,7 @@ public final class Health {
 	public static final AttachmentType<WoundData> WOUNDS = AttachmentRegistry.<WoundData>builder()
 			.persistent(WoundData.CODEC)
 			.initializer(WoundData::healthy)
-			.copyOnDeath()
+			// sin copyOnDeath: al morir se renace sano (al volver del End sí se conservan)
 			.buildAndRegister(EvolvedWarfare.id("wounds"));
 	public static final AttachmentType<Integer> HEARTS = AttachmentRegistry.<Integer>builder()
 			.persistent(Codec.INT)
@@ -99,6 +99,11 @@ public final class Health {
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
 			applyMaxHealth(handler.player);
 			sync(handler.player);
+		});
+		ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {
+			if (!alive) {
+				newPlayer.setAttached(WOUNDS, WoundData.healthy());
+			}
 		});
 		ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {
 			if (!alive) {

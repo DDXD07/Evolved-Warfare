@@ -126,6 +126,39 @@ public final class ClientHealth {
 		return false;
 	}
 
+	/** Dónde va el muñeco del HUD: a la derecha de la barra de objetos, después del rayo del aguante. */
+	public static int dollX(DrawContext ctx) {
+		return ctx.getScaledWindowWidth() / 2 + 91 + 22;
+	}
+
+	private static final String[] DROP = {
+			"..#..",
+			"..#..",
+			".#r#.",
+			".#rr#",
+			"#rrlr#",
+			"#rrrr#",
+			".#rr#.",
+			"..##.."};
+
+	/** Una gotita de sangre (6 × 8). */
+	public static void drawBloodDrop(DrawContext ctx, int x, int y) {
+		for (int row = 0; row < DROP.length; row++) {
+			String line = DROP[row];
+			for (int col = 0; col < line.length(); col++) {
+				int color = switch (line.charAt(col)) {
+					case '#' -> 0xFF3A0000;
+					case 'r' -> 0xFFC81414;
+					case 'l' -> 0xFFFF7070;
+					default -> 0;
+				};
+				if (color != 0) {
+					ctx.fill(x + col, y + row, x + col + 1, y + row + 1, color);
+				}
+			}
+		}
+	}
+
 	/** El color de una parte según la vida que le queda (verde → amarillo → rojo; negro sin vida). */
 	public static int color(float f) {
 		if (f <= 0.0F) {
@@ -185,12 +218,13 @@ public final class ClientHealth {
 				|| !client.interactionManager.hasStatusBars() || !hurt() || client.currentScreen instanceof HealthScreen) {
 			return;
 		}
-		// a la derecha de la barra de objetos (donde no tapa el chat)
-		int x = ctx.getScaledWindowWidth() / 2 + 91 + 10;
+		// a la derecha de la barra de objetos (donde no tapa el chat), dejando sitio al rayo del aguante
+		int x = dollX(ctx);
 		int y = ctx.getScaledWindowHeight() - 34;
 		drawDoll(ctx, x, y, 1, null);
-		if (bleedSeconds > 0 && player.age / 10 % 2 == 0) {
-			ctx.drawTextWithShadow(client.textRenderer, Text.translatable("hud.evolvedwarfare.health.bleeding"), x + 20, y + 20, 0xFFE03030);
+		if (bleedSeconds > 0) {
+			// una gota de sangre junto a la cabeza mientras dure la hemorragia
+			drawBloodDrop(ctx, x + 13, y - 2);
 		}
 	}
 }

@@ -2581,6 +2581,16 @@ La sexta parte de la dificultad al estilo RLCraft (en la categoría **Salud**: s
   - **La nevera** (tablones, hielo compacto y un cofre): lo que guardes dentro se pasa **diez veces más despacio**.
 - La comida de la misma hora se sigue apilando.
 
+## Fase 99 — Arreglos: renacer sano, la gota de sangre y el rayo del aguante
+
+- **Al renacer** ya no se arrastran las heridas de la muerte (la cabeza sin vida y el torso tocado): se renace sano y con
+  la vida llena. Además, si otro mod cancela un golpe, las heridas ya no dejan de contarse.
+- **Sangrando**: en vez del texto, una **gotita de sangre** junto a la cabeza del muñeco que se queda hasta que se corta la
+  hemorragia.
+- **El aguante**, al estilo de ARK: un **rayo** a la izquierda del muñeco de las heridas, justo debajo de la barra de
+  experiencia, que se llena de abajo arriba (azul; naranja con poco; rojo parpadeando agotado). Ya no hay barra bajo la
+  mira.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

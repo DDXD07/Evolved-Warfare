@@ -151,4 +151,21 @@ public class HealthGameTests implements FabricGameTest {
 		check(crystal.getCount() == 1, "El cristal no se gasta");
 		ctx.complete();
 	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "health")
+	public void respawnHealthy(TestContext ctx) {
+		ServerPlayerEntity player = player(ctx);
+		Health.onHurt(player, player.getDamageSources().generic(), HitZone.HEAD, null, 20.0F);
+		Health.onHurt(player, player.getDamageSources().generic(), HitZone.TORSO, null, 3.0F);
+		check(Health.get(player).get(BodyPart.HEAD) == 0.0F, "La cabeza no se queda sin vida");
+		player.setHealth(0.0F);
+		ServerPlayerEntity reborn = ctx.getWorld().getServer().getPlayerManager().respawnPlayer(player, false,
+				net.minecraft.entity.Entity.RemovalReason.KILLED);
+		WoundData d = Health.get(reborn);
+		LOG.info("[EW-GAMETEST] renacer: cabeza {}, torso {}, vida {} / {}", d.get(BodyPart.HEAD), d.get(BodyPart.TORSO), reborn.getHealth(),
+				reborn.getMaxHealth());
+		check(!d.isHurt(), "Se renace con las heridas de antes");
+		check(reborn.getHealth() == reborn.getMaxHealth(), "Se renace sin la vida llena");
+		ctx.complete();
+	}
 }
