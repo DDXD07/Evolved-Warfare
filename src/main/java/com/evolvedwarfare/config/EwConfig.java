@@ -123,6 +123,24 @@ public final class EwConfig {
 	/** Probabilidad (%) de que una araña envenene al morder (la de cueva, siempre). */
 	public int venomChance = 30;
 
+	// ------------------------------------------------------------------ dificultad que sube y élite
+	/** Los monstruos tienen nivel de peligro (distancia, días y dimensión): más vida, daño y armadura. */
+	public boolean scalingEnabled = true;
+	/** Bloques desde el punto de aparición por cada nivel. */
+	public int difficultyBlocksPerLevel = 1000;
+	/** Días del mundo por cada nivel. */
+	public int difficultyDaysPerLevel = 10;
+	public int difficultyMaxLevel = 20;
+	/** Vida extra por nivel (0.10 = +10 %). */
+	public double difficultyHealthPerLevel = 0.10;
+	/** Daño extra por nivel (0.05 = +5 %). */
+	public double difficultyDamagePerLevel = 0.05;
+	/** Monstruos élite (con rasgos, más vida y daño, y mejor botín). */
+	public boolean elitesEnabled = true;
+	/** Probabilidad de que un monstruo salga élite (más la de cada nivel). */
+	public double eliteChance = 0.03;
+	public double eliteChancePerLevel = 0.005;
+
 	// ------------------------------------------------------------------ asentamientos
 	/** Vida y daño extra por cada nivel del asentamiento por encima del 1. */
 	public double settlementBonusPerLevel = 0.10;
@@ -263,6 +281,15 @@ public final class EwConfig {
 			new Option("medicineEnabled", "health", 0, 1, 1),
 			new Option("woundInfectionChance", "health", 0, 100, 5),
 			new Option("venomChance", "health", 0, 100, 5),
+			new Option("scalingEnabled", "difficulty", 0, 1, 1),
+			new Option("difficultyBlocksPerLevel", "difficulty", 100, 100000, 100),
+			new Option("difficultyDaysPerLevel", "difficulty", 1, 1000, 1),
+			new Option("difficultyMaxLevel", "difficulty", 0, 100, 1),
+			new Option("difficultyHealthPerLevel", "difficulty", 0.0, 1.0, 0.01),
+			new Option("difficultyDamagePerLevel", "difficulty", 0.0, 1.0, 0.01),
+			new Option("elitesEnabled", "difficulty", 0, 1, 1),
+			new Option("eliteChance", "difficulty", 0.0, 1.0, 0.01),
+			new Option("eliteChancePerLevel", "difficulty", 0.0, 0.1, 0.001),
 			new Option("settlementBonusPerLevel", "settlements", 0.0, 1.0, 0.01),
 			new Option("settlementBlocksPerLevel", "settlements", 100, 100000, 50),
 			new Option("settlementMaxLevel", "settlements", 1, 10, 1),

@@ -49,6 +49,8 @@ public abstract class LivingEntityDamageMixin {
 		out = SkillEffects.modifyDamage(self, source, out, zone);
 		out = com.evolvedwarfare.weapon.HeavyAttack.modify(source, out);
 		out = com.evolvedwarfare.armor.ClassArmorItem.modifyDamage(self, source, out);
+		// las flechas y explosiones de los monstruos con nivel (fase 95)
+		out = com.evolvedwarfare.difficulty.Difficulty.modifyOutgoing(source, out);
 		evolvedwarfare$amount = out;
 		return out;
 	}
@@ -70,6 +72,10 @@ public abstract class LivingEntityDamageMixin {
 				com.evolvedwarfare.health.Health.onHurt(self, source, zone, point, lost);
 				// venenos (fase 93)
 				com.evolvedwarfare.health.Medicine.onHurt(self, source, lost);
+			}
+			if (cir.getReturnValueZ() && lost > 0.0F) {
+				// lo que hacen los élite al pegar (fase 95)
+				com.evolvedwarfare.difficulty.Elites.onHit(self, source, lost);
 			}
 		}
 		if (zone == HitZone.HEAD && cir.getReturnValueZ()) {

@@ -9,7 +9,7 @@ import net.minecraft.network.packet.CustomPayload;
 
 /**
  * Servidor → jugador: cómo tiene cada parte del cuerpo (0 a 1), lo que le queda a cada entablillado (segundos), qué está
- * roto, los segundos que le quedan sangrando, los corazones (los que tiene y, ×256, el máximo) y si está activo (fase 92).
+ * roto, los segundos que le quedan sangrando, los corazones (los que tiene, ×256 el máximo y ×65536 el nivel de peligro de donde está) y si está activo (fase 92).
  */
 public record WoundsPayload(List<Float> parts, List<Integer> splintLeft, int broken, int bleedSeconds, int hearts, boolean enabled)
 		implements CustomPayload {

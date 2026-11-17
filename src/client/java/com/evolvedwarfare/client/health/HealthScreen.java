@@ -165,6 +165,8 @@ public class HealthScreen extends Screen {
 		List<Text> status = new ArrayList<>();
 		status.add(Text.translatable("screen.evolvedwarfare.health.hearts", ClientHealth.hearts(), ClientHealth.maxHearts())
 				.formatted(Formatting.LIGHT_PURPLE));
+		status.add(Text.translatable("screen.evolvedwarfare.health.danger", ClientHealth.danger())
+				.formatted(ClientHealth.danger() >= 10 ? Formatting.RED : ClientHealth.danger() >= 5 ? Formatting.GOLD : Formatting.GRAY));
 		if (ClientHealth.bleedSeconds() > 0) {
 			status.add(Text.translatable("screen.evolvedwarfare.health.bleeding", ClientHealth.bleedSeconds()).formatted(Formatting.RED));
 		}

@@ -139,7 +139,8 @@ public final class Health {
 			splints.add(d.isBroken(part) ? d.splintLeft(part) : 0);
 		}
 		ServerPlayNetworking.send(player, new WoundsPayload(fractions, splints, d.broken(), d.bleeding(),
-				hearts(player) | EwConfig.get().maxHearts << 8, enabled()));
+				hearts(player) | EwConfig.get().maxHearts << 8
+				| com.evolvedwarfare.difficulty.Difficulty.level(player.getWorld(), player.getBlockPos()) << 16, enabled()));
 	}
 
 	// ------------------------------------------------------------------ los golpes

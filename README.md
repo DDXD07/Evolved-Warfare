@@ -2506,6 +2506,28 @@ juego (se ve cambiar en directo). Se cierra con H o Esc.
   veneno fuerte (con su grado y lo que les queda), el veneno normal, los parásitos, el desinfectado y si te regeneras o no.
 - **Qué hacer**: lo que te hace falta según lo que tengas (vendarte, entablillar tal parte, medicina, antídoto...).
 
+## Fase 95 — Dificultad (3): la dificultad que sube y los élite
+
+La tercera parte de la dificultad al estilo RLCraft (en la nueva categoría **Dificultad** de la configuración):
+
+- **Nivel de peligro**: cada monstruo de Minecraft, al aparecer, recibe un nivel según lo **lejos** que esté del punto de
+  aparición del mundo (un nivel cada 1000 bloques), los **días** que lleva el mundo (uno cada 10 días) y la **dimensión**
+  (el Nether +3, el End +5), hasta el nivel 20. Cada nivel le da **+10 % de vida** y **+5 % de daño** (también a sus
+  flechas y explosiones); a partir del 5, **armadura**; y algo más de velocidad. Se guarda con él (no se vuelve a subir).
+  Los jefes y los monstruos con nombre no cambian.
+- **En la pantalla de la salud** (H) se ve el **peligro de donde estás**.
+- **Monstruos élite**: un 3 % de los monstruos (más un 0,5 % por nivel, hasta el 30 %) salen élite. Son **más grandes**,
+  tienen **2,5 veces la vida** y **+50 % de daño**, aguantan más los empujones y llevan su nombre a la vista
+  («★ Zombi de Fuego y de Escarcha»), con las partículas de cada rasgo. Uno o varios rasgos (dos o tres en las zonas más
+  peligrosas):
+  - **de Fuego**: te quema (y él no se quema). **de Escarcha**: te ralentiza y te congela.
+  - **de Sangre**: se cura con la mitad de lo que te quita. **de Veneno**: veneno fuerte.
+  - **del Viento**: mucho más rápido. **de Hierro**: armadura y dureza.
+  - **de la Hidra**: se regenera. **de Pólvora**: explota al morir (sin romper bloques).
+  - **de Furia**: con menos de la mitad de vida pega mucho más. **de Ceniza**: te marchita.
+- **Botín de los élite** (si los matas tú): mucha más experiencia, esmeraldas, a veces remedios y, rara vez, un
+  **cristal de corazón**.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

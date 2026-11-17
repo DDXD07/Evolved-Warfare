@@ -24,7 +24,7 @@ import org.lwjgl.glfw.GLFW;
 public final class ClientHealth {
 	private static float[] parts = new float[BodyPart.values().length];
 	private static int[] splintLeft = new int[BodyPart.values().length];
-	private static int broken, bleedSeconds, hearts = 10, maxHearts = 10;
+	private static int broken, bleedSeconds, hearts = 10, maxHearts = 10, danger;
 	private static boolean enabled;
 	public static KeyBinding open;
 
@@ -67,6 +67,11 @@ public final class ClientHealth {
 		return maxHearts;
 	}
 
+	/** El nivel de peligro de donde está (fase 95). */
+	public static int danger() {
+		return danger;
+	}
+
 	public static boolean legBroken(boolean right) {
 		return enabled && broken(right ? BodyPart.RIGHT_LEG : BodyPart.LEFT_LEG);
 	}
@@ -94,7 +99,8 @@ public final class ClientHealth {
 			broken = payload.broken();
 			bleedSeconds = payload.bleedSeconds();
 			hearts = payload.hearts() & 0xFF;
-			maxHearts = payload.hearts() >> 8;
+			maxHearts = payload.hearts() >> 8 & 0xFF;
+			danger = payload.hearts() >> 16;
 			enabled = payload.enabled();
 		});
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
