@@ -2895,5 +2895,16 @@
   "config.evolvedwarfare.foodRotEnabled": "Food rot",
   "config.evolvedwarfare.foodRotEnabled.tip": "Food goes stale and rots over time (in storage too). Salt, the smoker and the icebox preserve it.",
   "config.evolvedwarfare.foodRotSpeed": "Rot speed",
-  "config.evolvedwarfare.foodRotSpeed.tip": "How fast food rots (1 = normal; 2 = twice as fast)."
+  "config.evolvedwarfare.foodRotSpeed.tip": "How fast food rots (1 = normal; 2 = twice as fast).",
+  "message.evolvedwarfare.enchanting.cursed": "The magic resisted: the item has been cursed!",
+  "config.evolvedwarfare.hardEnchanting": "Harder enchanting",
+  "config.evolvedwarfare.hardEnchanting.tip": "The enchanting table costs more levels and lapis and sometimes curses; the anvil costs more.",
+  "config.evolvedwarfare.enchantLevelMultiplier": "Table levels (x)",
+  "config.evolvedwarfare.enchantLevelMultiplier.tip": "Multiplies the levels the table costs (3 = 3, 6 or 9).",
+  "config.evolvedwarfare.enchantLapisMultiplier": "Table lapis (x)",
+  "config.evolvedwarfare.enchantLapisMultiplier.tip": "Multiplies the lapis the table costs.",
+  "config.evolvedwarfare.enchantCurseChance": "Curse chance",
+  "config.evolvedwarfare.enchantCurseChance.tip": "Curse chance with the first option (the third, twice as much).",
+  "config.evolvedwarfare.anvilCostMultiplier": "Anvil levels (x)",
+  "config.evolvedwarfare.anvilCostMultiplier.tip": "Multiplies the anvil's level cost (40 or more is too expensive)."
 }

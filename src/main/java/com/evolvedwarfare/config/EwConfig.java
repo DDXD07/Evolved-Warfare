@@ -154,6 +154,16 @@ public final class EwConfig {
 	public boolean smarterMobs = true;
 	/** Las arañas escupen telaraña. */
 	public boolean spiderWebs = true;
+	/** Encantar más difícil: la mesa cuesta más y a veces maldice, el yunque cuesta más. */
+	public boolean hardEnchanting = true;
+	/** Niveles que cuesta la mesa (x; 3 = 3, 6 o 9 niveles). */
+	public double enchantLevelMultiplier = 3.0;
+	/** Lapislázuli que cuesta la mesa (x). */
+	public double enchantLapisMultiplier = 2.0;
+	/** Probabilidad de maldición al encantar (la de la primera opción; la tercera, el doble). */
+	public double enchantCurseChance = 0.08;
+	/** Niveles que cuesta el yunque (x). */
+	public double anvilCostMultiplier = 1.5;
 
 	// ------------------------------------------------------------------ asentamientos
 	/** Vida y daño extra por cada nivel del asentamiento por encima del 1. */
@@ -311,6 +321,11 @@ public final class EwConfig {
 			new Option("eliteChancePerLevel", "difficulty", 0.0, 0.1, 0.001),
 			new Option("smarterMobs", "difficulty", 0, 1, 1),
 			new Option("spiderWebs", "difficulty", 0, 1, 1),
+			new Option("hardEnchanting", "difficulty", 0, 1, 1),
+			new Option("enchantLevelMultiplier", "difficulty", 1.0, 10.0, 0.5),
+			new Option("enchantLapisMultiplier", "difficulty", 1.0, 5.0, 0.5),
+			new Option("enchantCurseChance", "difficulty", 0.0, 1.0, 0.01),
+			new Option("anvilCostMultiplier", "difficulty", 1.0, 5.0, 0.1),
 			new Option("settlementBonusPerLevel", "settlements", 0.0, 1.0, 0.01),
 			new Option("settlementBlocksPerLevel", "settlements", 100, 100000, 50),
 			new Option("settlementMaxLevel", "settlements", 1, 10, 1),

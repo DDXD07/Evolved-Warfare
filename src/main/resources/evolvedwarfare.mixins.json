@@ -10,6 +10,8 @@
 		"ItemRotBarMixin",
 		"PlayerEatRotMixin",
 		"FurnaceSmokeMixin",
+		"EnchantmentTableMixin",
+		"AnvilCostMixin",
 		"MetalShieldMixin",
 		"CrossbowPullTimeMixin",
 		"PaviseKnockbackMixin",

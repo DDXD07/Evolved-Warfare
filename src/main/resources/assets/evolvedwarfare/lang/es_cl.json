@@ -2895,5 +2895,16 @@
   "config.evolvedwarfare.foodRotEnabled": "Comida que se pudre",
   "config.evolvedwarfare.foodRotEnabled.tip": "La comida se pasa y se pudre con el tiempo (también guardada). La sal, el ahumador y la nevera la conservan.",
   "config.evolvedwarfare.foodRotSpeed": "Velocidad de pudrirse",
-  "config.evolvedwarfare.foodRotSpeed.tip": "Lo deprisa que se pudre la comida (1 = normal; 2 = el doble de rápido)."
+  "config.evolvedwarfare.foodRotSpeed.tip": "Lo deprisa que se pudre la comida (1 = normal; 2 = el doble de rápido).",
+  "message.evolvedwarfare.enchanting.cursed": "La magia se ha resistido: ¡el objeto ha quedado maldito!",
+  "config.evolvedwarfare.hardEnchanting": "Encantar más difícil",
+  "config.evolvedwarfare.hardEnchanting.tip": "La mesa de encantamientos cuesta más niveles y lapislázuli y a veces maldice; el yunque cuesta más.",
+  "config.evolvedwarfare.enchantLevelMultiplier": "Niveles de la mesa (x)",
+  "config.evolvedwarfare.enchantLevelMultiplier.tip": "Lo que se multiplican los niveles que cuesta la mesa (3 = 3, 6 o 9).",
+  "config.evolvedwarfare.enchantLapisMultiplier": "Lapislázuli de la mesa (x)",
+  "config.evolvedwarfare.enchantLapisMultiplier.tip": "Lo que se multiplica el lapislázuli que cuesta la mesa.",
+  "config.evolvedwarfare.enchantCurseChance": "Maldición al encantar",
+  "config.evolvedwarfare.enchantCurseChance.tip": "Probabilidad de maldición con la primera opción (la tercera, el doble).",
+  "config.evolvedwarfare.anvilCostMultiplier": "Niveles del yunque (x)",
+  "config.evolvedwarfare.anvilCostMultiplier.tip": "Lo que se multiplican los niveles que cuesta el yunque (con 40 o más, demasiado caro)."
 }

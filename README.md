@@ -2591,6 +2591,18 @@ La sexta parte de la dificultad al estilo RLCraft (en la categoría **Salud**: s
   experiencia, que se llena de abajo arriba (azul; naranja con poco; rojo parpadeando agotado). Ya no hay barra bajo la
   mira.
 
+## Fase 100 — Dificultad (7): encantar más difícil
+
+La séptima parte de la dificultad al estilo RLCraft (en la categoría **Dificultad**):
+
+- **La mesa de encantamientos** cuesta el **triple de niveles** (3, 6 o 9 según la opción, en vez de 1, 2 o 3) y el
+  **doble de lapislázuli**. Y a veces la magia se resiste y el objeto sale **maldito** (maldición de desaparición o, en la
+  armadura, de ligamiento): un 8 % con la primera opción, un 12 % con la segunda y un 16 % con la tercera.
+- **El yunque** cuesta un **50 % más** de niveles, así que se llega antes a «¡Demasiado caro!» (40).
+- **La reparación** (Mending) repara la **mitad** con cada punto de experiencia.
+- Todo se ajusta: encantar más difícil sí/no, lo que se multiplican los niveles y el lapislázuli de la mesa, la
+  probabilidad de maldición y los niveles del yunque (la reparación, no: va en los datos del juego).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

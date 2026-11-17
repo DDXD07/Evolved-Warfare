@@ -33,6 +33,7 @@
 			"com.evolvedwarfare.gametest.SmartMobsGameTests",
 			"com.evolvedwarfare.gametest.StaminaGameTests",
 			"com.evolvedwarfare.gametest.FoodRotGameTests",
+			"com.evolvedwarfare.gametest.EnchantingGameTests",
 			"com.evolvedwarfare.gametest.CropGameTests",
 			"com.evolvedwarfare.gametest.WildlifeGameTests",
 			"com.evolvedwarfare.gametest.DismembermentGameTests",
