@@ -56,5 +56,6 @@ public final class DamnedRenderers {
 		simple(com.evolvedwarfare.legendary.Legendaries.FROST_GIANT, "frost_giant", layer("frost_giant"), 2.0F, 3.5F, false);
 		simple(com.evolvedwarfare.legendary.Legendaries.SEA_SERPENT, "sea_serpent", layer("sea_serpent"), 1.5F, 3.0F, false);
 		simple(com.evolvedwarfare.legendary.Legendaries.TREANT, "treant", layer("treant"), 0.8F, 1.2F, false);
+		simple(com.evolvedwarfare.legendary.Legendaries.COCO, "coco", layer("coco"), 0.5F, 1.15F, false);
 	}
 }

@@ -2678,9 +2678,21 @@ probabilidad por bloque —1 de cada 250— y la de que te despierten al dormir 
   lento, el fuego le hace el doble y las hachas un 50 % más; suelta troncos, palos, retoños, alguna manzana y **corteza
   viva**), o caen dos **arañas** de la copa.
 - **Al cavar** tierra, arena o grava: sale un **zombi** enterrado (un **momificado** en el desierto).
-- **Al dormir**: a veces **algo te despierta**: 2 o 3 monstruos (zombis, esqueletos, arañas; momificados en el desierto y
-  esqueletos glaciales en la nieve) te esperan junto a la cama.
+- (Al dormir: ver la fase 106, el Coco.)
 - Todos van directos a por ti, y tienen el nivel de peligro de la zona. En pacífico y en creativo, no pasa.
+
+## Fase 106 — El Coco
+
+En vez de la emboscada al dormir, ahora hay algo peor: **al despertar** (de día, tras dormir la noche) hay un **2 %** de que
+**el Coco** te esté esperando a la espalda (se ajusta en «El Coco al despertar»; en pacífico y en creativo, no).
+
+- **Cómo es**: alto y flaco, negro como la sombra, con un manto andrajoso y capucha, ojos blancos que brillan, una boca roja
+  muy ancha, brazos larguísimos con garras y el **saco** a la espalda. Solo puede haber **uno** en el mundo.
+- **Cómo pelea**: lejos de ti es **invisible**; cerca, se deja ver. Se **teletransporta a tu espalda** (también cuando le
+  pegas), sus zarpazos dan **oscuridad**, náuseas y lentitud y, de vez en cuando, **grita** y te deja a oscuras y ciego.
+  140 de vida y barra de jefe.
+- Si en **tres minutos** no lo vences, se esfuma entre las sombras... por ahora.
+- **Su botín**: la **garra del Coco** (el trofeo), perlas de ender y, la mitad de las veces, un cristal de corazón.
 
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):

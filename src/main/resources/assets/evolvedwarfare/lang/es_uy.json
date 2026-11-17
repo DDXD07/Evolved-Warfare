@@ -2987,11 +2987,17 @@
   "message.evolvedwarfare.ambush.log": "¡El árbol se ha despertado!",
   "message.evolvedwarfare.ambush.dirt": "¡Algo estaba enterrado ahí!",
   "message.evolvedwarfare.ambush.nether": "La roca del Nether escupe algo...",
-  "message.evolvedwarfare.ambush.sleep": "¡Algo te ha despertado! No estás solo...",
   "config.evolvedwarfare.blockMobsEnabled": "Monstruos al picar, talar y cavar",
   "config.evolvedwarfare.blockMobsEnabled.tip": "A veces, al romper piedra, troncos, tierra o arena, sale algo: lepismas, mineros zombis, arañas, ents...",
   "config.evolvedwarfare.blockMobChance": "Probabilidad por bloque",
   "config.evolvedwarfare.blockMobChance.tip": "Probabilidad de que salga algo al romper un bloque (0.004 = 1 de cada 250).",
-  "config.evolvedwarfare.sleepAmbushChance": "Emboscada al dormir",
-  "config.evolvedwarfare.sleepAmbushChance.tip": "Probabilidad de que algo te despierte al dormir (y te esté esperando)."
+  "entity.evolvedwarfare.coco": "El Coco",
+  "item.evolvedwarfare.coco_spawn_egg": "Huevo generador de el coco",
+  "item.evolvedwarfare.coco_claw": "Garra del Coco",
+  "item.evolvedwarfare.coco_claw.desc": "La prueba de que lo venciste. Ya puedes dormir tranquilo... ¿o no?",
+  "message.evolvedwarfare.coco.appears": "Algo te observaba mientras dormías... ¡El Coco!",
+  "message.evolvedwarfare.coco.gone": "El Coco se ha esfumado entre las sombras... por ahora.",
+  "message.evolvedwarfare.coco.scream": "¡El Coco grita y todo se oscurece!",
+  "config.evolvedwarfare.cocoChance": "El Coco al despertar",
+  "config.evolvedwarfare.cocoChance.tip": "Probabilidad de que el Coco te esté esperando al despertar (0.02 = 2 %)."
 }

@@ -202,10 +202,40 @@ def treant():
     return a
 
 
+# ------------------------------------------------------------------ fase 106: el Coco
+
+def coco():
+    """El Coco: alto y flaco, negro como la sombra, con un manto andrajoso, ojos blancos que brillan, una boca roja muy
+    ancha, brazos larguísimos con garras y el saco a la espalda."""
+    a = W.Animal("coco")
+    black, shadow = (14, 12, 18), (34, 30, 40)
+    rag = (40, 36, 44)
+    claw = (210, 206, 196)
+    for side, name, phase in ((-1, "leg_r", 0), (1, "leg_l", 1)):
+        leg = a.part(name, None, (side * 1.8, 6, 0), role="leg", phase=phase)
+        leg.cube((-1, 0, -1), (2, 18, 2), **C(black, low=(shadow, 2)))
+    body = a.part("body", None, (0, 6, 0), role="body")
+    body.cube((-3, -14, -1.5), (6, 14, 3), **C(black))
+    body.cube((-4, -14, -2.5), (8, 16, 5), **C(rag, spots=(black, 0.35), low=(black, 3)))       # el manto roto
+    body.cube((-3, -12, 2.5), (6, 7, 4), **C((96, 72, 46), bands=((70, 52, 32), 2)))          # el saco
+    head = a.part("head", "body", (0, -14, 0), role="head")
+    head.cube((-3, -8, -3), (6, 8, 6), **C(black, eyes=("front", 3, (255, 255, 255)), glow_eyes=True, mouth=(150, 20, 24)))
+    head.cube((-4, -9, -4), (8, 3, 8), **C(rag, spots=(black, 0.3)))                          # la capucha
+    jaw = a.part("jaw", "head", (0, -1, -1), role="jaw")
+    jaw.cube((-2.5, 0, -2), (5, 1, 3), **C((120, 10, 16)))
+    for side, name in ((-1, "arm_r"), (1, "arm_l")):
+        arm = a.part(name, "body", (side * 4, -13, 0), role="arm", side=side)
+        arm.cube((-1, -1, -1), (2, 22, 2), **C(black, low=(shadow, 3)))
+        for k in range(3):
+            arm.cube((-1 + k * 0.8 - 0.4, 21, -1.5), (1, 3, 1), **C(claw, tip=((255, 255, 255), 1)))
+    return a
+
+
 MODELS = collections.OrderedDict([("fire_dragon", lambda: dragon("fire_dragon")), ("ice_dragon", lambda: dragon("ice_dragon")),
-                                  ("frost_giant", frost_giant), ("sea_serpent", sea_serpent), ("treant", treant)])
+                                  ("frost_giant", frost_giant), ("sea_serpent", sea_serpent), ("treant", treant), ("coco", coco)])
 
 NAMES = {
+    "coco": ("El Coco", "The Bogeyman"),
     "treant": ("Ent", "Treant"),
     "sea_serpent": ("Serpiente marina", "Sea Serpent"),
     "frost_giant": ("Gigante de hielo", "Frost Giant"),
@@ -226,6 +256,7 @@ def count(item, lo, hi, chance=None):
 
 
 LOOT = {
+    "coco": [count(n("coco_claw"), 1, 1), count(n("heart_crystal"), 1, 1, 0.5), count("minecraft:ender_pearl", 1, 3)],
     "treant": [count("minecraft:oak_log", 3, 6), count("minecraft:stick", 2, 6), count("minecraft:oak_sapling", 1, 2),
                count("minecraft:apple", 1, 2, 0.4), count(n("living_bark"), 1, 2)],
     "sea_serpent": [count(n("sea_serpent_scale"), 10, 18), count(n("serpent_fang"), 2, 4), count("minecraft:prismarine_shard", 6, 14),
@@ -239,6 +270,8 @@ LOOT = {
 }
 
 ITEMS = {
+    "coco_claw": ("Garra del Coco", "Bogeyman's Claw", "La prueba de que lo venciste. Ya puedes dormir tranquilo... ¿o no?",
+                  "Proof that you beat it. Now you can sleep soundly... or can you?"),
     "living_bark": ("Corteza viva", "Living Bark", "Aún se mueve un poco. Con ella, la madera se cura sola (más adelante).",
                     "It still twitches. With it, wood mends itself (coming later)."),
     "sea_serpent_scale": ("Escama de serpiente marina", "Sea Serpent Scale", "Brilla como el mar. Para la armadura de las mareas.",
@@ -280,7 +313,12 @@ TEXTS = {
     "message.evolvedwarfare.ambush.log": ("¡El árbol se ha despertado!", "The tree has woken up!"),
     "message.evolvedwarfare.ambush.dirt": ("¡Algo estaba enterrado ahí!", "Something was buried there!"),
     "message.evolvedwarfare.ambush.nether": ("La roca del Nether escupe algo...", "The Nether rock spits something out..."),
-    "message.evolvedwarfare.ambush.sleep": ("¡Algo te ha despertado! No estás solo...", "Something woke you up! You are not alone..."),
+    "message.evolvedwarfare.coco.appears": ("Algo te observaba mientras dormías... ¡El Coco!", "Something was watching you sleep... the Bogeyman!"),
+    "message.evolvedwarfare.coco.gone": ("El Coco se ha esfumado entre las sombras... por ahora.", "The Bogeyman vanished into the shadows... for now."),
+    "message.evolvedwarfare.coco.scream": ("¡El Coco grita y todo se oscurece!", "The Bogeyman screams and everything goes dark!"),
+    "config.evolvedwarfare.cocoChance": ("El Coco al despertar", "Bogeyman on waking"),
+    "config.evolvedwarfare.cocoChance.tip": ("Probabilidad de que el Coco te esté esperando al despertar (0.02 = 2 %).",
+                                             "Chance that the Bogeyman is waiting for you when you wake up (0.02 = 2%)."),
     "config.evolvedwarfare.blockMobsEnabled": ("Monstruos al picar, talar y cavar", "Monsters when mining, chopping and digging"),
     "config.evolvedwarfare.blockMobsEnabled.tip": (
         "A veces, al romper piedra, troncos, tierra o arena, sale algo: lepismas, mineros zombis, arañas, ents...",
@@ -288,9 +326,6 @@ TEXTS = {
     "config.evolvedwarfare.blockMobChance": ("Probabilidad por bloque", "Chance per block"),
     "config.evolvedwarfare.blockMobChance.tip": ("Probabilidad de que salga algo al romper un bloque (0.004 = 1 de cada 250).",
                                                  "Chance that something comes out when breaking a block (0.004 = 1 in 250)."),
-    "config.evolvedwarfare.sleepAmbushChance": ("Emboscada al dormir", "Sleep ambush"),
-    "config.evolvedwarfare.sleepAmbushChance.tip": ("Probabilidad de que algo te despierte al dormir (y te esté esperando).",
-                                                    "Chance that something wakes you up while sleeping (and is waiting for you)."),
     "itemGroup.evolvedwarfare.legendary": ("Evolved Warfare: Legendarios", "Evolved Warfare: Legendary"),
     "message.evolvedwarfare.legendary.roar.fire_dragon": ("Un rugido estremece la tierra y el cielo se tiñe de rojo: un dragón de fuego anda cerca...",
                                                           "A roar shakes the earth and the sky turns red: a fire dragon is near..."),
@@ -532,6 +567,19 @@ def main():
     for x, y in ((6, 6), (9, 6)):
         bark.putpixel((x, y), (250, 220, 70, 255))
     bark.save(os.path.join(item_dir, "living_bark.png"))
+    claw = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    for k, (x0, y0) in enumerate(((3, 3), (7, 2), (11, 3))):
+        for t in range(10):
+            x = x0 + t // 4
+            y = y0 + t
+            if y < 16 and x < 16:
+                claw.putpixel((x, y), ((214, 210, 200) if t > 1 else (255, 255, 255)) + (255,))
+                if x + 1 < 16:
+                    claw.putpixel((x + 1, y), (130, 126, 118, 255))
+    for x in range(2, 15):
+        for y in (12, 13, 14):
+            claw.putpixel((x, y), (20, 18, 24, 255))
+    claw.save(os.path.join(item_dir, "coco_claw.png"))
     heart_icon((150, 30, 30), (255, 160, 40)).save(os.path.join(item_dir, "fire_dragon_heart.png"))
     heart_icon((70, 120, 170), (180, 240, 255)).save(os.path.join(item_dir, "ice_dragon_heart.png"))
     for name in ITEMS:

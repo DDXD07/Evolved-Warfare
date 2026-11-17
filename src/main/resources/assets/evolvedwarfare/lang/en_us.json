@@ -2987,11 +2987,17 @@
   "message.evolvedwarfare.ambush.log": "The tree has woken up!",
   "message.evolvedwarfare.ambush.dirt": "Something was buried there!",
   "message.evolvedwarfare.ambush.nether": "The Nether rock spits something out...",
-  "message.evolvedwarfare.ambush.sleep": "Something woke you up! You are not alone...",
   "config.evolvedwarfare.blockMobsEnabled": "Monsters when mining, chopping and digging",
   "config.evolvedwarfare.blockMobsEnabled.tip": "Sometimes breaking stone, logs, dirt or sand lets something out: silverfish, zombie miners, spiders, treants...",
   "config.evolvedwarfare.blockMobChance": "Chance per block",
   "config.evolvedwarfare.blockMobChance.tip": "Chance that something comes out when breaking a block (0.004 = 1 in 250).",
-  "config.evolvedwarfare.sleepAmbushChance": "Sleep ambush",
-  "config.evolvedwarfare.sleepAmbushChance.tip": "Chance that something wakes you up while sleeping (and is waiting for you)."
+  "entity.evolvedwarfare.coco": "The Bogeyman",
+  "item.evolvedwarfare.coco_spawn_egg": "The Bogeyman Spawn Egg",
+  "item.evolvedwarfare.coco_claw": "Bogeyman's Claw",
+  "item.evolvedwarfare.coco_claw.desc": "Proof that you beat it. Now you can sleep soundly... or can you?",
+  "message.evolvedwarfare.coco.appears": "Something was watching you sleep... the Bogeyman!",
+  "message.evolvedwarfare.coco.gone": "The Bogeyman vanished into the shadows... for now.",
+  "message.evolvedwarfare.coco.scream": "The Bogeyman screams and everything goes dark!",
+  "config.evolvedwarfare.cocoChance": "Bogeyman on waking",
+  "config.evolvedwarfare.cocoChance.tip": "Chance that the Bogeyman is waiting for you when you wake up (0.02 = 2%)."
 }

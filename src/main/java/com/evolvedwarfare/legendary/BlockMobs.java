@@ -3,7 +3,6 @@ package com.evolvedwarfare.legendary;
 import com.evolvedwarfare.config.EwConfig;
 import java.util.ArrayList;
 import java.util.List;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -31,7 +30,7 @@ import net.minecraft.util.math.random.Random;
  * arañas de cueva o un esqueleto minero; en la roca del Nether, cubos de magma.</li>
  * <li><b>Al talar</b>: el árbol se despierta (un <b>ent</b>) o caen arañas de la copa.</li>
  * <li><b>Al cavar</b> tierra, arena o grava: sale un zombi enterrado (un momificado en la arena).</li>
- * <li><b>Al dormir</b>: a veces algo te despierta, y te está esperando junto a la cama.</li>
+ * <li><b>Al despertar</b>: a veces (un 2 %) <b>el Coco</b> te está esperando ({@link CocoEntity}).</li>
  * </ul>
  */
 public final class BlockMobs {
@@ -51,15 +50,11 @@ public final class BlockMobs {
 				}
 			}
 		});
-		ServerTickEvents.END_SERVER_TICK.register(server -> {
-			if (!automatic() || EwConfig.get().sleepAmbushChance <= 0) {
-				return;
-			}
-			for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
-				if (player.isSleeping() && player.getSleepTimer() == 30 && canHappen(player.getServerWorld(), player)
-						&& player.getRandom().nextDouble() < EwConfig.get().sleepAmbushChance) {
-					ambush(player.getServerWorld(), player);
-				}
+		// al despertar (de día, tras dormir la noche), a veces el Coco te está esperando
+		net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents.STOP_SLEEPING.register((entity, sleepingPos) -> {
+			if (entity instanceof ServerPlayerEntity player && automatic() && player.getServerWorld().isDay()
+					&& canHappen(player.getServerWorld(), player) && player.getRandom().nextDouble() < EwConfig.get().cocoChance) {
+				coco(player.getServerWorld(), player);
 			}
 		});
 	}
@@ -178,43 +173,24 @@ public final class BlockMobs {
 		return mob;
 	}
 
-	/** Algo despierta al que duerme: aparecen 2 o 3 junto a la cama (en el suelo, a unos bloques) y lo esperan. */
-	public static int ambush(ServerWorld world, ServerPlayerEntity player) {
-		BlockPos bed = player.getBlockPos();
-		Random r = world.random;
-		boolean hot = world.getBiome(bed).value().getTemperature() >= 1.5F;
-		boolean cold = world.getBiome(bed).value().getTemperature() < 0.15F;
-		int n = 2 + r.nextInt(2);
-		List<MobEntity> out = new ArrayList<>();
-		for (int k = 0; k < n * 4 && out.size() < n; k++) {
-			int dx = r.nextInt(9) - 4, dz = r.nextInt(9) - 4;
-			if (Math.abs(dx) + Math.abs(dz) < 3) {
-				continue;
-			}
-			BlockPos at = bed.add(dx, 0, dz);
-			// el suelo: de la altura de la cama, buscando un hueco de dos con suelo debajo
-			BlockPos spot = null;
-			for (int dy = 2; dy >= -2; dy--) {
-				BlockPos p = at.up(dy);
-				if (world.getBlockState(p).isAir() && world.getBlockState(p.up()).isAir() && world.getBlockState(p.down()).isSolidBlock(world, p.down())) {
-					spot = p;
-					break;
-				}
-			}
-			if (spot == null) {
-				continue;
-			}
-			int roll = r.nextInt(3);
-			EntityType<? extends MobEntity> type = roll == 0 ? (hot ? EntityType.HUSK : EntityType.ZOMBIE)
-					: roll == 1 ? (cold ? EntityType.STRAY : EntityType.SKELETON) : EntityType.SPIDER;
-			add(out, world, type, spot, player);
+	/** El Coco: aparece a la espalda del que se despierta (solo puede haber uno en el mundo). */
+	public static CocoEntity coco(ServerWorld world, ServerPlayerEntity player) {
+		if (!world.getEntitiesByType(Legendaries.COCO, e -> e.isAlive()).isEmpty()) {
+			return null;
 		}
-		if (out.isEmpty()) {
-			return 0;
+		CocoEntity coco = Legendaries.COCO.create(world);
+		if (coco == null) {
+			return null;
 		}
-		player.wakeUp(true, true);
-		world.playSound(null, bed, SoundEvents.ENTITY_ZOMBIE_AMBIENT, SoundCategory.HOSTILE, 1.0F, 0.7F);
-		player.sendMessage(Text.translatable("message.evolvedwarfare.ambush.sleep").formatted(Formatting.DARK_RED, Formatting.ITALIC), true);
-		return out.size();
+		coco.refreshPositionAndAngles(player.getX(), player.getY(), player.getZ(), player.getYaw(), 0);
+		world.spawnEntity(coco);
+		if (!coco.behind(player)) {
+			coco.refreshPositionAndAngles(player.getX() + 2, player.getY(), player.getZ(), player.getYaw(), 0);
+		}
+		coco.setTarget(player);
+		world.playSound(null, player.getBlockPos(), SoundEvents.AMBIENT_CAVE.value(), SoundCategory.HOSTILE, 2.0F, 0.5F);
+		player.addStatusEffect(new net.minecraft.entity.effect.StatusEffectInstance(net.minecraft.entity.effect.StatusEffects.DARKNESS, 100, 0));
+		player.sendMessage(Text.translatable("message.evolvedwarfare.coco.appears").formatted(Formatting.DARK_PURPLE, Formatting.ITALIC), false);
+		return coco;
 	}
 }

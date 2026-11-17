@@ -196,11 +196,16 @@ public class LegendaryGameTests implements FabricGameTest {
 		BlockPos at = ctx.getAbsolutePos(new BlockPos(3, 1, 3));
 		var stone = com.evolvedwarfare.legendary.BlockMobs.spawn(ctx.getWorld(), player, at, com.evolvedwarfare.legendary.BlockMobs.Source.STONE);
 		var log = com.evolvedwarfare.legendary.BlockMobs.spawn(ctx.getWorld(), player, at, com.evolvedwarfare.legendary.BlockMobs.Source.LOG);
-		int ambush = com.evolvedwarfare.legendary.BlockMobs.ambush(ctx.getWorld(), player);
-		LOG.info("[EW-GAMETEST] sorpresas: piedra {}, tronco {}, al dormir {} ({})", stone.stream().map(m -> m.getType().getUntranslatedName()).toList(),
+		var coco = com.evolvedwarfare.legendary.BlockMobs.coco(ctx.getWorld(), player);
+		var second = com.evolvedwarfare.legendary.BlockMobs.coco(ctx.getWorld(), player);
+		int ambush = coco == null ? 0 : 1;
+		LOG.info("[EW-GAMETEST] sorpresas: piedra {}, tronco {}, el Coco {} ({})", stone.stream().map(m -> m.getType().getUntranslatedName()).toList(),
 				log.stream().map(m -> m.getType().getUntranslatedName()).toList(), ambush, BM.getSimpleName());
 		check(!stone.isEmpty() && stone.get(0).getTarget() == player, "De la piedra no sale nada (o no va a por el jugador)");
 		check(!log.isEmpty(), "Del tronco no sale nada");
+		check(coco != null && coco.getTarget() == player && second == null, "El Coco no aparece (o aparecen dos)");
+		check(coco.getMaxHealth() >= 140.0F, "El Coco es demasiado débil");
+		coco.discard();
 		stone.forEach(net.minecraft.entity.Entity::discard);
 		log.forEach(net.minecraft.entity.Entity::discard);
 		ctx.complete();
