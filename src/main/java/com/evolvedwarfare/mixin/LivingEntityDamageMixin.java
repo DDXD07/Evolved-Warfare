@@ -77,6 +77,10 @@ public abstract class LivingEntityDamageMixin {
 				// lo que hacen los élite al pegar (fase 95)
 				com.evolvedwarfare.difficulty.Elites.onHit(self, source, lost);
 			}
+			if (cir.getReturnValueZ()) {
+				// los monstruos se avisan (fase 96)
+				com.evolvedwarfare.difficulty.SmartMobs.onHurt(self, source);
+			}
 		}
 		if (zone == HitZone.HEAD && cir.getReturnValueZ()) {
 			LocationalDamage.headshot((LivingEntity) (Object) this, source);

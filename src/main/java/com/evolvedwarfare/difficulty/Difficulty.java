@@ -61,6 +61,7 @@ public final class Difficulty {
 			}
 		});
 		Elites.register();
+		SmartMobs.register();
 	}
 
 	/** ¿Le afecta? Los monstruos de Minecraft, sin nombre puesto y que no sean jefes. */

@@ -140,6 +140,10 @@ public final class EwConfig {
 	/** Probabilidad de que un monstruo salga élite (más la de cada nivel). */
 	public double eliteChance = 0.03;
 	public double eliteChancePerLevel = 0.005;
+	/** Monstruos más listos: se avisan, los esqueletos apuntan adelantándose y se apartan, los creepers revientan paredes... */
+	public boolean smarterMobs = true;
+	/** Las arañas escupen telaraña. */
+	public boolean spiderWebs = true;
 
 	// ------------------------------------------------------------------ asentamientos
 	/** Vida y daño extra por cada nivel del asentamiento por encima del 1. */
@@ -290,6 +294,8 @@ public final class EwConfig {
 			new Option("elitesEnabled", "difficulty", 0, 1, 1),
 			new Option("eliteChance", "difficulty", 0.0, 1.0, 0.01),
 			new Option("eliteChancePerLevel", "difficulty", 0.0, 0.1, 0.001),
+			new Option("smarterMobs", "difficulty", 0, 1, 1),
+			new Option("spiderWebs", "difficulty", 0, 1, 1),
 			new Option("settlementBonusPerLevel", "settlements", 0.0, 1.0, 0.01),
 			new Option("settlementBlocksPerLevel", "settlements", 100, 100000, 50),
 			new Option("settlementMaxLevel", "settlements", 1, 10, 1),

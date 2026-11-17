@@ -2860,5 +2860,9 @@
   "config.evolvedwarfare.eliteChance": "Probabilidad de élite",
   "config.evolvedwarfare.eliteChance.tip": "Probabilidad base de que un monstruo salga élite.",
   "config.evolvedwarfare.eliteChancePerLevel": "Élite por nivel",
-  "config.evolvedwarfare.eliteChancePerLevel.tip": "Lo que sube la probabilidad de élite con cada nivel de peligro (máximo 30 %)."
+  "config.evolvedwarfare.eliteChancePerLevel.tip": "Lo que sube la probabilidad de élite con cada nivel de peligro (máximo 30 %).",
+  "config.evolvedwarfare.smarterMobs": "Monstruos más listos",
+  "config.evolvedwarfare.smarterMobs.tip": "Se avisan entre ellos, los esqueletos apuntan adelantándose y se apartan, huyen muy heridos, esquivan cuando les apuntas y los creepers revientan paredes.",
+  "config.evolvedwarfare.spiderWebs": "Telarañas de las arañas",
+  "config.evolvedwarfare.spiderWebs.tip": "Las arañas te escupen telaraña a los pies desde lejos (se deshace a los 15 s)."
 }

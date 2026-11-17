@@ -328,6 +328,13 @@ TEXTS = {
     "config.evolvedwarfare.eliteChancePerLevel": ("Élite por nivel", "Elite chance per level"),
     "config.evolvedwarfare.eliteChancePerLevel.tip": ("Lo que sube la probabilidad de élite con cada nivel de peligro (máximo 30 %).",
                                                       "Extra elite chance per danger level (up to 30%)."),
+    "config.evolvedwarfare.smarterMobs": ("Monstruos más listos", "Smarter monsters"),
+    "config.evolvedwarfare.smarterMobs.tip": (
+        "Se avisan entre ellos, los esqueletos apuntan adelantándose y se apartan, huyen muy heridos, esquivan cuando les apuntas y los creepers revientan paredes.",
+        "They alert each other, skeletons lead their shots and keep their distance, they flee when badly hurt, dodge when you aim and creepers blow through walls."),
+    "config.evolvedwarfare.spiderWebs": ("Telarañas de las arañas", "Spider webs"),
+    "config.evolvedwarfare.spiderWebs.tip": ("Las arañas te escupen telaraña a los pies desde lejos (se deshace a los 15 s).",
+                                             "Spiders spit webs at your feet from afar (they dissolve after 15 s)."),
     "config.evolvedwarfare.category.health": ("Salud", "Health"),
     "config.evolvedwarfare.woundsEnabled": ("Heridas por partes", "Body-part wounds"),
     "config.evolvedwarfare.woundsEnabled.tip": (

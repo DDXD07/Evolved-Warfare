@@ -2528,6 +2528,22 @@ La tercera parte de la dificultad al estilo RLCraft (en la nueva categoría **Di
 - **Botín de los élite** (si los matas tú): mucha más experiencia, esmeraldas, a veces remedios y, rara vez, un
   **cristal de corazón**.
 
+## Fase 96 — Dificultad (4): monstruos más listos
+
+La cuarta parte de la dificultad al estilo RLCraft (en la categoría **Dificultad**: «Monstruos más listos» y
+«Telarañas de las arañas»). Se suma a lo que ya hacían de noche los zombis (romper bloques, excavar, saltar huecos y
+olerte):
+
+- **Se avisan entre ellos**: si le pegas a un monstruo, los de alrededor (14 bloques) que no estén atacando a nadie te oyen
+  y van a por ti (hasta 6).
+- **Esqueletos**: **apuntan adelantándose** a hacia dónde corres (ya no basta con correr de lado); si te acercas a menos
+  de 5 bloques **se apartan** unos pasos y vuelven a disparar; y **huyen** cuando están muy heridos.
+- **Arañas**: te **escupen telaraña** a los pies desde lejos (entre 4 y 14 bloques, viéndote); se deshace sola a los
+  15 segundos. También huyen muy heridas.
+- **Creepers**: si estás encerrado cerca (a menos de 4,5 bloques) y no pueden llegar hasta ti, **revientan la pared**.
+- **Zombis**: de día, si se queman, **buscan la sombra**.
+- **Esquivan**: esqueletos y zombis, a veces, se echan a un lado de un salto cuando les apuntas con el arco o la ballesta.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
