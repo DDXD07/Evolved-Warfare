@@ -53,5 +53,6 @@ public final class DamnedRenderers {
 		// las criaturas legendarias (tools/ew_legendary.py)
 		simple(com.evolvedwarfare.legendary.Legendaries.FIRE_DRAGON, "fire_dragon", layer("fire_dragon"), 2.5F, 2.2F, false);
 		simple(com.evolvedwarfare.legendary.Legendaries.ICE_DRAGON, "ice_dragon", layer("ice_dragon"), 2.5F, 2.2F, false);
+		simple(com.evolvedwarfare.legendary.Legendaries.FROST_GIANT, "frost_giant", layer("frost_giant"), 2.0F, 3.5F, false);
 	}
 }

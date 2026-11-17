@@ -2955,5 +2955,13 @@
   "item.evolvedwarfare.flamed_dragonbone_sword": "Espada flamígera de hueso de dragón",
   "item.evolvedwarfare.flamed_dragonbone_sword.desc": "Quema a lo que toca y hiere de más a los dragones de hielo.",
   "item.evolvedwarfare.iced_dragonbone_sword": "Espada helada de hueso de dragón",
-  "item.evolvedwarfare.iced_dragonbone_sword.desc": "Congela y ralentiza a lo que toca y hiere de más a los dragones de fuego."
+  "item.evolvedwarfare.iced_dragonbone_sword.desc": "Congela y ralentiza a lo que toca y hiere de más a los dragones de fuego.",
+  "entity.evolvedwarfare.frost_giant": "Gigante de hielo",
+  "item.evolvedwarfare.frost_giant_spawn_egg": "Huevo generador de gigante de hielo",
+  "item.evolvedwarfare.giant_club": "Garrote del gigante",
+  "item.evolvedwarfare.giant_club.desc": "Enorme y lento: pega muchísimo, empuja lejos y deja helado a lo que golpea.",
+  "item.evolvedwarfare.giant_pelt": "Piel de gigante",
+  "item.evolvedwarfare.giant_pelt.desc": "Gruesa y cálida. Para abrigos (más adelante).",
+  "message.evolvedwarfare.legendary.roar.frost_giant": "La tierra tiembla bajo unos pasos enormes: un gigante de hielo anda cerca...",
+  "message.evolvedwarfare.legendary.blizzard": "¡La ventisca del gigante te hiela hasta los huesos!"
 }

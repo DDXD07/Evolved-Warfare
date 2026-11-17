@@ -207,6 +207,26 @@ public final class DragonGear {
 		}
 	}
 
+	/** El garrote del gigante de hielo (fase 103): enorme y lento; pega muchísimo, empuja lejos y hiela. */
+	public static class GiantClubItem extends SwordItem {
+		public GiantClubItem() {
+			super(DRAGONBONE, new Item.Settings().rarity(Rarity.EPIC).attributeModifiers(SwordItem.createAttributeModifiers(DRAGONBONE, 8, -3.2F)));
+		}
+
+		@Override
+		public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+			target.takeKnockback(1.6, attacker.getX() - target.getX(), attacker.getZ() - target.getZ());
+			target.setFrozenTicks(Math.min(target.getMinFreezeDamageTicks() + 60, target.getFrozenTicks() + 80));
+			target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 60, 1), attacker);
+			return super.postHit(stack, target, attacker);
+		}
+
+		@Override
+		public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+			tooltip.add(Text.translatable(getTranslationKey() + ".desc").formatted(Formatting.GRAY));
+		}
+	}
+
 	private DragonGear() {
 	}
 

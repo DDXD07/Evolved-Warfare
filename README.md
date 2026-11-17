@@ -2642,6 +2642,17 @@ Lo que se hace con lo que sueltan los dragones (pestaña «Legendarios»):
   - **Helada** (la espada + un corazón de dragón de hielo): congela y ralentiza a lo que toca y hiere **+8** a los dragones
     de fuego.
 
+## Fase 103 — Criaturas legendarias (3): el gigante de hielo
+
+- **El gigante de hielo**: ocho bloques de alto, piel azul grisácea, barba blanca con carámbanos, corona de hielo,
+  faldón y botas de piel y un garrote de hielo. **600 de vida**, no se le puede empujar y no se congela. Aparece en los sitios
+  fríos como los dragones de hielo (la mitad de las veces es él), en el suelo, y se anuncia con un rugido.
+- **Cómo pelea**: te persigue a pie y te golpea con el garrote (empuja lejos y hiela). Cada poco, si estás cerca,
+  **pisotea** el suelo (una onda que hace daño, te lanza por los aires y te ralentiza); si te alejas, **arranca un bloque
+  de hielo y te lo tira** en arco. Herido, ruge una **ventisca** que te congela y te ralentiza.
+- **Su botín**: el **garrote del gigante** (un arma enorme y lenta que pega muchísimo, empuja lejos y hiela), piel de
+  gigante (para abrigos, más adelante), hielo compacto, diamantes, esmeraldas y un cristal de corazón.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

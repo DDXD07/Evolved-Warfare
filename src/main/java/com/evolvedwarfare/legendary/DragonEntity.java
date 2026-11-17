@@ -52,7 +52,7 @@ import org.jetbrains.annotations.Nullable;
  * <b>ruge</b> (empuja y aturde a los que tiene cerca) y con menos de un 30 % echa el aliento mucho más a menudo. Si
  * nadie se le acerca en mucho rato, se va (desaparece).
  */
-public class DragonEntity extends MiniBossEntity {
+public class DragonEntity extends MiniBossEntity implements Legendary {
 	/** Lo que dura un chorro de aliento (ticks). */
 	public static final int BREATH_TICKS = 50;
 	public static final double BREATH_RANGE = 16.0;

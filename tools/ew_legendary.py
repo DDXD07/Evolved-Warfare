@@ -107,9 +107,50 @@ def dragon(mid):
     return a
 
 
-MODELS = collections.OrderedDict([("fire_dragon", lambda: dragon("fire_dragon")), ("ice_dragon", lambda: dragon("ice_dragon"))])
+# ------------------------------------------------------------------ tanda 3: el gigante de hielo
+
+def frost_giant():
+    """El gigante de hielo: piel azul grisácea, barba blanca con carámbanos, una corona de hielo, faldón y botas de piel,
+    brazaletes de hielo y un garrote con la cabeza de hielo erizada."""
+    a = W.Animal("frost_giant")
+    skin, skin_dark = (146, 172, 196), (104, 128, 152)
+    fur, fur_dark = (232, 230, 222), (176, 170, 158)
+    leather = (110, 86, 62)
+    ice, ice_dark = (196, 230, 248), (130, 180, 214)
+    for side, name, phase in ((-1, "leg_r", 0), (1, "leg_l", 1)):
+        leg = a.part(name, None, (side * 3.5, 10, 0), role="leg", phase=phase)
+        leg.cube((-3, 0, -3), (6, 14, 6), **C(skin, low=(skin_dark, 2)))
+        leg.cube((-3.5, 8, -3.5), (7, 6, 7), **C(fur, bands=(fur_dark, 2)))
+    body = a.part("body", None, (0, 10, 0), role="body")
+    body.cube((-7, -14, -4), (14, 14, 8), **C(skin, belly=(skin_dark, 2), spots=(skin_dark, 0.06)))
+    body.cube((-7.5, -3, -4.5), (15, 6, 9), **C(fur, bands=(fur_dark, 2)))
+    body.cube((-7.5, -4, -4.5), (15, 1, 9), **C(leather))
+    body.cube((-7.5, -14, -4.5), (5, 4, 9), **C(fur, bands=(fur_dark, 2)))          # la piel al hombro
+    head = a.part("head", "body", (0, -14, 0), role="head")
+    head.cube((-4, -9, -4), (8, 9, 8), **C(skin, eyes=("front", 4, (150, 230, 255)), glow_eyes=True, mouth=(60, 70, 90)))
+    head.cube((-4.5, -4, -5), (9, 7, 2), **C(fur, bands=(fur_dark, 2)))              # la barba
+    for k in range(4):
+        head.cube((-3.5 + k * 2.2, 3, -5), (1, 3, 1), **C(ice, tip=(ice_dark, 1)))    # carámbanos en la barba
+    for k in range(5):
+        h = 3 if k % 2 == 0 else 2
+        head.cube((-4 + k * 1.8, -9 - h, -4), (1, h, 1), **C(ice, glow_all=False))     # la corona de hielo
+    for side, name in ((-1, "arm_r"), (1, "arm_l")):
+        arm = a.part(name, "body", (side * 9.5, -12, 0), role="arm", side=side)
+        arm.cube((-2.5, -2, -3), (5, 15, 6), **C(skin, low=(skin_dark, 2)))
+        arm.cube((-3, 8, -3.5), (6, 3, 7), **C(ice, bands=(ice_dark, 1)))              # el brazalete de hielo
+    club = a.part("club", "arm_r", (0, 12, 0), (-70, 0, 0))
+    club.cube((-1, -2, -1), (2, 14, 2), **C(leather))
+    club.cube((-3, 10, -3), (6, 8, 6), **C(ice, bands=(ice_dark, 2)))
+    for dx, dz in ((-4, 0), (3, 0), (0, -4), (0, 3)):
+        club.cube((dx, 13, dz), (1, 2, 1), **C(ice_dark))
+    return a
+
+
+MODELS = collections.OrderedDict([("fire_dragon", lambda: dragon("fire_dragon")), ("ice_dragon", lambda: dragon("ice_dragon")),
+                                  ("frost_giant", frost_giant)])
 
 NAMES = {
+    "frost_giant": ("Gigante de hielo", "Frost Giant"),
     "fire_dragon": ("Dragón de fuego", "Fire Dragon"),
     "ice_dragon": ("Dragón de hielo", "Ice Dragon"),
 }
@@ -127,6 +168,8 @@ def count(item, lo, hi, chance=None):
 
 
 LOOT = {
+    "frost_giant": [count(n("giant_club"), 1, 1), count(n("giant_pelt"), 2, 4), count("minecraft:packed_ice", 6, 16), count("minecraft:diamond", 2, 5),
+                    count("minecraft:emerald", 4, 10), count(n("heart_crystal"), 1, 1)],
     "fire_dragon": [count(n("fire_dragon_scale"), 10, 18), count(n("dragon_bone"), 5, 10), count(n("fire_dragon_heart"), 1, 1),
                     count(n("heart_crystal"), 1, 1), count("minecraft:gold_ingot", 8, 20), count("minecraft:diamond", 2, 5)],
     "ice_dragon": [count(n("ice_dragon_scale"), 10, 18), count(n("dragon_bone"), 5, 10), count(n("ice_dragon_heart"), 1, 1),
@@ -134,6 +177,11 @@ LOOT = {
 }
 
 ITEMS = {
+    "giant_club": ("Garrote del gigante", "Giant's Club",
+                   "Enorme y lento: pega muchísimo, empuja lejos y deja helado a lo que golpea.",
+                   "Huge and slow: hits extremely hard, knocks far back and leaves what it hits frozen."),
+    "giant_pelt": ("Piel de gigante", "Giant's Pelt",
+                   "Gruesa y cálida. Para abrigos (más adelante).", "Thick and warm. For coats (coming later)."),
     "fire_dragon_scale": ("Escama de dragón de fuego", "Fire Dragon Scale",
                           "Dura como el acero y no se quema. Para la armadura de escamas (más adelante).",
                           "Hard as steel and fireproof. For scale armour (coming later)."),
@@ -158,6 +206,9 @@ TEXTS = {
                                                           "A roar shakes the earth and the sky turns red: a fire dragon is near..."),
     "message.evolvedwarfare.legendary.roar.ice_dragon": ("Un rugido helado corta el aire: un dragón de hielo anda cerca...",
                                                          "A freezing roar cuts the air: an ice dragon is near..."),
+    "message.evolvedwarfare.legendary.roar.frost_giant": ("La tierra tiembla bajo unos pasos enormes: un gigante de hielo anda cerca...",
+                                                          "The ground trembles under huge footsteps: a frost giant is near..."),
+    "message.evolvedwarfare.legendary.blizzard": ("¡La ventisca del gigante te hiela hasta los huesos!", "The giant's blizzard freezes you to the bone!"),
     "message.evolvedwarfare.legendary.slain": ("¡%s ha caído! Su leyenda será contada.", "%s has fallen! Its legend will be told."),
     "death.attack.evolvedwarfare.dragon_fire": ("%1$s fue calcinado por el aliento de un dragón", "%1$s was burnt to ashes by dragon breath"),
     "death.attack.evolvedwarfare.dragon_fire.player": ("%1$s fue calcinado por %2$s", "%1$s was burnt to ashes by %2$s"),
@@ -282,6 +333,33 @@ def scale_icon(color):
     return img
 
 
+def club_icon():
+    img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    leather, ice, ice_dark = (110, 86, 62), (196, 230, 248), (110, 160, 200)
+    for k in range(1, 10):
+        img.putpixel((k, 15 - k), leather + (255,))
+        img.putpixel((k + 1, 15 - k), shade(leather, 0.7) + (255,))
+    for x in range(8, 15):
+        for y in range(1, 8):
+            if (x - 11) ** 2 + (y - 4) ** 2 <= 11:
+                img.putpixel((x, y), (ice if (x + y) % 3 else ice_dark) + (255,))
+    for x, y in ((14, 1), (7, 3), (12, 8), (15, 5)):
+        img.putpixel((x, y), ice_dark + (255,))
+    return img
+
+
+def pelt_icon():
+    img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    fur, dark = (232, 230, 222), (170, 164, 150)
+    for y in range(3, 14):
+        w = 5 if y in (3, 13) else 6
+        for x in range(8 - w, 8 + w):
+            img.putpixel((x, y), (dark if x in (8 - w, 8 + w - 1) or (x * y) % 7 == 0 else fur) + (255,))
+    for x, y in ((1, 4), (14, 4), (1, 12), (14, 12)):
+        img.putpixel((x, y), dark + (255,))
+    return img
+
+
 def bone_icon():
     img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
     bone, dark = (226, 218, 196), (150, 140, 120)
@@ -335,11 +413,14 @@ def main():
     scale_icon(DRAGONS["fire_dragon"][0]).save(os.path.join(item_dir, "fire_dragon_scale.png"))
     scale_icon(DRAGONS["ice_dragon"][0]).save(os.path.join(item_dir, "ice_dragon_scale.png"))
     bone_icon().save(os.path.join(item_dir, "dragon_bone.png"))
+    club_icon().save(os.path.join(item_dir, "giant_club.png"))
+    pelt_icon().save(os.path.join(item_dir, "giant_pelt.png"))
     heart_icon((150, 30, 30), (255, 160, 40)).save(os.path.join(item_dir, "fire_dragon_heart.png"))
     heart_icon((70, 120, 170), (180, 240, 255)).save(os.path.join(item_dir, "ice_dragon_heart.png"))
     for name in ITEMS:
         write_json(os.path.join(ASSETS, "models/item/%s.json" % name),
-                   {"parent": "minecraft:item/generated", "textures": {"layer0": n("item/" + name)}})
+                   {"parent": "minecraft:item/handheld" if name == "giant_club" else "minecraft:item/generated",
+                    "textures": {"layer0": n("item/" + name)}})
     # tanda 2: las armaduras de escamas y las espadas de hueso
     import ew_class_armor as CA
     import ew_armor as A

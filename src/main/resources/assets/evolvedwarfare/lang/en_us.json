@@ -2955,5 +2955,13 @@
   "item.evolvedwarfare.flamed_dragonbone_sword": "Flamed Dragonbone Sword",
   "item.evolvedwarfare.flamed_dragonbone_sword.desc": "Sets what it hits on fire and deals extra damage to ice dragons.",
   "item.evolvedwarfare.iced_dragonbone_sword": "Iced Dragonbone Sword",
-  "item.evolvedwarfare.iced_dragonbone_sword.desc": "Freezes and slows what it hits and deals extra damage to fire dragons."
+  "item.evolvedwarfare.iced_dragonbone_sword.desc": "Freezes and slows what it hits and deals extra damage to fire dragons.",
+  "entity.evolvedwarfare.frost_giant": "Frost Giant",
+  "item.evolvedwarfare.frost_giant_spawn_egg": "Frost Giant Spawn Egg",
+  "item.evolvedwarfare.giant_club": "Giant's Club",
+  "item.evolvedwarfare.giant_club.desc": "Huge and slow: hits extremely hard, knocks far back and leaves what it hits frozen.",
+  "item.evolvedwarfare.giant_pelt": "Giant's Pelt",
+  "item.evolvedwarfare.giant_pelt.desc": "Thick and warm. For coats (coming later).",
+  "message.evolvedwarfare.legendary.roar.frost_giant": "The ground trembles under huge footsteps: a frost giant is near...",
+  "message.evolvedwarfare.legendary.blizzard": "The giant's blizzard freezes you to the bone!"
 }

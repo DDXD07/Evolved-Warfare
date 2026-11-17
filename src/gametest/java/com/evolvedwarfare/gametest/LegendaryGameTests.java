@@ -129,4 +129,25 @@ public class LegendaryGameTests implements FabricGameTest {
 		ice.discard();
 		ctx.complete();
 	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "legendary", tickLimit = 100)
+	public void frostGiantStompsAndThrows(TestContext ctx) {
+		floor(ctx);
+		com.evolvedwarfare.legendary.FrostGiantEntity giant = ctx.spawnEntity(Legendaries.FROST_GIANT, 2, 1, 2);
+		giant.setAiDisabled(true);
+		VillagerEntity near = ctx.spawnEntity(EntityType.VILLAGER, 5, 1, 2);
+		near.setAiDisabled(true);
+		float before = near.getHealth();
+		int hit = giant.stomp(ctx.getWorld());
+		boolean thrown = giant.throwBoulder(ctx.getWorld(), near);
+		int boulders = ctx.getWorld().getEntitiesByClass(net.minecraft.entity.FallingBlockEntity.class, giant.getBoundingBox().expand(4, 6, 4),
+				e -> true).size();
+		LOG.info("[EW-GAMETEST] gigante: vida {}, pisotón a {} ({} -> {}), lanza {} ({} bloques en el aire)", giant.getMaxHealth(), hit, before,
+				near.getHealth(), thrown, boulders);
+		check(giant.getMaxHealth() >= 600.0F, "El gigante no tiene vida de leyenda");
+		check(hit >= 1 && near.getHealth() < before, "El pisotón no hace daño");
+		check(thrown && boulders >= 1, "No lanza el bloque de hielo");
+		giant.discard();
+		ctx.complete();
+	}
 }

@@ -54,6 +54,10 @@ public final class Legendaries {
 			EntityType.Builder.create(DragonEntity::new, SpawnGroup.MONSTER).dimensions(4.5F, 3.5F).eyeHeight(3.0F).maxTrackingRange(20),
 			0x84B2D6, 0xE8F0F8);
 
+	public static final EntityType<FrostGiantEntity> FROST_GIANT = type("frost_giant",
+			EntityType.Builder.create(FrostGiantEntity::new, SpawnGroup.MONSTER).dimensions(2.6F, 8.0F).eyeHeight(7.2F).maxTrackingRange(16),
+			0x92ACC4, 0xE8E6DE);
+
 	public static final Item FIRE_DRAGON_SCALE = item("fire_dragon_scale", new Described(new Item.Settings().rarity(Rarity.RARE).fireproof()));
 	public static final Item ICE_DRAGON_SCALE = item("ice_dragon_scale", new Described(new Item.Settings().rarity(Rarity.RARE)));
 	public static final Item DRAGON_BONE = item("dragon_bone", new Described(new Item.Settings().rarity(Rarity.RARE)));
@@ -77,6 +81,10 @@ public final class Legendaries {
 	public static final Item FLAMED_DRAGONBONE_SWORD = item("flamed_dragonbone_sword", new DragonGear.DragonboneSwordItem(DragonGear.Element.FIRE));
 	public static final Item ICED_DRAGONBONE_SWORD = item("iced_dragonbone_sword", new DragonGear.DragonboneSwordItem(DragonGear.Element.ICE));
 
+	// el gigante de hielo (fase 103)
+	public static final Item GIANT_CLUB = item("giant_club", new DragonGear.GiantClubItem());
+	public static final Item GIANT_PELT = item("giant_pelt", new Described(new Item.Settings().rarity(Rarity.RARE)));
+
 	public static final ItemGroup GROUP = Registry.register(Registries.ITEM_GROUP, EvolvedWarfare.id("legendary"), FabricItemGroup.builder()
 			.icon(() -> new ItemStack(FIRE_DRAGON_SCALE))
 			.displayName(Text.translatable("itemGroup.evolvedwarfare.legendary"))
@@ -97,7 +105,7 @@ public final class Legendaries {
 
 	/** Qué legendario le va a un sitio, o ninguno. */
 	public enum Kind {
-		FIRE_DRAGON, ICE_DRAGON
+		FIRE_DRAGON, ICE_DRAGON, FROST_GIANT
 	}
 
 	private Legendaries() {
@@ -117,6 +125,7 @@ public final class Legendaries {
 	public static void register() {
 		FabricDefaultAttributeRegistry.register(FIRE_DRAGON, DragonEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(ICE_DRAGON, DragonEntity.createAttributes());
+		FabricDefaultAttributeRegistry.register(FROST_GIANT, FrostGiantEntity.createAttributes());
 		ServerTickEvents.END_SERVER_TICK.register(Legendaries::tick);
 		DragonGear.register();
 	}
@@ -151,35 +160,52 @@ public final class Legendaries {
 				continue;
 			}
 			Kind kind = kindFor(world.getBiome(player.getBlockPos()).value().getTemperature());
-			if (kind == null || !world.getEntitiesByClass(DragonEntity.class, new Box(player.getBlockPos()).expand(300, 200, 300), e -> true).isEmpty()) {
+			if (kind == Kind.ICE_DRAGON && world.random.nextBoolean()) {
+				kind = Kind.FROST_GIANT;
+			}
+			if (kind == null || !world.getEntitiesByClass(net.minecraft.entity.mob.MobEntity.class, new Box(player.getBlockPos()).expand(300, 200, 300),
+					e -> e instanceof Legendary).isEmpty()) {
 				continue;
 			}
 			spawn(world, player, kind);
 		}
 	}
 
-	/** Llega uno: lejos del jugador, alto, con un rugido que se oye desde muy lejos. */
+	/** Llega uno: lejos del jugador (los dragones, en lo alto; el gigante, en el suelo), con un aviso que se oye desde muy lejos. */
 	@Nullable
-	public static DragonEntity spawn(ServerWorld world, ServerPlayerEntity near, Kind kind) {
+	public static net.minecraft.entity.mob.MobEntity spawn(ServerWorld world, ServerPlayerEntity near, Kind kind) {
 		double a = world.random.nextDouble() * Math.PI * 2;
-		double d = 56 + world.random.nextInt(32);
+		double d = (kind == Kind.FROST_GIANT ? 36 : 56) + world.random.nextInt(32);
 		int x = (int) (near.getX() + Math.cos(a) * d), z = (int) (near.getZ() + Math.sin(a) * d);
 		if (!world.isChunkLoaded(x >> 4, z >> 4)) {
 			return null;
 		}
-		int y = world.getTopY(Heightmap.Type.MOTION_BLOCKING, x, z) + 24;
-		DragonEntity dragon = (kind == Kind.ICE_DRAGON ? ICE_DRAGON : FIRE_DRAGON).create(world);
-		if (dragon == null) {
+		int ground = world.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z);
+		net.minecraft.entity.mob.MobEntity mob = switch (kind) {
+			case FIRE_DRAGON -> FIRE_DRAGON.create(world);
+			case ICE_DRAGON -> ICE_DRAGON.create(world);
+			case FROST_GIANT -> FROST_GIANT.create(world);
+		};
+		if (mob == null) {
 			return null;
 		}
-		dragon.refreshPositionAndAngles(x + 0.5, y, z + 0.5, world.random.nextFloat() * 360, 0);
-		dragon.setHome(new BlockPos(x, y - 24, z));
-		world.spawnEntity(dragon);
-		String key = "message.evolvedwarfare.legendary.roar." + (kind == Kind.ICE_DRAGON ? "ice_dragon" : "fire_dragon");
-		for (ServerPlayerEntity p : world.getPlayers(p -> p.squaredDistanceTo(dragon) < 200 * 200)) {
-			p.playSoundToPlayer(SoundEvents.ENTITY_ENDER_DRAGON_GROWL, SoundCategory.HOSTILE, 1.0F, kind == Kind.ICE_DRAGON ? 1.3F : 0.8F);
-			p.sendMessage(Text.translatable(key).formatted(kind == Kind.ICE_DRAGON ? Formatting.AQUA : Formatting.RED, Formatting.ITALIC), false);
+		int y = kind == Kind.FROST_GIANT ? ground : ground + 24;
+		if (kind == Kind.FROST_GIANT && world.getBlockState(new BlockPos(x, ground - 1, z)).getFluidState().isStill()) {
+			return null; // no en el agua
 		}
-		return dragon;
+		mob.refreshPositionAndAngles(x + 0.5, y, z + 0.5, world.random.nextFloat() * 360, 0);
+		if (mob instanceof DragonEntity dragon) {
+			dragon.setHome(new BlockPos(x, ground, z));
+		}
+		world.spawnEntity(mob);
+		String id = kind.name().toLowerCase(java.util.Locale.ROOT);
+		boolean cold = kind != Kind.FIRE_DRAGON;
+		for (ServerPlayerEntity p : world.getPlayers(p -> p.squaredDistanceTo(mob) < 200 * 200)) {
+			p.playSoundToPlayer(kind == Kind.FROST_GIANT ? SoundEvents.ENTITY_RAVAGER_ROAR : SoundEvents.ENTITY_ENDER_DRAGON_GROWL, SoundCategory.HOSTILE,
+					1.0F, kind == Kind.FROST_GIANT ? 0.4F : cold ? 1.3F : 0.8F);
+			p.sendMessage(Text.translatable("message.evolvedwarfare.legendary.roar." + id).formatted(cold ? Formatting.AQUA : Formatting.RED,
+					Formatting.ITALIC), false);
+		}
+		return mob;
 	}
 }
