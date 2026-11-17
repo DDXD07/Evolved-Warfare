@@ -176,6 +176,12 @@ public final class EwConfig {
 	public double legendaryChance = 0.01;
 	/** El aliento de los dragones prende fuego y congela (con mobGriefing). */
 	public boolean dragonGriefing = true;
+	/** A veces, al picar, talar o cavar, sale algo del bloque (lepismas, mineros zombis, ents...). */
+	public boolean blockMobsEnabled = true;
+	/** Probabilidad por bloque roto. */
+	public double blockMobChance = 0.004;
+	/** Probabilidad de que algo te despierte al dormir. */
+	public double sleepAmbushChance = 0.2;
 
 	// ------------------------------------------------------------------ asentamientos
 	/** Vida y daño extra por cada nivel del asentamiento por encima del 1. */
@@ -343,6 +349,9 @@ public final class EwConfig {
 			new Option("legendaryMinLevel", "legendary", 0, 100, 1),
 			new Option("legendaryChance", "legendary", 0.0, 1.0, 0.005),
 			new Option("dragonGriefing", "legendary", 0, 1, 1),
+			new Option("blockMobsEnabled", "legendary", 0, 1, 1),
+			new Option("blockMobChance", "legendary", 0.0, 0.1, 0.001),
+			new Option("sleepAmbushChance", "legendary", 0.0, 1.0, 0.05),
 			new Option("settlementBonusPerLevel", "settlements", 0.0, 1.0, 0.01),
 			new Option("settlementBlocksPerLevel", "settlements", 100, 100000, 50),
 			new Option("settlementMaxLevel", "settlements", 1, 10, 1),

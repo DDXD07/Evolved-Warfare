@@ -175,10 +175,38 @@ def sea_serpent():
     return a
 
 
+# ------------------------------------------------------------------ fase 105: el ent (sale al talar)
+
+def treant():
+    """El ent: piernas de tronco con raíces, un tronco de corteza con musgo, brazos de rama con ramitas, una cara tallada
+    con ojos amarillos que brillan y una copa de hojas."""
+    a = W.Animal("treant")
+    bark, bark_dark = (104, 80, 52), (70, 52, 32)
+    moss = (86, 120, 52)
+    leaves, leaves_dark = (64, 116, 40), (40, 84, 28)
+    for side, name, phase in ((-1, "leg_r", 0), (1, "leg_l", 1)):
+        leg = a.part(name, None, (side * 2.5, 12, 0), role="leg", phase=phase)
+        leg.cube((-2, 0, -2), (4, 12, 4), **C(bark, rings=(bark_dark, 3), low=(bark_dark, 2)))
+        leg.cube((-3, 10, -3), (6, 2, 6), **C(bark_dark))                                   # las raíces
+    body = a.part("body", None, (0, 12, 0), role="body")
+    body.cube((-5, -13, -3), (10, 13, 6), **C(bark, rings=(bark_dark, 3), spots=(moss, 0.12)))
+    head = a.part("head", "body", (0, -13, 0), role="head")
+    head.cube((-4, -8, -4), (8, 8, 8), **C(bark, eyes=("front", 4, (250, 220, 70)), glow_eyes=True, mouth=(40, 28, 16), spots=(moss, 0.1)))
+    head.cube((-7, -15, -6), (14, 8, 12), **C(leaves, spots=(leaves_dark, 0.3)))             # la copa
+    head.cube((-5, -18, -4), (10, 3, 8), **C(leaves, spots=(leaves_dark, 0.3)))
+    for side, name in ((-1, "arm_r"), (1, "arm_l")):
+        arm = a.part(name, "body", (side * 6.5, -11, 0), role="arm", side=side)
+        arm.cube((-1.5, -1, -1.5), (3, 14, 3), **C(bark, rings=(bark_dark, 2)))
+        arm.cube((side * 1 - 0.5, 4, -3), (1, 1, 3), **C(bark_dark))                       # ramitas
+        arm.cube((-1.5, 12, -1.5), (3, 3, 3), **C(leaves, spots=(leaves_dark, 0.3)))
+    return a
+
+
 MODELS = collections.OrderedDict([("fire_dragon", lambda: dragon("fire_dragon")), ("ice_dragon", lambda: dragon("ice_dragon")),
-                                  ("frost_giant", frost_giant), ("sea_serpent", sea_serpent)])
+                                  ("frost_giant", frost_giant), ("sea_serpent", sea_serpent), ("treant", treant)])
 
 NAMES = {
+    "treant": ("Ent", "Treant"),
     "sea_serpent": ("Serpiente marina", "Sea Serpent"),
     "frost_giant": ("Gigante de hielo", "Frost Giant"),
     "fire_dragon": ("Dragón de fuego", "Fire Dragon"),
@@ -198,6 +226,8 @@ def count(item, lo, hi, chance=None):
 
 
 LOOT = {
+    "treant": [count("minecraft:oak_log", 3, 6), count("minecraft:stick", 2, 6), count("minecraft:oak_sapling", 1, 2),
+               count("minecraft:apple", 1, 2, 0.4), count(n("living_bark"), 1, 2)],
     "sea_serpent": [count(n("sea_serpent_scale"), 10, 18), count(n("serpent_fang"), 2, 4), count("minecraft:prismarine_shard", 6, 14),
                     count("minecraft:nautilus_shell", 1, 3), count("minecraft:trident", 1, 1, 0.3), count(n("heart_crystal"), 1, 1)],
     "frost_giant": [count(n("giant_club"), 1, 1), count(n("giant_pelt"), 2, 4), count("minecraft:packed_ice", 6, 16), count("minecraft:diamond", 2, 5),
@@ -209,6 +239,8 @@ LOOT = {
 }
 
 ITEMS = {
+    "living_bark": ("Corteza viva", "Living Bark", "Aún se mueve un poco. Con ella, la madera se cura sola (más adelante).",
+                    "It still twitches. With it, wood mends itself (coming later)."),
     "sea_serpent_scale": ("Escama de serpiente marina", "Sea Serpent Scale", "Brilla como el mar. Para la armadura de las mareas.",
                           "It shines like the sea. For tide armour."),
     "serpent_fang": ("Colmillo de serpiente marina", "Sea Serpent Fang", "Largo y curvo. Un trofeo... y más adelante, algo más.",
@@ -243,6 +275,22 @@ TEXTS = {
                                                           "The sea churns and something huge moves beneath the waves: a sea serpent..."),
     "message.evolvedwarfare.legendary.capsize": ("¡La serpiente ha partido tu barca!", "The serpent has smashed your boat!"),
     "message.evolvedwarfare.legendary.whirlpool": ("¡Un remolino te arrastra hacia el fondo!", "A whirlpool drags you down!"),
+    "message.evolvedwarfare.ambush.stone": ("¡Has abierto un nido! Algo sale de la piedra...", "You broke into a nest! Something crawls out of the stone..."),
+    "message.evolvedwarfare.ambush.deep": ("Algo se movía en la oscuridad de la roca...", "Something was moving in the darkness of the rock..."),
+    "message.evolvedwarfare.ambush.log": ("¡El árbol se ha despertado!", "The tree has woken up!"),
+    "message.evolvedwarfare.ambush.dirt": ("¡Algo estaba enterrado ahí!", "Something was buried there!"),
+    "message.evolvedwarfare.ambush.nether": ("La roca del Nether escupe algo...", "The Nether rock spits something out..."),
+    "message.evolvedwarfare.ambush.sleep": ("¡Algo te ha despertado! No estás solo...", "Something woke you up! You are not alone..."),
+    "config.evolvedwarfare.blockMobsEnabled": ("Monstruos al picar, talar y cavar", "Monsters when mining, chopping and digging"),
+    "config.evolvedwarfare.blockMobsEnabled.tip": (
+        "A veces, al romper piedra, troncos, tierra o arena, sale algo: lepismas, mineros zombis, arañas, ents...",
+        "Sometimes breaking stone, logs, dirt or sand lets something out: silverfish, zombie miners, spiders, treants..."),
+    "config.evolvedwarfare.blockMobChance": ("Probabilidad por bloque", "Chance per block"),
+    "config.evolvedwarfare.blockMobChance.tip": ("Probabilidad de que salga algo al romper un bloque (0.004 = 1 de cada 250).",
+                                                 "Chance that something comes out when breaking a block (0.004 = 1 in 250)."),
+    "config.evolvedwarfare.sleepAmbushChance": ("Emboscada al dormir", "Sleep ambush"),
+    "config.evolvedwarfare.sleepAmbushChance.tip": ("Probabilidad de que algo te despierte al dormir (y te esté esperando).",
+                                                    "Chance that something wakes you up while sleeping (and is waiting for you)."),
     "itemGroup.evolvedwarfare.legendary": ("Evolved Warfare: Legendarios", "Evolved Warfare: Legendary"),
     "message.evolvedwarfare.legendary.roar.fire_dragon": ("Un rugido estremece la tierra y el cielo se tiñe de rojo: un dragón de fuego anda cerca...",
                                                           "A roar shakes the earth and the sky turns red: a fire dragon is near..."),
@@ -473,6 +521,17 @@ def main():
     pelt_icon().save(os.path.join(item_dir, "giant_pelt.png"))
     scale_icon((44, 120, 128)).save(os.path.join(item_dir, "sea_serpent_scale.png"))
     fang_icon().save(os.path.join(item_dir, "serpent_fang.png"))
+    bark = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    rb = random.Random(105)
+    for y in range(2, 14):
+        for x in range(3, 13):
+            c = (104, 80, 52) if (x + y // 3) % 3 else (70, 52, 32)
+            if rb.random() < 0.15:
+                c = (86, 120, 52)
+            bark.putpixel((x, y), c + (255,))
+    for x, y in ((6, 6), (9, 6)):
+        bark.putpixel((x, y), (250, 220, 70, 255))
+    bark.save(os.path.join(item_dir, "living_bark.png"))
     heart_icon((150, 30, 30), (255, 160, 40)).save(os.path.join(item_dir, "fire_dragon_heart.png"))
     heart_icon((70, 120, 170), (180, 240, 255)).save(os.path.join(item_dir, "ice_dragon_heart.png"))
     for name in ITEMS:

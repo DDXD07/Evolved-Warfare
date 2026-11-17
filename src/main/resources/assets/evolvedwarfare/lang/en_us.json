@@ -2977,5 +2977,21 @@
   "item.evolvedwarfare.sea_serpent_scale_helmet": "Tide Helmet",
   "item.evolvedwarfare.sea_serpent_scale_chestplate": "Tide Chestplate",
   "item.evolvedwarfare.sea_serpent_scale_leggings": "Tide Leggings",
-  "item.evolvedwarfare.sea_serpent_scale_boots": "Tide Boots"
+  "item.evolvedwarfare.sea_serpent_scale_boots": "Tide Boots",
+  "entity.evolvedwarfare.treant": "Treant",
+  "item.evolvedwarfare.treant_spawn_egg": "Treant Spawn Egg",
+  "item.evolvedwarfare.living_bark": "Living Bark",
+  "item.evolvedwarfare.living_bark.desc": "It still twitches. With it, wood mends itself (coming later).",
+  "message.evolvedwarfare.ambush.stone": "You broke into a nest! Something crawls out of the stone...",
+  "message.evolvedwarfare.ambush.deep": "Something was moving in the darkness of the rock...",
+  "message.evolvedwarfare.ambush.log": "The tree has woken up!",
+  "message.evolvedwarfare.ambush.dirt": "Something was buried there!",
+  "message.evolvedwarfare.ambush.nether": "The Nether rock spits something out...",
+  "message.evolvedwarfare.ambush.sleep": "Something woke you up! You are not alone...",
+  "config.evolvedwarfare.blockMobsEnabled": "Monsters when mining, chopping and digging",
+  "config.evolvedwarfare.blockMobsEnabled.tip": "Sometimes breaking stone, logs, dirt or sand lets something out: silverfish, zombie miners, spiders, treants...",
+  "config.evolvedwarfare.blockMobChance": "Chance per block",
+  "config.evolvedwarfare.blockMobChance.tip": "Chance that something comes out when breaking a block (0.004 = 1 in 250).",
+  "config.evolvedwarfare.sleepAmbushChance": "Sleep ambush",
+  "config.evolvedwarfare.sleepAmbushChance.tip": "Chance that something wakes you up while sleeping (and is waiting for you)."
 }

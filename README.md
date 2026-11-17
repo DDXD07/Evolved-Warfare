@@ -2666,6 +2666,22 @@ Lo que se hace con lo que sueltan los dragones (pestaña «Legendarios»):
 - **La armadura de las mareas** (con las escamas): como la de diamante; cada pieza quita un 25 % del daño al ahogarte y el
   **juego completo** te deja **respirar bajo el agua** y **nadar como un delfín**.
 
+## Fase 105 — Sorpresas: monstruos al picar, talar, cavar y dormir
+
+Como en RLCraft, a veces sale algo de donde menos te lo esperas (en la categoría **Criaturas legendarias**: sí/no, la
+probabilidad por bloque —1 de cada 250— y la de que te despierten al dormir —un 20 %—):
+
+- **Al picar piedra**: un nido de **lepismas** (3-4) o un **minero zombi** (con su pico y su casco). En la **pizarra
+  profunda**: dos **arañas de cueva** o un **esqueleto minero** (pico y casco de hierro). En la roca del **Nether**: un cubo
+  de magma.
+- **Al talar**: el árbol se despierta, un **ent** (tronco andante con copa de hojas y ojos amarillos; 60 de vida, duro y
+  lento, el fuego le hace el doble y las hachas un 50 % más; suelta troncos, palos, retoños, alguna manzana y **corteza
+  viva**), o caen dos **arañas** de la copa.
+- **Al cavar** tierra, arena o grava: sale un **zombi** enterrado (un **momificado** en el desierto).
+- **Al dormir**: a veces **algo te despierta**: 2 o 3 monstruos (zombis, esqueletos, arañas; momificados en el desierto y
+  esqueletos glaciales en la nieve) te esperan junto a la cama.
+- Todos van directos a por ti, y tienen el nivel de peligro de la zona. En pacífico y en creativo, no pasa.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

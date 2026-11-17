@@ -181,4 +181,28 @@ public class LegendaryGameTests implements FabricGameTest {
 		serpent.discard();
 		ctx.complete();
 	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "legendary", tickLimit = 100)
+	public void mobsComeOutOfBlocks(TestContext ctx) {
+		floor(ctx);
+		ServerPlayerEntity player = (ServerPlayerEntity) ctx.createMockCreativeServerPlayerInWorld();
+		player.changeGameMode(GameMode.SURVIVAL);
+		var BM = com.evolvedwarfare.legendary.BlockMobs.class;
+		check(com.evolvedwarfare.legendary.BlockMobs.source(Blocks.STONE.getDefaultState(), new BlockPos(0, 40, 0))
+				== com.evolvedwarfare.legendary.BlockMobs.Source.STONE, "La piedra no es de piedra");
+		check(com.evolvedwarfare.legendary.BlockMobs.source(Blocks.OAK_LOG.getDefaultState(), new BlockPos(0, 70, 0))
+				== com.evolvedwarfare.legendary.BlockMobs.Source.LOG, "El tronco no es de árbol");
+		check(com.evolvedwarfare.legendary.BlockMobs.source(Blocks.GLASS.getDefaultState(), new BlockPos(0, 70, 0)) == null, "Del cristal sale algo");
+		BlockPos at = ctx.getAbsolutePos(new BlockPos(3, 1, 3));
+		var stone = com.evolvedwarfare.legendary.BlockMobs.spawn(ctx.getWorld(), player, at, com.evolvedwarfare.legendary.BlockMobs.Source.STONE);
+		var log = com.evolvedwarfare.legendary.BlockMobs.spawn(ctx.getWorld(), player, at, com.evolvedwarfare.legendary.BlockMobs.Source.LOG);
+		int ambush = com.evolvedwarfare.legendary.BlockMobs.ambush(ctx.getWorld(), player);
+		LOG.info("[EW-GAMETEST] sorpresas: piedra {}, tronco {}, al dormir {} ({})", stone.stream().map(m -> m.getType().getUntranslatedName()).toList(),
+				log.stream().map(m -> m.getType().getUntranslatedName()).toList(), ambush, BM.getSimpleName());
+		check(!stone.isEmpty() && stone.get(0).getTarget() == player, "De la piedra no sale nada (o no va a por el jugador)");
+		check(!log.isEmpty(), "Del tronco no sale nada");
+		stone.forEach(net.minecraft.entity.Entity::discard);
+		log.forEach(net.minecraft.entity.Entity::discard);
+		ctx.complete();
+	}
 }
