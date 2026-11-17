@@ -35,6 +35,7 @@
 			"com.evolvedwarfare.gametest.FoodRotGameTests",
 			"com.evolvedwarfare.gametest.EnchantingGameTests",
 			"com.evolvedwarfare.gametest.LegendaryGameTests",
+			"com.evolvedwarfare.gametest.NpcDetailsGameTests",
 			"com.evolvedwarfare.gametest.CropGameTests",
 			"com.evolvedwarfare.gametest.WildlifeGameTests",
 			"com.evolvedwarfare.gametest.DismembermentGameTests",

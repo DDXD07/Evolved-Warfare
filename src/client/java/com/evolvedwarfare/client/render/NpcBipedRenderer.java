@@ -27,6 +27,8 @@ public abstract class NpcBipedRenderer<T extends MobEntity> extends BipedEntityR
 				context.getModelManager()));
 		// los muñones de lo que le hayan cortado
 		addFeature(new com.evolvedwarfare.client.dismember.StumpFeatureRenderer<>(this));
+		// las piezas en 3D de su aspecto (barbas, sombreros, cinturones, capas...; fase 111)
+		addFeature(new com.evolvedwarfare.client.render.details.NpcDetailFeature<>(this));
 	}
 
 	@Override

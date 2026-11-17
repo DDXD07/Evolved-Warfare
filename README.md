@@ -2750,6 +2750,27 @@ no).
   bolas de fuego**. **Anda por encima de la lava**, el fuego no le hace nada y el **agua le quema**. 24 de vida.
 - **Su botín**: polvo de blaze, crema de magma y, a veces, un **cuerno de diablito**.
 
+## Fase 111 — Las personas del mod, en 3D
+
+Cada uno de los **97 aspectos** de las personas del mod (reclutas, soldados, guardias, trabajadores, comerciantes,
+bandidos, piratas, vikingos y sus jefes) tiene ahora sus propias **piezas en 3D** (1290 en total), sacadas de lo que ya
+llevaba pintado y del mismo color (tools/ew_npc_details.py):
+
+- **En la cabeza**: barbas con volumen (cortas, pobladas, largas o trenzadas con sus anillas), bigotes, coletas, trenzas,
+  moños y melenas; capuchas con su pico, la punta y el embozo; sombreros de paja, gorras con visera, boinas, tricornios (con
+  su ribete y la calavera del capitán), los nudos del pañuelo pirata, turbantes con su gema y la nariguera del casco;
+  máscaras de bandido con el nudo atrás, parches y pendientes.
+- **En el cuerpo**: cinturones con hebilla, bolsas y herramientas, fajas con su lazo, bandoleras cruzadas, mandiles con
+  bolsillo, tabardos por delante y por detrás con su emblema, capas con su broche, mantos de piel y bufandas.
+- **En brazos y piernas**: hombreras, brazales, guantes, mangas remangadas, vendas de las piernas, rodilleras, cañas de las
+  botas y suelas.
+
+**Compatibles con todo**: cada pieza va pegada a su parte del cuerpo (también a los antebrazos y espinillas de las
+articulaciones, así que se doblan con codos y rodillas). Si al NPC le **cortan** la cabeza, un brazo o una pierna, sus
+piezas **se van con el trozo** (la barba con la cabeza, el brazal con el brazo) y no quedan flotando. Si lleva
+**armadura** en ese hueco, las piezas de ese hueco no se ponen (para que no atraviesen la armadura). El **daño
+locacional** va por la caja del NPC, así que funciona igual que antes.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

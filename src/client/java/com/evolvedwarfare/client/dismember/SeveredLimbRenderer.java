@@ -106,6 +106,18 @@ public class SeveredLimbRenderer extends EntityRenderer<SeveredLimbEntity> {
 			p.visible = true;
 			p.render(matrices, vc, light, OverlayTexture.DEFAULT_UV);
 		}
+		// sus piezas en 3D (la barba con la cabeza, el brazal con el brazo...; fase 111)
+		com.evolvedwarfare.client.render.details.NpcDetails details = com.evolvedwarfare.client.render.details.NpcDetails.forSkin(getTexture(limb));
+		if (details != null) {
+			String bone = switch (part) {
+				case Dismemberment.HEAD -> "head";
+				case Dismemberment.LEFT_ARM -> "left_arm";
+				case Dismemberment.RIGHT_LEG -> "right_leg";
+				case Dismemberment.LEFT_LEG -> "left_leg";
+				default -> "right_arm";
+			};
+			details.renderPiece(bone, matrices, consumers, light, OverlayTexture.DEFAULT_UV);
+		}
 		matrices.pop();
 		super.render(limb, yaw, tickDelta, matrices, consumers, light);
 	}
