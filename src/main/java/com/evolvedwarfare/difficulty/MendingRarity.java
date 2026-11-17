@@ -44,7 +44,7 @@ public final class MendingRarity {
 		if (mending == null) {
 			return ItemStack.EMPTY;
 		}
-		ItemStack book = EnchantmentHelper.getEnchantedBookWith(new EnchantmentLevelEntry(mending, 1));
+		ItemStack book = net.minecraft.item.EnchantedBookItem.forEnchantment(new EnchantmentLevelEntry(mending, 1));
 		book.setCount(Math.max(1, count));
 		return book;
 	}

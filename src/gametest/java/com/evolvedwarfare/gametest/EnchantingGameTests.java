@@ -100,7 +100,7 @@ public class EnchantingGameTests implements FabricGameTest {
 		var registries = ctx.getWorld().getRegistryManager();
 		var enchantments = registries.get(RegistryKeys.ENCHANTMENT);
 		ItemStack mendingBook = com.evolvedwarfare.difficulty.MendingRarity.mendingBook(registries, 1);
-		ItemStack sharpBook = EnchantmentHelper.getEnchantedBookWith(new net.minecraft.enchantment.EnchantmentLevelEntry(
+		ItemStack sharpBook = net.minecraft.item.EnchantedBookItem.forEnchantment(new net.minecraft.enchantment.EnchantmentLevelEntry(
 				enchantments.getEntry(Enchantments.SHARPNESS).orElseThrow(), 3));
 		EwConfig c = EwConfig.get();
 		int was = c.mendingBookChance;
