@@ -25,7 +25,10 @@ import net.minecraft.util.math.MathHelper;
  * <li><b>Nadar</b>: en el agua sin nadar a crol, se mantiene a flote moviendo los brazos a los lados y pataleando; a crol,
  * patada de piernas.</li>
  * </ul>
- * Todo pasa de una postura a otra poco a poco. Los brazos se dejan como están si sujetan o usan algo de forma especial
+ * Con codos y rodillas (fase 89, {@link Joints}): la pierna que va por el aire dobla la rodilla y la que pisa casi no, el
+ * peso pasa de un pie a otro, los codos se doblan al bracear (en ángulo al correr), se inclina desde la cadera, se agacha
+ * en cuclillas, encoge las piernas al saltar, sube la escalera rodilla a rodilla y tirando con los codos, y patalea en el
+ * agua. Todo pasa de una postura a otra poco a poco. Los brazos se dejan como están si sujetan o usan algo de forma especial
  * (arco, escudo...) o si están golpeando; las otras animaciones del mod (armas, cajas, beber...) van encima.
  */
 public final class LocomotionPoses {
@@ -131,13 +134,33 @@ public final class LocomotionPoses {
 			s.crouchSince = -1.0F;
 		}
 
-		boolean armsFree = armFree(model.rightArmPose) && armFree(model.leftArmPose) && model.handSwingProgress <= 0.0F && !player.isUsingItem();
+		boolean armsFree = armFree(model.rightArmPose) && armFree(model.leftArmPose) && model.handSwingProgress <= 0.0F && !player.isUsingItem()
+				&& !com.evolvedwarfare.client.render.CrateCarry.carrying(player) && !com.evolvedwarfare.client.thirst.DrinkAnimation.active(player)
+				&& com.evolvedwarfare.client.anim.ActivityPoses.activity(player) == com.evolvedwarfare.network.ActivityPayload.NONE;
 		float phase = limbAngle * 0.6662F;
 		float amp = Math.min(limbDistance, 1.0F);
 		float onFoot = (1 - s.jump) * (1 - s.fall) * (1 - s.climb) * (1 - s.tread);
+		// rodillas y codos (radianes de doblez): se van mezclando según la postura y se ponen al final
+		float kneeR = 0.0F, kneeL = 0.0F, elbowR = 0.0F, elbowL = 0.0F;
 
 		// --- andar y correr
 		if (!swimming && onFoot > 0.01F) {
+			// la pierna que va por el aire dobla la rodilla; la que pisa, casi recta (y algo más al recibir el peso)
+			float swingR = Math.max(0.0F, MathHelper.sin(phase)), swingL = Math.max(0.0F, MathHelper.sin(phase + PI));
+			float plantR = Math.max(0.0F, MathHelper.cos(phase)), plantL = Math.max(0.0F, MathHelper.cos(phase + PI));
+			float kneeAmp = (1.15F + 0.9F * s.run) * amp;
+			kneeR = (swingR * kneeAmp + plantR * 0.12F * amp + 0.04F) * onFoot;
+			kneeL = (swingL * kneeAmp + plantL * 0.12F * amp + 0.04F) * onFoot;
+			// los codos: algo doblados siempre, más al ir el brazo adelante; corriendo, en ángulo
+			elbowR = (0.12F + 0.18F * amp + Math.max(0.0F, -MathHelper.cos(phase + PI)) * 0.35F * amp) * onFoot;
+			elbowL = (0.12F + 0.18F * amp + Math.max(0.0F, -MathHelper.cos(phase)) * 0.35F * amp) * onFoot;
+			// el peso pasa de un pie al otro: la cadera se va un poco hacia la pierna que pisa
+			float shift = MathHelper.sin(phase) * 0.35F * amp * onFoot;
+			model.body.pivotX += shift;
+			model.head.pivotX += shift;
+			model.rightArm.pivotX += shift;
+			model.leftArm.pivotX += shift;
+			model.body.roll += -MathHelper.sin(phase) * 0.035F * amp * onFoot;
 			float bob = -Math.abs(MathHelper.cos(phase)) * amp * (0.9F + 0.6F * s.run) * onFoot;
 			for (ModelPart p : new ModelPart[] {model.head, model.body, model.rightArm, model.leftArm}) {
 				p.pivotY += bob;
@@ -151,14 +174,11 @@ public final class LocomotionPoses {
 			}
 			if (s.run > 0.01F && !sneaking) {
 				float r = s.run * onFoot;
-				model.body.pitch += 0.32F * r;
-				model.body.pivotY += 0.9F * r;
-				model.head.pivotY += 1.1F * r;
-				model.head.pitch -= 0.22F * r;
-				model.rightArm.pivotY += 1.2F * r;
-				model.leftArm.pivotY += 1.2F * r;
-				model.rightLeg.pivotZ += 2.2F * r;
-				model.leftLeg.pivotZ += 2.2F * r;
+				// inclinado desde la cadera, con la cabeza al frente
+				Joints.leanAtHips(model, 0.3F * r);
+				model.head.pitch -= 0.26F * r;
+				elbowR = MathHelper.lerp(r, elbowR, 1.35F + MathHelper.cos(phase + PI) * 0.25F * amp);
+				elbowL = MathHelper.lerp(r, elbowL, 1.35F + MathHelper.cos(phase) * 0.25F * amp);
 				// zancada y braceo más largos
 				model.rightLeg.pitch += MathHelper.cos(phase) * 0.35F * amp * r;
 				model.leftLeg.pitch += MathHelper.cos(phase + PI) * 0.35F * amp * r;
@@ -174,6 +194,13 @@ public final class LocomotionPoses {
 			float c = s.crouch * onFoot;
 			model.rightLeg.pitch *= 1.0F - 0.35F * c;
 			model.leftLeg.pitch *= 1.0F - 0.35F * c;
+			// en cuclillas: los muslos adelante y las rodillas dobladas
+			model.rightLeg.pitch -= 0.3F * c;
+			model.leftLeg.pitch -= 0.3F * c;
+			kneeR = MathHelper.lerp(c, kneeR, 0.62F + kneeR * 0.5F);
+			kneeL = MathHelper.lerp(c, kneeL, 0.62F + kneeL * 0.5F);
+			elbowR = MathHelper.lerp(c, elbowR, 0.55F);
+			elbowL = MathHelper.lerp(c, elbowL, 0.55F);
 			if (armsFree) {
 				model.rightArm.pitch -= 0.15F * c;
 				model.leftArm.pitch -= 0.15F * c;
@@ -189,6 +216,9 @@ public final class LocomotionPoses {
 				model.leftLeg.pitch += b * 0.035F * shake;
 				model.rightLeg.roll += b * 0.02F * shake;
 				model.leftLeg.roll -= a * 0.02F * shake;
+				// las rodillas son lo que más tiembla
+				kneeR += b * 0.06F * shake;
+				kneeL += a * 0.06F * shake;
 				float jitter = (a + b) * 0.12F * shake;
 				for (ModelPart p : new ModelPart[] {model.head, model.body, model.rightArm, model.leftArm}) {
 					p.pivotY += jitter;
@@ -201,6 +231,10 @@ public final class LocomotionPoses {
 			float w = s.jump * (1 - s.fall);
 			lerpPitch(model.rightLeg, -0.75F, w * 0.8F);
 			lerpPitch(model.leftLeg, 0.35F, w * 0.8F);
+			kneeR = MathHelper.lerp(w, kneeR, 1.1F);
+			kneeL = MathHelper.lerp(w, kneeL, 0.55F);
+			elbowR = MathHelper.lerp(w, elbowR, 0.7F);
+			elbowL = MathHelper.lerp(w, elbowL, 0.6F);
 			if (armsFree) {
 				lerpPitch(model.rightArm, -0.9F, w * 0.7F);
 				lerpPitch(model.leftArm, -0.6F, w * 0.7F);
@@ -217,6 +251,10 @@ public final class LocomotionPoses {
 			lerpPitch(model.leftLeg, MathHelper.sin(flail + PI) * 0.45F - 0.2F, w);
 			lerpRoll(model.rightLeg, 0.22F, w);
 			lerpRoll(model.leftLeg, -0.22F, w);
+			kneeR = MathHelper.lerp(w, kneeR, 0.45F + MathHelper.sin(flail + 0.8F) * 0.3F);
+			kneeL = MathHelper.lerp(w, kneeL, 0.45F + MathHelper.sin(flail + PI + 0.8F) * 0.3F);
+			elbowR = MathHelper.lerp(w, elbowR, 0.45F + MathHelper.sin(flail * 1.3F + 0.6F) * 0.35F);
+			elbowL = MathHelper.lerp(w, elbowL, 0.45F + MathHelper.sin(flail * 1.3F + 2.4F) * 0.35F);
 			lerpPitch(model.head, model.head.pitch + 0.35F, w * 0.6F);
 			if (armsFree) {
 				lerpPitch(model.rightArm, -2.5F + MathHelper.sin(flail * 1.3F) * 0.35F, w);
@@ -235,6 +273,11 @@ public final class LocomotionPoses {
 			lerpPitch(model.leftLeg, -0.55F - step * 0.5F, w);
 			lerpRoll(model.rightLeg, 0.05F, w);
 			lerpRoll(model.leftLeg, -0.05F, w);
+			// el pie que sube dobla la rodilla; la mano de abajo tira con el codo doblado
+			kneeR = MathHelper.lerp(w, kneeR, 0.5F + Math.max(0.0F, -step) * 1.0F);
+			kneeL = MathHelper.lerp(w, kneeL, 0.5F + Math.max(0.0F, step) * 1.0F);
+			elbowR = MathHelper.lerp(w, elbowR, 0.25F + Math.max(0.0F, step) * 1.1F);
+			elbowL = MathHelper.lerp(w, elbowL, 0.25F + Math.max(0.0F, -step) * 1.1F);
 			model.body.pitch -= 0.08F * w;
 			if (armsFree) {
 				lerpPitch(model.rightArm, -2.75F - step * 0.45F, w);
@@ -254,6 +297,10 @@ public final class LocomotionPoses {
 			}
 			lerpPitch(model.rightLeg, MathHelper.sin(t * 1.6F) * 0.45F, w);
 			lerpPitch(model.leftLeg, MathHelper.sin(t * 1.6F + PI) * 0.45F, w);
+			kneeR = MathHelper.lerp(w, kneeR, 0.5F + MathHelper.sin(t * 1.6F + 1.2F) * 0.4F);
+			kneeL = MathHelper.lerp(w, kneeL, 0.5F + MathHelper.sin(t * 1.6F + PI + 1.2F) * 0.4F);
+			elbowR = MathHelper.lerp(w, elbowR, 0.7F + MathHelper.cos(t) * 0.3F);
+			elbowL = MathHelper.lerp(w, elbowL, 0.7F + MathHelper.cos(t) * 0.3F);
 			if (armsFree) {
 				lerpPitch(model.rightArm, -0.35F + MathHelper.cos(t) * 0.2F, w);
 				lerpPitch(model.leftArm, -0.35F + MathHelper.cos(t) * 0.2F, w);
@@ -267,8 +314,18 @@ public final class LocomotionPoses {
 			float kick = MathHelper.sin(progress * 0.9F) * 0.3F * model.leaningPitch;
 			model.rightLeg.pitch += kick;
 			model.leftLeg.pitch -= kick;
+			kneeR = 0.15F + Math.max(0.0F, kick) * 0.8F;
+			kneeL = 0.15F + Math.max(0.0F, -kick) * 0.8F;
 		}
 
+		if (!player.hasVehicle()) {
+			Joints.knee(model.rightLeg, kneeR);
+			Joints.knee(model.leftLeg, kneeL);
+		}
+		if (armsFree) {
+			Joints.elbow(model.rightArm, elbowR);
+			Joints.elbow(model.leftArm, elbowL);
+		}
 		model.hat.copyTransform(model.head);
 	}
 }

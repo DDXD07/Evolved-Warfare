@@ -104,6 +104,22 @@ public final class ToolSwing {
 			{1F, -18F, 0F, 0F, 0F, 0F},
 	};
 
+	// {progreso, codo}: el codo se dobla al subir la herramienta y se estira al dar (fase 89)
+	private static final float[][] ELBOW_WORK = {{0F, 0.2F}, {0.3F, 1.45F}, {0.52F, 0.05F}, {0.75F, 0.25F}, {1F, 0.2F}};
+	private static final float[][] ELBOW_ATTACK = {{0F, 0.2F}, {0.28F, 1.1F}, {0.55F, 0.1F}, {0.75F, 0.3F}, {1F, 0.2F}};
+
+	private static float sample1(float[][] keys, float t) {
+		for (int i = 0; i < keys.length - 1; i++) {
+			float[] a = keys[i], b = keys[i + 1];
+			if (t <= b[0]) {
+				float u = MathHelper.clamp((t - a[0]) / (b[0] - a[0]), 0, 1);
+				u = u * u * (3 - 2 * u);
+				return MathHelper.lerp(u, a[1], b[1]);
+			}
+		}
+		return keys[keys.length - 1][1];
+	}
+
 	private ToolSwing() {
 	}
 
@@ -219,11 +235,14 @@ public final class ToolSwing {
 		main.pitch = k[0] * r + sneak;
 		main.yaw = k[1] * side * r + bodyYaw;
 		main.roll = k[2] * side * r;
+		float elbow = sample1(chop ? ELBOW_WORK : ELBOW_ATTACK, progress);
+		Joints.elbow(main, elbow);
 		if (chop && entity.getStackInHand(otherHand).isEmpty() && !entity.isUsingItem()) {
 			// talando o picando, con las dos manos en el mango
 			off.pitch = main.pitch;
 			off.yaw = main.yaw - 0.45F * side;
 			off.roll = -main.roll;
+			Joints.elbow(off, elbow + 0.25F);
 		} else {
 			off.yaw += bodyYaw;
 		}

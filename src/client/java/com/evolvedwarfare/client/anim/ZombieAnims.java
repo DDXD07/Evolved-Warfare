@@ -115,16 +115,18 @@ public final class ZombieAnims {
 		float amp = Math.min(limbDistance, 1.0F);
 		float c = s.chase;
 
-		// --- piernas: una normal y la otra arrastrando
-		model.rightLeg.pitch = MathHelper.cos(phase) * 1.0F * amp;
-		model.leftLeg.pitch = MathHelper.cos(phase + PI) * 0.55F * amp + 0.08F * amp;
-		model.leftLeg.roll = 0.06F * amp;
+		// --- piernas: una normal (dobla la rodilla al dar el paso, tiesa al pisar) y la otra arrastrando, casi sin doblar
+		model.rightLeg.pitch = MathHelper.cos(phase) * 0.9F * amp - 0.05F;
+		model.leftLeg.pitch = MathHelper.cos(phase + PI) * 0.45F * amp + 0.12F * amp;
+		model.leftLeg.roll = 0.05F * amp;
 		model.rightLeg.roll = -0.03F;
-		model.leftLeg.yaw = 0.12F * amp;
+		model.leftLeg.yaw = 0.1F * amp;
+		Joints.knee(model.rightLeg, Math.max(0.0F, MathHelper.sin(phase)) * 0.95F * amp + 0.1F);
+		Joints.knee(model.leftLeg, 0.08F + Math.max(0.0F, MathHelper.sin(phase + PI)) * 0.15F * amp);
 
 		// --- cuerpo: caído hacia delante y balanceándose a cada paso
 		float sway = MathHelper.sin(phase) * 0.11F * amp + MathHelper.sin(progress * 0.045F + seed) * 0.04F;
-		model.body.pitch = 0.12F + 0.14F * c;
+		model.body.pitch = 0.0F;
 		model.body.roll = sway;
 		model.body.yaw = MathHelper.sin(phase) * 0.08F * amp;
 		float lurch = -Math.abs(MathHelper.cos(phase)) * amp * 0.8F;
@@ -132,8 +134,8 @@ public final class ZombieAnims {
 		model.head.pivotY += lurch + 0.6F * c;
 		model.rightArm.pivotY += lurch;
 		model.leftArm.pivotY += lurch;
-		model.rightLeg.pivotZ += 1.0F * c;
-		model.leftLeg.pivotZ += 1.0F * c;
+		// caído hacia delante desde la cadera (antes giraba desde el cuello y el tronco se salía de las piernas)
+		Joints.leanAtHips(model, 0.14F + 0.16F * c);
 
 		// --- cabeza: ladeada, colgando, con tirones de cuello de vez en cuando
 		model.head.roll = 0.14F + MathHelper.sin(progress * 0.03F + seed) * 0.1F + sway * 0.5F;
@@ -160,12 +162,19 @@ public final class ZombieAnims {
 			arm.pitch = reach + MathHelper.sin(progress * 0.06F + seed + off) * 0.12F + MathHelper.sin(phase + (right ? 0 : PI)) * 0.16F * amp;
 			arm.yaw = (right ? -1 : 1) * (0.08F + 0.05F * MathHelper.sin(progress * 0.05F + off));
 			arm.roll = (right ? 1 : -1) * (0.05F + MathHelper.cos(progress * 0.07F + seed + off) * 0.04F);
+			// los antebrazos cuelgan, muertos, y se mecen
+			ModelPart fore = Joints.lower(arm);
+			if (fore != null) {
+				fore.pitch = 0.32F + MathHelper.sin(progress * 0.08F + seed + off) * 0.09F + MathHelper.sin(phase + (right ? 0.6F : PI + 0.6F)) * 0.1F * amp
+						- 0.15F * c;
+			}
 		}
 		if (hasWeapon) {
 			// el arma colgando de la mano
 			mainPart.pitch = -0.5F + MathHelper.sin(phase) * 0.18F * amp + MathHelper.sin(progress * 0.05F + seed) * 0.06F;
 			mainPart.yaw = 0.0F;
 			mainPart.roll = side * 0.08F;
+			Joints.elbow(mainPart, 0.25F);
 		}
 
 		// --- el ataque
@@ -184,6 +193,8 @@ public final class ZombieAnims {
 				model.leftArm.pivotZ = -MathHelper.sin(by) * 5.0F;
 				model.leftArm.pivotX = MathHelper.cos(by) * 5.0F;
 				offPart.pitch = MathHelper.lerp(0.5F, offPart.pitch, -0.6F);
+				// el codo: doblado atrás al levantar el arma, estirado al dar
+				Joints.elbow(mainPart, p < 0.3F ? p / 0.3F * 1.5F : Math.max(0.0F, 1.5F - (p - 0.3F) / 0.22F * 1.5F) + 0.1F);
 			} else {
 				float[] k = sample(GRAB, p);
 				model.rightArm.pitch = k[0];
@@ -192,6 +203,14 @@ public final class ZombieAnims {
 				model.leftArm.yaw = k[1];
 				model.rightArm.roll = 0.05F;
 				model.leftArm.roll = -0.05F;
+				// las garras: codos doblados arriba al echarse atrás, estirados al tirarse encima
+				float claw = p < 0.32F ? p / 0.32F : Math.max(0.0F, 1.0F - (p - 0.32F) / 0.2F);
+				for (ModelPart arm : new ModelPart[] {model.rightArm, model.leftArm}) {
+					ModelPart fore = Joints.lower(arm);
+					if (fore != null) {
+						fore.pitch = MathHelper.lerp(claw, 0.2F, -1.1F);
+					}
+				}
 				model.body.pitch += k[2];
 				model.head.pitch += k[3];
 				model.head.pivotY += k[2] * 2.0F;

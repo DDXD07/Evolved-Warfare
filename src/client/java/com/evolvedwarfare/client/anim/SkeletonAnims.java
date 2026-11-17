@@ -78,6 +78,9 @@ public final class SkeletonAnims {
 		model.leftLeg.pitch = stiff(MathHelper.cos(phase + PI)) * 0.85F * amp;
 		model.rightLeg.roll = 0.0F;
 		model.leftLeg.roll = 0.0F;
+		// rodillas de bisagra: se doblan secas al levantar el pie y se bloquean rectas al pisar
+		Joints.knee(model.rightLeg, Math.max(0.0F, stiff(MathHelper.sin(phase))) * 0.55F * amp);
+		Joints.knee(model.leftLeg, Math.max(0.0F, stiff(MathHelper.sin(phase + PI))) * 0.55F * amp);
 
 		// --- el tronco no se balancea: solo el traqueteo al pisar
 		float clack = -(float) Math.pow(Math.abs(MathHelper.cos(phase)), 6) * 0.6F * amp;
@@ -128,6 +131,8 @@ public final class SkeletonAnims {
 			float[] k = sample(STRIKE, swing);
 			a.pitch = k[0];
 			a.yaw = 0.0F;
+			// el codo, como una bisagra: doblado arriba, recto al caer
+			Joints.elbow(a, swing < 0.35F ? swing / 0.35F * 1.2F : Math.max(0.0F, 1.2F - (swing - 0.35F) / 0.15F * 1.2F));
 			model.body.yaw = k[1] * side;
 			float by = model.body.yaw;
 			model.rightArm.pivotZ = MathHelper.sin(by) * 5.0F;
@@ -144,8 +149,10 @@ public final class SkeletonAnims {
 			float side = bowRight ? 1.0F : -1.0F;
 			ModelPart bowArm = bowRight ? model.rightArm : model.leftArm;
 			ModelPart pull = bowRight ? model.leftArm : model.rightArm;
-			pull.yaw += side * 0.38F * draw;
-			pull.pitch += 0.12F * draw;
+			pull.yaw += side * 0.2F * draw;
+			pull.pitch += 0.08F * draw;
+			// el codo del brazo que tira se dobla de lado y lleva la mano a la cara
+			Joints.elbowSide(pull, side * 1.45F * draw);
 			bowArm.yaw -= side * 0.06F * draw;
 			model.body.yaw += side * 0.22F * draw;
 			model.head.roll = -side * 0.14F * draw;

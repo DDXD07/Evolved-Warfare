@@ -2428,6 +2428,14 @@ Los **esqueletos** (normales, de las nieves, wither y del pantano) se mueven **r
 - **Quieto**: **respira** (se hincha y deshincha muy poco) y de vez en cuando **gira la cabeza despacio** a mirar a otro lado, ladeándola con curiosidad.
 - **A punto de explotar**: **se agacha y se planta**, con las patas de delante adelantadas y las de detrás atrás y abiertas, **baja la cabeza** para mirarte y **tiembla cada vez más** hasta reventar (además del hinchado y el parpadeo de siempre).
 
+## Fase 89 — Animaciones (8): codos y rodillas
+
+- **Codos y rodillas de verdad**: los brazos y las piernas de todos los cuerpos de tipo jugador (el jugador, los zombis, los esqueletos, los piglins... y las armaduras, mangas y perneras, que se doblan con ellos) están **partidos en dos** y se doblan por el **codo** y la **rodilla**. Con el brazo o la pierna rectos se ven igual que siempre, y **lo que se lleva en la mano sigue al antebrazo**.
+- **Jugador**: andando, **la pierna que va por el aire dobla la rodilla** y la que pisa casi no, **el peso pasa de un pie a otro** y los **codos se doblan** al bracear; **corriendo**, los **codos en ángulo**, las rodillas muy arriba y el cuerpo inclinado **desde la cadera**; **agachado, en cuclillas** (muslos adelante, rodillas dobladas) y el temblor se nota sobre todo **en las rodillas**; al **saltar** encoge las piernas; **cayendo**, rodillas y codos sueltos; **trepando**, sube **rodilla a rodilla tirando con los codos**; en el agua **patalea doblando las rodillas** y bracea con los codos.
+- **Hachas y picos**: el **codo se dobla** al levantar la herramienta y **se estira** al dar el golpe (y la otra mano acompaña en el mango).
+- **Zombis**: arreglado el fallo de que **el tronco se salía de las piernas** (ahora se inclina desde la cadera). Además, la pierna buena **dobla la rodilla** al dar el paso y la que arrastra va casi tiesa, los **antebrazos cuelgan muertos** y se mecen, al atacar con las manos **doblan los codos** como garras y los estiran al tirarse encima, y con un arma el **codo se dobla atrás** al levantarla.
+- **Esqueletos**: **rodillas de bisagra** (se doblan secas al levantar el pie y se bloquean al pisar), el **codo como una bisagra** al golpear, y al tensar el arco **el codo se dobla de lado y lleva la mano a la cara**.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
