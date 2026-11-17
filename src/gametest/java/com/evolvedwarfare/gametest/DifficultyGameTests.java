@@ -99,9 +99,10 @@ public class DifficultyGameTests implements FabricGameTest {
 		ServerPlayerEntity player = (ServerPlayerEntity) ctx.createMockCreativeServerPlayerInWorld();
 		player.changeGameMode(GameMode.SURVIVAL);
 		ZombieEntity zombie = ctx.spawnEntity(EntityType.ZOMBIE, 2, 1, 2);
+		zombie.setAiDisabled(true);
 		Elites.make(zombie, List.of(Elites.Affix.VAMPIRIC, Elites.Affix.FROST));
 		zombie.setHealth(10.0F);
-		ctx.waitAndRun(80, () -> {
+		ctx.waitAndRun(1, () -> {
 			Elites.onHit(player, player.getDamageSources().mobAttack(zombie), 4.0F);
 			float healed = zombie.getHealth();
 			check(healed > 10.0F, "El élite de Sangre no se cura al pegar: " + healed);
