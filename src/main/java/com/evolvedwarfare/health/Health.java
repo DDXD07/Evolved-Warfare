@@ -147,7 +147,7 @@ public final class Health {
 
 	/** Lo que hace un golpe a las partes del cuerpo (lo llama LivingEntityDamageMixin con la vida que se ha perdido). */
 	public static void onHurt(LivingEntity entity, DamageSource source, @Nullable HitZone zone, @Nullable Vec3d point, float lost) {
-		if (!(entity instanceof ServerPlayerEntity player) || !enabled() || lost <= 0.0F || player.isCreative() || player.isSpectator()) {
+		if (!(entity instanceof ServerPlayerEntity player) || !enabled() || lost <= 0.0F || player.getAbilities().creativeMode || player.isSpectator()) {
 			return;
 		}
 		WoundData.Mutable m = get(player).edit();
@@ -245,7 +245,7 @@ public final class Health {
 		}
 		for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
 			applyMaxHealth(player);
-			if (!enabled() || !player.isAlive() || player.isCreative() || player.isSpectator()) {
+			if (!enabled() || !player.isAlive() || player.getAbilities().creativeMode || player.isSpectator()) {
 				clearEffects(player);
 				continue;
 			}

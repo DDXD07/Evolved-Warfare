@@ -81,9 +81,14 @@ public class HealthGameTests implements FabricGameTest {
 		ctx.complete();
 	}
 
-	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "health")
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "health", tickLimit = 200)
 	public void bleedingHurtsAndBandagesStopIt(TestContext ctx) {
 		ServerPlayerEntity player = player(ctx);
+		// pasada la invulnerabilidad de entrar
+		ctx.waitAndRun(80, () -> bleed(ctx, player));
+	}
+
+	private static void bleed(TestContext ctx, ServerPlayerEntity player) {
 		Health.startBleeding(player, 20);
 		check(!Health.canRegenerate(player), "Sangrando se regenera con la comida");
 		float life = player.getHealth();

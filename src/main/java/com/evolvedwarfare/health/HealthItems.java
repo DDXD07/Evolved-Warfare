@@ -68,7 +68,7 @@ public final class HealthItems {
 		public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
 			if (!world.isClient && user instanceof PlayerEntity player && effect.test(player)) {
 				world.playSound(null, user.getX(), user.getY(), user.getZ(), sound, SoundCategory.PLAYERS, 0.8F, 1.0F);
-				if (!player.isCreative()) {
+				if (!player.getAbilities().creativeMode) {
 					stack.decrement(1);
 				}
 			}
@@ -94,7 +94,7 @@ public final class HealthItems {
 			if (Health.addHeart(user)) {
 				world.playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.BLOCK_AMETHYST_BLOCK_RESONATE, SoundCategory.PLAYERS, 1.0F, 1.2F);
 				world.playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 0.6F, 1.4F);
-				if (!user.isCreative()) {
+				if (!user.getAbilities().creativeMode) {
 					stack.decrement(1);
 				}
 				return TypedActionResult.consume(stack);
