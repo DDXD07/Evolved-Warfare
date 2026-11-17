@@ -51,6 +51,8 @@ public abstract class LivingEntityDamageMixin {
 		out = com.evolvedwarfare.armor.ClassArmorItem.modifyDamage(self, source, out);
 		// las flechas y explosiones de los monstruos con nivel (fase 95)
 		out = com.evolvedwarfare.difficulty.Difficulty.modifyOutgoing(source, out);
+		// los golpes sin aguante hacen la mitad (fase 97)
+		out = com.evolvedwarfare.health.Stamina.modifyMelee(source, out);
 		evolvedwarfare$amount = out;
 		return out;
 	}
@@ -76,6 +78,10 @@ public abstract class LivingEntityDamageMixin {
 			if (cir.getReturnValueZ() && lost > 0.0F) {
 				// lo que hacen los élite al pegar (fase 95)
 				com.evolvedwarfare.difficulty.Elites.onHit(self, source, lost);
+			}
+			if (self instanceof net.minecraft.entity.player.PlayerEntity player && player.isBlocking() && amount > 0.0F && lost <= 0.0F) {
+				// parar con el escudo cansa (fase 97)
+				com.evolvedwarfare.health.Stamina.onBlocked(player, amount);
 			}
 			if (cir.getReturnValueZ()) {
 				// los monstruos se avisan (fase 96)

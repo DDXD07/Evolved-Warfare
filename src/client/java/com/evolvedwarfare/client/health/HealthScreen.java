@@ -167,6 +167,10 @@ public class HealthScreen extends Screen {
 				.formatted(Formatting.LIGHT_PURPLE));
 		status.add(Text.translatable("screen.evolvedwarfare.health.danger", ClientHealth.danger())
 				.formatted(ClientHealth.danger() >= 10 ? Formatting.RED : ClientHealth.danger() >= 5 ? Formatting.GOLD : Formatting.GRAY));
+		if (ClientStamina.enabled()) {
+			status.add(Text.translatable(ClientStamina.exhausted() ? "screen.evolvedwarfare.health.stamina_exhausted" : "screen.evolvedwarfare.health.stamina",
+					Math.round(ClientStamina.value())).formatted(ClientStamina.exhausted() ? Formatting.RED : Formatting.YELLOW));
+		}
 		if (ClientHealth.bleedSeconds() > 0) {
 			status.add(Text.translatable("screen.evolvedwarfare.health.bleeding", ClientHealth.bleedSeconds()).formatted(Formatting.RED));
 		}
@@ -233,6 +237,9 @@ public class HealthScreen extends Screen {
 		}
 		if (player.hasStatusEffect(ModEffects.PARASITES)) {
 			out.add(Text.literal("• ").append(Text.translatable("screen.evolvedwarfare.health.advice.parasites")));
+		}
+		if (ClientStamina.exhausted()) {
+			out.add(Text.literal("• ").append(Text.translatable("screen.evolvedwarfare.health.advice.rest_stamina")));
 		}
 		boolean hurt = false;
 		for (BodyPart part : BodyPart.values()) {

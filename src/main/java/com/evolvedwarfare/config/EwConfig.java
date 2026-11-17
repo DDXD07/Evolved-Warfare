@@ -122,6 +122,12 @@ public final class EwConfig {
 	public int woundInfectionChance = 30;
 	/** Probabilidad (%) de que una araña envenene al morder (la de cueva, siempre). */
 	public int venomChance = 30;
+	/** El aguante (correr, saltar, pegar, picar... cansan). */
+	public boolean staminaEnabled = true;
+	/** Lo que cuesta cada cosa (x). */
+	public double staminaCost = 1.0;
+	/** Lo deprisa que se recupera (x). */
+	public double staminaRegen = 1.0;
 
 	// ------------------------------------------------------------------ dificultad que sube y élite
 	/** Los monstruos tienen nivel de peligro (distancia, días y dimensión): más vida, daño y armadura. */
@@ -285,6 +291,9 @@ public final class EwConfig {
 			new Option("medicineEnabled", "health", 0, 1, 1),
 			new Option("woundInfectionChance", "health", 0, 100, 5),
 			new Option("venomChance", "health", 0, 100, 5),
+			new Option("staminaEnabled", "health", 0, 1, 1),
+			new Option("staminaCost", "health", 0.0, 5.0, 0.1),
+			new Option("staminaRegen", "health", 0.1, 5.0, 0.1),
 			new Option("scalingEnabled", "difficulty", 0, 1, 1),
 			new Option("difficultyBlocksPerLevel", "difficulty", 100, 100000, 100),
 			new Option("difficultyDaysPerLevel", "difficulty", 1, 1000, 1),

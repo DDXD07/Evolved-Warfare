@@ -2864,5 +2864,15 @@
   "config.evolvedwarfare.smarterMobs": "Smarter monsters",
   "config.evolvedwarfare.smarterMobs.tip": "They alert each other, skeletons lead their shots and keep their distance, they flee when badly hurt, dodge when you aim and creepers blow through walls.",
   "config.evolvedwarfare.spiderWebs": "Spider webs",
-  "config.evolvedwarfare.spiderWebs.tip": "Spiders spit webs at your feet from afar (they dissolve after 15 s)."
+  "config.evolvedwarfare.spiderWebs.tip": "Spiders spit webs at your feet from afar (they dissolve after 15 s).",
+  "message.evolvedwarfare.stamina.exhausted": "You are exhausted! Stop for a moment to catch your breath.",
+  "screen.evolvedwarfare.health.stamina": "Stamina: %s / 100",
+  "screen.evolvedwarfare.health.stamina_exhausted": "Stamina: %s / 100 (exhausted)",
+  "screen.evolvedwarfare.health.advice.rest_stamina": "You are exhausted: stand still for a moment to catch your breath.",
+  "config.evolvedwarfare.staminaEnabled": "Stamina",
+  "config.evolvedwarfare.staminaEnabled.tip": "Sprinting, jumping, attacking, mining, drawing a bow, swimming, climbing and blocking tire you out. Exhausted, you can't sprint and hit weakly.",
+  "config.evolvedwarfare.staminaCost": "Stamina cost",
+  "config.evolvedwarfare.staminaCost.tip": "How tiring everything is (1 = normal).",
+  "config.evolvedwarfare.staminaRegen": "Stamina recovery",
+  "config.evolvedwarfare.staminaRegen.tip": "How fast stamina recovers (1 = normal)."
 }

@@ -25,6 +25,7 @@ public final class ModNetworking {
 		com.evolvedwarfare.trade.CatalogReaders.register();
 		PayloadTypeRegistry.playS2C().register(ThirstPayload.ID, ThirstPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(WoundsPayload.ID, WoundsPayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(StaminaPayload.ID, StaminaPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(SeveredPayload.ID, SeveredPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(DrinkPosePayload.ID, DrinkPosePayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(ActivityPayload.ID, ActivityPayload.CODEC);

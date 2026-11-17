@@ -2544,6 +2544,22 @@ olerte):
 - **Zombis**: de día, si se queman, **buscan la sombra**.
 - **Esquivan**: esqueletos y zombis, a veces, se echan a un lado de un salto cuando les apuntas con el arco o la ballesta.
 
+## Fase 97 — Dificultad (5): el aguante
+
+La quinta parte de la dificultad al estilo RLCraft (en la categoría **Salud**: aguante sí/no, lo que cuesta y lo que se
+recupera):
+
+- **Qué cansa**: correr (unos 15 segundos seguidos con el aguante lleno), saltar, **pegar** (más cuanto más lenta y
+  pesada es el arma: un hacha cansa más que una espada), picar (más los bloques duros), tensar el arco o cargar la
+  ballesta, nadar, trepar y **parar golpes con el escudo** (según lo fuerte que fuera el golpe).
+- **Recuperarse**: un segundo y medio después de dejar de gastar, se recupera solo: más deprisa quieto que andando (y nada
+  corriendo); durmiendo, muy deprisa. Más despacio con hambre o sed, con el torso herido, con una pierna rota y con
+  armadura pesada.
+- **Agotado** (sin aguante): **no se puede correr**, se va lento, se pica despacio, **los golpes hacen la mitad** y, si te
+  pegan mientras paras con el escudo, **se te cae el escudo** 3 segundos. Hasta recuperar 30.
+- **La barra**: una barrita bajo la mira que aparece cuando no está lleno (y se desvanece al llenarse): amarilla, naranja
+  con poco, roja parpadeando agotado. En la pantalla de la salud (H) se ve el número.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

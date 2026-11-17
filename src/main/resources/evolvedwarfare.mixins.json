@@ -5,6 +5,7 @@
 	"mixins": [
 		"BiomeSeasonMixin",
 		"MilkBucketMedicineMixin",
+		"PlayerJumpStaminaMixin",
 		"MetalShieldMixin",
 		"CrossbowPullTimeMixin",
 		"PaviseKnockbackMixin",
