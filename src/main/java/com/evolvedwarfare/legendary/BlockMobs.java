@@ -158,8 +158,8 @@ public final class BlockMobs {
 		miner.setEquipmentDropChance(EquipmentSlot.HEAD, 0.1F);
 	}
 
-	private static <T extends MobEntity> T add(List<MobEntity> out, ServerWorld world, EntityType<T> type, BlockPos pos, PlayerEntity target) {
-		T mob = type.create(world);
+	private static MobEntity add(List<MobEntity> out, ServerWorld world, EntityType<? extends MobEntity> type, BlockPos pos, PlayerEntity target) {
+		MobEntity mob = type.create(world);
 		if (mob == null) {
 			return null;
 		}
