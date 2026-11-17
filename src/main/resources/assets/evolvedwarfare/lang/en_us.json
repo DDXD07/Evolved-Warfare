@@ -3007,5 +3007,12 @@
   "title.evolvedwarfare.rock_guardian": "GRRAAAH!",
   "subtitle.evolvedwarfare.rock_guardian": "A rock guardian bursts out of the vein!",
   "config.evolvedwarfare.rockGuardianChance": "Rock guardian",
-  "config.evolvedwarfare.rockGuardianChance.tip": "Chance that a rock guardian bursts out when mining an ore (0.015 = 1.5%)."
+  "config.evolvedwarfare.rockGuardianChance.tip": "Chance that a rock guardian bursts out when mining an ore (0.015 = 1.5%).",
+  "entity.evolvedwarfare.lava_imp": "Lava Imp",
+  "item.evolvedwarfare.lava_imp_spawn_egg": "Lava Imp Spawn Egg",
+  "item.evolvedwarfare.imp_horn": "Imp Horn",
+  "item.evolvedwarfare.imp_horn.desc": "Still hot. They say it brings bad luck.",
+  "message.evolvedwarfare.lava_imp": "Something giggles inside the lava... an imp!",
+  "config.evolvedwarfare.lavaImpChance": "Lava imps",
+  "config.evolvedwarfare.lavaImpChance.tip": "Chance every 10 s near a lava pool of 2x2 or more that an imp comes out."
 }

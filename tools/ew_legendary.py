@@ -374,11 +374,98 @@ def rock_guardian():
     return a
 
 
+# ------------------------------------------------------------------ fase 110: el diablito de la lava
+
+def lava_imp():
+    """El diablito: un demonio pequeño y encorvado que sale de la lava. Piel negra rojiza con grietas de lava que brillan,
+    una cabeza grande con cuernos curvos, orejas en punta, ojos amarillos encendidos y una sonrisa de oreja a oreja llena
+    de colmillos; alas de murciélago rotas, púas por el espinazo, una cola larga con punta de flecha, garras en manos y
+    pies y una bola de fuego en la mano."""
+    a = W.Animal("lava_imp")
+    skin, skin_dark = (60, 22, 20), (30, 10, 10)
+    lava = (255, 120, 20)
+    horn, horn_dark = (40, 32, 30), (20, 16, 14)
+    fang = (240, 230, 200)
+    wing, wing_dark = (90, 26, 22), (54, 14, 12)
+    eye = (255, 230, 60)
+    # las piernas, dobladas hacia atrás, con garras
+    for side, name, phase in ((-1, "leg_r", 0), (1, "leg_l", 1)):
+        thigh = a.part(name, None, (side * 1.8, 15, 0), (-25, 0, 0), role="leg", phase=phase)
+        thigh.cube((-1, 0, -1), (2, 5, 2), **C(skin, spots=(lava, 0.08)))
+        shin = a.part(name + "_shin", name, (0, 5, 0), (45, 0, 0))
+        shin.cube((-0.5, 0, -0.5), (1, 5, 1), **C(skin_dark))
+        foot = a.part(name + "_foot", name + "_shin", (0, 5, 0), (-20, 0, 0))
+        foot.cube((-1, 0, -2), (2, 1, 3), **C(skin_dark))
+        for k in range(2):
+            foot.cube((-1 + k, 0, -3), (1, 1, 1), **C(fang))
+    # el cuerpo encorvado, con grietas de lava y púas en el espinazo
+    body = a.part("body", None, (0, 15, 0), (25, 0, 0), role="body")
+    body.cube((-2.5, -8, -1.5), (5, 8, 3), **C(skin, spots=(skin_dark, 0.2)))
+    body.cube((-1.5, -7, -1.8), (1, 5, 1), **C(lava, glow_all=True))                        # grietas que brillan
+    body.cube((0.5, -5, -1.8), (1, 4, 1), **C(lava, glow_all=True))
+    body.cube((-0.5, -3, -1.9), (2, 1, 1), **C(lava, glow_all=True))
+    for k in range(4):
+        body.cube((-0.5, -8 + k * 2, 1.5), (1, 1, 2), **C(horn, tip=(horn_dark, 1)))        # las púas
+    # la cola larga con la punta de flecha
+    t1 = a.part("tail_1", "body", (0, -1, 1.5), (40, 0, 0), role="tail")
+    t1.cube((-0.5, -0.5, 0), (1, 1, 6), **C(skin))
+    t2 = a.part("tail_2", "tail_1", (0, 0, 6), (-30, 0, 0), role="tail")
+    t2.cube((-0.5, -0.5, 0), (1, 1, 6), **C(skin))
+    t2.cube((-1.5, -0.5, 5), (3, 1, 2), **C(horn))
+    t2.cube((-0.5, -0.5, 7), (1, 1, 1), **C(horn_dark))
+    # las alas de murciélago, rotas
+    for side in (-1, 1):
+        sname = "l" if side > 0 else "r"
+        w = a.part("wing_" + sname, "body", (side * 2, -7, 1.5), (0, side * 25, side * -15), role="wing", side=side)
+        if side > 0:
+            w.cube((0, -1, 0), (6, 1, 1), **C(horn))
+            w.cube((0, 0, 0), (6, 5, 1), **C(wing, spots=(wing_dark, 0.35)))
+            w.cube((5, 5, 0), (1, 2, 1), **C(wing_dark))
+        else:
+            w.cube((-6, -1, 0), (6, 1, 1), **C(horn))
+            w.cube((-6, 0, 0), (6, 5, 1), **C(wing, spots=(wing_dark, 0.35)))
+            w.cube((-6, 5, 0), (1, 2, 1), **C(wing_dark))
+    # la cabeza grande
+    head = a.part("head", "body", (0, -8, -0.5), (-25, 0, 0), role="head")
+    head.cube((-3, -6, -3), (6, 6, 6), **C(skin, spots=(skin_dark, 0.2)))
+    head.cube((-2.6, -4.5, -3.2), (2, 1, 1), **C(skin_dark))                                 # el ceño
+    head.cube((0.6, -4.5, -3.2), (2, 1, 1), **C(skin_dark))
+    head.cube((-2.2, -3.6, -3.3), (1, 1, 1), **C(eye, glow_all=True))                        # los ojos
+    head.cube((1.2, -3.6, -3.3), (1, 1, 1), **C(eye, glow_all=True))
+    head.cube((-2.5, -1.8, -3.2), (5, 1, 1), **C((20, 4, 4)))                                # la sonrisa
+    for k in range(5):
+        head.cube((-2.4 + k * 1.1, -1.8 if k % 2 == 0 else -1.0, -3.4), (1, 1, 1), **C(fang))  # colmillos
+    head.cube((-0.5, -6.6, -2), (1, 1, 2), **C(lava, glow_all=True))                         # grieta en la frente
+    for side in (-1, 1):
+        ear = a.part("ear_%d" % (side + 1), "head", (side * 3, -4, 0), (0, side * -20, side * -40))
+        ear.cube((-0.5, -3, -0.5), (1, 3, 1), **C(skin))
+        h1 = a.part("horn_%d" % (side + 1), "head", (side * 2, -6, -1), (-30, 0, side * 35))
+        h1.cube((-1, -3, -1), (2, 3, 2), **C(horn))
+        h2 = a.part("horn_mid_%d" % (side + 1), "horn_%d" % (side + 1), (0, -3, 0), (-35, 0, side * -25))
+        h2.cube((-0.5, -3, -0.5), (1, 3, 1), **C(horn))
+        h3 = a.part("horn_tip_%d" % (side + 1), "horn_mid_%d" % (side + 1), (0, -3, 0), (-40, 0, 0))
+        h3.cube((-0.5, -2, -0.5), (1, 2, 1), **C(horn_dark, tip=(lava, 1)))
+    jaw = a.part("jaw", "head", (0, 0, -1.5), role="jaw")
+    jaw.cube((-2, 0, -1.6), (4, 1, 3), **C(skin_dark))
+    # los brazos flacos con garras; en la derecha, la bola de fuego
+    for side, name in ((-1, "arm_r"), (1, "arm_l")):
+        arm = a.part(name, "body", (side * 3, -7, 0), (-30, 0, side * -10), role="arm", side=side)
+        arm.cube((-0.5, -0.5, -0.5), (1, 5, 1), **C(skin))
+        fore = a.part(name + "_fore", name, (0, 5, 0), (-35, 0, 0))
+        fore.cube((-0.5, 0, -0.5), (1, 5, 1), **C(skin_dark))
+        for k in range(3):
+            fore.cube((-1 + k, 5, -0.5), (1, 2, 1), **C(fang, tip=(skin_dark, 1)))
+        if side < 0:
+            fore.cube((-1.5, 6, -2), (3, 3, 3), **C(lava, glow_all=True))
+    return a
+
+
 MODELS = collections.OrderedDict([("fire_dragon", lambda: dragon("fire_dragon")), ("ice_dragon", lambda: dragon("ice_dragon")),
                                   ("frost_giant", frost_giant), ("sea_serpent", sea_serpent), ("treant", treant), ("coco", coco),
-                                  ("rock_guardian", rock_guardian)])
+                                  ("rock_guardian", rock_guardian), ("lava_imp", lava_imp)])
 
 NAMES = {
+    "lava_imp": ("Diablito", "Lava Imp"),
     "rock_guardian": ("Guardián de roca", "Rock Guardian"),
     "coco": ("El Coco", "The Bogeyman"),
     "treant": ("Ent", "Treant"),
@@ -401,6 +488,7 @@ def count(item, lo, hi, chance=None):
 
 
 LOOT = {
+    "lava_imp": [count("minecraft:blaze_powder", 1, 2), count("minecraft:magma_cream", 0, 2), count(n("imp_horn"), 1, 1, 0.25)],
     "rock_guardian": [count("minecraft:cobblestone", 4, 9), count(n("rock_core"), 1, 1, 0.35), count("minecraft:flint", 1, 3, 0.5)],
     "coco": [count(n("coco_claw"), 1, 1), count(n("heart_crystal"), 1, 1, 0.5), count("minecraft:ender_pearl", 1, 3)],
     "treant": [count("minecraft:oak_log", 3, 6), count("minecraft:stick", 2, 6), count("minecraft:oak_sapling", 1, 2),
@@ -416,6 +504,7 @@ LOOT = {
 }
 
 ITEMS = {
+    "imp_horn": ("Cuerno de diablito", "Imp Horn", "Aún está caliente. Dicen que trae mala suerte.", "Still hot. They say it brings bad luck."),
     "rock_core": ("Núcleo de guardián", "Guardian Core", "El corazón de piedra que movía al guardián. Aún está caliente.",
                   "The stone heart that moved the guardian. Still warm."),
     "coco_claw": ("Garra del Coco", "Bogeyman's Claw", "La prueba de que lo venciste. Ya puedes dormir tranquilo... ¿o no?",
@@ -469,6 +558,10 @@ TEXTS = {
     "config.evolvedwarfare.rockGuardianChance": ("Guardián de roca", "Rock guardian"),
     "config.evolvedwarfare.rockGuardianChance.tip": ("Probabilidad de que salga un guardián de roca al picar un mineral (0.015 = 1,5 %).",
                                                      "Chance that a rock guardian bursts out when mining an ore (0.015 = 1.5%)."),
+    "message.evolvedwarfare.lava_imp": ("Algo se ríe dentro de la lava... ¡un diablito!", "Something giggles inside the lava... an imp!"),
+    "config.evolvedwarfare.lavaImpChance": ("Diablitos de la lava", "Lava imps"),
+    "config.evolvedwarfare.lavaImpChance.tip": ("Probabilidad, cada 10 s cerca de un pozo de lava de 2x2 o más, de que salga un diablito.",
+                                                "Chance every 10 s near a lava pool of 2x2 or more that an imp comes out."),
     "config.evolvedwarfare.cocoChance": ("El Coco al despertar", "Bogeyman on waking"),
     "config.evolvedwarfare.cocoChance.tip": ("Probabilidad de que el Coco te esté esperando al despertar (0.02 = 2 %).",
                                              "Chance that the Bogeyman is waiting for you when you wake up (0.02 = 2%)."),
@@ -742,6 +835,13 @@ def main():
                 core.putpixel((x, y), c + (255,))
     core.putpixel((7, 6), (255, 240, 200, 255))
     core.save(os.path.join(item_dir, "rock_core.png"))
+    ih = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    pts = [(4, 13), (5, 12), (5, 11), (6, 10), (6, 9), (7, 8), (8, 7), (9, 6), (10, 5), (11, 4), (12, 4), (13, 3)]
+    for k, (x, y) in enumerate(pts):
+        w = 3 if k < 4 else 2 if k < 8 else 1
+        for dx in range(w):
+            ih.putpixel((x + dx, y), ((255, 120, 20) if k >= 10 else (40, 32, 30) if dx else (70, 58, 54)) + (255,))
+    ih.save(os.path.join(item_dir, "imp_horn.png"))
     heart_icon((150, 30, 30), (255, 160, 40)).save(os.path.join(item_dir, "fire_dragon_heart.png"))
     heart_icon((70, 120, 170), (180, 240, 255)).save(os.path.join(item_dir, "ice_dragon_heart.png"))
     for name in ITEMS:

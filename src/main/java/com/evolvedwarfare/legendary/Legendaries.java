@@ -74,6 +74,10 @@ public final class Legendaries {
 			EntityType.Builder.create(RockGuardianEntity::new, SpawnGroup.MONSTER).dimensions(1.6F, 2.3F).eyeHeight(1.6F).maxTrackingRange(10),
 			0x7C7C80, 0xFFBE50);
 
+	public static final EntityType<LavaImpEntity> LAVA_IMP = type("lava_imp",
+			EntityType.Builder.create(LavaImpEntity::new, SpawnGroup.MONSTER).dimensions(0.7F, 1.5F).eyeHeight(1.25F).makeFireImmune()
+					.maxTrackingRange(10), 0x3C1614, 0xFF7814);
+
 	public static final Item FIRE_DRAGON_SCALE = item("fire_dragon_scale", new Described(new Item.Settings().rarity(Rarity.RARE).fireproof()));
 	public static final Item ICE_DRAGON_SCALE = item("ice_dragon_scale", new Described(new Item.Settings().rarity(Rarity.RARE)));
 	public static final Item DRAGON_BONE = item("dragon_bone", new Described(new Item.Settings().rarity(Rarity.RARE)));
@@ -107,6 +111,7 @@ public final class Legendaries {
 	public static final Item LIVING_BARK = item("living_bark", new Described(new Item.Settings().rarity(Rarity.UNCOMMON)));
 	public static final Item COCO_CLAW = item("coco_claw", new Described(new Item.Settings().rarity(Rarity.EPIC)));
 	public static final Item ROCK_CORE = item("rock_core", new Described(new Item.Settings().rarity(Rarity.RARE)));
+	public static final Item IMP_HORN = item("imp_horn", new Described(new Item.Settings().rarity(Rarity.UNCOMMON).fireproof()));
 
 	static {
 		for (net.minecraft.item.ArmorItem.Type type : new net.minecraft.item.ArmorItem.Type[] {net.minecraft.item.ArmorItem.Type.HELMET,
@@ -160,6 +165,8 @@ public final class Legendaries {
 		FabricDefaultAttributeRegistry.register(TREANT, TreantEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(COCO, CocoEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(ROCK_GUARDIAN, RockGuardianEntity.createAttributes());
+		FabricDefaultAttributeRegistry.register(LAVA_IMP, LavaImpEntity.createAttributes());
+		LavaImps.register();
 		BlockMobs.register();
 		ServerTickEvents.END_SERVER_TICK.register(Legendaries::tick);
 		DragonGear.register();

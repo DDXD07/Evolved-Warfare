@@ -184,6 +184,8 @@ public final class EwConfig {
 	public double cocoChance = 0.02;
 	/** Probabilidad de que salga un guardián de roca al picar un mineral. */
 	public double rockGuardianChance = 0.015;
+	/** Probabilidad, cada 10 s cerca de un pozo de lava de 2x2 o más, de que salga un diablito. */
+	public double lavaImpChance = 0.06;
 
 	// ------------------------------------------------------------------ asentamientos
 	/** Vida y daño extra por cada nivel del asentamiento por encima del 1. */
@@ -355,6 +357,7 @@ public final class EwConfig {
 			new Option("blockMobChance", "legendary", 0.0, 0.1, 0.001),
 			new Option("cocoChance", "legendary", 0.0, 1.0, 0.01),
 			new Option("rockGuardianChance", "legendary", 0.0, 1.0, 0.005),
+			new Option("lavaImpChance", "legendary", 0.0, 1.0, 0.01),
 			new Option("settlementBonusPerLevel", "settlements", 0.0, 1.0, 0.01),
 			new Option("settlementBlocksPerLevel", "settlements", 100, 100000, 50),
 			new Option("settlementMaxLevel", "settlements", 1, 10, 1),

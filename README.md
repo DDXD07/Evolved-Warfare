@@ -2735,6 +2735,21 @@ Un modelo nuevo y mucho más trabajado para **el ent** (77 piezas), más árbol 
   fruncidas**, una nariz de nudo y una **boca de nudo** con **astillas por dientes**; la mandíbula se abre al atacar.
 - Encima, una **copa rota** de hojas con **ramas muertas** que asoman como cuernos.
 
+## Fase 110 — Los diablitos de la lava
+
+Cerca de un **pozo de lava de 2x2 o más** (a menos de 8 bloques), cada 10 segundos hay un **6 %** de que **salga un
+diablito** de la lava, riéndose (como mucho dos a la vez; se ajusta en «Diablitos de la lava»; en pacífico y en creativo,
+no).
+
+- **Cómo es** (60 piezas): un demonio pequeño y encorvado, de piel negra rojiza con **grietas de lava que brillan**, una
+  cabeza grande con **cuernos curvos** de punta encendida, orejas en punta, **ojos amarillos que brillan** con el ceño
+  fruncido, una sonrisa de oreja a oreja llena de **colmillos**, **alas de murciélago rotas**, púas por el espinazo, una
+  **cola larga con punta de flecha**, piernas dobladas hacia atrás, garras... y una **bola de fuego en la mano**. Va dejando
+  chispas y humo.
+- **Cómo pelea**: rápido y escurridizo: **guarda las distancias** (si te acercas, se aparta) y te lanza **ráfagas de tres
+  bolas de fuego**. **Anda por encima de la lava**, el fuego no le hace nada y el **agua le quema**. 24 de vida.
+- **Su botín**: polvo de blaze, crema de magma y, a veces, un **cuerno de diablito**.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

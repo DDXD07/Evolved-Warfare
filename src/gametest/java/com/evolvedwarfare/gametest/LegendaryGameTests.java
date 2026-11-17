@@ -229,4 +229,30 @@ public class LegendaryGameTests implements FabricGameTest {
 			ctx.complete();
 		});
 	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "legendary", tickLimit = 100)
+	public void impsComeOutOfLavaPools(TestContext ctx) {
+		floor(ctx);
+		ServerPlayerEntity player = (ServerPlayerEntity) ctx.createMockCreativeServerPlayerInWorld();
+		player.changeGameMode(GameMode.SURVIVAL);
+		BlockPos center = ctx.getAbsolutePos(new BlockPos(3, 1, 3));
+		var none = com.evolvedwarfare.legendary.LavaImps.findPool(ctx.getWorld(), center, 6);
+		ctx.setBlockState(5, 1, 5, Blocks.LAVA);
+		var single = com.evolvedwarfare.legendary.LavaImps.findPool(ctx.getWorld(), center, 6);
+		for (int x = 5; x <= 6; x++) {
+			for (int z = 5; z <= 6; z++) {
+				ctx.setBlockState(x, 1, z, Blocks.LAVA);
+			}
+		}
+		var pool = com.evolvedwarfare.legendary.LavaImps.findPool(ctx.getWorld(), center, 6);
+		check(none == null && single == null && pool != null, "No distingue un pozo de 2x2 de una sola casilla de lava");
+		var imp = com.evolvedwarfare.legendary.LavaImps.emerge(ctx.getWorld(), pool, player);
+		check(imp != null && imp.isFireImmune() && imp.getTarget() == player, "El diablito no sale de la lava (o no va a por el jugador)");
+		var ball = imp.shoot(player);
+		LOG.info("[EW-GAMETEST] diablito: pozo en {}, vida {}, bola de fuego {}", pool, imp.getMaxHealth(), ball.isAlive());
+		check(ball.isAlive() && ball.getOwner() == imp, "El diablito no lanza bolas de fuego");
+		ball.discard();
+		imp.discard();
+		ctx.complete();
+	}
 }

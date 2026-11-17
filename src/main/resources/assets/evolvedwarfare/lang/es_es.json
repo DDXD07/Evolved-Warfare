@@ -3007,5 +3007,12 @@
   "title.evolvedwarfare.rock_guardian": "¡GRRAAAH!",
   "subtitle.evolvedwarfare.rock_guardian": "¡Un guardián de roca sale de la veta!",
   "config.evolvedwarfare.rockGuardianChance": "Guardián de roca",
-  "config.evolvedwarfare.rockGuardianChance.tip": "Probabilidad de que salga un guardián de roca al picar un mineral (0.015 = 1,5 %)."
+  "config.evolvedwarfare.rockGuardianChance.tip": "Probabilidad de que salga un guardián de roca al picar un mineral (0.015 = 1,5 %).",
+  "entity.evolvedwarfare.lava_imp": "Diablito",
+  "item.evolvedwarfare.lava_imp_spawn_egg": "Huevo generador de diablito",
+  "item.evolvedwarfare.imp_horn": "Cuerno de diablito",
+  "item.evolvedwarfare.imp_horn.desc": "Aún está caliente. Dicen que trae mala suerte.",
+  "message.evolvedwarfare.lava_imp": "Algo se ríe dentro de la lava... ¡un diablito!",
+  "config.evolvedwarfare.lavaImpChance": "Diablitos de la lava",
+  "config.evolvedwarfare.lavaImpChance.tip": "Probabilidad, cada 10 s cerca de un pozo de lava de 2x2 o más, de que salga un diablito."
 }

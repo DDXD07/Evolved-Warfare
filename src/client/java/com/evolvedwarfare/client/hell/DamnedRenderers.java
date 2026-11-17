@@ -58,5 +58,6 @@ public final class DamnedRenderers {
 		simple(com.evolvedwarfare.legendary.Legendaries.TREANT, "treant", layer("treant"), 0.9F, 1.3F, false);
 		simple(com.evolvedwarfare.legendary.Legendaries.COCO, "coco", layer("coco"), 0.5F, 1.15F, false);
 		simple(com.evolvedwarfare.legendary.Legendaries.ROCK_GUARDIAN, "rock_guardian", layer("rock_guardian"), 1.0F, 1.5F, false);
+		simple(com.evolvedwarfare.legendary.Legendaries.LAVA_IMP, "lava_imp", layer("lava_imp"), 0.4F, 0.8F, false);
 	}
 }
