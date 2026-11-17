@@ -85,6 +85,9 @@ public class EvolvedWarfare implements ModInitializer {
 		com.evolvedwarfare.world.city.CityLaw.register();
 		com.evolvedwarfare.climate.Climate.register();
 		com.evolvedwarfare.climate.Thirst.register();
+		com.evolvedwarfare.health.HealthItems.register();
+		com.evolvedwarfare.health.Health.register();
+		com.evolvedwarfare.health.HealthLoot.register();
 		com.evolvedwarfare.climate.Crops.register();
 		com.evolvedwarfare.wood.Woodcutting.register();
 		com.evolvedwarfare.orchard.Orchards.register();

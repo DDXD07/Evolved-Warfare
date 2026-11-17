@@ -164,6 +164,7 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		com.evolvedwarfare.client.catalog.CatalogRemote.register();
 		// la sed: el medidor, la animación de beber con las manos y los colores de las bebidas
 		com.evolvedwarfare.client.thirst.ClientThirst.register();
+		com.evolvedwarfare.client.health.ClientHealth.register();
 		net.minecraft.client.render.block.entity.BlockEntityRendererFactories.register(ModBlocks.CROP_CRATE_ENTITY,
 				com.evolvedwarfare.client.render.CropCrateRenderer::new);
 		net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry.INSTANCE.register(ModBlocks.CROP_CRATE_ITEM,

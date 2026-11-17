@@ -189,6 +189,38 @@ public final class LocomotionPoses {
 			}
 		}
 
+		// --- cojear con una pierna rota (fase 92): esa pierna casi no dobla ni se balancea y el cuerpo se va hacia la sana
+		if (!swimming && onFoot > 0.01F && player == net.minecraft.client.MinecraftClient.getInstance().player) {
+			boolean brokenR = com.evolvedwarfare.client.health.ClientHealth.legBroken(true);
+			boolean brokenL = com.evolvedwarfare.client.health.ClientHealth.legBroken(false);
+			if (brokenR != brokenL) {
+				float w = onFoot;
+				ModelPart bad = brokenR ? model.rightLeg : model.leftLeg;
+				bad.pitch *= 1.0F - 0.6F * w;
+				bad.roll += (brokenR ? 0.08F : -0.08F) * w;
+				if (brokenR) {
+					kneeR *= 1.0F - 0.85F * w;
+				} else {
+					kneeL *= 1.0F - 0.85F * w;
+				}
+				// al pisar con la mala, el cuerpo cae un poco y se ladea hacia la buena
+				float onBad = Math.max(0.0F, MathHelper.cos(brokenR ? phase : phase + PI)) * amp * w;
+				float lean = (brokenR ? -1.0F : 1.0F) * (0.06F + 0.1F * onBad);
+				model.body.roll += lean;
+				model.head.roll -= lean * 0.5F;
+				for (ModelPart p : new ModelPart[] {model.head, model.body, model.rightArm, model.leftArm}) {
+					p.pivotY += 1.2F * onBad;
+				}
+			} else if (brokenR) {
+				// las dos rotas: pasitos rígidos y arrastrados
+				model.rightLeg.pitch *= 1.0F - 0.6F * onFoot;
+				model.leftLeg.pitch *= 1.0F - 0.6F * onFoot;
+				kneeR *= 0.3F;
+				kneeL *= 0.3F;
+				Joints.leanAtHips(model, 0.18F * onFoot);
+			}
+		}
+
 		// --- agachado: pasos cortos y con cuidado; y, con el rato, el temblor de las piernas
 		if (sneaking && !swimming && onFoot > 0.01F) {
 			float c = s.crouch * onFoot;

@@ -105,6 +105,18 @@ public final class EwConfig {
 	/** Probabilidad (%) de coger parásitos al beber agua sin hervir. */
 	public int parasiteChance = 25;
 
+	// ------------------------------------------------------------------ salud (dificultad)
+	/** Heridas por partes del cuerpo, huesos rotos y sangrar. */
+	public boolean woundsEnabled = true;
+	/** Corazones con los que se empieza (10 = como siempre). */
+	public int startHearts = 6;
+	/** Lo máximo a lo que se llega con los cristales de corazón. */
+	public int maxHearts = 15;
+	/** Lo que cura la comida (1 = como siempre; menos = más lento). */
+	public double regenRate = 0.35;
+	/** Probabilidad de romperse una pierna en una caída fuerte (x). */
+	public double boneBreakChance = 1.0;
+
 	// ------------------------------------------------------------------ asentamientos
 	/** Vida y daño extra por cada nivel del asentamiento por encima del 1. */
 	public double settlementBonusPerLevel = 0.10;
@@ -237,6 +249,11 @@ public final class EwConfig {
 			new Option("fishingMinigame", "climate", 0, 1, 1),
 			new Option("fireRainEveryMinutes", "climate", 1, 240, 1),
 			new Option("parasiteChance", "climate", 0, 100, 5),
+			new Option("woundsEnabled", "health", 0, 1, 1),
+			new Option("startHearts", "health", 1, 30, 1),
+			new Option("maxHearts", "health", 1, 50, 1),
+			new Option("regenRate", "health", 0.0, 1.0, 0.05),
+			new Option("boneBreakChance", "health", 0.0, 5.0, 0.1),
 			new Option("settlementBonusPerLevel", "settlements", 0.0, 1.0, 0.01),
 			new Option("settlementBlocksPerLevel", "settlements", 100, 100000, 50),
 			new Option("settlementMaxLevel", "settlements", 1, 10, 1),

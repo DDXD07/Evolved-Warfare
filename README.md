@@ -2444,6 +2444,32 @@ Los **esqueletos** (normales, de las nieves, wither y del pantano) se mueven **r
 
 - Al doblar el codo o la rodilla quedaba un **hueco por fuera** entre el brazo y el antebrazo (o el muslo y la espinilla). Ahora la mitad de abajo **sube un poco por dentro** de la de arriba: doblado, el hueco se cierra y se ve **un codo o una rodilla**; recto, se ve igual que antes.
 
+## Fase 92 — Dificultad (1): la salud
+
+La primera parte de la dificultad al estilo RLCraft (todo se puede ajustar o apagar en la categoría **Salud** de la
+configuración):
+
+- **Heridas por partes**: cabeza, torso, cada brazo y cada pierna tienen su propia vida. Cada golpe le da a la parte donde
+  pega (el daño locacional dice dónde); una caída, a las dos piernas; una explosión, a todo; el fuego, a casi todo.
+- **Huesos rotos**: un brazo o una pierna sin vida se rompe (y una caída fuerte puede romper una pierna aunque le quede).
+  Con una pierna rota se cojea (más lento, se salta menos y el personaje cojea de verdad); con las dos, mucho peor. Con el
+  brazo derecho roto se pega y se pica mucho peor; con el izquierdo, se golpea más despacio. La cabeza muy herida marea y,
+  sin vida, nubla la vista; el torso sin vida deja sin aliento y no deja curarse con la comida.
+- **Sangrar**: los tajos, mordiscos y flechas fuertes pueden abrir una herida que quita medio corazón cada 4 segundos
+  (y no deja regenerarse) hasta que se venda o se cierra sola (40 s). Quien muere así «se desangró».
+- **Curarse**: las partes que no están rotas se curan solas, poco a poco, si no se sangra, se ha comido y hace un rato
+  que no te dan. Un hueso roto solo suelda **entablillado** (4 minutos; entablillado ya se cojea menos). Dormir toda la
+  noche cura mucho y adelanta los huesos.
+- **Regeneración lenta**: la comida cura al 35 % de lo normal.
+- **Menos corazones**: se empieza con **6**; cada **cristal de corazón** da uno más para siempre (hasta 15). Los sueltan
+  siempre los jefes de las mazmorras, el Wither, el guardián y el dragón (el anciano guardián, la mitad de las veces), y a
+  veces salen en los cofres de las mazmorras y en los tesoros de la ciudad antigua, la ciudad del End, el bastión, la
+  fortaleza, la mansión, las pirámides y los tesoros enterrados.
+- **Objetos** (pestaña «Supervivencia»): **venda** (lana blanca + cuerda → 3; corta la sangre y cura la parte más herida)
+  y **entablillado** (palos y una venda → 2). Los dos se ponen manteniendo pulsado.
+- **El muñeco**: a la derecha de la barra de objetos, cuando hay algo herido, sale un muñeco con cada parte de su color
+  (verde, amarilla, roja; negra sin vida), los huesos rotos rayados, los entablillados con marco, y el aviso de que sangras.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

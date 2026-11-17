@@ -25,6 +25,18 @@ public abstract class LivingEntityDamageMixin {
 	private float evolvedwarfare$amount;
 	@Unique
 	private net.minecraft.util.math.Vec3d evolvedwarfare$point;
+	@Unique
+	private float evolvedwarfare$lifeBefore = -1.0F;
+	@Unique
+	private int evolvedwarfare$depth;
+
+	@Inject(method = "damage", at = @At("HEAD"))
+	private void evolvedwarfare$lifeBefore(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+		LivingEntity self = (LivingEntity) (Object) this;
+		if (evolvedwarfare$depth++ == 0) {
+			evolvedwarfare$lifeBefore = self.getHealth() + self.getAbsorptionAmount();
+		}
+	}
 
 	@ModifyVariable(method = "damage", at = @At("HEAD"), argsOnly = true)
 	private float evolvedwarfare$locational(float amount, DamageSource source) {
@@ -49,6 +61,15 @@ public abstract class LivingEntityDamageMixin {
 		evolvedwarfare$point = null;
 		evolvedwarfare$zone = null;
 		evolvedwarfare$amount = 0.0F;
+		if (--evolvedwarfare$depth <= 0) {
+			evolvedwarfare$depth = 0;
+			LivingEntity self = (LivingEntity) (Object) this;
+			float lost = evolvedwarfare$lifeBefore - (self.getHealth() + self.getAbsorptionAmount());
+			if (cir.getReturnValueZ() && lost > 0.0F && self instanceof net.minecraft.entity.player.PlayerEntity) {
+				// heridas por partes (fase 92)
+				com.evolvedwarfare.health.Health.onHurt(self, source, zone, point, lost);
+			}
+		}
 		if (zone == HitZone.HEAD && cir.getReturnValueZ()) {
 			LocationalDamage.headshot((LivingEntity) (Object) this, source);
 		}
