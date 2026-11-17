@@ -2422,6 +2422,12 @@ Los **esqueletos** (normales, de las nieves, wither y del pantano) se mueven **r
 - **Atacar** (sin arco, p. ej. el esqueleto wither con su espada): el **brazo, recto como un palo**, sube hasta arriba y **cae de golpe**, con el tronco girando **en bloque**. Con un arma en la mano, la llevan recta por delante.
 - **Cargar el arco**: mientras tensa, el brazo de la cuerda **se lleva la mano a la cara poco a poco**, el tronco **se pone de lado** y la **cabeza se ladea** para apuntar; al soltar, vuelve.
 
+## Fase 88 — Animaciones (7): los creepers
+
+- **Andando**: un **trotecillo** a pasos cortos con las **patas en diagonal**, que se abren un poco al levantarse; el cuerpo da **botecitos** y se **mece de lado**, y la cabeza va un pelín por detrás.
+- **Quieto**: **respira** (se hincha y deshincha muy poco) y de vez en cuando **gira la cabeza despacio** a mirar a otro lado, ladeándola con curiosidad.
+- **A punto de explotar**: **se agacha y se planta**, con las patas de delante adelantadas y las de detrás atrás y abiertas, **baja la cabeza** para mirarte y **tiembla cada vez más** hasta reventar (además del hinchado y el parpadeo de siempre).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
