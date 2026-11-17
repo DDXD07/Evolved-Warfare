@@ -61,11 +61,6 @@ public class SeaSerpentEntity extends MiniBossEntity implements Legendary {
 	}
 
 	@Override
-	public boolean canBreatheInWater() {
-		return true;
-	}
-
-	@Override
 	public boolean isPushedByFluids() {
 		return false;
 	}
@@ -171,9 +166,10 @@ public class SeaSerpentEntity extends MiniBossEntity implements Legendary {
 		LightningEntity bolt = EntityType.LIGHTNING_BOLT.create(world);
 		if (bolt != null) {
 			bolt.refreshPositionAfterTeleport(target.getX(), target.getY(), target.getZ());
-			bolt.setCosmetic(!Legendaries.griefing(world));
+			boolean cosmetic = !Legendaries.griefing(world);
+			bolt.setCosmetic(cosmetic);
 			world.spawnEntity(bolt);
-			if (bolt.isCosmetic()) {
+			if (cosmetic) {
 				target.damage(world.getDamageSources().lightningBolt(), 8.0F);
 			}
 		}
