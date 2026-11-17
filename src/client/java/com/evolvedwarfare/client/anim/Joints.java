@@ -29,8 +29,11 @@ public final class Joints {
 	public static void split(ModelPartData root, String name, String lower, int u, int v, boolean mirror, float x, float y, float z, float sx, float sy,
 			float sz, Dilation d, ModelTransform pivot) {
 		int h = (int) (sy / 2);
+		// la mitad de abajo sube un poco dentro de la de arriba (medio grosor): al doblar el codo o la rodilla no queda hueco
+		// por fuera, sino un codo o una rodilla; recta, esa parte coincide con la de arriba, con la misma textura
+		int ext = Math.max(1, (int) (sz / 2));
 		ModelPartData part = root.addChild(name, ModelPartBuilder.create().uv(u, v).mirrored(mirror).cuboid(x, y, z, sx, h, sz, d), pivot);
-		part.addChild(lower, ModelPartBuilder.create().uv(u, v + h).mirrored(mirror).cuboid(x, 0.0F, z, sx, sy - h, sz, d),
+		part.addChild(lower, ModelPartBuilder.create().uv(u, v + h - ext).mirrored(mirror).cuboid(x, -ext, z, sx, sy - h + ext, sz, d),
 				ModelTransform.pivot(0.0F, y + h, 0.0F));
 	}
 

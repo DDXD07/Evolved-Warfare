@@ -2440,6 +2440,10 @@ Los **esqueletos** (normales, de las nieves, wither y del pantano) se mueven **r
 
 - Algunas animaciones movían **de lado o hacia delante** la cabeza y el tronco (la inclinación del zombi desde la cadera, el paso del peso de un pie a otro, la carrera), y el juego no los devuelve a su sitio en cada fotograma: se **iban sumando** y, al rato, **la cabeza y el tronco se salían del cuerpo** (zombis sin cabeza ni tronco, el jugador sin cabeza). Ahora todo vuelve a su sitio antes de cada fotograma.
 
+## Fase 91 — Codos y rodillas sin hueco
+
+- Al doblar el codo o la rodilla quedaba un **hueco por fuera** entre el brazo y el antebrazo (o el muslo y la espinilla). Ahora la mitad de abajo **sube un poco por dentro** de la de arriba: doblado, el hueco se cierra y se ve **un codo o una rodilla**; recto, se ve igual que antes.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
