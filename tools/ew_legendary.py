@@ -13,6 +13,7 @@ import os
 import random
 import sys
 
+import numpy as np
 from PIL import Image
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -148,6 +149,10 @@ ITEMS = {
 }
 
 TEXTS = {
+    "armor.evolvedwarfare.dragon.fire": ("Cada pieza: −15 %% de daño de fuego. Completa: inmune al fuego.",
+                                         "Each piece: −15%% fire damage. Full set: immune to fire."),
+    "armor.evolvedwarfare.dragon.ice": ("Cada pieza: −15 %% de daño de frío. Completa: no te congelas y ralentizas a quien te pega.",
+                                        "Each piece: −15%% cold damage. Full set: you can't freeze and you slow whoever hits you."),
     "itemGroup.evolvedwarfare.legendary": ("Evolved Warfare: Legendarios", "Evolved Warfare: Legendary"),
     "message.evolvedwarfare.legendary.roar.fire_dragon": ("Un rugido estremece la tierra y el cielo se tiñe de rojo: un dragón de fuego anda cerca...",
                                                           "A roar shakes the earth and the sky turns red: a fire dragon is near..."),
@@ -171,6 +176,90 @@ TEXTS = {
     "config.evolvedwarfare.dragonGriefing.tip": ("El aliento de fuego prende fuego y el de hielo congela el agua y nieva (con mobGriefing).",
                                                  "Fire breath starts fires and ice breath freezes water and snows (with mobGriefing)."),
 }
+
+
+# ------------------------------------------------------------------ tanda 2: armaduras de escamas y espadas de hueso
+
+ARMOR = {
+    "fire_dragon_scale": {"base": (156, 36, 28), "dark": (96, 20, 16), "trim": (220, 160, 60), "item": n("fire_dragon_scale"),
+                          "es": ["Yelmo de escamas de dragón de fuego", "Peto de escamas de dragón de fuego",
+                                 "Grebas de escamas de dragón de fuego", "Botas de escamas de dragón de fuego"],
+                          "en": ["Fire Dragon Scale Helmet", "Fire Dragon Scale Chestplate", "Fire Dragon Scale Leggings",
+                                 "Fire Dragon Scale Boots"]},
+    "ice_dragon_scale": {"base": (138, 184, 220), "dark": (84, 120, 160), "trim": (236, 244, 250), "item": n("ice_dragon_scale"),
+                         "es": ["Yelmo de escamas de dragón de hielo", "Peto de escamas de dragón de hielo",
+                                "Grebas de escamas de dragón de hielo", "Botas de escamas de dragón de hielo"],
+                         "en": ["Ice Dragon Scale Helmet", "Ice Dragon Scale Chestplate", "Ice Dragon Scale Leggings",
+                                "Ice Dragon Scale Boots"]},
+}
+
+ARMOR_DECALS = {
+    # yelmo con cuernos pintados en la frente, coraza con la arista y el vientre claro
+    "head": [("hole", "N", 1, 3, 6, 1), ("vband", "N", 3, 5, "trim"), ("band", "sides", 7, 8, "dark"), ("vband", "U", 3, 5, "dark")],
+    "body": [("vband", "N", 3, 5, "trim"), ("band", "sides", 10, 11, "dark")],
+    "arm": [("band", "sides", 0, 2, "dark"), ("band", "sides", 7, 8, "trim")],
+    "waist": [("band", "sides", 9, 11, "dark")],
+    "leg": [("band", "sides", 9, 10, "dark"), ("vband", "N", 1, 3, "trim")],
+    "boot": [("band", "sides", 9, 10, "trim")],
+}
+
+
+def armor_layers(name):
+    import numpy as np
+    import ew_armor_paint as P
+    import ew_class_armor as CA
+    s = ARMOR[name]
+    m = {"m": {"kind": "scale", "c": s["base"]}, "dark": {"kind": "flat", "c": s["dark"]}, "trim": {"kind": "flat", "c": s["trim"]}}
+    d = ARMOR_DECALS
+    rnd = P.new_rng(sum(ord(c) for c in name) * 31)
+    l1 = np.zeros((32, 64, 4), np.float32)
+    l2 = np.zeros((32, 64, 4), np.float32)
+    P.paint_box(l1, CA.HEAD, CA.box("m", (-4, -8, -4, 8, 8, 8), CA.HEAD, d["head"]), m, rnd)
+    P.paint_box(l1, CA.BODY, CA.box("m", (-4, 0, -2, 8, 12, 4), CA.BODY, d["body"]), m, rnd)
+    P.paint_box(l1, CA.ARM, CA.box("m", (-3, -2, -2, 4, 12, 4), CA.ARM, d["arm"]), m, rnd)
+    P.paint_box(l1, CA.LEG, CA.box("m", (-2, 0, -2, 4, 12, 4), CA.LEG, d["boot"]), m, rnd)
+    CA.clear(l1, P.box_regions(*CA.LEG, 4, 12, 4), "NSEWU", rows=7)
+    P.paint_box(l2, CA.BODY, CA.box("m", (-4, 0, -2, 8, 12, 4), CA.BODY, d["waist"]), m, rnd)
+    CA.clear(l2, P.box_regions(*CA.BODY, 8, 12, 4), "NSEWU", rows=7)
+    P.paint_box(l2, CA.LEG, CA.box("m", (-2, 0, -2, 4, 12, 4), CA.LEG, d["leg"]), m, rnd)
+    return l1.astype(np.uint8), l2.astype(np.uint8)
+
+
+SWORDS = {
+    "dragonbone_sword": ((226, 218, 196), None, ("Espada de hueso de dragón", "Dragonbone Sword",
+                                                "Más dura y ligera que la de netherita.", "Harder and lighter than netherite.")),
+    "flamed_dragonbone_sword": ((226, 218, 196), (240, 110, 30), ("Espada flamígera de hueso de dragón", "Flamed Dragonbone Sword",
+                                                                 "Quema a lo que toca y hiere de más a los dragones de hielo.",
+                                                                 "Sets what it hits on fire and deals extra damage to ice dragons.")),
+    "iced_dragonbone_sword": ((226, 218, 196), (110, 200, 250), ("Espada helada de hueso de dragón", "Iced Dragonbone Sword",
+                                                                "Congela y ralentiza a lo que toca y hiere de más a los dragones de fuego.",
+                                                                "Freezes and slows what it hits and deals extra damage to fire dragons.")),
+}
+
+
+def sword_icon(bone, glow):
+    img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    dark = shade(bone, 0.6)
+    edge = glow or shade(bone, 1.1)
+    # la hoja en diagonal (de abajo izquierda a arriba derecha)
+    for k in range(4, 15):
+        x, y = k, 15 - k
+        img.putpixel((x, y - 1), edge + (255,))
+        img.putpixel((x, y), bone + (255,))
+        img.putpixel((x - 1, y), dark + (255,))
+    img.putpixel((14, 0), edge + (255,))
+    # la guarda (de hueso, con dos púas) y el puño
+    for k in range(-2, 3):
+        img.putpixel((4 + k, 11 + k), dark + (255,))
+    img.putpixel((2, 9), bone + (255,))
+    img.putpixel((6, 13), bone + (255,))
+    for k in range(3):
+        img.putpixel((3 - k, 12 + k), (90, 60, 40, 255))
+    img.putpixel((0, 15), dark + (255,))
+    if glow:
+        for k in (6, 9, 12):
+            img.putpixel((k + 1, 14 - k), shade(glow, 1.2) + (255,))
+    return img
 
 
 # ------------------------------------------------------------------ los iconos
@@ -251,6 +340,41 @@ def main():
     for name in ITEMS:
         write_json(os.path.join(ASSETS, "models/item/%s.json" % name),
                    {"parent": "minecraft:item/generated", "textures": {"layer0": n("item/" + name)}})
+    # tanda 2: las armaduras de escamas y las espadas de hueso
+    import ew_class_armor as CA
+    import ew_armor as A
+    armor_dir = os.path.join(ASSETS, "textures/models/armor")
+    os.makedirs(armor_dir, exist_ok=True)
+    armor_lang = {}
+    for name, st in ARMOR.items():
+        l1, l2 = armor_layers(name)
+        Image.fromarray(l1, "RGBA").save(os.path.join(armor_dir, "%s_layer_1.png" % name))
+        Image.fromarray(l2, "RGBA").save(os.path.join(armor_dir, "%s_layer_2.png" % name))
+        for i, piece in enumerate(A.PIECES):
+            item = "%s_%s" % (name, piece)
+            CA.icon(l1, l2, piece).save(os.path.join(item_dir, item + ".png"))
+            write_json(os.path.join(ASSETS, "models/item", item + ".json"),
+                       {"parent": "minecraft:item/generated", "textures": {"layer0": n("item/" + item)}})
+            pattern = [r.replace("A", "X") for r in A.SHAPES[piece]]
+            write_json(os.path.join(DATA, "recipe", item + ".json"), {
+                "type": "minecraft:crafting_shaped", "category": "equipment", "pattern": pattern,
+                "key": {"X": {"item": st["item"]}}, "result": {"id": n(item), "count": 1}})
+            armor_lang["item.%s.%s" % (NS, item)] = (st["es"][i], st["en"][i])
+    for piece, tag in (("helmet", "head_armor"), ("chestplate", "chest_armor"), ("leggings", "leg_armor"), ("boots", "foot_armor")):
+        CA.merge_tag(tag, [n("%s_%s" % (name, piece)) for name in ARMOR])
+    CA.merge_tag("trimmable_armor", [n("%s_%s" % (name, piece)) for name in ARMOR for piece in A.PIECES])
+    CA.merge_tag("swords", [n(name) for name in SWORDS])
+    for name, (bone, glow, _) in SWORDS.items():
+        sword_icon(bone, glow).save(os.path.join(item_dir, name + ".png"))
+        write_json(os.path.join(ASSETS, "models/item", name + ".json"),
+                   {"parent": "minecraft:item/handheld", "textures": {"layer0": n("item/" + name)}})
+    write_json(os.path.join(DATA, "recipe", "dragonbone_sword.json"), {
+        "type": "minecraft:crafting_shaped", "category": "equipment", "pattern": ["B", "B", "S"],
+        "key": {"B": {"item": n("dragon_bone")}, "S": {"item": "minecraft:stick"}}, "result": {"id": n("dragonbone_sword"), "count": 1}})
+    for name, heart in (("flamed_dragonbone_sword", "fire_dragon_heart"), ("iced_dragonbone_sword", "ice_dragon_heart")):
+        write_json(os.path.join(DATA, "recipe", name + ".json"), {
+            "type": "minecraft:crafting_shapeless", "category": "equipment",
+            "ingredients": [{"item": n("dragonbone_sword")}, {"item": n(heart)}], "result": {"id": n(name), "count": 1}})
     for dt in ("dragon_fire", "dragon_ice"):
         write_json(os.path.join(DATA, "damage_type/%s.json" % dt), {"exhaustion": 0.1, "message_id": "%s.%s" % (NS, dt), "scaling": "never"})
     D.add_tag(os.path.join(ROOT, "src/main/resources/data/minecraft/tags/damage_type/is_fire.json"), [n("dragon_fire")])
@@ -267,8 +391,19 @@ def main():
             data["item.%s.%s.desc" % (NS, key)] = den if english else des
         for key, (es, en) in TEXTS.items():
             data[key] = en if english else es
+        for key, (es, en) in armor_lang.items():
+            data[key] = en if english else es
+        for name, (_, _, (es, en, des, den)) in SWORDS.items():
+            data["item.%s.%s" % (NS, name)] = en if english else es
+            data["item.%s.%s.desc" % (NS, name)] = den if english else des
         write_json(path, data)
     if PREVIEW:
+        frames = []
+        for name in ARMOR:
+            l1 = np.array(Image.open(os.path.join(armor_dir, "%s_layer_1.png" % name)))
+            l2 = np.array(Image.open(os.path.join(armor_dir, "%s_layer_2.png" % name)))
+            frames.append(A.label(CA.figure(l1, l2, (-2.0, 1.9, 4.0)), name))
+        A.grid(frames, 2).save(os.path.join(PREVIEW, "dragon_armor.png"))
         os.makedirs(PREVIEW, exist_ok=True)
         for mid, parts, img in previews:
             for yaw in (35, 150):

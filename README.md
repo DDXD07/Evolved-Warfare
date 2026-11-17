@@ -2629,6 +2629,19 @@ La última parte de la dificultad al estilo RLCraft llega en tandas. La primera:
 - Hay huevos generadores en la pestaña «Legendarios». Que el aliento queme y congele se puede apagar (y respeta
   `mobGriefing`).
 
+## Fase 102 — Criaturas legendarias (2): armaduras de escamas y espadas de hueso de dragón
+
+Lo que se hace con lo que sueltan los dragones (pestaña «Legendarios»):
+
+- **Armaduras de escamas de dragón** (de fuego y de hielo; con las escamas, como las de siempre: 5, 8, 7 y 4): protegen
+  como la de diamante, más duras (dureza 3,5) y aguantan más. Cada pieza quita un **15 % del daño de su elemento** (fuego o
+  frío) y el **juego completo** hace **inmune al fuego** (la de fuego) o **al frío** (la de hielo: no te congelas y el que te
+  pega se queda lento y helado). La de fuego no se quema en la lava. Se reparan con escamas.
+- **Espada de hueso de dragón** (dos huesos de dragón y un palo): más daño y durabilidad que la de netherita.
+  - **Flamígera** (la espada + un corazón de dragón de fuego): quema a lo que toca y hiere **+8** a los dragones de hielo.
+  - **Helada** (la espada + un corazón de dragón de hielo): congela y ralentiza a lo que toca y hiere **+8** a los dragones
+    de fuego.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

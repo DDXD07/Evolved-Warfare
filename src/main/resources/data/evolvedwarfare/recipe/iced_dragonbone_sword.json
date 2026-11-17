@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "evolvedwarfare:dragonbone_sword"
+    },
+    {
+      "item": "evolvedwarfare:ice_dragon_heart"
+    }
+  ],
+  "result": {
+    "id": "evolvedwarfare:iced_dragonbone_sword",
+    "count": 1
+  }
+}

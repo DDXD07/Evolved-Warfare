@@ -2939,5 +2939,21 @@
   "config.evolvedwarfare.legendaryChance": "Chance per minute",
   "config.evolvedwarfare.legendaryChance.tip": "Chance per player each minute that one appears nearby (if the place fits).",
   "config.evolvedwarfare.dragonGriefing": "Breath burns and freezes",
-  "config.evolvedwarfare.dragonGriefing.tip": "Fire breath starts fires and ice breath freezes water and snows (with mobGriefing)."
+  "config.evolvedwarfare.dragonGriefing.tip": "Fire breath starts fires and ice breath freezes water and snows (with mobGriefing).",
+  "armor.evolvedwarfare.dragon.fire": "Each piece: −15%% fire damage. Full set: immune to fire.",
+  "armor.evolvedwarfare.dragon.ice": "Each piece: −15%% cold damage. Full set: you can't freeze and you slow whoever hits you.",
+  "item.evolvedwarfare.fire_dragon_scale_helmet": "Fire Dragon Scale Helmet",
+  "item.evolvedwarfare.fire_dragon_scale_chestplate": "Fire Dragon Scale Chestplate",
+  "item.evolvedwarfare.fire_dragon_scale_leggings": "Fire Dragon Scale Leggings",
+  "item.evolvedwarfare.fire_dragon_scale_boots": "Fire Dragon Scale Boots",
+  "item.evolvedwarfare.ice_dragon_scale_helmet": "Ice Dragon Scale Helmet",
+  "item.evolvedwarfare.ice_dragon_scale_chestplate": "Ice Dragon Scale Chestplate",
+  "item.evolvedwarfare.ice_dragon_scale_leggings": "Ice Dragon Scale Leggings",
+  "item.evolvedwarfare.ice_dragon_scale_boots": "Ice Dragon Scale Boots",
+  "item.evolvedwarfare.dragonbone_sword": "Dragonbone Sword",
+  "item.evolvedwarfare.dragonbone_sword.desc": "Harder and lighter than netherite.",
+  "item.evolvedwarfare.flamed_dragonbone_sword": "Flamed Dragonbone Sword",
+  "item.evolvedwarfare.flamed_dragonbone_sword.desc": "Sets what it hits on fire and deals extra damage to ice dragons.",
+  "item.evolvedwarfare.iced_dragonbone_sword": "Iced Dragonbone Sword",
+  "item.evolvedwarfare.iced_dragonbone_sword.desc": "Freezes and slows what it hits and deals extra damage to fire dragons."
 }

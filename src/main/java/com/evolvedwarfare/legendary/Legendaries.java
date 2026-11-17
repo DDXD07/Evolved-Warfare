@@ -60,6 +60,23 @@ public final class Legendaries {
 	public static final Item FIRE_DRAGON_HEART = item("fire_dragon_heart", new Described(new Item.Settings().maxCount(16).rarity(Rarity.EPIC).fireproof()));
 	public static final Item ICE_DRAGON_HEART = item("ice_dragon_heart", new Described(new Item.Settings().maxCount(16).rarity(Rarity.EPIC)));
 
+	// las armaduras de escamas y las espadas de hueso (fase 102)
+	public static final List<Item> DRAGON_ARMOR = new ArrayList<>();
+
+	static {
+		for (DragonGear.Element element : DragonGear.Element.values()) {
+			String set = element == DragonGear.Element.FIRE ? "fire_dragon_scale" : "ice_dragon_scale";
+			for (net.minecraft.item.ArmorItem.Type type : new net.minecraft.item.ArmorItem.Type[] {net.minecraft.item.ArmorItem.Type.HELMET,
+					net.minecraft.item.ArmorItem.Type.CHESTPLATE, net.minecraft.item.ArmorItem.Type.LEGGINGS, net.minecraft.item.ArmorItem.Type.BOOTS}) {
+				DRAGON_ARMOR.add(item(set + "_" + type.getName(), new DragonGear.DragonArmorItem(element, type)));
+			}
+		}
+	}
+
+	public static final Item DRAGONBONE_SWORD = item("dragonbone_sword", new DragonGear.DragonboneSwordItem(null));
+	public static final Item FLAMED_DRAGONBONE_SWORD = item("flamed_dragonbone_sword", new DragonGear.DragonboneSwordItem(DragonGear.Element.FIRE));
+	public static final Item ICED_DRAGONBONE_SWORD = item("iced_dragonbone_sword", new DragonGear.DragonboneSwordItem(DragonGear.Element.ICE));
+
 	public static final ItemGroup GROUP = Registry.register(Registries.ITEM_GROUP, EvolvedWarfare.id("legendary"), FabricItemGroup.builder()
 			.icon(() -> new ItemStack(FIRE_DRAGON_SCALE))
 			.displayName(Text.translatable("itemGroup.evolvedwarfare.legendary"))
@@ -101,6 +118,7 @@ public final class Legendaries {
 		FabricDefaultAttributeRegistry.register(FIRE_DRAGON, DragonEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(ICE_DRAGON, DragonEntity.createAttributes());
 		ServerTickEvents.END_SERVER_TICK.register(Legendaries::tick);
+		DragonGear.register();
 	}
 
 	public static boolean griefing(ServerWorld world) {

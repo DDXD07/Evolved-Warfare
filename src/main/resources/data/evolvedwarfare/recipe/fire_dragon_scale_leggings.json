@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "XXX",
+    "X X",
+    "X X"
+  ],
+  "key": {
+    "X": {
+      "item": "evolvedwarfare:fire_dragon_scale"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:fire_dragon_scale_leggings",
+    "count": 1
+  }
+}

@@ -60,6 +60,8 @@ public abstract class LivingEntityDamageMixin {
 		out = com.evolvedwarfare.difficulty.Difficulty.modifyOutgoing(source, out);
 		// los golpes sin aguante hacen la mitad (fase 97)
 		out = com.evolvedwarfare.health.Stamina.modifyMelee(source, out);
+		// las escamas de dragón (fase 102)
+		out = com.evolvedwarfare.legendary.DragonGear.modifyIncoming(self, source, out);
 		evolvedwarfare$amount = out;
 		return out;
 	}
@@ -93,6 +95,8 @@ public abstract class LivingEntityDamageMixin {
 			if (cir.getReturnValueZ()) {
 				// los monstruos se avisan (fase 96)
 				com.evolvedwarfare.difficulty.SmartMobs.onHurt(self, source);
+				// la armadura de escamas de hielo ralentiza al que pega (fase 102)
+				com.evolvedwarfare.legendary.DragonGear.onHurt(self, source);
 			}
 		}
 		if (zone == HitZone.HEAD && cir.getReturnValueZ()) {

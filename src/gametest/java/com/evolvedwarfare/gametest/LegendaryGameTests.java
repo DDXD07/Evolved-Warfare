@@ -102,4 +102,31 @@ public class LegendaryGameTests implements FabricGameTest {
 			ctx.complete();
 		});
 	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "legendary")
+	public void dragonGearWorks(TestContext ctx) {
+		floor(ctx);
+		ServerPlayerEntity player = (ServerPlayerEntity) ctx.createMockCreativeServerPlayerInWorld();
+		player.changeGameMode(GameMode.SURVIVAL);
+		var fire = player.getDamageSources().onFire();
+		float none = com.evolvedwarfare.legendary.DragonGear.modifyIncoming(player, fire, 10.0F);
+		net.minecraft.entity.EquipmentSlot[] slots = {net.minecraft.entity.EquipmentSlot.HEAD, net.minecraft.entity.EquipmentSlot.CHEST,
+				net.minecraft.entity.EquipmentSlot.LEGS, net.minecraft.entity.EquipmentSlot.FEET};
+		player.equipStack(slots[0], new net.minecraft.item.ItemStack(Legendaries.DRAGON_ARMOR.get(0)));
+		float one = com.evolvedwarfare.legendary.DragonGear.modifyIncoming(player, fire, 10.0F);
+		for (int k = 1; k < 4; k++) {
+			player.equipStack(slots[k], new net.minecraft.item.ItemStack(Legendaries.DRAGON_ARMOR.get(k)));
+		}
+		float full = com.evolvedwarfare.legendary.DragonGear.modifyIncoming(player, fire, 10.0F);
+		DragonEntity ice = ctx.spawnEntity(Legendaries.ICE_DRAGON, 4, 3, 4);
+		ice.setAiDisabled(true);
+		float flamed = Legendaries.FLAMED_DRAGONBONE_SWORD.getBonusAttackDamage(ice, 10.0F, player.getDamageSources().playerAttack(player));
+		float iced = Legendaries.ICED_DRAGONBONE_SWORD.getBonusAttackDamage(ice, 10.0F, player.getDamageSources().playerAttack(player));
+		LOG.info("[EW-GAMETEST] escamas: fuego 10 -> {} (una pieza) -> {} (completa); espada flamígera contra el de hielo +{}, helada +{}", one, full,
+				flamed, iced);
+		check(none == 10.0F && one < 10.0F && full == 0.0F, "Las escamas de fuego no protegen del fuego");
+		check(flamed > 0.0F && iced == 0.0F, "Las espadas no hieren de más al dragón contrario");
+		ice.discard();
+		ctx.complete();
+	}
 }

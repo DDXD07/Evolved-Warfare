@@ -2939,5 +2939,21 @@
   "config.evolvedwarfare.legendaryChance": "Probabilidad por minuto",
   "config.evolvedwarfare.legendaryChance.tip": "Probabilidad, cada minuto y por jugador, de que aparezca una cerca (si el sitio vale).",
   "config.evolvedwarfare.dragonGriefing": "El aliento quema y congela",
-  "config.evolvedwarfare.dragonGriefing.tip": "El aliento de fuego prende fuego y el de hielo congela el agua y nieva (con mobGriefing)."
+  "config.evolvedwarfare.dragonGriefing.tip": "El aliento de fuego prende fuego y el de hielo congela el agua y nieva (con mobGriefing).",
+  "armor.evolvedwarfare.dragon.fire": "Cada pieza: −15 %% de daño de fuego. Completa: inmune al fuego.",
+  "armor.evolvedwarfare.dragon.ice": "Cada pieza: −15 %% de daño de frío. Completa: no te congelas y ralentizas a quien te pega.",
+  "item.evolvedwarfare.fire_dragon_scale_helmet": "Yelmo de escamas de dragón de fuego",
+  "item.evolvedwarfare.fire_dragon_scale_chestplate": "Peto de escamas de dragón de fuego",
+  "item.evolvedwarfare.fire_dragon_scale_leggings": "Grebas de escamas de dragón de fuego",
+  "item.evolvedwarfare.fire_dragon_scale_boots": "Botas de escamas de dragón de fuego",
+  "item.evolvedwarfare.ice_dragon_scale_helmet": "Yelmo de escamas de dragón de hielo",
+  "item.evolvedwarfare.ice_dragon_scale_chestplate": "Peto de escamas de dragón de hielo",
+  "item.evolvedwarfare.ice_dragon_scale_leggings": "Grebas de escamas de dragón de hielo",
+  "item.evolvedwarfare.ice_dragon_scale_boots": "Botas de escamas de dragón de hielo",
+  "item.evolvedwarfare.dragonbone_sword": "Espada de hueso de dragón",
+  "item.evolvedwarfare.dragonbone_sword.desc": "Más dura y ligera que la de netherita.",
+  "item.evolvedwarfare.flamed_dragonbone_sword": "Espada flamígera de hueso de dragón",
+  "item.evolvedwarfare.flamed_dragonbone_sword.desc": "Quema a lo que toca y hiere de más a los dragones de hielo.",
+  "item.evolvedwarfare.iced_dragonbone_sword": "Espada helada de hueso de dragón",
+  "item.evolvedwarfare.iced_dragonbone_sword.desc": "Congela y ralentiza a lo que toca y hiere de más a los dragones de fuego."
 }
