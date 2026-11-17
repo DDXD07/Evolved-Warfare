@@ -205,29 +205,87 @@ def treant():
 # ------------------------------------------------------------------ fase 106: el Coco
 
 def coco():
-    """El Coco: alto y flaco, negro como la sombra, con un manto andrajoso, ojos blancos que brillan, una boca roja muy
-    ancha, brazos larguísimos con garras y el saco a la espalda."""
+    """El Coco: un ser altísimo y consumido, encorvado, de piel gris ceniza pegada a las costillas, con el espinazo marcado.
+    Un manto negro hecho jirones que cuelga en tiras; una capucha de la que asoma una cara de calavera pálida con las
+    cuencas hundidas, dos puntos rojos que brillan y una sonrisa llena de dientes (la mandíbula se le descuelga al atacar).
+    Cuernos retorcidos hacia atrás. Cuello largo y fino. Piernas dobladas hacia atrás con garras en los pies; brazos
+    larguísimos de dos tramos que llegan al suelo, con dedos como agujas. A la espalda, el saco... con una manita pálida
+    que asoma."""
     a = W.Animal("coco")
-    black, shadow = (14, 12, 18), (34, 30, 40)
-    rag = (40, 36, 44)
-    claw = (210, 206, 196)
+    skin, rib = (44, 40, 48), (70, 64, 76)
+    cloak, cloak_dark = (18, 16, 22), (8, 7, 10)
+    bone, bone_dark = (204, 198, 182), (150, 142, 126)
+    claw = (226, 222, 210)
+    red = (255, 30, 30)
+    # las piernas: muslo hacia delante, espinilla hacia atrás, pie con garras
     for side, name, phase in ((-1, "leg_r", 0), (1, "leg_l", 1)):
-        leg = a.part(name, None, (side * 1.8, 6, 0), role="leg", phase=phase)
-        leg.cube((-1, 0, -1), (2, 18, 2), **C(black, low=(shadow, 2)))
-    body = a.part("body", None, (0, 6, 0), role="body")
-    body.cube((-3, -14, -1.5), (6, 14, 3), **C(black))
-    body.cube((-4, -14, -2.5), (8, 16, 5), **C(rag, spots=(black, 0.35), low=(black, 3)))       # el manto roto
-    body.cube((-3, -12, 2.5), (6, 7, 4), **C((96, 72, 46), bands=((70, 52, 32), 2)))          # el saco
-    head = a.part("head", "body", (0, -14, 0), role="head")
-    head.cube((-3, -8, -3), (6, 8, 6), **C(black, eyes=("front", 3, (255, 255, 255)), glow_eyes=True, mouth=(150, 20, 24)))
-    head.cube((-4, -9, -4), (8, 3, 8), **C(rag, spots=(black, 0.3)))                          # la capucha
-    jaw = a.part("jaw", "head", (0, -1, -1), role="jaw")
-    jaw.cube((-2.5, 0, -2), (5, 1, 3), **C((120, 10, 16)))
-    for side, name in ((-1, "arm_r"), (1, "arm_l")):
-        arm = a.part(name, "body", (side * 4, -13, 0), role="arm", side=side)
-        arm.cube((-1, -1, -1), (2, 22, 2), **C(black, low=(shadow, 3)))
+        thigh = a.part(name, None, (side * 2, 3, 0), (-20, 0, 0), role="leg", phase=phase)
+        thigh.cube((-1, 0, -1), (2, 11, 2), **C(skin, low=(rib, 2)))
+        shin = a.part(name + "_shin", name, (0, 11, 0), (38, 0, 0))
+        shin.cube((-1, 0, -1), (2, 10, 2), **C(skin, low=(cloak_dark, 2)))
+        foot = a.part(name + "_foot", name + "_shin", (0, 10, 0), (-18, 0, 0))
+        foot.cube((-1.5, 0, -3), (3, 1, 4), **C(skin))
         for k in range(3):
-            arm.cube((-1 + k * 0.8 - 0.4, 21, -1.5), (1, 3, 1), **C(claw, tip=((255, 255, 255), 1)))
+            foot.cube((-1.5 + k, 0, -5), (1, 1, 2), **C(claw, tip=(bone_dark, 1)))
+    # el cuerpo, encorvado hacia delante
+    body = a.part("body", None, (0, 3, 0), (28, 0, 0), role="body")
+    body.cube((-3, -13, -2), (6, 13, 4), **C(skin, bands=(rib, 3), low=(cloak_dark, 2)))
+    for k in range(5):
+        body.cube((-0.5, -12 + k * 2.4, 2), (1, 1, 1), **C(bone_dark))                      # el espinazo
+    # el manto: los hombros y las tiras que cuelgan
+    body.cube((-4.5, -14, -3), (9, 4, 7), **C(cloak, spots=(cloak_dark, 0.3)))
+    strips = [(-4.5, -2.5, 15), (-4.5, 0.5, 12), (-4.5, 3, 17), (3.5, -2, 14), (3.5, 1, 18), (3.5, 3, 11),
+              (-3, 3, 16), (-1, 3.5, 19), (1, 3, 15), (2.5, 3.5, 13)]
+    for x, z, h in strips:
+        body.cube((x, -11, z if z < 0 else z - 0.5), (1, h, 1), **C(cloak, low=(cloak_dark, 4), spots=(cloak_dark, 0.25)))
+    # el saco a la espalda, con su cuerda... y una manita que asoma
+    body.cube((-3.5, -12, 2.5), (7, 8, 5), **C((92, 70, 46), bands=((64, 48, 30), 2), spots=((50, 38, 24), 0.15)))
+    body.cube((-1.5, -13, 3.5), (3, 1, 3), **C((60, 46, 30)))
+    body.cube((-4.5, -13, -0.5), (9, 1, 1), **C((80, 60, 40)))
+    body.cube((1, -15, 4), (1, 3, 1), **C((236, 212, 196)))                                  # el bracito
+    body.cube((0.5, -16, 3.5), (2, 1, 2), **C((236, 212, 196)))                               # la mano
+    # el cuello largo y la cabeza
+    neck = a.part("neck", "body", (0, -13, -1), (-40, 0, 0))
+    neck.cube((-1, -6, -1), (2, 6, 2), **C(skin, bands=(rib, 1)))
+    head = a.part("head", "neck", (0, -6, 0), (12, 0, 0), role="head")
+    # la cara de calavera, metida en la capucha
+    head.cube((-2.5, -6.5, -3), (5, 6, 5), **C(bone, front_color=bone, low=(bone_dark, 1)))
+    head.cube((-2.2, -5, -3.2), (2, 2, 1), **C((8, 6, 8)))                                     # las cuencas
+    head.cube((0.2, -5, -3.2), (2, 2, 1), **C((8, 6, 8)))
+    head.cube((-1.7, -4.5, -3.4), (1, 1, 1), **C(red, glow_all=True))                        # los ojos (puntos rojos)
+    head.cube((0.7, -4.5, -3.4), (1, 1, 1), **C(red, glow_all=True))
+    head.cube((-0.5, -3, -3.3), (1, 1, 1), **C((16, 10, 12)))                                 # la nariz hundida
+    for k in range(5):
+        head.cube((-2.25 + k, -1.6, -3.4), (1, 2, 1), **C(claw, tip=(bone_dark, 1)))          # los dientes de arriba
+    # la capucha: por detrás, por encima y un marco alrededor de la cara
+    head.cube((-3.5, -8, -2), (7, 8, 7), **C(cloak, spots=(cloak_dark, 0.3)))
+    head.cube((-3.5, -8, -3.6), (7, 1, 2), **C(cloak, spots=(cloak_dark, 0.3)))
+    head.cube((-3.5, -7, -3.6), (1, 7, 2), **C(cloak, low=(cloak_dark, 2)))
+    head.cube((2.5, -7, -3.6), (1, 7, 2), **C(cloak, low=(cloak_dark, 2)))
+    # los cuernos retorcidos, hacia atrás como los de un carnero
+    for side in (-1, 1):
+        h1 = a.part("horn_%d" % (side + 1), "head", (side * 2.8, -7.5, 0), (-55, 0, side * 30))
+        h1.cube((-1, -4, -1), (2, 4, 2), **C(bone_dark, low=((90, 84, 72), 1)))
+        h2 = a.part("horn_mid_%d" % (side + 1), "horn_%d" % (side + 1), (0, -4, 0), (-50, 0, 0))
+        h2.cube((-0.5, -4, -0.5), (1, 4, 1), **C(bone_dark))
+        h3 = a.part("horn_tip_%d" % (side + 1), "horn_mid_%d" % (side + 1), (0, -4, 0), (-60, 0, 0))
+        h3.cube((-0.5, -3, -0.5), (1, 3, 1), **C((60, 54, 46), tip=((30, 26, 22), 1)))
+    # la mandíbula que se descuelga, con los dientes de abajo
+    jaw = a.part("jaw", "head", (0, -0.5, -1), role="jaw")
+    jaw.cube((-2.5, 0, -2.5), (5, 1, 4), **C(bone_dark))
+    for k in range(5):
+        jaw.cube((-2.25 + k, -1, -2.6), (1, 1, 1), **C(claw))
+    # los brazos larguísimos: brazo, antebrazo y una mano con dedos como agujas
+    for side, name in ((-1, "arm_r"), (1, "arm_l")):
+        arm = a.part(name, "body", (side * 4, -12, 0), (-28, 0, side * -6), role="arm", side=side)
+        arm.cube((-1, -1, -1), (2, 13, 2), **C(skin, bands=(rib, 2)))
+        fore = a.part(name + "_fore", name, (0, 12, 0), (-30, 0, 0))
+        fore.cube((-1, 0, -1), (2, 13, 2), **C(skin, low=(cloak_dark, 2)))
+        hand = a.part(name + "_hand", name + "_fore", (0, 13, 0), (20, 0, 0))
+        hand.cube((-1.5, 0, -1), (3, 2, 2), **C(skin))
+        for k in range(4):
+            finger = a.part("%s_finger_%d" % (name, k), name + "_hand", (-1.5 + k + 0.5, 2, 0), (8 * (k - 1.5), 0, 6 * (k - 1.5)))
+            finger.cube((-0.5, 0, -0.5), (1, 6, 1), **C(skin, low=(claw, 1)))
     return a
 
 

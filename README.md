@@ -2707,6 +2707,21 @@ Al picar un **mineral** (de cualquier tipo), hay un **1,5 %** de que salga de go
 - **Su botín**: piedra, pedernal, a veces un **núcleo de guardián** y, además, **2-5 de lo que daba la veta** (hierro en
   bruto, diamantes, esmeraldas...).
 
+## Fase 108 — El Coco, de verdad
+
+Un modelo nuevo y mucho más trabajado para **el Coco** (más de 60 piezas), para que dé pánico verlo:
+
+- **Altísimo y consumido** (unos 3 bloques), **encorvado** hacia delante, con la piel gris ceniza pegada a las
+  **costillas** y el **espinazo** marcado.
+- Un **manto negro hecho jirones** que le cuelga en tiras por la espalda y los costados.
+- Una **capucha** de la que asoma una **cara de calavera** pálida: las cuencas hundidas, dos **puntos rojos que
+  brillan** en la oscuridad, la nariz hundida y una sonrisa llena de **dientes**; la **mandíbula se le descuelga** al
+  atacar.
+- **Cuernos retorcidos** hacia atrás, como los de un carnero, y un **cuello largo y fino**.
+- **Piernas dobladas hacia atrás** con garras en los pies.
+- **Brazos larguísimos** de dos tramos que le llegan al suelo, con **dedos como agujas** abiertos en abanico.
+- A la espalda, **el saco**... con una **manita pálida** que asoma.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

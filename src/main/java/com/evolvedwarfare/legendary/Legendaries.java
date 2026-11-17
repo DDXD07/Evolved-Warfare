@@ -67,7 +67,7 @@ public final class Legendaries {
 			0x68502E, 0x40742A);
 
 	public static final EntityType<CocoEntity> COCO = type("coco",
-			EntityType.Builder.create(CocoEntity::new, SpawnGroup.MONSTER).dimensions(0.8F, 2.9F).eyeHeight(2.6F).maxTrackingRange(10),
+			EntityType.Builder.create(CocoEntity::new, SpawnGroup.MONSTER).dimensions(0.9F, 3.1F).eyeHeight(2.8F).maxTrackingRange(10),
 			0x0E0C12, 0x962018);
 
 	public static final EntityType<RockGuardianEntity> ROCK_GUARDIAN = type("rock_guardian",
