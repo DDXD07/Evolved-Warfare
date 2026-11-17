@@ -2560,6 +2560,27 @@ recupera):
 - **La barra**: una barrita bajo la mira que aparece cuando no está lleno (y se desvanece al llenarse): amarilla, naranja
   con poco, roja parpadeando agotado. En la pantalla de la salud (H) se ve el número.
 
+## Fase 98 — Dificultad (6): la comida que se pudre
+
+La sexta parte de la dificultad al estilo RLCraft (en la categoría **Salud**: sí/no y lo deprisa que se pudre):
+
+- **Caducidad**: cada comida, al pasar por tu inventario, recibe cuándo se echa a perder: la carne y el pescado crudos,
+  **2 días** del juego; cocinados, **4**; los guisos, **3**; las patatas, zanahorias y remolachas, **10**; lo demás, **6**.
+  Lo seco y lo de oro (alga seca, manzanas y zanahorias de oro, miel...) no se pudre. Se sigue pasando aunque esté
+  guardado en un cofre.
+- **Etapas** (con una barra de frescura en el objeto, de verde a rojo, y cómo está en la descripción):
+  - **Fresca** (más de la mitad del tiempo): como siempre.
+  - **Pasada**: alimenta un 20 % menos y a veces da hambre.
+  - **Pocha**: alimenta la mitad y suele dar hambre, náuseas y a veces veneno.
+  - **Podrida**: se convierte en **carne podrida** (la carne y el pescado) o en **comida podrida** (lo demás; va bien al
+    compostador).
+- **Conservarla**:
+  - **Salar**: una **sal** y hasta 8 de la misma comida en la mesa de trabajo: aguanta **4 veces** más (lo que le quede;
+    no la refresca). La sal sale de un cubo de agua + carbón (3) o de un bloque de sal (4).
+  - **Ahumar**: lo que sale del **ahumador** sale ahumado y aguanta **3 veces** más (salado y ahumado, **8 veces**).
+  - **La nevera** (tablones, hielo compacto y un cofre): lo que guardes dentro se pasa **diez veces más despacio**.
+- La comida de la misma hora se sigue apilando.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

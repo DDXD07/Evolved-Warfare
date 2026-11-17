@@ -128,6 +128,10 @@ public final class EwConfig {
 	public double staminaCost = 1.0;
 	/** Lo deprisa que se recupera (x). */
 	public double staminaRegen = 1.0;
+	/** La comida se pudre (sal, ahumador y nevera la conservan). */
+	public boolean foodRotEnabled = true;
+	/** Lo deprisa que se pudre (1 = normal; 2 = el doble de rápido). */
+	public double foodRotSpeed = 1.0;
 
 	// ------------------------------------------------------------------ dificultad que sube y élite
 	/** Los monstruos tienen nivel de peligro (distancia, días y dimensión): más vida, daño y armadura. */
@@ -294,6 +298,8 @@ public final class EwConfig {
 			new Option("staminaEnabled", "health", 0, 1, 1),
 			new Option("staminaCost", "health", 0.0, 5.0, 0.1),
 			new Option("staminaRegen", "health", 0.1, 5.0, 0.1),
+			new Option("foodRotEnabled", "health", 0, 1, 1),
+			new Option("foodRotSpeed", "health", 0.1, 10.0, 0.1),
 			new Option("scalingEnabled", "difficulty", 0, 1, 1),
 			new Option("difficultyBlocksPerLevel", "difficulty", 100, 100000, 100),
 			new Option("difficultyDaysPerLevel", "difficulty", 1, 1000, 1),

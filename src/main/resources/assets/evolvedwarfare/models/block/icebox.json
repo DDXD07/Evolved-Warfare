@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "front": "evolvedwarfare:block/icebox_front",
+    "side": "evolvedwarfare:block/icebox_side",
+    "top": "evolvedwarfare:block/icebox_top"
+  }
+}

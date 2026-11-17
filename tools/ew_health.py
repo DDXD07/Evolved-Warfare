@@ -155,6 +155,82 @@ PAL_MASH = dict(PAL_BOTTLE, m=(176, 140, 72, 255), y=(230, 210, 140, 255))
 PAL_MEDKIT = {"o": (50, 20, 20, 255), "r": (196, 40, 40, 255), "d": (130, 24, 24, 255), "w": (245, 245, 245, 255)}
 
 
+SALT = [
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    "........w.......",
+    ".......wWw......",
+    "......wWWsw.....",
+    ".....wWwWWsw....",
+    "....wWWWsWWsw...",
+    "...wWWsWWWsWWw..",
+    "..wsWWWWsWWWWsw.",
+    "..osssssssssssso",
+    "...oooooooooooo.",
+    "................",
+    "................",
+]
+ROTTEN = [
+    "................",
+    "................",
+    "................",
+    "......ooo.......",
+    ".....ogGgo..f...",
+    "....ogGbgGo.....",
+    "...ogbGgGbgo....",
+    "...oGgGbgGgo..f.",
+    "..ogGbgGgbGgo...",
+    "..oggGgbGgGgo...",
+    "..obGgGgGbgGo...",
+    "...oGbgGgGgo....",
+    "....oggbGgo.....",
+    ".....ooooo......",
+    "................",
+    "................",
+]
+PAL_SALT = {"w": (250, 250, 248, 255), "W": (232, 230, 226, 255), "s": (196, 194, 190, 255), "o": (120, 116, 110, 255)}
+PAL_ROTTEN = {"o": (50, 40, 22, 255), "g": (104, 110, 50, 255), "G": (132, 124, 62, 255), "b": (76, 60, 30, 255),
+              "f": (40, 40, 40, 255)}
+
+
+def icebox_textures():
+    """Un arcón de madera clara con herrajes y escarcha (frente con cierre, lados y tapa)."""
+    import random as _r
+    _r.seed(98)
+    def wood():
+        img = Image.new("RGBA", (16, 16))
+        for y in range(16):
+            for x in range(16):
+                base = (182, 160, 120) if (y // 4) % 2 == 0 else (170, 148, 110)
+                n = _r.randint(-8, 8)
+                img.putpixel((x, y), (base[0] + n, base[1] + n, base[2] + n, 255))
+        for k in range(16):
+            for e in (0, 15):
+                img.putpixel((k, e), (90, 92, 104, 255))
+                img.putpixel((e, k), (90, 92, 104, 255))
+        # escarcha en las esquinas
+        for x, y in ((1, 1), (2, 1), (1, 2), (14, 1), (13, 1), (14, 2), (1, 14), (1, 13), (2, 14), (14, 14), (13, 14), (14, 13)):
+            img.putpixel((x, y), (214, 236, 250, 255))
+        return img
+    side = wood()
+    top = wood()
+    for x in range(1, 15):
+        top.putpixel((x, 7), (90, 92, 104, 255))
+        top.putpixel((x, 8), (120, 160, 196, 255))
+    front = wood()
+    for x in range(1, 15):
+        front.putpixel((x, 5), (90, 92, 104, 255))
+    for x in range(6, 10):
+        for y in range(4, 9):
+            front.putpixel((x, y), (150, 152, 164, 255) if (x in (6, 9) or y in (4, 8)) else (200, 202, 212, 255))
+    for x in range(3, 13):
+        front.putpixel((x, 12), (170, 214, 240, 255))
+    return front, side, top
+
+
 def effect_icon(kind):
     img = Image.new("RGBA", (18, 18), (0, 0, 0, 0))
     if kind == "venom":
@@ -200,6 +276,17 @@ ITEMS = {
     "medkit": ("Botiquín", "Medkit",
                "Lo cura todo: corta la sangre, cura cada parte, entablilla los huesos rotos y quita la infección y los venenos.",
                "Treats everything: stops bleeding, heals every part, splints broken bones and removes infection and venom."),
+    "salt": ("Sal", "Salt",
+             "Para salar la comida: una sal y hasta 8 de la misma comida en la mesa de trabajo (aguanta 4 veces más).",
+             "For salting food: one salt and up to 8 of the same food at a crafting table (it keeps 4 times longer)."),
+    "rotten_food": ("Comida podrida", "Rotten Food",
+                    "Se ha echado a perder. Mejor al compostador.", "It has gone off. Better in the composter."),
+}
+
+BLOCKS = {
+    "icebox": ("Nevera", "Icebox",
+               "Un arcón con hielo: la comida que guardes dentro se pasa diez veces más despacio.",
+               "A chest packed with ice: food kept inside spoils ten times slower."),
 }
 
 TEXTS = {
@@ -349,6 +436,24 @@ TEXTS = {
     "config.evolvedwarfare.staminaCost.tip": ("Lo que cansa cada cosa (1 = normal).", "How tiring everything is (1 = normal)."),
     "config.evolvedwarfare.staminaRegen": ("Recuperación de aguante", "Stamina recovery"),
     "config.evolvedwarfare.staminaRegen.tip": ("Lo deprisa que se recupera el aguante (1 = normal).", "How fast stamina recovers (1 = normal)."),
+    "tooltip.evolvedwarfare.food.fresh": ("Fresca · se pasa en %s", "Fresh · goes stale in %s"),
+    "tooltip.evolvedwarfare.food.stale": ("Pasada · se pudre en %s", "Stale · rots in %s"),
+    "tooltip.evolvedwarfare.food.spoiling": ("Pocha · se pudre en %s", "Spoiling · rots in %s"),
+    "tooltip.evolvedwarfare.food.rotten": ("Podrida", "Rotten"),
+    "tooltip.evolvedwarfare.food.lasts": ("Aguanta unos %s", "Keeps for about %s"),
+    "tooltip.evolvedwarfare.food.salted": ("Salada", "Salted"),
+    "tooltip.evolvedwarfare.food.smoked": ("Ahumada", "Smoked"),
+    "tooltip.evolvedwarfare.food.days_hours": ("%s d y %s h", "%s d %s h"),
+    "tooltip.evolvedwarfare.food.days": ("%s d", "%s d"),
+    "tooltip.evolvedwarfare.food.hours": ("%s h", "%s h"),
+    "tooltip.evolvedwarfare.food.under_hour": ("menos de 1 h", "under 1 h"),
+    "config.evolvedwarfare.foodRotEnabled": ("Comida que se pudre", "Food rot"),
+    "config.evolvedwarfare.foodRotEnabled.tip": (
+        "La comida se pasa y se pudre con el tiempo (también guardada). La sal, el ahumador y la nevera la conservan.",
+        "Food goes stale and rots over time (in storage too). Salt, the smoker and the icebox preserve it."),
+    "config.evolvedwarfare.foodRotSpeed": ("Velocidad de pudrirse", "Rot speed"),
+    "config.evolvedwarfare.foodRotSpeed.tip": ("Lo deprisa que se pudre la comida (1 = normal; 2 = el doble de rápido).",
+                                               "How fast food rots (1 = normal; 2 = twice as fast)."),
     "config.evolvedwarfare.category.health": ("Salud", "Health"),
     "config.evolvedwarfare.woundsEnabled": ("Heridas por partes", "Body-part wounds"),
     "config.evolvedwarfare.woundsEnabled.tip": (
@@ -388,6 +493,16 @@ RECIPES = {
                  "ingredients": [{"item": "minecraft:glass_bottle"}, {"item": "minecraft:spider_eye"}, {"item": "minecraft:charcoal"},
                                  {"item": "minecraft:sweet_berries"}],
                  "result": {"id": "%s:antidote" % NS, "count": 1}},
+    "salt": {"type": "minecraft:crafting_shapeless", "category": "misc",
+             "ingredients": [{"item": "minecraft:water_bucket"}, {"tag": "minecraft:coals"}],
+             "result": {"id": "%s:salt" % NS, "count": 3}},
+    "salt_from_block": {"type": "minecraft:crafting_shapeless", "category": "misc",
+                        "ingredients": [{"item": "%s:salt_block" % NS}],
+                        "result": {"id": "%s:salt" % NS, "count": 4}},
+    "salting": {"type": "%s:salting" % NS, "category": "misc"},
+    "icebox": {"type": "minecraft:crafting_shaped", "category": "misc", "pattern": ["PPP", "ICI", "PPP"],
+               "key": {"P": {"tag": "minecraft:planks"}, "I": {"item": "minecraft:packed_ice"}, "C": {"item": "minecraft:chest"}},
+               "result": {"id": "%s:icebox" % NS, "count": 1}},
     "medkit": {"type": "minecraft:crafting_shaped", "category": "misc", "pattern": ["LBL", "AMS", "LBL"],
                "key": {"L": {"item": "minecraft:leather"}, "B": {"item": "%s:bandage" % NS}, "A": {"item": "%s:alcohol" % NS},
                        "M": {"item": "%s:medicine" % NS}, "S": {"item": "%s:splint" % NS}},
@@ -406,6 +521,28 @@ def main():
     sprite(ALCOHOL, PAL_MEDICINE).save(os.path.join(item_dir, "medicine.png"))
     sprite(ALCOHOL, PAL_ANTIDOTE).save(os.path.join(item_dir, "antidote.png"))
     sprite(MEDKIT, PAL_MEDKIT).save(os.path.join(item_dir, "medkit.png"))
+    sprite(SALT, PAL_SALT).save(os.path.join(item_dir, "salt.png"))
+    sprite(ROTTEN, PAL_ROTTEN).save(os.path.join(item_dir, "rotten_food.png"))
+    front, side, top = icebox_textures()
+    block_dir = os.path.join(ASSETS, "textures/block")
+    front.save(os.path.join(block_dir, "icebox_front.png"))
+    side.save(os.path.join(block_dir, "icebox_side.png"))
+    top.save(os.path.join(block_dir, "icebox_top.png"))
+    write_json(os.path.join(ASSETS, "blockstates/icebox.json"), {"variants": {
+        "facing=%s" % f: {"model": "%s:block/icebox" % NS, **({"y": r} if r else {})}
+        for f, r in (("north", 0), ("east", 90), ("south", 180), ("west", 270))}})
+    write_json(os.path.join(ASSETS, "models/block/icebox.json"), {"parent": "minecraft:block/orientable", "textures": {
+        "front": "%s:block/icebox_front" % NS, "side": "%s:block/icebox_side" % NS, "top": "%s:block/icebox_top" % NS}})
+    write_json(os.path.join(ASSETS, "models/item/icebox.json"), {"parent": "%s:block/icebox" % NS})
+    write_json(os.path.join(DATA, "loot_table/blocks/icebox.json"), {"type": "minecraft:block", "pools": [{
+        "rolls": 1, "bonus_rolls": 0, "entries": [{"type": "minecraft:item", "name": "%s:icebox" % NS}],
+        "conditions": [{"condition": "minecraft:survives_explosion"}]}], "random_sequence": "%s:blocks/icebox" % NS})
+    axe = os.path.join(MC_DATA, "tags/block/mineable/axe.json")
+    with open(axe, encoding="utf-8") as fh:
+        tag = json.load(fh, object_pairs_hook=collections.OrderedDict)
+    if "%s:icebox" % NS not in tag["values"]:
+        tag["values"].append("%s:icebox" % NS)
+    write_json(axe, tag)
     for kind in ("venom", "disinfected"):
         effect_icon(kind).save(os.path.join(ASSETS, "textures/mob_effect/%s.png" % kind))
     for name in ITEMS:
@@ -431,6 +568,9 @@ def main():
         for key, (es, en, des, den) in ITEMS.items():
             data["item.%s.%s" % (NS, key)] = en if english else es
             data["item.%s.%s.desc" % (NS, key)] = den if english else des
+        for key, (es, en, des, den) in BLOCKS.items():
+            data["block.%s.%s" % (NS, key)] = en if english else es
+            data["block.%s.%s.desc" % (NS, key)] = den if english else des
         for key, (es, en) in TEXTS.items():
             data[key] = en if english else es
         write_json(path, data)

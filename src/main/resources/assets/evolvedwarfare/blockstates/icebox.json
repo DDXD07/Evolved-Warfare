@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "evolvedwarfare:block/icebox"
+    },
+    "facing=east": {
+      "model": "evolvedwarfare:block/icebox",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "evolvedwarfare:block/icebox",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "evolvedwarfare:block/icebox",
+      "y": 270
+    }
+  }
+}
