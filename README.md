@@ -2694,6 +2694,19 @@ En vez de la emboscada al dormir, ahora hay algo peor: **al despertar** (de día
 - Si en **tres minutos** no lo vences, se esfuma entre las sombras... por ahora.
 - **Su botín**: la **garra del Coco** (el trofeo), perlas de ender y, la mitad de las veces, un cristal de corazón.
 
+## Fase 107 — El guardián de roca
+
+Al picar un **mineral** (de cualquier tipo), hay un **1,5 %** de que salga de golpe un **guardián de roca** (se ajusta en
+«Guardián de roca», en Criaturas legendarias; en pacífico y en creativo, no):
+
+- **El susto**: sale de la veta mirándote, con un rugido, una lluvia de piedras, un empujón, un instante de ceguera,
+  náuseas y un «¡GRRAAAH!» en pantalla.
+- **Cómo es**: un gólem de piedra encorvado con vetas de mineral, cristales que brillan en la espalda, ojos de brasa y
+  brazos larguísimos con puños de roca. 80 de vida, **muy acorazado**, lento y de golpes pesados; no se le puede empujar.
+  Los **picos le hacen el doble**.
+- **Su botín**: piedra, pedernal, a veces un **núcleo de guardián** y, además, **2-5 de lo que daba la veta** (hierro en
+  bruto, diamantes, esmeraldas...).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

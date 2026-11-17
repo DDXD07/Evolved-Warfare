@@ -231,10 +231,38 @@ def coco():
     return a
 
 
+# ------------------------------------------------------------------ fase 107: el guardián de roca
+
+def rock_guardian():
+    """El guardián de roca: un gólem de piedra encorvado, con vetas de mineral, cristales que brillan en la espalda, la
+    cabeza hundida entre los hombros, ojos de brasa y unos brazos larguísimos con puños de roca."""
+    a = W.Animal("rock_guardian")
+    stone, stone_dark = (124, 124, 128), (84, 84, 90)
+    ore = (214, 160, 70)
+    crystal = (255, 190, 80)
+    for side, name, phase in ((-1, "leg_r", 0), (1, "leg_l", 1)):
+        leg = a.part(name, None, (side * 4, 16, 1), role="leg", phase=phase)
+        leg.cube((-2.5, 0, -2.5), (5, 8, 5), **C(stone, low=(stone_dark, 2), spots=(stone_dark, 0.2)))
+    body = a.part("body", None, (0, 16, 1), (12, 0, 0), role="body")
+    body.cube((-7, -14, -5), (14, 14, 10), **C(stone, spots=(ore, 0.08), low=(stone_dark, 3)))
+    body.cube((-6, -16, -4), (12, 3, 8), **C(stone_dark, spots=(stone, 0.3)))
+    for x, y, z, h in ((-4, -19, -1, 4), (-1, -20, 0, 5), (2, -18, -2, 3), (4, -19, 1, 4)):
+        body.cube((x, y, z), (2, h, 2), **C(crystal, glow_all=True))                              # los cristales
+    head = a.part("head", "body", (0, -12, -5), (-12, 0, 0), role="head")
+    head.cube((-3.5, -5, -5), (7, 6, 6), **C(stone, eyes=("front", 2, (255, 140, 40)), glow_eyes=True, mouth=(40, 40, 44)))
+    for side, name in ((-1, "arm_r"), (1, "arm_l")):
+        arm = a.part(name, "body", (side * 9, -11, 0), role="arm", side=side)
+        arm.cube((-2.5, -2, -2.5), (5, 16, 5), **C(stone, spots=(ore, 0.06), low=(stone_dark, 2)))
+        arm.cube((-3.5, 14, -3.5), (7, 6, 7), **C(stone_dark, spots=(stone, 0.25)))               # el puño
+    return a
+
+
 MODELS = collections.OrderedDict([("fire_dragon", lambda: dragon("fire_dragon")), ("ice_dragon", lambda: dragon("ice_dragon")),
-                                  ("frost_giant", frost_giant), ("sea_serpent", sea_serpent), ("treant", treant), ("coco", coco)])
+                                  ("frost_giant", frost_giant), ("sea_serpent", sea_serpent), ("treant", treant), ("coco", coco),
+                                  ("rock_guardian", rock_guardian)])
 
 NAMES = {
+    "rock_guardian": ("Guardián de roca", "Rock Guardian"),
     "coco": ("El Coco", "The Bogeyman"),
     "treant": ("Ent", "Treant"),
     "sea_serpent": ("Serpiente marina", "Sea Serpent"),
@@ -256,6 +284,7 @@ def count(item, lo, hi, chance=None):
 
 
 LOOT = {
+    "rock_guardian": [count("minecraft:cobblestone", 4, 9), count(n("rock_core"), 1, 1, 0.35), count("minecraft:flint", 1, 3, 0.5)],
     "coco": [count(n("coco_claw"), 1, 1), count(n("heart_crystal"), 1, 1, 0.5), count("minecraft:ender_pearl", 1, 3)],
     "treant": [count("minecraft:oak_log", 3, 6), count("minecraft:stick", 2, 6), count("minecraft:oak_sapling", 1, 2),
                count("minecraft:apple", 1, 2, 0.4), count(n("living_bark"), 1, 2)],
@@ -270,6 +299,8 @@ LOOT = {
 }
 
 ITEMS = {
+    "rock_core": ("Núcleo de guardián", "Guardian Core", "El corazón de piedra que movía al guardián. Aún está caliente.",
+                  "The stone heart that moved the guardian. Still warm."),
     "coco_claw": ("Garra del Coco", "Bogeyman's Claw", "La prueba de que lo venciste. Ya puedes dormir tranquilo... ¿o no?",
                   "Proof that you beat it. Now you can sleep soundly... or can you?"),
     "living_bark": ("Corteza viva", "Living Bark", "Aún se mueve un poco. Con ella, la madera se cura sola (más adelante).",
@@ -316,6 +347,11 @@ TEXTS = {
     "message.evolvedwarfare.coco.appears": ("Algo te observaba mientras dormías... ¡El Coco!", "Something was watching you sleep... the Bogeyman!"),
     "message.evolvedwarfare.coco.gone": ("El Coco se ha esfumado entre las sombras... por ahora.", "The Bogeyman vanished into the shadows... for now."),
     "message.evolvedwarfare.coco.scream": ("¡El Coco grita y todo se oscurece!", "The Bogeyman screams and everything goes dark!"),
+    "title.evolvedwarfare.rock_guardian": ("¡GRRAAAH!", "GRRAAAH!"),
+    "subtitle.evolvedwarfare.rock_guardian": ("¡Un guardián de roca sale de la veta!", "A rock guardian bursts out of the vein!"),
+    "config.evolvedwarfare.rockGuardianChance": ("Guardián de roca", "Rock guardian"),
+    "config.evolvedwarfare.rockGuardianChance.tip": ("Probabilidad de que salga un guardián de roca al picar un mineral (0.015 = 1,5 %).",
+                                                     "Chance that a rock guardian bursts out when mining an ore (0.015 = 1.5%)."),
     "config.evolvedwarfare.cocoChance": ("El Coco al despertar", "Bogeyman on waking"),
     "config.evolvedwarfare.cocoChance.tip": ("Probabilidad de que el Coco te esté esperando al despertar (0.02 = 2 %).",
                                              "Chance that the Bogeyman is waiting for you when you wake up (0.02 = 2%)."),
@@ -580,6 +616,15 @@ def main():
         for y in (12, 13, 14):
             claw.putpixel((x, y), (20, 18, 24, 255))
     claw.save(os.path.join(item_dir, "coco_claw.png"))
+    core = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    for y in range(2, 14):
+        for x in range(2, 14):
+            d = abs(x - 7.5) + abs(y - 7.5)
+            if d <= 6.5:
+                c = (84, 84, 90) if d > 4.5 else (255, 190, 80) if d < 2.5 else (214, 140, 50)
+                core.putpixel((x, y), c + (255,))
+    core.putpixel((7, 6), (255, 240, 200, 255))
+    core.save(os.path.join(item_dir, "rock_core.png"))
     heart_icon((150, 30, 30), (255, 160, 40)).save(os.path.join(item_dir, "fire_dragon_heart.png"))
     heart_icon((70, 120, 170), (180, 240, 255)).save(os.path.join(item_dir, "ice_dragon_heart.png"))
     for name in ITEMS:

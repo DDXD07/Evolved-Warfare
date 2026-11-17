@@ -45,7 +45,10 @@ public final class BlockMobs {
 		PlayerBlockBreakEvents.AFTER.register((world, player, pos, state, blockEntity) -> {
 			if (world instanceof ServerWorld sw && player instanceof ServerPlayerEntity sp && automatic()) {
 				Source source = source(state, pos);
-				if (source != null && canHappen(sw, sp) && sw.random.nextDouble() < EwConfig.get().blockMobChance) {
+				if (state.isIn(net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags.ORES) && canHappen(sw, sp)
+						&& sw.random.nextDouble() < EwConfig.get().rockGuardianChance) {
+					rockGuardian(sw, sp, pos, state);
+				} else if (source != null && canHappen(sw, sp) && sw.random.nextDouble() < EwConfig.get().blockMobChance) {
 					spawn(sw, sp, pos, source);
 				}
 			}
@@ -171,6 +174,52 @@ public final class BlockMobs {
 		world.spawnEntity(mob);
 		out.add(mob);
 		return mob;
+	}
+
+	/**
+	 * El guardián de roca: sale de golpe de la veta, mirando al jugador, con un rugido, una lluvia de piedras y un susto
+	 * en pantalla. Guarda unos cuantos de lo que daba la veta.
+	 */
+	public static RockGuardianEntity rockGuardian(ServerWorld world, ServerPlayerEntity player, BlockPos pos, BlockState ore) {
+		RockGuardianEntity guardian = Legendaries.ROCK_GUARDIAN.create(world);
+		if (guardian == null) {
+			return null;
+		}
+		// lo que daba la veta (si soltaba algo distinto del propio bloque, eso; si no, el bloque)
+		var drops = net.minecraft.block.Block.getDroppedStacks(ore, world, pos, null);
+		guardian.setHoard(drops.isEmpty() ? ore.getBlock().asItem() : drops.get(0).getItem());
+		double x = pos.getX() + 0.5, z = pos.getZ() + 0.5;
+		guardian.refreshPositionAndAngles(x, pos.getY(), z, 0, 0);
+		// sale hacia el jugador (que tenga sitio)
+		if (!world.isSpaceEmpty(guardian)) {
+			guardian.refreshPositionAndAngles(player.getX(), player.getY(), player.getZ(), 0, 0);
+			net.minecraft.util.math.Vec3d toward = player.getRotationVec(1.0F).multiply(1, 0, 1).normalize().multiply(1.5);
+			guardian.refreshPositionAndAngles(player.getX() + toward.x, player.getY(), player.getZ() + toward.z, 0, 0);
+		}
+		guardian.lookAtEntity(player, 360, 360);
+		guardian.setHeadYaw(guardian.getYaw());
+		guardian.setBodyYaw(guardian.getYaw());
+		guardian.setTarget(player);
+		world.spawnEntity(guardian);
+		// el susto
+		world.playSound(null, pos, SoundEvents.ENTITY_WARDEN_ROAR, SoundCategory.HOSTILE, 1.6F, 1.3F);
+		world.playSound(null, pos, SoundEvents.BLOCK_STONE_BREAK, SoundCategory.HOSTILE, 2.0F, 0.5F);
+		world.spawnParticles(new net.minecraft.particle.BlockStateParticleEffect(net.minecraft.particle.ParticleTypes.BLOCK, ore), x, pos.getY() + 1,
+				z, 80, 0.8, 0.8, 0.8, 0.3);
+		player.addStatusEffect(new net.minecraft.entity.effect.StatusEffectInstance(net.minecraft.entity.effect.StatusEffects.BLINDNESS, 12, 0));
+		player.addStatusEffect(new net.minecraft.entity.effect.StatusEffectInstance(net.minecraft.entity.effect.StatusEffects.NAUSEA, 60, 0));
+		net.minecraft.util.math.Vec3d push = player.getPos().subtract(x, player.getY(), z).multiply(1, 0, 1);
+		if (push.lengthSquared() > 1.0E-3) {
+			push = push.normalize();
+			player.addVelocity(push.x * 0.6, 0.3, push.z * 0.6);
+			player.velocityModified = true;
+		}
+		player.networkHandler.sendPacket(new net.minecraft.network.packet.s2c.play.TitleFadeS2CPacket(0, 25, 10));
+		player.networkHandler.sendPacket(new net.minecraft.network.packet.s2c.play.SubtitleS2CPacket(
+				Text.translatable("subtitle.evolvedwarfare.rock_guardian").formatted(Formatting.GOLD)));
+		player.networkHandler.sendPacket(new net.minecraft.network.packet.s2c.play.TitleS2CPacket(
+				Text.translatable("title.evolvedwarfare.rock_guardian").formatted(Formatting.DARK_RED, Formatting.BOLD)));
+		return guardian;
 	}
 
 	/** El Coco: aparece a la espalda del que se despierta (solo puede haber uno en el mundo). */

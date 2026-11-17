@@ -210,4 +210,23 @@ public class LegendaryGameTests implements FabricGameTest {
 		log.forEach(net.minecraft.entity.Entity::discard);
 		ctx.complete();
 	}
+
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "legendary", tickLimit = 100)
+	public void rockGuardianBurstsOut(TestContext ctx) {
+		floor(ctx);
+		ServerPlayerEntity player = (ServerPlayerEntity) ctx.createMockCreativeServerPlayerInWorld();
+		player.changeGameMode(GameMode.SURVIVAL);
+		BlockPos at = ctx.getAbsolutePos(new BlockPos(3, 1, 3));
+		var guardian = com.evolvedwarfare.legendary.BlockMobs.rockGuardian(ctx.getWorld(), player, at, Blocks.IRON_ORE.getDefaultState());
+		check(guardian != null && guardian.getTarget() == player, "El guardián de roca no sale (o no va a por el jugador)");
+		BlockPos where = guardian.getBlockPos();
+		guardian.damage(player.getDamageSources().playerAttack(player), 10000.0F);
+		ctx.waitAndRun(20, () -> {
+			var drops = ctx.getWorld().getEntitiesByClass(ItemEntity.class, new Box(where).expand(5), e -> true);
+			boolean iron = drops.stream().anyMatch(e -> e.getStack().isOf(net.minecraft.item.Items.RAW_IRON));
+			LOG.info("[EW-GAMETEST] guardián de roca: suelta {}", drops.stream().map(e -> e.getStack().toString()).toList());
+			check(iron, "El guardián no suelta lo que guardaba la veta");
+			ctx.complete();
+		});
+	}
 }

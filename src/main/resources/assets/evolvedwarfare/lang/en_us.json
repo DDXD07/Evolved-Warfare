@@ -2999,5 +2999,13 @@
   "message.evolvedwarfare.coco.gone": "The Bogeyman vanished into the shadows... for now.",
   "message.evolvedwarfare.coco.scream": "The Bogeyman screams and everything goes dark!",
   "config.evolvedwarfare.cocoChance": "Bogeyman on waking",
-  "config.evolvedwarfare.cocoChance.tip": "Chance that the Bogeyman is waiting for you when you wake up (0.02 = 2%)."
+  "config.evolvedwarfare.cocoChance.tip": "Chance that the Bogeyman is waiting for you when you wake up (0.02 = 2%).",
+  "entity.evolvedwarfare.rock_guardian": "Rock Guardian",
+  "item.evolvedwarfare.rock_guardian_spawn_egg": "Rock Guardian Spawn Egg",
+  "item.evolvedwarfare.rock_core": "Guardian Core",
+  "item.evolvedwarfare.rock_core.desc": "The stone heart that moved the guardian. Still warm.",
+  "title.evolvedwarfare.rock_guardian": "GRRAAAH!",
+  "subtitle.evolvedwarfare.rock_guardian": "A rock guardian bursts out of the vein!",
+  "config.evolvedwarfare.rockGuardianChance": "Rock guardian",
+  "config.evolvedwarfare.rockGuardianChance.tip": "Chance that a rock guardian bursts out when mining an ore (0.015 = 1.5%)."
 }

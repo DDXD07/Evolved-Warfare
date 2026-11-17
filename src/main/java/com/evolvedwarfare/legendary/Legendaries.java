@@ -70,6 +70,10 @@ public final class Legendaries {
 			EntityType.Builder.create(CocoEntity::new, SpawnGroup.MONSTER).dimensions(0.8F, 2.9F).eyeHeight(2.6F).maxTrackingRange(10),
 			0x0E0C12, 0x962018);
 
+	public static final EntityType<RockGuardianEntity> ROCK_GUARDIAN = type("rock_guardian",
+			EntityType.Builder.create(RockGuardianEntity::new, SpawnGroup.MONSTER).dimensions(1.6F, 2.3F).eyeHeight(1.6F).maxTrackingRange(10),
+			0x7C7C80, 0xFFBE50);
+
 	public static final Item FIRE_DRAGON_SCALE = item("fire_dragon_scale", new Described(new Item.Settings().rarity(Rarity.RARE).fireproof()));
 	public static final Item ICE_DRAGON_SCALE = item("ice_dragon_scale", new Described(new Item.Settings().rarity(Rarity.RARE)));
 	public static final Item DRAGON_BONE = item("dragon_bone", new Described(new Item.Settings().rarity(Rarity.RARE)));
@@ -102,6 +106,7 @@ public final class Legendaries {
 	public static final List<Item> TIDE_ARMOR = new ArrayList<>();
 	public static final Item LIVING_BARK = item("living_bark", new Described(new Item.Settings().rarity(Rarity.UNCOMMON)));
 	public static final Item COCO_CLAW = item("coco_claw", new Described(new Item.Settings().rarity(Rarity.EPIC)));
+	public static final Item ROCK_CORE = item("rock_core", new Described(new Item.Settings().rarity(Rarity.RARE)));
 
 	static {
 		for (net.minecraft.item.ArmorItem.Type type : new net.minecraft.item.ArmorItem.Type[] {net.minecraft.item.ArmorItem.Type.HELMET,
@@ -154,6 +159,7 @@ public final class Legendaries {
 		FabricDefaultAttributeRegistry.register(SEA_SERPENT, SeaSerpentEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(TREANT, TreantEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(COCO, CocoEntity.createAttributes());
+		FabricDefaultAttributeRegistry.register(ROCK_GUARDIAN, RockGuardianEntity.createAttributes());
 		BlockMobs.register();
 		ServerTickEvents.END_SERVER_TICK.register(Legendaries::tick);
 		DragonGear.register();
