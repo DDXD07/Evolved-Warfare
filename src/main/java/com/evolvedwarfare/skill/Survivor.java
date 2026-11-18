@@ -140,7 +140,7 @@ public final class Survivor {
 		return 0.0F;
 	}
 
-	public static final float FIRST_CRAFT_XP = 4.0F, NEW_BIOME_XP = 12.0F, DAWN_XP = 10.0F;
+	public static final float FIRST_CRAFT_XP = 4.0F, FIRST_CRAFT_BLOCK_XP = 0.5F, NEW_BIOME_XP = 12.0F, DAWN_XP = 10.0F;
 
 	// ------------------------------------------------------------------ dar
 
@@ -170,7 +170,10 @@ public final class Survivor {
 		SkillData data = state.of(player.getUuid());
 		if (data.crafted.add(Registries.ITEM.getId(stack.getItem()).toString())) {
 			state.markDirty();
-			notable(player, FIRST_CRAFT_XP, "craft", stack.getItem().getTranslationKey());
+			// los bloques (escaleras, losas, vallas de cada madera y color...) dan poco: si no, aprender la construcción
+			// de madera daba 9 niveles de golpe fabricando una de cada
+			float xp = stack.getItem() instanceof net.minecraft.item.BlockItem ? FIRST_CRAFT_BLOCK_XP : FIRST_CRAFT_XP;
+			notable(player, xp, xp >= FIRST_CRAFT_XP ? "craft" : null, stack.getItem().getTranslationKey());
 		}
 	}
 

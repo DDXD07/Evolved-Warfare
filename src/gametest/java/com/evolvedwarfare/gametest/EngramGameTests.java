@@ -79,6 +79,18 @@ public class EngramGameTests implements FabricGameTest {
 		ctx.complete();
 	}
 
+	/** Ningún engrama pide de ingrediente algo de un engrama de más nivel que no pida antes (fase 116). */
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "engrams")
+	public void noLevelInversions(TestContext ctx) {
+		java.util.List<String> bad = Engrams.inversions(ctx.getWorld().getServer());
+		for (String b : bad) {
+			LOG.info("[EW-GAMETEST] engrama al revés: {}", b);
+		}
+		LOG.info("[EW-GAMETEST] engramas al revés: {}", bad.size());
+		check(bad.isEmpty(), bad.size() + " engramas piden algo de más nivel (mira el registro)");
+		ctx.complete();
+	}
+
 	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "engrams")
 	public void learnCraftAndUse(TestContext ctx) {
 		ServerPlayerEntity player = ctx.createMockCreativeServerPlayerInWorld();

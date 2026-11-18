@@ -67,13 +67,17 @@ public class SurvivorGameTests implements FabricGameTest {
 		float minedPlaced = total(data) - t2;
 
 		float t3 = total(data);
-		Survivor.crafted(player, new ItemStack(Items.TORCH));
+		Survivor.crafted(player, new ItemStack(Items.IRON_PICKAXE));
 		float first = total(data) - t3;
-		Survivor.crafted(player, new ItemStack(Items.TORCH));
+		Survivor.crafted(player, new ItemStack(Items.IRON_PICKAXE));
 		float second = total(data) - t3 - first;
 
-		LOG.info("[EW-GAMETEST] superviviente: zombi {}, diamante {}, diamante puesto {}, antorcha 1ª {}, 2ª {}", kill, mined, minedPlaced, first,
-				second);
+		float t4 = total(data);
+		Survivor.crafted(player, new ItemStack(Items.OAK_STAIRS));
+		float block = total(data) - t4;
+		LOG.info("[EW-GAMETEST] superviviente: zombi {}, diamante {}, diamante puesto {}, pico 1ª {}, 2ª {}, escalera {}", kill, mined, minedPlaced, first,
+				second, block);
+		check(Math.abs(block - Survivor.FIRST_CRAFT_BLOCK_XP) < 0.01F, "Un bloque nuevo no da lo poco que debe: " + block);
 		check(zombie.isDead(), "El zombi no ha muerto");
 		check(Math.abs(kill - expectedKill) < 0.01F, "Matar un zombi no da " + expectedKill + ": " + kill);
 		check(Math.abs(mined - 12.0F) < 0.01F, "Minar diamante no da 12: " + mined);

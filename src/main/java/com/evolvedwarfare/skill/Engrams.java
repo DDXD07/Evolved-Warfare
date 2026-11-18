@@ -328,7 +328,9 @@ public final class Engrams {
 			if (!"minecraft".equals(id.getNamespace()) && !EvolvedWarfare.MOD_ID.equals(id.getNamespace())) {
 				continue;
 			}
-			if (item instanceof BlockItem || isFree(item)) {
+			// solo el equipo (lo que se gasta: herramientas, armas, armaduras); los materiales que se encuentran
+			// (fragmentos de prismarina, ladrillos del Nether...) no piden nada
+			if (item instanceof BlockItem || isFree(item) || !new ItemStack(item).isDamageable()) {
 				continue;
 			}
 			String full = id.toString();
@@ -348,6 +350,69 @@ public final class Engrams {
 		byItem = Collections.unmodifiableMap(map);
 		itemsOf = Collections.unmodifiableMap(lists);
 		EvolvedWarfare.LOGGER.info("Engramas: {} engramas, {} objetos con engrama de {} que salen de recetas", all.size(), map.size(), outputs.size());
+	}
+
+	/**
+	 * Las recetas cuyo engrama es de menos nivel que el de alguno de sus ingredientes (fase 116): aprenderlo no sirve hasta
+	 * tener el otro, así que el de menos nivel debería pedir el otro o subir de nivel. Si algún ingrediente tiene varias
+	 * opciones, cuenta la más fácil. Lo libre cuenta como nivel 1.
+	 */
+	public static List<String> inversions(MinecraftServer server) {
+		List<String> out = new ArrayList<>();
+		Set<String> seen = new java.util.HashSet<>();
+		for (RecipeEntry<?> recipe : server.getRecipeManager().values()) {
+			if (!lockedStation(recipe.value().getType())) {
+				continue;
+			}
+			ItemStack result;
+			try {
+				result = recipe.value().getResult(server.getRegistryManager());
+			} catch (RuntimeException e) {
+				continue;
+			}
+			if (result.isEmpty()) {
+				continue;
+			}
+			Engram e = byItem.get(result.getItem());
+			int level = e == null ? 1 : e.level;
+			for (net.minecraft.recipe.Ingredient ing : recipe.value().getIngredients()) {
+				if (ing.isEmpty()) {
+					continue;
+				}
+				Engram easiest = null;
+				boolean free = false;
+				for (ItemStack opt : ing.getMatchingStacks()) {
+					Engram f = byItem.get(opt.getItem());
+					if (f == null) {
+						free = true;
+						break;
+					}
+					if (easiest == null || f.level < easiest.level) {
+						easiest = f;
+					}
+				}
+				if (free || easiest == null || easiest == e || easiest.level <= level || e != null && needs(e, easiest)) {
+					continue;
+				}
+				String key = (e == null ? "-" : e.id) + ">" + easiest.id;
+				if (seen.add(key)) {
+					out.add((e == null ? "libre" : e.id + " (" + e.level + ")") + " pide " + easiest.id + " (" + easiest.level + ") por "
+							+ Registries.ITEM.getId(result.getItem()).getPath());
+				}
+			}
+		}
+		return out;
+	}
+
+	/** Si 'e' pide 'other' antes (directa o indirectamente). */
+	public static boolean needs(Engram e, Engram other) {
+		for (String r : e.requires) {
+			Engram req = byId(r);
+			if (req != null && (req == other || needs(req, other))) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/** Las recetas que piden engrama: las de la mesa de crafteo (y el inventario), la de herrería y el cortapiedras. */
