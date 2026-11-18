@@ -303,6 +303,27 @@ public final class Engrams {
 				map.put(item, found);
 			}
 		}
+		// lo del juego y del mod que no sale de recetas (lo que se forja, como el acero) pero encaja en un patrón: así
+		// tampoco se puede usar sin su engrama si se encuentra
+		for (Item item : Registries.ITEM) {
+			if (map.containsKey(item)) {
+				continue;
+			}
+			Identifier id = Registries.ITEM.getId(item);
+			if (!"minecraft".equals(id.getNamespace()) && !EvolvedWarfare.MOD_ID.equals(id.getNamespace())) {
+				continue;
+			}
+			if (item instanceof BlockItem || isFree(item)) {
+				continue;
+			}
+			String full = id.toString();
+			for (Engram e : all) {
+				if (e.fallback == null && !e.patterns.isEmpty() && matches(e, item, full)) {
+					map.put(item, e);
+					break;
+				}
+			}
+		}
 		// lo libre manda aunque algún engrama lo nombre
 		map.keySet().removeIf(Engrams::isFree);
 		Map<String, List<Item>> lists = new LinkedHashMap<>();

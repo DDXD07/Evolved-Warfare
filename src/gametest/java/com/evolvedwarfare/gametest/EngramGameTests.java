@@ -73,7 +73,7 @@ public class EngramGameTests implements FabricGameTest {
 		for (Item free : new Item[] {Items.CRAFTING_TABLE, Items.FURNACE, Items.IRON_INGOT, Items.OAK_PLANKS, Items.STICK, Items.TORCH}) {
 			check(Engrams.of(free) == null, "Pide engrama y debería ser libre: " + free);
 		}
-		check(empty <= 3, "Demasiados engramas sin nada: " + empty);
+		check(empty <= 1, "Demasiados engramas sin nada: " + empty);
 		ctx.complete();
 	}
 

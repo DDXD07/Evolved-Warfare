@@ -2850,6 +2850,8 @@ unos 217 puntos y los engramas de nivel 30 o menos cuestan 556.
   objetos". La opción "Engramas para fabricar y usar" (la de la forja de antes) los quita del todo.
 - **Comandos**: `/evolvedwarfare engrams <jugadores> learn <engrama|all>`, `reset` (los olvida y devuelve los puntos),
   `points <n>` y `xp <n>`.
+- Lo que no tiene receta pero encaja en un engrama (las herramientas de acero, que se forjan) también pide ese engrama
+  para usarlo.
 - La lista de engramas la escribe `tools/ew_engrams.py` (`data/evolvedwarfare/engrams/engrams.json`); el juego reparte
   cada receta en el primero que encaja, y lo que no encaja en ninguno va a los de "Otros" por su tipo.
 
