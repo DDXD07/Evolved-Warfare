@@ -456,6 +456,7 @@ TEXTS = {
     "key.evolvedwarfare.engrams": ("Engramas", "Engrams"),
     "screen.evolvedwarfare.engrams.title": ("Engramas", "Engrams"),
     "screen.evolvedwarfare.engrams.all": ("Todos", "All"),
+    "hud.evolvedwarfare.engrams.new": ("%s engramas nuevos para aprender (%s)", "%s new engrams to learn (%s)"),
     "screen.evolvedwarfare.engrams.level": ("Nivel %s", "Level %s"),
     "screen.evolvedwarfare.engrams.points": ("Puntos de engrama: %s", "Engram points: %s"),
     "screen.evolvedwarfare.engrams.cost": ("Cuesta %s puntos", "Costs %s points"),

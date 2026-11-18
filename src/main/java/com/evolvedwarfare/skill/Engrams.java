@@ -264,6 +264,10 @@ public final class Engrams {
 		}
 		Set<Item> outputs = new LinkedHashSet<>();
 		for (RecipeEntry<?> recipe : server.getRecipeManager().values()) {
+			if (!lockedStation(recipe.value().getType())) {
+				// lo del horno, el ahumador, el alto horno y la fogata es libre (fundir y cocinar no pide engrama)
+				continue;
+			}
 			try {
 				ItemStack result = recipe.value().getResult(server.getRegistryManager());
 				if (!result.isEmpty()) {
@@ -333,6 +337,25 @@ public final class Engrams {
 		byItem = Collections.unmodifiableMap(map);
 		itemsOf = Collections.unmodifiableMap(lists);
 		EvolvedWarfare.LOGGER.info("Engramas: {} engramas, {} objetos con engrama de {} que salen de recetas", all.size(), map.size(), outputs.size());
+	}
+
+	/** Las recetas que piden engrama: las de la mesa de crafteo (y el inventario), la de herrería y el cortapiedras. */
+	public static boolean lockedStation(net.minecraft.recipe.RecipeType<?> type) {
+		return type == net.minecraft.recipe.RecipeType.CRAFTING || type == net.minecraft.recipe.RecipeType.SMITHING
+				|| type == net.minecraft.recipe.RecipeType.STONECUTTING;
+	}
+
+	/** El engrama que le falta para hacer esta receta (null si no le falta o si es de horno). */
+	@Nullable
+	public static Engram missing(PlayerEntity player, net.minecraft.recipe.Recipe<?> recipe, net.minecraft.registry.RegistryWrapper.WrapperLookup lookup) {
+		if (!lockedStation(recipe.getType())) {
+			return null;
+		}
+		try {
+			return missing(player, recipe.getResult(lookup));
+		} catch (RuntimeException e) {
+			return null;
+		}
 	}
 
 	// ------------------------------------------------------------------ red

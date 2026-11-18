@@ -5,6 +5,8 @@
 	"client": [
 		"AbstractClientPlayerEntityMixin",
 		"InGameHudHealthBarMixin",
+		"RecipeResultCollectionEngramMixin",
+		"AnimatedResultButtonEngramMixin",
 		"MechanicalCrossbowHeldMixin",
 		"HeldItemRendererToolMixin",
 		"ZombieModelMixin",

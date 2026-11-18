@@ -94,6 +94,19 @@ public final class ClientSkills {
 					Math.max(0, after.engramPoints - before.engramPoints), Math.max(0, after.attributePoints - before.attributePoints)),
 					0xFFD75E, now, true));
 		}
+		if (after.level > before.level) {
+			// los engramas que ya se pueden aprender con el nivel nuevo (fase 115)
+			int fresh = 0;
+			for (com.evolvedwarfare.skill.Engram e : com.evolvedwarfare.skill.Engrams.all()) {
+				if (e.level > before.level && e.level <= after.level && !after.engrams.contains(e.id)) {
+					fresh++;
+				}
+			}
+			if (fresh > 0) {
+				NOTICES.add(new Notice(Text.translatable("hud.evolvedwarfare.engrams.new", fresh, open.getBoundKeyLocalizedText()), 0x9FD8E6, now,
+						false));
+			}
+		}
 		while (NOTICES.size() > 4) {
 			NOTICES.remove(0);
 		}

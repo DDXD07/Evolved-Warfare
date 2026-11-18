@@ -3258,5 +3258,6 @@
   "screen.evolvedwarfare.attributes.effect.metabolism": "El hambre y la sed, un %s %% más despacio",
   "screen.evolvedwarfare.attributes.effect.weight": "La carga pesada frena un %s %% menos",
   "screen.evolvedwarfare.attributes.effect.oxygen": "%s %% de no gastar aire",
-  "commands.evolvedwarfare.attributes.reset": "Puntos de atributo devueltos a %s jugadores"
+  "commands.evolvedwarfare.attributes.reset": "Puntos de atributo devueltos a %s jugadores",
+  "hud.evolvedwarfare.engrams.new": "%s engramas nuevos para aprender (%s)"
 }

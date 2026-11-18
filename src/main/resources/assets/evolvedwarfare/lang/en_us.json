@@ -3258,5 +3258,6 @@
   "screen.evolvedwarfare.attributes.effect.metabolism": "Hunger and thirst %s%% slower",
   "screen.evolvedwarfare.attributes.effect.weight": "Heavy load slows %s%% less",
   "screen.evolvedwarfare.attributes.effect.oxygen": "%s%% chance not to use air",
-  "commands.evolvedwarfare.attributes.reset": "Attribute points refunded for %s players"
+  "commands.evolvedwarfare.attributes.reset": "Attribute points refunded for %s players",
+  "hud.evolvedwarfare.engrams.new": "%s new engrams to learn (%s)"
 }

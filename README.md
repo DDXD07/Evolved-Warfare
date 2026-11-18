@@ -2892,6 +2892,20 @@ falta muchos puntos para notarse mucho.
   armadura y el termómetro se quedan justo encima, como con una sola fila de corazones.
 - **Comandos**: `/evolvedwarfare engrams <jugadores> attributes reset` (devuelve los puntos) y `attributes points <n>`.
 
+## Fase 115 — El libro de recetas y los engramas (como en ARK), parte 4
+
+- **En el libro de recetas**, lo que pide un engrama que no tienes sale **oscurecido**, con un **candado** abajo a la
+  izquierda y **su nivel** arriba a la derecha (dorado si ya tienes el nivel y solo falta aprenderlo; rojo si aún no).
+  Cuenta como **que no se puede fabricar**: sale con el fondo rojo, con el filtro "solo lo que se puede fabricar" no
+  aparece y al pulsarlo solo se enseña la receta en fantasma (no se mueven los ingredientes). Al pasar el ratón, la línea
+  roja dice qué engrama falta.
+- **Lo que sale del horno ya no pide engrama** (arreglo de la fase 113): la comida cocinada, el cristal, la piedra lisa,
+  la terracota... solo se fabrican fundiendo o cocinando, que es libre, así que ya no salen como bloqueadas.
+- **Al subir de nivel**, un aviso dice cuántos **engramas nuevos** puedes aprender ya ("3 engramas nuevos para aprender
+  (K)"); en la pantalla K son los dorados que parpadean.
+- Las estaciones del mod: la forja de herramientas de acero y los moldes de arcilla son recetas de la mesa de crafteo, así
+  que ya piden su engrama; el molino, el aserradero y el martinete solo dan materiales (libres).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
