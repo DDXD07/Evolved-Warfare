@@ -50,12 +50,12 @@ public final class ClientSkills {
 	}
 
 	public static void register() {
-		open = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.evolvedwarfare.skills", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K,
+		open = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.evolvedwarfare.engrams", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K,
 				"key.categories.evolvedwarfare"));
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			while (open.wasPressed()) {
 				if (client.player != null && client.currentScreen == null) {
-					client.setScreen(new SkillScreen());
+					client.setScreen(new com.evolvedwarfare.client.screen.EngramScreen());
 				}
 			}
 		});
@@ -68,7 +68,7 @@ public final class ClientSkills {
 			required = payload.required();
 			received = true;
 			if (payload.open()) {
-				context.client().setScreen(new SkillScreen());
+				context.client().setScreen(new com.evolvedwarfare.client.screen.EngramScreen());
 			}
 		});
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
@@ -77,14 +77,6 @@ public final class ClientSkills {
 			NOTICES.clear();
 		});
 		ClientBridge.clientPerkRank = (player, perk) -> player == MinecraftClient.getInstance().player ? data.rank(perk) : 0;
-		ItemTooltipCallback.EVENT.register((stack, tooltipContext, type, lines) -> {
-			Perk perk = Skills.lockOf(stack.getItem());
-			MinecraftClient client = MinecraftClient.getInstance();
-			if (perk != null && required && data.rank(perk) == 0 && client.player != null && !client.player.isCreative()) {
-				lines.add(Text.translatable("tooltip.evolvedwarfare.skills.needed", Text.translatable(perk.translationKey()),
-						Text.translatable(perk.skill.translationKey()), perk.levelFor(1)).formatted(Formatting.RED));
-			}
-		});
 		HudRenderCallback.EVENT.register((context, tickCounter) -> hud(context));
 	}
 
@@ -109,7 +101,7 @@ public final class ClientSkills {
 
 	private static void hud(DrawContext context) {
 		MinecraftClient client = MinecraftClient.getInstance();
-		if (NOTICES.isEmpty() || client.options.hudHidden || client.currentScreen instanceof SkillScreen) {
+		if (NOTICES.isEmpty() || client.options.hudHidden || client.currentScreen instanceof SkillScreen || client.currentScreen instanceof com.evolvedwarfare.client.screen.EngramScreen) {
 			return;
 		}
 		long now = System.currentTimeMillis();

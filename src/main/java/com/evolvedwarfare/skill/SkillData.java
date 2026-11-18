@@ -37,6 +37,10 @@ public final class SkillData {
 	public final Set<String> biomes = new LinkedHashSet<>();
 	/** El último amanecer que vio (día del mundo). */
 	public long lastDawn = -1L;
+	/** Los engramas aprendidos (fase 113). */
+	public final Set<String> engrams = new LinkedHashSet<>();
+	/** Ya se le dieron los puntos del principio y lo que sabía forjar pasó a engramas. */
+	public boolean engramStart;
 
 	public int level(Skill skill) {
 		return levels[skill.ordinal()];
@@ -46,7 +50,16 @@ public final class SkillData {
 		return xp[skill.ordinal()];
 	}
 
+	/**
+	 * El rango de una ventaja: desde la fase 113 las ventajas ya no se cogen; las de forja, mando y asedio las dan los
+	 * engramas y las de combate ya no existen.
+	 */
 	public int rank(Perk perk) {
+		return Engrams.perkRank(this, perk);
+	}
+
+	/** El rango que tenía de una ventaja en el árbol de antes (para pasarla a engramas). */
+	public int legacyRank(Perk perk) {
 		return perks.getOrDefault(perk, 0);
 	}
 
@@ -108,6 +121,8 @@ public final class SkillData {
 		nbt.putInt("AttributePoints", attributePoints);
 		nbt.putBoolean("Survivor", survivor);
 		nbt.putLong("LastDawn", lastDawn);
+		nbt.put("Engrams", strings(engrams));
+		nbt.putBoolean("EngramStart", engramStart);
 		NbtCompound skills = new NbtCompound();
 		for (Skill skill : Skill.values()) {
 			NbtCompound s = new NbtCompound();
@@ -153,6 +168,10 @@ public final class SkillData {
 		data.attributePoints = Math.max(0, nbt.getInt("AttributePoints"));
 		data.survivor = nbt.getBoolean("Survivor");
 		data.lastDawn = nbt.contains("LastDawn") ? nbt.getLong("LastDawn") : -1L;
+		data.engramStart = nbt.getBoolean("EngramStart");
+		for (NbtElement e : nbt.getList("Engrams", NbtElement.STRING_TYPE)) {
+			data.engrams.add(e.asString());
+		}
 		for (NbtElement e : nbt.getList("Crafted", NbtElement.STRING_TYPE)) {
 			data.crafted.add(e.asString());
 		}

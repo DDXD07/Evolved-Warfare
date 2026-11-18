@@ -60,6 +60,8 @@ public abstract class LivingEntityDamageMixin {
 		out = com.evolvedwarfare.difficulty.Difficulty.modifyOutgoing(source, out);
 		// los golpes sin aguante hacen la mitad (fase 97)
 		out = com.evolvedwarfare.health.Stamina.modifyMelee(source, out);
+		// con un arma que no sabe usar (sin su engrama), como un puñetazo (fase 113)
+		out = com.evolvedwarfare.skill.Engrams.modifyMelee(source, out);
 		// las escamas de dragón (fase 102)
 		out = com.evolvedwarfare.legendary.DragonGear.modifyIncoming(self, source, out);
 		evolvedwarfare$amount = out;

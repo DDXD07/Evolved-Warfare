@@ -81,17 +81,23 @@ public class FactionArmorGameTests implements FabricGameTest {
 		ItemStack outlaw = new ItemStack(ModItems.factionArmor(FactionArmor.BANDIT_OUTLAW, ArmorItem.Type.HELMET));
 		ItemStack huscarl = new ItemStack(ModItems.factionArmor(FactionArmor.VIKING_HUSCARL, ArmorItem.Type.CHESTPLATE));
 		ItemStack captain = new ItemStack(ModItems.factionArmor(FactionArmor.PIRATE_CAPTAIN, ArmorItem.Type.BOOTS));
-		boolean before = Skills.canCraft(player, outlaw) || Skills.canCraft(player, huscarl) || Skills.canCraft(player, captain);
-		Skills.grant(player, Perk.FACTION_TAILOR, 1);
-		boolean tailor = Skills.canCraft(player, outlaw) && !Skills.canCraft(player, huscarl);
-		Skills.grant(player, Perk.FACTION_ARMORER, 1);
-		boolean armorer = Skills.canCraft(player, huscarl) && !Skills.canCraft(player, captain);
-		Skills.grant(player, Perk.WARLORD_FORGE, 1);
-		boolean forge = Skills.canCraft(player, captain);
+		boolean before, tailor, armorer, forge;
+		com.evolvedwarfare.skill.Engrams.testEnforce = true;
+		try {
+			before = Skills.canCraft(player, outlaw) || Skills.canCraft(player, huscarl) || Skills.canCraft(player, captain);
+			com.evolvedwarfare.skill.Engrams.grant(player, "faction_light");
+			tailor = Skills.canCraft(player, outlaw) && !Skills.canCraft(player, huscarl);
+			com.evolvedwarfare.skill.Engrams.grant(player, "faction_medium");
+			armorer = Skills.canCraft(player, huscarl) && !Skills.canCraft(player, captain);
+			com.evolvedwarfare.skill.Engrams.grant(player, "faction_heavy");
+			forge = Skills.canCraft(player, captain);
+		} finally {
+			com.evolvedwarfare.skill.Engrams.testEnforce = false;
+		}
 		LOG.info("[EW-GAMETEST] recetas de armaduras: sin ventajas {}, sastrería {}, armería {}, forja de capitanes {}", before, tailor, armorer,
 				forge);
-		check(!before, "Se fabrican armaduras de facción sin ventajas");
-		check(tailor && armorer && forge, "Las ventajas de forja no desbloquean su rango");
+		check(!before, "Se fabrican armaduras de facción sin engramas");
+		check(tailor && armorer && forge, "Los engramas no desbloquean su rango");
 		ctx.complete();
 	}
 

@@ -1,0 +1,2059 @@
+{
+  "free": {
+    "items": [
+      "minecraft:crafting_table",
+      "minecraft:furnace",
+      "minecraft:stick",
+      "minecraft:torch",
+      "minecraft:iron_ingot",
+      "minecraft:gold_ingot",
+      "minecraft:copper_ingot",
+      "minecraft:netherite_ingot",
+      "minecraft:iron_nugget",
+      "minecraft:gold_nugget",
+      "minecraft:diamond",
+      "minecraft:emerald",
+      "minecraft:redstone",
+      "minecraft:lapis_lazuli",
+      "minecraft:coal",
+      "minecraft:bone_meal",
+      "minecraft:wheat",
+      "minecraft:raw_iron",
+      "minecraft:raw_gold",
+      "minecraft:raw_copper",
+      "minecraft:slime_ball",
+      "minecraft:dried_kelp",
+      "minecraft:melon_slice",
+      "minecraft:honey_bottle",
+      "minecraft:quartz",
+      "minecraft:amethyst_shard",
+      "minecraft:netherite_scrap",
+      "minecraft:glass",
+      "minecraft:charcoal",
+      "minecraft:sugar",
+      "minecraft:string",
+      "evolvedwarfare:guide_book",
+      "evolvedwarfare:charred_planks",
+      "evolvedwarfare:cabbage_seeds",
+      "evolvedwarfare:corn_seeds",
+      "evolvedwarfare:tomato_seeds"
+    ],
+    "tags": [
+      "minecraft:planks"
+    ],
+    "patterns": [
+      "^evolvedwarfare:hot_.*_ingot$"
+    ]
+  },
+  "categories": [
+    "tools",
+    "weapons",
+    "armor",
+    "medicine",
+    "food",
+    "building",
+    "utility",
+    "redstone",
+    "transport",
+    "magic",
+    "engineering",
+    "settlement",
+    "military",
+    "legendary"
+  ],
+  "engrams": [
+    {
+      "id": "wood_tools",
+      "category": "tools",
+      "level": 1,
+      "cost": 2,
+      "icon": "minecraft:wooden_pickaxe",
+      "items": [
+        "minecraft:wooden_pickaxe",
+        "minecraft:wooden_axe",
+        "minecraft:wooden_shovel",
+        "minecraft:wooden_hoe",
+        "minecraft:wooden_sword"
+      ]
+    },
+    {
+      "id": "flint_tools",
+      "category": "tools",
+      "level": 2,
+      "cost": 2,
+      "icon": "evolvedwarfare:flint_hatchet",
+      "items": [
+        "evolvedwarfare:flint_hatchet",
+        "evolvedwarfare:flint_knife"
+      ]
+    },
+    {
+      "id": "stone_tools",
+      "category": "tools",
+      "level": 3,
+      "cost": 3,
+      "icon": "minecraft:stone_pickaxe",
+      "items": [
+        "minecraft:stone_pickaxe",
+        "minecraft:stone_axe",
+        "minecraft:stone_shovel",
+        "minecraft:stone_hoe",
+        "minecraft:stone_sword"
+      ],
+      "requires": [
+        "wood_tools"
+      ]
+    },
+    {
+      "id": "copper_knife",
+      "category": "tools",
+      "level": 6,
+      "cost": 2,
+      "icon": "evolvedwarfare:copper_knife",
+      "items": [
+        "evolvedwarfare:copper_knife"
+      ]
+    },
+    {
+      "id": "shears_flint",
+      "category": "tools",
+      "level": 7,
+      "cost": 3,
+      "icon": "minecraft:shears",
+      "items": [
+        "minecraft:shears",
+        "minecraft:flint_and_steel"
+      ]
+    },
+    {
+      "id": "fishing",
+      "category": "tools",
+      "level": 5,
+      "cost": 3,
+      "icon": "minecraft:fishing_rod",
+      "items": [
+        "minecraft:fishing_rod",
+        "evolvedwarfare:bait"
+      ]
+    },
+    {
+      "id": "bucket",
+      "category": "tools",
+      "level": 10,
+      "cost": 4,
+      "icon": "minecraft:bucket",
+      "items": [
+        "minecraft:bucket"
+      ]
+    },
+    {
+      "id": "canteen",
+      "category": "tools",
+      "level": 2,
+      "cost": 2,
+      "icon": "evolvedwarfare:canteen",
+      "items": [
+        "evolvedwarfare:canteen"
+      ]
+    },
+    {
+      "id": "iron_tools",
+      "category": "tools",
+      "level": 14,
+      "cost": 8,
+      "icon": "minecraft:iron_pickaxe",
+      "items": [
+        "minecraft:iron_pickaxe",
+        "minecraft:iron_axe",
+        "minecraft:iron_shovel",
+        "minecraft:iron_hoe",
+        "minecraft:iron_sword",
+        "evolvedwarfare:iron_knife"
+      ],
+      "requires": [
+        "stone_tools"
+      ]
+    },
+    {
+      "id": "steel_tools",
+      "category": "tools",
+      "level": 30,
+      "cost": 8,
+      "icon": "evolvedwarfare:steel_pickaxe",
+      "patterns": [
+        "^evolvedwarfare:steel_(pickaxe|axe|shovel|hoe|sword)$"
+      ],
+      "requires": [
+        "iron_tools"
+      ]
+    },
+    {
+      "id": "gold_tools",
+      "category": "tools",
+      "level": 18,
+      "cost": 4,
+      "icon": "minecraft:golden_pickaxe",
+      "items": [
+        "minecraft:golden_pickaxe",
+        "minecraft:golden_axe",
+        "minecraft:golden_shovel",
+        "minecraft:golden_hoe",
+        "minecraft:golden_sword"
+      ],
+      "requires": [
+        "stone_tools"
+      ]
+    },
+    {
+      "id": "diamond_tools",
+      "category": "tools",
+      "level": 42,
+      "cost": 15,
+      "icon": "minecraft:diamond_pickaxe",
+      "items": [
+        "minecraft:diamond_pickaxe",
+        "minecraft:diamond_axe",
+        "minecraft:diamond_shovel",
+        "minecraft:diamond_hoe",
+        "minecraft:diamond_sword"
+      ],
+      "requires": [
+        "iron_tools"
+      ]
+    },
+    {
+      "id": "netherite_tools",
+      "category": "tools",
+      "level": 70,
+      "cost": 20,
+      "icon": "minecraft:netherite_pickaxe",
+      "items": [
+        "minecraft:netherite_pickaxe",
+        "minecraft:netherite_axe",
+        "minecraft:netherite_shovel",
+        "minecraft:netherite_hoe",
+        "minecraft:netherite_sword"
+      ],
+      "requires": [
+        "diamond_tools"
+      ]
+    },
+    {
+      "id": "obsidian_knife",
+      "category": "tools",
+      "level": 40,
+      "cost": 5,
+      "icon": "evolvedwarfare:obsidian_knife",
+      "items": [
+        "evolvedwarfare:obsidian_knife"
+      ]
+    },
+    {
+      "id": "navigation",
+      "category": "tools",
+      "level": 18,
+      "cost": 6,
+      "icon": "minecraft:compass",
+      "items": [
+        "minecraft:compass",
+        "minecraft:clock",
+        "minecraft:map",
+        "minecraft:recovery_compass",
+        "evolvedwarfare:atlas"
+      ]
+    },
+    {
+      "id": "spyglass",
+      "category": "tools",
+      "level": 24,
+      "cost": 4,
+      "icon": "minecraft:spyglass",
+      "items": [
+        "minecraft:spyglass"
+      ]
+    },
+    {
+      "id": "builder_tools",
+      "category": "tools",
+      "level": 16,
+      "cost": 6,
+      "icon": "evolvedwarfare:building_hammer",
+      "items": [
+        "evolvedwarfare:building_hammer",
+        "evolvedwarfare:prospector_pick",
+        "evolvedwarfare:structure_scanner",
+        "evolvedwarfare:smithing_hammer",
+        "evolvedwarfare:sharpener"
+      ]
+    },
+    {
+      "id": "brush_lead",
+      "category": "tools",
+      "level": 12,
+      "cost": 3,
+      "icon": "minecraft:lead",
+      "items": [
+        "minecraft:lead",
+        "minecraft:brush",
+        "minecraft:carrot_on_a_stick",
+        "minecraft:warped_fungus_on_a_stick"
+      ]
+    },
+    {
+      "id": "magic_bait",
+      "category": "tools",
+      "level": 30,
+      "cost": 5,
+      "icon": "evolvedwarfare:magic_bait",
+      "items": [
+        "evolvedwarfare:magic_bait"
+      ]
+    },
+    {
+      "id": "bow",
+      "category": "weapons",
+      "level": 6,
+      "cost": 4,
+      "icon": "minecraft:bow",
+      "items": [
+        "minecraft:bow",
+        "minecraft:arrow"
+      ]
+    },
+    {
+      "id": "javelin",
+      "category": "weapons",
+      "level": 10,
+      "cost": 4,
+      "icon": "evolvedwarfare:javelin",
+      "perk": "JAVELIN_SMITH",
+      "perkRank": 1
+    },
+    {
+      "id": "dagger",
+      "category": "weapons",
+      "level": 12,
+      "cost": 5,
+      "icon": "evolvedwarfare:iron_dagger",
+      "perk": "DAGGER_SMITH",
+      "perkRank": 1
+    },
+    {
+      "id": "shield",
+      "category": "weapons",
+      "level": 12,
+      "cost": 4,
+      "icon": "minecraft:shield",
+      "items": [
+        "minecraft:shield"
+      ]
+    },
+    {
+      "id": "spear",
+      "category": "weapons",
+      "level": 14,
+      "cost": 5,
+      "icon": "evolvedwarfare:iron_spear",
+      "perk": "SPEAR_SMITH",
+      "perkRank": 1
+    },
+    {
+      "id": "crossbow",
+      "category": "weapons",
+      "level": 18,
+      "cost": 6,
+      "icon": "minecraft:crossbow",
+      "items": [
+        "minecraft:crossbow"
+      ]
+    },
+    {
+      "id": "longbow",
+      "category": "weapons",
+      "level": 20,
+      "cost": 6,
+      "icon": "evolvedwarfare:longbow",
+      "requires": [
+        "bow"
+      ],
+      "perk": "LONGBOW_SMITH",
+      "perkRank": 1
+    },
+    {
+      "id": "longsword",
+      "category": "weapons",
+      "level": 22,
+      "cost": 7,
+      "icon": "evolvedwarfare:iron_longsword",
+      "requires": [
+        "dagger"
+      ],
+      "perk": "LONGSWORD_SMITH",
+      "perkRank": 1
+    },
+    {
+      "id": "mace",
+      "category": "weapons",
+      "level": 24,
+      "cost": 7,
+      "icon": "evolvedwarfare:iron_warhammer",
+      "perk": "MACE_SMITH",
+      "perkRank": 1
+    },
+    {
+      "id": "battle_axe",
+      "category": "weapons",
+      "level": 26,
+      "cost": 7,
+      "icon": "evolvedwarfare:iron_battle_axe",
+      "perk": "BATTLE_AXE_SMITH",
+      "perkRank": 1
+    },
+    {
+      "id": "pavise",
+      "category": "weapons",
+      "level": 28,
+      "cost": 6,
+      "icon": "evolvedwarfare:pavise",
+      "items": [
+        "evolvedwarfare:pavise"
+      ],
+      "requires": [
+        "shield"
+      ]
+    },
+    {
+      "id": "arbalest",
+      "category": "weapons",
+      "level": 28,
+      "cost": 7,
+      "icon": "evolvedwarfare:arbalest",
+      "items": [
+        "evolvedwarfare:arbalest"
+      ],
+      "requires": [
+        "crossbow"
+      ]
+    },
+    {
+      "id": "halberd",
+      "category": "weapons",
+      "level": 30,
+      "cost": 8,
+      "icon": "evolvedwarfare:iron_halberd",
+      "requires": [
+        "spear"
+      ],
+      "perk": "HALBERD_SMITH",
+      "perkRank": 1
+    },
+    {
+      "id": "reinforced_shield",
+      "category": "weapons",
+      "level": 30,
+      "cost": 7,
+      "icon": "evolvedwarfare:reinforced_shield",
+      "items": [
+        "evolvedwarfare:reinforced_shield"
+      ],
+      "requires": [
+        "shield"
+      ]
+    },
+    {
+      "id": "musket",
+      "category": "weapons",
+      "level": 32,
+      "cost": 8,
+      "icon": "evolvedwarfare:musket_ball",
+      "items": [
+        "evolvedwarfare:musket_ball",
+        "evolvedwarfare:musket"
+      ]
+    },
+    {
+      "id": "repeating_crossbow",
+      "category": "weapons",
+      "level": 34,
+      "cost": 9,
+      "icon": "evolvedwarfare:repeating_crossbow",
+      "items": [
+        "evolvedwarfare:repeating_crossbow"
+      ],
+      "requires": [
+        "arbalest"
+      ]
+    },
+    {
+      "id": "special_arrows",
+      "category": "weapons",
+      "level": 35,
+      "cost": 5,
+      "icon": "minecraft:spectral_arrow",
+      "items": [
+        "minecraft:spectral_arrow",
+        "minecraft:tipped_arrow"
+      ],
+      "requires": [
+        "bow"
+      ]
+    },
+    {
+      "id": "ammo_pouch",
+      "category": "weapons",
+      "level": 18,
+      "cost": 4,
+      "icon": "evolvedwarfare:ammo_pouch",
+      "items": [
+        "evolvedwarfare:ammo_pouch"
+      ]
+    },
+    {
+      "id": "glory_pouch",
+      "category": "weapons",
+      "level": 30,
+      "cost": 5,
+      "icon": "evolvedwarfare:glory_pouch",
+      "items": [
+        "evolvedwarfare:glory_pouch"
+      ]
+    },
+    {
+      "id": "tnt",
+      "category": "weapons",
+      "level": 30,
+      "cost": 8,
+      "icon": "minecraft:tnt",
+      "items": [
+        "minecraft:tnt",
+        "minecraft:tnt_minecart"
+      ]
+    },
+    {
+      "id": "linen",
+      "category": "armor",
+      "level": 4,
+      "cost": 2,
+      "icon": "evolvedwarfare:linen_tunic",
+      "items": [
+        "evolvedwarfare:linen_tunic",
+        "evolvedwarfare:linen_trousers",
+        "evolvedwarfare:sandals",
+        "evolvedwarfare:straw_hat"
+      ]
+    },
+    {
+      "id": "leather_armor",
+      "category": "armor",
+      "level": 5,
+      "cost": 4,
+      "icon": "minecraft:leather_chestplate",
+      "items": [
+        "minecraft:leather_helmet",
+        "minecraft:leather_chestplate",
+        "minecraft:leather_leggings",
+        "minecraft:leather_boots",
+        "minecraft:leather_horse_armor"
+      ]
+    },
+    {
+      "id": "fur",
+      "category": "armor",
+      "level": 8,
+      "cost": 4,
+      "icon": "evolvedwarfare:fur_coat",
+      "items": [
+        "evolvedwarfare:fur_hood",
+        "evolvedwarfare:fur_coat",
+        "evolvedwarfare:fur_trousers",
+        "evolvedwarfare:fur_boots"
+      ]
+    },
+    {
+      "id": "faction_light",
+      "category": "armor",
+      "level": 10,
+      "cost": 6,
+      "icon": "evolvedwarfare:bandit_outlaw_chestplate",
+      "perk": "FACTION_TAILOR",
+      "perkRank": 1
+    },
+    {
+      "id": "class_leather",
+      "category": "armor",
+      "level": 8,
+      "cost": 5,
+      "icon": "evolvedwarfare:warrior_leather_chestplate",
+      "patterns": [
+        "^evolvedwarfare:(archer|musketeer|thief|warrior)_leather_.*"
+      ],
+      "requires": [
+        "leather_armor"
+      ]
+    },
+    {
+      "id": "class_copper",
+      "category": "armor",
+      "level": 12,
+      "cost": 6,
+      "icon": "evolvedwarfare:warrior_copper_chestplate",
+      "patterns": [
+        "^evolvedwarfare:(archer|musketeer|thief|warrior)_copper_.*"
+      ],
+      "requires": [
+        "class_leather"
+      ]
+    },
+    {
+      "id": "iron_armor",
+      "category": "armor",
+      "level": 18,
+      "cost": 10,
+      "icon": "minecraft:iron_chestplate",
+      "items": [
+        "minecraft:iron_helmet",
+        "minecraft:iron_chestplate",
+        "minecraft:iron_leggings",
+        "minecraft:iron_boots",
+        "minecraft:iron_horse_armor"
+      ],
+      "requires": [
+        "leather_armor"
+      ]
+    },
+    {
+      "id": "gold_armor",
+      "category": "armor",
+      "level": 20,
+      "cost": 5,
+      "icon": "minecraft:golden_chestplate",
+      "items": [
+        "minecraft:golden_helmet",
+        "minecraft:golden_chestplate",
+        "minecraft:golden_leggings",
+        "minecraft:golden_boots",
+        "minecraft:golden_horse_armor"
+      ],
+      "requires": [
+        "leather_armor"
+      ]
+    },
+    {
+      "id": "class_iron",
+      "category": "armor",
+      "level": 20,
+      "cost": 7,
+      "icon": "evolvedwarfare:warrior_iron_chestplate",
+      "patterns": [
+        "^evolvedwarfare:(archer|musketeer|thief|warrior)_iron_.*"
+      ],
+      "requires": [
+        "class_copper"
+      ]
+    },
+    {
+      "id": "iron_plate",
+      "category": "armor",
+      "level": 24,
+      "cost": 8,
+      "icon": "evolvedwarfare:iron_plate_chestplate",
+      "patterns": [
+        "^evolvedwarfare:iron_plate_.*",
+        "^evolvedwarfare:iron_rings$"
+      ],
+      "requires": [
+        "iron_armor"
+      ]
+    },
+    {
+      "id": "faction_medium",
+      "category": "armor",
+      "level": 28,
+      "cost": 8,
+      "icon": "evolvedwarfare:viking_huscarl_chestplate",
+      "requires": [
+        "faction_light"
+      ],
+      "perk": "FACTION_ARMORER",
+      "perkRank": 1
+    },
+    {
+      "id": "steel_plate",
+      "category": "armor",
+      "level": 34,
+      "cost": 10,
+      "icon": "evolvedwarfare:steel_plate_chestplate",
+      "patterns": [
+        "^evolvedwarfare:steel_plate_.*"
+      ],
+      "requires": [
+        "iron_plate"
+      ]
+    },
+    {
+      "id": "diamond_armor",
+      "category": "armor",
+      "level": 48,
+      "cost": 18,
+      "icon": "minecraft:diamond_chestplate",
+      "items": [
+        "minecraft:diamond_helmet",
+        "minecraft:diamond_chestplate",
+        "minecraft:diamond_leggings",
+        "minecraft:diamond_boots",
+        "minecraft:diamond_horse_armor"
+      ],
+      "requires": [
+        "iron_armor"
+      ]
+    },
+    {
+      "id": "class_diamond",
+      "category": "armor",
+      "level": 50,
+      "cost": 12,
+      "icon": "evolvedwarfare:warrior_diamond_chestplate",
+      "patterns": [
+        "^evolvedwarfare:(archer|musketeer|thief|warrior)_diamond_.*"
+      ],
+      "requires": [
+        "class_iron"
+      ]
+    },
+    {
+      "id": "faction_heavy",
+      "category": "armor",
+      "level": 55,
+      "cost": 12,
+      "icon": "evolvedwarfare:bandit_warlord_chestplate",
+      "requires": [
+        "faction_medium"
+      ],
+      "perk": "WARLORD_FORGE",
+      "perkRank": 1
+    },
+    {
+      "id": "turtle",
+      "category": "armor",
+      "level": 45,
+      "cost": 6,
+      "icon": "minecraft:turtle_helmet",
+      "items": [
+        "minecraft:turtle_helmet",
+        "minecraft:wolf_armor"
+      ]
+    },
+    {
+      "id": "netherite_armor",
+      "category": "armor",
+      "level": 75,
+      "cost": 25,
+      "icon": "minecraft:netherite_chestplate",
+      "items": [
+        "minecraft:netherite_helmet",
+        "minecraft:netherite_chestplate",
+        "minecraft:netherite_leggings",
+        "minecraft:netherite_boots"
+      ],
+      "requires": [
+        "diamond_armor"
+      ]
+    },
+    {
+      "id": "class_netherite",
+      "category": "armor",
+      "level": 76,
+      "cost": 15,
+      "icon": "evolvedwarfare:warrior_netherite_chestplate",
+      "patterns": [
+        "^evolvedwarfare:(archer|musketeer|thief|warrior)_netherite_.*"
+      ],
+      "requires": [
+        "class_diamond"
+      ]
+    },
+    {
+      "id": "dragon_scales",
+      "category": "legendary",
+      "level": 80,
+      "cost": 30,
+      "icon": "evolvedwarfare:fire_dragon_scale_chestplate",
+      "patterns": [
+        "^evolvedwarfare:(fire_dragon|ice_dragon|sea_serpent)_scale_.*"
+      ],
+      "requires": [
+        "diamond_armor"
+      ]
+    },
+    {
+      "id": "dragonbone",
+      "category": "legendary",
+      "level": 82,
+      "cost": 20,
+      "icon": "evolvedwarfare:dragonbone_sword",
+      "items": [
+        "evolvedwarfare:dragonbone_sword",
+        "evolvedwarfare:flamed_dragonbone_sword",
+        "evolvedwarfare:iced_dragonbone_sword"
+      ],
+      "requires": [
+        "dragon_scales"
+      ]
+    },
+    {
+      "id": "bandage",
+      "category": "medicine",
+      "level": 1,
+      "cost": 2,
+      "icon": "evolvedwarfare:bandage",
+      "items": [
+        "evolvedwarfare:bandage"
+      ]
+    },
+    {
+      "id": "splint",
+      "category": "medicine",
+      "level": 8,
+      "cost": 3,
+      "icon": "evolvedwarfare:splint",
+      "items": [
+        "evolvedwarfare:splint"
+      ],
+      "requires": [
+        "bandage"
+      ]
+    },
+    {
+      "id": "alcohol",
+      "category": "medicine",
+      "level": 10,
+      "cost": 3,
+      "icon": "evolvedwarfare:alcohol",
+      "items": [
+        "evolvedwarfare:alcohol",
+        "evolvedwarfare:fermented_mash"
+      ]
+    },
+    {
+      "id": "medicine",
+      "category": "medicine",
+      "level": 18,
+      "cost": 5,
+      "icon": "evolvedwarfare:medicine",
+      "items": [
+        "evolvedwarfare:medicine"
+      ],
+      "requires": [
+        "alcohol"
+      ]
+    },
+    {
+      "id": "antidote",
+      "category": "medicine",
+      "level": 22,
+      "cost": 5,
+      "icon": "evolvedwarfare:antidote",
+      "items": [
+        "evolvedwarfare:antidote"
+      ],
+      "requires": [
+        "medicine"
+      ]
+    },
+    {
+      "id": "medkit",
+      "category": "medicine",
+      "level": 30,
+      "cost": 8,
+      "icon": "evolvedwarfare:medkit",
+      "items": [
+        "evolvedwarfare:medkit",
+        "evolvedwarfare:medic_kit"
+      ],
+      "requires": [
+        "splint",
+        "medicine"
+      ]
+    },
+    {
+      "id": "golden_food",
+      "category": "medicine",
+      "level": 40,
+      "cost": 8,
+      "icon": "minecraft:golden_apple",
+      "items": [
+        "minecraft:golden_apple",
+        "minecraft:golden_carrot",
+        "minecraft:glistering_melon_slice"
+      ]
+    },
+    {
+      "id": "cooking",
+      "category": "food",
+      "level": 3,
+      "cost": 2,
+      "icon": "minecraft:bread",
+      "items": [
+        "minecraft:bread",
+        "minecraft:mushroom_stew",
+        "minecraft:beetroot_soup",
+        "minecraft:bowl",
+        "evolvedwarfare:vegetable_stew"
+      ]
+    },
+    {
+      "id": "campfire",
+      "category": "food",
+      "level": 3,
+      "cost": 2,
+      "icon": "minecraft:campfire",
+      "items": [
+        "minecraft:campfire"
+      ]
+    },
+    {
+      "id": "drinks",
+      "category": "food",
+      "level": 8,
+      "cost": 3,
+      "icon": "evolvedwarfare:apple_juice",
+      "items": [
+        "evolvedwarfare:apple_juice",
+        "evolvedwarfare:berry_juice",
+        "evolvedwarfare:melon_juice",
+        "evolvedwarfare:orange_juice",
+        "evolvedwarfare:lemonade"
+      ]
+    },
+    {
+      "id": "preserving",
+      "category": "food",
+      "level": 10,
+      "cost": 4,
+      "icon": "evolvedwarfare:salt",
+      "items": [
+        "evolvedwarfare:salt",
+        "evolvedwarfare:fine_salt",
+        "evolvedwarfare:icebox"
+      ]
+    },
+    {
+      "id": "baking",
+      "category": "food",
+      "level": 12,
+      "cost": 4,
+      "icon": "minecraft:cake",
+      "items": [
+        "minecraft:cake",
+        "minecraft:cookie",
+        "minecraft:pumpkin_pie",
+        "minecraft:rabbit_stew",
+        "minecraft:suspicious_stew",
+        "minecraft:honey_block",
+        "minecraft:hay_block"
+      ]
+    },
+    {
+      "id": "smoker",
+      "category": "food",
+      "level": 12,
+      "cost": 4,
+      "icon": "minecraft:smoker",
+      "items": [
+        "minecraft:smoker"
+      ]
+    },
+    {
+      "id": "wood_building",
+      "category": "building",
+      "level": 2,
+      "cost": 2,
+      "icon": "minecraft:oak_stairs",
+      "items": [
+        "minecraft:ladder",
+        "minecraft:scaffolding"
+      ],
+      "patterns": [
+        "^minecraft:(oak|spruce|birch|jungle|acacia|dark_oak|mangrove|cherry|bamboo|crimson|warped)_(stairs|slab|fence|fence_gate|door|trapdoor|button|pressure_plate|wood|hyphae|log)$",
+        "^minecraft:stripped_(oak|spruce|birch|jungle|acacia|dark_oak|mangrove|cherry|bamboo|crimson|warped)_.*",
+        "^minecraft:bamboo_(block|mosaic|mosaic_stairs|mosaic_slab)$"
+      ]
+    },
+    {
+      "id": "signs",
+      "category": "building",
+      "level": 5,
+      "cost": 2,
+      "icon": "minecraft:oak_sign",
+      "patterns": [
+        "^minecraft:(oak|spruce|birch|jungle|acacia|dark_oak|mangrove|cherry|bamboo|crimson|warped)_(sign|hanging_sign)$"
+      ]
+    },
+    {
+      "id": "chest",
+      "category": "utility",
+      "level": 2,
+      "cost": 2,
+      "icon": "minecraft:chest",
+      "items": [
+        "minecraft:chest",
+        "minecraft:trapped_chest"
+      ]
+    },
+    {
+      "id": "bed",
+      "category": "utility",
+      "level": 4,
+      "cost": 3,
+      "icon": "minecraft:red_bed",
+      "patterns": [
+        "^minecraft:(white|orange|magenta|light_blue|yellow|lime|pink|gray|light_gray|cyan|purple|blue|brown|green|red|black)_bed$"
+      ]
+    },
+    {
+      "id": "stone_building",
+      "category": "building",
+      "level": 4,
+      "cost": 3,
+      "icon": "minecraft:stone_bricks",
+      "patterns": [
+        "^minecraft:(cobblestone|mossy_cobblestone|stone|smooth_stone|stone_brick|mossy_stone_brick|andesite|diorite|granite|polished_andesite|polished_diorite|polished_granite|cobbled_deepslate|polished_deepslate|deepslate_brick|deepslate_tile|tuff|polished_tuff|tuff_brick)_(stairs|slab|wall)$",
+        "^minecraft:(stone_bricks|mossy_stone_bricks|chiseled_stone_bricks|cracked_stone_bricks|polished_(andesite|diorite|granite|deepslate|tuff)|deepslate_(bricks|tiles)|chiseled_deepslate|chiseled_tuff|tuff_bricks|chiseled_tuff_bricks|mossy_cobblestone|stone_button|stone_pressure_plate|smooth_stone)$"
+      ],
+      "requires": [
+        "stone_tools"
+      ]
+    },
+    {
+      "id": "sandstone",
+      "category": "building",
+      "level": 6,
+      "cost": 2,
+      "icon": "minecraft:sandstone",
+      "patterns": [
+        "^minecraft:.*sandstone.*"
+      ]
+    },
+    {
+      "id": "colors",
+      "category": "building",
+      "level": 5,
+      "cost": 3,
+      "icon": "minecraft:red_wool",
+      "patterns": [
+        "^minecraft:(white|orange|magenta|light_blue|yellow|lime|pink|gray|light_gray|cyan|purple|blue|brown|green|red|black)_(dye|wool|carpet)$"
+      ]
+    },
+    {
+      "id": "bricks",
+      "category": "building",
+      "level": 8,
+      "cost": 3,
+      "icon": "minecraft:bricks",
+      "items": [
+        "minecraft:bricks",
+        "minecraft:flower_pot",
+        "minecraft:decorated_pot",
+        "minecraft:packed_mud"
+      ],
+      "patterns": [
+        "^minecraft:(brick|mud_brick)_(stairs|slab|wall)$",
+        "^minecraft:mud_bricks$"
+      ]
+    },
+    {
+      "id": "glass",
+      "category": "building",
+      "level": 10,
+      "cost": 3,
+      "icon": "minecraft:glass_pane",
+      "items": [
+        "minecraft:glass_pane",
+        "minecraft:glass_bottle",
+        "minecraft:tinted_glass"
+      ],
+      "patterns": [
+        "^minecraft:(white|orange|magenta|light_blue|yellow|lime|pink|gray|light_gray|cyan|purple|blue|brown|green|red|black)_stained_glass(_pane)?$"
+      ]
+    },
+    {
+      "id": "lighting",
+      "category": "building",
+      "level": 10,
+      "cost": 3,
+      "icon": "minecraft:lantern",
+      "items": [
+        "minecraft:lantern",
+        "minecraft:candle",
+        "minecraft:jack_o_lantern"
+      ],
+      "patterns": [
+        "^minecraft:(white|orange|magenta|light_blue|yellow|lime|pink|gray|light_gray|cyan|purple|blue|brown|green|red|black)_candle$"
+      ]
+    },
+    {
+      "id": "banners",
+      "category": "building",
+      "level": 12,
+      "cost": 3,
+      "icon": "minecraft:white_banner",
+      "patterns": [
+        "^minecraft:(white|orange|magenta|light_blue|yellow|lime|pink|gray|light_gray|cyan|purple|blue|brown|green|red|black)_banner$",
+        "^minecraft:.*_banner_pattern$"
+      ],
+      "requires": [
+        "colors"
+      ]
+    },
+    {
+      "id": "concrete",
+      "category": "building",
+      "level": 14,
+      "cost": 4,
+      "icon": "minecraft:white_concrete",
+      "patterns": [
+        "^minecraft:(white|orange|magenta|light_blue|yellow|lime|pink|gray|light_gray|cyan|purple|blue|brown|green|red|black)_(concrete_powder|terracotta|glazed_terracotta)$"
+      ]
+    },
+    {
+      "id": "storage_blocks",
+      "category": "building",
+      "level": 6,
+      "cost": 2,
+      "icon": "minecraft:iron_block",
+      "items": [
+        "minecraft:iron_block",
+        "minecraft:gold_block",
+        "minecraft:diamond_block",
+        "minecraft:emerald_block",
+        "minecraft:redstone_block",
+        "minecraft:lapis_block",
+        "minecraft:coal_block",
+        "minecraft:copper_block",
+        "minecraft:netherite_block",
+        "minecraft:raw_iron_block",
+        "minecraft:raw_gold_block",
+        "minecraft:raw_copper_block",
+        "minecraft:bone_block",
+        "minecraft:slime_block",
+        "minecraft:dried_kelp_block",
+        "minecraft:quartz_block",
+        "minecraft:amethyst_block",
+        "minecraft:packed_ice",
+        "minecraft:blue_ice",
+        "minecraft:snow_block",
+        "minecraft:clay",
+        "minecraft:melon",
+        "minecraft:chain",
+        "minecraft:iron_bars",
+        "minecraft:iron_door",
+        "minecraft:iron_trapdoor",
+        "minecraft:heavy_weighted_pressure_plate",
+        "minecraft:light_weighted_pressure_plate"
+      ]
+    },
+    {
+      "id": "copper_building",
+      "category": "building",
+      "level": 18,
+      "cost": 4,
+      "icon": "minecraft:cut_copper",
+      "patterns": [
+        "^minecraft:.*copper.*"
+      ]
+    },
+    {
+      "id": "nether_building",
+      "category": "building",
+      "level": 35,
+      "cost": 6,
+      "icon": "minecraft:nether_bricks",
+      "patterns": [
+        "^minecraft:.*(nether_brick|blackstone|quartz|basalt|nether_wart_block).*"
+      ]
+    },
+    {
+      "id": "prismarine",
+      "category": "building",
+      "level": 45,
+      "cost": 6,
+      "icon": "minecraft:prismarine_bricks",
+      "patterns": [
+        "^minecraft:.*prismarine.*",
+        "^minecraft:sea_lantern$"
+      ]
+    },
+    {
+      "id": "end_building",
+      "category": "building",
+      "level": 70,
+      "cost": 6,
+      "icon": "minecraft:purpur_block",
+      "patterns": [
+        "^minecraft:.*(purpur|end_stone|end_rod).*"
+      ]
+    },
+    {
+      "id": "crafting_stations",
+      "category": "utility",
+      "level": 8,
+      "cost": 4,
+      "icon": "minecraft:loom",
+      "items": [
+        "minecraft:loom",
+        "minecraft:fletching_table",
+        "minecraft:cartography_table",
+        "minecraft:composter"
+      ]
+    },
+    {
+      "id": "barrel",
+      "category": "utility",
+      "level": 8,
+      "cost": 2,
+      "icon": "minecraft:barrel",
+      "items": [
+        "minecraft:barrel"
+      ]
+    },
+    {
+      "id": "paper",
+      "category": "utility",
+      "level": 6,
+      "cost": 2,
+      "icon": "minecraft:book",
+      "items": [
+        "minecraft:paper",
+        "minecraft:book",
+        "minecraft:writable_book",
+        "minecraft:item_frame",
+        "minecraft:painting",
+        "minecraft:armor_stand",
+        "minecraft:glow_item_frame"
+      ]
+    },
+    {
+      "id": "stonecutter",
+      "category": "utility",
+      "level": 14,
+      "cost": 4,
+      "icon": "minecraft:stonecutter",
+      "items": [
+        "minecraft:stonecutter",
+        "minecraft:grindstone"
+      ]
+    },
+    {
+      "id": "cauldron",
+      "category": "utility",
+      "level": 14,
+      "cost": 3,
+      "icon": "minecraft:cauldron",
+      "items": [
+        "minecraft:cauldron"
+      ]
+    },
+    {
+      "id": "lectern",
+      "category": "utility",
+      "level": 20,
+      "cost": 4,
+      "icon": "minecraft:lectern",
+      "items": [
+        "minecraft:lectern",
+        "minecraft:chiseled_bookshelf"
+      ]
+    },
+    {
+      "id": "blast_furnace",
+      "category": "utility",
+      "level": 20,
+      "cost": 5,
+      "icon": "minecraft:blast_furnace",
+      "items": [
+        "minecraft:blast_furnace"
+      ]
+    },
+    {
+      "id": "jukebox",
+      "category": "utility",
+      "level": 24,
+      "cost": 3,
+      "icon": "minecraft:jukebox",
+      "items": [
+        "minecraft:jukebox"
+      ]
+    },
+    {
+      "id": "smithing_table",
+      "category": "utility",
+      "level": 28,
+      "cost": 6,
+      "icon": "minecraft:smithing_table",
+      "items": [
+        "minecraft:smithing_table"
+      ],
+      "patterns": [
+        "^minecraft:.*_smithing_template$"
+      ]
+    },
+    {
+      "id": "anvil",
+      "category": "utility",
+      "level": 32,
+      "cost": 10,
+      "icon": "minecraft:anvil",
+      "items": [
+        "minecraft:anvil"
+      ]
+    },
+    {
+      "id": "backpack_basic",
+      "category": "utility",
+      "level": 6,
+      "cost": 3,
+      "icon": "evolvedwarfare:backpack_basic",
+      "items": [
+        "evolvedwarfare:backpack_basic"
+      ]
+    },
+    {
+      "id": "backpack_traveler",
+      "category": "utility",
+      "level": 16,
+      "cost": 5,
+      "icon": "evolvedwarfare:backpack_traveler",
+      "items": [
+        "evolvedwarfare:backpack_traveler"
+      ],
+      "requires": [
+        "backpack_basic"
+      ]
+    },
+    {
+      "id": "backpack_explorer",
+      "category": "utility",
+      "level": 26,
+      "cost": 6,
+      "icon": "evolvedwarfare:backpack_explorer",
+      "items": [
+        "evolvedwarfare:backpack_explorer"
+      ],
+      "requires": [
+        "backpack_traveler"
+      ]
+    },
+    {
+      "id": "backpack_adventurer",
+      "category": "utility",
+      "level": 40,
+      "cost": 8,
+      "icon": "evolvedwarfare:backpack_adventurer",
+      "items": [
+        "evolvedwarfare:backpack_adventurer"
+      ],
+      "requires": [
+        "backpack_explorer"
+      ]
+    },
+    {
+      "id": "backpack_abyssal",
+      "category": "utility",
+      "level": 60,
+      "cost": 12,
+      "icon": "evolvedwarfare:backpack_abyssal",
+      "items": [
+        "evolvedwarfare:backpack_abyssal"
+      ],
+      "requires": [
+        "backpack_adventurer"
+      ]
+    },
+    {
+      "id": "ender_chest",
+      "category": "utility",
+      "level": 60,
+      "cost": 12,
+      "icon": "minecraft:ender_chest",
+      "items": [
+        "minecraft:ender_chest"
+      ]
+    },
+    {
+      "id": "shulker_box",
+      "category": "utility",
+      "level": 65,
+      "cost": 12,
+      "icon": "minecraft:shulker_box",
+      "patterns": [
+        "^minecraft:((white|orange|magenta|light_blue|yellow|lime|pink|gray|light_gray|cyan|purple|blue|brown|green|red|black)_)?shulker_box$"
+      ]
+    },
+    {
+      "id": "lodestone",
+      "category": "utility",
+      "level": 40,
+      "cost": 5,
+      "icon": "minecraft:lodestone",
+      "items": [
+        "minecraft:lodestone"
+      ]
+    },
+    {
+      "id": "respawn_anchor",
+      "category": "utility",
+      "level": 60,
+      "cost": 8,
+      "icon": "minecraft:respawn_anchor",
+      "items": [
+        "minecraft:respawn_anchor"
+      ]
+    },
+    {
+      "id": "beehive",
+      "category": "utility",
+      "level": 16,
+      "cost": 3,
+      "icon": "minecraft:beehive",
+      "items": [
+        "minecraft:beehive"
+      ]
+    },
+    {
+      "id": "redstone_basic",
+      "category": "redstone",
+      "level": 20,
+      "cost": 6,
+      "icon": "minecraft:repeater",
+      "items": [
+        "minecraft:redstone_torch",
+        "minecraft:lever",
+        "minecraft:repeater",
+        "minecraft:tripwire_hook",
+        "minecraft:redstone_lamp",
+        "minecraft:note_block",
+        "minecraft:target",
+        "minecraft:daylight_detector"
+      ]
+    },
+    {
+      "id": "hopper",
+      "category": "redstone",
+      "level": 22,
+      "cost": 5,
+      "icon": "minecraft:hopper",
+      "items": [
+        "minecraft:hopper",
+        "minecraft:hopper_minecart"
+      ],
+      "requires": [
+        "redstone_basic"
+      ]
+    },
+    {
+      "id": "dispensers",
+      "category": "redstone",
+      "level": 24,
+      "cost": 5,
+      "icon": "minecraft:dispenser",
+      "items": [
+        "minecraft:dispenser",
+        "minecraft:dropper"
+      ],
+      "requires": [
+        "redstone_basic"
+      ]
+    },
+    {
+      "id": "pistons",
+      "category": "redstone",
+      "level": 26,
+      "cost": 8,
+      "icon": "minecraft:piston",
+      "items": [
+        "minecraft:piston",
+        "minecraft:sticky_piston"
+      ],
+      "requires": [
+        "redstone_basic"
+      ]
+    },
+    {
+      "id": "comparator",
+      "category": "redstone",
+      "level": 28,
+      "cost": 6,
+      "icon": "minecraft:comparator",
+      "items": [
+        "minecraft:comparator",
+        "minecraft:observer",
+        "minecraft:crafter",
+        "minecraft:calibrated_sculk_sensor"
+      ],
+      "requires": [
+        "redstone_basic"
+      ]
+    },
+    {
+      "id": "boats",
+      "category": "transport",
+      "level": 6,
+      "cost": 3,
+      "icon": "minecraft:oak_boat",
+      "patterns": [
+        "^minecraft:.*_(boat|raft)$"
+      ]
+    },
+    {
+      "id": "carts",
+      "category": "transport",
+      "level": 14,
+      "cost": 5,
+      "icon": "evolvedwarfare:cart",
+      "items": [
+        "evolvedwarfare:cart",
+        "evolvedwarfare:cart_wheel",
+        "evolvedwarfare:cart_bed"
+      ]
+    },
+    {
+      "id": "minecart",
+      "category": "transport",
+      "level": 22,
+      "cost": 6,
+      "icon": "minecraft:minecart",
+      "items": [
+        "minecraft:minecart",
+        "minecraft:chest_minecart",
+        "minecraft:furnace_minecart",
+        "minecraft:rail"
+      ]
+    },
+    {
+      "id": "powered_rails",
+      "category": "transport",
+      "level": 30,
+      "cost": 6,
+      "icon": "minecraft:powered_rail",
+      "items": [
+        "minecraft:powered_rail",
+        "minecraft:detector_rail",
+        "minecraft:activator_rail"
+      ],
+      "requires": [
+        "minecart",
+        "redstone_basic"
+      ]
+    },
+    {
+      "id": "railway",
+      "category": "transport",
+      "level": 50,
+      "cost": 15,
+      "icon": "evolvedwarfare:train_cab",
+      "patterns": [
+        "^evolvedwarfare:(track_.*|train_.*)$"
+      ],
+      "requires": [
+        "powered_rails"
+      ]
+    },
+    {
+      "id": "bookshelf",
+      "category": "magic",
+      "level": 30,
+      "cost": 5,
+      "icon": "minecraft:bookshelf",
+      "items": [
+        "minecraft:bookshelf"
+      ],
+      "requires": [
+        "paper"
+      ]
+    },
+    {
+      "id": "brewing",
+      "category": "magic",
+      "level": 30,
+      "cost": 10,
+      "icon": "minecraft:brewing_stand",
+      "items": [
+        "minecraft:brewing_stand",
+        "minecraft:fermented_spider_eye",
+        "minecraft:magma_cream",
+        "minecraft:blaze_powder"
+      ]
+    },
+    {
+      "id": "enchanting",
+      "category": "magic",
+      "level": 35,
+      "cost": 15,
+      "icon": "minecraft:enchanting_table",
+      "items": [
+        "minecraft:enchanting_table"
+      ],
+      "requires": [
+        "bookshelf"
+      ]
+    },
+    {
+      "id": "ender_eye",
+      "category": "magic",
+      "level": 50,
+      "cost": 8,
+      "icon": "minecraft:ender_eye",
+      "items": [
+        "minecraft:ender_eye"
+      ]
+    },
+    {
+      "id": "blessed_salt",
+      "category": "magic",
+      "level": 45,
+      "cost": 6,
+      "icon": "evolvedwarfare:blessed_salt",
+      "items": [
+        "evolvedwarfare:blessed_salt",
+        "evolvedwarfare:ritual_circle"
+      ]
+    },
+    {
+      "id": "conduit",
+      "category": "magic",
+      "level": 70,
+      "cost": 10,
+      "icon": "minecraft:conduit",
+      "items": [
+        "minecraft:conduit"
+      ]
+    },
+    {
+      "id": "end_crystal",
+      "category": "magic",
+      "level": 75,
+      "cost": 10,
+      "icon": "minecraft:end_crystal",
+      "items": [
+        "minecraft:end_crystal"
+      ]
+    },
+    {
+      "id": "beacon",
+      "category": "magic",
+      "level": 85,
+      "cost": 30,
+      "icon": "minecraft:beacon",
+      "items": [
+        "minecraft:beacon"
+      ]
+    },
+    {
+      "id": "mechanics",
+      "category": "engineering",
+      "level": 16,
+      "cost": 6,
+      "icon": "evolvedwarfare:gearbox",
+      "items": [
+        "evolvedwarfare:shaft",
+        "evolvedwarfare:small_gear",
+        "evolvedwarfare:large_gear",
+        "evolvedwarfare:gearbox",
+        "evolvedwarfare:hand_crank"
+      ]
+    },
+    {
+      "id": "wind_water",
+      "category": "engineering",
+      "level": 22,
+      "cost": 8,
+      "icon": "evolvedwarfare:windmill_medium",
+      "patterns": [
+        "^evolvedwarfare:(water_wheel|windmill)_.*"
+      ],
+      "requires": [
+        "mechanics"
+      ]
+    },
+    {
+      "id": "transmission",
+      "category": "engineering",
+      "level": 26,
+      "cost": 8,
+      "icon": "evolvedwarfare:clutch",
+      "items": [
+        "evolvedwarfare:clutch",
+        "evolvedwarfare:gearshift",
+        "evolvedwarfare:pulley",
+        "evolvedwarfare:redstone_cam",
+        "evolvedwarfare:iron_shaft",
+        "evolvedwarfare:iron_small_gear",
+        "evolvedwarfare:iron_large_gear",
+        "evolvedwarfare:steel_shaft",
+        "evolvedwarfare:steel_small_gear",
+        "evolvedwarfare:steel_large_gear"
+      ],
+      "requires": [
+        "mechanics"
+      ]
+    },
+    {
+      "id": "workshops",
+      "category": "engineering",
+      "level": 28,
+      "cost": 10,
+      "icon": "evolvedwarfare:millstone",
+      "items": [
+        "evolvedwarfare:millstone",
+        "evolvedwarfare:sawmill",
+        "evolvedwarfare:bellows",
+        "evolvedwarfare:crucible",
+        "evolvedwarfare:trip_hammer",
+        "evolvedwarfare:architect_table"
+      ],
+      "requires": [
+        "mechanics"
+      ]
+    },
+    {
+      "id": "gauges",
+      "category": "engineering",
+      "level": 30,
+      "cost": 4,
+      "icon": "evolvedwarfare:stress_gauge",
+      "items": [
+        "evolvedwarfare:stress_gauge",
+        "evolvedwarfare:speed_gauge"
+      ],
+      "requires": [
+        "transmission"
+      ]
+    },
+    {
+      "id": "lifting",
+      "category": "engineering",
+      "level": 35,
+      "cost": 8,
+      "icon": "evolvedwarfare:crane",
+      "items": [
+        "evolvedwarfare:crane",
+        "evolvedwarfare:lift_platform",
+        "evolvedwarfare:screw",
+        "evolvedwarfare:drill_head"
+      ],
+      "requires": [
+        "transmission"
+      ]
+    },
+    {
+      "id": "steam",
+      "category": "engineering",
+      "level": 45,
+      "cost": 12,
+      "icon": "evolvedwarfare:steam_boiler",
+      "items": [
+        "evolvedwarfare:steam_boiler",
+        "evolvedwarfare:pipe",
+        "evolvedwarfare:hand_pump",
+        "evolvedwarfare:faucet"
+      ],
+      "requires": [
+        "workshops"
+      ]
+    },
+    {
+      "id": "town",
+      "category": "settlement",
+      "level": 10,
+      "cost": 5,
+      "icon": "evolvedwarfare:town_hall",
+      "items": [
+        "evolvedwarfare:town_hall",
+        "evolvedwarfare:builder_post",
+        "evolvedwarfare:lumberjack_post",
+        "evolvedwarfare:farmer_post",
+        "evolvedwarfare:miner_post",
+        "evolvedwarfare:digger_post",
+        "evolvedwarfare:gardener_post",
+        "evolvedwarfare:warehouse"
+      ]
+    },
+    {
+      "id": "trades",
+      "category": "settlement",
+      "level": 20,
+      "cost": 6,
+      "icon": "evolvedwarfare:blacksmith_post",
+      "patterns": [
+        "^evolvedwarfare:.*_post$"
+      ],
+      "requires": [
+        "town"
+      ]
+    },
+    {
+      "id": "commerce",
+      "category": "settlement",
+      "level": 18,
+      "cost": 5,
+      "icon": "evolvedwarfare:sales_mailbox",
+      "items": [
+        "evolvedwarfare:sales_mailbox",
+        "evolvedwarfare:trader_catalog",
+        "evolvedwarfare:route_slip",
+        "evolvedwarfare:coal_bunker",
+        "evolvedwarfare:crop_crate",
+        "evolvedwarfare:research_desk"
+      ]
+    },
+    {
+      "id": "command",
+      "category": "settlement",
+      "level": 15,
+      "cost": 4,
+      "icon": "evolvedwarfare:command_staff",
+      "items": [
+        "evolvedwarfare:command_staff",
+        "evolvedwarfare:recruitment_contract",
+        "evolvedwarfare:white_flag",
+        "evolvedwarfare:ambassador_seal",
+        "evolvedwarfare:tower_clock"
+      ]
+    },
+    {
+      "id": "drill",
+      "category": "military",
+      "level": 12,
+      "cost": 4,
+      "icon": "evolvedwarfare:command_staff",
+      "perk": "DRILL",
+      "perkRank": 1
+    },
+    {
+      "id": "field_medicine",
+      "category": "military",
+      "level": 22,
+      "cost": 5,
+      "icon": "evolvedwarfare:medic_kit",
+      "requires": [
+        "drill"
+      ],
+      "perk": "FIELD_MEDICINE",
+      "perkRank": 1
+    },
+    {
+      "id": "tactics",
+      "category": "military",
+      "level": 24,
+      "cost": 5,
+      "icon": "minecraft:map",
+      "requires": [
+        "drill"
+      ],
+      "perk": "TACTICS",
+      "perkRank": 1
+    },
+    {
+      "id": "quartermaster",
+      "category": "military",
+      "level": 28,
+      "cost": 5,
+      "icon": "minecraft:chest",
+      "requires": [
+        "drill"
+      ],
+      "perk": "QUARTERMASTER",
+      "perkRank": 1
+    },
+    {
+      "id": "inspire",
+      "category": "military",
+      "level": 35,
+      "cost": 6,
+      "icon": "minecraft:goat_horn",
+      "requires": [
+        "tactics"
+      ],
+      "perk": "INSPIRE",
+      "perkRank": 1
+    },
+    {
+      "id": "veterans",
+      "category": "military",
+      "level": 45,
+      "cost": 8,
+      "icon": "minecraft:iron_sword",
+      "requires": [
+        "field_medicine"
+      ],
+      "perk": "VETERANS",
+      "perkRank": 1
+    },
+    {
+      "id": "banner",
+      "category": "military",
+      "level": 60,
+      "cost": 10,
+      "icon": "minecraft:red_banner",
+      "requires": [
+        "inspire",
+        "veterans"
+      ],
+      "perk": "BANNER",
+      "perkRank": 1
+    },
+    {
+      "id": "battering_ram",
+      "category": "military",
+      "level": 20,
+      "cost": 6,
+      "icon": "evolvedwarfare:battering_ram",
+      "perk": "RAM_SMITH",
+      "perkRank": 1
+    },
+    {
+      "id": "fortification",
+      "category": "military",
+      "level": 30,
+      "cost": 7,
+      "icon": "evolvedwarfare:portcullis",
+      "items": [
+        "evolvedwarfare:portcullis_winch"
+      ],
+      "perk": "FORTIFICATION",
+      "perkRank": 1
+    },
+    {
+      "id": "gunner",
+      "category": "military",
+      "level": 32,
+      "cost": 6,
+      "icon": "evolvedwarfare:catapult",
+      "requires": [
+        "battering_ram"
+      ],
+      "perk": "GUNNER",
+      "perkRank": 3
+    },
+    {
+      "id": "torsion",
+      "category": "military",
+      "level": 35,
+      "cost": 9,
+      "icon": "evolvedwarfare:ballista",
+      "requires": [
+        "battering_ram"
+      ],
+      "perk": "TORSION",
+      "perkRank": 1
+    },
+    {
+      "id": "thrift",
+      "category": "military",
+      "level": 36,
+      "cost": 5,
+      "icon": "evolvedwarfare:ballista_bolt",
+      "requires": [
+        "gunner"
+      ],
+      "perk": "THRIFT",
+      "perkRank": 1
+    },
+    {
+      "id": "incendiaries",
+      "category": "military",
+      "level": 40,
+      "cost": 7,
+      "icon": "evolvedwarfare:fire_pot",
+      "requires": [
+        "torsion"
+      ],
+      "perk": "INCENDIARIES",
+      "perkRank": 1
+    },
+    {
+      "id": "sapper",
+      "category": "military",
+      "level": 42,
+      "cost": 6,
+      "icon": "minecraft:tnt",
+      "requires": [
+        "gunner"
+      ],
+      "perk": "SAPPER",
+      "perkRank": 1
+    },
+    {
+      "id": "trebuchet",
+      "category": "military",
+      "level": 55,
+      "cost": 12,
+      "icon": "evolvedwarfare:trebuchet",
+      "requires": [
+        "torsion"
+      ],
+      "perk": "COUNTERWEIGHT",
+      "perkRank": 1
+    },
+    {
+      "id": "misc_armor",
+      "category": "armor",
+      "level": 30,
+      "cost": 8,
+      "icon": "minecraft:chainmail_chestplate",
+      "fallback": "armor"
+    },
+    {
+      "id": "misc_tools",
+      "category": "tools",
+      "level": 25,
+      "cost": 6,
+      "icon": "minecraft:iron_pickaxe",
+      "fallback": "tool"
+    },
+    {
+      "id": "misc_food",
+      "category": "food",
+      "level": 8,
+      "cost": 3,
+      "icon": "minecraft:pumpkin_pie",
+      "fallback": "food"
+    },
+    {
+      "id": "misc_blocks_mc",
+      "category": "building",
+      "level": 10,
+      "cost": 5,
+      "icon": "minecraft:bricks",
+      "fallback": "block",
+      "namespace": "minecraft"
+    },
+    {
+      "id": "misc_blocks_ew",
+      "category": "utility",
+      "level": 15,
+      "cost": 6,
+      "icon": "evolvedwarfare:crop_crate",
+      "fallback": "block",
+      "namespace": "evolvedwarfare"
+    },
+    {
+      "id": "misc_items_mc",
+      "category": "utility",
+      "level": 12,
+      "cost": 5,
+      "icon": "minecraft:item_frame",
+      "fallback": "item",
+      "namespace": "minecraft"
+    },
+    {
+      "id": "misc_items_ew",
+      "category": "utility",
+      "level": 15,
+      "cost": 6,
+      "icon": "evolvedwarfare:guide_book",
+      "fallback": "item",
+      "namespace": "evolvedwarfare"
+    }
+  ]
+}

@@ -108,6 +108,7 @@ public final class ModCommands {
 								.then(CommandManager.argument("value", StringArgumentType.word())
 										.executes(ModCommands::configSet)))));
 		SkillCommands.register(dispatcher);
+		EngramCommands.register(dispatcher);
 	}
 
 	private static final SimpleCommandExceptionType UNKNOWN_OPTION =

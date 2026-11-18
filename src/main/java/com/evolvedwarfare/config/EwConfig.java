@@ -39,6 +39,8 @@ public final class EwConfig {
 	 * primera vez, explorar, amanecer; 1 = normal, 0 = solo con las habilidades).
 	 */
 	public double survivorXpRate = 1.0;
+	/** Las recetas de otros mods también piden engrama (fase 113; si no, son libres). */
+	public boolean engramsOtherMods = false;
 
 	// ------------------------------------------------------------------ facciones
 	/** Cada cuánto (minutos reales, al azar entre los dos) pasa una patrulla cerca de un jugador. */
@@ -290,6 +292,7 @@ public final class EwConfig {
 			new Option("researchRequired", "research", 0, 1, 1),
 			new Option("skillXpRate", "research", 0.1, 20.0, 0.25),
 			new Option("survivorXpRate", "research", 0.0, 20.0, 0.25),
+			new Option("engramsOtherMods", "research", 0, 1, 1),
 			new Option("patrolMinMinutes", "factions", 1, 240, 1),
 			new Option("patrolMaxMinutes", "factions", 1, 240, 1),
 			new Option("firstRaidMinutes", "factions", 1, 600, 5),

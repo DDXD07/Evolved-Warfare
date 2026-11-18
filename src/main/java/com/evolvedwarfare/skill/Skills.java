@@ -46,11 +46,8 @@ public final class Skills {
 	public static void register() {
 		PayloadTypeRegistry.playS2C().register(SkillPayloads.Data.ID, SkillPayloads.Data.CODEC);
 		PayloadTypeRegistry.playC2S().register(SkillPayloads.Unlock.ID, SkillPayloads.Unlock.CODEC);
+		// las ventajas ya no se cogen (fase 113: ahora son engramas)
 		ServerPlayNetworking.registerGlobalReceiver(SkillPayloads.Unlock.ID, (payload, context) -> {
-			Perk perk = Perk.byId(payload.perk());
-			if (perk != null) {
-				unlock(context.player(), perk);
-			}
 		});
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
 			migrate(handler.getPlayer());
@@ -123,12 +120,9 @@ public final class Skills {
 		return locks.get(item);
 	}
 
+	/** Si puede fabricarlo (desde la fase 113, con su engrama). */
 	public static boolean canCraft(ServerPlayerEntity player, ItemStack result) {
-		if (!EwConfig.get().researchRequired || player.getAbilities().creativeMode) {
-			return true;
-		}
-		Perk perk = lockOf(result.getItem());
-		return perk == null || rank(player, perk) > 0;
+		return Engrams.canCraft(player, result);
 	}
 
 	// ------------------------------------------------------------------ subir
@@ -179,7 +173,6 @@ public final class Skills {
 		while (!data.maxLevel() && data.levelXp >= SkillData.levelXpToNext(data.level)) {
 			data.levelXp -= SkillData.levelXpToNext(data.level);
 			data.level++;
-			data.points++;
 			data.engramPoints += SkillData.engramPointsFor(data.level);
 			data.attributePoints++;
 			player.playSoundToPlayer(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.PLAYERS, 0.8F, 1.0F);
@@ -331,33 +324,31 @@ public final class Skills {
 			migrateSurvivor(data);
 			state.markDirty();
 		}
-		if (data.migrated) {
-			return;
-		}
-		data.migrated = true;
-		state.markDirty();
-		ResearchState.Entry entry = ResearchState.get(player.getServer()).peek(player.getUuid());
-		if (entry == null || entry.done.isEmpty()) {
-			return;
-		}
-		List<Perk> given = new ArrayList<>();
-		for (Tech tech : entry.done) {
-			for (Perk perk : fromResearch(tech)) {
-				if (data.rank(perk) == 0) {
-					data.perks.put(perk, 1);
-					given.add(perk);
+		if (!data.migrated) {
+			data.migrated = true;
+			state.markDirty();
+			ResearchState.Entry entry = ResearchState.get(player.getServer()).peek(player.getUuid());
+			if (entry != null) {
+				for (Tech tech : entry.done) {
+					for (Perk perk : fromResearch(tech)) {
+						if (data.legacyRank(perk) == 0) {
+							data.perks.put(perk, 1);
+						}
+					}
 				}
 			}
 		}
-		if (!given.isEmpty()) {
-			MutableText list = Text.empty();
-			for (int i = 0; i < given.size(); i++) {
-				if (i > 0) {
-					list.append(", ");
-				}
-				list.append(Text.translatable(given.get(i).translationKey()));
+		if (!data.engramStart) {
+			boolean veteran = data.level > 1 || !data.perks.isEmpty();
+			List<Engram> given = Engrams.migrate(data);
+			state.markDirty();
+			if (!given.isEmpty()) {
+				player.sendMessage(Text.translatable("message.evolvedwarfare.engrams.migrated", Engrams.names(given)).formatted(Formatting.GOLD), false);
 			}
-			player.sendMessage(Text.translatable("message.evolvedwarfare.skills.migrated", list).formatted(Formatting.GOLD), false);
+			if (veteran || !given.isEmpty()) {
+				player.sendMessage(Text.translatable("message.evolvedwarfare.engrams.welcome", Text.keybind("key.evolvedwarfare.engrams"))
+						.formatted(Formatting.AQUA), false);
+			}
 		}
 	}
 

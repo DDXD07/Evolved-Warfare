@@ -2809,8 +2809,60 @@ aguante, carga..., más adelante). El nivel de personaje de las habilidades pasa
   aviso grande de arriba dice los puntos que ganas.
 - En la pantalla de habilidades (K) se ven también los puntos de engrama y de atributo.
 - **Configuración**: "Experiencia de superviviente" (`survivorXpRate`; 1 = normal, 0 = solo con las habilidades).
-- Las ventajas de las constelaciones siguen funcionando hasta la fase 113, en la que se quitan y la forja pasa a los
-  engramas.
+- Las ventajas de las constelaciones se quitan en la fase 113 (la forja pasa a los engramas).
+
+## Fase 113 — Engramas (como en ARK), parte 2
+
+Casi todo lo que se fabrica pide ahora **aprender su engrama** con los **puntos de engrama** que dan los niveles de
+superviviente (fase 112). Hay **160 engramas** en 14 categorías que cuestan **1.042 puntos** en total; hasta el nivel 100
+se ganan **1.064**. A tope se puede aprender casi todo, pero por el camino **hay que elegir**: al nivel 30 se han ganado
+unos 217 puntos y los engramas de nivel 30 o menos cuestan 556.
+
+- **Libre, sin engrama**: la mesa de crafteo, el horno, los tablones, los palos y las antorchas, y los materiales que salen
+  de compactar o descompactar (lingotes, pepitas, diamantes, redstone, lapislázuli, carbón, harina de hueso, trigo...).
+- **Al empezar** se dan **10 puntos** para lo primero: herramientas de madera (2), vendas (2), cofre (2), construcción de
+  madera (2)...
+- **Dónde se bloquea**: la mesa de crafteo, el crafteo del inventario, la **mesa de herrería** (la netherita) y el
+  **cortapiedras**. **Fundir y cocinar** en el horno, el ahumador o la fogata **no se bloquea**.
+- **Sin el engrama tampoco se puede usar lo que se encuentra**:
+  - la **armadura** se cae (al inventario, o al suelo si no cabe);
+  - con **herramientas y armas** se pega y se pica **como con la mano** (y no se recoge lo que pide herramienta);
+  - lo que se usa con **clic derecho** (arcos, escudos, cubos, botiquines...) no funciona.
+  - Los **bloques** se pueden poner y la **comida** se puede comer siempre.
+- **Algunos engramas piden otros antes** (ARK): piedra → hierro → diamante → netherita, cuero → hierro → diamante en la
+  armadura, mochilas por tamaños, molinos tras la mecánica básica...
+- **Las ventajas de las constelaciones ya no existen**:
+  - las de **forja** (dagas, lanzas, espadas largas, alabardas, armaduras de facción, ariete, catapulta, trabuquete,
+    fortificaciones...) son **engramas** de Armas, Armadura y Militar;
+  - las de **mando y asedio** (instrucción, tácticas, medicina de campaña, intendencia, arenga, veteranos, estandarte,
+    artillería, ahorro, zapadores) son **engramas de Militar** y siguen mejorando a tus soldados y tus máquinas;
+  - las de **combate** (maestrías, sangrado, críticos, evasión...) **se quitan**.
+  - **Los que ya jugaban** reciben gratis los engramas de lo que ya sabían forjar o mandar (y los que esos piden), y
+    además los 10 puntos del principio y los de sus niveles (fase 112).
+- **Pantalla de engramas (tecla K**, la misma de antes; también la Mesa de investigación):
+  - a la izquierda las categorías (con cuántos llevas de cada una);
+  - en medio los engramas: **verde** aprendido, **dorado** lo puedes aprender ya, **amarillo** te faltan puntos, **rojo**
+    te falta nivel, **gris** antes hay que aprender otro; en la esquina, su nivel;
+  - al pasar el ratón: nivel, coste, lo que pide antes y **lo que desbloquea**; **clic** para aprenderlo;
+  - un **buscador** (por el nombre del engrama o de lo que desbloquea) y, a la derecha, tus **habilidades** con su nivel.
+- En la descripción de los objetos sale en rojo **qué engrama falta** y su nivel.
+- Las recetas de **otros mods** son libres; con la opción "Engramas para otros mods" van a "Otros bloques" y "Otros
+  objetos". La opción "Engramas para fabricar y usar" (la de la forja de antes) los quita del todo.
+- **Comandos**: `/evolvedwarfare engrams <jugadores> learn <engrama|all>`, `reset` (los olvida y devuelve los puntos),
+  `points <n>` y `xp <n>`.
+- La lista de engramas la escribe `tools/ew_engrams.py` (`data/evolvedwarfare/engrams/engrams.json`); el juego reparte
+  cada receta en el primero que encaja, y lo que no encaja en ninguno va a los de "Otros" por su tipo.
+
+| Algunos engramas | Nivel | Puntos |
+|---|---|---|
+| Herramientas de madera / piedra / hierro / diamante / netherita | 1 / 3 / 14 / 42 / 70 | 2 / 3 / 8 / 15 / 20 |
+| Armadura de cuero / hierro / diamante / netherita | 5 / 18 / 48 / 75 | 4 / 10 / 18 / 25 |
+| Arco y flechas · Escudo · Ballesta | 6 · 12 · 18 | 4 · 4 · 6 |
+| Vendas · Férula · Medicina · Botiquín | 1 · 8 · 18 · 30 | 2 · 3 · 5 · 8 |
+| Cama · Cubo · Redstone básica · Pistones | 4 · 10 · 20 · 26 | 3 · 4 · 6 · 8 |
+| Yunque · Destilería · Mesa de encantamientos · Faro | 32 · 30 · 35 · 85 | 10 · 10 · 15 · 30 |
+| Fundar un pueblo · Mecánica básica · Ferrocarril | 10 · 16 · 50 | 5 · 6 · 15 |
+| Armaduras de escamas · Espadas de hueso de dragón | 80 · 82 | 30 · 20 |
 
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):

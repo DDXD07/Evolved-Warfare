@@ -90,6 +90,7 @@ public class EvolvedWarfare implements ModInitializer {
 		com.evolvedwarfare.health.HealthLoot.register();
 		com.evolvedwarfare.health.Stamina.register();
 		com.evolvedwarfare.skill.Survivor.register();
+		com.evolvedwarfare.skill.Engrams.register();
 		com.evolvedwarfare.food.FoodItems.register();
 		com.evolvedwarfare.legendary.Legendaries.register();
 		com.evolvedwarfare.difficulty.Difficulty.register();

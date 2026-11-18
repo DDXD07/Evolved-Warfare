@@ -3,6 +3,7 @@ package com.evolvedwarfare.gametest;
 import com.evolvedwarfare.registry.ModItems;
 import com.evolvedwarfare.research.ResearchState;
 import com.evolvedwarfare.research.Tech;
+import com.evolvedwarfare.skill.Engrams;
 import com.evolvedwarfare.skill.Perk;
 import com.evolvedwarfare.skill.Skill;
 import com.evolvedwarfare.skill.SkillData;
@@ -109,35 +110,41 @@ public class SkillGameTests implements FabricGameTest {
 		});
 	}
 
-	/** Subir mucho una habilidad sube el personaje y da puntos; la ventaja de forja permite fabricar. */
+	/** Subir mucho una habilidad sube de nivel y da puntos de engrama; el engrama de las dagas deja fabricarlas (fase 113). */
 	@GameTest(templateName = EMPTY_STRUCTURE)
 	public void levelsGivePointsAndUnlockCrafting(TestContext ctx) {
 		ServerPlayerEntity player = ctx.createMockCreativeServerPlayerInWorld();
 		player.changeGameMode(GameMode.SURVIVAL);
 		ItemStack dagger = new ItemStack(ModItems.weapon(WeaponType.DAGGER, "iron"));
 		SkillData data = Skills.get(ctx.getWorld().getServer(), player.getUuid());
-		int points = data.points;
-		boolean before = Skills.canCraft(player, dagger);
+		int points = data.engramPoints;
 		Skills.gain(player, Skill.AXES, 3000.0F);
-		Skills.Unlock result = Skills.unlock(player, Perk.DAGGER_SMITH);
-		boolean after = Skills.canCraft(player, dagger);
-		LOG.info("[EW-GAMETEST] subir: hachas {}, nivel {}, puntos {} -> {}; daga antes={}, después={} ({})", data.level(Skill.AXES), data.level,
-				points, data.points, before, after, result);
-		if (data.level(Skill.AXES) < 20 || data.level < 3) {
+		int fromSkills = data.level;
+		Skills.survivorXp(player, 2000.0F);
+		boolean before, after;
+		Engrams.Learn result;
+		Engrams.testEnforce = true;
+		try {
+			before = Skills.canCraft(player, dagger);
+			result = Engrams.learn(player, "dagger");
+			after = Skills.canCraft(player, dagger);
+		} finally {
+			Engrams.testEnforce = false;
+		}
+		LOG.info("[EW-GAMETEST] subir: hachas {}, nivel {}, puntos de engrama {} -> {}; daga antes={}, después={} ({})", data.level(Skill.AXES),
+				data.level, points, data.engramPoints, before, after, result);
+		if (data.level(Skill.AXES) < 20 || fromSkills < 3 || data.level < 12) {
 			throw new GameTestException("No sube: hachas " + data.level(Skill.AXES) + ", nivel " + data.level);
 		}
-		if (before || !after || result != Skills.Unlock.OK) {
-			throw new GameTestException("La forja de dagas no desbloquea las dagas: antes=" + before + ", después=" + after + ", " + result);
-		}
-		if (Skills.unlock(player, Perk.WHIRLWIND) != Skills.Unlock.LEVEL) {
-			throw new GameTestException("Se puede coger una ventaja sin el nivel");
+		if (before || !after || result != Engrams.Learn.OK) {
+			throw new GameTestException("El engrama de las dagas no desbloquea las dagas: antes=" + before + ", después=" + after + ", " + result);
 		}
 		ctx.complete();
 	}
 
-	/** Con "Maestría con hojas" al máximo, el mismo golpe hace bastante más (+50 %). */
+	/** Las ventajas de combate ya no existen (fase 113): aunque se tuvieran, no suman daño. */
 	@GameTest(templateName = EMPTY_STRUCTURE)
-	public void masteryAddsDamage(TestContext ctx) {
+	public void combatPerksAreGone(TestContext ctx) {
 		floor(ctx);
 		ServerPlayerEntity player = ctx.createMockCreativeServerPlayerInWorld();
 		player.setStackInHand(Hand.MAIN_HAND, new ItemStack(Items.IRON_SWORD));
@@ -151,9 +158,9 @@ public class SkillGameTests implements FabricGameTest {
 		Skills.grant(player, Perk.BLADE_MASTERY, 5);
 		zombie.damage(player.getDamageSources().playerAttack(player), 6.0F);
 		float b = start - zombie.getHealth();
-		LOG.info("[EW-GAMETEST] maestría: sin ventaja {} de daño, con ella {}", a, b);
-		if (b < a * 1.35F) {
-			throw new GameTestException("La maestría no suma daño: " + a + " -> " + b);
+		LOG.info("[EW-GAMETEST] sin ventajas de combate: {} y {} de daño, rango {}", a, b, Skills.rank(player, Perk.BLADE_MASTERY));
+		if (Math.abs(b - a) > 0.01F || Skills.rank(player, Perk.BLADE_MASTERY) != 0) {
+			throw new GameTestException("La maestría sigue sumando daño: " + a + " -> " + b);
 		}
 		if (SkillEffects.weaponSkill(new ItemStack(ModItems.weapon(WeaponType.HALBERD, "iron"))) != Skill.POLEARMS) {
 			throw new GameTestException("La alabarda no cuenta como asta");
@@ -172,6 +179,7 @@ public class SkillGameTests implements FabricGameTest {
 		entry.done.add(Tech.DRILL);
 		SkillData data = Skills.get(ctx.getWorld().getServer(), player.getUuid());
 		data.migrated = false;
+		data.engramStart = false;
 		int points = data.points;
 		Skills.migrate(player);
 		LOG.info("[EW-GAMETEST] migración: dagas {}, lanzas {}, jabalinas {}, instrucción {}, puntos {} -> {}", data.rank(Perk.DAGGER_SMITH),
