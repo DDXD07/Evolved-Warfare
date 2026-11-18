@@ -37,7 +37,7 @@ public class EngramScreen extends Screen {
 	/** La pestaña de atributos (fase 114) en vez de la de engramas. */
 	private static boolean attributesTab;
 	/** Donde empiezan las categorías (debajo de las dos pestañas). */
-	private static final int CATS_TOP = TOP + 34;
+	private static final int CATS_TOP = 44 + 34;
 	private static final int TILE = 26, GAP = 4, TABS_W = 104, SKILLS_W = 132, TOP = 44;
 
 	private TextFieldWidget search;
