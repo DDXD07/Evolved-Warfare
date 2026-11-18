@@ -249,7 +249,8 @@ public final class Backpacks {
 		if (speed == null) {
 			return;
 		}
-		double slow = -SLOW_PER_HEAVY * heavy;
+		// el atributo de carga (fase 114) quita parte de lo que frena
+		double slow = -SLOW_PER_HEAVY * heavy * com.evolvedwarfare.skill.SurvivorAttributes.weight(player);
 		EntityAttributeModifier old = speed.getModifier(WEIGHT);
 		if (heavy == 0) {
 			if (old != null) {

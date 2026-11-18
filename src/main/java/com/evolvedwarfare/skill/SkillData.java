@@ -41,6 +41,12 @@ public final class SkillData {
 	public final Set<String> engrams = new LinkedHashSet<>();
 	/** Ya se le dieron los puntos del principio y lo que sabía forjar pasó a engramas. */
 	public boolean engramStart;
+	/** Los puntos puestos en cada atributo (fase 114). */
+	public final int[] attributes = new int[SurvivorAttribute.values().length];
+
+	public int attribute(SurvivorAttribute a) {
+		return attributes[a.ordinal()];
+	}
 
 	public int level(Skill skill) {
 		return levels[skill.ordinal()];
@@ -123,6 +129,13 @@ public final class SkillData {
 		nbt.putLong("LastDawn", lastDawn);
 		nbt.put("Engrams", strings(engrams));
 		nbt.putBoolean("EngramStart", engramStart);
+		NbtCompound attrs = new NbtCompound();
+		for (SurvivorAttribute a : SurvivorAttribute.values()) {
+			if (attributes[a.ordinal()] > 0) {
+				attrs.putInt(a.id(), attributes[a.ordinal()]);
+			}
+		}
+		nbt.put("Attributes", attrs);
 		NbtCompound skills = new NbtCompound();
 		for (Skill skill : Skill.values()) {
 			NbtCompound s = new NbtCompound();
@@ -169,6 +182,10 @@ public final class SkillData {
 		data.survivor = nbt.getBoolean("Survivor");
 		data.lastDawn = nbt.contains("LastDawn") ? nbt.getLong("LastDawn") : -1L;
 		data.engramStart = nbt.getBoolean("EngramStart");
+		NbtCompound attrs = nbt.getCompound("Attributes");
+		for (SurvivorAttribute a : SurvivorAttribute.values()) {
+			data.attributes[a.ordinal()] = Math.max(0, attrs.getInt(a.id()));
+		}
 		for (NbtElement e : nbt.getList("Engrams", NbtElement.STRING_TYPE)) {
 			data.engrams.add(e.asString());
 		}

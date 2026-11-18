@@ -120,7 +120,7 @@ public final class ClientClimate {
 		// encima de los corazones (y de la armadura, si la lleva)
 		TextRenderer font = client.textRenderer;
 		float hearts = player.getMaxHealth() + player.getAbsorptionAmount();
-		int rows = MathHelper.ceil(hearts / 2.0F / 10.0F);
+		int rows = com.evolvedwarfare.client.health.ClientHealthBar.active(player) ? 1 : MathHelper.ceil(hearts / 2.0F / 10.0F);
 		int spacing = Math.max(10 - (rows - 2), 3);
 		int top = h - 39 - (rows - 1) * spacing;
 		if (player.getArmor() > 0) {

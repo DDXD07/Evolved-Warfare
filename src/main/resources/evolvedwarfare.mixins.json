@@ -12,6 +12,7 @@
 		"StonecutterEngramMixin",
 		"ItemStackEngramMixin",
 		"PlayerEngramMixin",
+		"PlayerMetabolismMixin",
 		"ItemStackRotMixin",
 		"ItemRotBarMixin",
 		"PlayerEatRotMixin",

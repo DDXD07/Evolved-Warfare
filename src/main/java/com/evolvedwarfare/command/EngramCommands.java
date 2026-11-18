@@ -26,6 +26,8 @@ import net.minecraft.text.Text;
  * /evolvedwarfare engrams &lt;jugadores&gt; reset                 olvidarlos todos y devolver los puntos
  * /evolvedwarfare engrams &lt;jugadores&gt; points &lt;n&gt;            dar (o quitar) puntos de engrama
  * /evolvedwarfare engrams &lt;jugadores&gt; xp &lt;n&gt;                dar experiencia de superviviente
+ * /evolvedwarfare engrams &lt;jugadores&gt; attributes reset      devolver los puntos de atributo
+ * /evolvedwarfare engrams &lt;jugadores&gt; attributes points &lt;n&gt; dar (o quitar) puntos de atributo
  * </pre>
  */
 final class EngramCommands {
@@ -46,6 +48,11 @@ final class EngramCommands {
 								.then(CommandManager.literal("points")
 										.then(CommandManager.argument("amount", IntegerArgumentType.integer(-5000, 5000))
 												.executes(EngramCommands::points)))
+								.then(CommandManager.literal("attributes")
+										.then(CommandManager.literal("reset").executes(EngramCommands::attributesReset))
+										.then(CommandManager.literal("points")
+												.then(CommandManager.argument("amount", IntegerArgumentType.integer(-1000, 1000))
+														.executes(EngramCommands::attributePoints))))
 								.then(CommandManager.literal("xp")
 										.then(CommandManager.argument("amount", FloatArgumentType.floatArg(0.0F, 1_000_000.0F))
 												.executes(EngramCommands::xp))))));
@@ -98,6 +105,29 @@ final class EngramCommands {
 			Skills.survivorXp(player, amount);
 		}
 		context.getSource().sendFeedback(() -> Text.literal("+" + amount + " XP → " + players.size()), true);
+		return players.size();
+	}
+
+	private static int attributesReset(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+		Collection<ServerPlayerEntity> players = EntityArgumentType.getPlayers(context, "targets");
+		for (ServerPlayerEntity player : players) {
+			com.evolvedwarfare.skill.SurvivorAttributes.reset(player);
+		}
+		context.getSource().sendFeedback(() -> Text.translatable("commands.evolvedwarfare.attributes.reset", players.size()), true);
+		return players.size();
+	}
+
+	private static int attributePoints(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+		Collection<ServerPlayerEntity> players = EntityArgumentType.getPlayers(context, "targets");
+		int amount = IntegerArgumentType.getInteger(context, "amount");
+		for (ServerPlayerEntity player : players) {
+			SkillState state = SkillState.get(player.getServer());
+			SkillData data = state.of(player.getUuid());
+			data.attributePoints = Math.max(0, data.attributePoints + amount);
+			state.markDirty();
+			Skills.sync(player, false);
+		}
+		context.getSource().sendFeedback(() -> Text.literal(amount + " → " + players.size()), true);
 		return players.size();
 	}
 }

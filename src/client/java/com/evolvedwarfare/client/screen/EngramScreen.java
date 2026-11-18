@@ -6,6 +6,7 @@ import com.evolvedwarfare.skill.Engram;
 import com.evolvedwarfare.skill.Engrams;
 import com.evolvedwarfare.skill.Skill;
 import com.evolvedwarfare.skill.SkillData;
+import com.evolvedwarfare.skill.SurvivorAttribute;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -33,6 +34,10 @@ import org.jetbrains.annotations.Nullable;
  */
 public class EngramScreen extends Screen {
 	private static String category = "";
+	/** La pestaña de atributos (fase 114) en vez de la de engramas. */
+	private static boolean attributesTab;
+	/** Donde empiezan las categorías (debajo de las dos pestañas). */
+	private static final int CATS_TOP = TOP + 34;
 	private static final int TILE = 26, GAP = 4, TABS_W = 104, SKILLS_W = 132, TOP = 44;
 
 	private TextFieldWidget search;
@@ -125,16 +130,27 @@ public class EngramScreen extends Screen {
 		hovered = null;
 		header(ctx, data);
 		tabs(ctx, mouseX, mouseY);
-		grid(ctx, data, mouseX, mouseY);
+		if (search != null) {
+			search.visible = !attributesTab;
+		}
+		if (attributesTab) {
+			attributes(ctx, data, mouseX, mouseY);
+		} else {
+			grid(ctx, data, mouseX, mouseY);
+		}
 		if (showSkills()) {
 			skills(ctx, data);
 		}
 		if (!Engrams.clientRequired) {
 			ctx.drawCenteredTextWithShadow(textRenderer, Text.translatable("screen.evolvedwarfare.engrams.off"), width / 2, height - 14, 0xFFE0B040);
 		}
-		if (hovered != null) {
+		if (hovered != null && !attributesTab) {
 			ctx.drawTooltip(textRenderer, tooltip(hovered, data), mouseX, mouseY);
 		}
+		if (attributesTab && attributeTip != null) {
+			ctx.drawTooltip(textRenderer, attributeTip, mouseX, mouseY);
+		}
+		attributeTip = null;
 	}
 
 	@Override
@@ -159,6 +175,10 @@ public class EngramScreen extends Screen {
 		int px = x + bw + 16;
 		Text points = Text.translatable("screen.evolvedwarfare.engrams.points", data.engramPoints);
 		ctx.drawTextWithShadow(textRenderer, points, px, 8, data.engramPoints > 0 ? 0xFFFFD75E : 0xFF9AA0AA);
+		Text attrPoints = Text.translatable("screen.evolvedwarfare.attributes.points", data.attributePoints);
+		int ax = px + Math.max(textRenderer.getWidth(points), textRenderer.getWidth(Text.translatable("screen.evolvedwarfare.engrams.count",
+				data.engrams.size(), Engrams.all().size()))) + 16;
+		ctx.drawTextWithShadow(textRenderer, attrPoints, ax, 8, data.attributePoints > 0 ? 0xFFFF9FA0 : 0xFF9AA0AA);
 		Text count = Text.translatable("screen.evolvedwarfare.engrams.count", data.engrams.size(), Engrams.all().size());
 		ctx.drawTextWithShadow(textRenderer, count, px, 19, 0xFF8A949E);
 		ctx.fill(10, TOP - 6, width - 10, TOP - 5, 0xFF2A6470);
@@ -172,7 +192,23 @@ public class EngramScreen extends Screen {
 	}
 
 	private void tabs(DrawContext ctx, int mouseX, int mouseY) {
-		int y = TOP;
+		for (int m = 0; m < 2; m++) {
+			int my = TOP + m * 15;
+			boolean sel = attributesTab == (m == 1);
+			boolean over = mouseX >= 10 && mouseX < 10 + TABS_W && mouseY >= my && mouseY < my + 14;
+			ctx.fill(10, my, 10 + TABS_W, my + 13, sel ? 0xFF2A5A2A : over ? 0x80306030 : 0x60182028);
+			Text name = Text.translatable(m == 0 ? "screen.evolvedwarfare.engrams.title" : "screen.evolvedwarfare.attributes.title")
+					.formatted(Formatting.BOLD);
+			ctx.drawTextWithShadow(textRenderer, name, 16, my + 3, sel ? 0xFFFFFFFF : 0xFFB0BAC4);
+			if (m == 1 && ClientSkills.data.attributePoints > 0) {
+				String n = String.valueOf(ClientSkills.data.attributePoints);
+				ctx.drawTextWithShadow(textRenderer, n, 10 + TABS_W - 4 - textRenderer.getWidth(n), my + 3, 0xFFFF9FA0);
+			}
+		}
+		if (attributesTab) {
+			return;
+		}
+		int y = CATS_TOP;
 		for (String cat : tabList()) {
 			boolean sel = cat.equals(category);
 			boolean over = mouseX >= 10 && mouseX < 10 + TABS_W && mouseY >= y && mouseY < y + 14;
@@ -267,6 +303,73 @@ public class EngramScreen extends Screen {
 		}
 	}
 
+	@Nullable
+	private SurvivorAttribute hoveredAttribute;
+
+	/** La pestaña de atributos: cada uno con sus puntos, lo que da y su botón de "+" (mayúsculas: de 5 en 5). */
+	private void attributes(DrawContext ctx, SkillData data, int mouseX, int mouseY) {
+		hoveredAttribute = null;
+		int left = gridLeft();
+		int right = gridRight();
+		int y = TOP;
+		int rowH = Math.max(22, Math.min(30, (height - TOP - 24) / SurvivorAttribute.values().length));
+		for (SurvivorAttribute a : SurvivorAttribute.values()) {
+			int p = data.attribute(a);
+			boolean over = mouseX >= left && mouseX < right && mouseY >= y && mouseY < y + rowH - 2;
+			ctx.fill(left, y, right, y + rowH - 2, over ? 0x80283440 : 0x60182028);
+			ctx.fill(left, y, left + 2, y + rowH - 2, 0xFF000000 | a.color);
+			ItemStack icon = Registries.ITEM.containsId(a.icon) ? new ItemStack(Registries.ITEM.get(a.icon)) : new ItemStack(Items.BOOK);
+			ctx.drawItem(icon, left + 6, y + (rowH - 2 - 16) / 2);
+			ctx.drawTextWithShadow(textRenderer, Text.translatable(a.translationKey()).formatted(Formatting.BOLD), left + 28, y + 3, 0xFF000000 | a.color);
+			ctx.drawTextWithShadow(textRenderer, effect(a, p), left + 28, y + 13, 0xFFD0D6DC);
+			// el botón
+			int bx = right - 20, by = y + (rowH - 2 - 14) / 2;
+			boolean can = data.attributePoints > 0;
+			boolean overBtn = over && can;
+			ctx.fill(bx - 1, by - 1, bx + 15, by + 15, can ? (overBtn ? 0xFFFFFFFF : 0xFF6FD06F) : 0xFF3A3E44);
+			ctx.fill(bx, by, bx + 14, by + 14, can ? 0xFF1F4A26 : 0xFF202428);
+			ctx.drawCenteredTextWithShadow(textRenderer, "+", bx + 7, by + 3, can ? 0xFFFFFFFF : 0xFF6A6E74);
+			String pts = String.valueOf(p);
+			ctx.drawTextWithShadow(textRenderer, pts, bx - 8 - textRenderer.getWidth(pts), y + (rowH - 2 - 8) / 2, p > 0 ? 0xFFFFFFFF : 0xFF6A747E);
+			if (over) {
+				hoveredAttribute = can ? a : null;
+				List<Text> tip = new ArrayList<>();
+				tip.add(Text.translatable(a.translationKey()).formatted(Formatting.BOLD));
+				tip.add(Text.translatable(a.translationKey() + ".desc").formatted(Formatting.GRAY));
+				tip.add(Text.translatable("screen.evolvedwarfare.attributes.next", effect(a, p + 1)).formatted(Formatting.DARK_AQUA));
+				if (a.cap > 0.0 && a.value(p + 1) >= a.cap) {
+					tip.add(Text.translatable("screen.evolvedwarfare.attributes.cap").formatted(Formatting.GOLD));
+				}
+				tip.add(Text.translatable(can ? "screen.evolvedwarfare.attributes.click" : "screen.evolvedwarfare.attributes.no_points")
+						.formatted(can ? Formatting.GREEN : Formatting.RED));
+				attributeTip = tip;
+			}
+			y += rowH;
+		}
+		if (data.attributePoints <= 0) {
+			ctx.drawTextWithShadow(textRenderer, Text.translatable("screen.evolvedwarfare.attributes.hint").formatted(Formatting.DARK_GRAY), left, y + 4,
+					0xFF8A949E);
+		}
+	}
+
+	@Nullable
+	private List<Text> attributeTip;
+
+	private static String num(double v) {
+		double r = Math.round(v * 10.0) / 10.0;
+		return r == Math.rint(r) ? String.valueOf((long) r) : String.format(Locale.ROOT, "%.1f", r).replace('.', ',');
+	}
+
+	/** Lo que dan ahora esos puntos, en palabras. */
+	private static Text effect(SurvivorAttribute a, int points) {
+		double v = a.value(points);
+		return switch (a) {
+			case HEALTH -> Text.translatable("screen.evolvedwarfare.attributes.effect.health", num(v));
+			case OXYGEN -> Text.translatable("screen.evolvedwarfare.attributes.effect.oxygen", num(v * 100.0 / (v + 1.0)));
+			default -> Text.translatable("screen.evolvedwarfare.attributes.effect." + a.id(), num(v * 100.0));
+		};
+	}
+
 	private void skills(DrawContext ctx, SkillData data) {
 		int x = width - 10 - SKILLS_W;
 		int y = TOP;
@@ -346,7 +449,27 @@ public class EngramScreen extends Screen {
 		if (super.mouseClicked(mouseX, mouseY, button)) {
 			return true;
 		}
-		int y = TOP;
+		for (int m = 0; m < 2; m++) {
+			int my = TOP + m * 15;
+			if (mouseX >= 10 && mouseX < 10 + TABS_W && mouseY >= my && mouseY < my + 14) {
+				attributesTab = m == 1;
+				scroll = 0;
+				click();
+				return true;
+			}
+		}
+		if (attributesTab) {
+			if (hoveredAttribute != null && button == 0) {
+				int times = hasShiftDown() ? Math.min(5, ClientSkills.data.attributePoints) : 1;
+				for (int i = 0; i < Math.max(1, times); i++) {
+					ClientPlayNetworking.send(new EngramPayloads.SpendAttribute(hoveredAttribute.id()));
+				}
+				click();
+				return true;
+			}
+			return false;
+		}
+		int y = CATS_TOP;
 		for (String cat : tabList()) {
 			if (mouseX >= 10 && mouseX < 10 + TABS_W && mouseY >= y && mouseY < y + 14) {
 				category = cat;

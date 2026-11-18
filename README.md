@@ -2866,6 +2866,32 @@ unos 217 puntos y los engramas de nivel 30 o menos cuestan 556.
 | Fundar un pueblo · Mecánica básica · Ferrocarril | 10 · 16 · 50 | 5 · 6 · 15 |
 | Armaduras de escamas · Espadas de hueso de dragón | 80 · 82 | 30 · 20 |
 
+## Fase 114 — Atributos del superviviente y barra de vida (como en ARK), parte 3
+
+Cada nivel de superviviente da **1 punto de atributo** (99 hasta el 100) que se reparte en la nueva pestaña
+**Atributos** de la pantalla **K** (clic: +1; mayúsculas + clic: +5). Como pediste, son **aumentos pequeños**: hacen
+falta muchos puntos para notarse mucho.
+
+| Atributo | Cada punto | Máximo |
+|---|---|---|
+| **Vida** | +0,2 corazones de vida máxima | — |
+| **Aguante** | −0,5 % de gasto y +0,5 % de recuperación | 50 % |
+| **Daño cuerpo a cuerpo** | +0,5 % de daño con las armas cuerpo a cuerpo | — |
+| **Velocidad** | +0,2 % al andar y correr | 25 % |
+| **Fortaleza** | −0,5 % de daño de sangrado, veneno, infección, parásitos, frío, calor, sed, hambre, fuego y wither | 50 % |
+| **Metabolismo** | El hambre y la sed bajan un 0,5 % más despacio | 50 % |
+| **Carga** | La carga pesada de la mochila frena un 0,8 % menos | 80 % |
+| **Oxígeno** | +0,03 de oxígeno (33 puntos ≈ Respiración I) | — |
+
+- Al pasar el ratón por un atributo se ve qué da y **cómo queda con un punto más**.
+- Los puntos de vida suben también la vida de ese momento. Al morir no se pierde nada.
+- Los corazones de los cristales siguen igual (hasta 15); los de los atributos van aparte, **por encima de los 15**.
+- **Barra de vida**: con **más de 15 corazones** de vida máxima, los corazones se juntan en **una barra** del ancho de una
+  fila: roja (verde envenenado, negra con wither, azul helado), lo absorbido en dorado al final, un rastro rosa de lo que
+  acabas de perder, marcas cada 5 corazones, parpadea con menos de un cuarto y la vida en números encima ("34/40 +4"). La
+  armadura y el termómetro se quedan justo encima, como con una sola fila de corazones.
+- **Comandos**: `/evolvedwarfare engrams <jugadores> attributes reset` (devuelve los puntos) y `attributes points <n>`.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

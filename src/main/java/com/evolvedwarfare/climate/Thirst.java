@@ -234,7 +234,7 @@ public final class Thirst {
 		if (!(player instanceof ServerPlayerEntity serverPlayer) || !enabled() || amount <= 0.0F || Climate.exempt(serverPlayer)) {
 			return;
 		}
-		float e = player.getAttachedOrCreate(EXHAUSTION) + amount;
+		float e = player.getAttachedOrCreate(EXHAUSTION) + amount * com.evolvedwarfare.skill.SurvivorAttributes.metabolism(player);
 		if (e >= EXHAUSTION_PER_POINT) {
 			e -= EXHAUSTION_PER_POINT;
 			add(player, -1.0F);
@@ -259,7 +259,7 @@ public final class Thirst {
 		if (world.getDifficulty() == Difficulty.PEACEFUL) {
 			level = Math.min(MAX, level + 0.5F);
 		} else {
-			level -= drain(air, player.isSprinting(), Climate.body(player));
+			level -= drain(air, player.isSprinting(), Climate.body(player)) * com.evolvedwarfare.skill.SurvivorAttributes.metabolism(player);
 		}
 		level = MathHelper.clamp(level, 0.0F, MAX);
 		player.setAttached(LEVEL, level);

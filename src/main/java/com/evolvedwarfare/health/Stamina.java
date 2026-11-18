@@ -91,7 +91,7 @@ public final class Stamina {
 			return true;
 		}
 		State s = state(player);
-		float cost = amount * (float) EwConfig.get().staminaCost;
+		float cost = amount * (float) EwConfig.get().staminaCost * com.evolvedwarfare.skill.SurvivorAttributes.staminaCost(player);
 		boolean enough = s.value >= cost;
 		s.value = Math.max(0.0F, s.value - cost);
 		s.lastSpend = now;
@@ -220,6 +220,8 @@ public final class Stamina {
 			}
 			rate *= 1.0F - 0.35F * Math.min(20, player.getArmor()) / 20.0F;
 			rate *= (float) EwConfig.get().staminaRegen;
+			// el atributo de aguante (fase 114)
+			rate *= com.evolvedwarfare.skill.SurvivorAttributes.staminaRegen(player);
 			s.value = Math.min(MAX, s.value + rate);
 		}
 		if (s.exhausted && s.value >= RECOVER) {

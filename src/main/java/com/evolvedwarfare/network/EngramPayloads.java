@@ -37,4 +37,17 @@ public final class EngramPayloads {
 			return ID;
 		}
 	}
+
+	/** Cliente → servidor: poner un punto en un atributo (fase 114). */
+	public record SpendAttribute(String attribute) implements CustomPayload {
+		public static final CustomPayload.Id<SpendAttribute> ID = new CustomPayload.Id<>(EvolvedWarfare.id("attribute_spend"));
+		public static final PacketCodec<RegistryByteBuf, SpendAttribute> CODEC = PacketCodec.tuple(
+				PacketCodecs.STRING, SpendAttribute::attribute,
+				SpendAttribute::new);
+
+		@Override
+		public Id<? extends CustomPayload> getId() {
+			return ID;
+		}
+	}
 }

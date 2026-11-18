@@ -64,6 +64,10 @@ public abstract class LivingEntityDamageMixin {
 		out = com.evolvedwarfare.skill.Engrams.modifyMelee(source, out);
 		// las escamas de dragón (fase 102)
 		out = com.evolvedwarfare.legendary.DragonGear.modifyIncoming(self, source, out);
+		// la fortaleza del superviviente (fase 114)
+		if (self instanceof net.minecraft.entity.player.PlayerEntity survivor) {
+			out = com.evolvedwarfare.skill.SurvivorAttributes.modifyIncoming(survivor, source, out);
+		}
 		evolvedwarfare$amount = out;
 		return out;
 	}
