@@ -43,7 +43,7 @@ FREE = {
     "items": mc("crafting_table", "furnace", "stick", "torch", "iron_ingot", "gold_ingot", "copper_ingot", "netherite_ingot",
                 "iron_nugget", "gold_nugget", "diamond", "emerald", "redstone", "lapis_lazuli", "coal", "bone_meal", "wheat",
                 "raw_iron", "raw_gold", "raw_copper", "slime_ball", "dried_kelp", "melon_slice", "honey_bottle", "quartz",
-                "amethyst_shard", "netherite_scrap", "glass", "charcoal", "sugar", "string", "leather", "white_wool")
+                "amethyst_shard", "netherite_scrap", "glass", "charcoal", "sugar", "string", "leather", "white_wool", "gunpowder")
     + ew("guide_book", "charred_planks", "cabbage_seeds", "corn_seeds", "tomato_seeds"),
     "tags": ["minecraft:planks"],
     "patterns": [r"^%s:hot_.*_ingot$" % NS],
@@ -150,6 +150,7 @@ engram("special_arrows", "weapons", 35, 5, "Flechas especiales", "Special arrows
        items=mc("spectral_arrow", "tipped_arrow"), requires=["bow"])
 engram("ammo_pouch", "weapons", 18, 4, "Bolsa de munición", "Ammo pouch", NS + ":ammo_pouch", items=ew("ammo_pouch"))
 engram("glory_pouch", "weapons", 30, 5, "Bolsa de gloria", "Glory pouch", NS + ":glory_pouch", items=ew("glory_pouch"))
+engram("mace_vanilla", "weapons", 45, 10, "Maza de viento", "Mace", "minecraft:mace", items=mc("mace", "wind_charge"))
 engram("tnt", "weapons", 30, 8, "TNT", "TNT", "minecraft:tnt", items=mc("tnt", "tnt_minecart"))
 
 # ---------------------------------------------------------------------------------------------- armadura
@@ -167,6 +168,8 @@ engram("class_leather", "armor", 8, 5, "Armaduras de clase de cuero", "Leather c
 engram("class_copper", "armor", 12, 6, "Armaduras de clase de cobre", "Copper class armors",
        NS + ":warrior_copper_chestplate", patterns=[r"^%s:(archer|musketeer|thief|warrior)_copper_.*" % NS],
        requires=["class_leather"])
+engram("chainmail", "armor", 14, 6, "Cota de malla", "Chainmail", "minecraft:chainmail_chestplate",
+       items=mc("chainmail_helmet", "chainmail_chestplate", "chainmail_leggings", "chainmail_boots"), requires=["leather_armor"])
 engram("iron_armor", "armor", 18, 10, "Armadura de hierro", "Iron armor", "minecraft:iron_chestplate",
        items=mc("iron_helmet", "iron_chestplate", "iron_leggings", "iron_boots", "iron_horse_armor"),
        requires=["leather_armor"])
@@ -238,7 +241,7 @@ engram("wood_building", "building", 2, 2, "Construcción de madera", "Wooden bui
 engram("signs", "building", 6, 2, "Carteles", "Signs", "minecraft:oak_sign",
        patterns=[r"^minecraft:%s_(sign|hanging_sign)$" % W])
 engram("chest", "utility", 2, 2, "Cofre", "Chest", "minecraft:chest", items=mc("chest"))
-engram("bed", "utility", 4, 3, "Cama", "Bed", "minecraft:red_bed", patterns=[r"^minecraft:%s_bed$" % C])
+engram("bed", "utility", 5, 3, "Cama", "Bed", "minecraft:red_bed", patterns=[r"^minecraft:%s_bed$" % C])
 engram("stone_building", "building", 4, 3, "Piedra labrada", "Cut stone", "minecraft:stone_bricks",
        patterns=[r"^minecraft:(cobblestone|mossy_cobblestone|stone|smooth_stone|stone_brick|mossy_stone_brick|andesite|"
                  r"diorite|granite|polished_andesite|polished_diorite|polished_granite|cobbled_deepslate|"
@@ -395,7 +398,7 @@ engram("banner", "military", 60, 10, "Estandarte de guerra", "War banner", "mine
        requires=["inspire", "veterans"])
 engram("battering_ram", "military", 20, 6, "Ariete", "Battering ram", NS + ":battering_ram", perk="RAM_SMITH")
 engram("fortification", "military", 30, 7, "Fortificaciones", "Fortifications", NS + ":portcullis",
-       perk="FORTIFICATION", items=ew("portcullis_winch"))
+       perk="FORTIFICATION", items=ew("portcullis", "portcullis_winch"))
 engram("gunner", "military", 32, 6, "Artillería", "Gunnery", NS + ":catapult", perk="GUNNER", rank=3,
        requires=["battering_ram"])
 engram("torsion", "military", 35, 9, "Catapulta y balista", "Catapult and ballista", NS + ":ballista", perk="TORSION",

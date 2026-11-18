@@ -2907,6 +2907,46 @@ falta muchos puntos para notarse mucho.
   que ya piden su engrama; el molino, el aserradero y el martinete solo dan materiales (libres).
 - Los engramas de "Otros" que no desbloquean nada no salen en la pantalla K.
 
+## Fase 116 — Equilibrado del nivel y los engramas (como en ARK), parte 5
+
+- **Ninguna receta pide algo de un engrama de más nivel** sin pedirlo antes: una prueba nueva recorre todas las recetas
+  del juego y del mod y avisa si un engrama necesita de ingrediente algo que se desbloquea más tarde (aprenderlo no
+  serviría de nada hasta entonces). Encontró 33 casos; arreglados:
+  - **libres** también el **cuero**, la **lana blanca** y la **pólvora** (son de animales y monstruos);
+  - las **botellas de cristal**, con la **cantimplora** (nivel 2: hacen falta para beber);
+  - **ballesta** al nivel 20 (pide la redstone básica, por el gancho de cuerda); el **cofre trampa**, con la redstone;
+  - **atril** al 30 (pide las estanterías); **pavés** al 31 (pide el escudo reforzado); **manzana y zanahoria de oro**
+    al 28 (antes que el botiquín); **carteles** al 6 (los colgantes llevan cadenas); **cama** al 5 (las de colores llevan
+    tinte); **herramientas de obra** al 18 (el escáner lleva brújula);
+  - la **carga de fuego**, con la destilería; el **bloque de magma**, con el Nether; el **reloj de torre**, con la
+    transmisión; el **rastrillo**, con las fortificaciones.
+- **Nuevos engramas**: **cota de malla** (nivel 14, 6 puntos; antes iba a "Otras armaduras" al 30) y **maza de viento**
+  (la maza y las cargas de viento de la 1.21; nivel 45, 10 puntos; antes, al 12).
+- **Fabricar por primera vez un bloque** da **0,5** de experiencia (lo demás, 4 como antes): con la construcción de
+  madera se podían sacar unas 100 escaleras, losas y vallas distintas y subir 9 niveles de golpe.
+- **El equipo que no se fabrica** (las herramientas de acero, que se forjan) pide su engrama para usarlo, pero los
+  **materiales que se encuentran** (fragmentos de prismarina, ladrillos del Nether...) ya no.
+- Ahora hay **162 engramas** que cuestan **1.058 puntos**; hasta el 100 se ganan 1.064.
+
+**El ritmo (estimado, aún sin jugar)** — `tools/ew_progression.py` (lo que se gana por hora en cada etapa: unas 450 las
+dos primeras horas, 700 hasta las 10, 1.000 hasta las 30 y 1.400 después):
+
+| Horas de juego | Nivel (aprox.) | Puntos de engrama |
+|---|---|---|
+| 0,5 | 6 | 40 |
+| 1 | 9 | 58 |
+| 2 | 13 | 86 |
+| 5 | 25 | 176 |
+| 10 | 36 | 271 |
+| 20 | 55 | 464 |
+| 40 | 79 | 758 |
+| 60 | 98 | 1033 |
+| 80 | 100 | 1064 |
+
+Unas 2 horas para las herramientas de hierro (nivel 14), unas 12 para las de diamante (42), unas 32 para la netherita
+(70) y unas 60 para el 100. Si va lento o rápido, la opción **"Experiencia de superviviente"** lo multiplica todo menos
+las habilidades (que tienen la suya).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
