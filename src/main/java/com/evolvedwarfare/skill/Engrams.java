@@ -374,7 +374,11 @@ public final class Engrams {
 				continue;
 			}
 			Engram e = byItem.get(result.getItem());
-			int level = e == null ? 1 : e.level;
+			if (e == null) {
+				// lo libre con otra receta que pide algo con engrama: no pasa nada, se fabrica con la libre
+				continue;
+			}
+			int level = e.level;
 			for (net.minecraft.recipe.Ingredient ing : recipe.value().getIngredients()) {
 				if (ing.isEmpty()) {
 					continue;
@@ -383,7 +387,8 @@ public final class Engrams {
 				boolean free = false;
 				for (ItemStack opt : ing.getMatchingStacks()) {
 					Engram f = byItem.get(opt.getItem());
-					if (f == null) {
+					// los bloques se encuentran o se pican casi todos (lana, adoquín, prismarina, purpur...)
+					if (f == null || opt.getItem() instanceof BlockItem) {
 						free = true;
 						break;
 					}
@@ -391,12 +396,12 @@ public final class Engrams {
 						easiest = f;
 					}
 				}
-				if (free || easiest == null || easiest == e || easiest.level <= level || e != null && needs(e, easiest)) {
+				if (free || easiest == null || easiest == e || easiest.level <= level || needs(e, easiest)) {
 					continue;
 				}
-				String key = (e == null ? "-" : e.id) + ">" + easiest.id;
+				String key = e.id + ">" + easiest.id;
 				if (seen.add(key)) {
-					out.add((e == null ? "libre" : e.id + " (" + e.level + ")") + " pide " + easiest.id + " (" + easiest.level + ") por "
+					out.add(e.id + " (" + e.level + ") pide " + easiest.id + " (" + easiest.level + ") por "
 							+ Registries.ITEM.getId(result.getItem()).getPath());
 				}
 			}

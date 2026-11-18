@@ -32,6 +32,8 @@
       "minecraft:charcoal",
       "minecraft:sugar",
       "minecraft:string",
+      "minecraft:leather",
+      "minecraft:white_wool",
       "evolvedwarfare:guide_book",
       "evolvedwarfare:charred_planks",
       "evolvedwarfare:cabbage_seeds",
@@ -153,7 +155,8 @@
       "cost": 2,
       "icon": "evolvedwarfare:canteen",
       "items": [
-        "evolvedwarfare:canteen"
+        "evolvedwarfare:canteen",
+        "minecraft:glass_bottle"
       ]
     },
     {
@@ -275,7 +278,7 @@
     {
       "id": "builder_tools",
       "category": "tools",
-      "level": 16,
+      "level": 18,
       "cost": 6,
       "icon": "evolvedwarfare:building_hammer",
       "items": [
@@ -360,11 +363,14 @@
     {
       "id": "crossbow",
       "category": "weapons",
-      "level": 18,
+      "level": 20,
       "cost": 6,
       "icon": "minecraft:crossbow",
       "items": [
         "minecraft:crossbow"
+      ],
+      "requires": [
+        "redstone_basic"
       ]
     },
     {
@@ -412,14 +418,14 @@
     {
       "id": "pavise",
       "category": "weapons",
-      "level": 28,
+      "level": 31,
       "cost": 6,
       "icon": "evolvedwarfare:pavise",
       "items": [
         "evolvedwarfare:pavise"
       ],
       "requires": [
-        "shield"
+        "reinforced_shield"
       ]
     },
     {
@@ -878,7 +884,7 @@
     {
       "id": "golden_food",
       "category": "medicine",
-      "level": 40,
+      "level": 28,
       "cost": 8,
       "icon": "minecraft:golden_apple",
       "items": [
@@ -982,7 +988,7 @@
     {
       "id": "signs",
       "category": "building",
-      "level": 5,
+      "level": 6,
       "cost": 2,
       "icon": "minecraft:oak_sign",
       "patterns": [
@@ -996,8 +1002,7 @@
       "cost": 2,
       "icon": "minecraft:chest",
       "items": [
-        "minecraft:chest",
-        "minecraft:trapped_chest"
+        "minecraft:chest"
       ]
     },
     {
@@ -1069,7 +1074,6 @@
       "icon": "minecraft:glass_pane",
       "items": [
         "minecraft:glass_pane",
-        "minecraft:glass_bottle",
         "minecraft:tinted_glass"
       ],
       "patterns": [
@@ -1168,6 +1172,9 @@
       "level": 35,
       "cost": 6,
       "icon": "minecraft:nether_bricks",
+      "items": [
+        "minecraft:magma_block"
+      ],
       "patterns": [
         "^minecraft:.*(nether_brick|blackstone|quartz|basalt|nether_wart_block).*"
       ]
@@ -1256,12 +1263,15 @@
     {
       "id": "lectern",
       "category": "utility",
-      "level": 20,
+      "level": 30,
       "cost": 4,
       "icon": "minecraft:lectern",
       "items": [
         "minecraft:lectern",
         "minecraft:chiseled_bookshelf"
+      ],
+      "requires": [
+        "bookshelf"
       ]
     },
     {
@@ -1430,6 +1440,7 @@
         "minecraft:lever",
         "minecraft:repeater",
         "minecraft:tripwire_hook",
+        "minecraft:trapped_chest",
         "minecraft:redstone_lamp",
         "minecraft:note_block",
         "minecraft:target",
@@ -1581,7 +1592,8 @@
         "minecraft:brewing_stand",
         "minecraft:fermented_spider_eye",
         "minecraft:magma_cream",
-        "minecraft:blaze_powder"
+        "minecraft:blaze_powder",
+        "minecraft:fire_charge"
       ]
     },
     {
@@ -1691,7 +1703,8 @@
         "evolvedwarfare:iron_large_gear",
         "evolvedwarfare:steel_shaft",
         "evolvedwarfare:steel_small_gear",
-        "evolvedwarfare:steel_large_gear"
+        "evolvedwarfare:steel_large_gear",
+        "evolvedwarfare:tower_clock"
       ],
       "requires": [
         "mechanics"
@@ -1816,8 +1829,7 @@
         "evolvedwarfare:command_staff",
         "evolvedwarfare:recruitment_contract",
         "evolvedwarfare:white_flag",
-        "evolvedwarfare:ambassador_seal",
-        "evolvedwarfare:tower_clock"
+        "evolvedwarfare:ambassador_seal"
       ]
     },
     {

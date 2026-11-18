@@ -43,7 +43,7 @@ FREE = {
     "items": mc("crafting_table", "furnace", "stick", "torch", "iron_ingot", "gold_ingot", "copper_ingot", "netherite_ingot",
                 "iron_nugget", "gold_nugget", "diamond", "emerald", "redstone", "lapis_lazuli", "coal", "bone_meal", "wheat",
                 "raw_iron", "raw_gold", "raw_copper", "slime_ball", "dried_kelp", "melon_slice", "honey_bottle", "quartz",
-                "amethyst_shard", "netherite_scrap", "glass", "charcoal", "sugar", "string")
+                "amethyst_shard", "netherite_scrap", "glass", "charcoal", "sugar", "string", "leather", "white_wool")
     + ew("guide_book", "charred_planks", "cabbage_seeds", "corn_seeds", "tomato_seeds"),
     "tags": ["minecraft:planks"],
     "patterns": [r"^%s:hot_.*_ingot$" % NS],
@@ -96,7 +96,8 @@ engram("shears_flint", "tools", 7, 3, "Tijeras y mechero", "Shears and flint and
 engram("fishing", "tools", 5, 3, "Pesca", "Fishing", "minecraft:fishing_rod",
        items=mc("fishing_rod") + ew("bait"))
 engram("bucket", "tools", 10, 4, "Cubo", "Bucket", "minecraft:bucket", items=mc("bucket"))
-engram("canteen", "tools", 2, 2, "Cantimplora", "Canteen", NS + ":canteen", items=ew("canteen"))
+engram("canteen", "tools", 2, 2, "Cantimplora y botellas", "Canteen and bottles", NS + ":canteen",
+       items=ew("canteen") + mc("glass_bottle"))
 engram("iron_tools", "tools", 14, 8, "Herramientas de hierro", "Iron tools", "minecraft:iron_pickaxe",
        items=mc("iron_pickaxe", "iron_axe", "iron_shovel", "iron_hoe", "iron_sword") + ew("iron_knife"),
        requires=["stone_tools"])
@@ -114,7 +115,7 @@ engram("obsidian_knife", "tools", 40, 5, "Cuchillo de obsidiana", "Obsidian knif
 engram("navigation", "tools", 18, 6, "Brújula, reloj y mapas", "Compass, clock and maps", "minecraft:compass",
        items=mc("compass", "clock", "map", "recovery_compass") + ew("atlas"))
 engram("spyglass", "tools", 24, 4, "Catalejo", "Spyglass", "minecraft:spyglass", items=mc("spyglass"))
-engram("builder_tools", "tools", 16, 6, "Herramientas de obra", "Builder's tools", NS + ":building_hammer",
+engram("builder_tools", "tools", 18, 6, "Herramientas de obra", "Builder's tools", NS + ":building_hammer",
        items=ew("building_hammer", "prospector_pick", "structure_scanner", "smithing_hammer", "sharpener"))
 engram("brush_lead", "tools", 12, 3, "Rienda y pincel", "Lead and brush", "minecraft:lead",
        items=mc("lead", "brush", "carrot_on_a_stick", "warped_fungus_on_a_stick"))
@@ -126,7 +127,7 @@ engram("javelin", "weapons", 10, 4, "Jabalinas", "Javelins", NS + ":javelin", pe
 engram("dagger", "weapons", 12, 5, "Dagas", "Daggers", NS + ":iron_dagger", perk="DAGGER_SMITH")
 engram("shield", "weapons", 12, 4, "Escudo", "Shield", "minecraft:shield", items=mc("shield"))
 engram("spear", "weapons", 14, 5, "Lanzas", "Spears", NS + ":iron_spear", perk="SPEAR_SMITH")
-engram("crossbow", "weapons", 18, 6, "Ballesta", "Crossbow", "minecraft:crossbow", items=mc("crossbow"))
+engram("crossbow", "weapons", 20, 6, "Ballesta", "Crossbow", "minecraft:crossbow", items=mc("crossbow"), requires=["redstone_basic"])
 engram("longbow", "weapons", 20, 6, "Arco largo", "Longbow", NS + ":longbow", perk="LONGBOW_SMITH", requires=["bow"])
 engram("longsword", "weapons", 22, 7, "Espadas largas", "Longswords", NS + ":iron_longsword", perk="LONGSWORD_SMITH",
        requires=["dagger"])
@@ -134,7 +135,7 @@ engram("mace", "weapons", 24, 7, "Martillos y manguales", "Warhammers and flails
        perk="MACE_SMITH")
 engram("battle_axe", "weapons", 26, 7, "Hachas de batalla", "Battle axes", NS + ":iron_battle_axe",
        perk="BATTLE_AXE_SMITH")
-engram("pavise", "weapons", 28, 6, "Pavés", "Pavise", NS + ":pavise", items=ew("pavise"), requires=["shield"])
+engram("pavise", "weapons", 31, 6, "Pavés", "Pavise", NS + ":pavise", items=ew("pavise"), requires=["reinforced_shield"])
 engram("arbalest", "weapons", 28, 7, "Arbalesta", "Arbalest", NS + ":arbalest", items=ew("arbalest"),
        requires=["crossbow"])
 engram("halberd", "weapons", 30, 8, "Alabardas", "Halberds", NS + ":iron_halberd", perk="HALBERD_SMITH",
@@ -214,7 +215,7 @@ engram("antidote", "medicine", 22, 5, "Antídoto", "Antidote", NS + ":antidote",
        requires=["medicine"])
 engram("medkit", "medicine", 30, 8, "Botiquín", "Medkit", NS + ":medkit", items=ew("medkit", "medic_kit"),
        requires=["splint", "medicine"])
-engram("golden_food", "medicine", 40, 8, "Manzana y zanahoria de oro", "Golden apple and carrot",
+engram("golden_food", "medicine", 28, 8, "Manzana y zanahoria de oro", "Golden apple and carrot",
        "minecraft:golden_apple", items=mc("golden_apple", "golden_carrot", "glistering_melon_slice"))
 
 # ---------------------------------------------------------------------------------------------- comida
@@ -234,9 +235,9 @@ engram("wood_building", "building", 2, 2, "Construcción de madera", "Wooden bui
        items=mc("ladder", "scaffolding"),
        patterns=[r"^minecraft:%s_(stairs|slab|fence|fence_gate|door|trapdoor|button|pressure_plate|wood|hyphae|log)$" % W,
                  r"^minecraft:stripped_%s_.*" % W, r"^minecraft:bamboo_(block|mosaic|mosaic_stairs|mosaic_slab)$"])
-engram("signs", "building", 5, 2, "Carteles", "Signs", "minecraft:oak_sign",
+engram("signs", "building", 6, 2, "Carteles", "Signs", "minecraft:oak_sign",
        patterns=[r"^minecraft:%s_(sign|hanging_sign)$" % W])
-engram("chest", "utility", 2, 2, "Cofre", "Chest", "minecraft:chest", items=mc("chest", "trapped_chest"))
+engram("chest", "utility", 2, 2, "Cofre", "Chest", "minecraft:chest", items=mc("chest"))
 engram("bed", "utility", 4, 3, "Cama", "Bed", "minecraft:red_bed", patterns=[r"^minecraft:%s_bed$" % C])
 engram("stone_building", "building", 4, 3, "Piedra labrada", "Cut stone", "minecraft:stone_bricks",
        patterns=[r"^minecraft:(cobblestone|mossy_cobblestone|stone|smooth_stone|stone_brick|mossy_stone_brick|andesite|"
@@ -254,7 +255,7 @@ engram("bricks", "building", 8, 3, "Ladrillos", "Bricks", "minecraft:bricks",
        items=mc("bricks", "flower_pot", "decorated_pot", "packed_mud"),
        patterns=[r"^minecraft:(brick|mud_brick)_(stairs|slab|wall)$", r"^minecraft:mud_bricks$"])
 engram("glass", "building", 10, 3, "Cristalería", "Glasswork", "minecraft:glass_pane",
-       items=mc("glass_pane", "glass_bottle", "tinted_glass"),
+       items=mc("glass_pane", "tinted_glass"),
        patterns=[r"^minecraft:%s_stained_glass(_pane)?$" % C])
 engram("lighting", "building", 10, 3, "Faroles y velas", "Lanterns and candles", "minecraft:lantern",
        items=mc("lantern", "candle", "jack_o_lantern"), patterns=[r"^minecraft:%s_candle$" % C])
@@ -271,7 +272,7 @@ engram("storage_blocks", "building", 6, 2, "Bloques de materiales", "Material bl
 engram("copper_building", "building", 18, 4, "Construcción de cobre", "Copper building", "minecraft:cut_copper",
        patterns=[r"^minecraft:.*copper.*"])
 engram("nether_building", "building", 35, 6, "Construcción del Nether", "Nether building", "minecraft:nether_bricks",
-       patterns=[r"^minecraft:.*(nether_brick|blackstone|quartz|basalt|nether_wart_block).*"])
+       items=mc("magma_block"), patterns=[r"^minecraft:.*(nether_brick|blackstone|quartz|basalt|nether_wart_block).*"])
 engram("prismarine", "building", 45, 6, "Prismarina", "Prismarine", "minecraft:prismarine_bricks",
        patterns=[r"^minecraft:.*prismarine.*", r"^minecraft:sea_lantern$"])
 engram("end_building", "building", 70, 6, "Construcción del End", "End building", "minecraft:purpur_block",
@@ -286,8 +287,8 @@ engram("paper", "utility", 6, 2, "Papel y libros", "Paper and books", "minecraft
 engram("stonecutter", "utility", 14, 4, "Cortapiedras y afiladora", "Stonecutter and grindstone", "minecraft:stonecutter",
        items=mc("stonecutter", "grindstone"))
 engram("cauldron", "utility", 14, 3, "Caldero", "Cauldron", "minecraft:cauldron", items=mc("cauldron"))
-engram("lectern", "utility", 20, 4, "Atril y estantes", "Lectern and shelves", "minecraft:lectern",
-       items=mc("lectern", "chiseled_bookshelf"))
+engram("lectern", "utility", 30, 4, "Atril y estantes", "Lectern and shelves", "minecraft:lectern",
+       items=mc("lectern", "chiseled_bookshelf"), requires=["bookshelf"])
 engram("blast_furnace", "utility", 20, 5, "Alto horno", "Blast furnace", "minecraft:blast_furnace",
        items=mc("blast_furnace"))
 engram("jukebox", "utility", 24, 3, "Tocadiscos", "Jukebox", "minecraft:jukebox", items=mc("jukebox"))
@@ -314,7 +315,7 @@ engram("beehive", "utility", 16, 3, "Colmena", "Beehive", "minecraft:beehive", i
 
 # ---------------------------------------------------------------------------------------------- redstone
 engram("redstone_basic", "redstone", 20, 6, "Redstone básica", "Basic redstone", "minecraft:repeater",
-       items=mc("redstone_torch", "lever", "repeater", "tripwire_hook", "redstone_lamp", "note_block", "target",
+       items=mc("redstone_torch", "lever", "repeater", "tripwire_hook", "trapped_chest", "redstone_lamp", "note_block", "target",
                 "daylight_detector"))
 engram("hopper", "redstone", 22, 5, "Tolva", "Hopper", "minecraft:hopper", items=mc("hopper", "hopper_minecart"),
        requires=["redstone_basic"])
@@ -340,7 +341,7 @@ engram("railway", "transport", 50, 15, "Ferrocarril", "Railway", NS + ":train_ca
 engram("bookshelf", "magic", 30, 5, "Estanterías", "Bookshelves", "minecraft:bookshelf", items=mc("bookshelf"),
        requires=["paper"])
 engram("brewing", "magic", 30, 10, "Destilería", "Brewing", "minecraft:brewing_stand",
-       items=mc("brewing_stand", "fermented_spider_eye", "magma_cream", "blaze_powder"))
+       items=mc("brewing_stand", "fermented_spider_eye", "magma_cream", "blaze_powder", "fire_charge"))
 engram("enchanting", "magic", 35, 15, "Mesa de encantamientos", "Enchanting table", "minecraft:enchanting_table",
        items=mc("enchanting_table"), requires=["bookshelf"])
 engram("ender_eye", "magic", 50, 8, "Ojo de Ender", "Eye of ender", "minecraft:ender_eye", items=mc("ender_eye"))
@@ -358,7 +359,7 @@ engram("wind_water", "engineering", 22, 8, "Molinos y norias", "Windmills and wa
        patterns=[r"^%s:(water_wheel|windmill)_.*" % NS], requires=["mechanics"])
 engram("transmission", "engineering", 26, 8, "Transmisión", "Transmission", NS + ":clutch",
        items=ew("clutch", "gearshift", "pulley", "redstone_cam", "iron_shaft", "iron_small_gear", "iron_large_gear",
-                "steel_shaft", "steel_small_gear", "steel_large_gear"), requires=["mechanics"])
+                "steel_shaft", "steel_small_gear", "steel_large_gear", "tower_clock"), requires=["mechanics"])
 engram("workshops", "engineering", 28, 10, "Talleres", "Workshops", NS + ":millstone",
        items=ew("millstone", "sawmill", "bellows", "crucible", "trip_hammer", "architect_table"),
        requires=["mechanics"])
@@ -378,7 +379,7 @@ engram("trades", "settlement", 20, 6, "Oficios", "Trades", NS + ":blacksmith_pos
 engram("commerce", "settlement", 18, 5, "Comercio", "Commerce", NS + ":sales_mailbox",
        items=ew("sales_mailbox", "trader_catalog", "route_slip", "coal_bunker", "crop_crate", "research_desk"))
 engram("command", "settlement", 15, 4, "Mando", "Command", NS + ":command_staff",
-       items=ew("command_staff", "recruitment_contract", "white_flag", "ambassador_seal", "tower_clock"))
+       items=ew("command_staff", "recruitment_contract", "white_flag", "ambassador_seal"))
 
 # ---------------------------------------------------------------------------------------------- militar (las ventajas de antes)
 engram("drill", "military", 12, 4, "Instrucción", "Drill", NS + ":command_staff", perk="DRILL")

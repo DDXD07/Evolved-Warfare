@@ -46,6 +46,14 @@ public class EngramGameTests implements FabricGameTest {
 			check(Engrams.categories().contains(e.category), "Categoría rara: " + e.category);
 			check(e.level >= 1 && e.level <= SkillData.MAX_LEVEL && e.cost > 0, "Nivel o coste raro: " + e.id);
 		}
+		for (String misc : new String[] {"misc_items_mc", "misc_blocks_mc", "misc_blocks_ew", "misc_armor"}) {
+			Engram m = Engrams.byId(misc);
+			StringBuilder sb = new StringBuilder();
+			for (Item item : Engrams.itemsOf(m)) {
+				sb.append(net.minecraft.registry.Registries.ITEM.getId(item).getPath()).append(' ');
+			}
+			LOG.info("[EW-GAMETEST] {}: {}", misc, sb);
+		}
 		int empty = 0;
 		for (Engram e : Engrams.all()) {
 			for (String r : e.requires) {
