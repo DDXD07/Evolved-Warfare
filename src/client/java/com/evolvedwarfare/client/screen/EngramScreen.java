@@ -82,7 +82,7 @@ public class EngramScreen extends Screen {
 	private List<Engram> filtered() {
 		String q = search == null ? "" : search.getText().trim().toLowerCase(Locale.ROOT);
 		List<Engram> out = new ArrayList<>();
-		for (Engram e : Engrams.all()) {
+		for (Engram e : Engrams.visible()) {
 			if (!category.isEmpty() && !category.equals(e.category) && q.isEmpty()) {
 				continue;
 			}
@@ -177,9 +177,9 @@ public class EngramScreen extends Screen {
 		ctx.drawTextWithShadow(textRenderer, points, px, 8, data.engramPoints > 0 ? 0xFFFFD75E : 0xFF9AA0AA);
 		Text attrPoints = Text.translatable("screen.evolvedwarfare.attributes.points", data.attributePoints);
 		int ax = px + Math.max(textRenderer.getWidth(points), textRenderer.getWidth(Text.translatable("screen.evolvedwarfare.engrams.count",
-				data.engrams.size(), Engrams.all().size()))) + 16;
+				data.engrams.size(), Engrams.visible().size()))) + 16;
 		ctx.drawTextWithShadow(textRenderer, attrPoints, ax, 8, data.attributePoints > 0 ? 0xFFFF9FA0 : 0xFF9AA0AA);
-		Text count = Text.translatable("screen.evolvedwarfare.engrams.count", data.engrams.size(), Engrams.all().size());
+		Text count = Text.translatable("screen.evolvedwarfare.engrams.count", data.engrams.size(), Engrams.visible().size());
 		ctx.drawTextWithShadow(textRenderer, count, px, 19, 0xFF8A949E);
 		ctx.fill(10, TOP - 6, width - 10, TOP - 5, 0xFF2A6470);
 	}
@@ -219,7 +219,7 @@ public class EngramScreen extends Screen {
 			Text name = cat.isEmpty() ? Text.translatable("screen.evolvedwarfare.engrams.all") : Text.translatable(Engram.categoryKey(cat));
 			ctx.drawTextWithShadow(textRenderer, name, 16, y + 3, sel ? 0xFFFFFFFF : 0xFFB0BAC4);
 			int learned = 0, total = 0;
-			for (Engram e : Engrams.all()) {
+			for (Engram e : Engrams.visible()) {
 				if (cat.isEmpty() || cat.equals(e.category)) {
 					total++;
 					learned += ClientSkills.data.engrams.contains(e.id) ? 1 : 0;

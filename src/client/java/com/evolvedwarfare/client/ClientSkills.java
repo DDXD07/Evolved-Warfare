@@ -97,7 +97,7 @@ public final class ClientSkills {
 		if (after.level > before.level) {
 			// los engramas que ya se pueden aprender con el nivel nuevo (fase 115)
 			int fresh = 0;
-			for (com.evolvedwarfare.skill.Engram e : com.evolvedwarfare.skill.Engrams.all()) {
+			for (com.evolvedwarfare.skill.Engram e : com.evolvedwarfare.skill.Engrams.visible()) {
 				if (e.level > before.level && e.level <= after.level && !after.engrams.contains(e.id)) {
 					fresh++;
 				}

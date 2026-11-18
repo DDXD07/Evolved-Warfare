@@ -164,6 +164,17 @@ public final class Engrams {
 		return all;
 	}
 
+	/** Los que desbloquean algo (los de "otros" que se quedan vacíos no salen en la pantalla). */
+	public static List<Engram> visible() {
+		List<Engram> out = new ArrayList<>();
+		for (Engram e : all()) {
+			if (e.perk != null || !itemsOf(e).isEmpty()) {
+				out.add(e);
+			}
+		}
+		return out;
+	}
+
 	public static List<String> categories() {
 		load();
 		return categories;

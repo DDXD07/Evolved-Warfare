@@ -2905,6 +2905,7 @@ falta muchos puntos para notarse mucho.
   (K)"); en la pantalla K son los dorados que parpadean.
 - Las estaciones del mod: la forja de herramientas de acero y los moldes de arcilla son recetas de la mesa de crafteo, así
   que ya piden su engrama; el molino, el aserradero y el martinete solo dan materiales (libres).
+- Los engramas de "Otros" que no desbloquean nada no salen en la pantalla K.
 
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
