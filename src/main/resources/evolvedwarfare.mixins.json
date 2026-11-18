@@ -6,6 +6,8 @@
 		"BiomeSeasonMixin",
 		"MilkBucketMedicineMixin",
 		"PlayerJumpStaminaMixin",
+		"BlockItemPlacedMixin",
+		"ItemStackCraftedMixin",
 		"ItemStackRotMixin",
 		"ItemRotBarMixin",
 		"PlayerEatRotMixin",

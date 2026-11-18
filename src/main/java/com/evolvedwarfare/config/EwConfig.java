@@ -34,6 +34,11 @@ public final class EwConfig {
 	public boolean researchRequired = true;
 	/** Lo rápido que suben las habilidades (1 = normal; 2 = el doble de rápido). */
 	public double skillXpRate = 1.0;
+	/**
+	 * Lo rápido que se sube de nivel de superviviente con lo que no son habilidades (matar, minar, talar, fabricar por
+	 * primera vez, explorar, amanecer; 1 = normal, 0 = solo con las habilidades).
+	 */
+	public double survivorXpRate = 1.0;
 
 	// ------------------------------------------------------------------ facciones
 	/** Cada cuánto (minutos reales, al azar entre los dos) pasa una patrulla cerca de un jugador. */
@@ -284,6 +289,7 @@ public final class EwConfig {
 	public static final List<Option> OPTIONS = List.of(
 			new Option("researchRequired", "research", 0, 1, 1),
 			new Option("skillXpRate", "research", 0.1, 20.0, 0.25),
+			new Option("survivorXpRate", "research", 0.0, 20.0, 0.25),
 			new Option("patrolMinMinutes", "factions", 1, 240, 1),
 			new Option("patrolMaxMinutes", "factions", 1, 240, 1),
 			new Option("firstRaidMinutes", "factions", 1, 600, 5),

@@ -735,7 +735,7 @@
   "key.categories.evolvedwarfare": "Evolved Warfare",
   "key.evolvedwarfare.skills": "Skill tree",
   "screen.evolvedwarfare.skills.title": "Skills",
-  "screen.evolvedwarfare.skills.level": "Level %s",
+  "screen.evolvedwarfare.skills.level": "Survivor: level %s",
   "screen.evolvedwarfare.skills.skill_level": "Level %s",
   "screen.evolvedwarfare.skills.points": "Perk points: %s",
   "screen.evolvedwarfare.skills.rank": "Rank %s/%s",
@@ -752,7 +752,7 @@
   "screen.evolvedwarfare.skills.owned": "Owned",
   "screen.evolvedwarfare.skills.hint": "Skills rise as you use them · one perk point per level · ←/→ switch",
   "hud.evolvedwarfare.skills.skill_up": "%s rises to %s",
-  "hud.evolvedwarfare.skills.level_up": "Level %s! +1 perk point (%s)",
+  "hud.evolvedwarfare.skills.level_up": "Level %s! +%s engram points · +%s attribute",
   "tooltip.evolvedwarfare.skills.needed": "Needs the perk “%s” (%s %s)",
   "message.evolvedwarfare.skills.locked": "To craft it you need the perk “%s” (%s %s): press K",
   "message.evolvedwarfare.skills.migrated": "What you had researched is now in your skill tree: %s",
@@ -3014,5 +3014,14 @@
   "item.evolvedwarfare.imp_horn.desc": "Still hot. They say it brings bad luck.",
   "message.evolvedwarfare.lava_imp": "Something giggles inside the lava... an imp!",
   "config.evolvedwarfare.lavaImpChance": "Lava imps",
-  "config.evolvedwarfare.lavaImpChance.tip": "Chance every 10 s near a lava pool of 2x2 or more that an imp comes out."
+  "config.evolvedwarfare.lavaImpChance.tip": "Chance every 10 s near a lava pool of 2x2 or more that an imp comes out.",
+  "hud.evolvedwarfare.survivor.xp": "+%s XP",
+  "hud.evolvedwarfare.survivor.xp_why": "+%s XP · %s",
+  "hud.evolvedwarfare.survivor.biome": "New biome: %s",
+  "hud.evolvedwarfare.survivor.craft": "First time: %s",
+  "hud.evolvedwarfare.survivor.kill": "%s slain",
+  "hud.evolvedwarfare.survivor.dawn": "Survived night %s",
+  "screen.evolvedwarfare.skills.survivor_points": "Engrams: %s · Attributes: %s",
+  "config.evolvedwarfare.survivorXpRate": "Survivor experience",
+  "config.evolvedwarfare.survivorXpRate.tip": "What killing, mining, chopping, first crafts, exploring and dawns give. 1 = normal; 0 = skills only."
 }

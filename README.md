@@ -2771,6 +2771,47 @@ piezas **se van con el trozo** (la barba con la cabeza, el brazal con el brazo) 
 **armadura** en ese hueco, las piezas de ese hueco no se ponen (para que no atraviesen la armadura). El **daño
 locacional** va por la caja del NPC, así que funciona igual que antes.
 
+## Fase 112 — Nivel de superviviente (como en ARK), parte 1
+
+Primera parte del nuevo sistema de progreso al estilo de ARK: subes de **nivel de superviviente** (del 1 al **100**) y
+cada nivel da **puntos de engrama** (para desbloquear lo que se fabrica, en la fase 113) y **puntos de atributo** (vida,
+aguante, carga..., más adelante). El nivel de personaje de las habilidades pasa a ser este mismo nivel: **es uno solo**.
+
+- **Se gana experiencia con todo**, no solo con las habilidades:
+
+| Qué | Experiencia |
+|---|---|
+| Subir una habilidad | Su nuevo nivel (como antes) |
+| Matar un monstruo | La mitad de su vida máxima (un zombi, 10) |
+| Matar un animal | 1,5 |
+| Matar a una persona (bandidos, soldados...) | 0,3 × su vida máxima |
+| Matar a un jugador | 25 |
+| Criatura legendaria o jefe | 1,5 × su vida (mínimo 150) |
+| Dragón del End o Wither | 500 |
+| Élite (con afijos) | ×3 |
+| Minar menas | Carbón, cobre y cuarzo 2 · hierro y redstone 3 · lapislázuli 4 · oro 5 · diamante y esmeralda 12 · escombros ancestrales 25 |
+| Talar un tronco / cosechar un cultivo maduro | 0,6 / 0,4 |
+| **Fabricar algo por primera vez** (también sacarlo del horno) | 4 por cada cosa distinta |
+| **Entrar en un bioma nuevo** | 12 |
+| **Ver amanecer** (vivo desde antes de medianoche) | 10 |
+
+- **Lo que pone un jugador no da nada al romperlo**, así no se puede poner y quitar una mena o un tronco para subir.
+- **La curva**: 26 de experiencia para el nivel 2, 92 para pasar del 10, unos 1.800 para pasar del 99; unos 71.000
+  en total hasta el 100. Los primeros niveles salen el primer día.
+- **Puntos por nivel**: 6 de engrama (+1 cada 10 niveles: 7 del 10 al 19 y 16 en el 100; unos 1.050 en total) y 1 de
+  atributo. Se guardan para las próximas fases.
+- **Al morir no se pierde nada** (ni el nivel ni la experiencia ni los puntos).
+- **Los que ya jugaban** se quedan con su nivel (hasta el 100) y reciben los puntos de engrama y de atributo de los
+  niveles que ya tenían.
+- **En pantalla**: una placa con el nivel y una barra fina azul **a la izquierda de la barra de experiencia** (dorada al
+  100). Al ganar experiencia sale un **"+N XP"** a su lado que sube y se desvanece, con el porqué si es algo especial
+  ("+12 XP · Nuevo bioma: Bosque", "+4 XP · Primera vez: Antorcha", "+30 XP · Zombi abatido"...). Al subir de nivel, el
+  aviso grande de arriba dice los puntos que ganas.
+- En la pantalla de habilidades (K) se ven también los puntos de engrama y de atributo.
+- **Configuración**: "Experiencia de superviviente" (`survivorXpRate`; 1 = normal, 0 = solo con las habilidades).
+- Las ventajas de las constelaciones siguen funcionando hasta la fase 113, en la que se quitan y la forja pasa a los
+  engramas.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

@@ -166,6 +166,7 @@ public class EvolvedWarfareClient implements ClientModInitializer {
 		com.evolvedwarfare.client.thirst.ClientThirst.register();
 		com.evolvedwarfare.client.health.ClientHealth.register();
 		com.evolvedwarfare.client.health.ClientStamina.register();
+		com.evolvedwarfare.client.ClientSurvivor.register();
 		com.evolvedwarfare.client.food.ClientFood.register();
 		net.minecraft.client.render.block.entity.BlockEntityRendererFactories.register(ModBlocks.CROP_CRATE_ENTITY,
 				com.evolvedwarfare.client.render.CropCrateRenderer::new);

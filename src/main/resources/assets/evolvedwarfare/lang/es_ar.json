@@ -735,7 +735,7 @@
   "key.categories.evolvedwarfare": "Evolved Warfare",
   "key.evolvedwarfare.skills": "Árbol de habilidades",
   "screen.evolvedwarfare.skills.title": "Habilidades",
-  "screen.evolvedwarfare.skills.level": "Nivel %s",
+  "screen.evolvedwarfare.skills.level": "Superviviente: nivel %s",
   "screen.evolvedwarfare.skills.skill_level": "Nivel %s",
   "screen.evolvedwarfare.skills.points": "Puntos de ventaja: %s",
   "screen.evolvedwarfare.skills.rank": "Rango %s/%s",
@@ -752,7 +752,7 @@
   "screen.evolvedwarfare.skills.owned": "La tienes",
   "screen.evolvedwarfare.skills.hint": "Las habilidades suben usándolas · cada nivel, un punto de ventaja · ←/→ cambiar",
   "hud.evolvedwarfare.skills.skill_up": "%s sube a %s",
-  "hud.evolvedwarfare.skills.level_up": "¡Nivel %s! +1 punto de ventaja (%s)",
+  "hud.evolvedwarfare.skills.level_up": "¡Nivel %s! +%s puntos de engrama · +%s de atributo",
   "tooltip.evolvedwarfare.skills.needed": "Necesitas la ventaja «%s» (%s %s)",
   "message.evolvedwarfare.skills.locked": "Para fabricarlo necesitas la ventaja «%s» (%s %s): tecla K",
   "message.evolvedwarfare.skills.migrated": "Lo que tenías investigado ya está en tu árbol de habilidades: %s",
@@ -3014,5 +3014,14 @@
   "item.evolvedwarfare.imp_horn.desc": "Aún está caliente. Dicen que trae mala suerte.",
   "message.evolvedwarfare.lava_imp": "Algo se ríe dentro de la lava... ¡un diablito!",
   "config.evolvedwarfare.lavaImpChance": "Diablitos de la lava",
-  "config.evolvedwarfare.lavaImpChance.tip": "Probabilidad, cada 10 s cerca de un pozo de lava de 2x2 o más, de que salga un diablito."
+  "config.evolvedwarfare.lavaImpChance.tip": "Probabilidad, cada 10 s cerca de un pozo de lava de 2x2 o más, de que salga un diablito.",
+  "hud.evolvedwarfare.survivor.xp": "+%s XP",
+  "hud.evolvedwarfare.survivor.xp_why": "+%s XP · %s",
+  "hud.evolvedwarfare.survivor.biome": "Nuevo bioma: %s",
+  "hud.evolvedwarfare.survivor.craft": "Primera vez: %s",
+  "hud.evolvedwarfare.survivor.kill": "%s abatido",
+  "hud.evolvedwarfare.survivor.dawn": "Sobreviviste a la noche %s",
+  "screen.evolvedwarfare.skills.survivor_points": "Engramas: %s · Atributos: %s",
+  "config.evolvedwarfare.survivorXpRate": "Experiencia de superviviente",
+  "config.evolvedwarfare.survivorXpRate.tip": "Lo que da matar, minar, talar, fabricar por primera vez, explorar y amanecer. 1 = normal; 0 = solo las habilidades."
 }

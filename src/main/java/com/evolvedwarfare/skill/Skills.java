@@ -165,14 +165,60 @@ public final class Skills {
 		}
 	}
 
-	private static void characterXp(ServerPlayerEntity player, SkillData data, float amount) {
+	/**
+	 * Experiencia de superviviente (fase 112): la dan las subidas de habilidad y lo de {@link Survivor} (matar, minar,
+	 * talar, fabricar por primera vez, explorar, pasar la noche...). Cada nivel da puntos de engrama y uno de atributo
+	 * (y, hasta que lleguen los engramas, también el de ventaja). Hasta el nivel 100.
+	 */
+	static void characterXp(ServerPlayerEntity player, SkillData data, float amount) {
+		if (data.maxLevel()) {
+			data.levelXp = 0.0F;
+			return;
+		}
 		data.levelXp += amount;
-		while (data.levelXp >= SkillData.levelXpToNext(data.level)) {
+		while (!data.maxLevel() && data.levelXp >= SkillData.levelXpToNext(data.level)) {
 			data.levelXp -= SkillData.levelXpToNext(data.level);
 			data.level++;
 			data.points++;
+			data.engramPoints += SkillData.engramPointsFor(data.level);
+			data.attributePoints++;
 			player.playSoundToPlayer(SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.PLAYERS, 0.8F, 1.0F);
 		}
+		if (data.maxLevel()) {
+			data.levelXp = 0.0F;
+		}
+	}
+
+	/** Experiencia de superviviente desde fuera (lo guarda y lo manda al cliente). */
+	public static void survivorXp(ServerPlayerEntity player, float amount) {
+		if (amount <= 0.0F || player.isSpectator() || player.getServer() == null) {
+			return;
+		}
+		SkillState state = SkillState.get(player.getServer());
+		SkillData data = state.of(player.getUuid());
+		int before = data.level;
+		characterXp(player, data, amount);
+		state.markDirty();
+		if (data.level != before) {
+			sync(player, false);
+		} else {
+			PENDING.add(player.getUuid());
+		}
+	}
+
+	/**
+	 * Los que ya jugaban (fase 112): su nivel de antes pasa a ser el de superviviente (hasta el 100) y se les dan los
+	 * puntos de engrama y de atributo de los niveles que ya tenían.
+	 */
+	public static void migrateSurvivor(SkillData data) {
+		if (data.survivor) {
+			return;
+		}
+		data.survivor = true;
+		data.level = Math.max(1, Math.min(SkillData.MAX_LEVEL, data.level));
+		data.levelXp = data.maxLevel() ? 0.0F : Math.min(data.levelXp, SkillData.levelXpToNext(data.level) - 1.0F);
+		data.engramPoints += SkillData.engramPointsUpTo(data.level);
+		data.attributePoints += data.level - 1;
 	}
 
 	/** Pone una habilidad en un nivel (comandos y pruebas); la experiencia de personaje sube como si la hubiera usado. */
@@ -281,6 +327,10 @@ public final class Skills {
 		}
 		SkillState state = SkillState.get(player.getServer());
 		SkillData data = state.of(player.getUuid());
+		if (!data.survivor) {
+			migrateSurvivor(data);
+			state.markDirty();
+		}
 		if (data.migrated) {
 			return;
 		}
@@ -337,7 +387,7 @@ public final class Skills {
 			return;
 		}
 		SkillData data = SkillState.get(player.getServer()).of(player.getUuid());
-		ServerPlayNetworking.send(player, new SkillPayloads.Data(data.toNbt(), open, EwConfig.get().researchRequired));
+		ServerPlayNetworking.send(player, new SkillPayloads.Data(data.toClientNbt(), open, EwConfig.get().researchRequired));
 		PENDING.remove(player.getUuid());
 	}
 }

@@ -44,6 +44,11 @@ public final class ClientSkills {
 	private ClientSkills() {
 	}
 
+	/** Si ya han llegado los datos del servidor. */
+	public static boolean received() {
+		return received;
+	}
+
 	public static void register() {
 		open = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.evolvedwarfare.skills", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K,
 				"key.categories.evolvedwarfare"));
@@ -93,7 +98,8 @@ public final class ClientSkills {
 			}
 		}
 		if (after.level > before.level) {
-			NOTICES.add(new Notice(Text.translatable("hud.evolvedwarfare.skills.level_up", after.level, open.getBoundKeyLocalizedText()),
+			NOTICES.add(new Notice(Text.translatable("hud.evolvedwarfare.skills.level_up", after.level,
+					Math.max(0, after.engramPoints - before.engramPoints), Math.max(0, after.attributePoints - before.attributePoints)),
 					0xFFD75E, now, true));
 		}
 		while (NOTICES.size() > 4) {

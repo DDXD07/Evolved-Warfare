@@ -164,7 +164,10 @@ public class SkillScreen extends Screen {
 		Text level = Text.translatable("screen.evolvedwarfare.skills.level", data.level);
 		context.drawTextWithShadow(textRenderer, level, 12, 10, 0xFFE6D2A0);
 		float next = SkillData.levelXpToNext(data.level);
-		bar(context, 12, 22, 110, 4, data.levelXp / next, 0xFF6FA8DC);
+		bar(context, 12, 22, 110, 4, data.maxLevel() ? 1.0F : data.levelXp / next, 0xFF3CC8E6);
+		// los puntos de superviviente (fase 112; se gastarán en los engramas y los atributos)
+		Text survivor = Text.translatable("screen.evolvedwarfare.skills.survivor_points", data.engramPoints, data.attributePoints);
+		context.drawTextWithShadow(textRenderer, survivor, 12, 29, 0xFF9FD8E6);
 		Text points = Text.translatable("screen.evolvedwarfare.skills.points", data.points);
 		context.drawTextWithShadow(textRenderer, points, width - 12 - textRenderer.getWidth(points), 10,
 				data.points > 0 ? 0xFFFFD75E : 0xFF9AA0AA);
