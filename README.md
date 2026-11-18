@@ -2911,7 +2911,7 @@ falta muchos puntos para notarse mucho.
 
 - **Ninguna receta pide algo de un engrama de más nivel** sin pedirlo antes: una prueba nueva recorre todas las recetas
   del juego y del mod y avisa si un engrama necesita de ingrediente algo que se desbloquea más tarde (aprenderlo no
-  serviría de nada hasta entonces). Encontró 33 casos; arreglados:
+  serviría de nada hasta entonces). Encontró 34 casos; arreglados:
   - **libres** también el **cuero**, la **lana blanca** y la **pólvora** (son de animales y monstruos);
   - las **botellas de cristal**, con la **cantimplora** (nivel 2: hacen falta para beber);
   - **ballesta** al nivel 20 (pide la redstone básica, por el gancho de cuerda); el **cofre trampa**, con la redstone;
@@ -2920,7 +2920,7 @@ falta muchos puntos para notarse mucho.
     tinte); **herramientas de obra** al 18 (el escáner lleva brújula);
   - la **carga de fuego**, con la destilería; el **bloque de magma**, con el Nether; el **reloj de torre**, con la
     transmisión; el **rastrillo**, con las fortificaciones.
-- **Nuevos engramas**: **cota de malla** (nivel 14, 6 puntos; antes iba a "Otras armaduras" al 30) y **maza de viento**
+- **Nuevos engramas**: **cota de malla** (nivel 14, 6 puntos, con las anillas de hierro; antes iba a "Otras armaduras" al 30) y **maza de viento**
   (la maza y las cargas de viento de la 1.21; nivel 45, 10 puntos; antes, al 12).
 - **Fabricar por primera vez un bloque** da **0,5** de experiencia (lo demás, 4 como antes): con la construcción de
   madera se podían sacar unas 100 escaleras, losas y vallas distintas y subir 9 niveles de golpe.

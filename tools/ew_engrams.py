@@ -169,7 +169,8 @@ engram("class_copper", "armor", 12, 6, "Armaduras de clase de cobre", "Copper cl
        NS + ":warrior_copper_chestplate", patterns=[r"^%s:(archer|musketeer|thief|warrior)_copper_.*" % NS],
        requires=["class_leather"])
 engram("chainmail", "armor", 14, 6, "Cota de malla", "Chainmail", "minecraft:chainmail_chestplate",
-       items=mc("chainmail_helmet", "chainmail_chestplate", "chainmail_leggings", "chainmail_boots"), requires=["leather_armor"])
+       items=mc("chainmail_helmet", "chainmail_chestplate", "chainmail_leggings", "chainmail_boots") + ew("iron_rings"),
+       requires=["leather_armor"])
 engram("iron_armor", "armor", 18, 10, "Armadura de hierro", "Iron armor", "minecraft:iron_chestplate",
        items=mc("iron_helmet", "iron_chestplate", "iron_leggings", "iron_boots", "iron_horse_armor"),
        requires=["leather_armor"])
@@ -179,7 +180,7 @@ engram("gold_armor", "armor", 20, 5, "Armadura de oro", "Golden armor", "minecra
 engram("class_iron", "armor", 20, 7, "Armaduras de clase de hierro", "Iron class armors", NS + ":warrior_iron_chestplate",
        patterns=[r"^%s:(archer|musketeer|thief|warrior)_iron_.*" % NS], requires=["class_copper"])
 engram("iron_plate", "armor", 24, 8, "Armadura de placas de hierro", "Iron plate armor", NS + ":iron_plate_chestplate",
-       patterns=[r"^%s:iron_plate_.*" % NS, r"^%s:iron_rings$" % NS], requires=["iron_armor"])
+       patterns=[r"^%s:iron_plate_.*" % NS], requires=["iron_armor"])
 engram("faction_medium", "armor", 28, 8, "Armaduras de bergante, huscarle y corsario", "Veteran raider armors",
        NS + ":viking_huscarl_chestplate", perk="FACTION_ARMORER", requires=["faction_light"])
 engram("steel_plate", "armor", 34, 10, "Armadura de placas de acero", "Steel plate armor", NS + ":steel_plate_chestplate",

@@ -632,7 +632,8 @@
         "minecraft:chainmail_helmet",
         "minecraft:chainmail_chestplate",
         "minecraft:chainmail_leggings",
-        "minecraft:chainmail_boots"
+        "minecraft:chainmail_boots",
+        "evolvedwarfare:iron_rings"
       ],
       "requires": [
         "leather_armor"
@@ -692,8 +693,7 @@
       "cost": 8,
       "icon": "evolvedwarfare:iron_plate_chestplate",
       "patterns": [
-        "^evolvedwarfare:iron_plate_.*",
-        "^evolvedwarfare:iron_rings$"
+        "^evolvedwarfare:iron_plate_.*"
       ],
       "requires": [
         "iron_armor"

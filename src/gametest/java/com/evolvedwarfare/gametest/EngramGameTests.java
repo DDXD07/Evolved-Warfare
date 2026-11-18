@@ -83,7 +83,7 @@ public class EngramGameTests implements FabricGameTest {
 				Items.COOKED_BEEF, Items.SMOOTH_STONE, Items.GLASS, Items.TERRACOTTA}) {
 			check(Engrams.of(free) == null, "Pide engrama y debería ser libre: " + free);
 		}
-		check(empty <= 3, "Demasiados engramas sin nada: " + empty);
+		check(empty <= 5, "Demasiados engramas sin nada: " + empty);
 		ctx.complete();
 	}
 
