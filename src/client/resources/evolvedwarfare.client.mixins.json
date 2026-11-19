@@ -7,7 +7,6 @@
 		"InGameHudHealthBarMixin",
 		"RecipeResultCollectionEngramMixin",
 		"AnimatedResultButtonEngramMixin",
-		"ItemStackFoodTimerMixin",
 		"MechanicalCrossbowHeldMixin",
 		"HeldItemRendererToolMixin",
 		"ZombieModelMixin",

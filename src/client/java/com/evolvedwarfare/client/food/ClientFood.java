@@ -12,8 +12,6 @@ public final class ClientFood {
 	}
 
 	public static void register() {
-		net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback.EVENT.register(data ->
-				data instanceof com.evolvedwarfare.food.FoodTimerTooltipData timer ? new TimerComponent(timerLines(timer.stack())) : null);
 		FoodRot.clientTime = () -> {
 			MinecraftClient client = MinecraftClient.getInstance();
 			return client.world == null ? -1L : client.world.getTime();
@@ -33,10 +31,11 @@ public final class ClientFood {
 			if ((preserved & FoodRot.SMOKED) != 0) {
 				lines.add(Text.translatable("tooltip.evolvedwarfare.food.smoked").formatted(Formatting.GOLD));
 			}
+			lines.addAll(timerLines(stack));
 		});
 	}
 
-	/** Si a esta comida se le ve el contador (en un trozo aparte de la descripción, al 80 %; fase 122). */
+	/** Si a esta comida se le ve el contador. */
 	public static boolean showsTimer(net.minecraft.item.ItemStack stack) {
 		MinecraftClient client = MinecraftClient.getInstance();
 		return client.world != null && FoodRot.enabled() && !stack.isEmpty() && !stack.isOf(com.evolvedwarfare.food.FoodItems.SALT)
@@ -53,54 +52,38 @@ public final class ClientFood {
 		long now = client.world.getTime();
 		Long exp = FoodRot.expires(stack);
 		if (exp == null) {
-			lines.add(Text.translatable("tooltip.evolvedwarfare.food.lasts", time(FoodRot.shelf(stack))).formatted(Formatting.DARK_GREEN));
+			lines.add(Text.literal("⌛ ~" + compact(FoodRot.shelf(stack))).formatted(Formatting.DARK_GREEN));
 			return lines;
 		}
 		FoodRot.Stage stage = FoodRot.stage(stack, now);
+		if (stage == FoodRot.Stage.ROTTEN) {
+			lines.add(Text.translatable("tooltip.evolvedwarfare.food.rotten").formatted(Formatting.DARK_RED));
+			return lines;
+		}
+		// corto (fase 122): el reloj y lo que le queda; el color dice cómo está (verde fresca, amarillo pasada, naranja pocha)
 		Formatting color = switch (stage) {
 			case FRESH -> Formatting.GREEN;
 			case STALE -> Formatting.YELLOW;
-			case SPOILING -> Formatting.GOLD;
-			case ROTTEN -> Formatting.DARK_RED;
+			default -> Formatting.GOLD;
 		};
-		String key = "tooltip.evolvedwarfare.food." + stage.name().toLowerCase(java.util.Locale.ROOT);
-		lines.add(Text.translatable(key, time(Math.max(0L, exp - now))).formatted(color));
+		String text = "⌛ " + compact(Math.max(0L, exp - now));
 		if (stack.getCount() > 1) {
-			// el contador es el de la primera; las demás van detrás (fase 121, como en ARK)
-			lines.add(Text.translatable("tooltip.evolvedwarfare.food.stack", time(FoodRot.shelf(stack)),
-				time(Math.max(0L, FoodRot.allGone(stack) - now))).formatted(Formatting.DARK_GRAY));
+			// con más de una: lo que tarda en pudrirse el montón entero (de una en una, como en ARK)
+			text += " · ×" + stack.getCount() + " " + compact(Math.max(0L, FoodRot.allGone(stack) - now));
 		}
+		lines.add(Text.literal(text).formatted(color));
 		return lines;
 	}
 
-	/** El trozo de la descripción con el contador, con la letra al 80 %. */
-	private record TimerComponent(java.util.List<Text> lines) implements net.minecraft.client.gui.tooltip.TooltipComponent {
-		private static final float SCALE = 0.8F;
-
-		@Override
-		public int getHeight() {
-			return (int) Math.ceil(lines.size() * 10 * SCALE) + 2;
+	/** «5d 18h», «18h», «<1h» (del juego). */
+	private static String compact(long ticks) {
+		long hours = ticks / 1000L;
+		long days = hours / 24L;
+		hours %= 24L;
+		if (days > 0) {
+			return hours > 0 ? days + "d " + hours + "h" : days + "d";
 		}
-
-		@Override
-		public int getWidth(net.minecraft.client.font.TextRenderer textRenderer) {
-			int w = 0;
-			for (Text t : lines) {
-				w = Math.max(w, textRenderer.getWidth(t));
-			}
-			return (int) Math.ceil(w * SCALE);
-		}
-
-		@Override
-		public void drawItems(net.minecraft.client.font.TextRenderer textRenderer, int x, int y, net.minecraft.client.gui.DrawContext context) {
-			context.getMatrices().push();
-			context.getMatrices().translate(x, y, 400.0F);
-			context.getMatrices().scale(SCALE, SCALE, 1.0F);
-			for (int i = 0; i < lines.size(); i++) {
-				context.drawTextWithShadow(textRenderer, lines.get(i), 0, i * 10, 0xFFFFFFFF);
-			}
-			context.getMatrices().pop();
-		}
+		return hours > 0 ? hours + "h" : "<1h";
 	}
 
 	/** «2 días y 5 h», «5 h», «menos de 1 h» (del juego). */

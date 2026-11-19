@@ -2999,11 +2999,13 @@ las habilidades (que tienen la suya).
 - Antes cada montón llevaba su fecha (redondeada a la hora) y solo se juntaba con otro de la misma hora; al caducar se
   pudría el montón entero en comida podrida o carne podrida.
 
-## Fase 122 — El contador de la comida, más pequeño
+## Fase 122 — El contador de la comida, más corto
 
-- En la descripción de la comida, el **contador** ("Fresca · se pasa en 5 d y 18 h" y, con más de una, "Se pudre 1 cada
-  ...") sale con la **letra al 80 %**. Va justo debajo del nombre (Minecraft pone ahí los trozos dibujados aparte, como
-  el contenido de un saco); lo demás de la descripción ("Quita la sed", "Salada"...) sigue igual.
+- El contador de la comida ocupa **una línea corta** en vez de una frase: **"⌛ 5d 18h"** (lo que le queda a la primera
+  del montón). **El color dice cómo está**: verde fresca, amarillo pasada, naranja pocha (y "Podrida" en rojo).
+- Con más de una, en la misma línea, lo que tarda **el montón entero**: **"⌛ 5d 18h · ×21 23d"**.
+- Sin contador aún (recién hecha, antes de llevarla encima): **"⌛ ~5d 18h"** (lo que aguanta).
+- Antes: "Fresca · se pasa en 5 d y 18 h" y, con más de una, otra línea "Se pudre 1 cada ... · el montón entero, en ...".
 
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
