@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "ITI",
+    "TBT",
+    "ITI"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "T": {
+      "item": "evolvedwarfare:activated_carbon_tube"
+    },
+    "B": {
+      "item": "minecraft:blaze_powder"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:activated_carbon_crate",
+    "count": 1
+  }
+}

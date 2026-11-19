@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS",
+    "SHS",
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "item": "evolvedwarfare:steel_ingot"
+    },
+    "H": {
+      "item": "evolvedwarfare:borer_head_iron"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:borer_head_steel",
+    "count": 1
+  }
+}

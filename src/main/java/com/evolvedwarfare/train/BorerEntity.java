@@ -56,6 +56,10 @@ public class BorerEntity extends LocomotiveEntity {
 	public static final double LOOKAHEAD = HALF_LENGTH + 1.5;
 	private static final TrackedData<Integer> MODE = DataTracker.registerData(BorerEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	private static final TrackedData<Boolean> DIGGING = DataTracker.registerData(BorerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+	/** El cabezal del taladro (fase 123): 0 ninguno, 1 hierro, 2 acero, 3 netherita. */
+	private static final TrackedData<Integer> HEAD = DataTracker.registerData(BorerEntity.class, TrackedDataHandlerRegistry.INTEGER);
+	/** Lo que pica cada cabezal (lo de su pico: hierro 6, acero 6,6, netherita 9). */
+	public static final float[] HEAD_SPEED = {0.0F, 6.0F, 6.6F, 9.0F};
 	private static final double K = 2.5 / 16.0;
 
 	/** El depósito: vías, combustible y lo excavado. */
@@ -85,6 +89,7 @@ public class BorerEntity extends LocomotiveEntity {
 		super.initDataTracker(builder);
 		builder.add(MODE, 0);
 		builder.add(DIGGING, false);
+		builder.add(HEAD, 1);
 	}
 
 	/** -1 baja, 0 llano, 1 sube. */
@@ -101,6 +106,28 @@ public class BorerEntity extends LocomotiveEntity {
 	public float cutterAngle, prevCutterAngle;
 	private float cutterSpin;
 
+	public int head() {
+		return dataTracker.get(HEAD);
+	}
+
+	public void setHead(int head) {
+		dataTracker.set(HEAD, MathHelper.clamp(head, 0, 3));
+	}
+
+	/** Lo deprisa que pica el cabezal, comparado con el de hierro (el de antes). */
+	public float headRate() {
+		return HEAD_SPEED[head()] / HEAD_SPEED[1];
+	}
+
+	/** El pico con el que excava (para lo que suelta): el del material del cabezal. */
+	public ItemStack headTool() {
+		return switch (head()) {
+			case 2 -> new ItemStack(com.evolvedwarfare.engineering.Metalwork.STEEL_PICKAXE);
+			case 3 -> new ItemStack(Items.NETHERITE_PICKAXE);
+			default -> new ItemStack(Items.IRON_PICKAXE);
+		};
+	}
+
 	public boolean digging() {
 		return dataTracker.get(DIGGING);
 	}
@@ -109,8 +136,9 @@ public class BorerEntity extends LocomotiveEntity {
 	protected List<Box> localBoxes() {
 		if (boxes == null) {
 			List<Box> b = new ArrayList<>(super.localBoxes());
-			// la cabeza: un disco de casi todo el túnel, delante
+			// la cabeza: un disco de casi todo el túnel, delante, y el taladro (cónico) que sale de él
 			b.addAll(split(new Box(-2.4, 0.3, 15 * K, 2.4, 5.4, 18 * K)));
+			b.addAll(split(new Box(-1.4, 1.5, 18 * K, 1.4, 4.2, 25 * K)));
 			// el depósito (a la derecha) y el hogar (a la izquierda), con sus puertas
 			b.addAll(split(new Box(-13 * K, 6 * K, -3 * K, -8 * K, 17 * K, 12 * K)));
 			b.addAll(split(new Box(6 * K, 6 * K, -4 * K, 13 * K, 17 * K, 6 * K)));
@@ -181,6 +209,12 @@ public class BorerEntity extends LocomotiveEntity {
 			dataTracker.set(DIGGING, false);
 			return near ? 0.0 : Double.MAX_VALUE;
 		}
+		if (head() <= 0) {
+			// sin cabezal no excava
+			warn(Text.translatable("message.evolvedwarfare.borer.no_head"));
+			dataTracker.set(DIGGING, false);
+			return near ? 0.0 : Double.MAX_VALUE;
+		}
 		if (job == null) {
 			job = plan(world, far.pos());
 			if (job == null) {
@@ -190,7 +224,8 @@ public class BorerEntity extends LocomotiveEntity {
 		}
 		dataTracker.set(DIGGING, true);
 		// cuanto más abierto el regulador, más deprisa excava (y avanza a ese paso, sin pararse)
-		float rate = 1.0F + 0.5F * Math.max(0, throttle());
+		// y según el cabezal (lo que pica su pico: el de netherita, un 50 % más que el de hierro)
+		float rate = (1.0F + 0.5F * Math.max(0, throttle())) * headRate();
 		job.done()[0] += rate;
 		effects(world);
 		double crawl = 0.9 * job.piece().length(0) * rate / job.cost();
@@ -285,7 +320,8 @@ public class BorerEntity extends LocomotiveEntity {
 
 	/** Termina el trozo: tapa el agua y la lava, excava (guarda lo que sale), rellena el suelo y pone la vía. */
 	private void finish(ServerWorld world, Job job) {
-		ItemStack tool = new ItemStack(Items.DIAMOND_PICKAXE);
+		// lo que suelta, como con el pico de su cabezal (con el de hierro o el de acero, la obsidiana no suelta nada)
+		ItemStack tool = headTool();
 		for (BlockPos p : job.seal()) {
 			if (!world.getFluidState(p).isEmpty()) {
 				world.setBlockState(p, Blocks.COBBLESTONE.getDefaultState(), Block.NOTIFY_ALL);
@@ -517,6 +553,31 @@ public class BorerEntity extends LocomotiveEntity {
 					Text.translatable("container.evolvedwarfare.steam_borer")));
 			return ActionResult.CONSUME;
 		}
+		// con un cabezal en la mano: se cambia por el que lleva (que vuelve a la mano o al inventario)
+		ItemStack held = player.getStackInHand(hand);
+		if (held.getItem() instanceof Trains.BorerHeadItem headItem) {
+			if (getWorld().isClient) {
+				return ActionResult.SUCCESS;
+			}
+			int old = head();
+			if (old == headItem.head) {
+				return ActionResult.CONSUME;
+			}
+			setHead(headItem.head);
+			held.decrement(1);
+			if (old > 0) {
+				ItemStack back = new ItemStack(Trains.headItem(old));
+				if (held.isEmpty()) {
+					player.setStackInHand(hand, back);
+				} else if (!player.getInventory().insertStack(back)) {
+					player.dropItem(back, false);
+				}
+			}
+			getWorld().playSound(null, getBlockPos(), SoundEvents.BLOCK_ANVIL_USE, SoundCategory.NEUTRAL, 0.6F, 1.2F);
+			player.sendMessage(Text.translatable("message.evolvedwarfare.borer.head", new ItemStack(Trains.headItem(headItem.head)).getName())
+					.formatted(Formatting.GOLD), true);
+			return ActionResult.CONSUME;
+		}
 		if (player.isSneaking()) {
 			return ActionResult.PASS;
 		}
@@ -526,6 +587,11 @@ public class BorerEntity extends LocomotiveEntity {
 	@Override
 	public void dropContents() {
 		super.dropContents();
+		// el de hierro va con la tuneladora (al ponerla otra vez ya lo lleva); el de acero o netherita se suelta
+		if (head() >= 2) {
+			dropStack(new ItemStack(Trains.headItem(head())));
+			setHead(1);
+		}
 		for (int i = 0; i < storage.size(); i++) {
 			ItemStack s = storage.removeStack(i);
 			if (!s.isEmpty()) {
@@ -541,6 +607,8 @@ public class BorerEntity extends LocomotiveEntity {
 		super.readCustomDataFromNbt(nbt);
 		storage.readNbtList(nbt.getList("Storage", NbtElement.COMPOUND_TYPE), getRegistryManager());
 		setMode(nbt.getInt("Mode"));
+		// las de antes llevaban el de hierro (el de la cabeza perforadora con la que se montaron)
+		setHead(nbt.contains("Head") ? nbt.getInt("Head") : 1);
 	}
 
 	@Override
@@ -548,5 +616,6 @@ public class BorerEntity extends LocomotiveEntity {
 		super.writeCustomDataToNbt(nbt);
 		nbt.put("Storage", storage.toNbtList(getRegistryManager()));
 		nbt.putInt("Mode", mode());
+		nbt.putInt("Head", head());
 	}
 }

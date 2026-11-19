@@ -341,7 +341,16 @@ engram("minecart", "transport", 22, 6, "Vagonetas y raíles", "Minecarts and rai
 engram("powered_rails", "transport", 30, 6, "Raíles propulsores", "Powered rails", "minecraft:powered_rail",
        items=mc("powered_rail", "detector_rail", "activator_rail"), requires=["minecart", "redstone_basic"])
 engram("railway", "transport", 50, 15, "Ferrocarril", "Railway", NS + ":train_cab",
-       patterns=[r"^%s:(track_.*|train_.*)$" % NS], requires=["powered_rails"])
+       items=ew("drill_head", "borer_head_iron"), patterns=[r"^%s:(track_.*|train_.*)$" % NS], requires=["powered_rails"])
+# fase 123: el carbón activado (más velocidad) y los cabezales del taladro de la tuneladora
+engram("activated_carbon_tube", "transport", 52, 6, "Tubo de carbón activado", "Activated carbon tube", NS + ":activated_carbon_tube",
+       items=ew("activated_carbon_tube"), requires=["railway"])
+engram("activated_carbon_crate", "transport", 66, 10, "Caja de carbón activado", "Activated carbon crate", NS + ":activated_carbon_crate",
+       items=ew("activated_carbon_crate"), requires=["activated_carbon_tube"])
+engram("borer_head_steel", "transport", 56, 8, "Cabezal de acero", "Steel drill head", NS + ":borer_head_steel",
+       items=ew("borer_head_steel"), requires=["railway"])
+engram("borer_head_netherite", "transport", 74, 12, "Cabezal de netherita", "Netherite drill head", NS + ":borer_head_netherite",
+       items=ew("borer_head_netherite"), requires=["borer_head_steel"])
 
 # ---------------------------------------------------------------------------------------------- magia
 engram("bookshelf", "magic", 30, 5, "Estanterías", "Bookshelves", "minecraft:bookshelf", items=mc("bookshelf"),
@@ -372,7 +381,7 @@ engram("workshops", "engineering", 28, 10, "Talleres", "Workshops", NS + ":mills
 engram("gauges", "engineering", 30, 4, "Medidores", "Gauges", NS + ":stress_gauge", items=ew("stress_gauge", "speed_gauge"),
        requires=["transmission"])
 engram("lifting", "engineering", 35, 8, "Grúas y elevadores", "Cranes and lifts", NS + ":crane",
-       items=ew("crane", "lift_platform", "screw", "drill_head"), requires=["transmission"])
+       items=ew("crane", "lift_platform", "screw"), requires=["transmission"])
 engram("steam", "engineering", 45, 12, "Vapor y tuberías", "Steam and pipes", NS + ":steam_boiler",
        items=ew("steam_boiler", "pipe", "hand_pump", "faucet"), requires=["workshops"])
 

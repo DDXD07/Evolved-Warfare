@@ -1592,11 +1592,67 @@
       "level": 50,
       "cost": 15,
       "icon": "evolvedwarfare:train_cab",
+      "items": [
+        "evolvedwarfare:drill_head",
+        "evolvedwarfare:borer_head_iron"
+      ],
       "patterns": [
         "^evolvedwarfare:(track_.*|train_.*)$"
       ],
       "requires": [
         "powered_rails"
+      ]
+    },
+    {
+      "id": "activated_carbon_tube",
+      "category": "transport",
+      "level": 52,
+      "cost": 6,
+      "icon": "evolvedwarfare:activated_carbon_tube",
+      "items": [
+        "evolvedwarfare:activated_carbon_tube"
+      ],
+      "requires": [
+        "railway"
+      ]
+    },
+    {
+      "id": "activated_carbon_crate",
+      "category": "transport",
+      "level": 66,
+      "cost": 10,
+      "icon": "evolvedwarfare:activated_carbon_crate",
+      "items": [
+        "evolvedwarfare:activated_carbon_crate"
+      ],
+      "requires": [
+        "activated_carbon_tube"
+      ]
+    },
+    {
+      "id": "borer_head_steel",
+      "category": "transport",
+      "level": 56,
+      "cost": 8,
+      "icon": "evolvedwarfare:borer_head_steel",
+      "items": [
+        "evolvedwarfare:borer_head_steel"
+      ],
+      "requires": [
+        "railway"
+      ]
+    },
+    {
+      "id": "borer_head_netherite",
+      "category": "transport",
+      "level": 74,
+      "cost": 12,
+      "icon": "evolvedwarfare:borer_head_netherite",
+      "items": [
+        "evolvedwarfare:borer_head_netherite"
+      ],
+      "requires": [
+        "borer_head_steel"
       ]
     },
     {
@@ -1781,8 +1837,7 @@
       "items": [
         "evolvedwarfare:crane",
         "evolvedwarfare:lift_platform",
-        "evolvedwarfare:screw",
-        "evolvedwarfare:drill_head"
+        "evolvedwarfare:screw"
       ],
       "requires": [
         "transmission"

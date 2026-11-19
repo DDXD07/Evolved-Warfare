@@ -185,32 +185,67 @@ def borer():
     frame.cube((-3, -6, -12), (4, 4, 1), **C(BLACK, rings=(BRASS, 1)))                          # el marco de la puerta
     frame.cube((-2, -5, -13), (2, 2, 1), **C(FIRE, high=((255, 210, 120), 1)))                  # la puerta, encendida
     frame.cube((-6, -1, -12), (10, 1, 1), **C(DARK))                                            # el cenicero
-    # la cabeza, con el pivote en el eje
-    cut = a.part("cutter", "frame", (-18, -12, 0), role="none")
+    # el taladro (fase 123): una broca cónica con dos espirales, sobre un aro con dientes del ancho del túnel; uno por
+    # cabezal (hierro, acero, netherita: el juego enseña el que lleva puesto). Gira sobre el eje de la vía.
+    for name, mat in (("cutter", "iron"), ("cutter_steel", "steel"), ("cutter_netherite", "netherite")):
+        drill(a, name, mat)
+    return a
+
+
+DRILL_MATS = {
+    # cuerpo, aros, espiral, dientes
+    "iron": ((168, 168, 174), (118, 118, 124), (214, 214, 222), (226, 226, 232)),
+    "steel": ((94, 102, 116), (62, 68, 80), (150, 160, 178), (176, 186, 204)),
+    "netherite": ((64, 56, 60), (40, 34, 38), (118, 102, 108), (150, 128, 96)),
+}
+
+
+def drill(a, name, mat):
+    """La broca: un aro de 32 de alto (casi todo el túnel) con dientes, un cono de 6 rodajas que se va estrechando hacia
+    delante (-x) hasta la punta y dos espirales (las estrías) que suben por el cono."""
+    import math
+    body, ring, flute, teeth = DRILL_MATS[mat]
+    cut = a.part(name, "frame", (-18, -12, 0), role="none")
     R = 16
+    # el aro de atrás (el disco que tapa el frente del túnel), hueco por dentro
     for y in range(-R, R, 2):
         h = math.sqrt(max(0.0, R * R - (y + 1) ** 2))
         w = int(round(h)) * 2
-        if w >= 2:
+        if w < 2:
+            continue
+        inner = math.sqrt(max(0.0, 11 * 11 - (y + 1) ** 2))
+        iw = int(round(inner)) * 2
+        if iw >= 2 and w - iw >= 4:
+            side = (w - iw) // 2
+            cut.cube((-1, y, -w // 2), (2, 2, side), **C((92, 88, 84), rings=((60, 58, 56), 1), spots=((120, 116, 110), 0.06)))
+            cut.cube((-1, y, iw // 2), (2, 2, side), **C((92, 88, 84), rings=((60, 58, 56), 1), spots=((120, 116, 110), 0.06)))
+        else:
             cut.cube((-1, y, -w // 2), (2, 2, w), **C((92, 88, 84), rings=((60, 58, 56), 1), spots=((120, 116, 110), 0.06)))
-    for k in range(-R + 2, R - 1, 4):                                                          # los brazos, en cruz
-        cut.cube((-2, k, -1), (1, 2, 2), **C(STEEL))
-        cut.cube((-2, -1, k), (1, 2, 2), **C(STEEL))
-    for ang in range(0, 360, 30):                                                              # los dientes del borde
+    for ang in range(0, 360, 30):                                                              # los dientes del aro
         r = R - 2
         y = int(round(r * math.sin(math.radians(ang)))) - 1
         z = int(round(r * math.cos(math.radians(ang)))) - 1
-        cut.cube((-3, y, z), (2, 2, 2), **C(STEEL, high=((200, 200, 210), 1)))
-    for ang in range(15, 360, 45):                                                             # y los de dentro
-        r = 8
-        y = int(round(r * math.sin(math.radians(ang)))) - 1
-        z = int(round(r * math.cos(math.radians(ang)))) - 1
-        cut.cube((-3, y, z), (2, 2, 2), **C(STEEL, high=((200, 200, 210), 1)))
-    cut.cube((-3, -3, -3), (2, 6, 6), **C(BRASS, rings=((150, 110, 40), 1)))                   # el cubo
-    cut.cube((-5, -2, -2), (2, 4, 4), **C(STEEL, high=((200, 200, 210), 1)))                   # la punta
-    cut.cube((-6, -1, -1), (1, 2, 2), **C((200, 200, 210)))
-    return a
-
+        cut.cube((-3, y, z), (2, 2, 2), **C(teeth, high=(tuple(min(255, v + 30) for v in teeth), 1)))
+    # el cono: rodajas de 2 de grueso cada vez más estrechas (24 de largo: unos 3,7 bloques por delante del aro)
+    radii = [13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2]
+    for i, r in enumerate(radii):
+        x0 = -3 - 2 * i
+        for y in range(-r, r, 2):
+            h = math.sqrt(max(0.0, r * r - (y + 1) ** 2))
+            w = max(2, int(round(h)) * 2)
+            cut.cube((x0, y, -w // 2), (2, 2, w), **C(body, rings=(ring, 1), spots=(tuple(max(0, v - 18) for v in body), 0.05)))
+    tip = -3 - 2 * len(radii)
+    cut.cube((tip, -1, -1), (2, 2, 2), **C(teeth, high=(tuple(min(255, v + 30) for v in teeth), 1)))   # la punta
+    cut.cube((tip - 1, -1, -1), (1, 1, 1), **C(teeth))
+    # las dos espirales (las estrías): sobresalen del cono y dan vueltas hasta la punta
+    for k in (0, 180):
+        for t in range(0, 2 * len(radii), 1):
+            x = -3 - t
+            r = radii[min(len(radii) - 1, t // 2)] + 0.5
+            ang = math.radians(k + t * 32)
+            y = int(round(r * math.sin(ang))) - 1
+            z = int(round(r * math.cos(ang))) - 1
+            cut.cube((x - 1, y, z), (1, 2, 2), **C(flute, high=(tuple(min(255, v + 25) for v in flute), 1)))
 
 def tender():
     a = W.Animal("coal_tender")

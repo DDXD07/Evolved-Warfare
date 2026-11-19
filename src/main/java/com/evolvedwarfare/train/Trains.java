@@ -106,6 +106,29 @@ public final class Trains {
 	public static final Item PLATFORM_ITEM = item("flatcar", new CarItem(2, new Item.Settings().maxCount(1)));
 	public static final Item BORER_ITEM = item("steam_borer", new CarItem(3, new Item.Settings().maxCount(1).rarity(Rarity.RARE)));
 
+	// ------------------------------------------------------------------ fase 123: carbón activado y cabezales
+	/** Combustible de la caldera que sube el máximo a 30 km/h mientras arde. */
+	public static final Item ACTIVATED_CARBON_TUBE = item("activated_carbon_tube", new DescItem(new Item.Settings()));
+	/** Combustible de la caldera que sube el máximo a 50 km/h mientras arde. */
+	public static final Item ACTIVATED_CARBON_CRATE = item("activated_carbon_crate", new DescItem(new Item.Settings().maxCount(16)));
+	public static final Item BORER_HEAD_IRON = item("borer_head_iron", new BorerHeadItem(1, new Item.Settings().maxCount(1)));
+	public static final Item BORER_HEAD_STEEL = item("borer_head_steel", new BorerHeadItem(2, new Item.Settings().maxCount(1)));
+	public static final Item BORER_HEAD_NETHERITE = item("borer_head_netherite", new BorerHeadItem(3,
+			new Item.Settings().maxCount(1).fireproof().rarity(Rarity.UNCOMMON)));
+
+	/** Lo que arde el carbón activado en la caldera (y en un horno): el tubo, como dos carbones; la caja, como diez. */
+	public static final int TUBE_BURN = 3200, CRATE_BURN = 16000;
+
+	/** El cabezal de ese número (1 hierro, 2 acero, 3 netherita). */
+	public static Item headItem(int head) {
+		return switch (head) {
+			case 1 -> BORER_HEAD_IRON;
+			case 2 -> BORER_HEAD_STEEL;
+			case 3 -> BORER_HEAD_NETHERITE;
+			default -> net.minecraft.item.Items.AIR;
+		};
+	}
+
 	// ------------------------------------------------------------------ construir
 	public static final Item BUILD_HAMMER = item("building_hammer", new HammerItem(new Item.Settings().maxCount(1)));
 
@@ -127,6 +150,8 @@ public final class Trains {
 	}
 
 	public static void register() {
+		net.fabricmc.fabric.api.registry.FuelRegistry.INSTANCE.add(ACTIVATED_CARBON_TUBE, TUBE_BURN);
+		net.fabricmc.fabric.api.registry.FuelRegistry.INSTANCE.add(ACTIVATED_CARBON_CRATE, CRATE_BURN);
 	}
 
 	// ------------------------------------------------------------------ montar el tren en la mesa
@@ -165,6 +190,28 @@ public final class Trains {
 		@Override
 		public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, net.minecraft.item.tooltip.TooltipType type) {
 			tooltip.add(Text.translatable("item.evolvedwarfare.train_part.desc").formatted(Formatting.GRAY));
+		}
+	}
+
+	/** Un objeto con su línea de descripción (item.evolvedwarfare.x.desc). */
+	public static class DescItem extends Item {
+		public DescItem(Settings settings) {
+			super(settings);
+		}
+
+		@Override
+		public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, net.minecraft.item.tooltip.TooltipType type) {
+			tooltip.add(Text.translatable(getTranslationKey() + ".desc").formatted(Formatting.GRAY));
+		}
+	}
+
+	/** Un cabezal de la tuneladora (fase 123): se cambia con clic derecho en la tuneladora llevándolo en la mano. */
+	public static class BorerHeadItem extends DescItem {
+		public final int head;
+
+		public BorerHeadItem(int head, Settings settings) {
+			super(settings);
+			this.head = head;
 		}
 	}
 

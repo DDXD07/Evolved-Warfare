@@ -125,6 +125,63 @@ public class TrainGameTests implements FabricGameTest {
 		});
 	}
 
+	/**
+	 * La velocidad (fase 123): 20 km/h de base; con una caja de carbón activado ardiendo, hasta 50 (el tubo, 30). Y los
+	 * cabezales de la tuneladora pican como su pico (hierro 6, acero 6,6, netherita 9) y sueltan como él.
+	 */
+	@GameTest(templateName = EMPTY_STRUCTURE, tickLimit = 300)
+	public void activatedCarbonRaisesTopSpeed(TestContext ctx) {
+		ServerWorld world = ctx.getWorld();
+		BlockPos o = ctx.getAbsolutePos(new BlockPos(0, 1, 0)).add(0, 0, 800);
+		List<ChunkPos> forced = force(world, o, 160, 8);
+		clear(world, o, 160, 2);
+		int y = o.getY();
+		double[] at = {o.getX(), o.getZ()};
+		for (int i = 0; i < 40; i++) {
+			at = lay(world, Track.Shape.STRAIGHT, false, Direction.EAST, at[0], at[1], y);
+		}
+		LocomotiveEntity loco = Trains.LOCOMOTIVE.create(world);
+		loco.setTrack(Track.start(world, BlockPos.ofFloored(o.getX() + 6.5, y, o.getZ() + 0.5), Direction.EAST));
+		world.spawnEntity(loco);
+		loco.place();
+		loco.firebox.setStack(0, new ItemStack(Trains.ACTIVATED_CARBON_CRATE));
+		loco.setThrottle(LocomotiveEntity.MAX_NOTCH);
+		BorerEntity borer = Trains.BORER.create(world);
+		float[] rates = new float[4];
+		String[] tools = new String[4];
+		for (int h = 1; h <= 3; h++) {
+			borer.setHead(h);
+			rates[h] = borer.headRate();
+			tools[h] = net.minecraft.registry.Registries.ITEM.getId(borer.headTool().getItem()).getPath();
+		}
+		borer.discard();
+		ctx.runAtTick(120, () -> {
+			double kmh = loco.speed() * 72.0;
+			int grade = loco.fuelGrade();
+			LOG.info("[EW-GAMETEST] velocidad: con caja de carbón activado {} km/h (grado {}, máx {}); base {}, tubo {}; arde tubo {} caja {};"
+							+ " cabezales {} / {} / {} ({}, {}, {})", kmh, grade, loco.topSpeed() * 72.0, LocomotiveEntity.TOP_SPEED * 72.0,
+					LocomotiveEntity.TUBE_SPEED * 72.0, LocomotiveEntity.fuelTime(new ItemStack(Trains.ACTIVATED_CARBON_TUBE)),
+					LocomotiveEntity.fuelTime(new ItemStack(Trains.ACTIVATED_CARBON_CRATE)), rates[1], rates[2], rates[3], tools[1], tools[2], tools[3]);
+			loco.discard();
+			forced.forEach(c -> world.setChunkForced(c.x, c.z, false));
+			if (grade != 2 || kmh < 45.0 || kmh > 50.5) {
+				throw new GameTestException("Con la caja de carbón activado no llega a 50 km/h: " + kmh + " (grado " + grade + ")");
+			}
+			if (Math.abs(LocomotiveEntity.TOP_SPEED * 72.0 - 20.0) > 1e-6 || Math.abs(LocomotiveEntity.TUBE_SPEED * 72.0 - 30.0) > 1e-6) {
+				throw new GameTestException("La velocidad base o la del tubo no es la que toca");
+			}
+			if (LocomotiveEntity.fuelTime(new ItemStack(Trains.ACTIVATED_CARBON_TUBE)) != Trains.TUBE_BURN
+					|| LocomotiveEntity.fuelTime(new ItemStack(Trains.ACTIVATED_CARBON_CRATE)) != Trains.CRATE_BURN) {
+				throw new GameTestException("El carbón activado no arde en la caldera");
+			}
+			if (Math.abs(rates[1] - 1.0F) > 1e-4 || Math.abs(rates[2] - 1.1F) > 1e-4 || Math.abs(rates[3] - 1.5F) > 1e-4
+					|| !"iron_pickaxe".equals(tools[1]) || !"steel_pickaxe".equals(tools[2]) || !"netherite_pickaxe".equals(tools[3])) {
+				throw new GameTestException("Los cabezales no pican como su pico");
+			}
+			ctx.complete();
+		});
+	}
+
 	@GameTest(templateName = EMPTY_STRUCTURE)
 	public void trackPiecesSnapAndBreakWhole(TestContext ctx) {
 		ServerWorld world = ctx.getWorld();

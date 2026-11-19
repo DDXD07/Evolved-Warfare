@@ -110,11 +110,15 @@ public final class TrainRenderers {
 			} catch (Exception ignored) {
 				// sin ruedas que giren
 			}
-			// la cabeza de la tuneladora (gira sobre el eje de la vía)
-			cutter = root.hasChild("frame") && root.getChild("frame").hasChild("cutter") ? root.getChild("frame").getChild("cutter") : null;
+			// los taladros de la tuneladora (uno por cabezal: hierro, acero, netherita; giran sobre el eje de la vía)
+			String[] names = {"cutter", "cutter_steel", "cutter_netherite"};
+			cutters = new ModelPart[names.length];
+			for (int i = 0; i < names.length; i++) {
+				cutters[i] = root.hasChild("frame") && root.getChild("frame").hasChild(names[i]) ? root.getChild("frame").getChild(names[i]) : null;
+			}
 		}
 
-		private final ModelPart cutter;
+		private final ModelPart[] cutters;
 
 		@Override
 		public Identifier getTexture(T entity) {
@@ -137,9 +141,15 @@ public final class TrainRenderers {
 			for (ModelPart w : wheels) {
 				w.roll = -angle;
 			}
-			if (cutter != null && car instanceof com.evolvedwarfare.train.BorerEntity borer) {
-				// gira mientras excava (y un poco al andar)
-				cutter.pitch = MathHelper.lerp(tickDelta, borer.prevCutterAngle, borer.cutterAngle);
+			if (car instanceof com.evolvedwarfare.train.BorerEntity borer) {
+				// solo se ve el del cabezal que lleva; gira mientras excava (y un poco al andar)
+				float spin = MathHelper.lerp(tickDelta, borer.prevCutterAngle, borer.cutterAngle);
+				for (int i = 0; i < cutters.length; i++) {
+					if (cutters[i] != null) {
+						cutters[i].visible = borer.head() == i + 1;
+						cutters[i].pitch = spin;
+					}
+				}
 			}
 			matrices.push();
 			matrices.translate(0.0F, 6.0F / 16.0F * scale, 0.0F);

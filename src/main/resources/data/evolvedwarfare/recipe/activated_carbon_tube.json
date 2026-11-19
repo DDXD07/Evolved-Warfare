@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "ICI",
+    "CSC",
+    "ICI"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "C": {
+      "item": "minecraft:charcoal"
+    },
+    "S": {
+      "item": "evolvedwarfare:salt"
+    }
+  },
+  "result": {
+    "id": "evolvedwarfare:activated_carbon_tube",
+    "count": 2
+  }
+}

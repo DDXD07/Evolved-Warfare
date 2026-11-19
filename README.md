@@ -2926,7 +2926,7 @@ falta muchos puntos para notarse mucho.
   madera se podían sacar unas 100 escaleras, losas y vallas distintas y subir 9 niveles de golpe.
 - **El equipo que no se fabrica** (las herramientas de acero, que se forjan) pide su engrama para usarlo, pero los
   **materiales que se encuentran** (fragmentos de prismarina, ladrillos del Nether...) ya no.
-- Ahora hay **162 engramas** que cuestan **1.058 puntos**; hasta el 100 se ganan 1.064.
+- Ahora hay **162 engramas** que cuestan **1.058 puntos**; hasta el 100 se ganan 1.064 (con la fase 123, 166 y 1.094).
 
 **El ritmo (estimado, aún sin jugar)** — `tools/ew_progression.py` (lo que se gana por hora en cada etapa: unas 450 las
 dos primeras horas, 700 hasta las 10, 1.000 hasta las 30 y 1.400 después):
@@ -3006,6 +3006,39 @@ las habilidades (que tienen la suya).
 - Con más de una, en la misma línea, lo que tarda **el montón entero**: **"⌛ 5d 18h · ×21 23d"**.
 - Sin contador aún (recién hecha, antes de llevarla encima): **"⌛ ~5d 18h"** (lo que aguanta).
 - Antes: "Fresca · se pasa en 5 d y 18 h" y, con más de una, otra línea "Se pudre 1 cada ... · el montón entero, en ...".
+
+## Fase 123 — Carbón activado y el taladro de la tuneladora
+
+**Velocidad**
+- La locomotora y la tuneladora van a **20 km/h** como máximo (antes 36).
+- Dos combustibles nuevos para la **caldera** suben el máximo **mientras arden**:
+
+| Combustible | Máximo | Arde como | Receta |
+|---|---|---|---|
+| **Tubo de carbón activado** | **30 km/h** | 2 carbones | 4 lingotes de hierro, 4 de carbón vegetal y 1 de sal → 2 tubos |
+| **Caja de carbón activado** | **50 km/h** | 10 carbones | 4 lingotes de hierro, 4 tubos y 1 polvo de blaze |
+
+- Lo que cuenta es lo que está ardiendo: cuando se acaba y coge carbón normal, vuelve a 20. En el salpicadero se ve el
+  máximo ("· máx. 50 km/h"). También arden en un horno.
+- Engramas: **Tubo de carbón activado** (nivel 52, 6 puntos) y **Caja de carbón activado** (66, 10).
+
+**El taladro de la tuneladora**
+- La cabeza plana es ahora un **taladro**: una broca cónica con dos espirales que sale unos 3,7 bloques por delante del aro
+  con dientes (la tuneladora es más larga). **El túnel sigue siendo de 6 x 6.**
+- Lleva uno de **3 cabezales**, y se ve el que lleva:
+
+| Cabezal | Pica como | Excava | Lo que suelta | Receta |
+|---|---|---|---|---|
+| **Hierro** (el que trae) | pico de hierro (6) | como antes | como un pico de hierro (la obsidiana, nada) | 4 lingotes de hierro, 4 bloques de hierro y un pistón |
+| **Acero** | pico de acero (6,6) | un 10 % más rápido | como un pico de acero (la obsidiana, nada) | 8 lingotes de acero y el cabezal de hierro |
+| **Netherita** | pico de netherita (9) | un 50 % más rápido | como un pico de netherita (todo) | 2 lingotes de netherita, 2 diamantes y el cabezal de acero |
+
+- **Para cambiarlo**: clic derecho en la tuneladora con el cabezal en la mano; el que llevaba vuelve a la mano (o al
+  inventario). Sin cabezal no excava (y avisa). Las tuneladoras de antes llevan el de hierro. Al romperla, el de acero o
+  netherita se suelta (el de hierro va con ella).
+- Engramas: el de hierro va con **Ferrocarril** (como la cabeza perforadora, que antes estaba por error en "Grúas y
+  elevadores"); **Cabezal de acero** (nivel 56, 8 puntos) y **Cabezal de netherita** (74, 12).
+- Con estos 4 engramas, entre todos cuestan 1.094 puntos y al 100 se ganan 1.064: ya no se pueden aprender todos.
 
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):

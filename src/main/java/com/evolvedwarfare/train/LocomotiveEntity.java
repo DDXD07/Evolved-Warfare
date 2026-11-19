@@ -49,8 +49,10 @@ import org.jetbrains.annotations.Nullable;
  */
 public class LocomotiveEntity extends TrainCarEntity {
 	public static final double HALF_LENGTH = 2.6, BOGIE = 1.6, GAP = 0.3;
-	/** Lo más rápido que va (bloques por tic). */
-	public static final double TOP_SPEED = 0.5;
+	/** Lo más rápido que va (bloques por tic; 1 bloque por tic = 72 km/h): 20 km/h (fase 123; antes 36). */
+	public static final double TOP_SPEED = 20.0 / 72.0;
+	/** Con carbón activado ardiendo en la caldera: el tubo, 30 km/h; la caja, 50 km/h. */
+	public static final double TUBE_SPEED = 30.0 / 72.0, CRATE_SPEED = 50.0 / 72.0;
 	public static final int MAX_NOTCH = 4, MIN_NOTCH = -2, MAX_WAGONS = 10;
 	private static final TrackedData<Integer> THROTTLE = DataTracker.registerData(LocomotiveEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	private static final TrackedData<Boolean> BURNING = DataTracker.registerData(LocomotiveEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
@@ -63,6 +65,8 @@ public class LocomotiveEntity extends TrainCarEntity {
 	private Track.Pos track;
 	private final List<UUID> wagons = new ArrayList<>();
 	private int fuel, maxFuel = 1, inputCooldown, whistleCooldown;
+	/** Lo que arde ahora: 0 combustible normal, 1 tubo de carbón activado, 2 caja (sube el máximo). */
+	private int fuelGrade;
 	private double speed;
 	public final Firebox firebox = new Firebox();
 	private final PropertyDelegate properties = new PropertyDelegate() {
@@ -316,7 +320,7 @@ public class LocomotiveEntity extends TrainCarEntity {
 		boolean burning = fuel > 0 && notch != 0;
 		if (burning) {
 			fuel = Math.max(0, fuel - Math.abs(notch));
-			double want = notch * TOP_SPEED / MAX_NOTCH;
+			double want = notch * topSpeed() / MAX_NOTCH;
 			speed += MathHelper.clamp(want - speed, -0.02, 0.01);
 			if (age % 40 == 0) {
 				world.playSound(null, getBlockPos(), SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.NEUTRAL, 0.8F, 0.8F);
@@ -353,6 +357,20 @@ public class LocomotiveEntity extends TrainCarEntity {
 			place();
 		}
 		dataTracker.set(SPEED, (float) speed);
+	}
+
+	/** Lo más deprisa que va ahora según lo que arde en la caldera (20, 30 o 50 km/h). */
+	public double topSpeed() {
+		return fuelGrade >= 2 ? CRATE_SPEED : fuelGrade == 1 ? TUBE_SPEED : TOP_SPEED;
+	}
+
+	public int fuelGrade() {
+		return fuelGrade;
+	}
+
+	/** Lo que sube el máximo ese combustible (0 nada, 1 tubo, 2 caja de carbón activado). */
+	public static int grade(ItemStack stack) {
+		return stack.isOf(Trains.ACTIVATED_CARBON_CRATE) ? 2 : stack.isOf(Trains.ACTIVATED_CARBON_TUBE) ? 1 : 0;
 	}
 
 	/** Lo que hace el maquinista además del regulador y el silbato (la tuneladora: subir o bajar). */
@@ -392,6 +410,7 @@ public class LocomotiveEntity extends TrainCarEntity {
 			int t = fuelTime(s);
 			if (t > 0) {
 				fuel += t;
+				fuelGrade = grade(s);
 				maxFuel = Math.max(t, fuel);
 				ItemStack rest = s.getRecipeRemainder();
 				s.decrement(1);
@@ -411,10 +430,12 @@ public class LocomotiveEntity extends TrainCarEntity {
 
 	public Text dash() {
 		int kmh = (int) Math.round(Math.abs(speed()) * 72.0);
+		int max = (int) Math.round(topSpeed() * 72.0);
 		int notch = throttle();
 		Text gear = Text.translatable("message.evolvedwarfare.train.notch." + (notch > 0 ? "forward" : notch < 0 ? "reverse" : "neutral"), Math.abs(notch));
 		int minutes = fuel / 1200;
 		return Text.translatable("message.evolvedwarfare.train.dash", kmh, gear, fuel > 0 ? Math.max(1, minutes) : 0)
+				.append(Text.translatable("message.evolvedwarfare.train.top", max))
 				.formatted(fuel > 0 ? Formatting.GOLD : Formatting.RED);
 	}
 
@@ -515,6 +536,7 @@ public class LocomotiveEntity extends TrainCarEntity {
 		maxFuel = Math.max(1, nbt.getInt("MaxFuel"));
 		setThrottle(nbt.getInt("Throttle"));
 		speed = nbt.getDouble("Speed");
+		fuelGrade = nbt.getInt("FuelGrade");
 		dataTracker.set(SPEED, (float) speed);
 		wagons.clear();
 		for (NbtElement e : nbt.getList("Wagons", NbtElement.INT_ARRAY_TYPE)) {
@@ -535,6 +557,7 @@ public class LocomotiveEntity extends TrainCarEntity {
 		nbt.putInt("MaxFuel", maxFuel);
 		nbt.putInt("Throttle", throttle());
 		nbt.putDouble("Speed", speed);
+		nbt.putInt("FuelGrade", fuelGrade);
 		NbtList list = new NbtList();
 		for (UUID id : wagons) {
 			list.add(NbtHelper.fromUuid(id));
