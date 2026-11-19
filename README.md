@@ -2963,6 +2963,17 @@ las habilidades (que tienen la suya).
 - Ahora el Nether del mod cuenta como **estable**: ya no salen los avisos, tampoco en los mundos que ya tenías (se
   calcula al entrar). El mundo es el mismo; no cambia nada de cómo se genera.
 
+## Fase 119 — Menú de engramas como el de ARK
+
+- La pantalla de engramas (**K**) se ordena **por nivel, como en ARK**: una **fila por nivel** con el **número grande a la
+  izquierda** (azul si ya lo tienes, apagado si aún no; una raya marca la fila de tu nivel) y sus engramas al lado.
+- Cada engrama es una **ficha más grande**: el **nombre arriba** en una franja oscura, el **icono al doble** en medio y,
+  abajo a la derecha, lo que **cuesta** ("5p") o un ✔ si ya lo tienes. Los colores del borde siguen igual (verde
+  aprendido, dorado lo puedes aprender ya, amarillo te faltan puntos, rojo te falta nivel) y un **candado** si antes
+  hace falta otro.
+- Fondo **azul oscuro** como el de ARK. Al abrir, **baja sola hasta tu nivel**.
+- Las categorías de la izquierda y el buscador siguen funcionando como **filtros** ("Todos" enseña todos los niveles).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

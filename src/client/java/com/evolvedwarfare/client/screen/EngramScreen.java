@@ -125,7 +125,8 @@ public class EngramScreen extends Screen {
 	@Override
 	public void render(DrawContext ctx, int mouseX, int mouseY, float delta) {
 		SkillData data = ClientSkills.data;
-		ctx.fill(0, 0, width, height, 0xC8080C10);
+		// fondo azul oscuro, como el menú de engramas de ARK
+		ctx.fillGradient(0, 0, width, height, 0xE00C2432, 0xE0050C12);
 		super.render(ctx, mouseX, mouseY, delta);
 		hovered = null;
 		header(ctx, data);
@@ -241,66 +242,147 @@ public class EngramScreen extends Screen {
 		};
 	}
 
+	/** Como en ARK (fase 119): una fila por nivel, con el número grande a la izquierda y las fichas con su nombre e icono. */
+	private static final int CARD_W = 64, CARD_H = 56, CARD_GAP = 5, LEVEL_W = 36, CARD_HEAD = 15;
+	/** Al abrir, baja hasta tu nivel. */
+	private boolean autoScroll = true;
+
+	private int cardColumns() {
+		return Math.max(1, (gridRight() - gridLeft() - LEVEL_W + CARD_GAP) / (CARD_W + CARD_GAP));
+	}
+
 	private void grid(DrawContext ctx, SkillData data, int mouseX, int mouseY) {
 		shown = filtered();
-		int cols = columns();
+		int cols = cardColumns();
 		int left = gridLeft();
-		int rows = (shown.size() + cols - 1) / cols;
-		int visibleH = height - TOP - 22;
-		int maxScroll = Math.max(0, rows * (TILE + GAP) - visibleH);
+		int bottom = height - 20;
+		java.util.TreeMap<Integer, List<Engram>> byLevel = new java.util.TreeMap<>();
+		for (Engram e : shown) {
+			byLevel.computeIfAbsent(e.level, k -> new ArrayList<>()).add(e);
+		}
+		// alto total y dónde empieza cada nivel
+		int total = 0;
+		int mine = 0;
+		for (var entry : byLevel.entrySet()) {
+			if (entry.getKey() <= data.level) {
+				mine = total;
+			}
+			int lines = (entry.getValue().size() + cols - 1) / cols;
+			total += lines * (CARD_H + CARD_GAP) + 4;
+		}
+		int visibleH = bottom - TOP;
+		int maxScroll = Math.max(0, total - visibleH);
+		if (autoScroll && !shown.isEmpty()) {
+			autoScroll = false;
+			scroll = Math.max(0, mine - (CARD_H + CARD_GAP));
+		}
 		scroll = MathHelper.clamp(scroll, 0, maxScroll);
-		ctx.enableScissor(left - 2, TOP - 2, gridRight() + 2, height - 20);
+		ctx.enableScissor(left - 2, TOP - 2, gridRight() + 2, bottom);
 		long time = System.currentTimeMillis();
-		for (int i = 0; i < shown.size(); i++) {
-			Engram e = shown.get(i);
-			int x = left + (i % cols) * (TILE + GAP);
-			int y = TOP + (i / cols) * (TILE + GAP) - scroll;
-			if (y + TILE < TOP - 2 || y > height - 20) {
-				continue;
+		int y = TOP - scroll;
+		for (var entry : byLevel.entrySet()) {
+			int level = entry.getKey();
+			List<Engram> list = entry.getValue();
+			int lines = (list.size() + cols - 1) / cols;
+			int blockH = lines * (CARD_H + CARD_GAP);
+			if (y + blockH >= TOP - 2 && y <= bottom) {
+				// el número del nivel, grande (azul si ya lo tienes; apagado si aún no)
+				boolean reached = data.level >= level;
+				ctx.getMatrices().push();
+				String lv = String.valueOf(level);
+				float scale = lv.length() >= 3 ? 1.6F : 2.2F;
+				ctx.getMatrices().translate(left + (LEVEL_W - textRenderer.getWidth(lv) * scale) / 2.0F - 2.0F, y + 4.0F, 0.0F);
+				ctx.getMatrices().scale(scale, scale, 1.0F);
+				ctx.drawTextWithShadow(textRenderer, lv, 0, 0, reached ? 0xFF3CC8E6 : 0xFF2A5A66);
+				ctx.getMatrices().pop();
+				if (level == data.level || (reached && byLevel.higherKey(level) != null && byLevel.higherKey(level) > data.level)) {
+					// la fila de tu nivel, marcada
+					ctx.fill(left, y + 2, left + 2, y + blockH - CARD_GAP - 2, 0xFF3CC8E6);
+				}
 			}
-			int st = state(e, data);
-			int border = switch (st) {
-				case 0 -> 0xFF4FB04F;
-				case 1 -> (time / 400) % 2 == 0 ? 0xFFFFD75E : 0xFFC8A040;
-				case 2 -> 0xFF8A7A40;
-				case 3 -> 0xFF8A2A2A;
-				default -> 0xFF4A4E54;
-			};
-			int bg = switch (st) {
-				case 0 -> 0xFF1A3320;
-				case 1 -> 0xFF2E2A18;
-				case 3 -> 0xFF2A1416;
-				default -> 0xFF161A1E;
-			};
-			boolean over = mouseX >= x && mouseX < x + TILE && mouseY >= y && mouseY < y + TILE && mouseY >= TOP && mouseY < height - 20;
-			ctx.fill(x - 1, y - 1, x + TILE + 1, y + TILE + 1, over ? 0xFFFFFFFF : border);
-			ctx.fill(x, y, x + TILE, y + TILE, bg);
-			ctx.drawItem(icon(e), x + 5, y + 4);
-			if (st >= 3) {
-				// apagado: aún no
-				ctx.fill(x, y, x + TILE, y + TILE, 0x90000000);
+			for (int i = 0; i < list.size(); i++) {
+				Engram e = list.get(i);
+				int x = left + LEVEL_W + (i % cols) * (CARD_W + CARD_GAP);
+				int cy = y + (i / cols) * (CARD_H + CARD_GAP);
+				if (cy + CARD_H < TOP - 2 || cy > bottom) {
+					continue;
+				}
+				boolean over = mouseX >= x && mouseX < x + CARD_W && mouseY >= cy && mouseY < cy + CARD_H && mouseY >= TOP && mouseY < bottom;
+				card(ctx, e, state(e, data), x, cy, over, time);
+				if (over) {
+					hovered = e;
+				}
 			}
-			ctx.getMatrices().push();
-			ctx.getMatrices().translate(0.0F, 0.0F, 200.0F);
-			String lv = String.valueOf(e.level);
-			ctx.drawTextWithShadow(textRenderer, lv, x + TILE - 1 - textRenderer.getWidth(lv), y + TILE - 8,
-					st == 3 ? 0xFFFF6060 : st == 0 ? 0xFF8FE08F : 0xFFE0E0E0);
-			if (st == 0) {
-				ctx.drawTextWithShadow(textRenderer, "✔", x + 1, y + 1, 0xFF6FD06F);
-			}
-			ctx.getMatrices().pop();
-			if (over) {
-				hovered = e;
-			}
+			y += blockH + 4;
 		}
 		ctx.disableScissor();
 		if (maxScroll > 0) {
-			int track = visibleH;
-			int knob = Math.max(12, track * visibleH / (rows * (TILE + GAP)));
-			int ky = TOP + (track - knob) * scroll / maxScroll;
-			ctx.fill(gridRight() + 3, TOP, gridRight() + 5, TOP + track, 0x40FFFFFF);
+			int knob = Math.max(12, visibleH * visibleH / total);
+			int ky = TOP + (visibleH - knob) * scroll / maxScroll;
+			ctx.fill(gridRight() + 3, TOP, gridRight() + 5, TOP + visibleH, 0x40FFFFFF);
 			ctx.fill(gridRight() + 3, ky, gridRight() + 5, ky + knob, 0xFF3CC8E6);
 		}
+	}
+
+	/** Una ficha: nombre arriba (en una franja oscura), el icono en grande y, abajo a la derecha, lo que cuesta. */
+	private void card(DrawContext ctx, Engram e, int st, int x, int y, boolean over, long time) {
+		int border = switch (st) {
+			case 0 -> 0xFF4FD07A;
+			case 1 -> (time / 400) % 2 == 0 ? 0xFFFFD75E : 0xFFC8A040;
+			case 2 -> 0xFF8A7A40;
+			case 3 -> 0xFF5A2A30;
+			default -> 0xFF3A4048;
+		};
+		int bg = switch (st) {
+			case 0 -> 0xA0143A2A;
+			case 3, 4 -> 0xA00C161C;
+			default -> 0xA0103040;
+		};
+		ctx.fill(x - 1, y - 1, x + CARD_W + 1, y + CARD_H + 1, over ? 0xFFFFFFFF : border);
+		ctx.fill(x, y, x + CARD_W, y + CARD_H, bg);
+		// un brillo arriba, como el cristal de ARK
+		ctx.fill(x, y + CARD_HEAD, x + CARD_W, y + CARD_HEAD + 1, 0x302E8FA6);
+		ctx.fill(x, y, x + CARD_W, y + CARD_HEAD, 0xC00A1A22);
+		// el nombre, en una o dos líneas pequeñas
+		float ts = 0.6F;
+		List<net.minecraft.text.OrderedText> name = textRenderer.wrapLines(Text.translatable(e.translationKey()), (int) ((CARD_W - 4) / ts));
+		ctx.getMatrices().push();
+		ctx.getMatrices().translate(x + 2.0F, y + (name.size() > 1 ? 1.5F : 4.5F), 10.0F);
+		ctx.getMatrices().scale(ts, ts, 1.0F);
+		for (int l = 0; l < Math.min(2, name.size()); l++) {
+			ctx.drawTextWithShadow(textRenderer, name.get(l), 0, l * 10, st == 3 || st == 4 ? 0xFF8A949E : 0xFFE6F4F8);
+		}
+		ctx.getMatrices().pop();
+		// el icono, al doble
+		ctx.getMatrices().push();
+		ctx.getMatrices().translate(x + CARD_W / 2.0F - 16.0F, y + CARD_HEAD + 3.0F, 0.0F);
+		ctx.getMatrices().scale(2.0F, 2.0F, 1.0F);
+		ctx.drawItem(icon(e), 0, 0);
+		ctx.getMatrices().pop();
+		ctx.getMatrices().push();
+		ctx.getMatrices().translate(0.0F, 0.0F, 250.0F);
+		if (st >= 3) {
+			ctx.fill(x, y + CARD_HEAD, x + CARD_W, y + CARD_H, 0x90000000);
+		}
+		if (st == 0) {
+			ctx.drawTextWithShadow(textRenderer, "✔", x + CARD_W - 9, y + CARD_H - 10, 0xFF6FD07F);
+		} else {
+			String cost = e.cost + "p";
+			ctx.drawTextWithShadow(textRenderer, cost, x + CARD_W - 2 - textRenderer.getWidth(cost), y + CARD_H - 10,
+					st == 1 ? 0xFFFFD75E : st == 2 ? 0xFFB0A060 : 0xFF6A747E);
+		}
+		if (st == 4) {
+			// le falta otro antes: candado
+			String[] lock = {"..###..", ".#...#.", ".#...#.", "#######", "###.###", "###.###", "#######"};
+			for (int r = 0; r < lock.length; r++) {
+				for (int c = 0; c < lock[r].length(); c++) {
+					if (lock[r].charAt(c) == '#') {
+						ctx.fill(x + 3 + c, y + CARD_H - 10 + r, x + 4 + c, y + CARD_H - 9 + r, r < 3 ? 0xFFB0B4BA : 0xFF8A9098);
+					}
+				}
+			}
+		}
+		ctx.getMatrices().pop();
 	}
 
 	@Nullable
@@ -498,7 +580,7 @@ public class EngramScreen extends Screen {
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double horizontal, double vertical) {
-		scroll -= (int) Math.round(vertical * (TILE + GAP));
+		scroll -= (int) Math.round(vertical * (CARD_H + CARD_GAP) / 2.0);
 		return true;
 	}
 
