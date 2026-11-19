@@ -2999,6 +2999,12 @@ las habilidades (que tienen la suya).
 - Antes cada montón llevaba su fecha (redondeada a la hora) y solo se juntaba con otro de la misma hora; al caducar se
   pudría el montón entero en comida podrida o carne podrida.
 
+## Fase 122 — El contador de la comida, más pequeño
+
+- En la descripción de la comida, el **contador** ("Fresca · se pasa en 5 d y 18 h" y, con más de una, "Se pudre 1 cada
+  ...") sale con la **letra al 80 %**. Va justo debajo del nombre (Minecraft pone ahí los trozos dibujados aparte, como
+  el contenido de un saco); lo demás de la descripción ("Quita la sed", "Salada"...) sigue igual.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
