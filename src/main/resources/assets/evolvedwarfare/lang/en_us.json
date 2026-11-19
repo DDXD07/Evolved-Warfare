@@ -3261,5 +3261,6 @@
   "commands.evolvedwarfare.attributes.reset": "Attribute points refunded for %s players",
   "hud.evolvedwarfare.engrams.new": "%s new engrams to learn (%s)",
   "engram.evolvedwarfare.mace_vanilla": "Mace",
-  "engram.evolvedwarfare.chainmail": "Chainmail"
+  "engram.evolvedwarfare.chainmail": "Chainmail",
+  "tooltip.evolvedwarfare.food.stack": "1 rots every %s · the whole stack in %s"
 }

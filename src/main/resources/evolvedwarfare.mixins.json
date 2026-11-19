@@ -14,6 +14,7 @@
 		"PlayerEngramMixin",
 		"PlayerMetabolismMixin",
 		"NetherLifecycleMixin",
+		"ItemStackRotStackingMixin",
 		"ItemStackRotMixin",
 		"ItemRotBarMixin",
 		"PlayerEatRotMixin",

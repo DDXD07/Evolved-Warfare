@@ -143,7 +143,12 @@ public final class FoodRot {
 		return f > 0.5F ? Stage.FRESH : f > 0.2F ? Stage.STALE : Stage.SPOILING;
 	}
 
-	/** Lo que hay en el inventario de un jugador, cada segundo: se le pone la caducidad, se redondea y, si toca, se pudre. */
+	/**
+	 * Lo que hay en el inventario de un jugador, cada segundo: se le pone la caducidad y, si toca, se pudre. Como en ARK
+	 * (fase 121): la caducidad es la de la PRIMERA del montón; al llegar se pudre una (desaparece) y el contador vuelve a
+	 * empezar entero para la siguiente. Si ha pasado mucho tiempo (en un cofre, sin jugar...), se pudren de golpe las que
+	 * tocaban. Devuelve lo que hay que poner en su sitio (vacío si se han podrido todas) o null si sigue siendo el mismo.
+	 */
 	@Nullable
 	public static ItemStack check(ItemStack stack, long now) {
 		if (!enabled() || !perishable(stack)) {
@@ -154,13 +159,49 @@ public final class FoodRot {
 			stamp(stack, now);
 			return null;
 		}
-		if (exp % BUCKET != 0) {
-			stack.set(EXPIRES, round(exp));
+		int lost = due(stack, now);
+		if (lost <= 0) {
+			return null;
 		}
-		if (exp <= now) {
-			return rotten(stack);
+		if (lost >= stack.getCount()) {
+			return ItemStack.EMPTY;
 		}
+		long each = Math.max(BUCKET, shelf(stack));
+		stack.decrement(lost);
+		stack.set(EXPIRES, exp + each * lost);
 		return null;
+	}
+
+	/** Cuántas del montón se tendrían que haber podrido ya. */
+	public static int due(ItemStack stack, long now) {
+		Long exp = expires(stack);
+		if (exp == null || exp > now) {
+			return 0;
+		}
+		long each = Math.max(BUCKET, shelf(stack));
+		long n = 1L + (now - exp) / each;
+		return (int) Math.min(stack.getCount(), n);
+	}
+
+	/** Cuándo se habrá podrido el montón entero. */
+	public static long allGone(ItemStack stack) {
+		Long exp = expires(stack);
+		return exp == null ? 0L : exp + Math.max(BUCKET, shelf(stack)) * Math.max(0, stack.getCount() - 1);
+	}
+
+	/** Si dos montones son la misma comida salvo por la caducidad (se juntan; se queda la caducidad del de destino). */
+	public static boolean sameButExpiry(ItemStack a, ItemStack b) {
+		if (a.isEmpty() || b.isEmpty() || !a.isOf(b.getItem()) || !perishable(a)) {
+			return false;
+		}
+		if (!a.contains(EXPIRES) && !b.contains(EXPIRES)) {
+			return false;
+		}
+		ItemStack ca = a.copyWithCount(1);
+		ItemStack cb = b.copyWithCount(1);
+		ca.remove(EXPIRES);
+		cb.remove(EXPIRES);
+		return ItemStack.areItemsAndComponentsEqual(ca, cb);
 	}
 
 	/** En lo que se convierte al pudrirse. */

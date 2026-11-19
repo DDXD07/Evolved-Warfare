@@ -46,6 +46,11 @@ public final class ClientFood {
 			};
 			String key = "tooltip.evolvedwarfare.food." + stage.name().toLowerCase(java.util.Locale.ROOT);
 			lines.add(Text.translatable(key, time(Math.max(0L, exp - now))).formatted(color));
+			if (stack.getCount() > 1) {
+				// el contador es el de la primera; las demás van detrás (fase 121, como en ARK)
+				lines.add(Text.translatable("tooltip.evolvedwarfare.food.stack", time(FoodRot.shelf(stack)),
+						time(Math.max(0L, FoodRot.allGone(stack) - now))).formatted(Formatting.DARK_GRAY));
+			}
 		});
 	}
 

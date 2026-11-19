@@ -441,6 +441,8 @@ TEXTS = {
     "tooltip.evolvedwarfare.food.spoiling": ("Pocha · se pudre en %s", "Spoiling · rots in %s"),
     "tooltip.evolvedwarfare.food.rotten": ("Podrida", "Rotten"),
     "tooltip.evolvedwarfare.food.lasts": ("Aguanta unos %s", "Keeps for about %s"),
+    # fase 121: el montón se pudre de una en una, como en ARK
+    "tooltip.evolvedwarfare.food.stack": ("Se pudre 1 cada %s · el montón entero, en %s", "1 rots every %s · the whole stack in %s"),
     "tooltip.evolvedwarfare.food.salted": ("Salada", "Salted"),
     "tooltip.evolvedwarfare.food.smoked": ("Ahumada", "Smoked"),
     "tooltip.evolvedwarfare.food.days_hours": ("%s d y %s h", "%s d %s h"),

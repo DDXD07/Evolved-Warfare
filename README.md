@@ -2986,6 +2986,19 @@ las habilidades (que tienen la suya).
   herramientas de madera; las de piedra, al nivel 3.
 - Una prueba nueva lo comprueba (que el principio se pueda hacer a nivel 1 y con 10 puntos).
 
+## Fase 121 — La comida se amontona y se pudre de una en una (como en ARK)
+
+- **La comida se amontona aunque su contador vaya por otro sitio**: un filete crudo al que le faltan 30 segundos y 20
+  filetes recién hechos se juntan en un montón de 21. El montón **se queda el contador del de destino** (el del montón
+  donde los sueltas).
+- **El contador es el de la primera del montón**: cuando llega a cero **se pudre una y desaparece** (el montón baja en
+  uno) y el contador **vuelve a empezar entero** para la siguiente, y así hasta que no quede ninguna.
+- Si pasa mucho tiempo sin mirarlo (en un cofre, sin jugar...), al volver **se pudren de golpe las que tocaban**.
+- En la descripción, con más de una: "Se pudre 1 cada 5 d y 18 h · el montón entero, en 23 d".
+- Lo salado o ahumado no se junta con lo normal (siguen siendo distintos). La nevera, la sal y el ahumador siguen igual.
+- Antes cada montón llevaba su fecha (redondeada a la hora) y solo se juntaba con otro de la misma hora; al caducar se
+  pudría el montón entero en comida podrida o carne podrida.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

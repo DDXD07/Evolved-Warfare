@@ -3261,5 +3261,6 @@
   "commands.evolvedwarfare.attributes.reset": "Puntos de atributo devueltos a %s jugadores",
   "hud.evolvedwarfare.engrams.new": "%s engramas nuevos para aprender (%s)",
   "engram.evolvedwarfare.mace_vanilla": "Maza de viento",
-  "engram.evolvedwarfare.chainmail": "Cota de malla"
+  "engram.evolvedwarfare.chainmail": "Cota de malla",
+  "tooltip.evolvedwarfare.food.stack": "Se pudre 1 cada %s · el montón entero, en %s"
 }

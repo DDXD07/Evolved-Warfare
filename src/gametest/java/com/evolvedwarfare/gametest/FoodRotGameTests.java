@@ -44,11 +44,32 @@ public class FoodRotGameTests implements FabricGameTest {
 		long shelf = FoodRot.shelf(bread);
 		FoodRot.Stage stale = FoodRot.stage(bread, FoodRot.expires(bread) - shelf / 3);
 		FoodRot.Stage spoiling = FoodRot.stage(bread, FoodRot.expires(bread) - shelf / 10);
-		ItemStack rotten = FoodRot.check(bread, FoodRot.expires(bread) + 1);
+		// como en ARK (fase 121): al llegar se pudre UNA y desaparece, y el contador vuelve a empezar para la siguiente
+		long exp = FoodRot.expires(bread);
+		ItemStack replaced = FoodRot.check(bread, exp + 1);
+		int left = bread.getCount();
+		long next = FoodRot.expires(bread);
+		// mucho tiempo después (en un cofre...), se pudren de golpe las que tocaban, y si son todas no queda nada
+		ItemStack four = bread.copy();
+		ItemStack gone = FoodRot.check(four, next + shelf * 10);
 		ItemStack rottenBeef = FoodRot.rotten(new ItemStack(Items.BEEF, 2));
-		LOG.info("[EW-GAMETEST] pudrirse: pan aguanta {} ticks, a 1/3 {}, a 1/10 {}, al final {}, carne {}", shelf, stale, spoiling, rotten, rottenBeef);
+		// se amontonan aunque el contador vaya por otro sitio; el montón de destino se queda el suyo
+		ItemStack old = new ItemStack(Items.BREAD, 1);
+		old.set(FoodRot.EXPIRES, now + 1000L);
+		ItemStack fresh = new ItemStack(Items.BREAD, 20);
+		FoodRot.check(fresh, now);
+		boolean stacks = ItemStack.areItemsAndComponentsEqual(old, fresh);
+		boolean sameForSync = ItemStack.areEqual(old.copyWithCount(20), fresh);
+		ItemStack salted = fresh.copy();
+		salted.set(FoodRot.PRESERVED, FoodRot.SALTED);
+		boolean saltedStacks = ItemStack.areItemsAndComponentsEqual(fresh, salted);
+		LOG.info("[EW-GAMETEST] pudrirse: pan aguanta {} ticks, a 1/3 {}, a 1/10 {}; al caducar quedan {} de 5 (siguiente en {}), mucho después {};"
+						+ " carne {}; se amontonan {}, iguales para mandar {}, con salado {}", shelf, stale, spoiling, left, next - exp, gone, rottenBeef,
+				stacks, sameForSync, saltedStacks);
 		check(stale == FoodRot.Stage.STALE && spoiling == FoodRot.Stage.SPOILING, "No se pasa por las etapas");
-		check(rotten != null && rotten.isOf(FoodItems.ROTTEN_FOOD) && rotten.getCount() == 5, "El pan caducado no se pudre");
+		check(replaced == null && left == 4 && next - exp == shelf, "Al caducar no se pudre una sola y vuelve a empezar: quedan " + left);
+		check(gone != null && gone.isEmpty(), "Mucho tiempo después no se pudren todas");
+		check(stacks && !sameForSync && !saltedStacks, "No se amontonan como deben");
 		check(rottenBeef.isOf(Items.ROTTEN_FLESH), "La carne no se pudre en carne podrida");
 		ctx.complete();
 	}
