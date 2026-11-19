@@ -43,7 +43,9 @@ FREE = {
     "items": mc("crafting_table", "furnace", "stick", "torch", "iron_ingot", "gold_ingot", "copper_ingot", "netherite_ingot",
                 "iron_nugget", "gold_nugget", "diamond", "emerald", "redstone", "lapis_lazuli", "coal", "bone_meal", "wheat",
                 "raw_iron", "raw_gold", "raw_copper", "slime_ball", "dried_kelp", "melon_slice", "honey_bottle", "quartz",
-                "amethyst_shard", "netherite_scrap", "glass", "charcoal", "sugar", "string", "leather", "white_wool", "gunpowder")
+                "amethyst_shard", "netherite_scrap", "glass", "charcoal", "sugar", "string", "leather", "white_wool", "gunpowder",
+                # el principio de la partida (fase 120): 4 palos = losa de roble, 2 losas = tablones; 4 guijarros = adoquín
+                "oak_slab", "cobblestone")
     + ew("guide_book", "charred_planks", "cabbage_seeds", "corn_seeds", "tomato_seeds"),
     "tags": ["minecraft:planks"],
     "patterns": [r"^%s:hot_.*_ingot$" % NS],
@@ -86,7 +88,7 @@ def engram(id, cat, level, cost, es, en, icon=None, items=(), patterns=(), tags=
 # ---------------------------------------------------------------------------------------------- herramientas
 engram("wood_tools", "tools", 1, 2, "Herramientas de madera", "Wooden tools", "minecraft:wooden_pickaxe",
        items=mc("wooden_pickaxe", "wooden_axe", "wooden_shovel", "wooden_hoe", "wooden_sword"))
-engram("flint_tools", "tools", 2, 2, "Herramientas de sílex", "Flint tools", NS + ":flint_hatchet",
+engram("flint_tools", "tools", 1, 2, "Herramientas de sílex", "Flint tools", NS + ":flint_hatchet",
        items=ew("flint_hatchet", "flint_knife"))
 engram("stone_tools", "tools", 3, 3, "Herramientas de piedra", "Stone tools", "minecraft:stone_pickaxe",
        items=mc("stone_pickaxe", "stone_axe", "stone_shovel", "stone_hoe", "stone_sword"), requires=["wood_tools"])

@@ -35,6 +35,8 @@
       "minecraft:leather",
       "minecraft:white_wool",
       "minecraft:gunpowder",
+      "minecraft:oak_slab",
+      "minecraft:cobblestone",
       "evolvedwarfare:guide_book",
       "evolvedwarfare:charred_planks",
       "evolvedwarfare:cabbage_seeds",
@@ -82,7 +84,7 @@
     {
       "id": "flint_tools",
       "category": "tools",
-      "level": 2,
+      "level": 1,
       "cost": 2,
       "icon": "evolvedwarfare:flint_hatchet",
       "items": [

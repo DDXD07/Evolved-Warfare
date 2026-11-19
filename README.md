@@ -2974,6 +2974,18 @@ las habilidades (que tienen la suya).
 - Fondo **azul oscuro** como el de ARK. Al abrir, **baja sola hasta tu nivel**.
 - Las categorías de la izquierda y el buscador siguen funcionando como **filtros** ("Todos" enseña todos los niveles).
 
+## Fase 120 — El principio de la partida con engramas
+
+- Con los engramas **no se podía empezar**: los troncos no se rompen con la mano (fase 21) y el tronco no da tablones en
+  la mesa (fase 70), así que la primera madera sale de **4 palos = losa de roble** (2 losas = tablones) o de **sílex + 2
+  palos = hacha de sílex**; pero la losa iba en "Construcción de madera" y el hacha de sílex en "Herramientas de sílex",
+  las dos de **nivel 2**. Y el **adoquín** (4 guijarros, fase 71) iba en "Otros bloques" (**nivel 10**), así que no había
+  ni herramientas de piedra ni horno hasta el 10.
+- Ahora son **libres** la **losa de roble** y el **adoquín**, y "Herramientas de sílex" es de **nivel 1**. A nivel 1, con
+  los 10 puntos del principio, salen la losa de palos, los tablones, la mesa, el horno, el hacha de sílex y las
+  herramientas de madera; las de piedra, al nivel 3.
+- Una prueba nueva lo comprueba (que el principio se pueda hacer a nivel 1 y con 10 puntos).
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

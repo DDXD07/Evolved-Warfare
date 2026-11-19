@@ -87,6 +87,31 @@ public class EngramGameTests implements FabricGameTest {
 		ctx.complete();
 	}
 
+	/**
+	 * El principio de la partida (fase 120): sin poder romper troncos con la mano ni sacar tablones del tronco en la mesa,
+	 * hay que poder hacer, a nivel 1 y con los 10 puntos del principio, la losa de palos, los tablones, la mesa, el
+	 * adoquín de guijarros, el horno, un hacha (de sílex o de madera) y un pico de madera; y de piedra al poco.
+	 */
+	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "engrams")
+	public void startIsPossible(TestContext ctx) {
+		Item[] free = {Items.STICK, Items.OAK_SLAB, Items.OAK_PLANKS, Items.CRAFTING_TABLE, Items.COBBLESTONE, Items.FURNACE, Items.TORCH};
+		for (Item item : free) {
+			check(Engrams.of(item) == null, "Al principio pide engrama: " + item + " (" + of(item) + ")");
+		}
+		int cost = 0;
+		for (Item item : new Item[] {Items.WOODEN_PICKAXE,
+				net.minecraft.registry.Registries.ITEM.get(net.minecraft.util.Identifier.of("evolvedwarfare", "flint_hatchet"))}) {
+			Engram e = Engrams.of(item);
+			check(e != null && e.level <= 1, "No se puede a nivel 1: " + item + " (" + of(item) + ")");
+			cost += e.cost;
+		}
+		Engram stone = Engrams.of(Items.STONE_PICKAXE);
+		LOG.info("[EW-GAMETEST] principio: pico de madera y hacha de sílex a nivel 1 por {} puntos; piedra al {}", cost, stone.level);
+		check(cost <= 10, "El primer pico y la primera hacha cuestan más de los 10 puntos del principio: " + cost);
+		check(stone.level <= 3, "Las herramientas de piedra llegan tarde: " + stone.level);
+		ctx.complete();
+	}
+
 	/** Ningún engrama pide de ingrediente algo de un engrama de más nivel que no pida antes (fase 116). */
 	@GameTest(templateName = EMPTY_STRUCTURE, batchId = "engrams")
 	public void noLevelInversions(TestContext ctx) {
