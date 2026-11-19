@@ -2491,7 +2491,7 @@
   "dialogue.evolvedwarfare.activity.order.home": "Now: at home",
   "entity.evolvedwarfare.steam_borer": "Steam Tunnel Borer",
   "item.evolvedwarfare.steam_borer": "Steam Tunnel Borer",
-  "item.evolvedwarfare.steam_borer.desc": "Place it on a big track. Ride it: W and S, the throttle; A slopes down, D slopes up. Its drill bores a 6 x 6 tunnel and lays its own track; it comes with the iron drill head (right click with another to swap). Right click the hopper hatch (right side): track, coal and spoil; the firebox door (left side): the fire.",
+  "item.evolvedwarfare.steam_borer.desc": "Place it on a big track. Ride it: W and S, the throttle; A slopes down, D slopes up. Bores a 6 x 6 tunnel and lays its own track. Right click the hopper hatch (right side): track, coal and spoil; the firebox door (left side): the fire.",
   "container.evolvedwarfare.steam_borer": "Borer Hopper",
   "message.evolvedwarfare.borer.dash": "%s · %s · track: %s",
   "message.evolvedwarfare.borer.mode.up": "Climbing",

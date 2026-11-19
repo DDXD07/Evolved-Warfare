@@ -156,37 +156,118 @@ def locomotive(name="steam_locomotive", front=True):
     return a
 
 
+def red_wheels(a, xs, r, z=6, name="w"):
+    """Ruedas negras con el centro rojo (como las de la foto de la Mikado), con su cubo y su contrapeso."""
+    for k, x in enumerate(xs):
+        for side in (-1, 1):
+            zz = z if side > 0 else -z - 1
+            w = a.part("%s%d_%d" % (name, k, side + 1), "frame", (x, 6 - r, zz), role="wheel")
+            w.cube((-r, -r, 0), (2 * r, 2 * r, 1), **C(BLACK, rings=((60, 60, 66), 1), spots=((44, 44, 50), 0.1)))   # la llanta
+            if r >= 3:
+                w.cube((-r + 2, -r + 2, side), (2 * r - 4, 2 * r - 4, 1), **C(RED, spots=((110, 22, 20), 0.05)))     # el centro, rojo
+                w.cube((-r + 1, 1, 2 * side), (3, 2, 1), **C(BLACK))                                                # el contrapeso
+            else:
+                w.cube((-1, -1, side), (2, 2, 1), **C(RED))
+            w.cube((-1, -1, 2 * side), (2, 2, 1), **C(STEEL, high=((190, 190, 198), 1)))                          # el cubo
+
+
 def borer():
-    """La tuneladora de vapor (fase 64): la locomotora sin quitapiedras, con un mamparo y una cabeza perforadora de casi
-    todo el túnel delante (la parte «cutter», que gira sobre el eje de la vía mientras excava)."""
+    """La tuneladora de vapor (fase 124): larga como una Mikado de vapor (la 141F de la foto, como inspiración): caldera
+    negra larga con su domo, el arenero y la chimenea, la franja roja de los estribos, los paravientos negros con el
+    borde rojo, una rueda guía delante, cuatro motrices grandes con el centro rojo, una bajo la cabina y la cabina
+    atrás. Delante, el mamparo con el taladro (fase 123); a los lados, el depósito (derecha) y el hogar (izquierda),
+    donde estaban (sus puertas y carteles no se mueven)."""
     import math
-    a = locomotive("steam_borer", front=False)
-    frame = a.parts[0]
-    # el mamparo (sostiene la cabeza) y sus tirantes hasta la caldera
-    frame.cube((-17, -26, -14), (2, 30, 28), **C(DARK, rings=((70, 68, 72), 2), spots=((84, 80, 86), 0.05)))
+    a = W.Animal("steam_borer")
+    frame = a.part("frame", None, (0, 0, 0), role="body")
+    blk = C(BLACK, high=((56, 56, 62), 1), low=((18, 18, 22), 1))
+    red = C(RED, spots=((110, 22, 20), 0.04), low=((96, 20, 18), 1))
+    # el bastidor y la viga de atrás (roja, con sus topes)
+    frame.cube((-24, 1, -6), (46, 2, 12), **C(IRON, rings=((70, 68, 72), 1)))
+    frame.cube((22, -1, -8), (2, 4, 16), **red)
+    for z in (-6, 4):
+        frame.cube((24, 0, z), (1, 2, 2), **C(STEEL))
+    frame.cube((24, 1, -1), (1, 1, 2), **C(DARK))
+    # los estribos: una plancha negra a lo largo, con su faldón rojo (la franja roja de la foto)
+    frame.cube((-22, -3, -9), (44, 1, 18), **C(BLACK, rings=((40, 40, 46), 1)))
+    for z in (-9, 8):
+        frame.cube((-22, -2, z), (44, 1, 1), **red)
+    # las ruedas: la guía delante, cuatro motrices grandes y una bajo la cabina
+    red_wheels(a, (-21,), 2, z=6, name="lead")
+    red_wheels(a, (-13, -3, 7, 17), 5, z=6, name="drive")
+    for side in (-1, 1):
+        z = 9 if side > 0 else -10
+        frame.cube((-14, 1, z), (32, 1, 1), **C(STEEL, high=((196, 196, 204), 1)))              # la biela de acoplamiento
+        frame.cube((-19, 0, z), (7, 1, 1), **C(STEEL))                                           # la biela motriz
+        frame.cube((-21, -2, -10 if side < 0 else 7), (6, 4, 3), **C(BLACK, rings=((70, 70, 78), 1)))   # los cilindros
+        frame.cube((-15, 0, -10 if side < 0 else 7), (5, 1, 3), **C(STEEL))                     # el vástago
+    # la caldera, larga y negra, con sus aros apenas marcados
+    boiler = a.part("boiler", "frame", (0, 0, 0), role="none")
+    boiler.cube((-22, -12, -5), (32, 9, 10), **blk)
+    boiler.cube((-22, -13, -4), (32, 1, 8), **C((44, 44, 50)))                                    # el lomo, redondeado
+    boiler.cube((-22, -11, -6), (32, 7, 1), **blk)                                               # y los costados
+    boiler.cube((-22, -11, 5), (32, 7, 1), **blk)
+    for x in (-14, -6, 2):
+        boiler.cube((x, -14, -6), (1, 11, 12), **C((40, 40, 46), high=((70, 70, 78), 1)))         # los aros (oscuros)
+    boiler.cube((-21, -17, -2), (4, 4, 4), **C(BLACK, high=((60, 60, 66), 1)))                    # la chimenea
+    boiler.cube((-22, -18, -3), (6, 1, 6), **C(BLACK, rings=((70, 70, 78), 1)))                   # su boca
+    boiler.cube((-16, -15, -3), (5, 2, 6), **C(BLACK, rings=((64, 64, 70), 1)))                   # el calentador de agua (encima)
+    boiler.cube((-7, -16, -3), (5, 3, 6), **C(BLACK, high=((66, 66, 72), 1)))                     # el domo de vapor
+    boiler.cube((0, -15, -2), (4, 2, 4), **C(BLACK, high=((66, 66, 72), 1)))                      # el arenero
+    boiler.cube((5, -15, -1), (1, 2, 1), **C(BRASS))                                              # el silbato
+    for z in (-6, 5):
+        boiler.cube((-20, -8, z), (29, 1, 1), **C(STEEL))                                         # los pasamanos
+        boiler.cube((-20, -5, z), (29, 1, 1), **C((40, 40, 46)))                                  # las tuberías
+    # los paravientos: dos planchas grandes a los lados, delante, negras con el borde rojo
+    for z in (-9, 8):
+        frame.cube((-23, -16, z), (9, 13, 1), **C(BLACK, rings=(RED, 1)))
+    # la cabina, atrás: negra con su franja roja y las ventanas
+    cab = a.part("cab", "frame", (0, 0, 0), role="none")
+    for side in (-1, 1):
+        z = 7 if side > 0 else -8
+        cab.cube((11, -9, z), (11, 6, 1), **blk)                                                  # lo bajo de los lados
+        cab.cube((11, -3, z), (11, 1, 1), **red)                                                  # la franja roja
+        cab.cube((11, -18, z), (11, 3, 1), **blk)                                                 # lo alto
+        cab.cube((11, -15, z), (2, 6, 1), **blk)                                                  # los postes (las ventanas)
+        cab.cube((16, -15, z), (1, 6, 1), **blk)
+        cab.cube((21, -15, z), (1, 6, 1), **blk)
+        cab.cube((13, -15, z - side), (3, 6, 1), **C(GLASS))                                       # los cristales (por dentro)
+        cab.cube((17, -15, z - side), (4, 6, 1), **C(GLASS))
+        cab.cube((14, -7, z + side), (4, 2, 1), **C(RED, rings=((150, 110, 40), 1)))              # la placa del número
+    cab.cube((10, -18, -8), (1, 15, 16), **blk)                                                   # la pared delantera
+    cab.cube((10, -15, -6), (1, 4, 3), **C(GLASS))
+    cab.cube((10, -15, 3), (1, 4, 3), **C(GLASS))
+    cab.cube((9, -20, -9), (14, 2, 18), **C(BLACK, low=(RED, 1), high=((56, 56, 62), 1)))      # el techo, con alero
+    cab.cube((13, -21, -2), (6, 1, 4), **C(BLACK))                                                # la claraboya
+    cab.cube((12, -8, -4), (2, 5, 8), **C(BLACK, rings=((70, 70, 78), 2)))                        # el frente del hogar
+    cab.cube((13, -6, -1), (2, 2, 2), **C(FIRE, high=((255, 210, 120), 1)))                       # la puerta, encendida
+    cab.cube((12, -12, -3), (1, 2, 2), **C(BRASS))                                                # los manómetros
+    cab.cube((12, -12, 1), (1, 2, 2), **C(BRASS))
+    # el mamparo de delante (sostiene el taladro) con sus tirantes y el farol de arriba
+    frame.cube((-26, -27, -14), (2, 31, 28), **C(DARK, rings=((70, 68, 72), 2), spots=((84, 80, 86), 0.05)))
     for z in (-13, 11):
-        frame.cube((-15, -24, z), (9, 2, 2), **C(IRON, high=((80, 78, 84), 1)))
-        frame.cube((-15, 0, z), (9, 2, 2), **C(IRON, high=((80, 78, 84), 1)))
-    frame.cube((-15, -26, -10), (6, 2, 20), **C(IRON))
+        frame.cube((-24, -25, z), (8, 2, 2), **C(IRON, high=((80, 78, 84), 1)))
+        frame.cube((-24, 0, z), (2, 2, 2), **C(IRON, high=((80, 78, 84), 1)))
+    frame.cube((-24, -27, -10), (5, 2, 20), **C(IRON))
     for z in (-10, 8):
-        frame.cube((-14, -3, z), (4, 4, 2), **C(BRASS, rings=((150, 110, 40), 1)))                # los pistones del empuje
-    frame.cube((-12, -24, -2), (2, 7, 4), **C(LAMP))                                           # el farol de arriba
-    # a la derecha (z +), el depósito: una tolva con su cartel arriba y la compuerta abajo
-    frame.cube((-12, -10, 8), (15, 10, 3), **C(RED, low=((96, 20, 18), 1), spots=((110, 22, 20), 0.04)))
-    frame.cube((-12, -11, 8), (15, 1, 3), **C(BLACK))                                          # su borde
-    frame.cube((-12, -10, 11), (14, 4, 1), **C(WOOD, rings=((70, 46, 26), 1)))                  # el cartel
-    frame.cube((-9, -5, 11), (8, 4, 1), **C(IRON, rings=(STEEL, 1)))                            # la compuerta
-    frame.cube((-6, -4, 12), (2, 1, 1), **C(BRASS))                                             # su tirador
+        frame.cube((-24, -3, z), (3, 4, 2), **C(BRASS, rings=((150, 110, 40), 1)))                # los pistones del empuje
+    frame.cube((-25, -25, -2), (2, 3, 4), **C(DARK))                                              # el farol
+    frame.cube((-26, -24, -1), (1, 2, 2), **C(LAMP))
+    frame.cube((-26, 1, -7), (2, 3, 14), **red)                                                   # la viga de delante, roja
+    # a la derecha (z +), el depósito: una tolva roja con su cartel arriba y la compuerta abajo
+    frame.cube((-12, -11, 8), (15, 8, 3), **C(RED, low=((96, 20, 18), 1), spots=((110, 22, 20), 0.04)))
+    frame.cube((-12, -12, 8), (15, 1, 3), **C(BLACK))                                             # su borde
+    frame.cube((-12, -10, 11), (14, 4, 1), **C(WOOD, rings=((70, 46, 26), 1)))                     # el cartel
+    frame.cube((-9, -6, 11), (8, 3, 1), **C(IRON, rings=(STEEL, 1)))                               # la compuerta
+    frame.cube((-6, -5, 12), (2, 1, 1), **C(BRASS))                                                # su tirador
     for x in (-9, -2):
-        frame.cube((x, -5, 12), (1, 1, 1), **C(STEEL))                                          # las bisagras
+        frame.cube((x, -6, 12), (1, 1, 1), **C(STEEL))                                             # las bisagras
     # a la izquierda (z -), la caldera: el hogar con su puerta encendida y su cartel
-    frame.cube((-6, -11, -11), (10, 11, 5), **C(BLACK, high=((54, 54, 60), 1), rings=(BRASS, 1)))
-    frame.cube((-6, -10, -12), (10, 3, 1), **C(WOOD, rings=((70, 46, 26), 1)))                  # el cartel
-    frame.cube((-3, -6, -12), (4, 4, 1), **C(BLACK, rings=(BRASS, 1)))                          # el marco de la puerta
-    frame.cube((-2, -5, -13), (2, 2, 1), **C(FIRE, high=((255, 210, 120), 1)))                  # la puerta, encendida
-    frame.cube((-6, -1, -12), (10, 1, 1), **C(DARK))                                            # el cenicero
-    # el taladro (fase 123): una broca cónica con dos espirales, sobre un aro con dientes del ancho del túnel; uno por
-    # cabezal (hierro, acero, netherita: el juego enseña el que lleva puesto). Gira sobre el eje de la vía.
+    frame.cube((-6, -11, -11), (10, 8, 5), **C(BLACK, high=((54, 54, 60), 1), rings=(BRASS, 1)))
+    frame.cube((-6, -10, -12), (10, 3, 1), **C(WOOD, rings=((70, 46, 26), 1)))                     # el cartel
+    frame.cube((-3, -7, -12), (4, 4, 1), **C(BLACK, rings=(BRASS, 1)))                             # el marco de la puerta
+    frame.cube((-2, -6, -13), (2, 2, 1), **C(FIRE, high=((255, 210, 120), 1)))                     # la puerta, encendida
+    # el taladro (fase 123), uno por cabezal; ahora delante del mamparo nuevo
     for name, mat in (("cutter", "iron"), ("cutter_steel", "steel"), ("cutter_netherite", "netherite")):
         drill(a, name, mat)
     return a
@@ -205,7 +286,7 @@ def drill(a, name, mat):
     delante (-x) hasta la punta y dos espirales (las estrías) que suben por el cono."""
     import math
     body, ring, flute, teeth = DRILL_MATS[mat]
-    cut = a.part(name, "frame", (-18, -12, 0), role="none")
+    cut = a.part(name, "frame", (-27, -12, 0), role="none")
     R = 16
     # el aro de atrás (el disco que tapa el frente del túnel), hueco por dentro
     for y in range(-R, R, 2):

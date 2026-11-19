@@ -52,8 +52,13 @@ import org.jetbrains.annotations.Nullable;
 public class BorerEntity extends LocomotiveEntity {
 	/** El túnel: 6 de ancho (la vía va entre dos bloques: así caben las plataformas de 5) y 6 de alto. */
 	public static final int WIDTH = 6, HEIGHT = 6;
+	/**
+	 * Lo que mide (fase 124): larga como una Mikado de vapor, de la viga de atrás al mamparo del taladro (unos 7,8
+	 * bloques; el taladro sale unos 3,7 más por delante). Los ejes, a 2,6 del centro.
+	 */
+	public static final double BORER_HALF_LENGTH = 25 * 2.5 / 16.0, BORER_BOGIE = 2.6;
 	/** Cuánto por delante del centro mira si queda vía (más que la cabeza). */
-	public static final double LOOKAHEAD = HALF_LENGTH + 1.5;
+	public static final double LOOKAHEAD = BORER_HALF_LENGTH + 1.9;
 	private static final TrackedData<Integer> MODE = DataTracker.registerData(BorerEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	private static final TrackedData<Boolean> DIGGING = DataTracker.registerData(BorerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	/** El cabezal del taladro (fase 123): 0 ninguno, 1 hierro, 2 acero, 3 netherita. */
@@ -135,16 +140,41 @@ public class BorerEntity extends LocomotiveEntity {
 	@Override
 	protected List<Box> localBoxes() {
 		if (boxes == null) {
-			List<Box> b = new ArrayList<>(super.localBoxes());
-			// la cabeza: un disco de casi todo el túnel, delante, y el taladro (cónico) que sale de él
-			b.addAll(split(new Box(-2.4, 0.3, 15 * K, 2.4, 5.4, 18 * K)));
-			b.addAll(split(new Box(-1.4, 1.5, 18 * K, 1.4, 4.2, 25 * K)));
-			// el depósito (a la derecha) y el hogar (a la izquierda), con sus puertas
-			b.addAll(split(new Box(-13 * K, 6 * K, -3 * K, -8 * K, 17 * K, 12 * K)));
-			b.addAll(split(new Box(6 * K, 6 * K, -4 * K, 13 * K, 17 * K, 6 * K)));
+			// lo macizo de la tuneladora larga (x a lo ancho, z hacia delante; fase 124)
+			List<Box> b = new ArrayList<>();
+			for (Box big : new Box[] {
+					new Box(-1.45, 0.45, -24 * K, 1.45, 9 * K, 24 * K),               // el bastidor y los estribos (se pisan)
+					new Box(-0.94, 9 * K, -10 * K, 0.94, 19 * K, 22 * K),             // la caldera
+					new Box(-0.4, 19 * K, 17 * K, 0.4, 24 * K, 21 * K),               // la chimenea
+					new Box(-1.4, 9 * K, -22 * K, 1.4, 24 * K, -10 * K),              // la cabina
+					new Box(-1.45, 9 * K, 14 * K, -1.25, 22 * K, 23 * K),             // los paravientos
+					new Box(1.25, 9 * K, 14 * K, 1.45, 22 * K, 23 * K)}) {
+				b.addAll(split(big));
+			}
+			// el mamparo con el aro del taladro, delante, y el taladro (cónico) que sale de él
+			b.addAll(split(new Box(-2.4, 0.3, 24 * K, 2.4, 5.4, 28 * K)));
+			b.addAll(split(new Box(-1.4, 1.5, 28 * K, 1.4, 4.2, 35 * K)));
+			// el depósito (a la derecha) y el hogar (a la izquierda), con sus puertas (donde estaban)
+			b.addAll(split(new Box(-13 * K, 9 * K, -3 * K, -8 * K, 18 * K, 12 * K)));
+			b.addAll(split(new Box(6 * K, 9 * K, -4 * K, 13 * K, 17 * K, 6 * K)));
 			boxes = b;
 		}
 		return boxes;
+	}
+
+	@Override
+	protected double halfLength() {
+		return BORER_HALF_LENGTH;
+	}
+
+	@Override
+	protected double bogie() {
+		return BORER_BOGIE;
+	}
+
+	@Override
+	protected double wheelRadius() {
+		return 5 * K;
 	}
 
 	@Override
@@ -190,7 +220,7 @@ public class BorerEntity extends LocomotiveEntity {
 	// ------------------------------------------------------------------ excavar y poner vía
 
 	/** Hasta dónde mira para empezar a excavar, y dónde tiene que estar ya parada si no ha acabado. */
-	public static final double FAR = HALF_LENGTH + 4.0, NEAR = HALF_LENGTH + 1.0;
+	public static final double FAR = BORER_HALF_LENGTH + 4.4, NEAR = BORER_HALF_LENGTH + 1.4;
 
 	@Override
 	protected double speedLimit(ServerWorld world, boolean burning) {

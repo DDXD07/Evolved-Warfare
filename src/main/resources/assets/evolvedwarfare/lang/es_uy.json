@@ -2491,7 +2491,7 @@
   "dialogue.evolvedwarfare.activity.order.home": "Ahora: en su casa",
   "entity.evolvedwarfare.steam_borer": "Tuneladora de vapor",
   "item.evolvedwarfare.steam_borer": "Tuneladora de vapor",
-  "item.evolvedwarfare.steam_borer.desc": "Ponla en una vía grande. Súbete: W y S, el regulador; A, baja en cuesta; D, sube. Su taladro abre un túnel de 6 x 6 y pone las vías sola; lleva el cabezal de hierro (clic derecho con otro para cambiarlo). Clic derecho en la compuerta del depósito (a la derecha): vías, carbón y lo excavado; en la puerta de la caldera (a la izquierda): el fuego.",
+  "item.evolvedwarfare.steam_borer.desc": "Ponla en una vía grande. Súbete: W y S, el regulador; A, baja en cuesta; D, sube. Abre un túnel de 6 x 6 y pone las vías sola. Clic derecho en la compuerta del depósito (a la derecha): vías, carbón y lo excavado; en la puerta de la caldera (a la izquierda): el fuego.",
   "container.evolvedwarfare.steam_borer": "Depósito de la tuneladora",
   "message.evolvedwarfare.borer.dash": "%s · %s · vías: %s",
   "message.evolvedwarfare.borer.mode.up": "Subiendo",

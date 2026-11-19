@@ -257,7 +257,8 @@ public class LocomotiveEntity extends TrainCarEntity {
 			return false;
 		}
 		boolean ok = placeCar(this, 0);
-		double behind = HALF_LENGTH;
+		// lo que mide ella (la tuneladora es más larga: fase 124)
+		double behind = halfLength();
 		for (TrainCarEntity w : loadedWagons()) {
 			behind += GAP + w.halfLength();
 			ok &= placeCar(w, behind);

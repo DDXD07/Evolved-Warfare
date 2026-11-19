@@ -3040,6 +3040,20 @@ las habilidades (que tienen la suya).
   elevadores"); **Cabezal de acero** (nivel 56, 8 puntos) y **Cabezal de netherita** (74, 12).
 - Con estos 4 engramas, entre todos cuestan 1.094 puntos y al 100 se ganan 1.064: ya no se pueden aprender todos.
 
+## Fase 124 — La tuneladora, larga como una locomotora de vapor de verdad
+
+- La tuneladora tiene un **modelo nuevo, mucho más largo**, inspirado en una **Mikado de vapor** (la 141F de RENFE):
+  - **caldera negra larga** con la chimenea, el calentador de agua encima, el domo de vapor, el arenero y el silbato;
+  - los **estribos** a lo largo con la **franja roja**;
+  - los **paravientos**: dos planchas grandes a los lados, delante, negras con el **borde rojo**;
+  - una **rueda guía** delante y **cuatro motrices grandes, negras con el centro rojo**, con sus bielas y cilindros;
+  - la **cabina** atrás, negra con su franja roja, ventanas y el techo con alero; la **viga de atrás, roja**, con topes.
+  - Delante, el **mamparo con el taladro** (fase 123) y su farol; a los lados, el **depósito** (derecha) y el **hogar**
+    (izquierda), en el mismo sitio y con las mismas puertas y carteles.
+- Mide unos **7,8 bloques** de la viga de atrás al mamparo (antes unos 5; el taladro sale unos 3,7 más por delante). El
+  **túnel sigue siendo de 6 x 6**. Para no meter el aro en la roca, se para un poco antes del final de la vía.
+- Los vagones que lleve detrás se enganchan a su nueva longitud.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,
