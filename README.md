@@ -2954,6 +2954,15 @@ las habilidades (que tienen la suya).
 - **Mientras recargas vas a media velocidad y no puedes correr.** Al acabar, o si cambias de objeto y se interrumpe,
   vuelves a tu velocidad (y si tiras el mosquete o mueres a mitad, en menos de un segundo).
 
+## Fase 118 — Sin avisos de "opciones experimentales"
+
+- Desde la 0.67.0 el mod cambia el **Nether** (sus biomas), y Minecraft marca como **experimental** cualquier mundo cuyo
+  Nether no sea el de siempre: al crear el mundo salía "¡Advertencia! Estas opciones utilizan características
+  experimentales" y al volver a entrar "Los mundos con opciones de generación experimentales no tienen soporte" (con
+  "Crear una copia y cargar" / "¡Yo sé lo que hago!").
+- Ahora el Nether del mod cuenta como **estable**: ya no salen los avisos, tampoco en los mundos que ya tenías (se
+  calcula al entrar). El mundo es el mismo; no cambia nada de cómo se genera.
+
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):
 - `ew_structures.py` — diseña cada edificio bloque a bloque (tres estilos de ciudad, campamentos, asentamientos,

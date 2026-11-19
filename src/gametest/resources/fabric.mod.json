@@ -36,6 +36,7 @@
 			"com.evolvedwarfare.gametest.EngramGameTests",
 			"com.evolvedwarfare.gametest.AttributeGameTests",
 			"com.evolvedwarfare.gametest.MusketReloadGameTests",
+			"com.evolvedwarfare.gametest.WorldLifecycleGameTests",
 			"com.evolvedwarfare.gametest.FoodRotGameTests",
 			"com.evolvedwarfare.gametest.EnchantingGameTests",
 			"com.evolvedwarfare.gametest.LegendaryGameTests",
