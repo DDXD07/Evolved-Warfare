@@ -845,7 +845,7 @@ Controles (como un arma de fuego):
 |---|---|
 | **Clic izquierdo** | **Dispara** (si está cargado; si no, chasquido y aviso). Con el mosquete en la mano no se pega ni se pican bloques. |
 | **Clic derecho** (mantener) | **Apunta con la mira metálica**: en primera persona el arma va a la cara con el punto de mira en el centro, hay un poco de zoom y la cruz de la pantalla se cambia por un punto diminuto; en tercera, se lo echa a la cara con las dos manos. Vas más despacio. Apuntando, la bala va casi exacta; desde la cadera se desvía bastante. |
-| **R** | **Recarga** (2 segundos; se cambia en *Controles → Evolved Warfare*). Gasta una bala de mosquete. Si cambias de objeto, se interrumpe. |
+| **R** | **Recarga** (7 segundos, a media velocidad y sin correr; se cambia en *Controles → Evolved Warfare*). Gasta una bala de mosquete. Si cambias de objeto, se interrumpe. |
 
 - **Recargar** se ve en primera y en tercera persona: alza el arma con la boca hacia arriba, cae la bala por el cañón,
   la aprieta con la baqueta, baja el arma, cierra la cazoleta y **sube el rastrillo**.
@@ -2946,6 +2946,13 @@ dos primeras horas, 700 hasta las 10, 1.000 hasta las 30 y 1.400 después):
 Unas 2 horas para las herramientas de hierro (nivel 14), unas 12 para las de diamante (42), unas 32 para la netherita
 (70) y unas 60 para el 100. Si va lento o rápido, la opción **"Experiencia de superviviente"** lo multiplica todo menos
 las habilidades (que tienen la suya).
+
+## Fase 117 — Recarga del mosquete más lenta
+
+- La recarga del mosquete dura **7 segundos** (antes 2; **+5 s**). Los sonidos (bala, baqueta, rastrillo) y la animación
+  se estiran a lo que dure. El conjunto de mosquetero la sigue acortando (10 % / 20 %), como mucho hasta 1,75 s.
+- **Mientras recargas vas a media velocidad y no puedes correr.** Al acabar, o si cambias de objeto y se interrumpe,
+  vuelves a tu velocidad (y si tiras el mosquete o mueres a mitad, en menos de un segundo).
 
 ## Herramientas (`tools/`)
 Las estructuras se generan con scripts de Python (no hace falta tocarlos para jugar):

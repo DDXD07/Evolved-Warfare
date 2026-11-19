@@ -42,8 +42,13 @@ import net.minecraft.world.event.GameEvent;
  * El clic izquierdo y la R llegan del cliente por red ({@code FirearmPayload}); el servidor lo comprueba todo.
  */
 public class MusketItem extends Item {
-	/** Lo que tarda en cargar (ticks). */
-	public static final int RELOAD_TICKS = 40;
+	/** Lo que tarda en cargar (ticks): 7 segundos (antes 2; +5 s en la fase 117). */
+	public static final int RELOAD_TICKS = 140;
+	/** Los sonidos de la recarga van sobre esta cuenta (la de los 2 segundos de antes), estirados a lo que dure. */
+	private static final int SOUND_TICKS = 40;
+	/** Lo que frena recargar: la mitad de la velocidad, y sin poder correr. */
+	public static final double RELOAD_SLOW = -0.5;
+	private static final net.minecraft.util.Identifier RELOAD_SLOW_ID = com.evolvedwarfare.EvolvedWarfare.id("musket_reload_slow");
 
 	/** Lo que tarda en recargar este jugador ("Recarga rápida" de Armas de fuego la acorta). */
 	public static int reloadTicks(@org.jetbrains.annotations.Nullable PlayerEntity player) {
@@ -52,7 +57,7 @@ public class MusketItem extends Item {
 		}
 		float faster = com.evolvedwarfare.skill.Skills.value(player, com.evolvedwarfare.skill.Perk.QUICK_RELOAD) / 100.0F
 				+ com.evolvedwarfare.armor.ClassArmorItem.bonus(player, com.evolvedwarfare.armor.ArmorClass.Effect.RELOAD_SPEED);
-		return Math.max(10, Math.round(RELOAD_TICKS * (1.0F - faster)));
+		return Math.max(35, Math.round(RELOAD_TICKS * (1.0F - faster)));
 	}
 	/** Daño de la bala: 5 corazones (al torso). */
 	public static final float DAMAGE = 10.0F;
@@ -147,6 +152,29 @@ public class MusketItem extends Item {
 		stack.set(ModComponents.MUSKET_RELOAD, player.getWorld().getTime());
 	}
 
+	/** Pone o quita la lentitud de recargar. */
+	public static void slow(PlayerEntity player, boolean on) {
+		net.minecraft.entity.attribute.EntityAttributeInstance speed = player.getAttributeInstance(
+				net.minecraft.entity.attribute.EntityAttributes.GENERIC_MOVEMENT_SPEED);
+		if (speed == null) {
+			return;
+		}
+		boolean has = speed.getModifier(RELOAD_SLOW_ID) != null;
+		if (on && !has) {
+			speed.addTemporaryModifier(new net.minecraft.entity.attribute.EntityAttributeModifier(RELOAD_SLOW_ID, RELOAD_SLOW,
+					net.minecraft.entity.attribute.EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+		} else if (!on && has) {
+			speed.removeModifier(RELOAD_SLOW_ID);
+		}
+	}
+
+	/** Si no está recargando un mosquete en la mano (lo tiró, murió...), que no se quede lento (cada segundo). */
+	public static void clearSlow(PlayerEntity player) {
+		if (!isReloading(player.getMainHandStack())) {
+			slow(player, false);
+		}
+	}
+
 	/** Lleva la recarga: sus sonidos y, a los 2 segundos, la bala dentro. Se corta si deja de tenerlo en la mano. */
 	@Override
 	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
@@ -156,13 +184,21 @@ public class MusketItem extends Item {
 		}
 		if (!selected || !(entity instanceof PlayerEntity player)) {
 			stack.remove(ModComponents.MUSKET_RELOAD);
+			if (entity instanceof PlayerEntity p) {
+				slow(p, false);
+			}
 			return;
 		}
 		long tick = world.getTime() - start;
 		int reload = reloadTicks(player);
-		// los sonidos van al mismo paso que la recarga (más deprisa con "Recarga rápida")
-		long now = tick * RELOAD_TICKS / reload;
-		long before = (tick - 1) * RELOAD_TICKS / reload;
+		// mientras recarga va despacio y no puede correr
+		slow(player, tick < reload);
+		if (tick < reload && player.isSprinting()) {
+			player.setSprinting(false);
+		}
+		// los sonidos van al mismo paso que la recarga (estirados a lo que dure)
+		long now = tick * SOUND_TICKS / reload;
+		long before = (tick - 1) * SOUND_TICKS / reload;
 		SoundEvent sound = null;
 		float pitch = 1.0F;
 		if (now != before || tick == 0) {

@@ -92,6 +92,14 @@ public class EvolvedWarfare implements ModInitializer {
 		com.evolvedwarfare.skill.Survivor.register();
 		com.evolvedwarfare.skill.Engrams.register();
 		com.evolvedwarfare.skill.SurvivorAttributes.register();
+		// que no se quede lento si dejó de recargar el mosquete sin acabar (lo tiró, murió...; fase 117)
+		net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents.END_SERVER_TICK.register(server -> {
+			if (server.getTicks() % 20 == 0) {
+				for (net.minecraft.server.network.ServerPlayerEntity p : server.getPlayerManager().getPlayerList()) {
+					com.evolvedwarfare.weapon.MusketItem.clearSlow(p);
+				}
+			}
+		});
 		com.evolvedwarfare.food.FoodItems.register();
 		com.evolvedwarfare.legendary.Legendaries.register();
 		com.evolvedwarfare.difficulty.Difficulty.register();
